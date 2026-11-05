@@ -1,15 +1,20 @@
 """Players' summons in the combat window (Combat/Summons.py,
 Combat/CombatUIQt/summons_mixin.py): Dessie's Reanimated Companion and
 Hanna's Drake Companion, as the Time Loop PR campaign has them. They're made
-when they're summoned (with the feature's use, or a spell slot, and a choice:
-the drake's Draconic Essence), take their turn right after their owner's, die
-with their owner, can be dismissed, stay out from one encounter to the next
-until a long rest, and can join a fight already summoned. Older logs (a hidden
-companion prepared with each encounter, "companion_of", "<owner>'s Companion
-(<type>)") still load and carry over."""
+when they're summoned (paid with the feature's use, or a spell slot, as their
+SummonSpec's costs allow, and with a choice: the drake's Draconic Essence),
+take their turn right after their owner's (or, rolling their own initiative,
+where their roll puts them), die with their owner, can be dismissed, stay out
+from one encounter to the next until a long rest (with the card they were
+built with), and can join a fight already summoned. Summoning and dismissing
+are logged (Action.SUMMON, Action.DISMISS), and one dismissed isn't brought
+back. Older logs (a hidden companion prepared with each encounter,
+"companion_of", "<owner>'s Companion (<type>)", no summon actions) still load
+and carry over."""
 
 import dataclasses
 import json
+import random
 import shutil
 from functools import cache
 from pathlib import Path
@@ -24,24 +29,31 @@ from CharacterContent.Features.SubClassFeatures.Artificer.ArtificerReanimatorFea
 )
 from Combat.CombatUIQt import CombatAppQt
 from Combat.CombatUIQt.player_view import _can_be_seen
+from Combat.Definitions import Action
 from Combat.EncounterLogs import prepare_log, scenario_log_path
+from Combat.Monsters.CR_0.monsters import Owl
 from Combat.Monsters.CR_1.monsters import Tiger
+from Combat.PlayerLog import is_round_key
 from Combat.Scenario import CombatScenario
 from Combat.Summons import (
     CHOICE_KEY,
     SOURCE_KEY,
     SUMMON_OF_KEY,
     SummonOption,
+    SummonPayment,
     carried_state,
+    cost_options,
     create,
+    dismissed,
     feature_summons,
+    last_seen,
     make_room,
     old_name,
     place_after_owners,
     upgrade_keys,
 )
 from Core.Definitions import DamageType
-from Model.Content.Summons import SummonContext
+from Model.Content.Summons import SummonContext, SummonCost, SummonSpec, SummonTurn
 from tests._combat_ui import qapp
 from tests._snapshot_helpers import build
 
@@ -55,6 +67,7 @@ OLD_REANIMATED = "Dessie's Companion (Reanimated Companion)"
 
 DEN = CombatScenario(name="den", title="Den", combatants=lambda: [Tiger()])
 LAIR = CombatScenario(name="lair", title="Lair", combatants=lambda: [Tiger()])
+CAVE = CombatScenario(name="cave", title="Cave", combatants=lambda: [Tiger()])
 # Prepared as logs were before summons were made on demand: with a hidden
 # companion for each player, under the old key and name.
 OLD = CombatScenario(name="old", title="Old", combatants=lambda: [Tiger()])
@@ -118,12 +131,12 @@ def _old_companions() -> list[dict]:
 
 
 def _ui(tmp_path) -> CombatAppQt:
-    """The window for a campaign in tmp_path with DEN, LAIR and OLD
+    """The window for a campaign in tmp_path with DEN, LAIR, CAVE and OLD
     prepared, on the party between encounters."""
     qapp()
     sheets = {cs.character_name: cs for cs in _party()}
     logs = tmp_path / "CombatLogs"
-    for scenario in (DEN, LAIR, OLD):
+    for scenario in (DEN, LAIR, CAVE, OLD):
         path = scenario_log_path(logs, scenario.name)
         if not path.exists():
             prepare_log(path, scenario, list(sheets), sheets=sheets)
@@ -136,7 +149,7 @@ def _ui(tmp_path) -> CombatAppQt:
         _party(),
         combat_log_dir=logs,
         player_log_path=str(tmp_path / "PlayerLogs" / "main_party.json"),
-        scenarios=[DEN, LAIR, OLD],
+        scenarios=[DEN, LAIR, CAVE, OLD],
     )
     ui._build_window()
     return ui
@@ -206,6 +219,22 @@ def _menu_texts(ui, char) -> list[str]:
     return [a.text() for a in ui._card_menu(char).actions()]
 
 
+def _submenu(menu, text: str):
+    """The submenu of `menu` whose entry reads `text`."""
+    (action,) = [a for a in menu.actions() if a.text() == text]
+    submenu = action.menu()
+    assert submenu is not None, text
+    return submenu
+
+
+def _events(ui, action: Action | None = None) -> list[dict]:
+    """The encounter log's events, in order (only `action`'s when given)."""
+    data = json.loads(_log_text(ui))
+    keys = sorted((k for k in data if is_round_key(k)), key=lambda k: int(k[6:]))
+    events = [e for k in keys for e in data[k]]
+    return [e for e in events if action is None or e.get("action") == action]
+
+
 # ---------------------------------------------------------------------------
 # Initiative
 
@@ -246,6 +275,11 @@ def test_place_after_owners_keeps_order_and_appends_an_ownerless_one():
         "Tiger",
         "Stray",
     ]
+    # One of hers that rolls its own initiative isn't skipped over: it isn't
+    # part of her turn.
+    own = {"name": "Owl", "summon_of": "Hanna", "summon_turn": "own initiative"}
+    order = place_after_owners([hanna, own, tiger], [drake])
+    assert [c["name"] for c in order] == ["Hanna", "Drake", "Owl", "Tiger"]
 
 
 # ---------------------------------------------------------------------------
@@ -355,9 +389,14 @@ def test_the_card_menus_offer_the_summon_with_its_cost_and_dismiss(tmp_path):
     def summon_texts(char):
         return [t for t in _menu_texts(ui, char) if "Summon" in t or t == "Dismiss"]
 
-    assert summon_texts(_char(ui, "Hanna")) == ["Summon Drake Companion (1 use left)"]
+    # The use first; a level 1 slot (their only level) pays too.
+    assert summon_texts(_char(ui, "Hanna")) == [
+        "Summon Drake Companion (1 use left)",
+        "Summon Drake Companion using…",
+    ]
     assert summon_texts(_char(ui, "Dessie")) == [
-        "Summon Reanimated Companion (1 use left)"
+        "Summon Reanimated Companion (1 use left)",
+        "Summon Reanimated Companion using…",
     ]
     assert summon_texts(_char(ui, "Tiger")) == []
     _summon(ui, "Hanna", "Fire")
@@ -410,6 +449,11 @@ def test_a_reanimated_companion_cant_be_made_while_its_out(tmp_path):
     ]
     assert _char(ui, f"{REANIMATED} 2")["hp"] == 20
     assert dessie["spell_slots"][1] == slots[1] - 1
+    # The refused one logged nothing.
+    assert [e["value"]["names"] for e in _events(ui, Action.SUMMON)] == [
+        [REANIMATED],
+        [f"{REANIMATED} 2"],
+    ]
 
 
 def test_a_slot_paid_summon_isnt_replayed_as_a_use(tmp_path):
@@ -544,9 +588,11 @@ def _played_old_log(ui, tmp_path) -> Path:
     """A log played before summons had their own names, listed in the
     player log: Hanna's drake (Cold) left out at 9 HP, under the old name and
     key; Dessie's companion never summoned."""
-    reanimated, drake = _old_companions()
-    drake = dict(drake, hp=9, companion_choice="Cold")
-    del drake["hidden_from_players"]
+    reanimated, _ = _old_companions()
+    hanna = _sheet(HANNA_BUILD)
+    feature, spec = _spec_of(hanna, "Drake Companion")
+    (cold,) = create(hanna, feature, spec, SummonContext(choice="Cold"), set())
+    drake = dict(_old_style(cold, hidden=False), hp=9)
     path = tmp_path / "CombatLogs" / "played_before.json"
     data = {
         "encounter": "played_before",
@@ -750,3 +796,443 @@ def test_the_time_loop_logs_load(tmp_path, name):
     assert "Summon Drake Companion (1 use left)" in _menu_texts(ui, hanna)
     reanimated = _char(ui, OLD_REANIMATED)
     assert _can_be_seen(reanimated) == (name == "time_loop_pr_square")
+
+
+# ---------------------------------------------------------------------------
+# Paying for a summon (SummonSpec.costs)
+
+
+def _drake_owner(**state) -> tuple[dict, object, object, object]:
+    """(an owner dict for Hanna with `state`, her sheet, the Drake Companion
+    feature, its spec)."""
+    hanna = _sheet(HANNA_BUILD)
+    feature, spec = _spec_of(hanna, "Drake Companion")
+    owner = {"name": "Hanna", "feature_uses_used": {}, "spell_slots": {}}
+    owner.update(state)
+    return owner, hanna, feature, spec
+
+
+def test_the_drakes_costs_are_its_use_then_any_slot_lowest_first():
+    # "you can't do so again until you finish a long rest, unless you expend
+    # a spell slot of 1st level or higher": the use first, then each slot.
+    owner, hanna, feature, spec = _drake_owner(
+        spell_slots={1: 2, 2: 1, 3: 0}, pact_slots={2: 1}
+    )
+    options = cost_options(owner, hanna, feature, spec)
+    assert options == [
+        SummonPayment(feature_use="Drake Companion", uses_left=1, own_use=True),
+        SummonPayment(slot_level=1),
+        SummonPayment(slot_level=2),
+        SummonPayment(slot_level=2, pact=True),
+    ]
+    assert [o.text for o in options] == [
+        "1 use left",
+        "a level 1 slot",
+        "a level 2 slot",
+        "a level 2 Pact Magic slot",
+    ]
+    # The use spent: the lowest slot is the cheapest way left.
+    owner["feature_uses_used"] = {"Drake Companion": 1}
+    assert cost_options(owner, hanna, feature, spec)[0] == SummonPayment(slot_level=1)
+    # Nothing left to pay with.
+    owner.update(spell_slots={1: 0}, pact_slots={})
+    assert cost_options(owner, hanna, feature, spec) == []
+
+
+def test_a_cost_can_be_a_minimum_slot_another_features_use_or_nothing():
+    owner, hanna, feature, spec = _drake_owner(spell_slots={1: 2, 3: 1})
+    second = dataclasses.replace(spec, costs=(SummonCost(spell_slot=2),))
+    assert cost_options(owner, hanna, feature, second) == [SummonPayment(slot_level=3)]
+    # Favored Enemy has 2 uses at Ranger level 3; Hanna has no Wild Shape.
+    other = dataclasses.replace(
+        spec,
+        costs=(SummonCost(feature_use="Wild Shape"), SummonCost("Favored Enemy")),
+    )
+    (option,) = cost_options(owner, hanna, feature, other)
+    assert option == SummonPayment(feature_use="Favored Enemy", uses_left=2)
+    assert option.text == "a Favored Enemy use, 2 uses left"
+    free = dataclasses.replace(spec, costs=())
+    assert cost_options(owner, hanna, feature, free) == [SummonPayment()]
+    assert SummonPayment().text == "free"
+
+
+def test_the_card_menu_pays_with_a_slot_instead_of_the_use(tmp_path):
+    ui = _in_fight(tmp_path)
+    hanna = _char(ui, "Hanna")
+    slots = hanna["spell_slots"][1]
+    using = _submenu(ui._card_menu(hanna), "Summon Drake Companion using…")
+    assert [a.text() for a in using.actions()] == ["a level 1 slot"]
+    cold = _submenu(using, "a level 1 slot")
+    (action,) = [a for a in cold.actions() if a.text() == "Cold"]
+    action.trigger()
+    assert _char(ui, DRAKE)[CHOICE_KEY] == "Cold"
+    assert hanna["spell_slots"][1] == slots - 1
+    assert "Drake Companion" not in hanna.get("feature_uses_used", {})
+    # The use is still there to pay for the next one.
+    assert "Summon Drake Companion (1 use left)" in _menu_texts(ui, hanna)
+
+
+def test_a_way_to_pay_thats_gone_summons_nothing(tmp_path):
+    ui = _in_fight(tmp_path)
+    hanna = _char(ui, "Hanna")
+    feature, spec = _spec_of(hanna["_stat_block"], "Drake Companion")
+    ui._summon(hanna, feature, spec, "Fire", SummonPayment(slot_level=2))
+    assert DRAKE not in _names(ui)
+    assert "can't pay with a level 2 slot" in ui._status_label.text()
+    assert _events(ui, Action.SUMMON) == []
+
+
+# ---------------------------------------------------------------------------
+# Logging: Action.SUMMON and Action.DISMISS
+
+
+def test_summoning_and_dismissing_are_logged_on_the_owner(tmp_path):
+    ui = _in_fight(tmp_path)
+    _summon(ui, "Hanna", "Cold")  # her use
+    _summon(ui, "Hanna", "Fire")  # a level 1 slot; the Cold one goes
+    ui._dismiss_summon(_char(ui, DRAKE))
+    ui._add_already_summoned(_option(ui, REANIMATED))
+    drake = "feature:Drake Companion"
+    logged = [
+        (e["action"], e["character"], e["value"])
+        for e in _events(ui)
+        if e.get("action") in (Action.SUMMON, Action.DISMISS)
+    ]
+    assert logged == [
+        (
+            Action.SUMMON,
+            "Hanna",
+            {"source": drake, "choice": "Cold", "slot": None, "names": [DRAKE]},
+        ),
+        (
+            Action.DISMISS,
+            "Hanna",
+            {
+                "source": drake,
+                "choice": "Cold",
+                "slot": None,
+                "names": [DRAKE],
+                "replaced": True,
+            },
+        ),
+        (
+            Action.SUMMON,
+            "Hanna",
+            {"source": drake, "choice": "Fire", "slot": 1, "names": [DRAKE]},
+        ),
+        (
+            Action.DISMISS,
+            "Hanna",
+            {"source": drake, "choice": "Fire", "slot": 1, "names": [DRAKE]},
+        ),
+        (
+            Action.SUMMON,
+            "Dessie",
+            {
+                "source": "feature:Reanimated Companion",
+                "choice": None,
+                "slot": None,
+                "names": [REANIMATED],
+                "before_combat": True,
+            },
+        ),
+    ]
+    # What paid is still logged on its own, before the summon.
+    actions = [
+        e["action"]
+        for e in _events(ui)
+        if e.get("character") == "Hanna" and e.get("action")
+    ]
+    assert actions == [
+        Action.ENABLE_FEATURE,
+        Action.SUMMON,
+        Action.REMOVE_SPELL_SLOT,
+        Action.DISMISS,
+        Action.SUMMON,
+        Action.DISMISS,
+    ]
+    # Players read it: the summons were out when it was logged.
+    assert all(e.get("public") for e in _events(ui, Action.SUMMON))
+
+
+def test_undoing_a_summon_takes_its_log_line_back(tmp_path):
+    ui = _in_fight(tmp_path)
+    _summon(ui, "Hanna", "Cold")
+    ui._undo_last()
+    assert DRAKE not in _names(ui)
+    assert _events(ui, Action.SUMMON) == []
+    assert _events(ui, Action.ENABLE_FEATURE) == []
+
+
+def test_dismissed_reads_an_encounter_logs_dismiss_events():
+    data = {
+        "round_1": [
+            {"text": "x", "action": "dismiss", "value": {"names": ["A", "B"]}},
+            {"text": "y", "action": "summon", "value": {"names": ["C"]}},
+        ],
+        "round_2": [{"text": "older line"}],
+        "round_number": 2,
+    }
+    assert dismissed(data) == {"A", "B"}
+    # An older log has none.
+    assert dismissed({"round_1": [{"text": "Hanna summons it"}]}) == set()
+
+
+def test_last_seen_forgets_a_summon_a_later_log_dismissed():
+    out = {"name": DRAKE, "hp": 12}
+    dismiss = {"action": "dismiss", "value": {"names": [DRAKE]}, "text": "x"}
+    first = {"combatants": [out]}
+    later = {"combatants": [], "round_1": [dismiss]}
+    assert last_seen(DRAKE, [(first, False)]) == (out, False)
+    assert last_seen(DRAKE, [(first, False), (later, False)]) is None
+    # Not in a later log, and not dismissed there: still the earlier one.
+    assert last_seen(DRAKE, [(first, False), ({"combatants": []}, True)]) == (
+        out,
+        False,
+    )
+    # Dismissed, then summoned again in that log.
+    again = {"name": DRAKE, "hp": 20}
+    both = {"combatants": [again], "round_1": [dismiss]}
+    assert last_seen(DRAKE, [(first, False), (both, False)]) == (again, False)
+
+
+# ---------------------------------------------------------------------------
+# Replaying the logs into the next encounter
+
+
+def test_a_dismissed_summon_isnt_brought_back_from_an_earlier_encounter(tmp_path):
+    ui = _in_fight(tmp_path)
+    _summon(ui, "Hanna", "Cold")
+    _summon(ui, "Dessie")
+    ui._load_encounter(LAIR, restart=False)
+    assert DRAKE in _names(ui) and REANIMATED in _names(ui)
+    _start(ui, Hanna=15, Dessie=5)
+    ui._dismiss_summon(_char(ui, DRAKE))
+    ui._load_encounter(CAVE, restart=False)
+    # The Den left it out, but the Lair dismissed it; Dessie's is still out.
+    assert DRAKE not in _names(ui)
+    assert _can_be_seen(_char(ui, REANIMATED))
+
+
+def test_a_summon_dismissed_and_summoned_again_is_still_out(tmp_path):
+    ui = _in_fight(tmp_path)
+    _summon(ui, "Hanna", "Cold")
+    ui._dismiss_summon(_char(ui, DRAKE))
+    _summon(ui, "Hanna", "Acid")
+    ui._load_encounter(LAIR, restart=False)
+    assert _char(ui, DRAKE)[CHOICE_KEY] == "Acid"
+
+
+def test_a_carried_summon_keeps_its_card_until_its_summoned_again(tmp_path):
+    ui = _in_fight(tmp_path)
+    _summon(ui, "Hanna", "Cold")
+    # The Den's log holds the drake as it was built: here as if Hanna's
+    # sheet had changed since (fewer Hit Points, a lower AC).
+    assert ui.log_file is not None
+    data = json.loads(_log_text(ui))
+    (logged,) = [c for c in data["combatants"] if c["name"] == DRAKE]
+    logged.update(hp=15, max_hp=15, ac=15)
+    ui.log_file.write_text(json.dumps(data), encoding="utf-8")
+    ui._load_encounter(LAIR, restart=False)
+    drake = _char(ui, DRAKE)
+    assert (drake["hp"], drake["max_hp"], drake["ac"]) == (15, 15, 15)
+    # Summoning it again builds it from her sheet as it is now.
+    _start(ui, Hanna=15, Dessie=5)
+    _summon(ui, "Hanna", "Cold")
+    drake = _char(ui, DRAKE)
+    assert (drake["hp"], drake["max_hp"], drake["ac"]) == (20, 20, 16)
+
+
+def test_the_time_loop_square_carries_its_summons_into_the_next_encounter(
+    tmp_path,
+):
+    """A log played before summons were logged (no Action.SUMMON) still
+    carries them over: the Square's, into the Drunk Oxe."""
+    campaign = Scenarios.SCENARIO_CAMPAIGNS["time_loop_pr_square"]
+    logs = tmp_path / "CombatLogs"
+    logs.mkdir()
+    for name in ("time_loop_pr_square", "time_loop_pr_drunk_oxe"):
+        committed = scenario_log_path(campaign.folder / "CombatLogs", name)
+        shutil.copyfile(committed, scenario_log_path(logs, name))
+    square = json.loads(
+        scenario_log_path(logs, "time_loop_pr_square").read_text(encoding="utf-8")
+    )
+    assert not any(
+        e.get("action") in (Action.SUMMON, Action.DISMISS)
+        for k in square
+        if is_round_key(k)
+        for e in square[k]
+    )
+    player_log = tmp_path / "PlayerLogs" / "main_party.json"
+    player_log.parent.mkdir()
+    ref = PlayerLog.log_ref(player_log, scenario_log_path(logs, "time_loop_pr_square"))
+    session = {"type": PlayerLog.ENCOUNTER, "scenario": "time_loop_pr_square"}
+    player_log.write_text(
+        json.dumps({"sessions": [dict(session, log=ref)]}), encoding="utf-8"
+    )
+    qapp()
+    ui = CombatAppQt(
+        combatants=[],
+        character_sheets=_time_loop_party(),
+        combat_log_dir=logs,
+        player_log_path=str(player_log),
+        scenarios=[
+            Scenarios.SCENARIOS["time_loop_pr_square"],
+            Scenarios.SCENARIOS["time_loop_pr_drunk_oxe"],
+        ],
+    )
+    ui._build_window()
+    ui._load_encounter(Scenarios.SCENARIOS["time_loop_pr_drunk_oxe"], restart=False)
+    for owner, name in (("Dessie", OLD_REANIMATED), ("Hanna", OLD_DRAKE)):
+        (left,) = [c for c in square["combatants"] if c["name"] == name]
+        # The Drunk Oxe was prepared with a hidden one of each, under the old
+        # name: the one the Square left out comes out as it left it.
+        (here,) = ui._owner_summons(_char(ui, owner))
+        assert here["name"] == name
+        if left.get("hidden_from_players") or left["hp"] <= 0:
+            assert here["hidden_from_players"]
+        else:
+            assert _can_be_seen(here) and here["hp"] == left["hp"]
+    # Nothing was written to the campaign: the logs are copies.
+    assert ui.log_file is not None and ui.log_file.parent == logs
+
+
+# ---------------------------------------------------------------------------
+# Two summons on one owner, and a summon with its own initiative
+
+OWL = "Hanna's Owl Familiar"
+
+
+@pytest.fixture
+def owl(monkeypatch):
+    """Hanna's Alert feat also summons an owl that rolls its own initiative,
+    for free: a stand-in for Find Familiar (2024: "It rolls its own
+    Initiative and acts on its own turn"), which no feature has yet."""
+    hanna = _sheet(HANNA_BUILD)
+    alert = next(f for f in hanna.iter_features_with_extensions() if f.name == "Alert")
+    spec = SummonSpec(
+        name="Owl Familiar",
+        build=lambda sheet, ctx: Owl(),
+        turn=SummonTurn.OWN_INITIATIVE,
+    )
+    monkeypatch.setattr(alert, "summons", lambda sheet: [spec])
+    return alert, spec
+
+
+def _d20(monkeypatch, roll: int):
+    """Every d20 rolls `roll`."""
+    monkeypatch.setattr(random, "randint", lambda a, b: roll)
+
+
+def test_one_owner_can_have_two_summons_out(tmp_path, owl, monkeypatch):
+    alert, spec = owl
+    ui = _in_fight(tmp_path)  # Hanna 15, Tiger 10, Dessie 5
+    hanna = _char(ui, "Hanna")
+    _summon(ui, "Hanna", "Cold")
+    _d20(monkeypatch, 2)  # 2 + the owl's Dex 13 (+1): last
+    ui._summon(hanna, alert, spec, None)
+    assert [c["name"] for c in ui._owner_summons(hanna)] == [DRAKE, OWL]
+    assert _order(ui) == ["Hanna", DRAKE, "Tiger", "Dessie", OWL]
+    owl_char = _char(ui, OWL)
+    assert (owl_char["hp"], owl_char[SOURCE_KEY]) == (1, "feature:Alert")
+    # Free: it spends nothing.
+    assert hanna["feature_uses_used"] == {"Drake Companion": 1}
+    # Each one is summoned from the owner's card; each card dismisses its own.
+    texts = _menu_texts(ui, hanna)
+    assert "Summon Alert (free)" in texts
+    assert "Summon Drake Companion (a level 1 slot)" in texts
+    # Summoning the drake again replaces only the drake.
+    _summon(ui, "Hanna", "Fire")
+    assert [c["name"] for c in ui._owner_summons(hanna)] == [DRAKE, OWL]
+    assert _char(ui, DRAKE)[CHOICE_KEY] == "Fire"
+    ui._dismiss_summon(_char(ui, DRAKE))
+    assert [c["name"] for c in ui._owner_summons(hanna)] == [OWL]
+    # Both carry over: the owl (out) with a row of its own, the drake not.
+    _summon(ui, "Hanna", "Acid")
+    ui._load_encounter(LAIR, restart=False)
+    assert {c["name"] for c in ui._owner_summons(_char(ui, "Hanna"))} == {DRAKE, OWL}
+    assert id(_char(ui, OWL)) in ui._initiative_inputs
+    assert id(_char(ui, DRAKE)) not in ui._initiative_inputs
+
+
+def test_an_own_initiative_summon_rolls_with_the_monsters_before_the_fight(
+    tmp_path, owl, monkeypatch
+):
+    ui = _ui(tmp_path)
+    ui._load_encounter(DEN, restart=False)
+    ui._add_already_summoned(_option(ui, OWL))
+    ui._add_already_summoned(_option(ui, f"{DRAKE} (Fire)"))
+    owl_char, tiger = _char(ui, OWL), _char(ui, "Tiger")
+    # A row of its own; the drake goes after Hanna.
+    assert id(owl_char) in ui._initiative_inputs
+    assert id(_char(ui, DRAKE)) not in ui._initiative_inputs
+    _d20(monkeypatch, 11)
+    ui._roll_monster_initiative()
+    # 11 + Dex 13's +1, and the Tiger's own; the players roll their own.
+    assert ui._initiative_inputs[id(owl_char)].text() == "12"
+    assert ui._initiative_inputs[id(tiger)].text()
+    assert not ui._initiative_inputs[id(_char(ui, "Hanna"))].text()
+    _start(ui, Hanna=15, Tiger=10, Dessie=5, **{OWL: 12})
+    assert _order(ui) == ["Hanna", DRAKE, OWL, "Tiger", "Dessie"]
+    assert _names(ui) == _order(ui)
+
+
+def test_an_own_initiative_summon_dismissed_before_the_fight_loses_its_row(
+    tmp_path, owl
+):
+    ui = _ui(tmp_path)
+    ui._load_encounter(DEN, restart=False)
+    ui._add_already_summoned(_option(ui, OWL))
+    owl_char = _char(ui, OWL)
+    ui._dismiss_summon(owl_char)
+    assert id(owl_char) not in ui._initiative_inputs
+    for unit in ui._initiative_row_units():
+        ui._initiative_inputs[id(unit[0])].setText("10")
+    ui._check_start_button()
+    assert ui._start_combat_btn.isEnabled()
+    _start(ui, Hanna=15, Tiger=10, Dessie=5)
+    assert _order(ui) == ["Hanna", "Tiger", "Dessie"]
+
+
+@pytest.mark.parametrize(
+    "d20, order",
+    [
+        # 12 + 1 = 13: before the Tiger (10).
+        (12, ["Hanna", OWL, "Tiger", "Dessie"]),
+        # 9 + 1 = 10, a tie with the Tiger: after it.
+        (9, ["Hanna", "Tiger", OWL, "Dessie"]),
+        # 19 + 1 = 20: first, before Hanna (15).
+        (19, [OWL, "Hanna", "Tiger", "Dessie"]),
+    ],
+)
+def test_an_own_initiative_summon_rolls_when_summoned_in_the_fight(
+    tmp_path, owl, monkeypatch, d20, order
+):
+    alert, spec = owl
+    ui = _in_fight(tmp_path)
+    ui._pass_turn()
+    assert _turn(ui) == "Tiger"
+    _d20(monkeypatch, d20)
+    ui._summon(_char(ui, "Hanna"), alert, spec, None)
+    assert _order(ui) == order
+    assert _names(ui) == order
+    assert _turn(ui) == "Tiger"
+    (event,) = _events(ui, Action.SUMMON)
+    assert event["value"]["initiative"] == {OWL: d20 + 1}
+    assert f"Hanna summons {OWL} (initiative {d20 + 1})" in event["text"]
+
+
+def test_an_own_initiative_summon_goes_last_when_no_roll_is_known(
+    tmp_path, owl, monkeypatch
+):
+    """A fight continued from its log has its turn order but not the rolls,
+    not even the players' from when it was started in this window."""
+    alert, spec = owl
+    ui = _in_fight(tmp_path)
+    _hit(ui, _char(ui, "Hanna"), _char(ui, "Tiger"), 3)  # a round to continue
+    ui._save_fight_state()
+    assert ui.log_file is not None
+    ui._load_log_from_path(str(ui.log_file))
+    _d20(monkeypatch, 11)  # 12 would go before the Tiger's 10
+    ui._summon(_char(ui, "Hanna"), alert, spec, None)
+    assert _order(ui) == ["Hanna", "Tiger", "Dessie", OWL]

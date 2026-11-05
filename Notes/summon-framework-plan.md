@@ -227,9 +227,15 @@ Functions:
   summon, which has no `summon_source`, by its stat block's type; `mark`
   sets the keys on one (also on an older log's hidden companion that the
   carry-over brings out).
-- `place_after_owners` stays; only `AFTER_OWNER` summons go through it.
-  `OWN_INITIATIVE` ones get an initiative row (rolled at summon time in
-  combat, `_add_initiative_row` before it).
+- `place_after_owners` stays; only `AFTER_OWNER` summons go through it, and
+  it places them right after the owner's other `AFTER_OWNER` summons, not
+  after any `OWN_INITIATIVE` ones. `OWN_INITIATIVE` ones get an initiative
+  row before the fight (rolled with "Roll for Monsters", removed again if
+  dismissed there). Summoned mid-fight, one rolls d20 + Dex and goes before
+  the first turn that rolled lower (a tie goes after); the rolls are kept
+  as `_initiative` on each combatant (the underscore keeps it out of the
+  log). A fight continued from its log knows no rolls
+  (`_load_log_from_path` clears them), so a summon added there goes last.
 - `make_room(existing, spec, new) -> list[dict] | None`: with `REPLACES`,
   the oldest ones past `max_out` (to remove); with `REFUSED`, None when
   there's no room (the menu greys the entry out). `existing` is only the
@@ -239,6 +245,19 @@ Functions:
   stays, so the new one is numbered (`" 2"`).
 - `carried_state` stays for `UNTIL_LONG_REST` / `UNTIL_DISMISSED` /
   long-`DURATION` summons; `CONCENTRATION` summons don't carry (see Q2).
+  A carried summon keeps the card it was logged with (`keep_card`, Q13);
+  only "Summon again" rebuilds it from the sheet. `last_seen` forgets a
+  summon that a later log dismissed (`dismissed`), so it doesn't come back
+  from an even earlier log.
+
+**Player view (Q11).** A summon whose owner is a player in the fight is
+shown like a player once it's out: exact HP, AC and every condition, in
+both the Informative and the Limited view, also while Invisible; only the
+GM's "Hidden from players" hides it. Its stat block (`summon_card`) shows
+on its own turn and the turn before it (usually its owner's), not on every
+turn, so a large encounter still fits a 1080p screen. At 0 HP it keeps its
+exact numbers and loses the stat block. The browser page draws the same
+rows (`PlayerViewRow.as_json`, `card` only on such a summon's row).
 
 **Created on demand, not pre-added.** Today each encounter is prepared with a
 hidden companion. That doesn't scale to spells (which summon? how many?).
@@ -268,17 +287,28 @@ and slot) at full HP and spends nothing, logged as `Action.SUMMON` with
 | Long rest | `UNTIL_LONG_REST` summons end; feature uses come back | rests_mixin |
 | Undo | all of it is `@undoable` dict changes, as now | |
 
-**Logging.** Add `Action.SUMMON` / `Action.DISMISS` with
-`{source, choice, slot, names}` so the player log's replay knows which
-summons are out and which slots/uses were spent (today the use and slot are
-logged separately; keep those too).
+**Logging.** `Action.SUMMON` / `Action.DISMISS`, logged on the owner, with
+`{source, choice, slot, names}`, plus `"before_combat": true` ("Already
+summoned…"), `"replaced": true` (a `DISMISS` for one that a new summon
+replaced) and `"initiative": {name: roll}` (`OWN_INITIATIVE`). The use and
+slot that paid are still logged separately, before the `SUMMON` line. The
+replay into the window does nothing with them (what paid is its own
+line); the carry-over reads `DISMISS` (see `dismissed` in 3.4), and each
+log's final `combatants` already holds what's out, so `SUMMON` is a record.
 
 ### 3.6 Cost resolution
 
-Replace `_summon_uses_left` / `_lowest_slot` with one function over
-`spec.costs`: try each `SummonCost` in order, offer the cheapest valid one by
-default and let the card menu pick another. "Lowest slot" stays the default
-for the drake/reanimator, which matches today's behaviour.
+`cost_options(owner, sheet, feature, spec) -> list[SummonPayment]`
+(Combat/Summons.py) replaces `_summon_uses_left` / `_lowest_slot`: it goes
+through `spec.costs` in order and returns what the owner can pay now. A
+slot cost becomes one option per slot level they have, from its minimum up
+(a spell slot before a Pact Magic slot of the same level); an empty `costs`
+is one free option. The card menu's entry pays with the first (cheapest)
+and a "Summon X using…" submenu offers the rest; with nothing affordable
+the entry is greyed out and says what's missing. "One use, else the lowest
+slot" stays the default for the drake/reanimator, which matches the old
+behaviour. A slot that pays for a feature's summon also goes into
+`SummonContext.slot_level` (`summon_slot` on the card, `slot` in the log).
 
 This is for features only. A spell's summon is paid by casting it: the
 existing cast flow picks and spends the slot (and its level is the upcast
@@ -338,15 +368,24 @@ also get `rules-checker` against the spell and feature texts.
   before the fight (3.4); old TimeLoopPR logs still load.
 - [x] **S2.4** `make_room` for `max_out` / `when_full`; add "Dismiss" to the
   card menu.
-- [ ] **S2.5** Resolve costs from `spec.costs` (3.6).
-- [ ] **S2.6** Log `Action.SUMMON` / `Action.DISMISS`, and replay them from
+- [x] **S2.5** Resolve costs from `spec.costs` (3.6).
+- [x] **S2.6** Log `Action.SUMMON` / `Action.DISMISS`, and replay them from
   the player log.
-- [ ] **S2.7** Give `OWN_INITIATIVE` summons an initiative row, rolled with
+- [x] **S2.7** Give `OWN_INITIATIVE` summons an initiative row, rolled with
   the GM's monster roll button (Q3).
-- [ ] **S2.8** Tests: two summons on one owner, replacing on resummon,
+- [x] **S2.8** Tests: two summons on one owner, replacing on resummon,
   dismiss, replay. Screenshot with the `run-apps` skill.
-- [ ] **S2.9** A player's own summon shows its full card in the player
-  view once it's out (Q11).
+- [x] **S2.9** A player's own summon shows its full card in the player
+  view once it's out (Q11). The stat block shows on its turn and the one
+  before, not always (3.4, Player view).
+- [ ] **S2.10** A `VANISHES` summon at 0 HP is removed from the fight and
+  logged (3.5's 0 HP row); a `DIES` one stays, dead. Today both stay.
+- [ ] **S2.11** Label a summon's menu entries by the spec, not the feature,
+  so a source with two specs, or a spell whose spec has another name, gets
+  distinct "Summon X" entries. Needed by Phase 4.
+- [ ] **S2.12** `screenshot.py combat --summon "<label>"` (run-apps skill),
+  and a player-screen mode, so a summon can be screenshotted without a
+  scratch script (summons are made on demand now).
 
 ### Phase 3: the remaining features with stat blocks
 
@@ -616,6 +655,18 @@ them up.
   lands, the UI still charges a use or the lowest slot whatever the spec's
   costs say (Steel Defender, Vestige and Primal Companion are free; Wildfire
   Spirit costs a Wild Shape use).
+- 2026-11-05: S2.5-S2.9 done: `cost_options` and the "using…" menu (the
+  Phase 3 specs' costs now apply), `Action.SUMMON` / `DISMISS` with
+  `dismissed` in the carry-over (a summon dismissed in one encounter no
+  longer comes back from an older log), carried summons keep their logged
+  card (Q13), `OWN_INITIATIVE` rows and mid-fight placement,
+  `place_after_owners` no longer skips `OWN_INITIATIVE` summons, and the
+  player view (screen and browser page) for a player's summon. 3.4-3.6 say
+  how. Differs from Q11's answer: the stat block shows on the summon's turn
+  and the one before, for screen space. Added S2.10 (vanishing at 0 HP, in
+  3.5 but never a step), S2.11 (menu labels by spec) and S2.12 (screenshot
+  support). The square TimeLoopPR log's S2.1 rewrite is still uncommitted,
+  mixed with play changes in the working tree.
 - 2026-11-05: Q14 and Q15 answered (the recommendations). S3.9 done: the
   Echo summon, and `get_saving_throw_modifier` on `CharacterView`. S3.8 now
   says it adds `SummonCost.amount` (Q15) once S2.5 and S4.6 are in.

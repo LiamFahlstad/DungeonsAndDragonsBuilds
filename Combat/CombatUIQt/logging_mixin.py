@@ -36,6 +36,7 @@ from .stats import (
     spell_slots_used_key,
 )
 from .state import CombatWindowState
+from .turns_mixin import INITIATIVE_KEY
 
 # The combatant key of the slots each slot action changes.
 _SLOT_POOLS = {
@@ -233,6 +234,9 @@ class LoggingMixin(CombatWindowState):
         self.characters = players + data.get("combatants", [])
         player_state = data.get(PLAYER_FIGHT_STATE_KEY, {})
         for char in self.characters:
+            # A continued fight knows its order, not the rolls behind it; a
+            # player's roll may be from an earlier fight in this window.
+            char.pop(INITIATIVE_KEY, None)
             char["spell_slots"] = _slots_by_level(char.get("spell_slots"))
             if char.get("_is_player"):
                 char["pact_slots"] = _slots_by_level(char.get("pact_slots"))
@@ -546,6 +550,11 @@ class LoggingMixin(CombatWindowState):
                 pass  # a form their character sheet no longer has
         elif action == Action.LEAVE_WILD_SHAPE:
             leave_form(char)
+        elif action in (Action.SUMMON, Action.DISMISS):
+            # Nothing on the owner: what paid for it is logged on its own,
+            # and the next encounter's carry-over reads which summons are out
+            # (SummonsMixin._carry_summons_over).
+            pass
 
     def _compute_player_log_stats(self) -> dict[str, dict]:
         """Aggregate lifetime stats per character name: the sessions archived

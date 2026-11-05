@@ -29,6 +29,13 @@ class Action(str, Enum):
     # leaving it (Combat/WildShape.py).
     WILD_SHAPE = "wild_shape"
     LEAVE_WILD_SHAPE = "leave_wild_shape"
+    # A player's summons coming out or leaving the fight (Combat/Summons.py),
+    # logged on their owner with {"source": "feature:Drake Companion",
+    # "choice": ..., "slot": ..., "names": [...]}; a summon made before the
+    # fight adds "before_combat": True, one replaced by another
+    # "replaced": True. What paid for it is logged on its own, as before.
+    SUMMON = "summon"
+    DISMISS = "dismiss"
 
 
 class CombatStatus(str, Enum):

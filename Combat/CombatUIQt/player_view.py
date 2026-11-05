@@ -7,10 +7,17 @@ its speed, the damage it's taken, a word for how hurt it is, what those two and
 attack rolls have shown of its maximum HP and AC, and what the log has shown of
 its resistances and immunities. In both, a monster they can't perceive, or
 the GM has hidden from them until it joins the fight, isn't listed, and
-nothing else of its stat block is shown."""
+nothing else of its stat block is shown.
+
+A player's own summon (its owner, owner_name, is a player in the fight) is
+theirs to know: it's listed as a player is, with its numbers and conditions in
+both views. While it's out (is_out), its whole stat block goes on its row on its
+turn and the one before (its owner's, usually), to plan with: on every row, the
+cards would push the turn order off a TV. One the GM still hides from them
+isn't listed. A monster's summon is a monster."""
 
 import math
-from dataclasses import dataclass, replace
+from dataclasses import asdict, dataclass, replace
 from typing import Callable
 
 from PyQt6.QtCore import Qt
@@ -26,10 +33,18 @@ from PyQt6.QtWidgets import (
 )
 
 from Combat.Definitions import CombatStatus
+from Combat.Summons import is_out, owner_name
 from Core.Definitions import Condition
+from Core.Rules import ability_modifier
 from .attack_rolls import known_ac_text
 from .cards_mixin import _hp_chunk_color
-from .dialogs_mixin import _display, _speed_text
+from .dialogs_mixin import (
+    _MONSTER_ABILITY_SECTIONS,
+    _ability_entry,
+    _damage_entry_text,
+    _display,
+    _speed_text,
+)
 from .monster_actions import first_number
 from .turns_mixin import initiative_units, unit_label
 
@@ -66,6 +81,7 @@ QLabel#playerViewMark { color: #c9a84c; font-weight: bold; }
 QLabel#playerViewConditions { color: #a0c4ff; font-size: 22px; }
 QLabel#playerViewDetails { color: #a0a0b0; font-size: 20px; }
 QLabel#playerViewMember { font-size: 22px; }
+QLabel#playerViewCard { color: #c8c8d8; font-size: 18px; }
 QProgressBar {
     background-color: #8a8a9a;
     font-size: 22px;
@@ -91,6 +107,18 @@ class PlayerViewRow:
     health: tuple[PlayerViewHealth, ...]  # one bar for each combatant on this turn
     conditions: tuple[str, ...]
     turn: str  # "now", "next" or ""
+    # A player's summon's stat block, a line each ("Dreadful Swipe (Action).
+    # Melee Attack Roll: +5, ..."), on its turn and the one before; () for
+    # everyone else.
+    card: tuple[str, ...] = ()
+
+    def as_json(self) -> dict:
+        """The row as the player link sends it. Only a row with a stat block
+        has a "card", so nobody else's row tells anything new."""
+        data = asdict(self)
+        if not self.card:
+            del data["card"]
+        return data
 
 
 def _health_text(char: dict, death_state: str) -> str:
@@ -137,6 +165,28 @@ def _can_be_seen(char: dict) -> bool:
         return True
     states = set(char.get("conditions", [])) | set(char.get("visibility_states", []))
     return not char.get("hidden_from_players") and not states & HIDDEN_STATES
+
+
+def _player_names(chars: list[dict]) -> set[str]:
+    return {c["name"] for c in chars if c.get("_is_player")}
+
+
+def _is_players_summon(char: dict, players: set[str]) -> bool:
+    """Whether char is the summon of one of `players` (their names)."""
+    return not char.get("_is_player") and owner_name(char) in players
+
+
+def _is_known(char: dict, players: set[str]) -> bool:
+    """Whether the players know all of char: theirs, or a summon of theirs."""
+    return bool(char.get("_is_player")) or _is_players_summon(char, players)
+
+
+def _seen(char: dict, players: set[str]) -> bool:
+    """_can_be_seen, where a player's summon is seen as its owner is: wherever
+    it is, once the GM no longer hides it from them."""
+    if _is_players_summon(char, players):
+        return not char.get("hidden_from_players")
+    return _can_be_seen(char)
 
 
 def _highest_max_hp(lost: int, percent: int) -> int:
@@ -279,13 +329,80 @@ def _limited_view(
     )
 
 
-def _unit_conditions(unit: list[dict]) -> tuple[str, ...]:
+def _unit_conditions(unit: list[dict], players: set[str]) -> tuple[str, ...]:
     names: dict[str, None] = {}
     for char in unit:
         for cond in char.get("conditions", []):
-            if char.get("_is_player") or cond in SHOWN_MONSTER_CONDITIONS:
+            if _is_known(char, players) or cond in SHOWN_MONSTER_CONDITIONS:
                 names[cond] = None
     return tuple(names)
+
+
+def _ability_scores_text(char: dict) -> str:
+    """char's scores, "STR 11 (+0) · DEX 10 (+0) · ...", and "Saving Throws
+    CON +5" for the saves that aren't just the modifier."""
+    scores = {
+        name: score
+        for name, score in (char.get("Ability Scores") or {}).items()
+        if isinstance(score, int)
+    }
+    modifiers = {name: ability_modifier(score) for name, score in scores.items()}
+    parts = [
+        _unbroken(f"{name} {score} ({modifiers[name]:+})")
+        for name, score in scores.items()
+    ]
+    saves = [
+        f"{name} {bonus:+}"
+        for name, bonus in (char.get("Saving Throws") or {}).items()
+        if bonus != modifiers.get(name)
+    ]
+    if saves:
+        parts.append(_unbroken("Saving Throws ") + ", ".join(saves))
+    return " · ".join(parts)
+
+
+def summon_card(char: dict) -> tuple[str, ...]:
+    """A player's summon's stat block as lines of plain text, as the GM's card
+    has it: its scores, skills, defenses, senses and languages, then each
+    trait and action. Its HP, AC, size and speed are on its row already."""
+    lines = [_ability_scores_text(char)]
+    if char.get("skills"):
+        lines.append(
+            "Skills "
+            + ", ".join(f"{_display(k)} {v:+}" for k, v in char["skills"].items())
+        )
+    for key, label in (
+        ("damage_vulnerabilities", "Vulnerabilities"),
+        ("damage_resistances", "Resistances"),
+        ("damage_immunities", "Damage Immunities"),
+    ):
+        if char.get(key):
+            lines.append(f"{label} " + "; ".join(map(_damage_entry_text, char[key])))
+    if char.get("condition_immunities"):
+        immune = ", ".join(_display(c) for c in char["condition_immunities"])
+        lines.append(f"Condition Immunities {immune}")
+    for key, label in (("senses", "Senses"), ("languages", "Languages")):
+        if char.get(key):
+            lines.append(f"{label} {char[key]}")
+    for key, section in _MONSTER_ABILITY_SECTIONS:
+        # "Bonus Actions" -> "(Bonus Action)"; a trait needs no word.
+        kind = "" if key == "traits" else f" ({section.removesuffix('s')})"
+        for ability in char.get(key) or []:
+            name, description = _ability_entry(ability)
+            lines.append(f"{name}{kind}. {description}".strip())
+    return tuple(line for line in lines if line)
+
+
+def _unit_card(unit: list[dict], players: set[str]) -> tuple[str, ...]:
+    """The stat block of each of the players' summons in unit that's out, a
+    line once if they share it."""
+    lines = [
+        line
+        for c in unit
+        if _is_players_summon(c, players) and is_out(c)
+        for line in summon_card(c)
+    ]
+    return tuple(dict.fromkeys(lines))
 
 
 def player_view_rows(
@@ -300,9 +417,12 @@ def player_view_rows(
     of those they can see, so a hidden monster's place doesn't give it away.
     On that monster's own turn, "now" stays where it was, for the same reason.
     `limited` is the Limited view, for monsters' rows: a player is never in an
-    initiative group, so a row is all monsters or one player."""
+    initiative group, so a row is all monsters or one player. A player's
+    summon's row is as its owner's, with its stat block while it's out and
+    its turn is now or next."""
+    players = _player_names(order)
     next_unit = next(
-        (unit for unit in upcoming if any(_can_be_seen(c) for c in unit)), []
+        (unit for unit in upcoming if any(_seen(c, players) for c in unit)), []
     )
     units = initiative_units(order)
     now_index = next(
@@ -313,13 +433,13 @@ def player_view_rows(
         (
             units[(now_index - back) % len(units)]
             for back in range(len(units))
-            if any(_can_be_seen(c) for c in units[(now_index - back) % len(units)])
+            if any(_seen(c, players) for c in units[(now_index - back) % len(units)])
         ),
         [],
     )
     rows = []
     for unit in units:
-        shown = [c for c in unit if _can_be_seen(c)]
+        shown = [c for c in unit if _seen(c, players)]
         if not shown:
             continue
         turn = ""
@@ -327,14 +447,19 @@ def player_view_rows(
             turn = "now"
         elif any(c is n for c in unit for n in next_unit):
             turn = "next"
-        if limited and not shown[0].get("_is_player"):
+        if limited and not all(_is_known(c, players) for c in shown):
             details, health = _limited_view(shown, death_state)
         else:
             details = _unit_details(shown)
             health = tuple(_health(c, death_state(c)) for c in shown)
         rows.append(
             PlayerViewRow(
-                unit_label(shown), details, health, _unit_conditions(shown), turn
+                unit_label(shown),
+                details,
+                health,
+                _unit_conditions(shown, players),
+                turn,
+                _unit_card(shown, players) if turn else (),
             )
         )
     return rows
@@ -373,18 +498,22 @@ def may_read_log_line(
     `value`, since the text can't be trusted to name it: it may already be gone,
     and "keeps concentration" doesn't say Concentrating. The whole text is also
     checked, not just `character`: a hidden monster can be named as the source
-    of a line about someone else, or in its turn's prefix."""
-    private = {c["name"] for c in chars if not _can_be_seen(c)}
+    of a line about someone else, or in its turn's prefix.
+
+    A line about a player's summon is as readable as one about a player, once
+    the GM no longer hides it from them."""
+    players = _player_names(chars)
+    private = {c["name"] for c in chars if not _seen(c, players)}
     for unit in initiative_units(chars):
         group = unit[0].get("initiative_group")
-        if group and not any(_can_be_seen(c) for c in unit):
+        if group and not any(_seen(c, players) for c in unit):
             private.add(group)
     if character in private:
         return False
     condition = value.get("condition", "") if isinstance(value, dict) else ""
     # Every one by that name: nothing stops two monsters sharing one.
     for subject in chars:
-        if subject["name"] != character or subject.get("_is_player"):
+        if subject["name"] != character or _is_known(subject, players):
             continue
         if condition and condition not in LOGGED_MONSTER_CONDITIONS:
             return False
@@ -472,6 +601,12 @@ class PlayerViewWindow(QWidget):
             conditions.setObjectName("playerViewConditions")
             conditions.setWordWrap(True)
             grid.addWidget(conditions, 3, 1, 1, 2)
+        if row.card:
+            card = QLabel("\n".join(row.card))
+            card.setObjectName("playerViewCard")
+            card.setTextFormat(Qt.TextFormat.PlainText)
+            card.setWordWrap(True)
+            grid.addWidget(card, 4, 1, 1, 2)
         return frame
 
     def show_on_spare_screen(self, main_window: QWidget):

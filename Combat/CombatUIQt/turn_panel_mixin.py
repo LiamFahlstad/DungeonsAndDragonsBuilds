@@ -6,7 +6,6 @@ the combatant's public keys, so undo and a saved fight keep them. The encounter
 log fills the bottom of the column, with its own scrollbar."""
 
 import random
-from dataclasses import asdict
 from textwrap import shorten
 
 from PyQt6.QtCore import Qt
@@ -438,7 +437,7 @@ class TurnPanelMixin(CombatWindowState):
 
     def _publish_player_view(self, title: str, rows: list[PlayerViewRow]):
         self._player_server.feed.publish(
-            title, [asdict(row) for row in rows], self._public_log()
+            title, [row.as_json() for row in rows], self._public_log()
         )
 
     def _start_player_server(self, host: str):

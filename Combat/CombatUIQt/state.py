@@ -292,6 +292,12 @@ class CombatWindowState:
     def _add_initiative_row(self, unit: list[dict]):
         raise NotImplementedError("TurnsMixin._add_initiative_row")
 
+    def _remove_initiative_row(self, char: dict):
+        raise NotImplementedError("TurnsMixin._remove_initiative_row")
+
+    def _roll_into_turn_order(self, char: dict) -> int:
+        raise NotImplementedError("TurnsMixin._roll_into_turn_order")
+
     def _check_start_button(self):
         raise NotImplementedError("TurnsMixin._check_start_button")
 

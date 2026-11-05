@@ -311,6 +311,16 @@ Archdruid (Druid 20), Evergreen Wild Shape: 'Whenever you roll Initiative and ha
 **History**
 - 2026-11-04 main session (Claude Opus 5.5): found
 
+### DI-049 · Player Screen overflows a 1080p TV in a large encounter (no scroll, rows squash)
+- **Status:** open
+- **Area:** combat-simulator
+- **Where:** `Combat/CombatUIQt/player_view.py`
+
+PlayerViewWindow lays its rows in a plain QVBoxLayout with no scroll area. time_loop_pr_square (4 players, 2 summons, 3 monster groups of 2) needs about 1130 px of rows at 1920x1080 before any summon card, so the window either grows past the screen or squashes word-wrapped labels (a summon card was cut off mid-line when the window was held at 1400 px). Fix idea: scale fonts down, or a two-column layout, when the rows don't fit the screen's height.
+
+**History**
+- 2026-11-05 combat-simulator: found
+
 ### DI-050 · Combat UI: summon menu entry reads "Summon Summon Wildfire Spirit"
 - **Status:** open
 - **Area:** combat-simulator
@@ -320,6 +330,16 @@ The card menu labels a summon's entry f"Summon {feature.name} (...)". The featur
 
 **History**
 - 2026-11-05 main-session: found
+
+### DI-051 · An Invisible player's summon attacking records nothing for the Limited player view
+- **Status:** open
+- **Area:** combat-simulator
+- **Where:** `Combat/CombatUIQt/damage_mixin.py:175`
+
+damage_mixin only notes what players learn from an attack roll (known AC etc.) when _can_be_seen(source). Since S2.9 a player's summon is shown like a player even while Invisible, so the players see its roll, but an Invisible summon's attack notes nothing. Fix: use player_view's player-aware check (_is_known / _seen) for the source there.
+
+**History**
+- 2026-11-05 combat-simulator: found
 
 ## Fixed
 
@@ -492,7 +512,7 @@ _restore_feature_uses restored every spent use of each short-or-long-rest featur
 - 2026-11-04 main session (Claude Opus 5.5): found
 
 ### DI-045 · Combat UI: player companions roll their own initiative instead of acting on their owner's turn
-- **Status:** fixed · 2026-11-04 · uncommitted
+- **Status:** fixed · 2026-11-04 · 8044cc59
 - **Area:** combat-simulator
 - **Where:** `Combat/CombatUIQt/turns_mixin.py:432`, `Combat/PlayerCombatant.py`
 
@@ -502,9 +522,10 @@ Companions from Feature.companion() (Dessie's Reanimated Companion, Hanna's Drak
 - 2026-11-04 main-session: found
 - 2026-11-04 main-session: marked in-progress
 - 2026-11-04 main-session: marked fixed
+- 2026-11-04 main-session: marked fixed in 8044cc59
 
 ### DI-046 · Combat UI: a player's companion comes back fresh in every encounter (HP, death, summon use not carried over)
-- **Status:** fixed · 2026-11-04 · uncommitted
+- **Status:** fixed · 2026-11-04 · 8044cc59
 - **Area:** combat-simulator
 - **Where:** `Combat/EncounterLogs.py:92`, `CharacterContent/Features/SubClassFeatures/Artificer/ArtificerReanimatorFeatures.py:241`, `CharacterContent/Features/SubClassFeatures2014/Ranger/RangerDrakewardenFeatures.py:170`
 
@@ -515,9 +536,10 @@ prepared_log puts each companion in at full HP, hidden, in every encounter's log
 - 2026-11-04 main-session: marked in-progress
 - 2026-11-04 main-session: marked fixed
 - 2026-11-04 main-session: Fixed per feature (Feature.companion_rules): a Reanimated Companion can't be re-made while out and ends at a long rest; a drake is replaced by a new summon and stays out past a long rest until 0 HP. Summon spends the use, else the lowest slot (no slot-level choice for the GM).
+- 2026-11-04 main-session: marked fixed in 8044cc59
 
 ### DI-047 · Combat UI: Drake Companion's Draconic Essence type is fixed by the build, not chosen per summon
-- **Status:** fixed · 2026-11-04 · uncommitted
+- **Status:** fixed · 2026-11-04 · 8044cc59
 - **Area:** combat-simulator
 - **Where:** `CharacterContent/Features/SubClassFeatures2014/Ranger/RangerDrakewardenFeatures.py:228`
 
@@ -527,9 +549,10 @@ Drake Companion: 'Whenever you summon the drake, choose a damage type listed in 
 - 2026-11-04 main-session: found
 - 2026-11-04 main-session: marked in-progress
 - 2026-11-04 main-session: marked fixed
+- 2026-11-04 main-session: marked fixed in 8044cc59
 
 ### DI-048 · run-apps screenshot.py combat prepares logs without the party, so players and companions never show
-- **Status:** fixed · 2026-11-04 · uncommitted
+- **Status:** fixed · 2026-11-04 · e6fab83b
 - **Area:** main-session
 - **Where:** `.claude/skills/run-apps/screenshot.py:102`
 
@@ -539,6 +562,7 @@ The combat screenshot prepares the encounter log with players=[] and passes char
 - 2026-11-04 main-session: found
 - 2026-11-04 main-session: marked in-progress
 - 2026-11-04 main-session: marked fixed
+- 2026-11-04 main-session: marked fixed in e6fab83b
 
 ## Won't fix
 

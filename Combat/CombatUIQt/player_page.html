@@ -84,6 +84,13 @@
     color: #a0c4ff;
     font-size: 15px;
   }
+  .card {
+    grid-column: 2 / 4;
+    white-space: pre-line;
+    overflow-wrap: anywhere;
+    color: #c8c8d8;
+    font-size: 14px;
+  }
   #log { max-width: 640px; margin-top: 14px; }
   summary { padding: 8px 0; color: #c9a84c; font-weight: bold; cursor: pointer; }
   .round { margin-bottom: 6px; }
@@ -192,6 +199,9 @@ function rowElement(row) {
   element.append(health);
   if (row.conditions.length) {
     element.append(cell("conditions", row.conditions.join(", ")));
+  }
+  if (row.card) {
+    element.append(cell("card", row.card.join("\n")));
   }
   return element;
 }

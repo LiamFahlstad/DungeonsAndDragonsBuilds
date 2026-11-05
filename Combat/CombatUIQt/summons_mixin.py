@@ -5,13 +5,22 @@ back in the next encounter as they were, and joining a fight already summoned.
 A summon is made when its owner summons it: from Enable Feature (Drake
 Companion, Reanimated Companion) or from the owner's or the summon's card
 menu, which also offers the choices made when it's summoned (a drake's
-Draconic Essence). It spends the feature's use and its Action, or a spell slot
-once the use is spent, as the features allow, and the summon comes out at
-full Hit Points right after its owner in the turn order. With as many out as
-its feature allows, summoning another replaces the oldest (a drake) or isn't
-possible (a Reanimated Companion: greyed out). The summon's card menu also
-dismisses it. The feature's use and the slot are logged with actions, so the
-player log's replay spends them for the rest of the day too.
+Draconic Essence). It's paid for with the first of its SummonSpec's costs the
+owner can pay (cost_options: the feature's use, else their lowest spell slot);
+the card menu's "using..." entry pays another way. It spends the feature's
+Action too, and the summon comes out at full Hit Points right after its owner
+in the turn order, or, rolling its own initiative (SummonTurn.OWN_INITIATIVE),
+where its roll puts it (a row of its own on the initiative screen, rolled with
+the monsters). With as many out as its feature allows, summoning another
+replaces the oldest (a drake) or isn't possible (a Reanimated Companion:
+greyed out). The summon's card menu also dismisses it.
+
+The feature's use and the slot are logged with their own actions, so the
+player log's replay spends them for the rest of the day too; the summon
+itself is logged as Action.SUMMON, and dismissing or replacing one as
+Action.DISMISS, which the next encounter's carry-over reads: one dismissed
+isn't brought back. A summon carried over keeps the card it was built with
+(only summoning it again rebuilds it from the owner's sheet).
 
 Add Combatant's "Already summoned..." adds one made before the fight (any of
 the party's, with its choice) at full Hit Points, spending nothing.
@@ -24,14 +33,19 @@ from PyQt6.QtGui import QCursor
 from PyQt6.QtWidgets import QMenu
 
 import Combat.PlayerLog as PlayerLog
+from Combat.Definitions import Action
 from Combat.Summons import (
     CHOICE_KEY,
     SummonOption,
+    SummonPayment,
     carried_state,
     choice_of,
+    cost_options,
     create,
     feature_summons,
+    follows_owner,
     is_out,
+    keep_card,
     last_seen,
     make_room,
     mark,
@@ -39,15 +53,15 @@ from Combat.Summons import (
     old_name,
     owner_name,
     place_after_owners,
-    set_stat_block,
     source_for,
+    summon_event,
     summon_name,
 )
 from Model.Character import Character
 from Model.Content.Feature import Feature
 from Model.Content.Summons import OnZeroHp, SummonContext, SummonLifetime, SummonSpec
 
-from .effect_options import feature_action_cost
+from .effect_options import PactSlot, feature_action_cost
 from .state import CombatWindowState
 from .stats import _default_stats
 from .styles import QSS
@@ -98,26 +112,22 @@ class SummonsMixin(CombatWindowState):
                 same.append(char)
         return same
 
-    def _summon_uses_left(self, owner: dict, feature: Feature) -> int:
-        used = owner.get("feature_uses_used", {}).get(feature.name, 0)
-        return max(feature.number_of_uses(owner["_stat_block"]) - used, 0)
-
     @staticmethod
-    def _lowest_slot(owner: dict) -> int | None:
-        """The lowest level owner has a spell slot (or Pact Magic slot) of."""
-        levels = [
-            int(level)
-            for pool in ("spell_slots", "pact_slots")
-            for level, left in owner.get(pool, {}).items()
-            if left > 0 and int(level) >= 1
-        ]
-        return min(levels, default=None)
+    def _payments(
+        owner: dict, feature: Feature, spec: SummonSpec
+    ) -> list[SummonPayment]:
+        """How owner can pay for spec now, cheapest (the default) first."""
+        return cost_options(owner, owner["_stat_block"], feature, spec)
 
-    def _summon_cost_text(self, owner: dict, feature: Feature) -> str:
-        if self._summon_uses_left(owner, feature) > 0:
-            return "1 use left"
-        level = self._lowest_slot(owner)
-        return f"a level {level} slot" if level is not None else "no uses or slots"
+    def _pay_for_summon(self, owner: dict, payment: SummonPayment):
+        """Spend `payment` (logged with its own action, so the replay spends
+        it too). A slot isn't a use of the feature: the replay would count it
+        as one."""
+        if payment.feature_use is not None:
+            self._count_feature_use(owner, payment.feature_use, counts_uses=True)
+        elif payment.slot_level is not None:
+            level = payment.slot_level
+            self._spend_slot(owner, PactSlot(level) if payment.pact else level)
 
     def _room_for(
         self, owner: dict, feature: Feature, spec: SummonSpec, ctx: SummonContext
@@ -160,19 +170,53 @@ class SummonsMixin(CombatWindowState):
         spec: SummonSpec,
         current: str | None,
     ):
-        """menu's entry that summons spec (a submenu of its choices, `current`
-        checked), greyed out when it can't be summoned now."""
+        """menu's entry that summons spec, paid the cheapest way (a submenu
+        of its choices, `current` checked), and, when owner can pay another
+        way too, a "using..." submenu of those; greyed out when it can't be
+        summoned now."""
+        greyed = None
+        payments = self._payments(owner, feature, spec)
         if self._room_for(owner, feature, spec, SummonContext()) is None:
-            action = menu.addAction(f"Summon {feature.name} (one is already out)")
+            greyed = f"{_summon_label(feature)} (one is already out)"
+        elif not payments:
+            greyed = f"{_summon_label(feature)} ({_unpaid_text(feature, spec)})"
+        if greyed is not None:
+            action = menu.addAction(greyed)
             assert action is not None  # addAction with a text always makes one
             action.setEnabled(False)
             return
-        label = f"Summon {feature.name} ({self._summon_cost_text(owner, feature)})"
+        label = f"{_summon_label(feature)} ({payments[0].text})"
+        self._add_summon_entry(menu, label, owner, sheet, feature, spec, current, None)
+        if len(payments) > 1:
+            other = menu.addMenu(f"{_summon_label(feature)} using…")
+            assert other is not None  # addMenu with a title always makes one
+            other.setStyleSheet(QSS)
+            for payment in payments[1:]:
+                self._add_summon_entry(
+                    other, payment.text, owner, sheet, feature, spec, current, payment
+                )
+
+    def _add_summon_entry(
+        self,
+        menu: QMenu,
+        label: str,
+        owner: dict,
+        sheet: Character,
+        feature: Feature,
+        spec: SummonSpec,
+        current: str | None,
+        payment: SummonPayment | None,
+    ):
+        """menu's entry `label` that summons spec paid with `payment` (None:
+        the cheapest way): a submenu of its choices, `current` checked, when
+        it has any."""
         choices = spec.choices(sheet)
         if not choices:
             menu.addAction(
                 label,
-                lambda _=False, o=owner, f=feature, s=spec: self._summon(o, f, s, None),
+                lambda _=False, o=owner, f=feature, s=spec, p=payment: self._summon(
+                    o, f, s, None, p
+                ),
             )
             return
         submenu = menu.addMenu(label)
@@ -184,8 +228,8 @@ class SummonsMixin(CombatWindowState):
             action.setCheckable(True)
             action.setChecked(current == choice)
             action.triggered.connect(
-                lambda _=False, o=owner, f=feature, s=spec, ch=choice: self._summon(
-                    o, f, s, ch
+                lambda _=False, o=owner, f=feature, s=spec, ch=choice, p=payment: (
+                    self._summon(o, f, s, ch, p)
                 )
             )
 
@@ -207,19 +251,30 @@ class SummonsMixin(CombatWindowState):
 
     @undoable
     def _summon(
-        self, owner: dict, feature: Feature, spec: SummonSpec, choice: str | None
+        self,
+        owner: dict,
+        feature: Feature,
+        spec: SummonSpec,
+        choice: str | None,
+        payment: SummonPayment | None = None,
     ):
-        """owner summons spec of feature (with `choice`): the feature's use
-        or, with none left, their lowest spell slot, and its Action; the
-        summon comes out at full Hit Points right after owner in the turn
-        order, replacing the oldest one when there's no room for it."""
+        """owner summons spec of feature (with `choice`), paid with `payment`
+        (None: the cheapest way they can, cost_options) and the feature's
+        Action; the summon comes out at full Hit Points in the turn order
+        (right after owner, or where its own initiative roll puts it),
+        replacing the oldest one when there's no room for it."""
         if self.phase == "PARTY":
             self._show_status("No summon: open an encounter first.")
             return
         if self._char_death_state(owner) != "alive":
             self._show_status(f"No summon: {owner['name']} is down.")
             return
-        ctx = SummonContext(choice=choice)
+        payments = self._payments(owner, feature, spec)
+        if payment is None and payments:
+            payment = payments[0]
+        # A slot that pays for it is the slot it's made with.
+        slot = payment.slot_level if payment is not None else None
+        ctx = SummonContext(choice=choice, slot_level=slot)
         gone = self._room_for(owner, feature, spec, ctx)
         if gone is None:
             out = [c for c in self._same_summons(owner, feature, spec) if is_out(c)]
@@ -228,26 +283,27 @@ class SummonsMixin(CombatWindowState):
                 f" {feature.name} can't make another while it is."
             )
             return
-        if self._summon_uses_left(owner, feature) > 0:
-            self._count_feature_use(owner, feature.name, counts_uses=True)
-        else:
-            level = self._lowest_slot(owner)
-            if level is None:
-                self._show_status(
-                    f"No summon: {owner['name']} has no use of {feature.name}"
-                    " and no spell slot left."
-                )
-                return
-            # Not a use of the feature: the replay would count it as one.
-            self._spend_slot(owner, level)
+        if payment is None:
+            self._show_status(
+                f"No summon: {owner['name']} has {_unpaid_text(feature, spec)}."
+            )
+            return
+        if payment not in payments:
+            self._show_status(
+                f"No summon: {owner['name']} can't pay with {payment.text} now."
+            )
+            return
+        self._pay_for_summon(owner, payment)
         action_cost = feature_action_cost(feature)
         if action_cost is not None:
             self._add_action_use(action_cost, owner)
-        new = self._bring_in(owner, feature, spec, ctx, gone)
+        new, rolls = self._bring_in(owner, feature, spec, ctx, gone)
         chosen = f" ({choice})" if choice else ""
         self._log_event(
-            f"{owner['name']} summons {_names(new)}{chosen}",
-            character=new[0]["name"] if new else None,
+            f"{owner['name']} summons {_names(new)}{chosen}{_rolled(rolls)}",
+            character=owner["name"],
+            action=Action.SUMMON,
+            value=summon_event(new, initiative=rolls),
         )
         self._rebuild_cards()
         if self.phase == "COMBAT":
@@ -261,15 +317,18 @@ class SummonsMixin(CombatWindowState):
         spec: SummonSpec,
         ctx: SummonContext,
         gone: list[dict],
-    ) -> list[dict]:
-        """Make spec's creatures and put them in the fight after owner, once
+    ) -> tuple[list[dict], dict[str, int]]:
+        """Make spec's creatures and put them in the fight (_join_fight), once
         `gone` (the ones they replace, logged) and the ones of spec that
         aren't out and won't be back (an older log's hidden one, a drake at
-        0 Hit Points) are out of it. Returns the new ones."""
+        0 Hit Points) are out of it. Returns the new ones, and the initiative
+        each one that rolls its own rolled."""
         for char in gone:
             self._log_event(
                 f"{char['name']} vanishes: {owner['name']} summons another",
-                character=char["name"],
+                character=owner["name"],
+                action=Action.DISMISS,
+                value=summon_event([char], replaced=True),
             )
             self._remove_from_fight(char)
         for char in self._same_summons(owner, feature, spec):
@@ -279,21 +338,53 @@ class SummonsMixin(CombatWindowState):
                 self._remove_from_fight(char)
         taken = {c["name"] for c in self.characters}
         new = create(owner["_stat_block"], feature, spec, ctx, taken)
-        self._join_fight(new)
-        return new
+        return new, self._join_fight(new)
 
-    def _join_fight(self, new: list[dict]):
-        """Put the summons `new` in the window right after their owners, and
-        in the turn order when the fight is on, keeping whoever's turn it is."""
+    def _join_fight(self, new: list[dict]) -> dict[str, int]:
+        """Put the summons `new` in the window and, when the fight is on, in
+        the turn order, keeping whoever's turn it is: right after their
+        owners, or, one that rolls its own initiative, where its roll puts it
+        (before the fight, a row of its own on the initiative screen).
+        Returns each roll, by name."""
         for char in new:
             char["stats"] = _default_stats()
+        own = [c for c in new if not follows_owner(c)]
+        follow = [c for c in new if follows_owner(c)]
+        rolls: dict[str, int] = {}
         if self.phase == "COMBAT" and self.initiative_order:
             # Whoever's turn it is keeps it.
             current = self.initiative_order[self.current_turn_idx]
-            self.initiative_order = place_after_owners(self.initiative_order, new)
+            self.initiative_order = place_after_owners(self.initiative_order, follow)
             at = next(i for i, c in enumerate(self.initiative_order) if c is current)
             self.current_turn_idx = self._turn_span(at)[0]
+            for char in own:
+                rolls[char["name"]] = self._roll_into_turn_order(char)
+                self._place_as_in_turn_order(char)
+            self.characters[:] = place_after_owners(self.characters, follow)
+            return rolls
         self.characters[:] = place_after_owners(self.characters, new)
+        if self.phase == "INITIATIVE":
+            for char in own:
+                self._add_initiative_row([char])
+            if own:
+                self._check_start_button()
+        return rolls
+
+    def _place_as_in_turn_order(self, char: dict):
+        """Put char (in the turn order, not yet in the window) in the window
+        where it is in the turn order: before the next one after it there."""
+        order = self.initiative_order
+        at = next(i for i, c in enumerate(order) if c is char)
+        later = next(
+            (
+                i
+                for c in order[at + 1 :]
+                for i, w in enumerate(self.characters)
+                if w is c
+            ),
+            len(self.characters),
+        )
+        self.characters.insert(later, char)
 
     def _remove_from_fight(self, char: dict):
         """Take char out of the window and the turn order, keeping whoever's
@@ -313,6 +404,8 @@ class SummonsMixin(CombatWindowState):
                     i for i, c in enumerate(self.initiative_order) if c is current
                 )
                 self.current_turn_idx = self._turn_span(at)[0]
+        if self.phase == "INITIATIVE":
+            self._remove_initiative_row(char)
         self.characters[:] = [c for c in self.characters if c is not char]
         if self.selected_character is char:
             self.selected_character = None
@@ -326,9 +419,14 @@ class SummonsMixin(CombatWindowState):
     @undoable
     def _dismiss_summon(self, summon: dict):
         """Its owner dismisses summon: it leaves the fight."""
-        owner = owner_name(summon) or "Its owner"
+        owner = owner_name(summon)
         # Logged while it's still there, so players read it if they saw it.
-        self._log_event(f"{owner} dismisses {summon['name']}", character=summon["name"])
+        self._log_event(
+            f"{owner or 'Its owner'} dismisses {summon['name']}",
+            character=owner or summon["name"],
+            action=Action.DISMISS,
+            value=summon_event([summon]),
+        )
         self._remove_from_fight(summon)
         self._save_fight_state()
         self._rebuild_cards()
@@ -361,8 +459,10 @@ class SummonsMixin(CombatWindowState):
     def _carry_summons_over(self, log_path: Path):
         """Start the encounter log at `log_path` (one not started yet) with
         the party's summons the last encounter left out, as it left them:
-        their Hit Points, conditions and choice. A long rest since ends a
-        Reanimated Companion and rests a drake (its SummonSpec's lifetime)."""
+        their card (as it was built), Hit Points, conditions and choice. One
+        dismissed or replaced since (Action.DISMISS) stays gone (last_seen).
+        A long rest since ends a Reanimated Companion and rests a drake (its
+        SummonSpec's lifetime)."""
         if not self.player_log_file:
             return
         ref = PlayerLog.log_ref(self.player_log_file, log_path)
@@ -406,7 +506,7 @@ class SummonsMixin(CombatWindowState):
                         new.append(here)
                     else:
                         mark(here, sheet, feature, spec)
-                        set_stat_block(here, sheet, spec, state.get(CHOICE_KEY))
+                    keep_card(here, seen[0])
                     taken.add(here["name"])
                     here.update(state)
                     del here["hidden_from_players"]
@@ -446,11 +546,13 @@ class SummonsMixin(CombatWindowState):
                 f" {owner['name']}'s is out."
             )
             return
-        new = self._bring_in(owner, feature, spec, ctx, gone)
+        new, rolls = self._bring_in(owner, feature, spec, ctx, gone)
         self._log_event(
-            f"{_names(new)} joins the fight, already summoned",
+            f"{_names(new)} joins the fight, already summoned{_rolled(rolls)}",
             note_turn=False,
-            character=new[0]["name"] if new else None,
+            character=owner["name"],
+            action=Action.SUMMON,
+            value=summon_event(new, before_combat=True, initiative=rolls),
         )
         self._rebuild_cards()
         if self.phase == "COMBAT":
@@ -490,6 +592,37 @@ def _earlier_names(
 
 def _names(chars: list[dict]) -> str:
     return " and ".join(c["name"] for c in chars)
+
+
+def _rolled(rolls: dict[str, int]) -> str:
+    """What a summon line says of the initiative its summons rolled."""
+    if not rolls:
+        return ""
+    if len(rolls) == 1:
+        return f" (initiative {next(iter(rolls.values()))})"
+    return " (initiative " + ", ".join(f"{n} {v}" for n, v in rolls.items()) + ")"
+
+
+def _summon_label(feature: Feature) -> str:
+    """The menu's verb and name for summoning with feature: "Summon Drake
+    Companion", but "Summon Wildfire Spirit" for a feature already named so."""
+    if feature.name.startswith("Summon "):
+        return feature.name
+    return f"Summon {feature.name}"
+
+
+def _unpaid_text(feature: Feature, spec: SummonSpec) -> str:
+    """What owner lacks when they can't pay for spec: "no use of Drake
+    Companion and no spell slot left"."""
+    lacks = []
+    for cost in spec.costs:
+        if cost.spell_slot is None:
+            lacks.append(f"no use of {cost.feature_use or feature.name}")
+        elif cost.spell_slot == 1:
+            lacks.append("no spell slot")
+        else:
+            lacks.append(f"no spell slot of level {cost.spell_slot} or higher")
+    return " and ".join(lacks) + " left"
 
 
 def _ability_name(ability) -> str | None:

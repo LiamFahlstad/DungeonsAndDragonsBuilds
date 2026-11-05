@@ -18,13 +18,17 @@ from PyQt6.QtWidgets import (
 
 from Combat.PlayerLog import has_round_events
 
-from Combat.Summons import numbered, place_after_owners
+from Combat.Summons import follows_owner, numbered, place_after_owners
 
 from .stats import _default_stats
 from .styles import QSS
 from Core.Rules import ability_modifier
 from .state import CombatWindowState
 from .undo import undoable
+
+# Each combatant's initiative roll this fight, once it's started. Not
+# logged ("_"): a fight continued from its log has only the turn order.
+INITIATIVE_KEY = "_initiative"
 
 
 def initiative_units(chars: list[dict]) -> list[list[dict]]:
@@ -318,13 +322,55 @@ class TurnsMixin(CombatWindowState):
             self._initiative_inputs[id(member)] = init_input
 
     def _initiative_row_units(self) -> list[list[dict]]:
-        """The turns that roll initiative: all but players' summons, which
-        go right after their owner (Combat/Summons.py)."""
+        """The turns that roll initiative: all but players' summons that go
+        right after their owner (Combat/Summons.py). One that rolls its own
+        (SummonTurn.OWN_INITIATIVE) rolls with the monsters."""
         return [
             unit
             for unit in initiative_units(self.characters)
-            if self._summon_owner(unit[0]) is None
+            if self._summon_owner(unit[0]) is None or not follows_owner(unit[0])
         ]
+
+    def _remove_initiative_row(self, char: dict):
+        """Take char's row off the initiative screen (a summon dismissed or
+        replaced before the fight), if it has one of its own."""
+        init_input = self._initiative_inputs.get(id(char))
+        if init_input is None:
+            return
+        sharing = [k for k, v in self._initiative_inputs.items() if v is init_input]
+        del self._initiative_inputs[id(char)]
+        self._initiative_hp_inputs.pop(id(char), None)
+        if len(sharing) == 1:
+            # Nobody else rolls with it (an initiative group shares one row).
+            row = init_input.parentWidget()
+            if row is not None:
+                row.hide()
+                row.deleteLater()
+        self._check_start_button()
+
+    def _roll_into_turn_order(self, char: dict) -> int:
+        """Roll char's initiative (a summon with its own, summoned during the
+        fight) and put it in the turn order by it: before the first turn
+        that rolled lower, keeping whoever's turn it is. A turn whose roll
+        isn't known (a fight continued from its log) isn't compared; with
+        none known, it goes last. Returns the roll."""
+        value = random.randint(1, 20) + self._dex_mod(char)
+        char[INITIATIVE_KEY] = value
+        order = self.initiative_order
+        current = order[self.current_turn_idx] if order else None
+        at = next(
+            (
+                self._turn_span(i)[0]
+                for i, c in enumerate(order)
+                if c.get(INITIATIVE_KEY) is not None and c[INITIATIVE_KEY] < value
+            ),
+            len(order),
+        )
+        order.insert(at, char)
+        if current is not None:
+            now = next(i for i, c in enumerate(order) if c is current)
+            self.current_turn_idx = self._turn_span(now)[0]
+        return value
 
     def _unique_name(self, name: str) -> str:
         """name, numbered if it's taken: effects find their targets by name."""
@@ -520,6 +566,9 @@ class TurnsMixin(CombatWindowState):
             except ValueError:
                 value = 0
             order_with_initiative.append((value, unit))
+            for member in unit:
+                # For a summon rolling its own initiative during the fight.
+                member[INITIATIVE_KEY] = value
 
         # Stable sort descending — ties preserve original order
         order_with_initiative.sort(key=lambda x: x[0], reverse=True)
@@ -549,8 +598,11 @@ class TurnsMixin(CombatWindowState):
             )
 
         sorted_chars = [c for _, unit in order_with_initiative for c in unit]
-        # Players' summons take their turn right after their owner's.
-        summons = [c for c in self.characters if self._summon_owner(c)]
+        # Players' summons take their turn right after their owner's (all
+        # but the ones that rolled their own).
+        summons = [
+            c for c in self.characters if self._summon_owner(c) and follows_owner(c)
+        ]
         sorted_chars = place_after_owners(sorted_chars, summons)
 
         # Re-order self.characters in-place to match initiative order

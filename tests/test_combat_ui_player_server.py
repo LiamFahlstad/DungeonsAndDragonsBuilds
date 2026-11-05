@@ -10,7 +10,6 @@ import os
 import re
 import socket
 import threading
-from dataclasses import asdict
 from pathlib import Path
 from typing import NamedTuple
 from urllib.parse import urlsplit
@@ -48,6 +47,7 @@ from Combat.CombatUIQt.player_view import (
     PlayerViewRow,
     PlayerViewWindow,
     _limited_health,
+    may_read_log_line,
     note_health,
     player_view_rows,
 )
@@ -231,7 +231,7 @@ def test_state_is_the_player_screens_rows(fight):
         ui._upcoming_turns(),
         ui._char_death_state,
     )
-    assert state["rows"] == json.loads(json.dumps([asdict(r) for r in filtered]))
+    assert state["rows"] == json.loads(json.dumps([r.as_json() for r in filtered]))
 
 
 def test_a_players_numbers_size_and_speed_are_on_the_page(fight):
@@ -2405,3 +2405,182 @@ def test_a_round_the_reader_opened_or_closed_stays_that_way():
     assert "chosenRounds.set(round.round, !element.open)" in page
     assert "chosenRounds.has(round.round)" in page
     assert "chosenRounds.clear()" in page
+
+
+# ---------------------------------------------------------------------------
+# A player's summon: theirs to know
+
+
+# The stat block the summon fixture gives the Tiger, and its lines on the card.
+_SUMMON_STAT_BLOCK = {
+    "Ability Scores": {"STR": 18, "DEX": 14},
+    "Saving Throws": {"STR": 4, "DEX": 5},
+    "skills": {"Perception": 3},
+    "damage_resistances": _defenses("Cold"),
+    "condition_immunities": ["Charmed"],
+    "senses": "Darkvision 60 ft.",
+    "traits": [{"name": "Keen Smell", "description": "Advantage on smell."}],
+    "actions": [{"name": "Rend", "description": "Melee Attack Roll: +6."}],
+    "bonus_actions": [{"name": "Pounce", "description": "It leaps."}],
+}
+_SUMMON_CARD = [
+    "STR\N{NO-BREAK SPACE}18\N{NO-BREAK SPACE}(+4) · DEX\N{NO-BREAK SPACE}14"
+    "\N{NO-BREAK SPACE}(+2) · Saving\N{NO-BREAK SPACE}Throws\N{NO-BREAK SPACE}DEX +5",
+    "Skills Perception +3",
+    "Resistances Cold",
+    "Condition Immunities Charmed",
+    "Senses Darkvision 60 ft.",
+    "Keen Smell. Advantage on smell.",
+    "Rend (Action). Melee Attack Roll: +6.",
+    "Pounce (Bonus Action). It leaps.",
+]
+
+
+@pytest.fixture
+def summoned(fight):
+    """The fight, with the Pirate a player and the Tiger (12 of 30 HP) the
+    Pirate's summon, out."""
+    ui, pirate, tiger, bandit = fight
+    pirate["_is_player"] = True
+    tiger.update(_SUMMON_STAT_BLOCK, summon_of="Pirate", hp=12, speed_ground_ft=40)
+    ui._refresh_views()
+    return fight
+
+
+def _rows_now(ui) -> list[PlayerViewRow]:
+    return player_view_rows(
+        ui.initiative_order,
+        ui._current_turn_group(),
+        ui._upcoming_turns(),
+        ui._char_death_state,
+        limited=ui.settings.limited_player_view,
+    )
+
+
+@pytest.mark.parametrize("limited_view", [False, True])
+def test_a_players_summon_shows_its_numbers_and_card_in_both_views(
+    summoned, limited_view
+):
+    ui, _, tiger, _ = summoned
+    tiger["conditions"] = ["Prone", "Blessed"]  # a badge, which a monster hides
+    ui.settings.limited_player_view = limited_view
+    ui._refresh_views()
+    assert _row_of(ui, "Tiger") == {
+        "name": "Tiger",
+        "details": "AC 13 · Speed 40 ft.",
+        "health": [
+            {"name": "Tiger", "text": "12 / 30", "percent": 40, "color": "#e67e22"}
+        ],
+        "conditions": ["Prone", "Blessed"],
+        "turn": "next",
+        "card": _SUMMON_CARD,
+    }
+
+
+def test_a_summons_card_is_on_its_turn_and_the_one_before(summoned):
+    """The Pirate's turn, then the Tiger's: then the Bandit's has no room for it."""
+    ui, *_ = summoned
+    cards = []
+    for _ in range(3):
+        cards.append([r.get("card", []) == _SUMMON_CARD for r in _state(ui)["rows"]])
+        ui._advance_turn()
+    assert cards == [[False, True, False], [False, True, False], [False, False, False]]
+    assert _row_of(ui, "Tiger")["turn"] == "next"
+    assert _row_of(ui, "Tiger")["card"] == _SUMMON_CARD
+
+
+def test_the_link_sends_exactly_the_player_screens_rows(summoned):
+    """And a "card" only on the summon's row."""
+    ui, *_ = summoned
+    state = _state(ui)
+    assert state["rows"] == json.loads(json.dumps([r.as_json() for r in _rows_now(ui)]))
+    assert [name for name in _names(state) if "card" in _row_of(ui, name)] == ["Tiger"]
+
+
+def test_the_player_screen_shows_a_summons_card(summoned):
+    ui, *_ = summoned
+    window = PlayerViewWindow(lambda: None)
+    window.show_rows("Round 1", _rows_now(ui))
+    texts = []
+    for i in range(window._rows_layout.count()):
+        item = window._rows_layout.itemAt(i)
+        frame = item.widget() if item is not None else None
+        assert frame is not None
+        texts.append(
+            [label.text() for label in frame.findChildren(QLabel, "playerViewCard")]
+        )
+    assert texts == [[], ["\n".join(_SUMMON_CARD)], []]
+
+
+def test_an_older_logs_companion_is_a_players_summon_too(summoned):
+    ui, _, tiger, _ = summoned
+    tiger["companion_of"] = tiger.pop("summon_of")
+    ui.settings.limited_player_view = True
+    ui._refresh_views()
+    assert _hp(_row_of(ui, "Tiger")) == ["12 / 30"]
+    assert _row_of(ui, "Tiger")["card"] == _SUMMON_CARD
+
+
+def test_a_summon_the_gm_still_hides_isnt_listed_or_read_about(summoned):
+    ui, pirate, tiger, _ = summoned
+    tiger["hidden_from_players"] = True
+    ui._refresh_views()
+    body = _poll(ui).body.decode()
+    assert _names(json.loads(body)) == ["Pirate", "Bandit (Pirate)"]
+    for private in ("Tiger", "Rend", "Keen Smell"):
+        assert private not in body
+    _hit(ui, pirate, tiger)
+    assert "Tiger" not in str(_lines(ui))
+
+
+def test_an_invisible_summon_is_listed_as_its_invisible_owner_would_be(summoned):
+    ui, _, tiger, bandit = summoned
+    tiger["conditions"] = ["Invisible"]
+    ui._refresh_views()
+    assert _row_of(ui, "Tiger")["conditions"] == ["Invisible"]
+    _hit(ui, tiger, bandit)
+    assert "Pirate | Bandit (Pirate) takes from Tiger | 3 Slashing" in _lines(ui)
+
+
+def test_lines_about_a_players_summon_are_read_as_a_players(summoned):
+    ui, pirate, tiger, bandit = summoned
+    chars = ui.characters
+    tiger["conditions"] = ["Blessed"]
+    bandit["conditions"] = ["Blessed"]
+    badge = {"condition": "Blessed"}
+    assert may_read_log_line("Tiger gains Blessed", "Tiger", badge, chars)
+    assert may_read_log_line("Pirate hits Tiger (Blessed)", "Pirate", None, chars)
+    name = bandit["name"]
+    assert not may_read_log_line(f"{name} gains Blessed", name, badge, chars)
+
+
+def test_a_summon_at_0_hp_keeps_its_numbers_but_not_its_card(summoned):
+    """A body that's no longer out has no use for its actions."""
+    ui, _, tiger, _ = summoned
+    tiger["hp"] = 0
+    ui.settings.limited_player_view = True
+    ui._refresh_views()
+    row = _row_of(ui, "Tiger")
+    assert _hp(row) == ["Defeated"]
+    assert row["details"] == "AC 13 · Speed 40 ft."
+    assert "card" not in row
+
+
+@pytest.mark.parametrize("owner", ["Bandit (Pirate)", "Nobody here"])
+def test_a_monsters_summon_is_a_monster(summoned, owner):
+    """Its owner isn't a player in the fight: a monster's, or one whose owner
+    isn't here to know it."""
+    ui, _, tiger, _ = summoned
+    tiger.update(summon_of=owner, conditions=["Prone", "Blessed"])
+    ui.settings.limited_player_view = True
+    ui._refresh_views()
+    body = _poll(ui).body.decode()
+    for private in ("12 / 30", "AC 13", "Rend", "Keen Smell", "Blessed"):
+        assert private not in body
+    row = _row_of(ui, "Tiger")
+    assert _hp(row) == ["Bloodied"]
+    assert row["conditions"] == ["Prone"]
+    assert "card" not in row
+    ui.settings.limited_player_view = False
+    ui._refresh_views()
+    assert "card" not in _row_of(ui, "Tiger")

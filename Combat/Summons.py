@@ -9,13 +9,18 @@ at full Hit Points, named "<owner>'s <spec name>" (numbered when the owner has
 several). Its dict holds its owner's character name (SUMMON_OF_KEY), where it
 came from (SOURCE_KEY, to find the spec again) and the spec's rules it follows
 (lifetime, turn, what 0 Hit Points does), so a saved log replays without the
-sheet. A summon has no initiative of its own: it takes its turn right after
-its owner's (place_after_owners). How many can be out at once, and what
-summoning another does then, is make_room.
+sheet. Most summons have no initiative of their own: they take their turn
+right after their owner's (place_after_owners); one whose spec says
+SummonTurn.OWN_INITIATIVE (follows_owner is False) rolls its own. How many can
+be out at once, and what summoning another does then, is make_room; how a
+feature's summon can be paid for now (its SummonSpec's costs), cost_options.
 
 One that's out stays out as long as its spec's lifetime says (a Reanimated
 Companion until a long rest, a drake until it drops to 0 Hit Points): the next
 encounter re-creates it as the last one left it (carried_state, last_seen).
+Summoning and dismissing are logged as Action.SUMMON and Action.DISMISS
+(summon_event), so one dismissed in a later encounter isn't brought back from
+an earlier one (dismissed).
 
 Older logs call the owner key "companion_of" and the choice key
 "companion_choice" (upgrade_keys reads them), name a summon
@@ -25,13 +30,15 @@ out (is_out). Nothing here imports Qt.
 """
 
 import json
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
+from Combat.Definitions import Action
 from Combat.EncounterLogs import LogJSONEncoder
 from Combat.PlayerCombatant import combatant_from_stat_block
+from Combat.PlayerLog import is_round_key
 from Model.Character import Character
 from Model.Content.Feature import Feature
-from Model.Content.Summons import SummonContext, SummonSpec, WhenFull
+from Model.Content.Summons import SummonContext, SummonSpec, SummonTurn, WhenFull
 
 SUMMON_OF_KEY = "summon_of"
 # "feature:<feature name>" (later "spell:<spell name>").
@@ -47,14 +54,28 @@ ON_ZERO_HP_KEY = "summon_on_zero_hp"
 OLD_KEYS = {"companion_of": SUMMON_OF_KEY, "companion_choice": CHOICE_KEY}
 # What a summon keeps from one encounter to the next.
 CARRIED_KEYS = ("hp", "temp_hp", "conditions", "hidden_from_players", CHOICE_KEY)
-# The keys a summon's card keeps when its stat block is rebuilt.
-_IDENTITY_KEYS = (
+# The keys of a summon's dict that aren't its card (keep_card): who it is,
+# the spec's rules it follows, and its state in a fight.
+_NOT_CARD_KEYS = (
     "name",
     "create_name",
     SUMMON_OF_KEY,
     SOURCE_KEY,
     CHOICE_KEY,
     SLOT_KEY,
+    LIFETIME_KEY,
+    TURN_KEY,
+    ON_ZERO_HP_KEY,
+    "hp",
+    "temp_hp",
+    "conditions",
+    "hidden_from_players",
+    "visibility_states",
+    "death_saves",
+    "death_saves_fail",
+    "death_saves_success",
+    "spell_slots",
+    "stats",
 )
 
 
@@ -68,6 +89,130 @@ class SummonOption:
     feature: Feature
     spec: SummonSpec
     choice: str | None
+
+
+@dataclass(frozen=True)
+class SummonPayment:
+    """One way a player can pay for a feature's summon now (cost_options):
+    a use of a feature, a spell slot, or nothing (a free summon)."""
+
+    # The feature whose use is spent, and how many of its uses are left (only
+    # what the menu says: not part of which way to pay it is).
+    feature_use: str | None = None
+    uses_left: int = field(default=0, compare=False)
+    # Whether that feature is the one that summons (its own use).
+    own_use: bool = False
+    # The level of the slot spent; a Pact Magic slot's when `pact`.
+    slot_level: int | None = None
+    pact: bool = False
+
+    @property
+    def text(self) -> str:
+        """What the card menu says it costs: "1 use left", "a level 2 slot"."""
+        if self.feature_use is not None:
+            uses = f"{self.uses_left} use{'' if self.uses_left == 1 else 's'} left"
+            return uses if self.own_use else f"a {self.feature_use} use, {uses}"
+        if self.slot_level is not None:
+            kind = "Pact Magic slot" if self.pact else "slot"
+            return f"a level {self.slot_level} {kind}"
+        return "free"
+
+
+def cost_options(
+    owner: dict, sheet: Character, feature: Feature, spec: SummonSpec
+) -> list[SummonPayment]:
+    """The ways `owner` (a player's combatant dict, of the character `sheet`)
+    can pay for `feature`'s summon `spec` now, cheapest first: each of
+    spec.costs in its order, a slot cost as each level of slot they have left
+    from its lowest level up (a spell slot before a Pact Magic slot of the
+    same level). [] when they can't pay; a free summon (no costs) costs
+    nothing (one SummonPayment with nothing in it)."""
+    if not spec.costs:
+        return [SummonPayment()]
+    used = owner.get("feature_uses_used", {})
+    features = {f.name: f for f in sheet.iter_features_with_extensions()}
+    features[feature.name] = feature
+    options: list[SummonPayment] = []
+    for cost in spec.costs:
+        found: list[SummonPayment] = []
+        if cost.spell_slot is not None:
+            minimum = cost.spell_slot
+            slots = [
+                (int(level), pact)
+                for pact, pool in ((False, "spell_slots"), (True, "pact_slots"))
+                for level, left in owner.get(pool, {}).items()
+                if left > 0 and int(level) >= minimum
+            ]
+            found = [
+                SummonPayment(slot_level=level, pact=pact)
+                for level, pact in sorted(slots)
+            ]
+        else:
+            name = cost.feature_use or feature.name
+            source = features.get(name)
+            left = 0
+            if source is not None:
+                left = source.number_of_uses(sheet) - used.get(name, 0)
+            if left > 0:
+                found = [
+                    SummonPayment(
+                        feature_use=name,
+                        uses_left=left,
+                        own_use=name == feature.name,
+                    )
+                ]
+        options += [option for option in found if option not in options]
+    return options
+
+
+def follows_owner(char: dict) -> bool:
+    """Whether the summon `char` takes its turn right after its owner's
+    rather than rolling its own initiative (an older log's always does)."""
+    return char.get(TURN_KEY) != SummonTurn.OWN_INITIATIVE.value
+
+
+def summon_event(
+    summons: list[dict],
+    *,
+    before_combat: bool = False,
+    replaced: bool = False,
+    initiative: dict[str, int] | None = None,
+) -> dict[str, object]:
+    """The value of an Action.SUMMON or Action.DISMISS event about `summons`
+    (all of one source): where they came from, with which choice and slot
+    (SummonContext: for a feature's, the slot that paid for it), and their
+    names; "before_combat" for ones that join already summoned,
+    "replaced" for ones another summon replaced, and the "initiative" each
+    one that rolls its own rolled, by name."""
+    first = summons[0] if summons else {}
+    value: dict[str, object] = {
+        "source": first.get(SOURCE_KEY),
+        "choice": choice_of(first),
+        "slot": first.get(SLOT_KEY),
+        "names": [c["name"] for c in summons],
+    }
+    if before_combat:
+        value["before_combat"] = True
+    if replaced:
+        value["replaced"] = True
+    if initiative:
+        value["initiative"] = initiative
+    return value
+
+
+def dismissed(data: dict) -> set[str]:
+    """The names of the summons the encounter log `data` took out of the
+    fight with an Action.DISMISS (dismissed, or replaced by another)."""
+    names: set[str] = set()
+    for key, events in data.items():
+        if not is_round_key(key) or not isinstance(events, list):
+            continue
+        for event in events:
+            if isinstance(event, dict) and event.get("action") == Action.DISMISS:
+                value = event.get("value")
+                if isinstance(value, dict):
+                    names |= set(value.get("names") or [])
+    return names
 
 
 def upgrade_keys(char: dict) -> dict:
@@ -211,20 +356,21 @@ def mark(char: dict, sheet: Character, feature: Feature, spec: SummonSpec):
     char[ON_ZERO_HP_KEY] = spec.on_zero_hp.value
 
 
-def set_stat_block(
-    summon: dict, sheet: Character, spec: SummonSpec, choice: str | None
-):
-    """Rebuild `summon`'s card from `spec` with `choice` (None: the build's
-    own), keeping its name, owner, source and state (Hit Points, conditions)."""
-    fields = _card(sheet, spec, SummonContext(choice=choice))
-    for key, value in fields.items():
-        if key not in _IDENTITY_KEYS + ("hp", "temp_hp", "conditions"):
+def keep_card(summon: dict, previous: dict):
+    """Give `summon` (made or revealed to carry `previous` over, the same
+    summon as an earlier log left it) the card `previous` was built with: a
+    log keeps a summon's card as it was built, and only summoning it again
+    builds it anew from the owner's sheet (an owner may have levelled up
+    since). Its name, owner, rules and state stay `summon`'s."""
+    previous = upgrade_keys(json.loads(json.dumps(previous, cls=LogJSONEncoder)))
+    for key, value in previous.items():
+        if key in summon and key not in _NOT_CARD_KEYS:
             summon[key] = value
-    upgrade_keys(summon)
-    if choice is None:
-        summon.pop(CHOICE_KEY, None)
-    else:
-        summon[CHOICE_KEY] = choice
+    for key in (CHOICE_KEY, SLOT_KEY):
+        if key in previous:
+            summon[key] = previous[key]
+        else:
+            summon.pop(key, None)
 
 
 def make_room(existing: list[dict], spec: SummonSpec, new: int) -> list[dict] | None:
@@ -268,19 +414,27 @@ def last_seen(
     """The combatant called `name` (or one of `aliases`, the names older logs
     gave it) as the last of the encounter logs `logs` (in the order they were
     played, each with whether a long rest came after it) that has one left
-    it, and that log's long-rest flag."""
+    it, and that log's long-rest flag. None when a log after the last that
+    has it dismissed it (Action.DISMISS): one taken out of the fight isn't in
+    that log's combatants, so an earlier log's would bring it back."""
     names = {name, *aliases}
     found = None
     for data, rested in logs:
+        here = None
         for char in data.get("combatants", []):
             if char.get("name") in names:
-                found = (char, rested)
+                here = (char, rested)
+        if here is not None:
+            found = here
+        elif names & dismissed(data):
+            found = None
     return found
 
 
 def place_after_owners(order: list[dict], summons: list[dict]) -> list[dict]:
     """`order` with each of `summons` right after its owner (after any
-    summon of theirs before it), or at the end when its owner isn't in it."""
+    summon of theirs before it that goes after them too, not one rolling its
+    own initiative), or at the end when its owner isn't in it."""
     order = list(order)
     for summon in summons:
         owner = owner_name(summon)
@@ -292,7 +446,11 @@ def place_after_owners(order: list[dict], summons: list[dict]) -> list[dict]:
             order.append(summon)
             continue
         at += 1
-        while at < len(order) and owner_name(order[at]) == owner:
+        while (
+            at < len(order)
+            and owner_name(order[at]) == owner
+            and follows_owner(order[at])
+        ):
             at += 1
         order.insert(at, summon)
     return order
