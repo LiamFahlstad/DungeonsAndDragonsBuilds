@@ -1,10 +1,10 @@
 """Battle statistics configuration."""
 
-import json
 from pathlib import Path
 
 import Combat.PlayerLog as PlayerLog
 from Combat.Definitions import Action
+from Combat.LogFiles import read_json
 from Core.Definitions import DamageType
 
 SPELL_SLOT_LEVELS = range(1, 10)
@@ -89,7 +89,7 @@ def long_rest_archive_sessions(player_log_path: str | Path) -> list[dict]:
     sessions are the party's whole history, each session exactly once."""
     sessions: list[dict] = []
     for archive in long_rest_archives(player_log_path):
-        data = json.loads(archive.read_text(encoding="utf-8"))
+        data = read_json(archive)
         sessions.extend(data.get("sessions", []))
     return sessions
 

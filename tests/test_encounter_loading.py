@@ -54,7 +54,11 @@ from Combat.EncounterLogs import (
 )
 from Combat.Monsters.CR_1.monsters import GoblinBoss, Tiger
 from Combat.Scenario import CombatScenario
-from Combat.Tools.prepare_encounters import prepare_campaign
+from Combat.Tools.prepare_encounters import (
+    BROKEN,
+    logs_without_encounter,
+    prepare_campaign,
+)
 from Core.Definitions import DamageType
 from tests._combat_ui import open_dialog, qapp
 from tests._snapshot_helpers import build
@@ -775,6 +779,38 @@ def test_the_load_encounter_dialog_lists_the_campaigns_encounters(
     assert buttons["Start Encounter"].text() == "Continue Encounter"
     assert buttons["Start Encounter"].isEnabled()
     assert buttons["Restart Encounter"].isEnabled()
+
+
+def test_the_load_encounter_dialog_shows_a_broken_log(tmp_path, monkeypatch):
+    ui = _ui(tmp_path)
+    scenario_log_path(tmp_path / "CombatLogs", "pirate_ambush").write_text(
+        '{"round_1": [', encoding="utf-8"
+    )
+    dlg = open_dialog(monkeypatch, ui._show_load_encounter_dialog)
+    (scenario_list,) = dlg.findChildren(QListWidget)
+    scenario_list.setCurrentRow(0)
+    assert scenario_list.item(0).text() == "Pirate Ambush\n    Log can't be read"  # type: ignore[union-attr]
+    buttons = {b.text(): b for b in dlg.findChildren(QPushButton)}
+    assert not buttons["Start Encounter"].isEnabled()
+    details = [label.text() for label in dlg.findChildren(QLabel)][-1]
+    assert "git checkout -- " in details and "pirate_ambush.json" in details
+
+
+def test_the_prepare_tool_leaves_a_broken_log_and_lists_stray_logs(tmp_path):
+    campaign = Campaign.from_config(_config([TIGER_CONFIG]), tmp_path)
+    logs = tmp_path / "CombatLogs"
+    logs.mkdir()
+    broken = scenario_log_path(logs, "tiger_den")
+    broken.write_text('{"round_1": [', encoding="utf-8")
+    (logs / "old_tiger_den.json").write_text("{}", encoding="utf-8")
+    (logs / "tiger_den_restarted_2026-11-05_20-00-00.json").write_text("{}")
+
+    problems, [(name, what)] = prepare_campaign(campaign)
+    assert problems == [] and name == "tiger_den"
+    assert what.startswith(BROKEN) and "git checkout -- " in what
+    assert broken.read_text(encoding="utf-8") == '{"round_1": ['
+    # A renamed or removed encounter's log; restart backups aren't listed.
+    assert logs_without_encounter(campaign) == [logs / "old_tiger_den.json"]
 
 
 def test_journal_helpers():

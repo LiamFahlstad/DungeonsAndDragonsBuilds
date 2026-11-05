@@ -34,6 +34,7 @@ from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
 
+from Combat.LogFiles import read_json, write_json
 from Combat.PlayerCombatant import combatant_from_stat_block
 from Combat.PlayerLog import ENCOUNTER, has_round_events, log_ref
 
@@ -82,9 +83,8 @@ def event_text(event) -> str:
 
 
 def write_log(path: str | Path, data: dict):
-    path = Path(path)
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(data, indent=2, cls=LogJSONEncoder), encoding="utf-8")
+    """Write the encounter log at `path` all at once (Combat/LogFiles.py)."""
+    write_json(path, data, LogJSONEncoder)
 
 
 def _plain(data: dict) -> dict:
@@ -118,7 +118,7 @@ def is_prepared(path: str | Path) -> bool:
     path = Path(path)
     if not path.exists():
         return False
-    return "encounter" in json.loads(path.read_text(encoding="utf-8"))
+    return "encounter" in read_json(path)
 
 
 def prepare_log(
@@ -136,7 +136,7 @@ def prepare_log(
     ("in progress, header added"; its last-played time is kept)."""
     path = Path(path)
     fresh = _plain(prepared_log(scenario, players, sheets))
-    data = json.loads(path.read_text(encoding="utf-8")) if path.exists() else {}
+    data = read_json(path) if path.exists() else {}
     if not data:
         if write:
             write_log(path, fresh)
@@ -168,7 +168,7 @@ def empty_log(path: str | Path, write: bool = True) -> str:
         if write:
             write_log(path, {})
         return "created empty"
-    data = json.loads(path.read_text(encoding="utf-8"))
+    data = read_json(path)
     if not data:
         return "empty"
     if has_round_events(data):
@@ -211,7 +211,7 @@ def read_log_status(path: str | Path | None) -> EncounterLogStatus | None:
     if path is None or not Path(path).exists():
         return None
     path = Path(path)
-    data = json.loads(path.read_text(encoding="utf-8"))
+    data = read_json(path)
     if not has_round_events(data):
         return None
     combatants = data.get("combatants") or []
@@ -259,7 +259,7 @@ def restart_log(
     path = Path(path)
     backup = None
     if read_log_status(path) is not None:
-        data = json.loads(path.read_text(encoding="utf-8"))
+        data = read_json(path)
         if player_log_data is not None and player_log_path is not None:
             sessions = player_log_data["sessions"]
             undone = attempt_entries(path, player_log_path, sessions)

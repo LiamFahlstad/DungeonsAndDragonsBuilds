@@ -5,6 +5,7 @@ import Combat.Scenarios as Scenarios
 from Combat.CombatUIQt import CombatAppQt
 from Combat.EncounterConfig import resolve_players
 from Combat.EncounterLogs import scenario_log_path
+from Combat.LogFiles import BrokenLogError
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="DnD Combat Engine")
@@ -148,15 +149,20 @@ if __name__ == "__main__":
         log_path = scenario_log_path(campaign.combat_log_dir, scenario.name)
 
     party = campaign.players()
-    app = CombatAppQt(
-        combatants=[],
-        character_sheets=party if args.player_log else [],
-        combat_log_dir=campaign.combat_log_dir,
-        combatants_per_column=scenario.combatants_per_column if scenario else 4,
-        log_path=log_path,
-        player_log_path=args.player_log,
-        scenario_name=args.scenario,
-        scenarios=campaign.scenarios,
-        party_names=[cs.character_name for cs in party],
-    )
-    app.run()
+    try:
+        app = CombatAppQt(
+            combatants=[],
+            character_sheets=party if args.player_log else [],
+            combat_log_dir=campaign.combat_log_dir,
+            combatants_per_column=scenario.combatants_per_column if scenario else 4,
+            log_path=log_path,
+            player_log_path=args.player_log,
+            scenario_name=args.scenario,
+            scenarios=campaign.scenarios,
+            party_names=[cs.character_name for cs in party],
+        )
+        app.run()
+    except BrokenLogError as error:
+        # The party is replayed from its logs: say which one is broken and
+        # how to get it back, instead of a traceback.
+        sys.exit(str(error))

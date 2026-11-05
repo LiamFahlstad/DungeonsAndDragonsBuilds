@@ -4,7 +4,6 @@ Encounter dialog, setting up an empty log from its config when it's opened,
 continuing a fight in progress or restarting it; end one; and the party view
 shown between encounters, where nothing is logged."""
 
-import json
 from pathlib import Path
 
 from PyQt6.QtCore import Qt
@@ -31,6 +30,7 @@ from Combat.EncounterLogs import (
     restart_log,
     scenario_log_path,
 )
+from Combat.LogFiles import BrokenLogError, read_json
 from Combat.Scenario import CombatScenario
 
 from .state import CombatWindowState
@@ -111,7 +111,7 @@ class EncountersMixin(CombatWindowState):
             except KeyError:
                 pass
         if path.exists():
-            return json.loads(path.read_text(encoding="utf-8")).get("players", [])
+            return read_json(path).get("players", [])
         return []
 
     def _prepare_if_missing(self, scenario: CombatScenario, path: Path):
@@ -156,7 +156,7 @@ class EncountersMixin(CombatWindowState):
             if len(self.player_log_data["sessions"]) != session_count:
                 self._write_player_log()
                 self._rebuild_players_from_log()
-        data = json.loads(path.read_text(encoding="utf-8"))
+        data = read_json(path)
         self._set_party(data.get("players"))
         self._load_log_from_path(str(path))
         if ENDED_KEY in data:
@@ -351,13 +351,21 @@ class EncountersMixin(CombatWindowState):
             "QListWidget::item:selected { background: #1e2d5a; color: #eaeaea; }"
         )
         statuses = {}
+        # Logs that aren't valid JSON, by encounter: what BrokenLogError says.
+        broken: dict[str, str] = {}
         for scenario in self._scenarios:
             path = scenario_log_path(self._combat_log_dir, scenario.name)
-            statuses[scenario.name] = read_log_status(path)
+            try:
+                statuses[scenario.name] = read_log_status(path)
+            except BrokenLogError as error:
+                statuses[scenario.name] = None
+                broken[scenario.name] = str(error)
             heading = scenario.display_title
             if scenario.name == self._scenario_name:
                 heading += "  (current)"
-            if statuses[scenario.name] is None:
+            if scenario.name in broken:
+                detail = "Log can't be read"
+            elif statuses[scenario.name] is None:
                 detail = "Ready"
             else:
                 detail = statuses[scenario.name].describe()
@@ -405,9 +413,11 @@ class EncountersMixin(CombatWindowState):
             lines.append(f"Monsters: {', '.join(scenario.monster_summary) or 'none'}")
             if scenario.ally_summary:
                 lines.append(f"Allies: {', '.join(scenario.ally_summary)}")
+            if scenario.name in broken:
+                lines.append(broken[scenario.name])
             details.setText("\n".join(lines))
             in_progress = statuses[scenario.name] is not None
-            continue_btn.setEnabled(True)
+            continue_btn.setEnabled(scenario.name not in broken)
             continue_btn.setText(
                 "Continue Encounter" if in_progress else "Start Encounter"
             )

@@ -221,7 +221,10 @@ __marimo__/
 !.claude/agent-memory/
 
 # Combat logs are committed: the party's state is replayed from them (see
-# Combat/PlayerLog.py). Only the backups a restart leaves behind are ignored.
+# Combat/PlayerLog.py). Only the backups a restart leaves behind are ignored,
+# and the temporary file a log is written to first (Combat/LogFiles.py), which
+# a crash mid-write can leave next to it.
 Combat/Campaigns/*/CombatLogs/*_restarted_*.json
+Combat/Campaigns/*/*/*.json.tmp
 # Scratch output of CharacterContent/Features/FeatureGeneration/GenerateFeatures.py
 CharacterContent/Features/FeatureGeneration/Output.py

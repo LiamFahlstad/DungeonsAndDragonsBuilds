@@ -1,6 +1,5 @@
 """Logging mixin for CombatAppQt."""
 
-import json
 from pathlib import Path
 
 from PyQt6.QtWidgets import QDialog, QMessageBox, QPushButton, QTextEdit, QVBoxLayout
@@ -16,7 +15,9 @@ from Combat.EncounterLogs import (
     LogJSONEncoder,
     event_text,
     read_log_status,
+    write_log,
 )
+from Combat.LogFiles import read_json, write_json
 from Combat.PlayerCombatant import combatant_from_character
 from Combat.PlayerLog import has_round_events, is_round_key, session_label
 from Combat.Summons import upgrade_keys
@@ -81,10 +82,7 @@ class LoggingMixin(CombatWindowState):
         data.pop(PLAYER_FIGHT_STATE_KEY, None)
         if player_state:
             data[PLAYER_FIGHT_STATE_KEY] = player_state
-        self.log_file.parent.mkdir(parents=True, exist_ok=True)
-        self.log_file.write_text(
-            json.dumps(data, indent=2, cls=LogJSONEncoder), encoding="utf-8"
-        )
+        write_log(self.log_file, data)
         # The party's journal gets this log's entry once something happens in it.
         session = self._player_log_session
         if (
@@ -106,7 +104,7 @@ class LoggingMixin(CombatWindowState):
         """The encounter log's contents; {} between encounters."""
         if self.log_file is None or not self.log_file.exists():
             return {}
-        return json.loads(self.log_file.read_text(encoding="utf-8"))
+        return read_json(self.log_file)
 
     def _current_turn_character(self) -> dict | None:
         if self.phase != "COMBAT" or not self.initiative_order:
@@ -227,7 +225,7 @@ class LoggingMixin(CombatWindowState):
         """Play the encounter log at `path`: its combatants join the players
         already in the window, on the initiative screen for a fight that
         hasn't started, or straight into combat to continue one."""
-        data = json.loads(Path(path).read_text(encoding="utf-8"))
+        data = read_json(path)
         # Logs only ever hold non-player combatants (see _write_log), so splice
         # them in alongside the players rather than replacing self.characters.
         players = [c for c in self.characters if c.get("_is_player")]
@@ -571,11 +569,7 @@ class LoggingMixin(CombatWindowState):
     def _write_player_log(self):
         if not self.player_log_file:
             return
-        self.player_log_file.parent.mkdir(parents=True, exist_ok=True)
-        self.player_log_file.write_text(
-            json.dumps(self.player_log_data, indent=2, cls=LogJSONEncoder),
-            encoding="utf-8",
-        )
+        write_json(self.player_log_file, self.player_log_data, LogJSONEncoder)
 
     def _log_status_text(self) -> str:
         """One-line summary of whether player-log tracking is active, shown in the side panel."""

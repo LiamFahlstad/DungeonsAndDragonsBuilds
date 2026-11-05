@@ -30,7 +30,6 @@ Add Combatant's "Already summoned..." adds one made before the fight (any of
 the party's, with its choice) at full Hit Points, spending nothing.
 """
 
-import json
 from pathlib import Path
 
 from PyQt6.QtGui import QCursor
@@ -38,6 +37,7 @@ from PyQt6.QtWidgets import QMenu
 
 import Combat.PlayerLog as PlayerLog
 from Combat.Definitions import Action
+from Combat.LogFiles import read_json
 from Combat.Summons import (
     CHOICE_KEY,
     VANISHED_REASON,
@@ -509,7 +509,7 @@ class SummonsMixin(CombatWindowState):
                 continue
             path = PlayerLog.resolve_log(self.player_log_file, session["log"])
             if path.exists():
-                played.append((json.loads(path.read_text(encoding="utf-8")), False))
+                played.append((read_json(path), False))
         taken = {c["name"] for c in self.characters}
         new: list[dict] = []
         for owner in [c for c in self.characters if c.get("_is_player")]:

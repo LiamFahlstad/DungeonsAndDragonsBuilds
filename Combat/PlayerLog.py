@@ -29,10 +29,11 @@ Older player logs embedded each session's events ("round_<n>" lists) in the
 entry itself instead of pointing to a log, and had "adventure" entries with
 logs of their own; those entries are still read."""
 
-import json
 import os
 from datetime import datetime
 from pathlib import Path
+
+from Combat.LogFiles import read_json, write_json
 
 LONG_REST = "long_rest"
 SHORT_REST = "short_rest"
@@ -97,7 +98,7 @@ def session_rounds(session: dict, player_log_path: str | Path) -> dict[str, list
     path = resolve_log(player_log_path, session["log"])
     if not path.exists():
         return {}
-    data = json.loads(path.read_text(encoding="utf-8"))
+    data = read_json(path)
     return {k: v for k, v in data.items() if is_round_key(k)}
 
 
@@ -141,7 +142,7 @@ def load(player_log_path: str | Path) -> dict:
     path = Path(player_log_path)
     if not path.exists():
         return {"sessions": []}
-    data = json.loads(path.read_text(encoding="utf-8"))
+    data = read_json(path)
     data.setdefault("sessions", [])
     return data
 
@@ -156,6 +157,4 @@ def append_long_rest(player_log_path: str | Path):
     """Record a long rest (see long_rest_entry) in the player log file."""
     data = load(player_log_path)
     data["sessions"].append(long_rest_entry())
-    path = Path(player_log_path)
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(data, indent=2), encoding="utf-8")
+    write_json(player_log_path, data)

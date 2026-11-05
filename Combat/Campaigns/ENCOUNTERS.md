@@ -156,6 +156,16 @@ for each encounter:
 | `{}` | left **empty** |
 | set up (the encounter was opened), fight not started | **emptied** back to `{}` |
 | fight in progress or ended | left as it is (**in progress** / **ended**) |
+| not valid JSON | left as it is (**can't be read**), with how to get it back; the check fails |
+
+It also lists any log in `CombatLogs/` named after no encounter id
+(**NO ENCOUNTER**), e.g. after renaming an id: rename the log to the new id, or
+delete it. The window never opens such a log.
+
+Logs are written all at once: the window writes a temporary `<log>.json.tmp`
+and renames it over the log, so a crash mid-write leaves the old log, never
+half of one. A log that still can't be read (edited by hand, say) stops the
+window with the file's name and the `git checkout` that gets it back.
 
 When the window opens an encounter whose log is `{}` (or missing), it sets the
 log up from the config (a log from before this setup that holds a fight only
