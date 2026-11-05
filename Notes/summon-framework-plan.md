@@ -76,9 +76,10 @@ What it can't do yet:
 
 - Summon "effects" without a stat block stay ordinary spell effects:
   Spiritual Weapon, Healing Spirit, Spirit Totem auras, 2024 Conjure Animals
-  (a pack that's an area, not creatures), Negative Energy Flood, Tentacle of
-  the Deep. They keep the `summon` usage tag; they just don't make a
-  combatant. Classify each tagged entry once (see Phase 4).
+  (a pack that's an area, not creatures), Tentacle of the Deep. They keep
+  the `summon` usage tag; they just don't make a combatant. Classify each
+  tagged entry once (see Phase 4). Negative Energy Flood's damage is an
+  effect too, but the Zombie it raises is a creature (S4.12).
 - Out-of-combat use of familiars (scouting, telepathy, touch spells through
   them) is just text on the card.
 - Automating a summon's AI. The GM still plays its turn.
@@ -155,9 +156,12 @@ asking a feature five questions.
 - `Spell.summons(character) -> list[SummonSpec]` on the `Spell` base class,
   looked up by spell name in a Python registry,
   `CharacterContent/Summons/SpellSummons.py`:
-  `SPELL_SUMMONS: dict[str, Callable[[], SummonSpec]]`. Spell JSON stays
-  untouched (it's scraped data); the registry is the hand-written part, like
-  `_extended.json` is for tags.
+  `SPELL_SUMMONS: dict[str, Callable[[Ability | None], SummonSpec]]`. The
+  factory gets the spell's `spell_casting_ability` (one character can have
+  a spell from two classes, and a spirit's attack bonus and save DC use
+  it); the character reaches the spec's `build` / `choices` / `count`
+  when they run. Spell JSON stays untouched (it's scraped data); the
+  registry is the hand-written part, like `_extended.json` is for tags.
 - Stat blocks come from three places, all already used in the repo:
   1. hand-built `_build_*` functions in the feature files (Drake, Steel
      Defender, Wildfire Spirit, Vestige, Reanimated);
@@ -210,13 +214,15 @@ Pure dict functions, no Qt, as today. Keys on a summon's combatant dict:
 |---|---|
 | `summon_of` | owner's character name (renamed from `companion_of`, read both while old logs exist) |
 | `summon_source` | `"feature:Drake Companion"` / `"spell:Summon Beast"`, to find the spec again |
+| `summon_spec` | the spec's name, since one source can have several specs |
 | `summon_choice`, `summon_slot` | the `SummonContext` it was made with |
 | `summon_lifetime`, `summon_turn`, `summon_on_zero_hp` | copied from the spec, so a saved log replays without the sheet |
 
 Functions:
 
 - `spec_for(sheet, combatant) -> SummonSpec | None` (replaces
-  `companion_feature`): looks up by `summon_source`, not `combatant_type`.
+  `companion_feature`): looks up by `summon_source` and `summon_spec`, and
+  by `combatant_type` only for an older log's summon that has neither.
 - `create(owner_sheet, spec, ctx) -> list[dict]`: builds `count` dicts,
   applies modifiers, names them uniquely: `"<owner>'s <spec.name>"`, then
   `" 2"`, `" 3"` (reuse `_unique_name`). The carry-over finds a summon in
@@ -279,18 +285,20 @@ and slot) at full HP and spends nothing, logged as `Action.SUMMON` with
 |---|---|---|
 | Cast a summon spell | after the slot is chosen: ask the choice (menu at the mouse, as `_pick_companion_summon` does), create, add to turn order | `_apply_cast_spell` (spells_mixin) checks `spell.summons(sheet)` |
 | Enable a summon feature | pay the first affordable `SummonCost`, spend `action_type`, create | `_pick_companion_summon` generalised |
-| Card menu | "Summon again (cost)", choice submenu, "Dismiss" | `_add_summon_actions` generalised |
+| Card menu | "Summon <spec.name> (cost)", choice submenu, "Dismiss" | `_add_summon_actions` generalised |
 | Concentration ends | every summon tied to that spell vanishes | `_end_spell_effects`: store summon names in the `active_spells` entry (`"summoned": [...]`) next to `"applied"` |
 | Duration runs out | same, from `_tick_active_spells` | same entry |
-| 0 HP | `VANISHES`: removed (logged); `DIES`: stays, dead | damage_mixin's knock-out path |
-| Owner dies | `drops_with_owner` summons drop to 0 HP (Death Burst) | `_companions_die_with` generalised |
+| 0 HP | `VANISHES`: removed (logged), inside the damage's undo step; `DIES`: stays, dead | damage_mixin's `_deal_damage` → `_vanish_at_zero_hp` |
+| Owner dies | `drops_with_owner` summons drop to 0 HP (Death Burst), so `VANISHES` ones are removed | `_summons_die_with` |
 | Long rest | `UNTIL_LONG_REST` summons end; feature uses come back | rests_mixin |
 | Undo | all of it is `@undoable` dict changes, as now | |
 
 **Logging.** `Action.SUMMON` / `Action.DISMISS`, logged on the owner, with
 `{source, choice, slot, names}`, plus `"before_combat": true` ("Already
 summoned…"), `"replaced": true` (a `DISMISS` for one that a new summon
-replaced) and `"initiative": {name: roll}` (`OWN_INITIATIVE`). The use and
+replaced), `"reason": "0 hp"` (a `DISMISS` for a `VANISHES` summon that
+dropped to 0 HP, also when its owner died) and `"initiative": {name:
+roll}` (`OWN_INITIATIVE`). The use and
 slot that paid are still logged separately, before the `SUMMON` line. The
 replay into the window does nothing with them (what paid is its own
 line); the carry-over reads `DISMISS` (see `dismissed` in 3.4), and each
@@ -378,12 +386,12 @@ also get `rules-checker` against the spell and feature texts.
 - [x] **S2.9** A player's own summon shows its full card in the player
   view once it's out (Q11). The stat block shows on its turn and the one
   before, not always (3.4, Player view).
-- [ ] **S2.10** A `VANISHES` summon at 0 HP is removed from the fight and
+- [x] **S2.10** A `VANISHES` summon at 0 HP is removed from the fight and
   logged (3.5's 0 HP row); a `DIES` one stays, dead. Today both stay.
-- [ ] **S2.11** Label a summon's menu entries by the spec, not the feature,
+- [x] **S2.11** Label a summon's menu entries by the spec, not the feature,
   so a source with two specs, or a spell whose spec has another name, gets
   distinct "Summon X" entries. Needed by Phase 4.
-- [ ] **S2.12** `screenshot.py combat --summon "<label>"` (run-apps skill),
+- [x] **S2.12** `screenshot.py combat --summon "<label>"` (run-apps skill),
   and a player-screen mode, so a summon can be screenshotted without a
   scratch script (summons are made on demand now).
 
@@ -404,7 +412,8 @@ Each is a `summons()` override around the feature's existing `_build_*`.
   that only cast a summon spell wait for its Phase 4 step: Wild Companion
   (Find Familiar, S4.5), Faithful Steed (Find Steed, S4.8), Dragon Companion
   (Summon Dragon) and Create Thrall (Summon Aberration) (both S4.6),
-  Faithful Summons (Conjure Animals, S4.1). Effects, not creatures: Spirit
+  Faithful Summons (Conjure Animals, which S4.1 found is an effect in 2024,
+  so Faithful Summons makes no combatant either). Effects, not creatures: Spirit
   Totem, Guardian Spirit, Gathered Swarm, Tentacle of the Deep, Guardian
   Coil, Spirits from Beyond. Modifiers: Undead Thralls, Mighty Summoner,
   Durable/Splintered Summons (Phase 5).
@@ -427,13 +436,13 @@ Each is a `summons()` override around the feature's existing `_build_*`.
 
 ### Phase 4: spells
 
-- [ ] **S4.1** Classify the 38 `summon`-tagged spells (23 in
+- [x] **S4.1** Classify the 38 `summon`-tagged spells (23 in
   spells_dnd2024_extended.json, 15 in spells_dnd5e_extended.json) as a
   *creature* (gets a registry entry) or an *effect* (stays a spell effect),
   into Appendix A. Also sweep for creature spells that lack the tag: Find
   Steed (2024) isn't tagged, though S4.8 is about it; tag those through
   the `usage-tags` skill. Add a step below for each creature spell.
-- [ ] **S4.2** Add `Spell.summons()` and the registry
+- [x] **S4.2** Add `Spell.summons()` and the registry
   `CharacterContent/Summons/SpellSummons.py`.
 - [ ] **S4.3** Make casting a summon spell summon: slot, then choice, then
   create (3.5). The slot is the cast's own; nothing else is charged (3.6).
@@ -442,15 +451,79 @@ Each is a `summons()` override around the feature's existing `_build_*`.
   with the encounter; the next encounter of its owner offers "keep it" (Q2).
 - [ ] **S4.5** Find Familiar (CR 0 beast forms, `OWN_INITIATIVE`;
   recasting replaces the old familiar; Pact of the Chain's forms come from
-  `character.invocations`, 3.3).
+  `character.invocations`, 3.3). First decide where Monster Manual stat
+  blocks come from, since CharacterContent can't import Combat.Monsters
+  (DI-057; also S3.7, S4.7).
 - [ ] **S4.6** The Summon X family: one shared helper that scales with the
-  slot, then one entry per spell.
+  slot, then one entry per spell. Giant Insect, Homunculus Servant, Spirit
+  of Death and Summon Shadowspawn have the same shape (a stat block that
+  uses the slot's level), so they're entries here too (Appendix A).
   *Done when:* Summon Beast cast with a level 3 slot and a level 4 slot has
   different HP, and losing concentration removes it.
 - [ ] **S4.7** Animate Dead (Skeleton or Zombie; one creature plus two per
   slot level above 3; usually brought in with "Already summoned…").
 - [ ] **S4.8** Find Steed. Decide how a steed works without mounted combat
   when this starts (Q10); until then it stays a spell effect.
+- [ ] **S4.9** Animate Objects: Animated Object stat blocks up to your
+  spellcasting modifier (a Large object counts two, a Huge one three; one
+  summon per size), Slam damage by slot, `CONCENTRATION` 1 minute,
+  `VANISHES` (back to an object) at 0 HP.
+- [ ] **S4.10** Battle Familiar: Brute, Flyer or Stalker form by slot level
+  (S4.6's helper), `OWN_INITIATIVE`, gone if you die, one at a time. Cast
+  while a Find Familiar familiar is out, it changes that familiar's stat
+  block and gives it Temporary Hit Points instead, which a spec can't say
+  yet. After S4.5 and S4.6.
+- [ ] **S4.11** Create Undead: three Ghouls, more (or Ghasts, Wights,
+  Mummies) with a level 7-9 slot, as a choice; Monster Manual stat blocks
+  handed in as S4.7's are; controlled for 24 hours (`DURATION`), `DIES`.
+  With or after S4.7.
+- [ ] **S4.12** Negative Energy Flood: a Humanoid it kills rises as a Zombie
+  that obeys you for 24 hours. Made by the kill, not the cast, so it needs a
+  trigger S4.3 doesn't give; S4.7's Zombie. The damage stays a spell effect
+  (section 2 lists the spell as one).
+- [ ] **S4.13** Planar Ally: a Celestial, Elemental or Fiend the GM picks
+  from the monster list, serving for a bargained task (`UNTIL_DISMISSED`).
+  Needs a "pick any monster" choice; may stay text if that isn't worth it.
+- [ ] **S4.14** Sticks to Snakes: four Venomous Snakes plus two per slot
+  level above 4 (`count`), `CONCENTRATION` 1 minute, `VANISHES` (back to a
+  stick) at 0 HP.
+- [ ] **S4.15** Simulacrum: a copy of a Beast's or Humanoid's stat block (a
+  Construct, half its Hit Point maximum) that acts on your turn; recasting
+  destroys the old one (`REPLACES`), lasts until dispelled. Copying a player
+  character needs that character's card as the stat block.
+- [ ] **S4.16** Phantom Steed: a Riding Horse with Speed 100 feet for 1 hour
+  (`DURATION`), ended by any damage. A mount, so after S4.8 (Q10).
+- [ ] **S4.17** True Polymorph's Object into Creature mode: a creature of CR
+  9 or lower from the monster list that obeys you and acts after you, under
+  your control for the spell's first hour. The other two modes stay
+  effects.
+- [ ] **S4.18** Create Homunculus (2014): the Monster Manual Homunculus,
+  permanent (`UNTIL_DISMISSED`), `DIES`, drops with its owner, `REFUSED`
+  while one lives. Sharing Hit Dice with it stays text.
+- [ ] **S4.19** Create Magen (2014): a magen of the chosen type, permanent,
+  no limit (`max_out=None`). Combat/Monsters has no magen stat blocks yet.
+- [ ] **S4.20** Find Greater Steed (2014): a griffon, pegasus, peryton, dire
+  wolf, rhinoceros or saber-toothed tiger (Monster Manual), one mount
+  shared with Find Steed. After S4.8 (Q10).
+- [ ] **S4.21** Flock of Familiars (2014): three Find Familiar familiars,
+  one more per slot level above 2, one fewer while you have a familiar;
+  `CONCENTRATION` 1 hour. After S4.5.
+- [ ] **S4.22** *(blocked by Q16)* Infernal Calling (2014): a devil of CR 6 or lower (one more
+  per slot level above 5) from the monster list, `OWN_INITIATIVE`,
+  unfriendly and GM-run. The first summon that isn't on its owner's side:
+  ask how that shows when this starts (also S4.23, S4.24).
+- [ ] **S4.23** *(blocked by Q16)* Summon Greater Demon (2014): a demon of CR 5 or lower (one
+  more per slot level above 4), `OWN_INITIATIVE`, obeys you until it
+  succeeds on a Charisma save at the end of a turn, then hostile.
+- [ ] **S4.24** *(blocked by Q16)* Summon Lesser Demons (2014): demons by a d6 table (twice or
+  three times as many with a higher slot), hostile to everyone, one
+  initiative for the group.
+- [ ] **S4.25** Tiny Servant (2014): the Tiny Servant stat block, one plus
+  two per slot level above 3 (`count`), `DURATION` 8 hours, `VANISHES` (back
+  to an object) at 0 HP.
+- [ ] **S4.26** Danse Macabre (2014): up to five Zombies or Skeletons (two
+  more per slot level above 5), your spellcasting modifier added to their
+  attack and damage rolls, `CONCENTRATION` 1 hour. S4.7's stat blocks.
 
 ### Phase 5: modifier features
 
@@ -595,6 +668,17 @@ affects, and leave the question here so the reasoning stays on record.
   `cost_options` require (and the summon spend) that many uses.
 - **Answer:** 2026-11-05: the recommendation; done as part of S3.8.
 
+### Q16. How does a summon that isn't on its owner's side show? *(blocks S4.22-S4.24)*
+- **Why it matters:** Infernal Calling's devil is unfriendly, Summon
+  Greater Demon's demon turns hostile when it breaks free, and Summon
+  Lesser Demons' demons attack everyone. A summon is shown to the players
+  like a player (Q11) and acts after its owner; neither fits a hostile one.
+- **Recommendation:** a hostile summon is made as an ordinary monster
+  (`summon_of` kept for the record, not shown like a player's), and
+  breaking free turns a friendly summon into one, which the GM does from
+  the card menu.
+- **Answer:**
+
 ## 6. Keeping this plan up to date
 
 This is a working plan: steps and questions are added as the work turns
@@ -670,11 +754,95 @@ them up.
 - 2026-11-05: Q14 and Q15 answered (the recommendations). S3.9 done: the
   Echo summon, and `get_saving_throw_modifier` on `CharacterView`. S3.8 now
   says it adds `SummonCost.amount` (Q15) once S2.5 and S4.6 are in.
+- 2026-11-05: S4.1 done: the 38 tagged spells classified in Appendix A, and
+  Find Steed, Phantom Steed, Simulacrum, True Polymorph (2024) and Danse
+  Macabre (2014) tagged `summon` (43 now). Added S4.9-S4.26, one per
+  creature spell that no step covered; S4.6 also takes Giant Insect,
+  Homunculus Servant, Spirit of Death and Summon Shadowspawn (same shape).
+  Appendix A counts Negative Energy Flood's Zombie as a creature (S4.12),
+  though section 2 lists the spell as an effect. S4.22-S4.24 are the first
+  summons hostile to their owner.
+- 2026-11-05: S4.2 done: `Spell.summons(character)` and an empty
+  `SPELL_SUMMONS` in CharacterContent/Summons/SpellSummons.py, tested in
+  tests/test_spell_summons.py. A factory takes the spell's casting ability
+  (`Callable[[Ability | None], SummonSpec]`), not nothing as 3.2 says: the
+  character reaches the spec's `build` anyway, but the ability belongs to
+  the spell copy (one character can have a spell from two classes) and the
+  spirits' attack bonus and save DC need it.
+- 2026-11-05: 3.2 now gives the registry's factory signature; section 2
+  and S3.5 say what S4.1 found about Negative Energy Flood (its Zombie is a
+  creature) and Faithful Summons (2024 Conjure Animals is an effect). Q16
+  added for summons hostile to their owner; S4.22-S4.24 blocked by it.
+- 2026-11-05: S2.10-S2.12 done, so Phase 2 is complete: a `VANISHES` summon
+  at 0 HP is removed and logged as a `DISMISS` with `"reason": "0 hp"`
+  (so the carry-over never brings it back); menu entries read "Summon
+  <spec.name>" (DI-050 fixed), with a new `summon_spec` key so two specs of
+  one source stay apart; screenshot.py's `combat --summon / --choice /
+  --start / --player-screen / --limited`. DI-051 fixed on the way.
 
 ## Appendix A. Spell classification
 
 Filled in by S4.1: each `summon`-tagged spell, whether it makes a creature or
 is an effect, and the step that implements it.
 
+*Source* is the spell file the spell renders from: 2024 is
+spells_dnd2024.json, 2014 is spells_dnd5e.json (2014-rules books). A 2024
+spell replaces the 2014 spell of the same name in SpellFactory, so a 2014
+version with a 2024 reprint is never implemented separately (the rows say
+"no separate 2014"). Rows marked *tagged by S4.1* had no `summon` tag
+before the sweep.
+
 | Spell | Source | Creature or effect | Step |
 |---|---|---|---|
+| Animate Dead | 2024 | Creature: a Skeleton or Zombie (Monster Manual) per corpse. No separate 2014. | S4.7 |
+| Animate Objects | 2024 | Creature: objects become Animated Object stat blocks. No separate 2014. | S4.9 |
+| Battle Familiar | 2024 | Creature: Battle Familiar stat block, own initiative. | S4.10 |
+| Conjure Animals | 2024 | Effect: an intangible pack that's an area (a Dexterity save near it), no stat block. No separate 2014 (whose beasts were creatures). | - |
+| Create Undead | 2024 | Creature: Ghouls (Ghasts, Wights, Mummies upcast), Monster Manual. No separate 2014. | S4.11 |
+| Find Familiar | 2024 | Creature: a CR 0 Beast's stat block. No separate 2014. | S4.5 |
+| Find Steed | 2024, tagged by S4.1 | Creature: Otherworldly Steed stat block. No separate 2014. | S4.8 |
+| Giant Insect | 2024 | Creature: Giant Insect stat block by slot level. No separate 2014. | S4.6 |
+| Homunculus Servant | 2024 | Creature: Homunculus Servant stat block by slot level. | S4.6 |
+| Negative Energy Flood | 2024 | Creature, as a rider: a Humanoid it kills rises as a Zombie that obeys you for 24 hours; the damage is an effect. No separate 2014. | S4.12 |
+| Phantom Steed | 2024, tagged by S4.1 | Creature: a Riding Horse stat block with Speed 100 feet. No separate 2014. | S4.16 |
+| Planar Ally | 2024 | Creature: a Celestial, Elemental or Fiend the GM picks, serving for payment. No separate 2014. | S4.13 |
+| Planar Binding | 2024 | Effect: binds a creature that's already there (often summoned by something else); makes none. No separate 2014. | - |
+| Simulacrum | 2024, tagged by S4.1 | Creature: a Construct copy of a Beast's or Humanoid's stat block that obeys you. No separate 2014. | S4.15 |
+| Sticks to Snakes | 2024 | Creature: Venomous Snake stat blocks. | S4.14 |
+| Summon Aberration | 2024 | Creature: Aberrant Spirit stat block by slot level. No separate 2014. | S4.6 |
+| Summon Beast | 2024 | Creature: Bestial Spirit stat block by slot level. No separate 2014. | S4.6 |
+| Summon Celestial | 2024 | Creature: Celestial Spirit stat block by slot level. No separate 2014. | S4.6 |
+| Summon Construct | 2024 | Creature: Construct Spirit stat block by slot level. No separate 2014. | S4.6 |
+| Summon Dinosaur | 2024 | Creature: Dinosaur Spirit stat block by slot level. | S4.6 |
+| Summon Dragon | 2024 | Creature: Draconic Spirit stat block by slot level. Reprints 2014's Summon Draconic Spirit. | S4.6 |
+| Summon Elemental | 2024 | Creature: Elemental Spirit stat block by slot level. No separate 2014. | S4.6 |
+| Summon Fey | 2024 | Creature: Fey Spirit stat block by slot level. No separate 2014. | S4.6 |
+| Summon Fiend | 2024 | Creature: Fiendish Spirit stat block by slot level. No separate 2014. | S4.6 |
+| Summon Plant | 2024 | Creature: Plant Spirit stat block by slot level. | S4.6 |
+| Summon Undead | 2024 | Creature: Undead Spirit stat block by slot level. No separate 2014. | S4.6 |
+| True Polymorph | 2024, tagged by S4.1 | Creature in its Object into Creature mode (a creature of CR 9 or lower that obeys you); the other modes are effects. No separate 2014. | S4.17 |
+| Create Homunculus | 2014 | Creature: the Monster Manual Homunculus, permanent. | S4.18 |
+| Create Magen | 2014 | Creature: a magen of the chosen type, permanent. | S4.19 |
+| Danse Macabre | 2014, tagged by S4.1 | Creature: up to five Zombies or Skeletons (Monster Manual). | S4.26 |
+| Find Greater Steed | 2014 | Creature: a Monster Manual mount (griffon, pegasus, ...). | S4.20 |
+| Flock of Familiars | 2014 | Creature: three Find Familiar familiars. | S4.21 |
+| Galder's Speedy Courier | 2014 | Effect: a formless air elemental, immune to all damage, that carries a chest away; no stat block. | - |
+| Galder's Tower | 2014 | Effect: a building. | - |
+| Healing Spirit | 2014 | Effect: an intangible spirit in a 5-foot cube that heals; no stat block. | - |
+| Infernal Calling | 2014 | Creature: a devil of CR 6 or lower, unfriendly, own initiative. | S4.22 |
+| Mighty Fortress | 2014 | Effect: a building. | - |
+| Spirit of Death | 2014 | Creature: Reaper Spirit stat block by slot level. | S4.6 |
+| Summon Draconic Spirit | 2014 | Creature, but 2024's Summon Dragon is the same spell renamed, so not implemented separately. | - (S4.6's Summon Dragon) |
+| Summon Greater Demon | 2014 | Creature: a demon of CR 5 or lower, own initiative; can break free. | S4.23 |
+| Summon Lesser Demons | 2014 | Creature: demons from a d6 table, hostile to everyone. | S4.24 |
+| Summon Shadowspawn | 2014 | Creature: Shadow Spirit stat block by slot level. | S4.6 |
+| Tiny Servant | 2014 | Creature: Tiny Servant stat block. | S4.25 |
+
+Swept and left untagged (no creature under your control, or no stat
+block): the 2024 Conjure Celestial, Conjure Constructs, Conjure Elemental,
+Conjure Fey, Conjure Minor Elementals and Conjure Woodland Beings
+(intangible spirits that are areas or attacks, like 2024 Conjure Animals),
+Unseen Servant (a force with AC 10 and 1 HP), Deryan's Helpful Homunculi
+(intangible crafting help), Mordenkainen's Faithful Hound (intangible,
+invulnerable), Bigby's Hand (an object), Awaken (a creature that's only
+Charmed by you) and Gate (it doesn't control what comes through).

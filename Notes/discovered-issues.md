@@ -320,26 +320,87 @@ PlayerViewWindow lays its rows in a plain QVBoxLayout with no scroll area. time_
 
 **History**
 - 2026-11-05 combat-simulator: found
+- 2026-11-05 combat-simulator: Seen with screenshot.py combat --scenario time_loop_pr_square --summon 'Drake Companion' --player-screen --size 1920x1080: the window grows to 1206 px tall and the drake's stat block loses its wrapped last line ('damage.'); at 1600x1300 it shows whole.
 
-### DI-050 · Combat UI: summon menu entry reads "Summon Summon Wildfire Spirit"
+### DI-052 · 2024 spell usage_tags that don't match the spell text (heal on polymorph spells, control on Find Steed); Conjure X summon tags inconsistent
+- **Status:** open
+- **Area:** character-engine
+- **Where:** `CharacterContent/Spells/spells_dnd2024_extended.json`
+
+Several 2024 spells carry usage_tags their own text doesn't support, all looking like one bad batch: Find Steed ['control'], Simulacrum ['heal'], True Polymorph ['heal'], Polymorph ['heal'], Shapechange ['heal'], Animal Shapes ['heal'], Astral Projection ['heal'], Alter Self ['damage'], Conjure Celestial ['heal'] (it also deals damage). Separately, 2024 Conjure Animals is tagged summon (an area of spirits) while the same-shaped 2024 Conjure Celestial, Conjure Constructs, Conjure Elemental, Conjure Fey, Conjure Minor Elementals and Conjure Woodland Beings are not. Found during summon-framework S4.1, which only added summon tags; re-tag through the usage-tags skill.
+
+**History**
+- 2026-11-05 character-engine-dev: found
+
+### DI-053 · Combat UI: a summon that vanishes on its own turn skips the next turn's start (and the new round when it was last)
 - **Status:** open
 - **Area:** combat-simulator
-- **Where:** `Combat/CombatUIQt/summons_mixin.py (_add_spec_summon_actions)`
+- **Where:** `Combat/CombatUIQt/summons_mixin.py:466`, `Combat/CombatUIQt/summons_mixin.py:395`
 
-The card menu labels a summon's entry f"Summon {feature.name} (...)". The feature Summon Wildfire Spirit (Wildfire Druid) now has a SummonSpec named "Wildfire Spirit", so the entry reads "Summon Summon Wildfire Spirit (...)". Animating Performance reads "Summon Animating Performance" though it summons a Dancing Item. Label it from spec.name instead ("Summon Wildfire Spirit", "Summon Dancing Item"). Not fixed now: summons_mixin.py is being changed for S2.5-S2.9 of Notes/summon-framework-plan.md.
+When the combatant removed by _vanish_at_zero_hp (S2.10) is the current turn, _remove_from_fight only moves current_turn_idx (at %= len). Nothing Next does runs: no round_number += 1 and no '--- Round N ---' line, no _tick_active_features / _tick_timed_conditions / _tick_active_spells, the next combatant's action_uses isn't reset, _start_monster_turn (recharge) and _on_turn_changed don't run. Scenario (code-reviewer probe): order Tiger, Dessie, Hanna, drake; the drake drops to 0 HP on its round-1 turn (Fire Shield, Armor of Agathys, a reaction, a hazard): the turn goes to Tiger but the round stays 1, so Tiger acts twice in round 1 and every round-based duration is a round off. Mid-order, the next combatant keeps action_uses {'Action': 1}. Dismiss and 'replaced' have the same older flaw, but those are GM-chosen. Fix: in _remove_from_fight, when the current turn group is only the removed combatant, call self._advance_turn() first (nested @undoable, one undo step). Extend test_a_summon_vanishing_on_its_own_turn_passes_the_turn_on (it only checks the name) with the wrap case: round_number == 2 and the next combatant's action_uses == {}.
 
 **History**
 - 2026-11-05 main-session: found
 
-### DI-051 · An Invisible player's summon attacking records nothing for the Limited player view
+### DI-054 · Combat UI: conditions timed on a removed summon's turn never end
 - **Status:** open
 - **Area:** combat-simulator
-- **Where:** `Combat/CombatUIQt/damage_mixin.py:175`
+- **Where:** `Combat/CombatUIQt/conditions_mixin.py:294`
 
-damage_mixin only notes what players learn from an attack roll (known AC etc.) when _can_be_seen(source). Since S2.9 a player's summon is shown like a player even while Invisible, so the players see its roll, but an Invisible summon's attack notes nothing. Fix: use player_view's player-aware check (_is_known / _seen) for the source there.
+turns_left condition entries whose 'of' is a combatant that leaves the fight (a summon that vanished at 0 HP, or one dismissed), e.g. 'until the end of the drake's next turn', never count down, because that turn never comes. time_left entries already fall back to ticking at the start of a round when ticks_on is gone. Older for Dismiss; S2.10 makes it automatic. Fix: in _remove_from_fight, expire (or tick) entries with of == the removed combatant.
 
 **History**
-- 2026-11-05 combat-simulator: found
+- 2026-11-05 main-session: found
+
+### DI-055 · Test gap: no test drives _apply_custom_effect on a summon that vanishes
+- **Status:** open
+- **Area:** combat-simulator
+- **Where:** `Combat/CombatUIQt/conditions_mixin.py:387`, `tests/test_combat_ui_summons.py`
+
+S2.10 added a `continue` in the custom-effect path so a target that vanished from the damage isn't given the effect's condition or recorded in the caster's active_spells 'applied'. The code is right (code-reviewer probe), but test_a_damage_effect_skips_its_condition_on_a_summon_that_vanished calls _deal_damage directly, with no condition, so removing the `continue` fails nothing. Fix: drive _apply_custom_effect(CustomEffect(condition='Prone', damage=[(5, 'Bludgeoning')], concentration=True)) on [drake at 1 HP, another target]; assert the drake is gone and the caster's active_spells[0]['applied'] doesn't name it.
+
+**History**
+- 2026-11-05 main-session: found
+
+### DI-056 · Combat UI: an older log's summon resolves to the first spec when one source has two specs of the same creature type
+- **Status:** open
+- **Area:** combat-simulator
+- **Where:** `Combat/Summons.py (source_for, _earlier_names)`
+
+Since S2.11, summons carry summon_source + summon_spec, so new logs are fine. A summon from a log written before S2.1 has neither key, so source_for falls back to matching the stat block's creature type, and _earlier_names gives the legacy alias "<owner>'s Companion (<type>)" to every spec of that type. With two specs of one type on one source, both resolve to the first spec. No such old log exists today (the four TimeLoopPR logs were rewritten in S2.1, and each companion feature had one spec), so this only matters for logs kept outside the repo.
+
+**History**
+- 2026-11-05 main-session: found
+
+### DI-057 · Summon plan: S4.5/S4.7 need Monster Manual stat blocks that CharacterContent can't import
+- **Status:** open
+- **Area:** character-engine-dev
+- **Where:** `CharacterContent/Summons/SpellSummons.py`, `tests/test_layering.py`, `Notes/summon-framework-plan.md (S4.5, S4.7, S3.7)`
+
+tests/test_layering.py lets content import only core/helpers/records/model/content, and forbids lazy imports that hide a cycle. So the SPELL_SUMMONS entries for Find Familiar (CR 0 beasts), Animate Dead and Fungal Infestation (Skeleton/Zombie), Create Undead, Danse Macabre etc. can't build their stat blocks from Combat.Monsters. Decide before S4.5 where they come from: handed in by the build as Wild Shape's CreatureForm callables are, or the needed stat blocks moved into a lower layer. Also: an entry must not import a content module that imports SpellFactory (today only CharacterFeats/EpicBoon.py), or Spell.py's import of the registry becomes a cycle.
+
+**History**
+- 2026-11-05 main-session: found
+
+### DI-058 · Pyright: 18 errors in tests/test_combat_ui_summons.py around lines 830-864
+- **Status:** open
+- **Area:** combat-simulator
+- **Where:** `tests/test_combat_ui_summons.py:830`
+
+./typecheck.sh tests/test_combat_ui_summons.py reports 18 errors, all in older code at lines ~805-870 (not in the S2.10-S2.12 hunks). Found by combat-simulator and code-reviewer on 2026-11-05; not looked into.
+
+**History**
+- 2026-11-05 main-session: found
+
+### DI-059 · Tests: intermittent UnicodeDecodeError ('charmap' codec, byte 0x8d) in a background thread
+- **Status:** open
+- **Area:** test-bughunter
+- **Where:** `tests/ (unknown test)`
+
+One full ./run_tests.sh -q run on 2026-11-05 ended '9303 passed ... 1 warning' with a PytestUnhandledThreadExceptionWarning: a thread's codecs.charmap_decode raised UnicodeDecodeError: 'charmap' codec can't decode byte 0x8d in position 39. Two later runs had no warning. Likely a subprocess whose output is read with the Windows default (cp1252) encoding instead of encoding='utf-8' (0x8d is undefined in cp1252). Which test wasn't captured; grep tests/ for subprocess.run/Popen with text=True and no encoding.
+
+**History**
+- 2026-11-05 main-session: found
 
 ## Fixed
 
@@ -563,6 +624,30 @@ The combat screenshot prepares the encounter log with players=[] and passes char
 - 2026-11-04 main-session: marked in-progress
 - 2026-11-04 main-session: marked fixed
 - 2026-11-04 main-session: marked fixed in e6fab83b
+
+### DI-050 · Combat UI: summon menu entry reads "Summon Summon Wildfire Spirit"
+- **Status:** fixed · 2026-11-05 · uncommitted
+- **Area:** combat-simulator
+- **Where:** `Combat/CombatUIQt/summons_mixin.py (_add_spec_summon_actions)`
+
+The card menu labels a summon's entry f"Summon {feature.name} (...)". The feature Summon Wildfire Spirit (Wildfire Druid) now has a SummonSpec named "Wildfire Spirit", so the entry reads "Summon Summon Wildfire Spirit (...)". Animating Performance reads "Summon Animating Performance" though it summons a Dancing Item. Label it from spec.name instead ("Summon Wildfire Spirit", "Summon Dancing Item"). Not fixed now: summons_mixin.py is being changed for S2.5-S2.9 of Notes/summon-framework-plan.md.
+
+**History**
+- 2026-11-05 main-session: found
+- 2026-11-05 combat-simulator: marked in-progress; S2.11: menu labels by spec
+- 2026-11-05 combat-simulator: marked fixed; S2.11: _summon_label(spec) labels entries 'Summon <spec.name>' (Summon Wildfire Spirit, Summon Dancing Item); uncommitted
+
+### DI-051 · An Invisible player's summon attacking records nothing for the Limited player view
+- **Status:** fixed · 2026-11-05 · uncommitted
+- **Area:** combat-simulator
+- **Where:** `Combat/CombatUIQt/damage_mixin.py:175`
+
+damage_mixin only notes what players learn from an attack roll (known AC etc.) when _can_be_seen(source). Since S2.9 a player's summon is shown like a player even while Invisible, so the players see its roll, but an Invisible summon's attack notes nothing. Fix: use player_view's player-aware check (_is_known / _seen) for the source there.
+
+**History**
+- 2026-11-05 combat-simulator: found
+- 2026-11-05 combat-simulator: marked in-progress
+- 2026-11-05 combat-simulator: marked fixed; _resolve_attack_roll uses player_view._seen(source, _player_names(...)); test test_an_invisible_players_summons_attack_roll_shows_the_targets_ac; uncommitted
 
 ## Won't fix
 
