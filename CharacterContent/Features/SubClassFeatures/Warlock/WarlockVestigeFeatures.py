@@ -57,6 +57,13 @@ from Model.Content.FeatureText import (
     StatBlock,
     Table,
 )
+from Model.Content.Summons import (
+    OnZeroHp,
+    SummonContext,
+    SummonLifetime,
+    SummonSpec,
+    WhenFull,
+)
 
 # The Domain Spells of the Cleric domains Vestige Spells can draw on, keyed by
 # the Warlock level (equal to the Cleric level) they're prepared from.
@@ -315,6 +322,33 @@ class VestigeCompanion(Feature):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
+
+    def summons(self, character: CharacterView) -> list[SummonSpec]:
+        return [
+            SummonSpec(
+                name=self.name,
+                build=self._build_summon,
+                # One vestige; "If the vestige is already manifested from
+                # this feature, its form changes to the new one."
+                when_full=WhenFull.REPLACES,
+                # It doesn't end on a Long Rest; it can take a new form then.
+                lifetime=SummonLifetime.UNTIL_DISMISSED,
+                # "When the vestige drops to 0 Hit Points, it disappears."
+                on_zero_hp=OnZeroHp.VANISHES,
+                # "It vanishes if you die."
+                drops_with_owner=True,
+                # "In combat, the vestige acts during your turn" (the default
+                # SummonTurn). It costs nothing (the default costs): a
+                # 1-minute ceremony brings it back.
+            )
+        ]
+
+    def _build_summon(
+        self, character: CharacterView, ctx: SummonContext
+    ) -> ExtendedCombatantData:
+        # Its type changes only when a Long Rest ends, so it's the build's,
+        # not a choice made when it's summoned.
+        return _build_vestige(character, self.vestige_type)
 
 
 class VestigeSpells(Feature):

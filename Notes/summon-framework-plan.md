@@ -353,12 +353,38 @@ also get `rules-checker` against the spell and feature texts.
 Each is a `summons()` override around the feature's existing `_build_*`.
 *Agent:* character-engine-dev, then combat-simulator for anything in the UI.
 
-- [ ] **S3.1** Steel Defender (Battle Smith).
-- [ ] **S3.2** Wildfire Spirit, paid with a Wild Shape use.
-- [ ] **S3.3** Vestige Companion (Vestige Warlock).
-- [ ] **S3.4** Primal Companion (Beast Master), with the Land/Sea/Sky choice.
-- [ ] **S3.5** Go through the other `summon`-tagged features and add a step
-  here for each one that makes a creature.
+- [x] **S3.1** Steel Defender (Battle Smith).
+- [x] **S3.2** Wildfire Spirit, paid with a Wild Shape use.
+- [x] **S3.3** Vestige Companion (Vestige Warlock). Its Celestial/Fiend/Undead
+  type is the build's, not a summon choice: it changes only when a Long Rest
+  ends.
+- [x] **S3.4** Primal Companion (Beast Master), with the Land/Sea/Sky choice
+  (one choice per stat block and Beast's Strike damage type).
+- [x] **S3.5** Go through the other `summon`-tagged features and add a step
+  here for each one that makes a creature. Also swept untagged ones. Features
+  that only cast a summon spell wait for its Phase 4 step: Wild Companion
+  (Find Familiar, S4.5), Faithful Steed (Find Steed, S4.8), Dragon Companion
+  (Summon Dragon) and Create Thrall (Summon Aberration) (both S4.6),
+  Faithful Summons (Conjure Animals, S4.1). Effects, not creatures: Spirit
+  Totem, Guardian Spirit, Gathered Swarm, Tentacle of the Deep, Guardian
+  Coil, Spirits from Beyond. Modifiers: Undead Thralls, Mighty Summoner,
+  Durable/Splintered Summons (Phase 5).
+- [x] **S3.6** Animating Performance's Dancing Item (Creation Bard): a new
+  `_build_dancing_item`, one use or a level 3+ slot, 1 hour; tagged `summon`.
+- [ ] **S3.7** Fungal Infestation (Spores Druid): a Zombie (Monster Manual)
+  that rises with 1 Hit Point for 1 hour, one per use, as a Reaction. Content
+  can't import `Combat.Monsters` (test_layering), so the build has to hand the
+  feature its Zombie stat block, as Wild Shape's forms are; do it with S4.7,
+  which needs the same Zombie. `create()` also starts every summon at its
+  maximum Hit Points, so "1 hit point" needs a way to start lower.
+- [ ] **S3.8** Beasts of Ill Omen (Shadow Sorcerer): casts Summon Beast for 3
+  Sorcery Points, optionally without Concentration (1 minute). After S4.6
+  and S2.5. Per Q15, first add `amount: int = 1` to `SummonCost` and make
+  `cost_options` require (and the summon spend) that many uses. Also tag it
+  `summon` (it's tagged `control` only).
+- [x] **S3.9** Manifest Echo (Echo Knight), per Q14: a card built from the
+  feature text (`_build_echo`), saving throws read through the new
+  `CharacterView.get_saving_throw_modifier`; tagged `summon`.
 
 ### Phase 4: spells
 
@@ -407,6 +433,10 @@ new id, when it's picked up.
 - [ ] **SL.1** Render the sheets' summon stat blocks from the spec (Q5).
 - [ ] **SL.2** Commanding a summon on the owner's turn (Q6).
 - [ ] **SL.3** Bringing a destroyed persistent summon back (Q8).
+- [ ] **SL.4** Semblance of Life (Vestige Warlock 14): the vestige takes a
+  Summon Celestial/Fiend/Undead spirit's stat block for an hour, keeping its
+  Hit Points, with the spirit's Hit Points as Temporary Hit Points. A
+  stat-block swap on a summon that's out, like Wild Shape on a player.
 
 ## 5. Questions
 
@@ -508,6 +538,24 @@ affects, and leave the question here so the reasoning stays on record.
 - **Answer:** 2026-11-05: the recommendation, since re-summoning is possible:
   the card menu's "Summon again" rebuilds the card from the current sheet.
 
+### Q14. Is Manifest Echo a summon? *(blocks S3.9)*
+- **Why it matters:** the echo isn't a creature and has no stat block or
+  turn, but it has AC 14 + Proficiency Bonus and 1 Hit Point, occupies a
+  space, and is destroyed by damage, so enemies attack it. As a summon it
+  would get a card (and a turn slot after its owner that does nothing).
+- **Recommendation:** yes: a small card (AC, 1 HP, immune to all
+  conditions, the owner's saving throw bonuses), free, a Bonus Action,
+  `UNTIL_DISMISSED`, `REPLACES`, `VANISHES`, `drops_with_owner` (it also
+  ends when its owner is Incapacitated, which stays text).
+- **Answer:** 2026-11-05: the recommendation.
+
+### Q15. How does a summon cost several of a resource? *(blocks S3.8)*
+- **Why it matters:** `SummonCost(feature_use=...)` spends one use; Beasts
+  of Ill Omen spends 3 Sorcery Points.
+- **Recommendation:** add `amount: int = 1` to `SummonCost`, and have
+  `cost_options` require (and the summon spend) that many uses.
+- **Answer:** 2026-11-05: the recommendation; done as part of S3.8.
+
 ## 6. Keeping this plan up to date
 
 This is a working plan: steps and questions are added as the work turns
@@ -560,6 +608,17 @@ them up.
   summons made on demand (no hidden ones in prepared logs; `prepared_log`'s
   `sheets` argument is now unused), "Already summoned…", `make_room` and
   Dismiss. 3.4 says what `make_room` counts and what summoning drops.
+- 2026-11-05: S3.1-S3.6 done: `summons()` on Steel Defender, Summon Wildfire
+  Spirit, Vestige Companion, Primal Companion and Animating Performance (a
+  new Dancing Item stat block), tested in tests/test_feature_summons.py.
+  S3.5's sweep added S3.7 (Fungal Infestation), S3.8 (Beasts of Ill Omen),
+  S3.9 (Manifest Echo), SL.4 (Semblance of Life), Q14 and Q15. Until S2.5
+  lands, the UI still charges a use or the lowest slot whatever the spec's
+  costs say (Steel Defender, Vestige and Primal Companion are free; Wildfire
+  Spirit costs a Wild Shape use).
+- 2026-11-05: Q14 and Q15 answered (the recommendations). S3.9 done: the
+  Echo summon, and `get_saving_throw_modifier` on `CharacterView`. S3.8 now
+  says it adds `SummonCost.amount` (Q15) once S2.5 and S4.6 are in.
 
 ## Appendix A. Spell classification
 

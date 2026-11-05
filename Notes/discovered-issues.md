@@ -311,6 +311,16 @@ Archdruid (Druid 20), Evergreen Wild Shape: 'Whenever you roll Initiative and ha
 **History**
 - 2026-11-04 main session (Claude Opus 5.5): found
 
+### DI-050 · Combat UI: summon menu entry reads "Summon Summon Wildfire Spirit"
+- **Status:** open
+- **Area:** combat-simulator
+- **Where:** `Combat/CombatUIQt/summons_mixin.py (_add_spec_summon_actions)`
+
+The card menu labels a summon's entry f"Summon {feature.name} (...)". The feature Summon Wildfire Spirit (Wildfire Druid) now has a SummonSpec named "Wildfire Spirit", so the entry reads "Summon Summon Wildfire Spirit (...)". Animating Performance reads "Summon Animating Performance" though it summons a Dancing Item. Label it from spec.name instead ("Summon Wildfire Spirit", "Summon Dancing Item"). Not fixed now: summons_mixin.py is being changed for S2.5-S2.9 of Notes/summon-framework-plan.md.
+
+**History**
+- 2026-11-05 main-session: found
+
 ## Fixed
 
 ### DI-001 · Temporary Hit Points stack instead of keeping one amount

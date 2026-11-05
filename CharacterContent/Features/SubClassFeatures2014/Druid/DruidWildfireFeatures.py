@@ -27,6 +27,14 @@ from Model.Content.FeatureText import (
     Table,
     dc_formula,
 )
+from Model.Content.Summons import (
+    OnZeroHp,
+    SummonContext,
+    SummonCost,
+    SummonLifetime,
+    SummonSpec,
+    WhenFull,
+)
 
 
 def _build_wildfire_spirit(
@@ -93,15 +101,25 @@ def _build_wildfire_spirit(
     )
 
 
-def format_wildfire_spirit(character: CharacterView) -> str:
+def _build_from_character(character: CharacterView) -> ExtendedCombatantData:
     druid_level = character.get_class_level(CharacterClass.DRUID)
     proficiency_bonus = character.get_proficiency_bonus()
     wisdom_modifier = character.get_wisdom_modifier()
     spell_attack_modifier = proficiency_bonus + wisdom_modifier
-    spirit = _build_wildfire_spirit(
-        druid_level, proficiency_bonus, spell_attack_modifier
+    return _build_wildfire_spirit(druid_level, proficiency_bonus, spell_attack_modifier)
+
+
+def _build_summon(
+    character: CharacterView, ctx: SummonContext
+) -> ExtendedCombatantData:
+    # Nothing is chosen when it's summoned.
+    return _build_from_character(character)
+
+
+def format_wildfire_spirit(character: CharacterView) -> str:
+    return format_creature_stat_block(
+        _build_from_character(character), retain_mental_abilities=False
     )
-    return format_creature_stat_block(spirit, retain_mental_abilities=False)
 
 
 class CircleSpells(Feature):
@@ -216,6 +234,28 @@ class SummonWildfireSpirit(Feature):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
+
+    def summons(self, character: CharacterView) -> list[SummonSpec]:
+        return [
+            SummonSpec(
+                name="Wildfire Spirit",
+                build=_build_summon,
+                # "The spirit manifests for 1 hour, until it is reduced to 0
+                # hit points, until you use this feature to summon the spirit
+                # again, or until you die."
+                lifetime=SummonLifetime.DURATION,
+                duration_seconds=60 * 60,
+                when_full=WhenFull.REPLACES,
+                on_zero_hp=OnZeroHp.VANISHES,
+                drops_with_owner=True,
+                # "In combat, the spirit shares your initiative count, but it
+                # takes its turn immediately after yours" (the default
+                # SummonTurn).
+                # "you can expend one use of your Wild Shape feature to
+                # summon your wildfire spirit".
+                costs=(SummonCost(feature_use="Wild Shape"),),
+            )
+        ]
 
 
 class EnhancedBond(Feature):

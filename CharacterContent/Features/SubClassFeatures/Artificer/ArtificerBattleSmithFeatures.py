@@ -32,6 +32,13 @@ from Model.Content.FeatureText import (
     StatBlock,
     Table,
 )
+from Model.Content.Summons import (
+    OnZeroHp,
+    SummonContext,
+    SummonLifetime,
+    SummonSpec,
+    WhenFull,
+)
 
 
 class ToolsOfTheTrade(Feature):
@@ -221,6 +228,13 @@ def _build_steel_defender(character: CharacterView) -> ExtendedCombatantData:
     )
 
 
+def _build_summon(
+    character: CharacterView, ctx: SummonContext
+) -> ExtendedCombatantData:
+    # Nothing is chosen when it's created.
+    return _build_steel_defender(character)
+
+
 def format_steel_defender(character: CharacterView) -> str:
     return format_creature_stat_block(
         _build_steel_defender(character), retain_mental_abilities=False
@@ -276,6 +290,28 @@ class SteelDefender(Feature):
 
     def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
+
+    def summons(self, character: CharacterView) -> list[SummonSpec]:
+        return [
+            SummonSpec(
+                name=self.name,
+                build=_build_summon,
+                # "Whenever you finish a Long Rest, you can create a new
+                # defender ... If you already have a defender from this
+                # feature, the first one vanishes."
+                when_full=WhenFull.REPLACES,
+                # It doesn't end on a Long Rest; one is made anew then.
+                lifetime=SummonLifetime.UNTIL_DISMISSED,
+                # "If the defender has died within the last hour, you can ...
+                # expend a spell slot. The defender returns to life".
+                on_zero_hp=OnZeroHp.DIES,
+                # "It vanishes if you die."
+                drops_with_owner=True,
+                # "In combat, the defender acts during your turn" (the
+                # default SummonTurn). It costs nothing (the default costs):
+                # it's made at the end of a Long Rest.
+            )
+        ]
 
 
 class ExtraAttack(Feature):

@@ -6,8 +6,38 @@ from CharacterContent.Features.ClassFeatures.Ranger.PrimalCompanions import (
     CompanionType,
 )
 from Model.Content.Feature import Feature, FeatureActivation, FeatureTarget
+from Model.Creatures.Combatants import ExtendedCombatantData
 from Model.View import CharacterView
 from Model.Content.FeatureText import Block, Facts, Paragraph, StatBlock
+from Model.Content.Summons import (
+    OnZeroHp,
+    SummonContext,
+    SummonLifetime,
+    SummonSpec,
+    WhenFull,
+)
+
+
+def _primal_beast_choice(companion_type: CompanionType, damage_type: DamageType) -> str:
+    """'Beast of the Land (Piercing)'; just 'Beast of the Sky', whose Strike
+    has one damage type."""
+    if len(PrimalCompanions.ALLOWED_STRIKE_DAMAGE_TYPES[companion_type]) == 1:
+        return companion_type.value
+    return f"{companion_type.value} ({damage_type.value})"
+
+
+# Each summon choice: the stat block and its Beast's Strike damage type.
+PRIMAL_BEAST_CHOICES: dict[str, tuple[CompanionType, DamageType]] = {
+    _primal_beast_choice(companion_type, damage_type): (companion_type, damage_type)
+    for companion_type, damage_types in (
+        PrimalCompanions.ALLOWED_STRIKE_DAMAGE_TYPES.items()
+    )
+    for damage_type in damage_types
+}
+
+
+def _primal_beast_choices(character: CharacterView) -> list[str]:
+    return list(PRIMAL_BEAST_CHOICES)
 
 
 class PrimalCompanion(Feature):
@@ -70,6 +100,43 @@ class PrimalCompanion(Feature):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
+
+    def summons(self, character: CharacterView) -> list[SummonSpec]:
+        return [
+            SummonSpec(
+                name=self.name,
+                build=self._build_summon,
+                # "Choose its stat block: Beast of the Land, Beast of the Sea
+                # or Beast of the Sky", and the Strike's damage type "when
+                # summoned".
+                choices=_primal_beast_choices,
+                choice_label="Primal Beast",
+                # "If you already have a beast from this feature, the old one
+                # vanishes when the new one appears."
+                when_full=WhenFull.REPLACES,
+                # It doesn't end on a Long Rest; a different one can be
+                # summoned then.
+                lifetime=SummonLifetime.UNTIL_DISMISSED,
+                # "If the beast has died within the last hour, you can ...
+                # expend a spell slot. The beast returns to life".
+                on_zero_hp=OnZeroHp.DIES,
+                # "In Combat, the beast acts during your turn" (the default
+                # SummonTurn). It costs nothing (the default costs): it's
+                # summoned at the end of a Long Rest.
+            )
+        ]
+
+    def _build_summon(
+        self, character: CharacterView, ctx: SummonContext
+    ) -> ExtendedCombatantData:
+        # None is the build's own beast.
+        if ctx.choice is None:
+            companion_type, damage_type = self.companion_type, self.damage_type
+        else:
+            companion_type, damage_type = PRIMAL_BEAST_CHOICES[ctx.choice]
+        return PrimalCompanions.build_primal_companion(
+            companion_type, character, damage_type
+        )
 
 
 class ExceptionalTraining(Feature):

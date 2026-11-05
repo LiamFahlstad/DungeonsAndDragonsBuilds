@@ -1,4 +1,4 @@
-from Core.Definitions import Ability
+from Core.Definitions import Ability, CharacterClass, Condition, DamageType
 from Model.Content.Feature import (
     FeatureUses,
     Feature,
@@ -7,8 +7,22 @@ from Model.Content.Feature import (
     RegainedOn,
     FeatureTarget,
 )
+from Model.Creatures.Combatants import (
+    DamageTypeEntry,
+    ExtendedCombatantData,
+    MonsterType,
+)
+from Model.Creatures.MonsterAbilities import MonsterAbility
 from Model.View import CharacterView
 from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table, dc_formula
+from Model.Content.Summons import (
+    OnZeroHp,
+    SummonContext,
+    SummonCost,
+    SummonLifetime,
+    SummonSpec,
+    WhenFull,
+)
 
 
 class MoteOfPotential(Feature):
@@ -136,6 +150,85 @@ class PerformanceOfCreation(Feature):
         return RegainedOn.LONG_REST
 
 
+def _build_dancing_item(
+    character: CharacterView, ctx: SummonContext
+) -> ExtendedCombatantData:
+    """The Dancing Item stat block, for this character. Nothing is chosen
+    when it's animated."""
+    bard_level = character.get_class_level(CharacterClass.BARD)
+    proficiency_bonus = character.get_proficiency_bonus()
+    spell_attack = character.calculate_attack_bonus_for_ability(Ability.CHARISMA)
+    return ExtendedCombatantData(
+        combatant_type="Dancing Item",
+        hp=10 + 5 * bard_level,
+        ac=16,
+        temp_hp=0,
+        conditions=[],
+        ability_scores={
+            Ability.STRENGTH: 18,
+            Ability.DEXTERITY: 14,
+            Ability.CONSTITUTION: 16,
+            Ability.INTELLIGENCE: 4,
+            Ability.WISDOM: 10,
+            Ability.CHARISMA: 6,
+        },
+        saving_throws={},
+        spell_slots={},
+        cr="—",
+        monster_type=MonsterType.CONSTRUCT,
+        # Its size is the animated item's: Large or smaller.
+        description=(
+            "Large or smaller (the animated item's size). "
+            f"PB equals your Proficiency Bonus (currently +{proficiency_bonus})."
+        ),
+        ac_note="natural armor",
+        hp_formula=f"10 + five times your bard level ({bard_level})",
+        speed_ground_ft=30,
+        speed_fly_ft=30,
+        speed_special_rules="hover",
+        damage_immunities=[
+            DamageTypeEntry(damage_types=[DamageType.POISON, DamageType.PSYCHIC])
+        ],
+        condition_immunities=[
+            Condition.CHARMED,
+            Condition.EXHAUSTION,
+            Condition.POISONED,
+            Condition.FRIGHTENED,
+        ],
+        senses="Darkvision 60 ft., Passive Perception 10",
+        languages="Understands the languages you speak",
+        traits=[
+            MonsterAbility(
+                name="Immutable Form",
+                description="The item is immune to any spell or effect that would alter its form.",
+            ),
+            MonsterAbility(
+                name="Irrepressible Dance",
+                description=(
+                    "When any creature starts its turn within 10 feet of the item, the item can increase or "
+                    "decrease (your choice) the walking speed of that creature by 10 feet until the end of the "
+                    "turn, provided the item isn't incapacitated."
+                ),
+            ),
+        ],
+        actions=[
+            MonsterAbility(
+                name="Force-Empowered Slam",
+                description=(
+                    f"Melee Weapon Attack: {spell_attack:+} to hit (your spell attack modifier), reach 5 ft., "
+                    f"one target you can see. Hit: 1d10 + {proficiency_bonus} Force damage (1d10 + PB)."
+                ),
+            )
+        ],
+        bonus_actions=[],
+        reactions=[],
+        legendary_actions=[],
+        legendary_resistances=0,
+        lair_actions=[],
+        mythic_actions=[],
+    )
+
+
 class AnimatingPerformance(Feature):
     def __init__(self):
         super().__init__(
@@ -146,7 +239,7 @@ class AnimatingPerformance(Feature):
                 duration="1 Hour or Until Reduced to 0 HP or Death",
                 range="30 Feet",
             ),
-            usage_tags=["utility"],
+            usage_tags=["utility", "summon"],
             uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
 
@@ -258,6 +351,32 @@ class AnimatingPerformance(Feature):
 
     def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
+
+    def summons(self, character: CharacterView) -> list[SummonSpec]:
+        return [
+            SummonSpec(
+                name="Dancing Item",
+                build=_build_dancing_item,
+                # "You can have only one item animated by this feature at a
+                # time; if you use this action and already have a dancing
+                # item from this feature, the first one immediately becomes
+                # inanimate."
+                when_full=WhenFull.REPLACES,
+                # "It lives for 1 hour, until it is reduced to 0 hit points,
+                # or until you die." At 0 it's an item again, out of the fight.
+                lifetime=SummonLifetime.DURATION,
+                duration_seconds=60 * 60,
+                on_zero_hp=OnZeroHp.VANISHES,
+                drops_with_owner=True,
+                # "In combat, the item shares your initiative count, but it
+                # takes its turn immediately after yours" (the default
+                # SummonTurn).
+                # "Once you animate an item with this feature, you can't do
+                # so again until you finish a long rest, unless you expend a
+                # spell slot of 3rd level or higher".
+                costs=(SummonCost(), SummonCost(spell_slot=3)),
+            )
+        ]
 
 
 class CreativeCrescendo(Feature):

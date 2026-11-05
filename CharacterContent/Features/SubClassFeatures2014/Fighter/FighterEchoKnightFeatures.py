@@ -6,9 +6,71 @@ from Model.Content.Feature import (
     RegainedOn,
     FeatureTarget,
 )
+from Core.Definitions import Ability, Condition
 from Core.Rules import MAX_ABILITY_MODIFIER
+from Model.Creatures.Combatants import ExtendedCombatantData
+from Model.Creatures.MonsterAbilities import MonsterAbility
 from Model.View import CharacterView
 from Model.Content.FeatureText import Block, Facts, Option, Paragraph
+from Model.Content.Summons import (
+    OnZeroHp,
+    SummonContext,
+    SummonLifetime,
+    SummonSpec,
+    WhenFull,
+)
+
+
+def _build_echo(character: CharacterView, ctx: SummonContext) -> ExtendedCombatantData:
+    """The echo's card: it has no stat block, only what Manifest Echo says it
+    has. Nothing is chosen when it's manifested."""
+    proficiency_bonus = character.get_proficiency_bonus()
+    return ExtendedCombatantData(
+        combatant_type="Echo",
+        hp=1,
+        ac=14 + proficiency_bonus,
+        temp_hp=0,
+        conditions=[],
+        # "If it has to make a saving throw, it uses your saving throw bonus".
+        saving_throws={
+            ability: character.get_saving_throw_modifier(ability) for ability in Ability
+        },
+        spell_slots={},
+        cr="—",
+        description=(
+            "A magical, translucent, gray image of you, the same size as you; it "
+            "occupies its space. It takes no actions of its own."
+        ),
+        ac_note="14 + your Proficiency Bonus",
+        hp_formula="1",
+        speed_special_rules="moves up to 30 ft. on your turn when you command it (no action)",
+        condition_immunities=list(Condition),
+        traits=[
+            MonsterAbility(
+                name="Tethered",
+                description=(
+                    "It's destroyed if it's more than 30 feet from you at the end of your turn, "
+                    "and it ends when you have the Incapacitated condition."
+                ),
+            ),
+            MonsterAbility(
+                name="Echo Attacks",
+                description=(
+                    "Each attack of your Attack action can originate from your space or the echo's. "
+                    "When a creature you can see within 5 feet of the echo moves at least 5 feet away "
+                    "from it, you can take a Reaction to make an Opportunity Attack against it as if "
+                    "you were in the echo's space."
+                ),
+            ),
+        ],
+        actions=[],
+        bonus_actions=[],
+        reactions=[],
+        legendary_actions=[],
+        legendary_resistances=0,
+        lair_actions=[],
+        mythic_actions=[],
+    )
 
 
 class ManifestEcho(Feature):
@@ -19,7 +81,7 @@ class ManifestEcho(Feature):
             activation=FeatureActivation(
                 action_type=ActionType.BONUS_ACTION, range="15 Feet"
             ),
-            usage_tags=["damage", "utility"],
+            usage_tags=["damage", "utility", "summon"],
         )
 
     def get_improved_description(self, character: CharacterView) -> list[Block]:
@@ -82,6 +144,24 @@ class ManifestEcho(Feature):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
+
+    def summons(self, character: CharacterView) -> list[SummonSpec]:
+        return [
+            SummonSpec(
+                name="Echo",
+                build=_build_echo,
+                # It "lasts until it is destroyed, until you dismiss it as a
+                # bonus action, until you manifest another echo, or until
+                # you're incapacitated" (the last is text on its card).
+                when_full=WhenFull.REPLACES,
+                lifetime=SummonLifetime.UNTIL_DISMISSED,
+                on_zero_hp=OnZeroHp.VANISHES,
+                drops_with_owner=True,
+                # It has no turn of its own; its owner moves it on theirs
+                # (the default SummonTurn). Manifesting it costs only the
+                # Bonus Action (the default costs).
+            )
+        ]
 
 
 class UnleashIncarnation(Feature):
