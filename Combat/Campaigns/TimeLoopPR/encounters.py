@@ -1,5 +1,6 @@
 """Time Loop PR: the party and every encounter it can run (format:
-Combat/Campaigns/ENCOUNTERS.md). After changing it, prepare the logs:
+Combat/Campaigns/ENCOUNTERS.md). Each encounter's log is an empty {} until the
+encounter is opened, which sets it up from its EncounterSpec. Check this with:
 python -m Combat.Tools.prepare_encounters --campaign time_loop_pr"""
 
 from Builds.Characters.Y2024_Artificer_Reanimator_Dessie import (
@@ -31,7 +32,7 @@ from Combat.Monsters.CR_5.monsters_homebrew import MiraPrincessOfTheLoop
 CONFIG = CampaignSpec(
     name="time_loop_pr",
     title="Time Loop PR",
-    description="A oneshot for four level 3 players. Every encounter below is played from its log, CombatLogs/<id>.json, prepared with: python -m Combat.Tools.prepare_encounters --campaign time_loop_pr",
+    description="A oneshot for four level 3 players. Every encounter below is logged in CombatLogs/<id>.json, empty until it's opened, then set up from its encounter below.",
     party=[
         Y2024ArtificerReanimatorDessieCharacterBuilder,
         Y2024RangerDrakewardenHannaCharacterBuilder,

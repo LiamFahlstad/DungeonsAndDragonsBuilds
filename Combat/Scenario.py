@@ -9,8 +9,8 @@ from Model.Creatures.Combatants import BasicCombatantData
 class CombatScenario:
     """One encounter of a campaign, as its encounters.py describes it
     (Combat/Campaigns/ENCOUNTERS.md): who's fighting, who takes part, and the
-    layout. Its log is CombatLogs/<name>.json, written by
-    `python -m Combat.Tools.prepare_encounters` before it can be played.
+    layout. Its log is CombatLogs/<name>.json: an empty {} until the combat
+    window opens the encounter, which sets the log up from this.
 
     `combatants` are the hostile side; `allies` are friendly NPCs fighting with the
     party. Both are shown in the combat window, but only `combatants` count toward

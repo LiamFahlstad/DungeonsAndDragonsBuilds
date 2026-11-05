@@ -69,10 +69,14 @@ class CombatAppQt(
         player_log_path: str | None = None,
         scenario_name: str | None = None,
         scenarios: list[CombatScenario] | None = None,
+        party_names: list[str] | None = None,
     ):
         """`character_sheets` is the tracked party. Encounters come from the
-        campaign's `scenarios`, each played from its prepared log in
-        `combat_log_dir` (Combat/EncounterLogs.py):
+        campaign's `scenarios`, each played from its log in `combat_log_dir`
+        (Combat/EncounterLogs.py), which is set up from its config when the
+        encounter is opened (an empty {} until then), with those of
+        `party_names` (the campaign's party, by default the tracked one) who
+        take part in it:
 
         - With `scenario_name`, `log_path` is that encounter's log, which
           run() opens (asking whether to continue or restart a fight in progress).
@@ -90,6 +94,9 @@ class CombatAppQt(
         for cs in character_sheets:
             self._add_from_character_sheet(cs)
             self._party_sheets[self.characters[-1]["name"]] = cs
+        self._party_names = list(
+            party_names if party_names is not None else self._party_sheets
+        )
         for c in combatants:
             self._add_basic_combatant(c)
 

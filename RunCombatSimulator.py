@@ -4,7 +4,7 @@ import sys
 import Combat.Scenarios as Scenarios
 from Combat.CombatUIQt import CombatAppQt
 from Combat.EncounterConfig import resolve_players
-from Combat.EncounterLogs import is_prepared, scenario_log_path
+from Combat.EncounterLogs import scenario_log_path
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="DnD Combat Engine")
@@ -13,8 +13,8 @@ if __name__ == "__main__":
         choices=sorted(Scenarios.SCENARIOS.keys()),
         default=None,
         help="Encounter to play, an id from its campaign's encounters.py. Its log, "
-        "CombatLogs/<id>.json, must be prepared first (python -m "
-        "Combat.Tools.prepare_encounters). When it holds a fight in progress, the window "
+        "CombatLogs/<id>.json, is set up from the config when the encounter is "
+        "opened. When it holds a fight in progress, the window "
         "asks whether to continue it or restart it (the old log is kept as a backup). Omit "
         "it with --player-log to open the party between encounters.",
     )
@@ -146,20 +146,17 @@ if __name__ == "__main__":
     log_path = None
     if scenario is not None:
         log_path = scenario_log_path(campaign.combat_log_dir, scenario.name)
-        if not is_prepared(log_path):
-            parser.error(
-                f"encounter '{scenario.name}' isn't prepared yet. Prepare its log with:\n"
-                f"  python -m Combat.Tools.prepare_encounters --campaign {campaign.name}"
-            )
 
+    party = campaign.players()
     app = CombatAppQt(
         combatants=[],
-        character_sheets=campaign.players() if args.player_log else [],
+        character_sheets=party if args.player_log else [],
         combat_log_dir=campaign.combat_log_dir,
         combatants_per_column=scenario.combatants_per_column if scenario else 4,
         log_path=log_path,
         player_log_path=args.player_log,
         scenario_name=args.scenario,
         scenarios=campaign.scenarios,
+        party_names=[cs.character_name for cs in party],
     )
     app.run()

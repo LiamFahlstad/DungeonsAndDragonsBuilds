@@ -1,7 +1,8 @@
 """Encounter mixin for CombatAppQt: play the campaign's encounters from their
-prepared logs (Combat/EncounterLogs.py), at launch (--scenario) or from the
-Load Encounter dialog, continuing a fight in progress or restarting it; end
-one; and the party view shown between encounters, where nothing is logged."""
+logs (Combat/EncounterLogs.py), at launch (--scenario) or from the Load
+Encounter dialog, setting up an empty log from its config when it's opened,
+continuing a fight in progress or restarting it; end one; and the party view
+shown between encounters, where nothing is logged."""
 
 import json
 from pathlib import Path
@@ -24,6 +25,7 @@ from Combat.EncounterConfig import resolve_players
 from Combat.EncounterLogs import (
     ENDED_KEY,
     is_prepared,
+    prepare_log,
     prepared_log,
     read_log_status,
     restart_log,
@@ -36,10 +38,6 @@ from .styles import QSS
 
 CONTINUE = "continue"
 RESTART = "restart"
-PREPARE_HINT = (
-    "Its log isn't prepared yet: run `python -m Combat.Tools.prepare_encounters` "
-    "after adding it to the campaign's encounters.py."
-)
 
 
 class EncountersMixin(CombatWindowState):
@@ -93,6 +91,9 @@ class EncountersMixin(CombatWindowState):
         """Open the --scenario encounter's log when the window starts; False
         if the GM cancelled."""
         assert self._scenario_name is not None
+        scenario = self._scenario(self._scenario_name)
+        if scenario is not None:
+            self._prepare_if_missing(scenario, path)
         choice = self._ask_continue_or_restart(
             path, self._scenario_title(self._scenario_name)
         )
@@ -104,14 +105,30 @@ class EncountersMixin(CombatWindowState):
     def _encounter_players(self, scenario: CombatScenario, path: Path) -> list[str]:
         """Who takes part in `scenario`: from its config when the party is
         known, else as its log says."""
-        if self._party_sheets:
+        if self._party_names:
             try:
-                return resolve_players(scenario.players, list(self._party_sheets))
+                return resolve_players(scenario.players, self._party_names)
             except KeyError:
                 pass
         if path.exists():
             return json.loads(path.read_text(encoding="utf-8")).get("players", [])
         return []
+
+    def _prepare_if_missing(self, scenario: CombatScenario, path: Path):
+        """Set up `scenario` from its config the first time it is opened, when
+        its log at `path` is missing or empty ({}): its players, and its
+        monsters and allies at full HP, written into the log. A log already
+        set up is left as it is (prepare_log only gives a log from before
+        headers its header)."""
+        if is_prepared(path):
+            return
+        prepare_log(
+            path,
+            scenario,
+            self._encounter_players(scenario, path),
+            sheets=self._party_sheets,
+        )
+        print(f"Set up {path} from {scenario.name}'s config")
 
     def _open_encounter_log(self, path: Path, restart: bool):
         """Play the current scenario's prepared log at `path`: continue the
@@ -170,17 +187,12 @@ class EncountersMixin(CombatWindowState):
         self._update_target_label()
 
     def _load_encounter(self, scenario: CombatScenario, restart: bool):
-        """Swap the encounter in the window for `scenario`, from its prepared
-        log: continue it, or restart it. The encounter being left needs no
-        saving: its log is written on every event."""
+        """Swap the encounter in the window for `scenario`, from its log
+        (prepared now if it has none yet): continue it, or restart it. The
+        encounter being left needs no saving: its log is written on every
+        event."""
         path = scenario_log_path(self._combat_log_dir, scenario.name)
-        if not is_prepared(path):
-            QMessageBox.warning(
-                self._window,
-                "Load Encounter",
-                f"{scenario.display_title}: {PREPARE_HINT}",
-            )
-            return
+        self._prepare_if_missing(scenario, path)
         self.characters = [c for c in self.characters if c.get("_is_player")]
         self.combatants_per_column = scenario.combatants_per_column
         self._scenario_name = scenario.name
@@ -338,18 +350,14 @@ class EncountersMixin(CombatWindowState):
             "QListWidget::item { padding: 6px 10px; }"
             "QListWidget::item:selected { background: #1e2d5a; color: #eaeaea; }"
         )
-        prepared = {}
         statuses = {}
         for scenario in self._scenarios:
             path = scenario_log_path(self._combat_log_dir, scenario.name)
-            prepared[scenario.name] = is_prepared(path)
             statuses[scenario.name] = read_log_status(path)
             heading = scenario.display_title
             if scenario.name == self._scenario_name:
                 heading += "  (current)"
-            if not prepared[scenario.name]:
-                detail = "Not prepared"
-            elif statuses[scenario.name] is None:
+            if statuses[scenario.name] is None:
                 detail = "Ready"
             else:
                 detail = statuses[scenario.name].describe()
@@ -397,11 +405,9 @@ class EncountersMixin(CombatWindowState):
             lines.append(f"Monsters: {', '.join(scenario.monster_summary) or 'none'}")
             if scenario.ally_summary:
                 lines.append(f"Allies: {', '.join(scenario.ally_summary)}")
-            if not prepared[scenario.name]:
-                lines.append(PREPARE_HINT)
             details.setText("\n".join(lines))
             in_progress = statuses[scenario.name] is not None
-            continue_btn.setEnabled(prepared[scenario.name])
+            continue_btn.setEnabled(True)
             continue_btn.setText(
                 "Continue Encounter" if in_progress else "Start Encounter"
             )

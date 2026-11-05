@@ -1,5 +1,6 @@
 """Curse of the Lich: the party and every encounter it can run (format:
-Combat/Campaigns/ENCOUNTERS.md). After changing it, prepare the logs:
+Combat/Campaigns/ENCOUNTERS.md). Each encounter's log is an empty {} until the
+encounter is opened, which sets it up from here. After changing this, check it:
 python -m Combat.Tools.prepare_encounters"""
 
 import Combat.Combatants as Combatants
@@ -51,7 +52,7 @@ from Combat.Monsters.CR_6.monsters_homebrew import TheMouthThatWalks
 CONFIG = CampaignSpec(
     name="curse_of_the_lich",
     title="Curse of the Lich",
-    description="The tracked six-player campaign. Every encounter below is played from its log, CombatLogs/<id>.json, prepared with: python -m Combat.Tools.prepare_encounters",
+    description="The tracked six-player campaign. Every encounter below is logged in CombatLogs/<id>.json, empty until it's opened, then set up from its encounter below.",
     party=[
         Y2024ArtificerCartographerObmarStalskaggCharacterBuilder,
         Y2024PaladinDevotionEdmundCharacterBuilder,

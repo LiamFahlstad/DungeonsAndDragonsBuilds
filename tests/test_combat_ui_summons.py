@@ -15,7 +15,6 @@ and carry over."""
 import dataclasses
 import json
 import random
-import shutil
 from functools import cache
 from pathlib import Path
 
@@ -23,7 +22,6 @@ import pytest
 from PyQt6.QtWidgets import QDialog, QMessageBox
 
 import Combat.PlayerLog as PlayerLog
-import Combat.Scenarios as Scenarios
 from CharacterContent.Features.SubClassFeatures.Artificer.ArtificerReanimatorFeatures import (
     ReanimatedCompanion,
 )
@@ -80,13 +78,6 @@ CAVE = CombatScenario(name="cave", title="Cave", combatants=lambda: [Tiger()])
 # Prepared as logs were before summons were made on demand: with a hidden
 # companion for each player, under the old key and name.
 OLD = CombatScenario(name="old", title="Old", combatants=lambda: [Tiger()])
-
-TIME_LOOP_LOGS = [
-    "time_loop_pr_drunk_oxe",
-    "time_loop_pr_mira",
-    "time_loop_pr_outside_the_gates",
-    "time_loop_pr_square",
-]
 
 
 @pytest.fixture(autouse=True)
@@ -770,43 +761,6 @@ def test_an_old_logs_hidden_companions_load_and_arent_out(tmp_path):
     assert _char(ui, DRAKE)[CHOICE_KEY] == "Acid"
 
 
-@cache
-def _time_loop_party() -> list:
-    return Scenarios.SCENARIO_CAMPAIGNS[TIME_LOOP_LOGS[0]].players()
-
-
-@pytest.mark.parametrize("name", TIME_LOOP_LOGS)
-def test_the_time_loop_logs_load(tmp_path, name):
-    campaign = Scenarios.SCENARIO_CAMPAIGNS[name]
-    scenario = Scenarios.SCENARIOS[name]
-    committed = scenario_log_path(campaign.folder / "CombatLogs", name)
-    text = committed.read_text(encoding="utf-8")
-    assert '"summon_of"' in text and '"companion_of"' not in text
-    path = scenario_log_path(tmp_path, name)
-    shutil.copyfile(committed, path)
-    qapp()
-    ui = CombatAppQt(
-        combatants=[],
-        character_sheets=_time_loop_party(),
-        combat_log_dir=tmp_path,
-        log_path=path,
-        scenario_name=name,
-        scenarios=[scenario],
-    )
-    ui._build_window()
-    ui._open_encounter_log(path, restart=False)
-    # The Square was played (Dessie summoned hers); the others weren't yet.
-    assert ui.phase == ("COMBAT" if name == "time_loop_pr_square" else "INITIATIVE")
-    hanna, dessie = _char(ui, "Hanna"), _char(ui, "Dessie")
-    assert [c["name"] for c in ui._owner_summons(hanna)] == [OLD_DRAKE]
-    assert [c["name"] for c in ui._owner_summons(dessie)] == [OLD_REANIMATED]
-    # The cards' menus work out what each one is.
-    assert "Dismiss" in _menu_texts(ui, _char(ui, OLD_DRAKE))
-    assert "Summon Drake Companion (1 use left)" in _menu_texts(ui, hanna)
-    reanimated = _char(ui, OLD_REANIMATED)
-    assert _can_be_seen(reanimated) == (name == "time_loop_pr_square")
-
-
 # ---------------------------------------------------------------------------
 # Paying for a summon (SummonSpec.costs)
 
@@ -1050,60 +1004,6 @@ def test_a_carried_summon_keeps_its_card_until_its_summoned_again(tmp_path):
     _summon(ui, "Hanna", "Cold")
     drake = _char(ui, DRAKE)
     assert (drake["hp"], drake["max_hp"], drake["ac"]) == (20, 20, 16)
-
-
-def test_the_time_loop_square_carries_its_summons_into_the_next_encounter(
-    tmp_path,
-):
-    """A log played before summons were logged (no Action.SUMMON) still
-    carries them over: the Square's, into the Drunk Oxe."""
-    campaign = Scenarios.SCENARIO_CAMPAIGNS["time_loop_pr_square"]
-    logs = tmp_path / "CombatLogs"
-    logs.mkdir()
-    for name in ("time_loop_pr_square", "time_loop_pr_drunk_oxe"):
-        committed = scenario_log_path(campaign.folder / "CombatLogs", name)
-        shutil.copyfile(committed, scenario_log_path(logs, name))
-    square = json.loads(
-        scenario_log_path(logs, "time_loop_pr_square").read_text(encoding="utf-8")
-    )
-    assert not any(
-        e.get("action") in (Action.SUMMON, Action.DISMISS)
-        for k in square
-        if is_round_key(k)
-        for e in square[k]
-    )
-    player_log = tmp_path / "PlayerLogs" / "main_party.json"
-    player_log.parent.mkdir()
-    ref = PlayerLog.log_ref(player_log, scenario_log_path(logs, "time_loop_pr_square"))
-    session = {"type": PlayerLog.ENCOUNTER, "scenario": "time_loop_pr_square"}
-    player_log.write_text(
-        json.dumps({"sessions": [dict(session, log=ref)]}), encoding="utf-8"
-    )
-    qapp()
-    ui = CombatAppQt(
-        combatants=[],
-        character_sheets=_time_loop_party(),
-        combat_log_dir=logs,
-        player_log_path=str(player_log),
-        scenarios=[
-            Scenarios.SCENARIOS["time_loop_pr_square"],
-            Scenarios.SCENARIOS["time_loop_pr_drunk_oxe"],
-        ],
-    )
-    ui._build_window()
-    ui._load_encounter(Scenarios.SCENARIOS["time_loop_pr_drunk_oxe"], restart=False)
-    for owner, name in (("Dessie", OLD_REANIMATED), ("Hanna", OLD_DRAKE)):
-        (left,) = [c for c in square["combatants"] if c["name"] == name]
-        # The Drunk Oxe was prepared with a hidden one of each, under the old
-        # name: the one the Square left out comes out as it left it.
-        (here,) = ui._owner_summons(_char(ui, owner))
-        assert here["name"] == name
-        if left.get("hidden_from_players") or left["hp"] <= 0:
-            assert here["hidden_from_players"]
-        else:
-            assert _can_be_seen(here) and here["hp"] == left["hp"]
-    # Nothing was written to the campaign: the logs are copies.
-    assert ui.log_file is not None and ui.log_file.parent == logs
 
 
 # ---------------------------------------------------------------------------

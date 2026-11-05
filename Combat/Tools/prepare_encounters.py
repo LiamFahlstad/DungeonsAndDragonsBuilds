@@ -1,7 +1,8 @@
-"""Check a campaign's encounters.py and prepare each encounter's log,
-CombatLogs/<encounter id>.json: the encounter, who takes part, and its
-monsters and allies at full HP, ready to be played (Combat/EncounterLogs.py).
-The combat window only plays prepared encounters.
+"""Check a campaign's encounters.py and get each encounter's log,
+CombatLogs/<encounter id>.json, ready: an empty {} until the encounter is
+opened, when the combat window sets it up from its EncounterSpec
+(Combat/EncounterLogs.py). Run it after changing encounters.py: a log whose
+fight hasn't started is emptied, so the changed config sets it up.
 
 Run from the repo root:
     python -m Combat.Tools.prepare_encounters                         # the default campaign
@@ -11,10 +12,10 @@ Run from the repo root:
     python -m Combat.Tools.prepare_encounters wrath_of_durmor         # only these encounters
 
 Nothing is written while the config has problems (unknown monsters or
-builds, players not in the party, bad or repeated ids). A log that isn't
-prepared yet is written; one not started yet is rewritten when the config
-changed; a fight in progress or ended is left as it is (it only gets the
-header older logs lack). Combat/Campaigns/ENCOUNTERS.md documents the config.
+builds, players not in the party, bad or repeated ids). A missing log is
+created empty; one set up but not started is emptied; a fight in progress
+or ended is left as it is. Combat/Campaigns/ENCOUNTERS.md documents the
+config.
 """
 
 import argparse
@@ -22,8 +23,8 @@ import sys
 
 import Combat.Scenarios as Scenarios
 from Combat.Campaign import Campaign
-from Combat.EncounterConfig import resolve_players, validate
-from Combat.EncounterLogs import prepare_log, scenario_log_path
+from Combat.EncounterConfig import validate
+from Combat.EncounterLogs import empty_log, scenario_log_path
 
 
 def prepare_campaign(
@@ -32,8 +33,7 @@ def prepare_campaign(
     """(problems, [(encounter id, what happened to its log)]). Nothing is
     written when there are problems."""
     assert campaign.config is not None, f"{campaign.name} has no encounters.py"
-    sheets = {cs.character_name: cs for cs in campaign.players()}
-    party_names = list(sheets)
+    party_names = [cs.character_name for cs in campaign.players()]
     problems = validate(campaign.config, party_names)
     known = {s.name for s in campaign.scenarios}
     problems += [
@@ -45,11 +45,8 @@ def prepare_campaign(
     for scenario in campaign.scenarios:
         if only and scenario.name not in only:
             continue
-        players = resolve_players(scenario.players, party_names)
         path = scenario_log_path(campaign.combat_log_dir, scenario.name)
-        results.append(
-            (scenario.name, prepare_log(path, scenario, players, write, sheets))
-        )
+        results.append((scenario.name, empty_log(path, write)))
     return problems, results
 
 
@@ -86,9 +83,8 @@ def main(argv: list[str] | None = None) -> int:
         for name, what in results:
             if args.check:
                 what = {
-                    "prepared": "would be prepared",
-                    "updated": "would be updated",
-                    "in progress, header added": "in progress, header would be added",
+                    "created empty": "would be created empty",
+                    "emptied": "would be emptied",
                 }.get(what, what)
             print(f"  {name:<40} {what}")
     return 1 if failed else 0

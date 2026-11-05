@@ -44,6 +44,7 @@ from Combat.EncounterConfig import (
 from Combat.EncounterLogs import (
     ENDED_KEY,
     UNDONE_SESSIONS_KEY,
+    empty_log,
     is_prepared,
     prepare_log,
     prepared_log,
@@ -252,25 +253,13 @@ def test_a_prepared_log_holds_no_summons_of_who_takes_part():
     assert [c["name"] for c in log["combatants"]] == ["Tiger"]
 
 
-def test_preparing_a_campaign_adds_no_party_summons(tmp_path):
-    campaign = Campaign(
-        name="test",
-        folder=tmp_path,
-        players=lambda: [_sheet(DESSIE_BUILD)],
-        scenarios=[dataclasses.replace(TIGER, players=None)],
-        config=CampaignSpec(
-            name="test",
-            title="Test",
-            description="",
-            party=[],
-            encounters=[EncounterSpec(id="tiger_den", title="Tiger Den")],
-        ),
-    )
-    problems, results = prepare_campaign(campaign)
-    assert (problems, results) == ([], [("tiger_den", "prepared")])
-    data = json.loads(
-        scenario_log_path(tmp_path / "CombatLogs", "tiger_den").read_text()
-    )
+def test_setting_up_a_log_adds_no_party_summons(tmp_path):
+    dessie = _sheet(DESSIE_BUILD)
+    path = scenario_log_path(tmp_path, "tiger_den")
+    scenario = dataclasses.replace(TIGER, players=None)
+    sheets = {dessie.character_name: dessie}
+    assert prepare_log(path, scenario, list(sheets), sheets=sheets) == "prepared"
+    data = json.loads(path.read_text())
     assert [c["name"] for c in data["combatants"]] == ["Tiger"]
 
 
@@ -279,6 +268,8 @@ def test_preparing_logs(tmp_path):
     assert not is_prepared(path)
     assert prepare_log(path, TIGER, ["Edmund"], write=False) == "prepared"
     assert not path.exists()
+    path.write_text("{}")
+    assert not is_prepared(path)
     assert prepare_log(path, TIGER, ["Edmund"]) == "prepared"
     assert is_prepared(path)
     assert prepare_log(path, TIGER, ["Edmund"]) == "unchanged"
@@ -368,21 +359,39 @@ def test_the_prepare_tool_writes_nothing_while_the_config_has_problems(tmp_path)
     assert not (tmp_path / "CombatLogs").exists()
 
 
-def test_the_prepare_tool_prepares_each_encounter(tmp_path):
+def test_the_prepare_tool_empties_each_encounter_log(tmp_path):
     second = dataclasses.replace(TIGER_CONFIG, id="second_den")
     campaign = Campaign.from_config(_config([TIGER_CONFIG, second]), tmp_path)
     assert prepare_campaign(campaign, write=False) == (
         [],
-        [("tiger_den", "prepared"), ("second_den", "prepared")],
+        [("tiger_den", "created empty"), ("second_den", "created empty")],
     )
     assert prepare_campaign(campaign, only=["tiger_den"]) == (
         [],
-        [("tiger_den", "prepared")],
+        [("tiger_den", "created empty")],
     )
-    log = json.loads((tmp_path / "CombatLogs" / "tiger_den.json").read_text())
-    assert log["players"] == ["Edmund"]
-    assert [c["name"] for c in log["combatants"]] == ["Stripes (Tiger)"]
+    assert json.loads((tmp_path / "CombatLogs" / "tiger_den.json").read_text()) == {}
     assert not (tmp_path / "CombatLogs" / "second_den.json").exists()
+
+
+def test_emptying_logs_keeps_fights_that_started(tmp_path):
+    path = tmp_path / "tiger_den.json"
+    assert empty_log(path, write=False) == "created empty"
+    assert not path.exists()
+    assert empty_log(path) == "created empty"
+    assert empty_log(path) == "empty"
+    # Set up when it was opened, but not started: the config sets it up again.
+    prepare_log(path, TIGER, ["Edmund"])
+    assert empty_log(path) == "emptied"
+    assert json.loads(path.read_text()) == {}
+    _in_progress_log(path)
+    played = path.read_text()
+    assert empty_log(path) == "in progress"
+    data = json.loads(played)
+    data[ENDED_KEY] = "2026-11-05T20:00:00"
+    path.write_text(json.dumps(data))
+    assert empty_log(path) == "ended"
+    assert json.loads(path.read_text()) == data
 
 
 # ---------------------------------------------------------------------------
@@ -465,14 +474,48 @@ def test_between_encounters_the_window_shows_the_party_and_logs_nothing(tmp_path
     ]
 
 
-def test_an_unprepared_encounter_cannot_be_loaded(tmp_path, monkeypatch):
+def test_an_encounter_without_a_log_gets_one_when_loaded(tmp_path):
     ui = _ui(tmp_path)
-    scenario_log_path(tmp_path / "CombatLogs", "tiger_den").unlink()
-    warned = []
-    monkeypatch.setattr(QMessageBox, "warning", lambda *a: warned.append(a[2]))
+    path = scenario_log_path(tmp_path / "CombatLogs", "tiger_den")
+    path.unlink()
     ui._load_encounter(TIGER, restart=False)
-    assert warned and "isn't prepared" in warned[0]
-    assert ui.phase == "PARTY"
+    assert ui.phase == "INITIATIVE"
+    data = json.loads(path.read_text(encoding="utf-8"))
+    assert data["encounter"] == "tiger_den"
+    assert data["players"] == resolve_players(TIGER.players, _names())
+    assert "Tiger" in [c["name"] for c in ui.characters]
+
+
+def test_an_empty_log_is_set_up_from_the_config_when_opened(tmp_path):
+    """A log waits as {} until its encounter is opened, which sets it up from
+    the encounter's config."""
+    ui = _ui(tmp_path)
+    path = scenario_log_path(tmp_path / "CombatLogs", "tiger_den")
+    path.write_text("{}", encoding="utf-8")
+    assert read_log_status(path) is None
+    ui._load_encounter(TIGER, restart=False)
+    data = json.loads(path.read_text(encoding="utf-8"))
+    assert data["encounter"] == "tiger_den" and data["players"] == ["Edmund"]
+    assert [c["name"] for c in data["combatants"]] == ["Tiger"]
+    assert "Tiger" in [c["name"] for c in ui.characters]
+
+
+def test_an_untracked_party_still_takes_part_in_a_new_log(tmp_path):
+    """Without a player log the window has no party, but the log it prepares
+    lists who takes part, so a later tracked run plays them."""
+    logs = tmp_path / "CombatLogs"
+    qapp()
+    ui = CombatAppQt(
+        [],
+        [],
+        combat_log_dir=logs,
+        scenarios=[PIRATES, TIGER],
+        party_names=_names(),
+    )
+    ui._build_window()
+    ui._load_encounter(TIGER, restart=False)
+    data = json.loads(scenario_log_path(logs, "tiger_den").read_text(encoding="utf-8"))
+    assert data["players"] == resolve_players(TIGER.players, _names())
 
 
 def test_loading_an_encounter_brings_its_monsters_and_players(tmp_path):
@@ -719,14 +762,15 @@ def test_the_load_encounter_dialog_lists_the_campaigns_encounters(
     dlg = open_dialog(monkeypatch, ui._show_load_encounter_dialog)
     (scenario_list,) = dlg.findChildren(QListWidget)
     items = [scenario_list.item(i).text() for i in range(scenario_list.count())]  # type: ignore[union-attr]
-    assert items[0] == "Pirate Ambush\n    Not prepared"
+    # An encounter without a log yet is ready: opening it prepares one.
+    assert items[0] == "Pirate Ambush\n    Ready"
     assert items[1].startswith("Tiger Den\n    Round 4, 1 of 2 standing")
 
     buttons = {b.text(): b for b in dlg.findChildren(QPushButton)}
-    assert not buttons["Start Encounter"].isEnabled()
+    assert buttons["Start Encounter"].isEnabled()
     assert not buttons["Restart Encounter"].isEnabled()
     details = [label.text() for label in dlg.findChildren(QLabel)][-1]
-    assert "Players: the whole party" in details and "isn't prepared" in details
+    assert "Players: the whole party" in details
     scenario_list.setCurrentRow(1)
     assert buttons["Start Encounter"].text() == "Continue Encounter"
     assert buttons["Start Encounter"].isEnabled()

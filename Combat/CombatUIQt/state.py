@@ -92,6 +92,9 @@ class CombatWindowState:
     log_file: Path | None
     # The tracked party's character sheets by character name (_set_party).
     _party_sheets: dict
+    # The campaign party's character names, tracked or not: who an encounter
+    # log is prepared with (EncountersMixin._prepare_if_missing).
+    _party_names: list[str]
     # A short rest's events while it's being taken (RestsMixin).
     _rest_events: list[dict] | None
     _initiative_widget: QWidget | None

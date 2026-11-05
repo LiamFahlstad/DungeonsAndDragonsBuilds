@@ -1,9 +1,12 @@
 """Each encounter's log, Combat/Campaigns/<C>/CombatLogs/<encounter id>.json:
-preparing it, how far the fight in it got, and starting it over.
+setting it up, how far the fight in it got, and starting it over.
 
-Every encounter in a campaign's encounters.py (Combat/Campaigns/ENCOUNTERS.md)
-gets its log from `python -m Combat.Tools.prepare_encounters`, named after its
-id; nothing else writes new logs. A prepared log starts as
+The encounter is set up by its EncounterSpec in the campaign's encounters.py
+(Combat/Campaigns/ENCOUNTERS.md), not by its log. Until the combat window
+opens the encounter, its log is an empty JSON file, {} (or missing):
+`python -m Combat.Tools.prepare_encounters` checks the config and empties
+every log whose fight hasn't started (empty_log). Opening the encounter sets
+the log up from the config (prepare_log), as
 
     {"encounter": <id>, "title": ..., "players": [<who takes part>],
      "round_number": 1, "combatants": [<allies, monsters, full HP>]}
@@ -125,18 +128,19 @@ def prepare_log(
     write: bool = True,
     sheets: dict | None = None,
 ) -> str:
-    """Write the prepared log of `scenario` at `path` (unless `write` is
-    False; `sheets` as for prepared_log), and say what happened: "prepared" (new), "updated" (not started,
-    but the config changed), "unchanged", or "in progress" for a fight that
-    got going, which is left as it is except for a header it didn't have yet
+    """Set up the log of `scenario` at `path` from its config (unless `write`
+    is False; `sheets` as for prepared_log), and say what happened:
+    "prepared" (it was missing or empty, {}), "updated" (not started, but the
+    config changed), "unchanged", or "in progress" for a fight that got
+    going, which is left as it is except for a header it didn't have yet
     ("in progress, header added"; its last-played time is kept)."""
     path = Path(path)
     fresh = _plain(prepared_log(scenario, players, sheets))
-    if not path.exists():
+    data = json.loads(path.read_text(encoding="utf-8")) if path.exists() else {}
+    if not data:
         if write:
             write_log(path, fresh)
         return "prepared"
-    data = json.loads(path.read_text(encoding="utf-8"))
     if has_round_events(data):
         missing = {k: fresh[k] for k in HEADER_KEYS if k not in data}
         if not missing:
@@ -151,6 +155,27 @@ def prepare_log(
     if write:
         write_log(path, fresh)
     return "updated"
+
+
+def empty_log(path: str | Path, write: bool = True) -> str:
+    """Make the log at `path` an empty {} until its encounter is opened,
+    unless its fight started (unless `write` is False), and say what
+    happened: "created empty" (it was missing), "empty" (already), "emptied"
+    (set up, but not started: the config sets it up again when it's opened),
+    or "in progress" / "ended" for a fight that got going, left as it is."""
+    path = Path(path)
+    if not path.exists():
+        if write:
+            write_log(path, {})
+        return "created empty"
+    data = json.loads(path.read_text(encoding="utf-8"))
+    if not data:
+        return "empty"
+    if has_round_events(data):
+        return "ended" if ENDED_KEY in data else "in progress"
+    if write:
+        write_log(path, {})
+    return "emptied"
 
 
 @dataclass

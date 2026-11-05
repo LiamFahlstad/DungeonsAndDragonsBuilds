@@ -1,5 +1,6 @@
 """Grim's Castle: the party and every encounter it can run (format:
-Combat/Campaigns/ENCOUNTERS.md). After changing it, prepare the logs:
+Combat/Campaigns/ENCOUNTERS.md). Each encounter's log is an empty {} until the
+encounter is opened, which sets it up from here. After changing this, check it:
 python -m Combat.Tools.prepare_encounters --campaign grims_castle"""
 
 from Combat.Combatants import Bull, Player1
@@ -8,7 +9,7 @@ from Combat.EncounterConfig import CampaignSpec, CombatantSpec, EncounterSpec
 CONFIG = CampaignSpec(
     name="grims_castle",
     title="Grim's Castle",
-    description="No character sheets yet, so there is no tracked party: four placeholder players join each encounter as allies. Every encounter below is played from its log, CombatLogs/<id>.json, prepared with: python -m Combat.Tools.prepare_encounters --campaign grims_castle",
+    description="No character sheets yet, so there is no tracked party: four placeholder players join each encounter as allies. Every encounter below is logged in CombatLogs/<id>.json, empty until it's opened, then set up from its encounter below.",
     party=[],
     encounters=[
         EncounterSpec(

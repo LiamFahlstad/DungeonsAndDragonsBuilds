@@ -6,12 +6,13 @@ Every campaign lives in `Combat/Campaigns/<Campaign>/`:
 |---|---|---|
 | `encounters.py` | `CONFIG`: the campaign's party and every encounter it can run | You |
 | `Campaign.py` | One line that makes the campaign from `encounters.py` | Nobody (leave it) |
-| `CombatLogs/<encounter id>.json` | One log per encounter: who takes part, the monsters, every event of the fight | `prepare_encounters` creates it; the combat window fills it in |
+| `CombatLogs/<encounter id>.json` | One log per encounter: who takes part, the monsters, every event of the fight | `{}` until the encounter is opened; then the combat window sets it up from `encounters.py` and logs the fight into it |
 | `PlayerLogs/main_party.json` | The party's journal: where they've been (encounters, short and long rests) | The combat window |
 | `CHEATSHEET.md` | The commands for this campaign | You |
 
-The combat window only plays encounters listed in `encounters.py`, and only once
-their log is prepared. It never makes up a log of its own.
+The combat window only plays encounters listed in `encounters.py`. The
+encounter's `EncounterSpec` sets it up, not its log: the log stays an empty
+`{}` until the encounter is opened, and then records the fight.
 
 ## encounters.py
 
@@ -96,7 +97,7 @@ A player whose sheet has a feature that creates or summons a creature to fight
 beside them (one that overrides `Feature.summons()`, so far the Reanimator
 Artificer's Reanimated Companion and the Drakewarden Ranger's Drake Companion)
 can summon it in any encounter they take part in, without a line in
-`encounters.py`. It isn't in the prepared log: it joins the fight when it's
+`encounters.py`. It isn't in the log when it's set up: it joins the fight when it's
 summoned, as "<character>'s <feature>" (e.g. "Hanna's Drake Companion",
 numbered " 2", " 3" when one owner has several). Combat/Summons.py has the
 details.
@@ -132,9 +133,11 @@ To find a class, search the stat blocks for the monster's name, e.g.
 `grep -rn 'combatant_type="Goblin Boss"' Combat/Monsters`: the class is the
 `class ...:` line above the match, and the file is the module to import it from.
 
-## Preparing the logs
+## Checking the config and emptying the logs
 
-After adding or changing an encounter, prepare its log:
+After adding or changing an encounter, check the config. Every log whose fight
+hasn't started is made an empty `{}`, so the changed config sets it up when the
+encounter is opened:
 
 ```
 python -m Combat.Tools.prepare_encounters --campaign curse_of_the_lich
@@ -149,11 +152,14 @@ for each encounter:
 
 | The log | What happens |
 |---|---|
-| doesn't exist | **prepared**: written with the encounter, its players, and its allies and monsters at full HP |
-| exists, fight not started | **updated** to match the config (or **unchanged**) |
-| fight in progress or ended | left as it is (**in progress**); a log from before this setup only gets the header it lacks |
+| doesn't exist | **created empty**: `{}` |
+| `{}` | left **empty** |
+| set up (the encounter was opened), fight not started | **emptied** back to `{}` |
+| fight in progress or ended | left as it is (**in progress** / **ended**) |
 
-A prepared log starts as:
+When the window opens an encounter whose log is `{}` (or missing), it sets the
+log up from the config (a log from before this setup that holds a fight only
+gets the header it lacks). A log set up that way starts as:
 
 ```json
 {
@@ -178,7 +184,7 @@ conditions aren't stored in it: they're replayed from the events (see below).
 - Without `--scenario`, `--player-log` opens the party **between encounters**: their
   current HP, slots and conditions, with Load Encounter (Ctrl+O), Short Rest and
   Long Rest. Nothing is logged between encounters.
-- **Restart** puts the log back to its prepared state (re-read from the config) and
+- **Restart** sets the log up again from the config and
   undoes the fight for the party. The old log is kept as
   `<id>_restarted_<timestamp>.json` (git-ignored).
 - **End Encounter** marks the fight as ended (`ended_at`) and goes back to the party.
