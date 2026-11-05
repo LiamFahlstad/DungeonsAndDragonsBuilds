@@ -6,8 +6,9 @@ full disk in the middle of a write must not leave half a file: write_json
 writes a temporary file next to the log and swaps it in with one rename, so
 the log on disk is always either the old version or the new one. read_json
 turns a log that still can't be read (edited by hand, cut off before this
-existed) into a BrokenLogError that names the file and says how to get it
-back, instead of a bare JSONDecodeError from deep inside a replay."""
+existed) into a BrokenLogError that names the file and what to do about
+it, instead of a bare JSONDecodeError from deep inside a replay. The logs are
+local to the play session (git-ignored), so git can't restore them."""
 
 import json
 import os
@@ -31,11 +32,11 @@ class BrokenLogError(Exception):
         backups = sorted(path.parent.glob(f"{path.stem}_restarted_*.json"))
         lines = [
             f"The log {path} can't be read ({error.msg}, line {error.lineno}).",
-            "Get the last committed version back with:",
-            f"    git checkout -- {path.as_posix()}",
+            "Logs aren't kept in git: fix the JSON by hand, copy a backup of",
+            "yours over it, or delete it to start the encounter over.",
         ]
         if backups:
-            lines.append("or copy one of its backups over it:")
+            lines.append("Restart backups of it, next to it:")
             lines += [f"    {b.name}" for b in backups]
         super().__init__("\n".join(lines))
 

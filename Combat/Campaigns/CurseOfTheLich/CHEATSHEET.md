@@ -12,7 +12,8 @@ Everything for this campaign lives in `Combat/Campaigns/CurseOfTheLich/`:
   long rests). The party's current HP, conditions and slots are replayed from
   the encounter logs since the last long rest.
 
-Both logs are committed, since the party's state comes from them.
+Both logs stay on this machine (git ignores them). The party's state comes
+from them, so copy `CombatLogs/` and `PlayerLogs/` to keep the campaign safe.
 
 ## Adding or changing an encounter
 
@@ -61,7 +62,7 @@ Or open the party between encounters and pick one with Load Encounter.
 - If an encounter's log holds a fight in progress, the window asks first:
   **Continue Encounter** picks it up where it stopped; **Restart Encounter**
   undoes it (fresh monsters from the config, its line leaves the player log,
-  and the party is as they were before it; the old log is kept, not committed,
+  and the party is as they were before it; the old log is kept
   as `CombatLogs/<id>_restarted_<timestamp>.json`).
 - **End Encounter** marks the fight ended (`ended_at`, in its log and on its
   player-log line) and goes back to the party between encounters. Continuing

@@ -793,7 +793,7 @@ def test_the_load_encounter_dialog_shows_a_broken_log(tmp_path, monkeypatch):
     buttons = {b.text(): b for b in dlg.findChildren(QPushButton)}
     assert not buttons["Start Encounter"].isEnabled()
     details = [label.text() for label in dlg.findChildren(QLabel)][-1]
-    assert "git checkout -- " in details and "pirate_ambush.json" in details
+    assert "can't be read" in details and "pirate_ambush.json" in details
 
 
 def test_the_prepare_tool_leaves_a_broken_log_and_lists_stray_logs(tmp_path):
@@ -807,7 +807,7 @@ def test_the_prepare_tool_leaves_a_broken_log_and_lists_stray_logs(tmp_path):
 
     problems, [(name, what)] = prepare_campaign(campaign)
     assert problems == [] and name == "tiger_den"
-    assert what.startswith(BROKEN) and "git checkout -- " in what
+    assert what.startswith(BROKEN) and "tiger_den.json" in what
     assert broken.read_text(encoding="utf-8") == '{"round_1": ['
     # A renamed or removed encounter's log; restart backups aren't listed.
     assert logs_without_encounter(campaign) == [logs / "old_tiger_den.json"]

@@ -57,7 +57,7 @@ def test_a_log_held_open_for_a_moment_is_still_written(tmp_path, monkeypatch):
     assert refusals and read_json(path) == {"round_number": 3}
 
 
-def test_a_broken_log_says_which_file_and_how_to_get_it_back(tmp_path):
+def test_a_broken_log_says_which_file_and_what_to_do(tmp_path):
     path = tmp_path / "tiger_den.json"
     path.write_text('{"round_number": 4, "round_1": [', encoding="utf-8")
     backup = tmp_path / "tiger_den_restarted_2026-11-05_20-00-00.json"
@@ -67,5 +67,5 @@ def test_a_broken_log_says_which_file_and_how_to_get_it_back(tmp_path):
     message = str(caught.value)
     assert caught.value.path == path
     assert str(path) in message
-    assert f"git checkout -- {path.as_posix()}" in message
+    assert "aren't kept in git" in message and "git checkout" not in message
     assert backup.name in message

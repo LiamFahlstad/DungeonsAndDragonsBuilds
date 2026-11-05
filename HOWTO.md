@@ -207,9 +207,9 @@ SNAPSHOT_DUMP_DIR=/some/dir ./run_tests.sh tests/test_build_snapshots.py   # als
 |---|---|
 | `Output/<build>/` | Character sheets (`character.html`, features/, spells, items) |
 | `Output/BuildGroups/`, `Output/ItemSheets/`, `Output/ClassHandouts/` | Party, item and handout pages |
-| `Combat/Campaigns/<C>/PlayerLogs/` | `main_party.json`, where the party has been (plus older `*_long_rest_<timestamp>.json` archives) |
+| `Combat/Campaigns/<C>/PlayerLogs/` | `main_party.json`, where the party has been (plus older `*_long_rest_<timestamp>.json` archives). Local, git-ignored |
 | `Combat/Campaigns/<C>/encounters.py` | The campaign's party and encounters ([format](Combat/Campaigns/ENCOUNTERS.md)) |
-| `Combat/Campaigns/<C>/CombatLogs/` | One log per encounter (`{}` until it's opened), with every event of its fight (committed; only `*_restarted_*` backups are git-ignored) |
+| `Combat/Campaigns/<C>/CombatLogs/` | One log per encounter (`{}` until it's opened), with every event of its fight. Local, git-ignored, like the `*_restarted_*` backups |
 | `Combat/Campaigns/<C>/player_statistics_report.html` | The campaign's player statistics report (git-ignored, like all `*.html`) |
 | `Builds/GeneratedBuilds/` | Build files from the Character Creator GUI |
 | `Guides/` | Static player guides (`ChoosingYourSpecies.html`, `ChoosingYourSubclass.html`), open directly |
