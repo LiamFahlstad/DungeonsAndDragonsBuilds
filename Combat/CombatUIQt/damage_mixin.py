@@ -569,7 +569,7 @@ class DamageMixin(CombatWindowState):
         if newly_dead and "Concentrating" in char.get("conditions", []):
             self._remove_condition_from(char, "Concentrating", source=char)
         if newly_dead:
-            self._companions_die_with(char)
+            self._summons_die_with(char)
         self._refresh_selected_card()
 
     @undoable

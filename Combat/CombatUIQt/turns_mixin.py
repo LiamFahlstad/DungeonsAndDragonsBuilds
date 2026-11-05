@@ -18,7 +18,7 @@ from PyQt6.QtWidgets import (
 
 from Combat.PlayerLog import has_round_events
 
-from Combat.Companions import place_after_owners
+from Combat.Summons import numbered, place_after_owners
 
 from .stats import _default_stats
 from .styles import QSS
@@ -318,23 +318,17 @@ class TurnsMixin(CombatWindowState):
             self._initiative_inputs[id(member)] = init_input
 
     def _initiative_row_units(self) -> list[list[dict]]:
-        """The turns that roll initiative: all but players' companions, which
-        go right after their owner (Combat/Companions.py)."""
+        """The turns that roll initiative: all but players' summons, which
+        go right after their owner (Combat/Summons.py)."""
         return [
             unit
             for unit in initiative_units(self.characters)
-            if self._companion_owner(unit[0]) is None
+            if self._summon_owner(unit[0]) is None
         ]
 
     def _unique_name(self, name: str) -> str:
         """name, numbered if it's taken: effects find their targets by name."""
-        taken = {c["name"] for c in self.characters}
-        number = 2
-        unique = name
-        while unique in taken:
-            unique = f"{name} {number}"
-            number += 1
-        return unique
+        return numbered(name, {c["name"] for c in self.characters})
 
     @undoable
     def _add_ad_hoc_combatant(self, name: str, hp: int = 10, ac: int = 10):
@@ -555,9 +549,9 @@ class TurnsMixin(CombatWindowState):
             )
 
         sorted_chars = [c for _, unit in order_with_initiative for c in unit]
-        # Players' companions take their turn right after their owner's.
-        companions = [c for c in self.characters if self._companion_owner(c)]
-        sorted_chars = place_after_owners(sorted_chars, companions)
+        # Players' summons take their turn right after their owner's.
+        summons = [c for c in self.characters if self._summon_owner(c)]
+        sorted_chars = place_after_owners(sorted_chars, summons)
 
         # Re-order self.characters in-place to match initiative order
         self.characters[:] = sorted_chars

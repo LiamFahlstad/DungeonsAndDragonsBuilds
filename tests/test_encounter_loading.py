@@ -33,7 +33,6 @@ from Combat.Campaign import Campaign
 from Combat.Combatants import Pirate
 from Combat.CombatUIQt import CombatAppQt
 from Combat.CombatUIQt.encounters_mixin import CONTINUE, RESTART
-from Combat.CombatUIQt.player_view import _can_be_seen
 from Combat.CombatUIQt.rest import apply_long_rest
 from Combat.EncounterConfig import (
     CampaignSpec,
@@ -62,9 +61,9 @@ from tests._snapshot_helpers import build
 SLASHING = DamageType.SLASHING.value
 EDMUND_BUILD = "Y2024_Paladin_Devotion_Edmund"
 CLOVER_BUILD = "Y2024_Bard_Valor_Clover"
-# A Reanimator Artificer: her Reanimated Companion joins her encounters.
+# A Reanimator Artificer, with a Reanimated Companion to summon.
 DESSIE_BUILD = "Y2024_Artificer_Reanimator_Dessie"
-# A Drakewarden Ranger (Fire): her Drake Companion joins her encounters.
+# A Drakewarden Ranger (Fire), with a Drake Companion to summon.
 HANNA_BUILD = "Y2024_Ranger_Drakewarden_Hanna"
 
 PIRATES = CombatScenario(
@@ -242,47 +241,18 @@ def test_a_prepared_log_holds_the_encounter_and_who_takes_part():
     assert (tiger["name"], tiger["hp"], tiger["max_hp"]) == ("Tiger", 30, 30)
 
 
-def test_a_prepared_log_holds_the_companions_of_who_takes_part_hidden():
-    sheets = {cs.character_name: cs for cs in (_sheet(DESSIE_BUILD), *_party())}
-    log = prepared_log(TIGER, ["Dessie", "Edmund"], sheets)
-    companion, tiger = log["combatants"]
-    assert tiger["name"] == "Tiger"
-    # Level 3, Intelligence 16: 5 + 5 * 3 HP, AC 10 + 3.
-    assert (
-        companion["name"],
-        companion["hp"],
-        companion["max_hp"],
-        companion["ac"],
-    ) == ("Dessie's Companion (Reanimated Companion)", 20, 20, 13)
-    # Off the players' screen until the GM reveals it when she summons it.
-    assert companion["hidden_from_players"] is True
-    assert not _can_be_seen(companion)
-    # Not when she isn't taking part, nor without the party's sheets.
-    assert [
-        c["name"] for c in prepared_log(TIGER, ["Edmund"], sheets)["combatants"]
-    ] == ["Tiger"]
-    assert [c["name"] for c in prepared_log(TIGER, ["Dessie"])["combatants"]] == [
-        "Tiger"
-    ]
+def test_a_prepared_log_holds_no_summons_of_who_takes_part():
+    # They join when they're summoned, or still out from an earlier
+    # encounter (tests/test_combat_ui_summons.py).
+    sheets = {
+        cs.character_name: cs
+        for cs in (_sheet(DESSIE_BUILD), _sheet(HANNA_BUILD), *_party())
+    }
+    log = prepared_log(TIGER, ["Dessie", "Hanna", "Edmund"], sheets)
+    assert [c["name"] for c in log["combatants"]] == ["Tiger"]
 
 
-def test_a_drakewardens_drake_joins_her_encounters_hidden():
-    hanna = _sheet(HANNA_BUILD)
-    log = prepared_log(TIGER, ["Hanna"], {hanna.character_name: hanna})
-    drake, _ = log["combatants"]
-    # Level 3, Proficiency Bonus +2: 5 + 5 * 3 HP, AC 14 + 2, no wings yet.
-    assert (drake["name"], drake["max_hp"], drake["ac"], drake["speed_fly_ft"]) == (
-        "Hanna's Companion (Drake Companion)",
-        20,
-        16,
-        None,
-    )
-    (immunity,) = drake["damage_immunities"]
-    assert immunity.damage_types == [DamageType.FIRE]
-    assert drake["hidden_from_players"] is True
-
-
-def test_preparing_a_campaign_adds_the_party_companions(tmp_path):
+def test_preparing_a_campaign_adds_no_party_summons(tmp_path):
     campaign = Campaign(
         name="test",
         folder=tmp_path,
@@ -301,10 +271,7 @@ def test_preparing_a_campaign_adds_the_party_companions(tmp_path):
     data = json.loads(
         scenario_log_path(tmp_path / "CombatLogs", "tiger_den").read_text()
     )
-    assert [c["name"] for c in data["combatants"]] == [
-        "Dessie's Companion (Reanimated Companion)",
-        "Tiger",
-    ]
+    assert [c["name"] for c in data["combatants"]] == ["Tiger"]
 
 
 def test_preparing_logs(tmp_path):

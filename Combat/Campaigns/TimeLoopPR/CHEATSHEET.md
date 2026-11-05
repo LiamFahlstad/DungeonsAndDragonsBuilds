@@ -17,15 +17,18 @@ level 3. After changing `encounters.py`, prepare the logs:
 python -m Combat.Tools.prepare_encounters --campaign time_loop_pr
 ```
 
-Dessie's Reanimated Companion and Hanna's Drake Companion are in every
-encounter as "Dessie's Companion" and "Hanna's Companion", hidden from the
-players. They roll no initiative: each takes its turn right after its owner's.
-When one is summoned, select Dessie or Hanna and use **Enable Feature**, or
-right-click the companion's card (or its owner's) and pick **Summon ...**; for
+Dessie's Reanimated Companion and Hanna's Drake Companion join a fight when
+they're summoned, as "Dessie's Reanimated Companion" and "Hanna's Drake
+Companion". They roll no initiative: each takes its turn right after its
+owner's. To summon one, select Dessie or Hanna and use **Enable Feature**, or
+right-click the owner's card (or the summon's) and pick **Summon ...**; for
 the drake, pick its Draconic Essence there. That spends the feature's use (then
-a spell slot) and brings it out at full HP. One that's out stays out into the
-next encounter until a long rest, and if its owner dies it drops to 0 HP.
-See "Players' companions" in [../ENCOUNTERS.md](../ENCOUNTERS.md).
+a spell slot) and brings it out at full HP. **Dismiss** in the summon's menu
+sends it away. One that's out stays out into the next encounter until a long
+rest, and if its owner dies it drops to 0 HP. One summoned before the fight:
+**Add Combatant**, "Already summoned…". The logs played before this hold
+"Dessie's Companion" and "Hanna's Companion", hidden; they still load. See
+"Players' summons" in [../ENCOUNTERS.md](../ENCOUNTERS.md).
 
 ## Between encounters
 

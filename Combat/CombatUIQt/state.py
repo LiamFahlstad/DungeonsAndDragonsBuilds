@@ -31,6 +31,7 @@ from PyQt6.QtWidgets import (
 
 from Combat.Rules import Rule
 from Combat.Scenario import CombatScenario
+from Combat.Summons import SummonOption
 from Model.Content.Feature import Feature
 from Model.Creatures.Combatants import BasicCombatantData
 
@@ -264,26 +265,26 @@ class CombatWindowState:
     def _give_temp_hp(self, target: dict, amount: int, source: dict | None):
         raise NotImplementedError("DamageMixin._give_temp_hp")
 
-    def _companion_owner(self, char: dict) -> dict | None:
-        raise NotImplementedError("CompanionsMixin._companion_owner")
+    def _summon_owner(self, char: dict) -> dict | None:
+        raise NotImplementedError("SummonsMixin._summon_owner")
 
     def _add_summon_actions(self, menu: QMenu, char: dict):
-        raise NotImplementedError("CompanionsMixin._add_summon_actions")
+        raise NotImplementedError("SummonsMixin._add_summon_actions")
 
-    def _pick_companion_summon(self, owner: dict, feature: Feature):
-        raise NotImplementedError("CompanionsMixin._pick_companion_summon")
+    def _pick_summon(self, owner: dict, feature: Feature):
+        raise NotImplementedError("SummonsMixin._pick_summon")
 
-    def _companions_die_with(self, owner: dict):
-        raise NotImplementedError("CompanionsMixin._companions_die_with")
+    def _summons_die_with(self, owner: dict):
+        raise NotImplementedError("SummonsMixin._summons_die_with")
 
-    def _carry_companions_over(self, log_path: Path):
-        raise NotImplementedError("CompanionsMixin._carry_companions_over")
+    def _carry_summons_over(self, log_path: Path):
+        raise NotImplementedError("SummonsMixin._carry_summons_over")
 
-    def _missing_party_companions(self) -> list[tuple[str, BasicCombatantData]]:
-        raise NotImplementedError("CompanionsMixin._missing_party_companions")
+    def _already_summoned_options(self) -> list[SummonOption]:
+        raise NotImplementedError("SummonsMixin._already_summoned_options")
 
-    def _add_party_companion(self, stat_block: BasicCombatantData):
-        raise NotImplementedError("CompanionsMixin._add_party_companion")
+    def _add_already_summoned(self, option: SummonOption):
+        raise NotImplementedError("SummonsMixin._add_already_summoned")
 
     def _spend_slot(self, char: dict, level: int) -> bool:
         raise NotImplementedError("SpellsMixin._spend_slot")

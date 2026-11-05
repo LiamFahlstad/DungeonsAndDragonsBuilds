@@ -7,3 +7,4 @@
 2026-11-02: Tests' make_ui has no player log, so a reload doesn't replay a player's slots or stats. Check the logged CAST_SPELL/REMOVE_SPELL_SLOT events instead; monsters' public keys do reload.
 2026-11-02: tests/test_layering.py bans `if TYPE_CHECKING:` blocks outside an allowlist. Break an import cycle by moving the class into the lower module (EffectOption lives in saves.py), even if a brief offers TYPE_CHECKING.
 2026-11-02: pytest.ini adds -n (xdist): use -n0 for one process, not -p no:xdist (that errors on -n).
+2026-11-05: A scratch screenshot taken after an action that rebuilds cards shows the replaced cards overlapping the new ones: run QCoreApplication.sendPostedEvents(None, QEvent.Type.DeferredDelete.value) before screenshot.grab (its processEvents leaves deleteLater widgets alive).

@@ -345,8 +345,8 @@ class FeaturesMixin(CombatWindowState):
             return
 
         sb = source.get("_stat_block")
-        if source.get("_is_player") and feature.companion(sb) is not None:
-            self._pick_companion_summon(source, feature)
+        if source.get("_is_player") and feature.summons(sb):
+            self._pick_summon(source, feature)
             return
         feature_target = feature.target(sb) if sb is not None else None
 

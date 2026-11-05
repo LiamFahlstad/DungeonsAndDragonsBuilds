@@ -731,16 +731,16 @@ class DialogsMixin(CombatWindowState):
         layout.setContentsMargins(14, 14, 14, 14)
         layout.setSpacing(8)
 
-        # A player's companion the encounter doesn't have (one prepared
-        # before it summoned anything), with its own stat block.
-        party_companions = self._missing_party_companions()
-        companion_combo = QComboBox()
-        if party_companions:
-            layout.addWidget(QLabel("From the party:"))
-            companion_combo.addItem("— none —")
-            for name, _ in party_companions:
-                companion_combo.addItem(name)
-            layout.addWidget(companion_combo)
+        # A player's summon made before the fight (Find Familiar cast an hour
+        # ago, a drake still out), with its own stat block and its choice.
+        summon_options = self._already_summoned_options()
+        summon_combo = QComboBox()
+        if summon_options:
+            layout.addWidget(QLabel("Already summoned…"))
+            summon_combo.addItem("— none —")
+            for option in summon_options:
+                summon_combo.addItem(option.label)
+            layout.addWidget(summon_combo)
 
         layout.addWidget(QLabel("Name:"))
         name_input = QLineEdit()
@@ -769,9 +769,9 @@ class DialogsMixin(CombatWindowState):
         layout.addLayout(btn_row)
 
         def do_add():
-            picked = companion_combo.currentIndex() - 1
-            if party_companions and picked >= 0:
-                self._add_party_companion(party_companions[picked][1])
+            picked = summon_combo.currentIndex() - 1
+            if summon_options and picked >= 0:
+                self._add_already_summoned(summon_options[picked])
                 dlg.accept()
                 return
             name = name_input.text().strip()

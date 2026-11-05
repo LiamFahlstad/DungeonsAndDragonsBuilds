@@ -12,7 +12,6 @@ from Combat.Scenario import CombatScenario
 from Model.Creatures.Combatants import BasicCombatantData, Visibility
 
 from .cards_mixin import CardsMixin
-from .companions_mixin import CompanionsMixin
 from .conditions_mixin import ConditionsMixin
 from .damage_mixin import DamageMixin
 from .dialogs_mixin import DialogsMixin
@@ -27,6 +26,7 @@ from .spells_mixin import SpellsMixin
 from .stats import _default_stats
 from .saves import DEFAULT_ATTACK_BONUS, DEFAULT_SAVE_DC, SAVING_THROW
 from .styles import QSS
+from .summons_mixin import SummonsMixin
 from .timer_mixin import TimerMixin
 from .turn_panel_mixin import TurnPanelMixin
 from .turns_mixin import TurnsMixin
@@ -40,7 +40,7 @@ class CombatAppQt(
     SpellsMixin,
     FeaturesMixin,
     WildShapeMixin,
-    CompanionsMixin,
+    SummonsMixin,
     TurnsMixin,
     TurnPanelMixin,
     CardsMixin,

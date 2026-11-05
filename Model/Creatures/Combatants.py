@@ -1,6 +1,6 @@
 """A creature's stat block and its starting combat state: BasicCombatantData
 (hit points, AC, conditions, ...) and ExtendedCombatantData (the full monster
-stat block). Shared by the monster catalog (Combat/Monsters), companions and
+stat block). Shared by the monster catalog (Combat/Monsters), summons and
 wild shapes (CharacterContent) and the combat engine."""
 
 from dataclasses import dataclass
@@ -114,9 +114,9 @@ class BasicCombatantData:
     # Kept off the players' screen until the GM reveals it, for one that joins
     # the fight later (the encounters.py "hidden_from_players").
     hidden_from_players: bool = False
-    # The character name of the player whose feature summons it (a Drake
-    # Companion's Ranger), for a player's companion (Combat/Companions.py).
-    companion_of: Optional[str] = None
+    # The character name of the player whose feature or spell summons it (a
+    # Drake Companion's Ranger), for a player's summon (Combat/Summons.py).
+    summon_of: Optional[str] = None
 
     def __attrs_post_init__(self):
         if self.spell_slots is None:

@@ -19,6 +19,7 @@ from Combat.EncounterLogs import (
 )
 from Combat.PlayerCombatant import combatant_from_character
 from Combat.PlayerLog import has_round_events, is_round_key, session_label
+from Combat.Summons import upgrade_keys
 from Combat.WildShape import assume_form, leave_form
 
 from .player_view import may_read_log_line
@@ -238,6 +239,9 @@ class LoggingMixin(CombatWindowState):
                 for key in PLAYER_FIGHT_KEYS:
                     char.pop(key, None)
                 char.update(player_state.get(char["name"], {}))
+            else:
+                # An older log's companion_of / companion_choice.
+                upgrade_keys(char)
             stats = char.setdefault("stats", {})
             for key in STAT_KEYS:
                 stats.setdefault(key, 0)
@@ -253,7 +257,7 @@ class LoggingMixin(CombatWindowState):
         self._use_log_file(Path(path))
         self.current_turn_idx = 0
         if not has_round_events(data):
-            self._carry_companions_over(Path(path))
+            self._carry_summons_over(Path(path))
             self.phase = "INITIATIVE"
             self.initiative_order = []
             self._switch_to_initiative()

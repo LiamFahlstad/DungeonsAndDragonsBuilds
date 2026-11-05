@@ -6,7 +6,7 @@ gets its log from `python -m Combat.Tools.prepare_encounters`, named after its
 id; nothing else writes new logs. A prepared log starts as
 
     {"encounter": <id>, "title": ..., "players": [<who takes part>],
-     "round_number": 1, "combatants": [<companions, allies, monsters, full HP>]}
+     "round_number": 1, "combatants": [<allies, monsters, full HP>]}
 
 and the combat window then adds one "round_<n>" list of events per round
 played, keeping "combatants" (HP, conditions, ...) and "round_number"
@@ -31,7 +31,7 @@ from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
 
-from Combat.PlayerCombatant import combatant_from_stat_block, companions_of
+from Combat.PlayerCombatant import combatant_from_stat_block
 from Combat.PlayerLog import ENCOUNTER, has_round_events, log_ref
 
 # When the fight was ended, in an encounter log and in its player-log entry.
@@ -92,13 +92,11 @@ def _plain(data: dict) -> dict:
 def prepared_log(scenario, players: list[str], sheets: dict | None = None) -> dict:
     """What the log of `scenario` (a CombatScenario) starts as: its header,
     round 1, and its allies and monsters at full HP. `players` are the
-    character names of the party members taking part. With their Characters
-    in `sheets` (by character name), each player's companions
-    (PlayerCombatant.companions_of) come first, hidden until summoned."""
-    sheets = sheets or {}
-    companions = [
-        c for name in players if name in sheets for c in companions_of(sheets[name])
-    ]
+    character names of the party members taking part. Players' summons
+    aren't in it: they join when they're summoned, or when one is still out
+    from an earlier encounter (Combat/Summons.py). `sheets` (the party's
+    Characters by name) is accepted for the callers that pass it; older logs
+    were prepared with a hidden companion for each player from them."""
     return {
         "encounter": scenario.name,
         "title": scenario.display_title,
@@ -106,7 +104,7 @@ def prepared_log(scenario, players: list[str], sheets: dict | None = None) -> di
         "round_number": 1,
         "combatants": [
             combatant_from_stat_block(c)
-            for c in companions + scenario.build_allies() + scenario.build_combatants()
+            for c in scenario.build_allies() + scenario.build_combatants()
         ],
     }
 

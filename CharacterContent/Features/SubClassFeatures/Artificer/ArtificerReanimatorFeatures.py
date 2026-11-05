@@ -21,6 +21,14 @@ from Model.Content.Feature import (
     RegainedOn,
 )
 from Core.Rules import MAX_ABILITY_MODIFIER
+from Model.Content.Summons import (
+    OnZeroHp,
+    SummonContext,
+    SummonCost,
+    SummonLifetime,
+    SummonSpec,
+    WhenFull,
+)
 from Model.View import CharacterView
 from Model.Content.FeatureText import (
     Block,
@@ -232,6 +240,13 @@ def _build_reanimated_companion(character: CharacterView) -> ExtendedCombatantDa
     )
 
 
+def _build_summon(
+    character: CharacterView, ctx: SummonContext
+) -> ExtendedCombatantData:
+    # Nothing is chosen when it's created.
+    return _build_reanimated_companion(character)
+
+
 def format_reanimated_companion(character: CharacterView) -> str:
     return format_creature_stat_block(
         _build_reanimated_companion(character), retain_mental_abilities=False
@@ -286,10 +301,28 @@ class ReanimatedCompanion(Feature):
             StatBlock(format_reanimated_companion(character)),
         ]
 
-    def companion(
-        self, character: CharacterView, choice: str | None = None
-    ) -> ExtendedCombatantData:
-        return _build_reanimated_companion(character)
+    def summons(self, character: CharacterView) -> list[SummonSpec]:
+        return [
+            SummonSpec(
+                name=self.name,
+                build=_build_summon,
+                # "You can have only one companion at a time and can't create
+                # one while your companion is present."
+                when_full=WhenFull.REFUSED,
+                # "It lasts until you finish a Long Rest or until you take a
+                # Magic action to dismiss it early ... It immediately drops to
+                # 0 Hit Points and dies (triggering its Death Burst trait) if
+                # you die."
+                lifetime=SummonLifetime.UNTIL_LONG_REST,
+                on_zero_hp=OnZeroHp.DIES,
+                drops_with_owner=True,
+                # "In combat, the companion acts during your turn" (the
+                # default SummonTurn).
+                # "Once you create a companion, you can't do so again until
+                # you finish a Long Rest or expend a spell slot to create one."
+                costs=(SummonCost(), SummonCost(spell_slot=1)),
+            )
+        ]
 
     def get_description(self, character: CharacterView) -> str:
         description = (

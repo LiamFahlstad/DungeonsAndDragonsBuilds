@@ -9,21 +9,9 @@ from Model.Content.Effect import Effect
 from Model.Content.FeatureText import Block
 from Model.Creatures.Combatants import ExtendedCombatantData
 from Model.Ledger.LedgerWriter import LedgerWriter
+from Model.Content.Summons import SummonContext, SummonSpec
 from Model.Spells import FeatureSpell
 from Model.View import CharacterView
-
-
-@dataclass(frozen=True)
-class CompanionRules:
-    """How long a feature's companion (Feature.companion) lasts, and what
-    summoning it again does."""
-
-    # Summoning it again while it's out replaces it (a drake); without this
-    # it can't be made while it's present (a Reanimated Companion).
-    summon_again_replaces: bool = False
-    # It's gone when its owner finishes a Long Rest; without this it stays
-    # out until it drops to 0 Hit Points.
-    ends_on_long_rest: bool = True
 
 
 @dataclass
@@ -395,28 +383,38 @@ class Feature(Effect):
         passive features or ones that affect the caster only implicitly)."""
         return None
 
-    def companion(
-        self, character: CharacterView, choice: str | None = None
-    ) -> ExtendedCombatantData | None:
-        """Override to return the stat block of the creature this feature
-        creates or summons to fight beside the character (e.g. a Reanimated
-        Companion), so the combat simulator adds it to the character's
-        encounters, hidden from the players until it's summoned
-        (Combat/Companions.py). `choice` is one of companion_choices(), made
-        when it's summoned; None is the build's own. Return None (default)
+    def summons(self, character: CharacterView) -> list[SummonSpec]:
+        """Override to describe the creatures this feature creates or
+        summons to fight beside the character (e.g. a Reanimated Companion,
+        a Drake Companion): their stat block, choices, lifetime and cost
+        (Model/Content/Summons.py), so the combat simulator can summon them
+        in the character's encounters (Combat/Summons.py). Return [] (default)
         for features that summon nothing."""
-        return None
-
-    def companion_rules(self, character: CharacterView) -> CompanionRules:
-        """Override when the companion lasts past a Long Rest or summoning it
-        again replaces it (see CompanionRules)."""
-        return CompanionRules()
-
-    def companion_choices(self, character: CharacterView) -> list[str]:
-        """Override to list what's chosen each time the companion is summoned
-        (e.g. a drake's Draconic Essence), each one a `choice` companion()
-        takes. Return [] (default) when there's nothing to choose."""
         return []
+
+    def adjust_summon(self, character: CharacterView, spec: SummonSpec) -> SummonSpec:
+        """Override when this feature changes what another source summons
+        (e.g. Undead Thralls: Animate Dead makes one more creature): return
+        `spec` with more creatures or more choices (dataclasses.replace). It
+        sees every summon of the character, so check spec.name first.
+        Applied in no particular order. Return `spec` unchanged (default)
+        for features that change no summon."""
+        return spec
+
+    def modify_summon(
+        self,
+        character: CharacterView,
+        spec: SummonSpec,
+        stat_block: ExtendedCombatantData,
+        ctx: SummonContext,
+    ) -> None:
+        """Override when this feature changes the stat block of a summoned
+        creature (e.g. Mighty Summoner: more Hit Points per Hit Die): edit
+        `stat_block`, one creature `spec` built with `ctx`, in place. It sees
+        every summon of the character, so check spec.name first. Applied in
+        no particular order. Does nothing (default) for features that change
+        no summon."""
+        return None
 
     def number_of_uses(self, character: CharacterView) -> int:
         """Override to return this feature's actual current number of uses,

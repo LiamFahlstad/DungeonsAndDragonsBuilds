@@ -90,35 +90,43 @@ Each line is one stat block, optionally several of it:
 | `group` | no | Lines with the same `group` share one turn, as a GM runs a pack of the same monster: one initiative roll (with the first one's modifier), one row on the initiative screen ("Goblin Warriors (4)"), and they all take their turn together. Each keeps its own card and stat block. Monsters and allies can't share a group. |
 | `hidden_from_players` | no | `True` for one that joins the fight later: it rolls initiative and has its card like the rest, but the players' screen and link don't show it (nor its turn, nor log lines about it) until the GM reveals it. Right-click its card as the only target and uncheck **Hidden from players**; the log then says it appears. Checking it again hides one mid-fight. |
 
-### Players' companions
+### Players' summons
 
 A player whose sheet has a feature that creates or summons a creature to fight
-beside them (one that overrides `Feature.companion()`, so far the Reanimator
+beside them (one that overrides `Feature.summons()`, so far the Reanimator
 Artificer's Reanimated Companion and the Drakewarden Ranger's Drake Companion)
-gets it in every encounter they take part in, without a line in
-`encounters.py`: it comes first in the log, as "<character>'s Companion",
-hidden from players (Combat/Companions.py has the details).
+can summon it in any encounter they take part in, without a line in
+`encounters.py`. It isn't in the prepared log: it joins the fight when it's
+summoned, as "<character>'s <feature>" (e.g. "Hanna's Drake Companion",
+numbered " 2", " 3" when one owner has several). Combat/Summons.py has the
+details.
 
 - **Initiative:** it has no row of its own. It takes its turn right after its
-  owner's.
+  owner's, also when it's summoned mid-fight (whoever's turn it is keeps it).
 - **Summoning:** the owner's **Enable Feature** (Drake Companion, Reanimated
-  Companion), or **Summon ...** in its card's or its owner's right-click menu,
+  Companion), or **Summon ...** in its owner's (or its own) right-click menu,
   which also offers the choice made each time (the drake's Draconic Essence:
   Acid, Cold, Fire, Lightning or Poison). It spends the feature's use and its
   Action, or the owner's lowest spell slot once the use is gone, and brings it
   out at full Hit Points for the players to see. Summoning a drake again
-  replaces it; a Reanimated Companion can't be made while one is out.
-  Unchecking **Hidden from players** shows one that's already out without
-  spending anything.
+  replaces it (the old one vanishes); a Reanimated Companion can't be made
+  while one is out (the menu entry is greyed out).
+- **Dismiss:** in the summon's right-click menu; it leaves the fight (logged;
+  Undo brings it back).
 - **Its owner dies:** it drops to 0 Hit Points (a Reanimated Companion's Death
   Burst goes off).
-- **The next encounter:** one that's out stays out, with the Hit Points,
-  conditions and choice the last encounter left it (conditions ending on a
-  timer or a save don't carry). One that died is gone until it's summoned
-  again. A long rest ends a Reanimated Companion; a drake stays out, rested
-  to full (`Feature.companion_rules`).
-- **A fight prepared without it** (before its owner had it): **Add Combatant**
-  lists the party's missing companions under "From the party".
+- **The next encounter:** one that's out joins it from the start, with the Hit
+  Points, conditions and choice the last encounter left it (conditions ending
+  on a timer or a save don't carry). One that died is gone until it's
+  summoned again. A long rest ends a Reanimated Companion; a drake stays out,
+  rested to full (the lifetime of the feature's `SummonSpec`).
+- **Summoned before the fight:** **Add Combatant** lists every summon of the
+  party (with each choice) under "Already summoned…"; it joins at full Hit
+  Points and spends nothing.
+- **Older logs** were prepared with a hidden "<character>'s Companion
+  (<feature>)" for each player and use the keys `companion_of` /
+  `companion_choice`. They still load: a hidden one isn't out, and summoning
+  replaces it.
 
 To find a class, search the stat blocks for the monster's name, e.g.
 `grep -rn 'combatant_type="Goblin Boss"' Combat/Monsters`: the class is the

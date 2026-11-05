@@ -39,7 +39,7 @@
         "CHA": -2
       },
       "hidden_from_players": true,
-      "companion_of": "Dessie",
+      "summon_of": "Dessie",
       "cr": "None",
       "monster_type": "Undead",
       "monster_type_note": "",
@@ -128,7 +128,7 @@
         "WIS": 4
       },
       "hidden_from_players": true,
-      "companion_of": "Hanna",
+      "summon_of": "Hanna",
       "cr": "2",
       "monster_type": "Dragon",
       "monster_type_note": "",

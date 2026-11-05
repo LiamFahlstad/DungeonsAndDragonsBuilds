@@ -3,7 +3,6 @@ from Core.Rules import MAX_PROFICIENCY_BONUS, levels_gained, proficiency_bonus
 
 from Model.Content.Feature import (
     ActionType,
-    CompanionRules,
     Feature,
     FeatureActivation,
     FeatureTarget,
@@ -23,6 +22,14 @@ from Core.Definitions import Ability, CharacterClass, DamageType
 from Presentation.CreatureStatBlocks import format_creature_stat_block
 from Model.View import CharacterView
 from Model.Content.FeatureText import Block, Facts, Paragraph, StatBlock, dc_formula
+from Model.Content.Summons import (
+    OnZeroHp,
+    SummonContext,
+    SummonCost,
+    SummonLifetime,
+    SummonSpec,
+    WhenFull,
+)
 
 # The damage types a drake's Draconic Essence can be.
 DRACONIC_ESSENCE_TYPES = (
@@ -239,23 +246,45 @@ class DrakeCompanion(Feature):
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
-    def companion(
-        self, character: CharacterView, choice: str | None = None
+    def summons(self, character: CharacterView) -> list[SummonSpec]:
+        return [
+            SummonSpec(
+                name=self.name,
+                build=self._build_summon,
+                # "Whenever you summon the drake, choose a damage type listed
+                # in its Draconic Essence trait."
+                choices=_draconic_essence_choices,
+                choice_label="Draconic Essence",
+                # "The drake remains until it is reduced to 0 hit points, until
+                # you use this feature to summon the drake again, or until you
+                # die. ... when the drake vanishes."
+                when_full=WhenFull.REPLACES,
+                lifetime=SummonLifetime.UNTIL_DISMISSED,
+                on_zero_hp=OnZeroHp.VANISHES,
+                drops_with_owner=True,
+                # It "shares your initiative count, but it takes its turn
+                # immediately after yours" (the default SummonTurn).
+                # "Once you summon the drake, you can't do so again until you
+                # finish a long rest, unless you expend a spell slot of 1st
+                # level or higher to summon it."
+                costs=(SummonCost(), SummonCost(spell_slot=1)),
+            )
+        ]
+
+    def _build_summon(
+        self, character: CharacterView, ctx: SummonContext
     ) -> ExtendedCombatantData:
-        # The choice is the Draconic Essence, made each time it's summoned.
+        # The choice is the Draconic Essence, made each time it's summoned;
+        # None is the build's own.
         return _build_drake(
             character.get_class_level(CharacterClass.RANGER),
             character.get_proficiency_bonus(),
-            DamageType(choice) if choice is not None else self.damage_type,
+            DamageType(ctx.choice) if ctx.choice is not None else self.damage_type,
         )
 
-    def companion_choices(self, character: CharacterView) -> list[str]:
-        return [damage_type.value for damage_type in DRACONIC_ESSENCE_TYPES]
 
-    def companion_rules(self, character: CharacterView) -> CompanionRules:
-        # "The drake remains until it is reduced to 0 hit points, until you use
-        # this feature to summon the drake again, or until you die."
-        return CompanionRules(summon_again_replaces=True, ends_on_long_rest=False)
+def _draconic_essence_choices(character: CharacterView) -> list[str]:
+    return [damage_type.value for damage_type in DRACONIC_ESSENCE_TYPES]
 
 
 class BondOfFangAndScale(Feature):
