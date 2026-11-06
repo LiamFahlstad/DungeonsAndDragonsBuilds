@@ -243,6 +243,16 @@ def test_a_players_numbers_size_and_speed_are_on_the_page(fight):
     assert row["details"] == "Small · AC 13 · Speed 25 ft."
 
 
+def test_a_monsters_cr_is_on_the_informative_page_not_the_limited_one(fight):
+    ui, _, tiger, _ = fight
+    tiger.update(cr="1/2", size="Large")
+    ui._refresh_views()
+    assert _row_of(ui, "Tiger")["details"] == "Large · CR 1/2 · AC 13"
+    ui.settings.limited_player_view = True
+    ui._refresh_views()
+    assert "CR" not in _row_of(ui, "Tiger")["details"]
+
+
 def test_a_monsters_hp_ac_and_speed_are_on_the_page_but_nothing_else(fight):
     ui, _, tiger, _ = fight
     tiger.update(hp=137, max_hp=293, temp_hp=59, ac=471, speed_ground_ft=613)
@@ -1094,6 +1104,63 @@ def test_a_long_note_wraps_on_the_player_screen(names):
     window = PlayerViewWindow(lambda: None)
     window.show_rows("Round 1", [PlayerViewRow("Tiger", long, health, (), "")])
     assert window.minimumSizeHint().width() < 900
+
+
+def _big_fight_rows() -> list[PlayerViewRow]:
+    """As many rows as time_loop_pr_square: four players, two summons (one
+    with its stat block out) and three groups of two."""
+
+    def row(name, members=1, turn="", card=()):
+        health = tuple(
+            PlayerViewHealth(f"{name} {i}", "27 / 27", 100, "") for i in range(members)
+        )
+        return PlayerViewRow(
+            name, "Medium · AC 15 · Speed 30 ft.", health, (), turn, card
+        )
+
+    card = ("STR 16 (+3) · DEX 12 (+1)",) + tuple(
+        f"Trait {i}. " + "A long sentence about what this trait does. " * 6
+        for i in range(4)
+    )
+    return (
+        [row("Hanna", turn="now"), row("Drake", turn="next", card=card)]
+        + [row(name) for name in ("Dessie", "Companion", "Maggie", "Thomas")]
+        + [row(name, members=2) for name in ("Sentinels", "Officers", "Dogs")]
+    )
+
+
+def test_a_big_fight_shrinks_to_fit_a_1080p_tv():
+    """DI-049: no scrolling a TV, so neither growing past the screen nor
+    squashing wrapped lines away; the text gets smaller instead."""
+    qapp()
+    window = PlayerViewWindow(lambda: None)
+    window.resize(1920, 1080)
+    window.show_rows("Round 1", _big_fight_rows())
+    assert window.height() == 1080
+    assert window.scale < 1.0
+    assert window.needed_height() <= 1080
+
+
+def test_a_small_fight_keeps_full_size_text():
+    qapp()
+    window = PlayerViewWindow(lambda: None)
+    window.resize(1920, 1080)
+    window.show_rows("Round 1", _big_fight_rows()[:4])
+    assert window.scale == 1.0
+
+
+def test_the_player_screen_refits_when_it_moves_to_a_bigger_screen():
+    qapp()
+    window = PlayerViewWindow(lambda: None)
+    window.resize(1920, 1080)
+    window.show_rows("Round 1", _big_fight_rows())
+    window.show()
+    small = window.scale
+    window.resize(1920, 2160)
+    qapp().processEvents()
+    assert window.scale > small
+    assert window.needed_height() <= 2160
+    window.close()
 
 
 def test_each_member_of_a_group_has_its_own_defenses(tmp_path):

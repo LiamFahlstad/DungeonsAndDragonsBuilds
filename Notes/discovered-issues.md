@@ -311,17 +311,6 @@ Archdruid (Druid 20), Evergreen Wild Shape: 'Whenever you roll Initiative and ha
 **History**
 - 2026-11-04 main session (Claude Opus 5.5): found
 
-### DI-049 · Player Screen overflows a 1080p TV in a large encounter (no scroll, rows squash)
-- **Status:** open
-- **Area:** combat-simulator
-- **Where:** `Combat/CombatUIQt/player_view.py`
-
-PlayerViewWindow lays its rows in a plain QVBoxLayout with no scroll area. time_loop_pr_square (4 players, 2 summons, 3 monster groups of 2) needs about 1130 px of rows at 1920x1080 before any summon card, so the window either grows past the screen or squashes word-wrapped labels (a summon card was cut off mid-line when the window was held at 1400 px). Fix idea: scale fonts down, or a two-column layout, when the rows don't fit the screen's height.
-
-**History**
-- 2026-11-05 combat-simulator: found
-- 2026-11-05 combat-simulator: Seen with screenshot.py combat --scenario time_loop_pr_square --summon 'Drake Companion' --player-screen --size 1920x1080: the window grows to 1206 px tall and the drake's stat block loses its wrapped last line ('damage.'); at 1600x1300 it shows whole.
-
 ### DI-052 · 2024 spell usage_tags that don't match the spell text (heal on polymorph spells, control on Find Steed); Conjure X summon tags inconsistent
 - **Status:** open
 - **Area:** character-engine
@@ -624,6 +613,18 @@ The combat screenshot prepares the encounter log with players=[] and passes char
 - 2026-11-04 main-session: marked in-progress
 - 2026-11-04 main-session: marked fixed
 - 2026-11-04 main-session: marked fixed in e6fab83b
+
+### DI-049 · Player Screen overflows a 1080p TV in a large encounter (no scroll, rows squash)
+- **Status:** fixed · 2026-11-05 · uncommitted
+- **Area:** combat-simulator
+- **Where:** `Combat/CombatUIQt/player_view.py`
+
+PlayerViewWindow lays its rows in a plain QVBoxLayout with no scroll area. time_loop_pr_square (4 players, 2 summons, 3 monster groups of 2) needs about 1130 px of rows at 1920x1080 before any summon card, so the window either grows past the screen or squashes word-wrapped labels (a summon card was cut off mid-line when the window was held at 1400 px). Fix idea: scale fonts down, or a two-column layout, when the rows don't fit the screen's height.
+
+**History**
+- 2026-11-05 combat-simulator: found
+- 2026-11-05 combat-simulator: Seen with screenshot.py combat --scenario time_loop_pr_square --summon 'Drake Companion' --player-screen --size 1920x1080: the window grows to 1206 px tall and the drake's stat block loses its wrapped last line ('damage.'); at 1600x1300 it shows whole.
+- 2026-11-05 main-session: marked fixed; PlayerViewWindow shrinks its style sheet's sizes (to 0.5 at most) until every row fits the window's height, and its layout no longer grows the window past the screen; refits on resize. Tests in test_combat_ui_player_server.py. Not committed yet.
 
 ### DI-050 · Combat UI: summon menu entry reads "Summon Summon Wildfire Spirit"
 - **Status:** fixed · 2026-11-05 · uncommitted

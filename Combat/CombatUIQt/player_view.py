@@ -1,7 +1,7 @@
 """The players' screen (a second monitor or a TV): the turn order, whose turn
 it is and who's next, so players plan during other turns. player_view_rows
 decides what they may see. The Informative view has everyone's Hit Points, as on
-the GM's cards, size, AC and speed. The Limited view is the same for players,
+the GM's cards, size, Challenge Rating, AC and speed. The Limited view is the same for players,
 who can tell each other all of it anyway, but a monster's row has only
 its speed, the damage it's taken, a word for how hurt it is, what those two and
 attack rolls have shown of its maximum HP and AC, and what the log has shown of
@@ -17,16 +17,18 @@ cards would push the turn order off a TV. One the GM still hides from them
 isn't listed. A monster's summon is a monster."""
 
 import math
+import re
 from dataclasses import asdict, dataclass, replace
 from typing import Callable
 
 from PyQt6.QtCore import Qt
-from PyQt6.QtGui import QCloseEvent, QGuiApplication, QKeyEvent
+from PyQt6.QtGui import QCloseEvent, QGuiApplication, QKeyEvent, QResizeEvent
 from PyQt6.QtWidgets import (
     QFrame,
     QGridLayout,
     QHBoxLayout,
     QLabel,
+    QLayout,
     QProgressBar,
     QVBoxLayout,
     QWidget,
@@ -90,6 +92,20 @@ QProgressBar {
 }
 """
 _BAR_WIDTH = 320
+# How far the window shrinks its text and bars to fit every row on the screen
+# (a big fight on a 1080p TV), at most: below this a TV is unreadable anyway.
+_MIN_SCALE = 0.5
+_SCALE_STEP = 0.05
+
+
+def _scaled_style(scale: float) -> str:
+    """_STYLE with every size in it (fonts, bar heights, corners) `scale`
+    times as big."""
+    return re.sub(
+        r"(\d+)px",
+        lambda size: f"{max(1, round(int(size.group(1)) * scale))}px",
+        _STYLE,
+    )
 
 
 @dataclass(frozen=True)
@@ -249,15 +265,17 @@ def _unit_speeds(unit: list[dict]) -> list[str]:
 
 
 def _unit_details(unit: list[dict]) -> str:
-    """Everyone's size, AC and speed. A player's AC is a sentence once they have
-    a Shield, so only the number they have now is shown."""
+    """Everyone's size, Challenge Rating (monsters and summons have one), AC
+    and speed. A player's AC is a sentence once they have a Shield, so only
+    the number they have now is shown."""
     sizes = [_display(c["size"]) for c in unit if c.get("size")]
+    ratings = [f"CR {c['cr']}" for c in unit if c.get("cr")]
     armor = [
         f"AC {first_number(c.get('ac'))}"
         for c in unit
         if first_number(c.get("ac")) is not None
     ]
-    return " · ".join(dict.fromkeys(sizes + armor + _unit_speeds(unit)))
+    return " · ".join(dict.fromkeys(sizes + ratings + armor + _unit_speeds(unit)))
 
 
 def _unbroken(text: str) -> str:
@@ -523,11 +541,18 @@ def may_read_log_line(
 
 class PlayerViewWindow(QWidget):
     """Shows the rows it's given. It reads nothing itself, so all it can ever
-    show the players is what player_view_rows let through."""
+    show the players is what player_view_rows let through.
+
+    Every row has to fit on the screen: nobody scrolls a TV. When they don't
+    fit the window's height, the text and bars shrink until they do (down to
+    _MIN_SCALE), rather than the window growing past the screen or squashing
+    wrapped lines away."""
 
     def __init__(self, on_close: Callable[[], None]):
         super().__init__()
         self._on_close = on_close
+        self._scale = 1.0
+        self._fitting = False
         self.setObjectName("playerView")
         # It goes when the main window does, instead of keeping the app open.
         self.setAttribute(Qt.WidgetAttribute.WA_QuitOnClose, False)
@@ -536,6 +561,9 @@ class PlayerViewWindow(QWidget):
         self.setStyleSheet(_STYLE)
         self.resize(900, 700)
         layout = QVBoxLayout(self)
+        # The rows don't set the window's minimum size, which would grow it
+        # past the screen: _fit shrinks them into it instead.
+        layout.setSizeConstraint(QLayout.SizeConstraint.SetNoConstraint)
         layout.setContentsMargins(24, 24, 24, 24)
         layout.setSpacing(10)
         self._title = QLabel("")
@@ -567,7 +595,57 @@ class PlayerViewWindow(QWidget):
             if widget is not None:
                 widget.deleteLater()
         for row in rows:
-            self._rows_layout.addWidget(self._row_widget(row))
+            frame = self._row_widget(row)
+            self._rows_layout.addWidget(frame)
+            # New rows take the style sheet's fonts now, so _fit measures them.
+            frame.ensurePolished()
+        self._fit()
+
+    def resizeEvent(self, a0: QResizeEvent | None) -> None:
+        super().resizeEvent(a0)
+        self._fit()
+
+    @property
+    def scale(self) -> float:
+        """How big the text and bars are now, 1.0 being their full size."""
+        return self._scale
+
+    def needed_height(self) -> int:
+        """The height every row needs at the window's width and its scale."""
+        layout = self.layout()
+        assert layout is not None
+        layout.invalidate()
+        if layout.hasHeightForWidth():
+            return layout.heightForWidth(self.width())
+        return layout.sizeHint().height()
+
+    def _set_scale(self, scale: float):
+        if scale != self._scale:
+            self._scale = scale
+            self.setStyleSheet(_scaled_style(scale))
+
+    def _fit(self):
+        """The biggest scale, in _SCALE_STEPs from full size, at which every row
+        fits the window's height."""
+        if self._fitting:
+            return
+        self._fitting = True
+        try:
+            self._set_scale(1.0)
+            needed, height = self.needed_height(), self.height()
+            if needed <= height:
+                return
+            # Sizes don't all scale (margins, the bars' width), so start
+            # from the guess and step down until it fits.
+            scale = max(_MIN_SCALE, min(1.0, height / needed))
+            scale = math.floor(scale / _SCALE_STEP) * _SCALE_STEP
+            while True:
+                self._set_scale(max(_MIN_SCALE, round(scale, 2)))
+                if self._scale <= _MIN_SCALE or self.needed_height() <= height:
+                    return
+                scale -= _SCALE_STEP
+        finally:
+            self._fitting = False
 
     @staticmethod
     def _row_widget(row: PlayerViewRow) -> QFrame:
