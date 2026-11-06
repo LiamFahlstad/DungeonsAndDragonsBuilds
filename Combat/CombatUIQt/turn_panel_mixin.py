@@ -33,7 +33,13 @@ from .monster_actions import (
     start_of_turn_traits,
 )
 from .player_server import PLAYER_PORT
-from .player_view import PlayerViewRow, PlayerViewWindow, player_view_rows
+from .player_view import (
+    PlayerViewRow,
+    PlayerViewWindow,
+    _player_names,
+    _seen,
+    player_view_rows,
+)
 from .state import CombatWindowState
 from .turns_mixin import unit_label
 from .undo import undoable
@@ -135,8 +141,26 @@ class TurnPanelMixin(CombatWindowState):
             self._log_feed.show_log(self._read_log())
         self._refresh_player_view()
 
+    def _hidden_turn_note(self) -> str:
+        """During the turn of monsters the players can't see, what the players'
+        screen shows instead: it keeps "now" on the last turn they could see,
+        so as not to give the hidden ones away (player_view_rows)."""
+        turn = self._current_turn_group()
+        players = _player_names(self.characters)
+        if not turn or any(_seen(c, players) for c in turn):
+            return ""
+        shown = next(
+            (row.name for row in self._player_view_content()[1] if row.turn == "now"),
+            None,
+        )
+        if shown is None:
+            return "  (hidden from players)"
+        return f"  (hidden: players see {shown} as now)"
+
     def _refresh_turn_labels(self):
-        self._turn_now_label.setText(f"Now: {self._current_turn_label()}")
+        self._turn_now_label.setText(
+            f"Now: {self._current_turn_label()}{self._hidden_turn_note()}"
+        )
         upcoming = [unit_label(unit) for unit in self._upcoming_turns()[:2]]
         self._turn_next_label.setText(
             "Next: " + ", then ".join(upcoming) if upcoming else ""

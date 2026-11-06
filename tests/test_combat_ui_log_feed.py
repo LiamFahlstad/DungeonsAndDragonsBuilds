@@ -1,6 +1,8 @@
 """The encounter log under the turn column (log_feed.py): always open, up to
 date with every line and undo, and scrolling only when the GM wants it to."""
 
+import json
+
 import pytest
 from PyQt6.QtCore import Qt
 from PyQt6.QtTest import QTest
@@ -8,6 +10,7 @@ from PyQt6.QtWidgets import QApplication
 
 from Combat.Combatants import Pirate, Tiger
 from Combat.CombatUIQt.log_feed import log_feed_html
+from Combat.EncounterLogs import PUBLIC_KEY, TURN_KEY
 from tests._combat_ui import make_ui
 
 MANY = 80
@@ -93,16 +96,89 @@ def test_a_new_turn_and_round_get_headings(fight):
     fight._log_event("Second")
     fight._advance_turn()
     fight._log_event("Third")
+    # Each turn's first line says whose it is.
     assert _settled(fight).split("\n") == [
         "Round 1",
         "Pirate",
+        "It's Pirate's turn",
         "First",
         "Tiger",
+        "It's Tiger's turn",
         "Second",
         "Round 2",
         "Pirate",
+        "It's Pirate's turn",
         "Third",
     ]
+
+
+def test_a_turn_nothing_happens_in_still_gets_its_heading(fight):
+    fight._advance_turn()
+    fight._advance_turn()
+    assert _settled(fight).split("\n") == [
+        "Round 1",
+        "Pirate",
+        "It's Pirate's turn",
+        "Tiger",
+        "It's Tiger's turn",
+        "Round 2",
+        "Pirate",
+        "It's Pirate's turn",
+    ]
+
+
+def _log(ui) -> dict:
+    assert ui.log_file is not None
+    return json.loads(ui.log_file.read_text(encoding="utf-8"))
+
+
+def test_whose_turn_it_is_is_saved_before_anything_happens(fight):
+    """Continuing the fight starts on it: the turn line makes the log a fight."""
+    fight._advance_turn()
+    data = _log(fight)
+    assert data[TURN_KEY] == "Tiger"
+    assert [e["text"] for e in data["round_1"]] == [
+        "[Pirate's turn] It's Pirate's turn",
+        "[Tiger's turn] It's Tiger's turn",
+    ]
+
+
+def test_turn_lines_are_the_gms_only(fight):
+    """The players' screen and link show whose turn it is in their own rows,
+    which keep a hidden monster's turn from them."""
+    fight._advance_turn()
+    assert not any(e.get(PUBLIC_KEY) for e in _log(fight)["round_1"])
+
+
+def test_previous_says_whose_turn_it_is_again(fight):
+    fight._advance_turn()
+    # What Previous does after anything but Next: only the turn steps back.
+    fight._step_turn_back()
+    assert _log(fight)["round_1"][-1]["text"] == (
+        "[Pirate's turn] Back to Pirate's turn"
+    )
+
+
+def test_undoing_next_takes_its_turn_line_back(fight):
+    fight._advance_turn()
+    fight._previous_turn()  # straight after Next: undoes it
+    assert [e["text"] for e in _log(fight)["round_1"]] == [
+        "[Pirate's turn] It's Pirate's turn"
+    ]
+
+
+def test_a_hidden_monsters_turn_says_what_the_players_see(fight):
+    """Their screen keeps "now" on the last turn they could see."""
+    _, tiger = fight.characters
+    tiger["hidden_from_players"] = True
+    fight._advance_turn()
+    QApplication.processEvents()
+    assert fight._turn_now_label.text() == (
+        "Now: Tiger  (hidden: players see Pirate as now)"
+    )
+    fight._advance_turn()
+    QApplication.processEvents()
+    assert fight._turn_now_label.text() == "Now: Pirate"
 
 
 def test_a_groups_turn_has_one_heading():

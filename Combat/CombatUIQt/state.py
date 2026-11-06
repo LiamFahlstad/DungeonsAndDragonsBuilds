@@ -95,6 +95,9 @@ class CombatWindowState:
     # The campaign party's character names, tracked or not: who an encounter
     # log is prepared with (EncountersMixin._prepare_if_missing).
     _party_names: list[str]
+    # The allies who travel with the party (PartySpec.allies, CombatantSpecs),
+    # tracked from fight to fight (Combat/PartyAllies.py).
+    _party_ally_specs: list
     # A short rest's events while it's being taken (RestsMixin).
     _rest_events: list[dict] | None
     _initiative_widget: QWidget | None
@@ -402,6 +405,9 @@ class CombatWindowState:
 
     def _current_turn_group(self) -> list[dict]:
         raise NotImplementedError("TurnsMixin._current_turn_group")
+
+    def _current_turn_name(self) -> str | None:
+        raise NotImplementedError("LoggingMixin._current_turn_name")
 
     def _end_concentration_spells(self, char: dict):
         raise NotImplementedError("SpellsMixin._end_concentration_spells")

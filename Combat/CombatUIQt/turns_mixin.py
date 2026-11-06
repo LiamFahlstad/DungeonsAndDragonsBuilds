@@ -98,6 +98,12 @@ class TurnsMixin(CombatWindowState):
             self._pass_turn()
             if not (self.settings.skip_dead_turns and self._turn_is_dead()):
                 break
+            self._log_event(
+                f"{self._current_turn_name()}'s turn is skipped: "
+                "everyone in it is dead",
+                public=False,
+            )
+        self._log_turn_start()
         self._refresh_turn()
         self._on_turn_changed()
         # Save whose turn it is, so continuing the fight starts there. A log
@@ -105,6 +111,18 @@ class TurnsMixin(CombatWindowState):
         data = self._read_log()
         if has_round_events(data):
             self._write_log(data)
+
+    def _log_turn_start(self, back: bool = False):
+        """Log whose turn it is now, once it's theirs ("It's Hanna's turn"),
+        or, `back`, that Previous made it theirs again: every turn has a line,
+        one in which nothing happened too, so the log shows whose turn it was
+        and saves it (_write_log), and the log feed shows the turn's heading.
+        It's the GM's: the players' screen and link show whose turn it is in
+        their own rows, which keep a hidden monster's turn from them."""
+        name = self._current_turn_name()
+        if name is not None:
+            text = f"Back to {name}'s turn" if back else f"It's {name}'s turn"
+            self._log_event(text, public=False)
 
     def _turn_is_dead(self) -> bool:
         """Whether everyone whose turn it is is dead. Someone dying still has
@@ -198,6 +216,7 @@ class TurnsMixin(CombatWindowState):
             skip = self.settings.skip_dead_turns and self._turn_is_dead()
             if not skip or self._is_first_turn():
                 break
+        self._log_turn_start(back=True)
         self._refresh_turn()
         self._on_turn_changed()
         data = self._read_log()
@@ -610,6 +629,7 @@ class TurnsMixin(CombatWindowState):
         self.initiative_order = list(sorted_chars)
         self.current_turn_idx = 0
         self.phase = "COMBAT"
+        self._log_turn_start()
 
         self._switch_to_combat()
 

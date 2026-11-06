@@ -7,7 +7,7 @@ Every campaign lives in `Combat/Campaigns/<Campaign>/`:
 | `encounters.py` | `CONFIG`: the campaign's party and every encounter it can run | You |
 | `Campaign.py` | One line that makes the campaign from `encounters.py` | Nobody (leave it) |
 | `CombatLogs/<encounter id>.json` | One log per encounter: who takes part, the monsters, every event of the fight | `{}` until the encounter is opened; then the combat window sets it up from `encounters.py` and logs the fight into it |
-| `PlayerLogs/main_party.json` | The party's journal: where they've been (encounters, short and long rests) | The combat window |
+| `PlayerLogs/<party id>.json` | The party's journal: where they've been (encounters, short and long rests). `main_party.json` unless the `PartySpec` says otherwise | The combat window |
 | `CHEATSHEET.md` | The commands for this campaign | You |
 
 The combat window only plays encounters listed in `encounters.py`. The
@@ -24,7 +24,7 @@ from Builds.Characters.Y2024_Bard_Valor_Clover import Y2024BardValorCloverCharac
 from Builds.Characters.Y2024_Paladin_Devotion_Edmund import (
     Y2024PaladinDevotionEdmundCharacterBuilder,
 )
-from Combat.EncounterConfig import CampaignSpec, CombatantSpec, EncounterSpec
+from Combat.EncounterConfig import CampaignSpec, CombatantSpec, EncounterSpec, PartySpec
 from Combat.Monsters.CR_0.monsters import GoblinWarrior
 from Combat.Monsters.CR_1.monsters import GoblinBoss
 from Combat.Monsters.CR_1.monsters_homebrew import GreypawCR1
@@ -33,22 +33,26 @@ CONFIG = CampaignSpec(
     name="curse_of_the_lich",
     title="Curse of the Lich",
     description="Free text about the campaign.",
-    party=[
-        Y2024PaladinDevotionEdmundCharacterBuilder,
-        Y2024BardValorCloverCharacterBuilder,
-    ],
+    party=PartySpec(
+        id="main_party",
+        members=[
+            Y2024PaladinDevotionEdmundCharacterBuilder,
+            Y2024BardValorCloverCharacterBuilder,
+        ],
+        allies=[CombatantSpec(GreypawCR1, "Greypaw")],
+    ),
     encounters=[
         EncounterSpec(
             id="goblin_scouting_party",
             title="Goblin Scouting Party",
-            description="A goblin scouting party, with Greypaw fighting alongside the party.",
+            description="A goblin scouting party, with a hired guide fighting alongside the party.",
             difficulty="Balanced for three level 3 players.",
-            players=["Edmund", "Clover", "Kivi"],
+            players=["Edmund", "Clover", "Greypaw"],
             monsters=[
                 CombatantSpec(GoblinBoss, "Goblin Boss", count=2),
                 CombatantSpec(GoblinWarrior, "Goblin Warrior", count=4, group="Goblin Warriors"),
             ],
-            allies=[CombatantSpec(GreypawCR1, "Greypaw (Ally)")],
+            allies=[CombatantSpec(GoblinWarrior, "Hired Guide")],
             combatants_per_column=5,
         ),
     ],
@@ -62,8 +66,39 @@ CONFIG = CampaignSpec(
 | `name` | yes | The campaign's id, snake_case. It's what `--campaign` takes. |
 | `title` | yes | How it's shown, e.g. in the statistics report. |
 | `description` | yes | Free text (may be `""`). |
-| `party` | yes | The tracked party, as `CharacterBuilder` classes imported from `Builds/Characters/`. `[]` for a campaign without character sheets. |
+| `party` | yes | The tracked party, a `PartySpec` (below). A plain list of `CharacterBuilder` classes is a party of just those members; `[]` for a campaign without character sheets. |
 | `encounters` | yes | The encounters, in the order Load Encounter lists them. The first one is what `RunCombatSimulator.py` runs with no flags. |
+
+### The party: `PartySpec`
+
+The players' characters and the allies who travel with them, both tracked from
+one encounter to the next in the party's player log.
+
+| Field | Required | Meaning |
+|---|---|---|
+| `members` | no | The players' characters, as `CharacterBuilder` classes imported from `Builds/Characters/`. |
+| `allies` | no | NPCs and creatures who travel with the party (a hireling, an animal companion, a rescued prisoner), as `CombatantSpec`s (below). Each needs a `name`: it's how it's tracked, and it can't be a member's name or another ally's. An encounter's monsters and allies can't use it either. |
+| `id` | no | Names the player log, `PlayerLogs/<id>.json` (default `main_party`). snake_case. |
+
+A **party ally** joins every encounter, as the members do, unless the
+encounter's `players` leaves it out (name it there with the members you want).
+It's tracked like a player:
+
+- **From fight to fight:** it starts each encounter as the last one left it:
+  Hit Points, temporary Hit Points, conditions (not ones ending on a timer or
+  a save), death saves, spell slots and Legendary Resistances left.
+- **Rests:** a long rest brings it back to full; the short-rest window heals it
+  like a player.
+- **At 0 Hit Points** it makes Death Saving Throws like a player instead of
+  dying, so it can be healed; one left at 0 HP joins the next fight at 0 HP.
+  Take it out of `allies` when it's gone for good.
+- **Between encounters** the party view lists it under *Allies*, as it is now.
+- Its card and log entry name it as the window names every named creature:
+  `Greypaw (Wolf)` for `CombatantSpec(Wolf, "Greypaw")`.
+
+It's tracked by the player log, so a fight played without `--player-log` starts
+it at full Hit Points. An ally who only fights in one encounter goes in that
+encounter's `allies` instead: it starts every fight at full Hit Points.
 
 ### An encounter: `EncounterSpec`
 
@@ -73,9 +108,9 @@ CONFIG = CampaignSpec(
 | `title` | yes | How Load Encounter, the window title and the player log show it. |
 | `description` | no | What the encounter is, shown in Load Encounter. |
 | `difficulty` | no | A note on how hard it is, shown in Load Encounter. `--difficulty` computes the real rating. |
-| `players` | no | Who of the party takes part, by character name or a part of one ("Kivi" for "Kivi Jätti"). Leave it out for the whole party. |
+| `players` | no | Who of the party takes part, members and party allies alike, by name or a part of one ("Kivi" for "Kivi Jätti"). Leave it out for the whole party; a party ally not named here stays out. |
 | `monsters` | no | The hostile side (see below). They count toward XP and difficulty. |
-| `allies` | no | Friendly NPCs fighting with the party (see below). They're subtracted from the difficulty. |
+| `allies` | no | Friendly NPCs fighting with the party in this encounter only (see below), at full HP. They're subtracted from the difficulty, as the party allies taking part are. |
 | `combatants_per_column` | no | How many cards per column in the window (default 4). |
 
 ### Monsters and allies: `CombatantSpec`
@@ -187,13 +222,26 @@ too) and whose turn it is (`turn`), and adds one `round_<n>` list of events per
 round. Continuing the fight picks up in that order, on that turn. Players' HP and
 conditions aren't stored in it: they're replayed from the events (see below).
 
+Every turn starts with a line saying whose it is (`[Hanna's turn] It's Hanna's
+turn`; `Back to Hanna's turn` after **Previous**; a turn skipped because everyone
+in it is dead says so), also a turn nothing else happens in, so the log shows
+each turn and saves whose it is from the first one on. These lines are the GM's:
+the players' screen and link show whose turn it is in their own rows. During
+the turn of a monster hidden from players, their screen keeps **NOW** on the
+last turn they could see, so as not to give it away; the GM's **Now:** line
+says so ("hidden: players see Hanna's Drake Companion as now").
+
 ## Playing
 
 - `--scenario <id>` opens that encounter (asking to continue or restart a fight in
   progress), with the players its log lists.
 - Without `--scenario`, `--player-log` opens the party **between encounters**: their
-  current HP, slots and conditions, with Load Encounter (Ctrl+O), Short Rest and
-  Long Rest. Nothing is logged between encounters.
+  current HP, slots and conditions, and their allies', with Load Encounter (Ctrl+O),
+  Short Rest and Long Rest. Nothing is logged between encounters.
+- A player log in a campaign's `PlayerLogs/` folder belongs to that campaign:
+  `--player-log` picks it (no `--campaign` needed), and a `--campaign` or
+  `--scenario` of another campaign is refused. `--player-log` with no path uses
+  the campaign's own party log, `PlayerLogs/<party id>.json`.
 - **Restart** sets the log up again from the config and
   undoes the fight for the party. The old log is kept as
   `<id>_restarted_<timestamp>.json` (git-ignored).
@@ -202,7 +250,7 @@ conditions aren't stored in it: they're replayed from the events (see below).
 
 ## The player log
 
-`PlayerLogs/main_party.json` lists where the party has been, in order:
+`PlayerLogs/<party id>.json` (`main_party.json`) lists where the party has been, in order:
 
 ```json
 {"sessions": [

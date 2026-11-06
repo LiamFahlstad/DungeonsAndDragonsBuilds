@@ -624,7 +624,8 @@ def test_restart_brings_the_prepared_encounter_back_and_undoes_the_fight(tmp_pat
     assert _player(ui, "Tiger")["hp"] == 30
     assert _journal(tmp_path) == []
     (backup,) = (tmp_path / "CombatLogs").glob("tiger_den_restarted_*.json")
-    assert "takes 7" in json.loads(backup.read_text())["round_1"][0]["text"]
+    # The fight's last line; its first says whose turn it was.
+    assert "takes 7" in json.loads(backup.read_text())["round_1"][-1]["text"]
 
 
 def test_the_player_log_says_where_the_party_has_been(tmp_path):
@@ -640,7 +641,8 @@ def test_the_player_log_says_where_the_party_has_been(tmp_path):
     }
     # Every detail is in the encounter log.
     assert ui.log_file is not None
-    (event,) = json.loads(ui.log_file.read_text())["round_1"]
+    turn, event = json.loads(ui.log_file.read_text())["round_1"]
+    assert turn["text"].endswith("'s turn")
     assert (event["character"], event["action"], event["value"]["hp_delta"]) == (
         "Edmund",
         "damage",
