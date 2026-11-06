@@ -2,47 +2,47 @@
  "SpellSlotTestPaladin4Wizard3": {
   "full": {
    "character.html": "a8b909ea312625fae7d90b9178385480b3bc26765b2fbb16928653f759c911e7",
-   "features/level_01.html": "0de49746f2d134695852472fc2476a7048e9327d1a156cc658dfa3ef76cef869",
+   "features/level_01.html": "dc3ecc4adc9383dd6e0867dae20670e25e6a309e06d6416e8156b910b8a74402",
    "features/level_02.html": "0378d02ad5be370283a3f3b94e078416503c11acad708467a07ca614728bcb42",
    "features/level_03.html": "14c389623535ea107144008e26f2ea7581270db5653191d8c2b33bc9d647028f",
    "features/level_04.html": "ee8c6ce60883e0f06edfa74d29178b2563934630e87b6263e2309de0055547d8",
    "fighting_styles.html": "0231ca6f2b7463ad4bb9d43d5e6e27715b38a087e51917a533b5a24b495e7598",
-   "full_character_sheet.html": "7003ad848c2c3e9393ca9c84cb0d52f361d5e1ab65c844afbfcadd03865a5360",
+   "full_character_sheet.html": "ec4579a6c9eb560166c0a5a44b1ccab8761a17c8ab9d2c5776909fc104ad4e58",
    "items.html": "89668547fd30648355d5a668e7f243841c6da947a123292c95a446c64fb9b2c0"
   }
  },
  "SpellSlotTestPaladin5": {
   "full": {
    "character.html": "67a6baa375e78e7873a5102e4575c1193f0bab9753aade890b793e746b0b7d74",
-   "features/level_01.html": "50d4bcbf1cbb5fccb108fa753d4c6f1ad3a9a6fad39e94eee7983df4b55ea894",
+   "features/level_01.html": "2a6ee74d7ac48834078fac640677275946e17f59b7043e87cca1c9aa9b528122",
    "features/level_02.html": "2eb7a4ea36fc393a103e99cdf2bc021716cb52bfb8c63307a58af135daf301ef",
    "features/level_03.html": "d65afc758712bd7c18d0f008e6bfade3b3a6a5d3bcc166de638547c75d467569",
    "features/level_04.html": "2aae97edede488d7984c6ced245fb7ed849cb345b12e34c6fd18c530013617af",
    "features/level_05.html": "7d091912587232da2e9dcbaa86f7e0f8fe40448098f389f565774c320637e296",
    "fighting_styles.html": "d5986e25d07ed70f71953e0cb64ecaf293ba114b1308b3e82d1fa88f0aab2d95",
-   "full_character_sheet.html": "72a5b3d023115b067e615da5cc5153aebd101e09e5cb60915892ff8a9e5ffb26",
+   "full_character_sheet.html": "e878cb0ed5f2bbc30be349d67ccac2ea2e73595750011db829c68eb5b3ca7d2a",
    "items.html": "1060c5f16d56e3b08b4d6676cab0835f1d805dee60adc7b9d10b0453510c8450"
   }
  },
  "SpellSlotTestWizard3Warlock3": {
   "full": {
    "character.html": "0c0bacc899203816d69596dd3c3dd7150b070a3a3993a00131597b4c58c662f9",
-   "features/level_01.html": "6e1904fc085cb18078ca0526d06319511e8d4d314d0ee4db75a0137e1a6ba3e6",
+   "features/level_01.html": "2c0edf2bdc58399fe4564cd786eb7b37952028290208c5122de447fc5468aca6",
    "features/level_02.html": "3f97f23ebc44bc16785e41ffbc805b38bba442f7b42e54440cba66c201493304",
    "features/level_03.html": "28c4ecbd4a5762aca2f8d47bb429dd5a2af26aabb837b259f22436ccd27b4075",
-   "full_character_sheet.html": "62f0d00f9ada1f72ee687876374744a995963503f38691740e5a93bb8ddc604b",
+   "full_character_sheet.html": "1a5ae919ae2142044180ee94a894f7c46d6adcfa904b2ee0c864cb974da33f69",
    "items.html": "c299c93080fa1df130fab069cfbb7b5241dd870acad9b2c4bae60980774ed077"
   }
  },
  "SpellSlotTestWizard5": {
   "full": {
    "character.html": "624f3aa2e036f40b68222ca099b119255cfc6c6558816d7e4a5bac392d53373e",
-   "features/level_01.html": "eb1a765333fb12ff1ecdb70ef7f4711c6d1228cb48dfe70984e36f995b3ea870",
+   "features/level_01.html": "80dfd3b1d707bd320146bedcd9687a17f2e684feb3c96b608e97a5b63fdc3d6e",
    "features/level_02.html": "43e14c59074ae0dd5f9b2732796f8c2d2dd8a5a3e38802d1348ff16ca0d816a4",
    "features/level_03.html": "760de406d643431dc2bd3a1db96770c923e7faa19efc7b60a8a927bd91708945",
    "features/level_04.html": "7093debc348c74de50edd2b19a279262f6a2221d111f4af6117ea0a89445c79c",
    "features/level_05.html": "42c18856237892134b7055f456be8bb397f8e6a6efc1444af966cbb69cd11878",
-   "full_character_sheet.html": "fb926e1fb8e8105ac6e7b6b992bf3554834aab67fb3bf27658ffba1c0858c442",
+   "full_character_sheet.html": "93e8676ade8ce28642d48d149b735638a0cef4496155f89f0ee3a1ab1449a5cb",
    "items.html": "01bb000555bf46269c9f155a8602b3e2947a7f97cbe0e4d98be735d18e63e1af"
   }
  },
@@ -178,7 +178,7 @@
  "Y2014BardEloquenceCorvinusTalebrightCharacterBuilder": {
   "full": {
    "character.html": "693834a7df7d543fb7ce4a1d961fd7ea682500933ba3360e0238ed707bdb0bd1",
-   "features/level_01.html": "cb75cd412b8a9a9fe9b28693d35423376bdd2288517bbd52d8247a0967ec8341",
+   "features/level_01.html": "636a14f2be20877f31d5e7afb13394e795b4ac741e499ec736422a66e989d1d7",
    "features/level_02.html": "301fd5ad3962eaff2f266e4ff3980d76737ceeeb81e0b3681abadd4729081f34",
    "features/level_03.html": "9aee2fa8e051164124088f161d63086bf1966e9723d6ce37a8fb1edccf56cc5f",
    "features/level_04.html": "949000882ae6d594faf806212f85b4071e1988106284e54142bea25588dbfbff",
@@ -192,14 +192,14 @@
    "features/level_12.html": "1d3d067516fa2fb0f0e3fb214b9803e7a567df845c7de3e32d53c27a0cf45788",
    "features/level_13.html": "a2ad7ad8ea5dc810625d34d2f83de69166f846a32492c93d0e97fd47c3d68d7f",
    "features/level_14.html": "cc4072a03ca15cdc740c8eaaa4e5d9823ae73f894fb798ec0be206f4ab25c2de",
-   "full_character_sheet.html": "ff1bca36075dd729da511cd0f5c0168159aa7b1e0e5b294bb7b1f17807571f82",
+   "full_character_sheet.html": "e850652bff7724e65b3a0b677d99991813a7be9a93bbe906264df17e15ea73c2",
    "items.html": "55bb86db67425fc5facf3b855e1bcbdf22bf95f29da558ac298761b6444f2c59"
   }
  },
  "Y2014BardSwordsPerrinBladesongCharacterBuilder": {
   "full": {
    "character.html": "875c8f577514082ce2d0a5a69ac076fee3051979ed62d0906c6231fdcd0b533e",
-   "features/level_01.html": "35ff57f35e28d46fd5559d5b574ea3dba322fe01c3c422f6c36ad299903d4eaf",
+   "features/level_01.html": "c1c2e2edb0c59272ee68cf524339e297fd7c2a742da49340358e2d3cdf1db335",
    "features/level_02.html": "1ee6cc441dd76b125f91847761e6e0dd7c9c00b7e1626f89807c44568dbd7311",
    "features/level_03.html": "bd125ab03a8aeb1040ed74e45c2b5f4a09f6c932b46bd30ee89bb734d37fa56d",
    "features/level_04.html": "c4b93637179faeebbb38ece53e5c528e458274fa218450ed383c1600c4e9d0d9",
@@ -214,14 +214,14 @@
    "features/level_13.html": "fa27d2aee6e0a9cf8ba0a297c6f37abd7596574db560c13a846d913ec87151d0",
    "features/level_14.html": "5ecfe43ee79bc385bc8132eeb435be9362ebfacdf65277e90797ec054dad1200",
    "fighting_styles.html": "8e28ec32b602b046e18ebac4d56dd9a331e5a1c390ef4fbeee41ec414c6a42ba",
-   "full_character_sheet.html": "bbdf8afda4eb231446dfa39fc0a0d33452a2d92b9720e1fb33569e09e4a0ea8b",
+   "full_character_sheet.html": "9b56e085e12e3caae54a8a1d5e590dce9be8bf6b028ca18195b1603f2502550d",
    "items.html": "8e1fccbc59d0f118a8a07ba884ba2b47b44259a9250c53fa5ff1f9e3a2847fbd"
   }
  },
  "Y2014BardWhispersNyraHollowechoCharacterBuilder": {
   "full": {
    "character.html": "380e6e91f61363f837c3006e37f8b10cfabbbbcec8dde709a5590d5b1a6c8058",
-   "features/level_01.html": "b8e1280fd31924fc67d994d4ad611cacad030c91aa694579aeecac11d1f56c12",
+   "features/level_01.html": "e77645c7053ad5d9b445542af6d63b500bec13cf860784cc3f5838080dbd2df1",
    "features/level_02.html": "e0295c81d3580c4f418eb7e2c377c177b014e9ccd7438790057a1d5a9d0d8d62",
    "features/level_03.html": "35eb813f2e80473dc773dbb25a478793f5515c7873f58f72f016b446f909e789",
    "features/level_04.html": "d44facdf519b99d450b4355c7d04a17d2e9cfaeef0b9ba994f00a9365bcd0842",
@@ -235,14 +235,14 @@
    "features/level_12.html": "fb8e1c326e58f7b0a9b378fffc3278542c7c57f9d0576aa5763e78c25de5e835",
    "features/level_13.html": "8f372296996a95ff88858e075aafeba40cd30cdf37fc993346bf9131432af5a9",
    "features/level_14.html": "e6dd2eed1b3ad4854353be8922546fdc4cdc1aeeeb22250a0a84e5f38f2c03bd",
-   "full_character_sheet.html": "a5d78e21fb302c66c367af71b6726665b4f6819fdb7842a3a905bb43a83ebbcb",
+   "full_character_sheet.html": "354a5074503b16bacf87be7d92e890e72bafb07b4e1daad3c298d5f58882918b",
    "items.html": "ceb65446ef0dedbd6b2502af3c2c78bb6ba8c48da4614443270217db5a8dabcf"
   }
  },
  "Y2014ClericDeathMortimerGrimvaleCharacterBuilder": {
   "full": {
    "character.html": "d67d2eb361986835c5581de8e9ff26eceb372a5057383fac03274e6e749f883d",
-   "features/level_01.html": "17de9073be79c44db8cd8ef52d888170f7eb463f300e94c2c911b7127256fd0f",
+   "features/level_01.html": "114623f5c1e97a7e4fcad2e54d16ff0ee9d23d10dfd6b2a97225b1a641e91cd8",
    "features/level_02.html": "74c93ea1722d0670196423a49b0e4cb1b852e268e800e560e699e27fd7467418",
    "features/level_03.html": "1da1f2f86337bb9b4e0c8d7997f661771b53646f23202b1bef9476aed3c04bee",
    "features/level_04.html": "77249c404cb2c98b437a732f05b945b1bafd87d72d005058577fa6419dacd10c",
@@ -259,7 +259,7 @@
    "features/level_15.html": "8bb522f5c251ac45a2449ab85ea5be470f30b95273f7c0351a0fbbeecab38739",
    "features/level_16.html": "d5d0453c22c90175c3446e1807b8a5f0b03402d48bbae3c485d9b434107b4257",
    "features/level_17.html": "3184e9509c6a97bac803c63b8e4c44eb17dc3cbae87f79e1668973fb3cee1a8f",
-   "full_character_sheet.html": "02312d0267190252a2ddd96b46226414af3097600962bcc9e648509d8fe5dbc7",
+   "full_character_sheet.html": "51b45cd5f786523a0756b2b6715edda4168ef1cdb6282775bec5952fabd03d47",
    "items.html": "6539e46ce6bbb5623f0d0cfc7f8f66c0b9ef97b3845cae5681f09920070b9460"
   }
  },
@@ -290,7 +290,7 @@
  "Y2014ClericNatureWillowdaleFernstepCharacterBuilder": {
   "full": {
    "character.html": "04bd8ef85ed847911cf32ae95c355e2ee22493fee634ea91bd4935b603d191cf",
-   "features/level_01.html": "dc76688a70d3a2450dc9238f479accf2ab06d080cd6dcffb07c31cd811e91803",
+   "features/level_01.html": "f36d6abe21f82eee167833a11c74abe85867c263a8e901938bad93882d6ba065",
    "features/level_02.html": "c1b7988d38be88702b7af93f94ce0b0df8f2c47113ffed0bd3a415691f8f9f84",
    "features/level_03.html": "cddfd5b357c3dc4b48bc40e1c56f7399916c1d4dd8faef76145d2674eeb07328",
    "features/level_04.html": "f542a54604ec6c6392cfd2618c5f0909393910f1273e20e96aff5747c5504b1b",
@@ -307,14 +307,14 @@
    "features/level_15.html": "af35eba5e832ed21f422f2e1aaeb9f074f44233b46361a2274ce73d3de52656d",
    "features/level_16.html": "e0e67d311df5e1f45680fff13ca4018505e5722778211033e9dcc170b083abb2",
    "features/level_17.html": "4c136214494e627039c8548645189849a7b6655cf11cbd7881c02c7cc4483e2e",
-   "full_character_sheet.html": "638510b216ad30d908ff5f0215c3f60eeb382cc837a763a370be9e5d75570bc0",
+   "full_character_sheet.html": "ecf2388e9bdba1d021260a70e520bcf7a630cadf38219775b9c537d5afd8b50d",
    "items.html": "39859b040ad1dce33addda4a14a0fc26ec2b067f1792592955ae3daa54d7f511"
   }
  },
  "Y2014ClericOrderCastellanTruewardCharacterBuilder": {
   "full": {
    "character.html": "fbda8f0c08bc9e938c31823b8d818f683fe773cb7be46d53bd438eabe4cd747a",
-   "features/level_01.html": "52379b2c75c82f4eed7c014c224f00b4dc9ca692c7e2e6cbafa35a9ddcd94fa3",
+   "features/level_01.html": "5de40b18070af21ce5e357c864e62272bb50d3f75ae408c8e07b4e21791c0907",
    "features/level_02.html": "995ca07123b7bbca02f9b69b27833e25440f979ad5dcc977f65a517d39deee3b",
    "features/level_03.html": "5ab84b54b2bffb4b6dd80e80d71ae69842000461b09b470b10903d0fa053ade9",
    "features/level_04.html": "9a3418fdb644ede402537c29a4c2a23f32a539225aa0c1a306b0eb81baa359fe",
@@ -331,14 +331,14 @@
    "features/level_15.html": "a0c7275f15b656489e104b26b283648a8d8798c7e8dd76659c70cfdc4be5928e",
    "features/level_16.html": "d9dacb1f0298d1dd49b9c69d6dc1e538a0702ffb9f418fec53f71c580b37f0b5",
    "features/level_17.html": "306b102de3f3b4652906381ba7ccee8ad7c20f3a5f6196f2252b63c3c88333a7",
-   "full_character_sheet.html": "3514391388c6a135c3817e568c15f607b061fed38bdba2ef872aed0c640c9108",
+   "full_character_sheet.html": "51a438b18cb8e4bd1018f8455bdbc69a3b7d961ab8e4192bfc83d0fe7902f530",
    "items.html": "35acd0c8219a2dcf387f6d6fabe5d6454e52a6af1ab2368cee8e226c3a063652"
   }
  },
  "Y2014ClericPeaceHalcyonMeadowlightCharacterBuilder": {
   "full": {
    "character.html": "f0da0a2e3aebb28decac8c868315686a96ac462d174d2eaf993eb840a1445177",
-   "features/level_01.html": "64c3cb462b735f0e41df45f6634c649d7cd8017ba28b3a5ff8671edc426bf440",
+   "features/level_01.html": "f50edaa7388c263aa2f423e93c8741a824cb489e2a4856fdfb075d29d9f956e8",
    "features/level_02.html": "4738ab9b4639cd4b392f52f384deffdc9f9a46824be8cd845f39835b2d44357d",
    "features/level_03.html": "7f527cbb0160d962b298f5ff2cc2e40a4ee7dbe95f90b4f95300d6d64755dcea",
    "features/level_04.html": "643db8375bfd12ae2ab98bc3ee55b932f300fbb052f4b1b64d281ea73d742830",
@@ -355,14 +355,14 @@
    "features/level_15.html": "7440488fbd2a1c9f59b588bfd1dd3bed95273a246bfd1e6f418a408340e220b3",
    "features/level_16.html": "05a8d74ee84ddd3d06b2d92449b300de337a145a46cda1cd8fdef25b84a386dc",
    "features/level_17.html": "3ebcc9aa59df593e6e66f6dbe5679107856187fceff0353928e82989e63750a6",
-   "full_character_sheet.html": "4caace48fe826cf266653b28ddb03ec9c885180660eac1655d66b642799ba336",
+   "full_character_sheet.html": "cc7fb89a06cd21d27a40e30c721c545133b3b90179d0813a0ce694c64f948483",
    "items.html": "8aa9a075283d90487866bd9b3b008b5fbacbe34e5f4c8d7659cc58dac8ad9ce0"
   }
  },
  "Y2014ClericTempestStormWavecrestCharacterBuilder": {
   "full": {
    "character.html": "f8faf4470f641ecda585a13a8a2439e0bd8c24b795c761a934d9a75359d1cbf9",
-   "features/level_01.html": "b7166b0573ca164a00c2b85304c729b60bf93c70fbdb29564f142ae092dbd9dc",
+   "features/level_01.html": "c139ae7866954b4b97acd0ef257689893143df35a5a09f5303683ade0edb9f2c",
    "features/level_02.html": "444d7f1ed4bd2ff4fea9e9a173137ef6327ebc89eee186d41b261e6669ec50f1",
    "features/level_03.html": "02e130290a371f5b6d8b597dd41f39f56d1c620f005507c25e2244f7d41296be",
    "features/level_04.html": "05dc39b9c29ad2835e2bda78dcf0a6c1662aa9153b8208ab26aa58f1ab6e1099",
@@ -379,14 +379,14 @@
    "features/level_15.html": "0631fd149d74c365c1fad068c1be731dab078a4c9efd54d40b344b037e6a3c53",
    "features/level_16.html": "15f6141ab36ff5559ed00a14e6f6e345676b97ce6aa9d4be45266d2bc9599239",
    "features/level_17.html": "74a768ed5c8c4c4ab735d3332d4c7eb1bccccfdb1e4765a8777bbd565c23b085",
-   "full_character_sheet.html": "a5bb33e7f1f4c0322aa0e3986c8063381823b9e72b92f09ea14dee5e9cd53232",
+   "full_character_sheet.html": "0fbc3d7d822bb239691de9699b9779303a621c72b2c2ef30b23322421c0a6e0f",
    "items.html": "007c313668b4b00510d7e2215cea5e8fc9071af577294f955eb0ee1ab46347db"
   }
  },
  "Y2014ClericTwilightVesperNightsongCharacterBuilder": {
   "full": {
    "character.html": "0c1df786a204567586e1e887a3dd93c0041a831d312ce412b90de9fc64fa755a",
-   "features/level_01.html": "24abfaaee6c1833b04bc2e72dce925746c39b2d4b17ee5ea7ac672a48a3ff663",
+   "features/level_01.html": "233662b0297a927a1ecd212e0fa2dd1bc9239a01baa3a14989ca33786a0ea18d",
    "features/level_02.html": "f69ffc0bff86d9335649a54701d840afe42f1c25602aeaace879d5d647271853",
    "features/level_03.html": "9d21990bcb4058464742d1f430123382080d199f93573e2c6f3238385bc3f41d",
    "features/level_04.html": "eb07a3abfc38db93b28815166df03bc041725aabb52278ce0c3d6b334da21a00",
@@ -403,14 +403,14 @@
    "features/level_15.html": "3c0828ec54c480fdb8c2dac57fafcbea466bfef20706616b0455a64bb812c855",
    "features/level_16.html": "2fe339d624267097b57c9e29b92ccd992d6d430ba56951dabd5b20c00d04d162",
    "features/level_17.html": "518a82be2e109956aa5e4e2ccb320b1d31306aec43079e956937d6d813ebe6b9",
-   "full_character_sheet.html": "dcb1ba0bea2492d5af9d4bcf9814129a8f201cc2279b33f4c43d23686ecd3de4",
+   "full_character_sheet.html": "b326c4579bb6b04bb8d1cf9ddf39587b6c60713dcd09b8cf01eba31659be2636",
    "items.html": "2a06ada85c37dc3baba21ffb8beb150ee1539479cb1046b8ea16c2591f1b4691"
   }
  },
  "Y2014DruidDreamsSomnaDriftwillowCharacterBuilder": {
   "full": {
    "character.html": "7b58ed3603366e62d22d0c6e4a22cbf5c0d8615df3127af4da0cc934291ac051",
-   "features/level_01.html": "bea895bce9f70c13e88dc47a6b21a4e49886d89a36f0869b4fde59aca0f12c61",
+   "features/level_01.html": "120fe831c1e6a03d2ca3e4cb3fa73f85df44b9b5f6d2f434c7ac0b5db3fe7285",
    "features/level_02.html": "772931789b67ae634774de4cef6fc5f5b2e8ee02961a63743e6f83605addd6e9",
    "features/level_03.html": "d60125615cbe7f402b6ae69c6f1007a7f4c71131db719398c2fcd7aa23cdb4fb",
    "features/level_04.html": "03c613b969d1d6ae26da0a2c2a6915e053fbe349cd2d193f5c27084f3e9cc9ee",
@@ -424,14 +424,14 @@
    "features/level_12.html": "7102ed8041b8000f672b052a2055d90baa6f7fa01668d15c08db6462f5fb2128",
    "features/level_13.html": "ff59f974eb0c964d38b83294f899d0b165aef360299a8ea35498505f4815c4d3",
    "features/level_14.html": "9f81344413e28a0f3bc6a53eafa3be7b4be236b32c0ffa985d4a66736ff4ceec",
-   "full_character_sheet.html": "e8a84f78988ee269a49a6441851315ecfe14fef28939fd5ab18a93ea97b16d8c",
+   "full_character_sheet.html": "6120920d354844bda32355e0c17a42c605efdc983ff4057f96fedaf9c7cf5ca7",
    "items.html": "428ac3cc6cda727905beab825dc94ae457b569b45a896cf1963d561c5a592996"
   }
  },
  "Y2014DruidShepherdMeridianFlockwardCharacterBuilder": {
   "full": {
    "character.html": "c8a2623b9606be67c14056a4218725e646c7f1a0e6612de85812892c1fbb46b0",
-   "features/level_01.html": "e2e7da5cf838733448553598b7bfba2172461a04b158267ba9eb8b1fff59e96d",
+   "features/level_01.html": "dce804dfb8aa1bb9982dac9a574c0837563c85b681bc0a715fa97728cb785eff",
    "features/level_02.html": "52f921db8856d59a061e6e0d156344fabe87ace1c004bab24ec8050a60e82b68",
    "features/level_03.html": "89dc94e0e6bbcd0279dad75109a2e8d5c9d43791281f8776d09f641fc266254c",
    "features/level_04.html": "059550ff8ed2365f71bf3e7858c23dce4d39dab2c7e716cccb781a1521ed012c",
@@ -445,14 +445,14 @@
    "features/level_12.html": "520c699a914dbba29a07a415f62569bf77a44a126f3d85a803296b31a41cd5dd",
    "features/level_13.html": "653574d221518d43f6427b1401460d1c29903a5033e085e515d4fa51f0773db6",
    "features/level_14.html": "9892cc2581d69f590a6a20c3e89e8a33deca833f4992989ae2c88c64171d53d0",
-   "full_character_sheet.html": "eb42ae4583b7c87ccbc889a1db6444064624a5c9318a9532a0a304c000b3e936",
+   "full_character_sheet.html": "79d9a15f5f692c5d38d912c356dbd0e4fd49babc741e641b58f98d0c47665874",
    "items.html": "b9de9986dee5572b944f1371c1c539656bf71e8ebcc949055d75d9633ed750d9"
   }
  },
  "Y2014DruidSporesMossenRotbloomCharacterBuilder": {
   "full": {
    "character.html": "f0366e686d8e76278929d27fb730e835178964f7909eaa74b8fa6b3f8cae02eb",
-   "features/level_01.html": "f9ef8e017840b26a7d41667b9f16a78dd6f85b440c9624a29dba1ad01ae1ec89",
+   "features/level_01.html": "da5f94e2d5f512e2ccc30753be22622e5f95aa3118b98a3d63690727a8aedf1c",
    "features/level_02.html": "f223ee6a6d8236f16f1959e8413677a0aa576801d754f09df024565c2792e3d6",
    "features/level_03.html": "a1276aee713ff652988177386b6f2d77828b835eba43da241d16fdc02cb636f0",
    "features/level_04.html": "e6fc60e01f9f0267561da92599c35f87abed8fbb1d0b566eeb954b07c1cb6ebe",
@@ -466,14 +466,14 @@
    "features/level_12.html": "3580cea6b4004dd42dc6b0fbfbf64e0fe6b0e489adf10bba6af799aac6baeb28",
    "features/level_13.html": "1fc81299b4aa9198bd36ea65261c96ea98115cf428012465a4303f32f218f91a",
    "features/level_14.html": "6b0a56b710f6bcd521f4718b0205f982bf225e3605661c13a2464e12903aa9ed",
-   "full_character_sheet.html": "61cffea4c6f079cf218fbc54e0234a28b53a75eddc89d28c3fc93ed9e462dd6b",
+   "full_character_sheet.html": "25c76d0843371b8893ff856b3cc408d94cb72ef973a0a357e2b73921838614bc",
    "items.html": "c9446770d36ab039df310b533801735667802a14ca53f62ce3ba6f060392c015"
   }
  },
  "Y2014DruidWildfireEmberAshgroveCharacterBuilder": {
   "full": {
    "character.html": "625421b6d3c688508fed176227a0afab7196561e73015a7ae5446d5075bd463e",
-   "features/level_01.html": "09480b8840717c2fef007becd79fa15a1a0f755ff2c79ef52655d04045f7ca0b",
+   "features/level_01.html": "cf753d668df5a7dc15a4d065a787a98745e7dd9bdb46e6dea61a8179998a3ccb",
    "features/level_02.html": "4d285dcdafb95b117848f3fd24a61a0ffb822ebbc14ec5bbe6c9346e078393e8",
    "features/level_03.html": "1143448a27a2494cf3ae846d41d7d9f859f1900dc96fe1576ab97b5de042b380",
    "features/level_04.html": "a362f72214bfef9321056b47d3d2be80bfee916872694e51238aa1987ee20a96",
@@ -487,14 +487,14 @@
    "features/level_12.html": "a764c9a2801efd6621703d7efb5cf136fd3ba2fb771eeebff32f14231ee10913",
    "features/level_13.html": "6372ebab07c3f7a758b63508ea909e4ca64c39a0cd8a9d935db952131316ee86",
    "features/level_14.html": "428f8fd92a91b3cb6a26386fe83884e3f180d805a9f380e85255a6eacd493123",
-   "full_character_sheet.html": "467955b216f9893f12527e2d6ad860da6bf6a4a402236bfeb5c2ba818d084443",
+   "full_character_sheet.html": "971046d0989b32b0de81910371b9433292d2e2cdbfee038c1f725e6b64e8caee",
    "items.html": "8dff7ddf4fd0a0aa99e5c953ef4699ec50d1d0e81292c456aaa2664cb8b80d67"
   }
  },
  "Y2014FighterCavalierPercivalSteelmountCharacterBuilder": {
   "full": {
    "character.html": "7a650cfbb5efef62991de344d11767008d28e5482500692116949922acbfd911",
-   "features/level_01.html": "5f5592eca71e9a2109e1b7c6fb492b4ea19de11888c62d63d40acb4cf1658ead",
+   "features/level_01.html": "8484896b7d37924378269a77322f94d1e13d0c405ac58e71ae25de7f66df8154",
    "features/level_02.html": "558e973e3dab583d7f201ad30a06e96c0c41fdc38e7553e79405f2aa56954820",
    "features/level_03.html": "5a822a6094405b4dd38ba4a65f37398387ed960c9d7cca6cc74fb8eb8fbccf18",
    "features/level_04.html": "9882caea81b3847064591f40b0760c359deb50acfb70fa3e81f5ea0a3f5226dd",
@@ -512,14 +512,14 @@
    "features/level_16.html": "c1e7ed54b656ae57e6127161c74eb8a4f1c308b4ed848d33f63c31df774d0d61",
    "features/level_18.html": "46cacc63a3381b637d834ac97f73d46cc065ce2875027b72fcf6a280d10c2ed7",
    "fighting_styles.html": "6af51f11d3909ae9ff144b388ba2d31f5ab8d19f98385a35211b6b5607ba5d90",
-   "full_character_sheet.html": "d552cabf0ea5e39c3284444242e74320955915f4c2effd1d6cccb9e3f62b557f",
+   "full_character_sheet.html": "c9e95f4954a46c71930af3ba8bbf26648104e8ec182a8114620eec2b8d0d7377",
    "items.html": "665ce592e0ddb680ee72c025bcb0df771145f92d736213667c5d3e0fb78cdc89"
   }
  },
  "Y2014FighterEchoKnightLucianMirrorstrikeCharacterBuilder": {
   "full": {
    "character.html": "ca79849a856dbb7fd13fc8d25ea97d17049f7b5c1849c7f242e2560b1cb7c805",
-   "features/level_01.html": "d92edf2c6baaf1671c38b7c0d5620675f3d5725305730c4b974157d104129cc4",
+   "features/level_01.html": "205efaa2a9b8bda248724e277b4fb3ecdb359d5af7e5ab045c8a66a1c8da52c5",
    "features/level_02.html": "ccd572ef7c1045936fea6a9b95a532137c73f95dc766a55675b2b1c04765e439",
    "features/level_03.html": "a3f274510895c4a1b11ad3e04e8c97569b05f9826950ff8ea17838084a72b4e1",
    "features/level_04.html": "603fd5429be970c5bafe0db091fb23749206d04f4f2e04f442399034a5e04ad3",
@@ -537,14 +537,14 @@
    "features/level_16.html": "050f0907ef59dd6df132b7ecdc662e880c53820112dccb0ea07052ff4606c513",
    "features/level_18.html": "7bc140628bd597c599c8f12f484ec11b977af04ab09fbf78c0c3549554930834",
    "fighting_styles.html": "a0d58e785d59d5739fcf327456905c12ea42412010521cf1ef5cdbc363d39c33",
-   "full_character_sheet.html": "da1750a969dbb22b3dfe8e79409b6ff196b4c2fe5f39c2113c07b2a55b6e5c65",
+   "full_character_sheet.html": "70993b5e0ec3d653223a2a1205d8e4f1e929cf50fdbeb36740fb2c8791f4f894",
    "items.html": "d0230fd8432bf9ec6b8c0099c8b6bcee7b8d7f8daffebeca1cabd8d57c4baa9e"
   }
  },
  "Y2014FighterRuneKnightBjornGiantforgeCharacterBuilder": {
   "full": {
    "character.html": "4c86ba244b895fdee9ca3978bceadac574c42c7c4ca44f702d83c88635a68e08",
-   "features/level_01.html": "16062a00ab01325676618f32cd83166e9ec72536b294d75bafb88791d1235049",
+   "features/level_01.html": "d5afa74303ee840e4a6f53adb73243723a9c389ddd79328b2b9c8769aed51e12",
    "features/level_02.html": "0e90f436e20bef04d11238c1c3fa12886c65d9ee9f766293c5b8b437f5054fec",
    "features/level_03.html": "ed36bafbb8d808e2512c0f91a064b9386738966484893eecf1f9d3ea00f29949",
    "features/level_04.html": "d97588923b9a7d0298470a80530913f51682872bc216052b315b70a0c4b0dfb2",
@@ -562,14 +562,14 @@
    "features/level_16.html": "2abf540e12d404b36daa7b19716db3f85c34bffd3433c45986a59d9f1f86bf0d",
    "features/level_18.html": "818960955156b853ea4450269026e861a7aa4ee59873292f9bf51a4e25f1fd5e",
    "fighting_styles.html": "b1900fd813492846d7ebcfb19bcb1d48ad1a2664a7360398de0e083952ae6fba",
-   "full_character_sheet.html": "055b64dd81ca1202a40b5f0ea7c6b6f10b2b038ba752f27ae568732c4e4dc89b",
+   "full_character_sheet.html": "5ee7303c68a31c51406d0d95dba9eb38d53953700a6a68a86d3981c40d9618c0",
    "items.html": "b997c586b83e941d6ea200375cdbaf6fc846c70f38817a2ddcd5978a164e78e3"
   }
  },
  "Y2014FighterSamuraiKaitoStormedgeCharacterBuilder": {
   "full": {
    "character.html": "fb82cd6b0533ec5ae2cc37e6fa3720c47df2727988eebd0ca0e87fe68e776de8",
-   "features/level_01.html": "411f50304b7bdf88303377322380990734efeaa18e505d4b92a5b56151f4eec3",
+   "features/level_01.html": "7e6b8e40e5f0b821f2a638268b2a972c71bb89ebf7190af8dbb3265e4c2d9b6d",
    "features/level_02.html": "f32580e0962d772f969f181a4a0f88681a5c260e88bb70c4e9bcff812b54ad63",
    "features/level_03.html": "ace4efef7f5bd7ada29496a6df1a29ae8c49c41ee79099a75e3699752c1a84c9",
    "features/level_04.html": "de5714ca9a808604df7b2b6343c3a53936e78954f86003c828a0c7f1d9d39b12",
@@ -587,79 +587,79 @@
    "features/level_16.html": "2d404ceb6a0ef9b131a21fa33d4bb7703f0464f2f15a72b9f8e54246532bd817",
    "features/level_18.html": "f6149cc4cde5130b7dcea711df8bb0be59f68af5ba95711b504403f1d78cd54f",
    "fighting_styles.html": "5e1cfec3e9d48ee309ba97a028e7d2c2fdc4f88f4c733d4f7d420acab4749444",
-   "full_character_sheet.html": "77b1f9bb1227f015856bc743d0cea0b8347d50e31ff42f031bbe7462963b5d86",
+   "full_character_sheet.html": "2fcfa7e63b85d52286ca9589d32d89b384a272ed7998ae6a82a1365efc6ed25c",
    "items.html": "e9497311593e2b4792895e9eeb3505d66ba5a12c83d2a85bb0cdec8f4cd59918"
   }
  },
  "Y2014MonkAstralSelfIndraStarformCharacterBuilder": {
   "full": {
    "character.html": "76b066c7002bcd69ee22ee204e894e51cea32fef93220dedd4653492a3208c7f",
-   "features/level_01.html": "ae49211f037d7c3c624d8424fcdd123787f649c8bbd34e46ac74ec89d3bbdd0f",
+   "features/level_01.html": "a0d0f89c609c344bf003a91b5c737efe8234ff87c657dc56171392bd5cd60537",
    "features/level_02.html": "ecf7724de97b2fb1cc31892358abd1ee088e3ec87d2ad2e76c4fbb8b77f6e6be",
    "features/level_03.html": "386d66ccec93ab03641b71c19aa2eccd4da11ba9eaf5c49f57c8e7a20dfd7f4a",
    "features/level_06.html": "1b880554ed218a0185d9b8dec816cb53e161697514db1c8f883ef42c2b205763",
    "features/level_11.html": "631c3b86ebc295e8d593329ed35792be1b11e24554c4eb991b4b13195ef1bde3",
    "features/level_17.html": "bff79a96fc9892c45e07f72e036a16f8533315e2162eec6d7247def1cf0ae0ed",
-   "full_character_sheet.html": "d46556c3becc2661384375dcc0c5bcc29cc0171169b13738f05ac2c0ccc710e6",
+   "full_character_sheet.html": "4e2317a84a2dce3e14eb2ac9153267618c5faa4387eda31afa17f9ca6bf7512c",
    "items.html": "3a32b68315c5a91cb8ee10e189692815c60e037aab8622e1c130f7dd83ebc915"
   }
  },
  "Y2014MonkDrunkenMasterChenWobblejarCharacterBuilder": {
   "full": {
    "character.html": "39da7c03c45dec80feff3816f246680b1f198eebf496e3304946957a562b7184",
-   "features/level_01.html": "f50221abd05f28a7d74dcde60197c5d2709dac20b0ef90eff47664b180d16013",
+   "features/level_01.html": "400d427308823d504fd0c57fc1853f0e65dc9c7b3bc229ffb8f1931919795691",
    "features/level_02.html": "5b43dffaee9626bb8bb6654f83551b2acdd650d0e5ca03ab2d0c562c3a7e8487",
    "features/level_03.html": "74f7e800b9adc2c75c9ec5c6b8aa1a51b1b63c9c23d87b6d0e59b1f4dbe83233",
    "features/level_06.html": "65062bc6da88d1ceb8502e0db38595edabbeb7f10d15600cee240d922a202fd9",
    "features/level_11.html": "4def18f93c39873a88000d295e1be1b9f887eb501986433fe35027e00f673071",
    "features/level_17.html": "b960df77f8a3c5f700edc171a99c547a7816011de82a2ea5552b62187aec5fd4",
-   "full_character_sheet.html": "518f127e976f4613c29c00ab2ea831d4c2a4ba05271e0d9d7a3eb57ef77b5ee3",
+   "full_character_sheet.html": "2bee7b9bbc7854035631fa0c19364107d4021135442b973a6bff98f787dbaeda",
    "items.html": "35c2e30ec9d7b20fa0fa0e5fbf362d9c4e6ce3d9921515960fdd8cf2ff99acfc"
   }
  },
  "Y2014MonkKenseiHanaSteeldriftCharacterBuilder": {
   "full": {
    "character.html": "9bdfb4ef69738b638af76d4fb4a51cb2c245cb57a86836aeb4bbdc4277a27285",
-   "features/level_01.html": "03f16131b0795f09c998046db643053339fee8c867a7e68a8d107e5692e395d1",
+   "features/level_01.html": "44a91fe7e312ffec4d842ced3554cdf0d4552e96623042822946947dd2999d5a",
    "features/level_02.html": "b311912868f2cd304920c32490a45af54ba74459408ea52ae8e8f3515b43c34a",
    "features/level_03.html": "54987f0d55a2fee6828d733de360dc1178302adb946c6f9f6e079f6f4a7468aa",
    "features/level_06.html": "917a045146d2ae8aec331be97bed54075464f46f94c00001a243513a2a7f675e",
    "features/level_11.html": "553ab3d02f0995e85505164f5c6a7b24dfca860df44744b4c3e23df4d7590483",
    "features/level_17.html": "f774df2b520819afb15eb914ee2c0e8286915be30a4048a50b65542a6f891f72",
-   "full_character_sheet.html": "b1695c0f839db55ac062d0f34066182ec7a848c38b2d8f9152dee726b44c08d4",
+   "full_character_sheet.html": "46b74df96c0f687b701e3fedad975e4caab8e85fe65d07ed441108f27fc5d43b",
    "items.html": "a19b5abcbb700f9e9cfeb15db9919b862812537978737deb765f20bbf57e50f8"
   }
  },
  "Y2014MonkLongDeathYorrinPaleboneCharacterBuilder": {
   "full": {
    "character.html": "a5dd4706e5c96f8c6cb53ffd8062663ede5be58bd9c90d75e98753b54a62f6a5",
-   "features/level_01.html": "02288a7ffefe085bdd2ffc48f797e2dfb81b3bcc306f2ee214e68e861a8e0c96",
+   "features/level_01.html": "692c86953ef2f8720e25e97b3def6c894e4c376046d63d3eb762693581a0e025",
    "features/level_02.html": "c0f85184f7c6f2fae3efe25427238bb882ac9d9b03a1cf746526c56e60d3a514",
    "features/level_03.html": "2b7ba093327276b1b13f0c02a0a9c4b5bd212141b9cdf9ae8fce0041e90b624e",
    "features/level_06.html": "ac26861152626ac9ca819a886dea72dcc84050fbfdbca7349fd71476908520dc",
    "features/level_11.html": "e73211b9eadcf5791fa8587baa337d0b10d54c17f7c2102092fc076a890e668b",
    "features/level_17.html": "e30226cfc930203ea81be5e757d63e44d2faafc09ca9e5f9342d42283dcab1a8",
-   "full_character_sheet.html": "c300a36f18342ad0b46b74213bb9dd309986c41e792c8136320896819348ead6",
+   "full_character_sheet.html": "5aec7906e23952c54f17c1446f332f2ca18262b1ec7d38c0195e3ab56a9c3c62",
    "items.html": "14bfaf3852a2084fe08fe992db7c3b5bd5a22981ebc867650fac23276dd1bcb0"
   }
  },
  "Y2014MonkSunSoulSolaraBrightpalmCharacterBuilder": {
   "full": {
    "character.html": "1223056e60b5ff9fb55366226c92458e1f6c3267234a90aa126488896f86d327",
-   "features/level_01.html": "1ce3bbfda3f4fc168c901a210e596a31103211480ff748491f694eccce6bd65f",
+   "features/level_01.html": "4774620938f17cc3b40a07b5da0ec5b9098bd4135742380855ff539e8b123628",
    "features/level_02.html": "16cd139ef80563ad85b62faa2204d63628c7611389004ddb8cecab046031952b",
    "features/level_03.html": "5fa58ab9e40e2897523a7a0180d2a7db28193a8fa2882aa77bd9edd1efae143a",
    "features/level_06.html": "8ff8fa7fc06b5f59c5c2306408b082087c78dd4c6403d73b2fcaaaea5b453f51",
    "features/level_11.html": "3868df4c69d6afbf38d8fac0f957de7b14a2399df3a31c89191c797fb3177f33",
    "features/level_17.html": "1675030a967b1868b9c76af7e51ac1c97054b51643cdb6c940f9c1c015aab927",
-   "full_character_sheet.html": "c83a0a514634072e2d5577f8c0dd0b95e07d7d71e45bd7f1c712355d71eb1305",
+   "full_character_sheet.html": "3cd60d9331dcb6445b0daf34d428425eb9f6b2d679fb2eb479cc9b592cf0eabf",
    "items.html": "12fd8fe0efe10500a148d7842c1de8ce5910d1dc0e8717e77f0508131199baea"
   }
  },
  "Y2014PaladinConquestMalacharIronwillCharacterBuilder": {
   "full": {
    "character.html": "14880f056c7a80f2552ed3eef596b5fcdafa8da29789e4fd088faad5741fd905",
-   "features/level_01.html": "e740a01cac684598059d7489f859249f34cba63d05a85fab305491c0fbeb2cd0",
+   "features/level_01.html": "50125015b09740f88edabcc61b30dbb54ffcd3370a77fbe46db11e882c7df79d",
    "features/level_02.html": "18e8e5ab98a2d16bdd06f166c07ef1d6de8a14d48643a61d9db4e867623e1eb6",
    "features/level_03.html": "e0f4fffa5e723268ad19d0cf01b1c624a88f29f115353300d67a8fbdecd330b8",
    "features/level_04.html": "961c96564031f19e0a23aeb988ad708074d094f45db264f6fbbfd6d13d292007",
@@ -680,14 +680,14 @@
    "features/level_19.html": "e9344dc71fff8aaa2341355907a8cf9aad3c8ae05a0d9357f6809f6004e1dbbf",
    "features/level_20.html": "9af34c497ef99a67d32e44b00cc9ae054f71b964e1d298dfbf7ca593a029fc89",
    "fighting_styles.html": "6fb652603333d1d5977adab21336579e7ca97d0fd95edc11f1b1edfc4cb5968d",
-   "full_character_sheet.html": "71327821d641d7df1e28eb6788d67e2609b693151bc69222e93d52d9d540ad3e",
+   "full_character_sheet.html": "3d80e5c7745c2d87e3d074211ae3cf5c0f0017a9a951e66201ff660c3b6f95a1",
    "items.html": "7543aa0aba74a3426796c74f07133f20de4bbd3b5204c14e3302e59bba01439d"
   }
  },
  "Y2014PaladinCrownRegaliaTrueheartCharacterBuilder": {
   "full": {
    "character.html": "0f7d37bc408baa8d86d3ba9081d9909c275f552863ca64eeec0e6cc318b2acd9",
-   "features/level_01.html": "965374b0c1b7baf3e2ef643099ad2ee670313ce986f12c065bc858735fdde52d",
+   "features/level_01.html": "94dafea6227088b2ffb23db9e5d4fef98b054a841bbb59fa31ca44b8045050e1",
    "features/level_02.html": "f8cdf8852f0e9d84ec8d1d44edebe396bf81bbc081455423e16456ab9ece52b4",
    "features/level_03.html": "be4a145b991883c3e66da179a77bab06e3662da41afe509b7f7dbb10b704c159",
    "features/level_04.html": "73a6e4b2921f0295ca3f87e29f77b0f5ec981d1f93e943bd41cfbdcc0b08bab3",
@@ -708,14 +708,14 @@
    "features/level_19.html": "f308c6a03c4c262f16f4531a7119a21b03fa07bc401ddd440519d5463f727fce",
    "features/level_20.html": "cb4c594f30399b489367ddc9734ae5feecca87c7ebd6b72db831cff95e27371b",
    "fighting_styles.html": "c7c1879d04291991a45835e1515c14b1727f35d1b629ff9f12f56e4082fd9e9c",
-   "full_character_sheet.html": "ed0f5cfae2414a5418e70d21831d857219a678d99077d66b3778cd70bd5b2c3e",
+   "full_character_sheet.html": "d8833f076d21bd1f967d70461009d65d679006b72ce02931164cb818046a138a",
    "items.html": "d380956fddf0fd422c38d8b9a2103e7a42237556fdf9a71dd28059ffb2ae73d8"
   }
  },
  "Y2014PaladinOathbreakerVorlagCurseboundCharacterBuilder": {
   "full": {
    "character.html": "b6325a59e59fd994bc6661da29dc866054c1ab54f13597c8ad76dd4e3649180b",
-   "features/level_01.html": "edda1c621acea25c1c5e88b33f478ea97bb1fe7353ad376521b4679817f5dfdf",
+   "features/level_01.html": "c59e996397fcd19cfa7f365a41537a75a43d29b92b4687b31a93d3a0ad9c62a2",
    "features/level_02.html": "1b5174c186f701693a0ccbfb5d667762e5d4be3a66bec774cb97a435d9a5b068",
    "features/level_03.html": "a3f2b3b633993e39270bc347e459a3201dee4c7e0d727f1a625086862588b9d8",
    "features/level_04.html": "ed1aad2436ed612ad6adb3e131a45d5f08489f6fa5daa14ef03e975fe5f67569",
@@ -736,14 +736,14 @@
    "features/level_19.html": "716e6d0906f42def957313ee91454b15f2ca66e189a0d6d4237f9a92bd5315d2",
    "features/level_20.html": "47b64dfb4197f0612f87451c2cc3596d0d17e901a05186a2597e96c839a77d98",
    "fighting_styles.html": "28a4fff9e40728f637464aaf283c2435289f0d31d5738c3077abe638d732ee78",
-   "full_character_sheet.html": "9a2435b33e1d699adfe64cf6dbd72da65a06f14d3cfadc14ccdc980434b44c57",
+   "full_character_sheet.html": "f15f624de43a13b0ab226600b7aa6ade4ea484f001427628f7de0ab1b6f9dfa6",
    "items.html": "565c27fb4a67e71dfef0f50dc24aa6cef4ba6f43d6600e32583fd729490372fa"
   }
  },
  "Y2014PaladinRedemptionPaxMercywardCharacterBuilder": {
   "full": {
    "character.html": "52045b505e4d9607308f0544276c7bb2c56c24f6be715e90cdfa5850639aa848",
-   "features/level_01.html": "5a2c7df4ace29f6790deb25d959a9b6fbc38fdbc4102e6f9f8f2970f7eacbcb7",
+   "features/level_01.html": "efec8bee633cda8780f4a53c540461f261abf4f7fdfa8aa766b65f38d75ce86b",
    "features/level_02.html": "4f1f40622de289477615ca5dffd4348e5c653ff1f72ee29e8c43436829c0b788",
    "features/level_03.html": "dc14c9a3c145435c5160ae7f1111d360fbfdfd6bdd63e1b4954a9ca62547430d",
    "features/level_04.html": "3ecfdc549628c0da94e425ee98af05f24d5dda73abe996928ca94d47becb83b2",
@@ -764,14 +764,14 @@
    "features/level_19.html": "12cce6c6d6d7b683c50937d88d90630bb0a2ee0f8241e0a8561f73d526b7cc38",
    "features/level_20.html": "e7bcf7c3cc5c19ad042fdd0331fb114ec934d8abfe368553b69102dd8cd32d8c",
    "fighting_styles.html": "6304ee7b0e902795f2dfa7dc04c869be58b18a1dba5748416c2b732fb3fb4d3e",
-   "full_character_sheet.html": "b550a3de0c902ca1ea38bb9d1587b05981f5b1fbf60ad9e0e523668b9a80cab2",
+   "full_character_sheet.html": "186db5c3be6ed965d0c674d013f6f2a624cda0a27d27c16ed27af3416e4c3567",
    "items.html": "8319741a4e50f09cd8bbdf6bd4f16620c638c923410d9391b1ffc205fde94bd0"
   }
  },
  "Y2014PaladinWatchersArgusFarwatchCharacterBuilder": {
   "full": {
    "character.html": "115132d595a8d90ea9ec5face690706d5e589c5ed528c078550765ad9d2b34f8",
-   "features/level_01.html": "f210587d3bd031ce56bcc1bcee252ff8fa0cf6905b6d7aa6fdaf362fc4551442",
+   "features/level_01.html": "b6d6930c55995c8c49413a790aaed112c1ef7cd95948ef88800d34663fd7c621",
    "features/level_02.html": "dc6dc7ea07145ae2bda4d3752ea85799c4c0d08e49c11a77dbdcfcf16da91e3c",
    "features/level_03.html": "d9abec1e050cd9a670b015200a07cc25f58643c6d9f6cb78650a60a185059a5a",
    "features/level_04.html": "c0d42b38c6f1c00216b6971b58067c19dd8e67f58b1837bfedc4db988dff4391",
@@ -792,15 +792,15 @@
    "features/level_19.html": "e12519c8af053e926b2e2bf1ab18081b4e6eda03896b94002409e4f634bf6128",
    "features/level_20.html": "3973cff1f320c74113e2312ab0354883496152675e2a8359c43f8a2599b992e6",
    "fighting_styles.html": "55a51f6ca5082fee14fe1b06cfd06b813c312ea886b171774bb436c86bf9ecfb",
-   "full_character_sheet.html": "08d717cf518acd0d12cbde77737083c21f0760899c0b5c365016453f95893387",
+   "full_character_sheet.html": "e034736d8c425631b42c570e48ff0e3411e966b8ce9cbf430d8479f0a2470464",
    "items.html": "bcb919ff1c72d3f50b38efabdf4de66321e3ee2c93ef6c4ff1537b61f8a3e919"
   }
  },
  "Y2014RangerDrakewardenWyrmhildScalebornCharacterBuilder": {
   "full": {
    "character.html": "d9147bf365b8f156d8c7ad7d9e131155b6fc2a49db52c30890895c3ea1855f37",
-   "features/level_01.html": "f8ae192e43d878822b84ddddf3ee9f1b2857236b9368112e3357e40ad81c9a2c",
-   "features/level_02.html": "293ce8608709e497e570cace451fc9e63d206fa3b0800153ef3591901d8c1e1c",
+   "features/level_01.html": "7c4a8fd9387f5633f354452af6c36898fa59684a828f9a4dd15f607a7d198ffe",
+   "features/level_02.html": "9d6fdf7f9f08a8fe615b270d7f405e7c8ecd93faea0d14ffc3229c8058c2983c",
    "features/level_03.html": "f359ba9934d0c71ba1d32caf896a3ac6028f8215af0b3820a0559b6b5e7c0003",
    "features/level_04.html": "09b8aaea56a3c7a92594d6e4673c1d5b3748b16682631626ea627206f49dab3d",
    "features/level_05.html": "1a72978500975800394d64c0ab9fd8272e0bc86619e5c9bfb720480c00762b6f",
@@ -817,15 +817,15 @@
    "features/level_16.html": "c7446647bf3048c2f0caa274767ae6791eaf265f5fc1d8463b9efde269c95a3e",
    "features/level_17.html": "4ae3d578a50f058240d2831340da8270a89bf1b926730a80fac549eda2f2e74e",
    "fighting_styles.html": "4f101fecd39bf4de13f7dacafb4bf77253a4ef61831f5a50a7947f301d356738",
-   "full_character_sheet.html": "282e807c03daa81376b3799b00b5a10c6884af8bdfff11921ce5ffa9559c9dcd",
+   "full_character_sheet.html": "2fb69a1353b7215fc05aa8dca6948b431fded1a5a4937640f434820feb6e9a0b",
    "items.html": "f019421d3ef90ca08035196d513eb66dda6dfdc222013ca905a1eedf51927d87"
   }
  },
  "Y2014RangerHorizonWalkerDashiellFarstrideCharacterBuilder": {
   "full": {
    "character.html": "1119e6304a824cdee3a49e6da09af82ecb4ffeffa787843559ad89ae131a50fd",
-   "features/level_01.html": "26c51d9ab0f9a78471931c60a3196a4bb6cc15b608111511318aa6fcac9233ef",
-   "features/level_02.html": "f9ef72e0d840c3866160a012fb94145d60ce44147fd032b6ed0955162a8b2e67",
+   "features/level_01.html": "b3b36cf6188b702d4d6e40274ee42334d0ac98f138026ca798e0594bec0f750d",
+   "features/level_02.html": "2f87ec2b81bc23e7c01d49989c2ff2030d3c43c92286f0b073a40d22835edaf4",
    "features/level_03.html": "b30750825d49631d90764aeb9eabf00f048eb4dff8382cb3ca400288d86c066a",
    "features/level_04.html": "0c73ffa039408be03ea8799c127e5a5e3b38ed5346df2bbb315b31e2fc05da60",
    "features/level_05.html": "a1502d98aa8a7c3737089c89125ac8a7d6a654b4901b3d82927e2514334ec58e",
@@ -842,15 +842,15 @@
    "features/level_16.html": "0ae55626f6ada962d70b4d9f33c6c28494523ab8c4bfb84896dd4b3a045a933c",
    "features/level_17.html": "4c6159cc5421447e88456803c471010993f73b86fa3d3bec6bbd6f8de5efcd7c",
    "fighting_styles.html": "038aed032bf22a389400405da52ea943b5e22cd28cc524a8c281906ec1183f47",
-   "full_character_sheet.html": "c442aede7729811b36d5478200e237376b878e80b5ba993890f9fc1f39b5632d",
+   "full_character_sheet.html": "5a27493121e22455583c4daa79f4ffea9561310363c352aff16e16f005a9d7ea",
    "items.html": "985627869d0abaa62787d5b3a14d395d45cbe9c93e1e50fef434a441a48a98b2"
   }
  },
  "Y2014RangerMonsterSlayerVanthaBeastbaneCharacterBuilder": {
   "full": {
    "character.html": "2310c1150cb13890d1c78c79ff0b2141396c7852f1f6af9cc1c03e92b6333dfa",
-   "features/level_01.html": "59773fbbf36db2675384b9247bd9bae6ec188d0d616c674ded12e3087ff43530",
-   "features/level_02.html": "93d3f104a6de6be25e0099e3eb078a09325eddab0c1f412d4ee1fe1ec3d8b590",
+   "features/level_01.html": "1674fc9b6e61e7110d176e5ba85e752bef62c3f0e64c3a54c9cdaeea88784042",
+   "features/level_02.html": "93995310fb86496ebfda393dde97345b5ed4bcda68191c04668cdd9024ba1707",
    "features/level_03.html": "e0d616f50114e8e231768f490c6e1a087335632f04d7d4132aae89d10816af78",
    "features/level_04.html": "a74433bf0a9709a22b32a4cc21aa20c9abc3b7e49cc6dd36a78d3020662b340a",
    "features/level_05.html": "5885cd47455970ef972f23fd6974a0f0f491ac398a1d07fc0cb4ac285001745e",
@@ -867,15 +867,15 @@
    "features/level_16.html": "b59d25246d671f5472dbbdca3c6765a639b47c08736481aec6800c5baf3e9c63",
    "features/level_17.html": "2a8bc69138cbcbf7730916ec94a65ad1c083814bff218080d3b1ef2e2c03b1a1",
    "fighting_styles.html": "5c4de3d42c87d02124a4aefcba6888db9ec41e924509ee773416b9b30ba49919",
-   "full_character_sheet.html": "7ba9b48e34e8e93c8570e8fc15b777a6412a27c9069bc2aaf0c9c3cf791fcf8f",
+   "full_character_sheet.html": "f3fe7844e292d4c2eb680d7ffc0f76f8c1cbb351f93da640e2941ef482323a53",
    "items.html": "5b63a020a8efda80414945a2298c68db6c64dff133dd119a23d434753f4cabe1"
   }
  },
  "Y2014RangerSwarmkeeperWispThornwhistleCharacterBuilder": {
   "full": {
    "character.html": "f9ca9841a911e4b1622d2490afe590ded8f507ac2f8c476f7e60991d5c321f2c",
-   "features/level_01.html": "3983087389cd097e4bdc81d63425b7257c5ec4a1fa07666b3fcfe312c333c9d6",
-   "features/level_02.html": "41cd411c788f43651c96801b49d7aa2869d1e9d86ed8814bfa6be063cbee03b2",
+   "features/level_01.html": "47e68f8cdc8dc455d33ad043e963857ba93dbb988847406ade83d0b34513c191",
+   "features/level_02.html": "c9a1dc7e5a5879cc90e299af3819c6874e9018a7f0ee391cec2859b9100bf6b3",
    "features/level_03.html": "90dd759057da93bb408655c189bad99e79a5ff560449341d0bdfd898e8e330c8",
    "features/level_04.html": "acbdcd7d11d52e7efd9e6e29a4833e72b9838e6bf028f90ac0de80b3ba20bc88",
    "features/level_05.html": "487596d4618705f9b2fe4933f3aa45e22bee8c35fdf875a416cdaafb4202cd39",
@@ -892,14 +892,14 @@
    "features/level_16.html": "ce2bb3f86569179cce966dd274bc7b6db445b0fd51511840259874f7500b9de1",
    "features/level_17.html": "6e9fdbcefa6aab5091d8971c21c185dcb4c4839469512e6b2fb7bf7d2cf567d2",
    "fighting_styles.html": "09a949cb111f9b2f99b83d4127ae2b8951272736eea4ad250e7cfcaef2fb199b",
-   "full_character_sheet.html": "ea8ffd69a0a72b95189d27163e5cf63702f1775f5fc56651820c5ac1ec8d2a1b",
+   "full_character_sheet.html": "44e2a9ddc4af3edb9183b954e0aced6a796a5d0bf9833d4884bd312f185f973e",
    "items.html": "b78b17f55f425f9c92c2e3a6de8edf2901d39321989b01c5a28eaf322f1c2446"
   }
  },
  "Y2014RogueMastermindDelphineWebswornCharacterBuilder": {
   "full": {
    "character.html": "a604a75dbb08512cda4a32cae553182398410848de3fc1a09fd3d5acbfdaa669",
-   "features/level_01.html": "dfd39283c3f224531d0fbeffba3b7cf653abe12b9d7a0c543f96fbc7cacb5d1f",
+   "features/level_01.html": "6ecf5f99589acb4daad7966748e2afb09f91e7d9ded8fa0ee3c67adaf0a4801c",
    "features/level_02.html": "012b40397b92f5aa8a113490b587971ec47c0f0d2170c5c34c42f227010ac8f1",
    "features/level_03.html": "169ac89d9ea4d52babe10a97919419a8d98d8b6434d50e9adf83d932e1fb70de",
    "features/level_04.html": "6e0cabde868afe7d352cb0ca42f9c369d955a16814f7645690e56c0a5b2856f9",
@@ -916,7 +916,7 @@
    "features/level_15.html": "4ac07a764eaaa9028d75d6f4a734cbffc0affebae6e5ef55bffd4318639ca816",
    "features/level_16.html": "5566cbd8b9a7e48cd882f97f17a746b04a1a8fecaf3cb27bd4ae999bff40c503",
    "features/level_17.html": "0d3e666c3035a6c6880a6204c4398a99c2a0f29359faad6cd2f7cad7e64af1a9",
-   "full_character_sheet.html": "bcd29cf9140d5a9ca78f996dd9ed6f2b5dec9142b3917b68c4eb031031be8ed5",
+   "full_character_sheet.html": "d3668649dfc8c43e5985876dc76c859183a92fb9ba94eb5c0cbe4bf68c98f7be",
    "items.html": "44dbfff1cfffb1cadb78b77bd07479d89b93bc4bb9bb2b81f7ed58755d1daba3"
   }
  },
@@ -971,7 +971,7 @@
  "Y2014SorcererDivineSoulSeraphelLightbornCharacterBuilder": {
   "full": {
    "character.html": "f3456c982caf07668b8ad6f6fb441595797b683e16ec60ff4b7ce35e12d07eed",
-   "features/level_01.html": "04681fc2fff2ceb1f96e3237b8b95fcead193a1cc0c5afb0946565a06c30c5a9",
+   "features/level_01.html": "b8eb2a02d7d0e027c606bfc58bf5716ada3b376726ca35972c674f6b65602ccf",
    "features/level_02.html": "2737c9206054f000bf3cd8ff54b5214259af7163432835c25f3208c5ec297f55",
    "features/level_03.html": "16c49acfbccb114ad2a5cf3563f57c0cd6452c3e477884b967b7c0d05f26254e",
    "features/level_04.html": "48e9e416530565c50ce8df0faf3515cb06a6d6398e6b2b5c0753e7cd99bcea24",
@@ -989,14 +989,14 @@
    "features/level_16.html": "a65ba0ea1603a0b21ed1ad75b744bcd7e51d52781c5dbe7cc9de9632e7b863ff",
    "features/level_17.html": "38673f3b7f83f0fb53b016299bb5e2ec04e91217817cd61d10605b8522058d04",
    "features/level_18.html": "88839b40dc976f3732faa2c407d59503ac3855564ece140d87f63ba32ca5c2cc",
-   "full_character_sheet.html": "bb73324472ceb40c5631b78d97ac9c16e54e8a9b477888ad05c7f5f25b8a1259",
+   "full_character_sheet.html": "203908141f538c7a923ecd812071de7c8f2da7ad3c632880d252ef93e3a0954d",
    "items.html": "a0aba6e4f6ea3ecd6bf0801dbe592b4073fdf6a78b0d60d8616580c0087abebf"
   }
  },
  "Y2014SorcererLunarSorcerySeleneMoonflareCharacterBuilder": {
   "full": {
    "character.html": "6c1d5772e9122c14e32a2ac9617888aba26f83964aa43fc74153f2f95968f475",
-   "features/level_01.html": "bc047a3274b98866453350656ed78f92bdaee266b8899062a28d6783fdaad930",
+   "features/level_01.html": "a36515fb2ac2efc4f275ba17560dbe555081d7612301ac7acd4b844cf4a5a0f1",
    "features/level_02.html": "5f53f30068fc80ecb938f1b8a85eedefd0e90b31b4bd1a22fd72d6e0f1fe9489",
    "features/level_03.html": "5936e545915e59c29e3dd513303cffac47b10bc76ff3e8367e3b2a0454627d34",
    "features/level_04.html": "fb56984768a95f2ca04b391c85e43c2995c2149f99c9508088d9a3eeb7a29756",
@@ -1014,14 +1014,14 @@
    "features/level_16.html": "e0a61109509ee30c78db19ccde173b9070012f5ac277faf8a4c90a75b560c691",
    "features/level_17.html": "ea9ae125e493980a96eed1f51979553ab9a05da51aa198ec8d66d6de5e866222",
    "features/level_18.html": "b85506d11ef178ead594d1fe72a9c1d900a247afa5568e66edb78a49d46f930e",
-   "full_character_sheet.html": "eb650c7c14ab482aab2f888fef4fc6f4941b104892b78967c85925d1a644fce2",
+   "full_character_sheet.html": "7f5727a0b1b7b523c831f6d93314cf353347fd61975d505de9b45af50f2b3acb",
    "items.html": "0e6d94388e9a68f28f0094b351099aff3b4170e016bc55e15cfffdc35fc3f878"
   }
  },
  "Y2014SorcererStormSorceryZephyraGalewindCharacterBuilder": {
   "full": {
    "character.html": "dd135e41018a2dfc253c3caf6f9b18bf36bfb31e7ebac0dad77793469e249fde",
-   "features/level_01.html": "cdd3dfda2966d824b6e339fa78447aa40daa168c96e6a67cc48975bc272ce0ce",
+   "features/level_01.html": "b755e7eafad6650d55712798c1ebe5b0927cbefd32930bc8a4c18da7d0cf0e4f",
    "features/level_02.html": "da241b88a040894f2c03daa573e7a08486ae5a586e0b528c4eb6b2dd117f2abc",
    "features/level_03.html": "ce4f7a6dcbb57f0b678cbdb9bec3cf0b49b6d6439cee197fde690fd19a6277e2",
    "features/level_04.html": "abbf35ffc118b1de6ca7ecf554bb542e40be9232eafb299a69a133112f3c3993",
@@ -1039,14 +1039,14 @@
    "features/level_16.html": "e456eeafb1fb3544e929baa9273983f43ca4fc9d94c332600323eaa69ea08a53",
    "features/level_17.html": "1ec52bcf1607e4e311257d38f318e61ac4f648fae0ea1190f54967f1102c4ac6",
    "features/level_18.html": "73ec3c8ac58ea1f85a120de7387ea8799d1a1aa45e71c1a5115ef5495c3c307a",
-   "full_character_sheet.html": "3a59d604683a5ebe743972b36925ef22b2c383c5be77d6e2c8663497c20f3774",
+   "full_character_sheet.html": "40e1965aff54c255e76cab6e81a9df8cf4df2c2950b8b8d7384c1ec5f496b6f8",
    "items.html": "60a5421e9c1a66755237bda162e449035a201d5f947432a99eb4fe6fec7a8042"
   }
  },
  "Y2014WarlockFathomlessMarrowDeepbindCharacterBuilder": {
   "full": {
    "character.html": "e3beeff9e91cf3b2d9c64443422dad3ab79c2314ebe7a92c4885f16fc42fa6e8",
-   "features/level_01.html": "e75c0c25b4a6015c1d8af4dc529138a4f8c8d76902ae6aaaa725c057b8c04937",
+   "features/level_01.html": "852d7af1ceca18aa8166a1927da98b19767513e38130ee59bdae098ea303444e",
    "features/level_02.html": "a9ad4a4bc0b0f4df5e2b1eddb36abed1f4734b910911d62d60b2ada99b6be489",
    "features/level_03.html": "d8737f5739920f8977ad4e42bd82458dc705b62837b0390078e80f8c2f816d63",
    "features/level_04.html": "cde1f34195d1dea809d5423e8b17145d57c844bb614dd5a1734b9c85ea1e455b",
@@ -1060,14 +1060,14 @@
    "features/level_12.html": "f65c1e0a89b697cd172ec704e10e73b564231abc61be2c889ed58d59d2934cc4",
    "features/level_13.html": "0d2725c5d569c330736968f8fd3031256af03381b645de7a7b0ab4dea1fdefea",
    "features/level_14.html": "9b441d253cf9eb85cdd2093b7f23a4f50531a274641904e2017fbad7d424961f",
-   "full_character_sheet.html": "ecb3048986e781c61fca4b5f3f7016ad6cc54161848e6643c62895cc73c67826",
+   "full_character_sheet.html": "94a4232f74fad7dcaa194c72891d940efbb48fcb290184220bddf1413fc377d6",
    "items.html": "cd0602f477f52463b842d966476c981f81ce5e810a471a029ab2a1d493494973"
   }
  },
  "Y2014WarlockGenieKalindaBottleboundCharacterBuilder": {
   "full": {
    "character.html": "51538c0a1781555da9feffa4832ebdeb39854264bf9ecf255b148bb3b9002d31",
-   "features/level_01.html": "10337f01aeccf7592074421398838b566f5aa28636aa8527e52ceafbf91828c6",
+   "features/level_01.html": "ed70d8b8a0f23b5d1712c5f1b616c537be9ac40f31112db0bec85e43a40a07da",
    "features/level_02.html": "c9e8ea8d987541b9f7c8e092e0993b98c6db6606320e542f21e506ee45491e5f",
    "features/level_03.html": "0911500f43617e9253a4de5cc4d81e8fa9f87a7839642be7d42fa40fba1c8c70",
    "features/level_04.html": "a195652159daf416e8a2fb0dd1b68cbef4c333d497974b1b81d324a5eb2a547b",
@@ -1081,14 +1081,14 @@
    "features/level_12.html": "02ab2acdc3b234eb4d11d49234eeaa78a9fb7ce9b66eca754ac50d99e1ebcbcc",
    "features/level_13.html": "180c738663df614f38f547c3813087b3c7692f083904e8509c81ca1713c021f1",
    "features/level_14.html": "234717f0b22162393c87c05980caa12397fc28fbf0266c9fabd53ba127b03fb0",
-   "full_character_sheet.html": "b593d8672637bd334e6a7c004f7b33388083e80d9dcc55ecb7fbb91b7c5c3322",
+   "full_character_sheet.html": "bbfd4505ed3b2458e52764fa11693091bd635bc762ede6062a0e0ce534edf4a4",
    "items.html": "21e52f4a7ec93752f45fd367c8ea3f06b5ac3b7cefd00d58006dda1b77acf67b"
   }
  },
  "Y2014WarlockHexbladeDravenCursebladeCharacterBuilder": {
   "full": {
    "character.html": "2882c3aa73f8800aa56048513a23b421311b69a769850b6dcef93e7e1ab05df3",
-   "features/level_01.html": "24d500891196c03bc55a21d3aee64322e87e2a05452163fd83eaba0d9bc7481e",
+   "features/level_01.html": "57c165d3c7bf2bd1c2f63278293815481d1429d70ca894174a2c346d231047d7",
    "features/level_02.html": "d45b8e5d1d4c2668ff3d33bb662caf915de5ab4fcb3622e5b64db47cb044bb05",
    "features/level_03.html": "4706981d3d7f5554340a6598d56f88e93a59a2b9ea93b96904330be4b828cbb6",
    "features/level_04.html": "a3b31b7ea7ab257ed724a097b9c36aeba5b988e70f3c5f5ce1c3ab5368b56bac",
@@ -1102,14 +1102,14 @@
    "features/level_12.html": "8ca15f5f4a593926ae8b69677a24361bd5d5f0408c0268df572ddff8342e5c02",
    "features/level_13.html": "d88163b0bbda656dafaddcbba3be42224898d4c373859ccbb5944cc455d69c0b",
    "features/level_14.html": "3d881f14015bea1c66d04402b7a931ed7f7e228429e9f599a29e78d67e3e1834",
-   "full_character_sheet.html": "85613b2bf0c6c8164ba6d120e3564d23214980a4ca5bc6b0c7cc14b6bc964af8",
+   "full_character_sheet.html": "6e12e545d533d43e44b6a18b4d806584a671fc1d14def90c6528b993cbe8c20d",
    "items.html": "69eb6f3e5424e9be540b5b812ee4cd31b710498bdf577d0ea5203ed6e0933ecc"
   }
  },
  "Y2014WarlockUndyingMortessaGravepactCharacterBuilder": {
   "full": {
    "character.html": "49a16936d3c4ebb91b791d1ce371b1ff54a67fc94cd31c50d8e331bd5a967e5b",
-   "features/level_01.html": "f49ee50209b71f25a4ea1cd9652e3d962c5342ffb9c5ef381abc46edfe4f7578",
+   "features/level_01.html": "a7912349cfbdaf54d2f6b16f232fbc64c2056c884545c28c6dcf36e554f3e779",
    "features/level_02.html": "a7a0c6e8d017e48cdab2afb5621230a0e483ac555fbb43a52caee787c4a72f7c",
    "features/level_03.html": "5526031eda7e7f716e951e3cd4c834d6799b0ff371ad2c4d4543bd5c7ebcb25c",
    "features/level_04.html": "c5dabf8b233e0669f628821f8fbe87773493baa7d0d00ea54a1f2c76cb337d12",
@@ -1123,7 +1123,7 @@
    "features/level_12.html": "3bb168cfa71db15dcfe18c057fc82951de5ced332a4aa917cc6a2c7742469b80",
    "features/level_13.html": "81618639e23d804f765998d81701fca51cbdfd62b8f2265119a6336eb9f8054e",
    "features/level_14.html": "b01e8a942771b8894dec76fdeeab187f80b2d7397506264b087aa59f614b24b9",
-   "full_character_sheet.html": "b43eca7899ef1ff1f7ba05d5c4eef8740db7da92a536f6f37623ebe794a93762",
+   "full_character_sheet.html": "a08e2530dd1c8badc74c4a12de11237ae0c88a29fc5c282b021b1902efc3503d",
    "items.html": "b83e0dc79ef4588e2a323621b4cf47c48c0f14fdc34f08b35f7b7a6b0548a274"
   }
  },
@@ -1339,7 +1339,7 @@
  "Y2024DruidLandRowanThistledownCharacterBuilder": {
   "full": {
    "character.html": "54d2f2b14823c3c780408c799ac004f6113a0981ee928ee63a429460e04c7e3d",
-   "features/level_01.html": "47d856705ec793373b4c08c452251208a6081de90aded861a54ede8d4706f1f8",
+   "features/level_01.html": "e9bf7dd81d603fbf2b213270a9f67b89620f37768381e64b8277be568523316a",
    "features/level_02.html": "a0a382182687c14418eee6202720023223690255a75cee0822bef81bf3f8604f",
    "features/level_03.html": "11d3b9c0f73e8d01a50268afe850a977aaacb0c72560e1d92238f9a056613008",
    "features/level_04.html": "e61f49c1df9176d09999f016aa5290b9f9cec2b929a67bf17e18bbf128916272",
@@ -1359,44 +1359,44 @@
    "features/level_18.html": "7baf21d316a5960797d35e1e2ecf70626322545642ac6f274406043fe2b0459e",
    "features/level_19.html": "961a7f0422ae47c15ddd0728d9bbba2797a532949d9f00919f7f25c88aab4ef6",
    "features/level_20.html": "0cd8263c4cf8e6eaa911019a76bee0625c2d3bfd920f9941646069e63c811a14",
-   "full_character_sheet.html": "afbb8d2cbffcb83eb3341081e8f9ee625bfaff8ed8cd1c34867e1eecd423d5d8",
+   "full_character_sheet.html": "4762a31ea34fce58cf26a1acf758be7690a321f342a508abcf12604186859d58",
    "items.html": "dd60d77db338d926302831abe64caca3ddb1432c5691f64c6b65078713d4ccec"
   }
  },
  "Y2024DruidMoonBriarWolfshadeCharacterBuilder": {
   "full": {
    "character.html": "0d52bb2c71e639da5907f603b2fbeb239192dac1677ecda22f038b3332307382",
-   "features/level_01.html": "9386a0c89daa9d8c229795911a8477619e3a6852251dee79530fd34902a3dc5d",
+   "features/level_01.html": "1fd1ca9a2743a1d726f249704af11662d338d7ce70c9740ce74b762f727da47f",
    "features/level_02.html": "f6ac9bd1616aaf80414ba01b7034b4f115057ace73458fa35b2fc57e5b00464d",
    "features/level_03.html": "0bc6592e44954509cdf4651094573b28f8b90491f1b0f3df53a3dddc5ee33283",
-   "full_character_sheet.html": "fe7e56fe69b55f695108bdb40fdba8e6758474fb75ef0502e14775cb2aa9baa2",
+   "full_character_sheet.html": "af1b0150128a3aa081feb9c0a3522ff15ced859fa0e7b51057d2947edcf85a3c",
    "items.html": "20e844e466b19b85387edf21db22f1c43744849d01d2c44838b5f34bbee09c3c"
   }
  },
  "Y2024DruidSeaCoralTidewalkerCharacterBuilder": {
   "full": {
    "character.html": "b93dc45062d2469f4d2290f2adcd310b959e7bb7b6dacfcde3b24a849079fdc3",
-   "features/level_01.html": "61ae975e97c93b95c02615055dbe23aedaf895016100446577b8d1a9ddb2909e",
+   "features/level_01.html": "9e11ef21dc107b3c9072f177d2905c99a998e810ce8b25b3782bc995ce6e0b31",
    "features/level_02.html": "5b1b3bd02226b415df4166f1869aeb565adde787c2bb9d7826ece23cbfe666dd",
    "features/level_03.html": "3a37ed63c14f074f05a15c4d39025710f62eaf8a63d5b18eb2655ae32ca5092b",
-   "full_character_sheet.html": "3ba5d4a89e3f03556e53770d6acc6505e30f5802a85752704c1e74e985e34d99",
+   "full_character_sheet.html": "68fbf2f560d6e00cc3eb001c9fa57be04919a104d5ed81343ec50fe76a2db18b",
    "items.html": "7a13e20097f8582b520ee9cf659d63b2c0221fc7185da4253e552ed67c16dab5"
   }
  },
  "Y2024DruidStarsCelestineSkyfarerCharacterBuilder": {
   "full": {
    "character.html": "39f5a9e522a46d433279f96cc2728c73cf0b4cf09401b8ff48501a56ecce3b5d",
-   "features/level_01.html": "1f0873fad50b3d8b17e78b170e978ae44053a588f09f69c3c8974f2ec187658d",
+   "features/level_01.html": "8f9dd5e966746d165577f60f68562706afc53974cb0f31152de8e62f0eb49f4f",
    "features/level_02.html": "8090937aacbb93b724502947c3509901fdd7d386b4ae1d00823de17ddb363c6b",
    "features/level_03.html": "e2b686ceebcfacc8e468f3f9d629120b7f3f9f9622fc62bcaeae37b5b984ea0c",
-   "full_character_sheet.html": "acf90c09fe02814675fffd6cc56aed7129d1222fd6aa70345a496d9e4822c2f9",
+   "full_character_sheet.html": "a2f4c399d820b53fd0f824f83c0fddbf7b47f0b5faca53a9594674194248ed64",
    "items.html": "84f259ce004da09c62076b9b5b89441f5b53770139bb23587e6064f4d20e93a2"
   }
  },
  "Y2024FighterArcaneArcherSylvaineFarshotCharacterBuilder": {
   "full": {
    "character.html": "66e634b4f5ee50ffa0f43a66541e1c8edc85f928c00495ef6c0ec1c122d9825e",
-   "features/level_01.html": "9065f9b7696e69ce44c557b8c67cf6ea282eb4b657cfb0bfaf0d50dd8d66090d",
+   "features/level_01.html": "26b456a195801dcd4206e5072ab78ea9274cb7611eb7a2e378cb5bd41f8769c8",
    "features/level_02.html": "22b1b68ae2d0fd5cf71b992ceb370ca68e73d86a8b54fc0f9c4c2eb03f7cc601",
    "features/level_03.html": "c787755a5d061c1f4da2ae24505f0e4401c1db6a7feefb64a630ddff7e31080b",
    "features/level_04.html": "d6a570ad6c56e7052551ce525eb83c415fe417b7684038c2c2cd85c26f835d4b",
@@ -1414,14 +1414,14 @@
    "features/level_16.html": "48bdeb94587284e7725d0d8222a62cccd6f1b5ede113ea70ad40e0c2f96a1e18",
    "features/level_18.html": "580011fb39684866a450e6513712b2b335b487a7d42d89a0828a058847998e72",
    "fighting_styles.html": "99eab64c5b3b72ed04c49a860a3afc99fdd5ea75f2100fb40a8649b048e164d3",
-   "full_character_sheet.html": "d3a3d588a25242f077d2a18f050c331d7eb34dc233d02f10b00178c41a44d1aa",
+   "full_character_sheet.html": "9f9900f2ee34da797423a1fba90dd1db2166dcca683962a57f6196ed185ff413",
    "items.html": "54d9e956e18f001a81678f17c0e10a35fa1f4a89c7aaaa3ba7bc27ca177362f9"
   }
  },
  "Y2024FighterBanneretRoderickVanguardCharacterBuilder": {
   "full": {
    "character.html": "af8d6219483c9331256d5a77b9c0b9b48180ff7e3685cf9b8716e41b7aeff1ac",
-   "features/level_01.html": "db8ce6afe425e50dbd836dee69c8ff45576faa432c8c746ce7b2f10870c476a2",
+   "features/level_01.html": "3d5ed3c216749020a05980d4d0fe07f318fa8299562ec86425f3c90d13023d8b",
    "features/level_02.html": "ee898b4995cdc9c630f2005e17cbfe9b90691432f9d60b70686d1393fab14d2d",
    "features/level_03.html": "0c72de9da30a8faa738e12a9046d3f4020b22a3d34165d47f814f3fbd866d13f",
    "features/level_04.html": "4c4c0d0a5fd8d2f7153dd899ba5d7dccfca1007aa8e08057f643c40cee972f15",
@@ -1439,18 +1439,18 @@
    "features/level_16.html": "f8c14ff0625b4e395ecfae257b201dfcf09e69f474c8d64eb0583589fa71b84e",
    "features/level_18.html": "580125780f15cff82a635c37cac429f6eff5894261ac7e784e192bc4fa6ff68a",
    "fighting_styles.html": "72641cca7083aed34bc7f87e6706099e0b97385772db10f95ed0bf7ea0d8026e",
-   "full_character_sheet.html": "6bb67119b20bfc21b84ba0d0f3454bfeec6c26d59f43355e6fbc4d909e24efb5",
+   "full_character_sheet.html": "16607d189ca9ad5ed7fb9d86d8355afbfefc7e9137a66ec181441eae4328e590",
    "items.html": "9ed4c07987c5c767d9caeba6796ee0925f14bf79a9cbe8746051eef59648b44a"
   }
  },
  "Y2024FighterBattleMasterAldricStormbladeCharacterBuilder": {
   "full": {
    "character.html": "abfd385ff4972f110572a343c82fc678ff1aa0a3babf6d709fee97c012bd4d95",
-   "features/level_01.html": "942f81f2089a8d03e5e03dcfa662304152b84d9a836d2bfbcf989218069a3e20",
+   "features/level_01.html": "bce2493d4207060cbc67ead01916f333b50df6ad1b521865489962cd26a6c80f",
    "features/level_02.html": "d9c8a23b7189701f07ad22dad8783878c9f516dfc9e6633e76fb89457ed66fac",
    "features/level_03.html": "252df61fa233d34192f09b706a9e67dad223e4933a7452c0fa03371ecaafc008",
    "fighting_styles.html": "d3f09964e28c9048d0e758d5976a895272239e3b7fe3b3f8f5f747d1363f7f61",
-   "full_character_sheet.html": "627dc866abc73ee6698ca553699955c0c88bb88cdbd6453498a83043d0757656",
+   "full_character_sheet.html": "9b69fd03895796388567bc109195b7ab3d4be97407639f8b21a50b468163b940",
    "items.html": "22220db690d802b1f371797d85b4471231fd42f8721df33b1d0fd980e9c8df4e"
   }
  },
@@ -1518,7 +1518,7 @@
  "Y2024FighterPsiWarriorKestrelMindshardCharacterBuilder": {
   "full": {
    "character.html": "c54ccbb108fc19d11959a0f0d789e3c74628f15a2f0e3b062488be7ae520d6f9",
-   "features/level_01.html": "14a55a67d5bd94a8fb73a86cd8e1511f8b35cedc1d100bbb092c3f3840593ed7",
+   "features/level_01.html": "82f88a9308fa753f82652a0a23cbefc2b983ff3c19fc5845be70d3bbb149cbe1",
    "features/level_02.html": "57c1b5e0d4fba40b8b739f5676bc974273142592c647eb75a1f3a285cd564b1a",
    "features/level_03.html": "93b784682d79aa2198065477d913ff67ebb59e1927c2662f757779e4080f8f3b",
    "features/level_04.html": "4ec03a38c366f7e2a4b66a6ece6395089e924b1094aef3b462c1749f702d3b8b",
@@ -1536,7 +1536,7 @@
    "features/level_16.html": "2a414237336b7bd732fecdf0852f3a3edcde473bd87bf54c10349ab26a05a84e",
    "features/level_18.html": "e5d8a0b4407443039cc9beeb1597ddfff6364c7f2da45b27cd60f3fb9e779a13",
    "fighting_styles.html": "d7c238dc81c5cbbecee846bdcd8d07c36dff3278fd4205f8218e217db2f2f885",
-   "full_character_sheet.html": "8ce418583801cb0e94053582d9e9e28abd7c15b2e83412d33b274601dfeef00d",
+   "full_character_sheet.html": "903c6aed9e9fac1eb68ef31784f59f10fa576fabb5bce1c84efdb84b2e38d147",
    "items.html": "92541830c09c799781d3182aaa31000f47b3ea1f646e67150e5cd35c7af4a13a"
   }
  },
@@ -1685,11 +1685,11 @@
  "Y2024PaladinDevotionGarethLightbearerCharacterBuilder": {
   "full": {
    "character.html": "65675f363ca7f2f7d5ec5656560cd83d9078579a6faf1e60f8055ef9af325816",
-   "features/level_01.html": "ad7d845e14a4e31e5c5b3e7736405fc74776c7b95a83d33f65350e462905257f",
+   "features/level_01.html": "47e20241dc6456b2b304eb5c263c4d7429b9842739e5a09f83821495dfcd57d7",
    "features/level_02.html": "ec7a703014b8545e87f71c3a10a240afe34ec099b961a90ff45767bf38a5032e",
    "features/level_03.html": "2240511ee7abb13fa9383516069cb098ac19821f9d66f00a07e4dcea44e16033",
    "fighting_styles.html": "d2a0703e94aeac2d56cf449e8d91ce2195ed252724d6c6a680d01e0e3afe38db",
-   "full_character_sheet.html": "d224b7a3c3613b759e9d9fdf6ddfb09eafee79217e82c61454a594e9b673c944",
+   "full_character_sheet.html": "82f7009bd601597770c4791d2a5bc989debd8345a3e6c832f30f1e16b95fe763",
    "items.html": "d80ba601c397a7e33795c5fa6f308dbc89cec18cc5b2fc4c0d34f42d1a4a2342"
   }
  },
@@ -1707,7 +1707,7 @@
  "Y2024PaladinGloryTitusBattlegloryCharacterBuilder": {
   "full": {
    "character.html": "a171d99c7bbfb89e15461583045e5260319f33b71478f93cb0f13f2c4ec8a247",
-   "features/level_01.html": "27622bbe3ac734d94c34e74310d1b5fa76e9acc794a9c35d98a8e5da4a15083b",
+   "features/level_01.html": "6f59fec7a5b62058c1ef6208b226570379c9f32879057fe3e9d4b823c8c7f953",
    "features/level_02.html": "b888b6a8bd0a3e976a461dd6e0013cb2644362b4bdb2b4939d3167be966dcd2e",
    "features/level_03.html": "2f775bec7c802f1b5dacf76747f402f2b646e561348bb15e554c55f44a95a745",
    "features/level_04.html": "cd909bd9202c9912d7c5d8cc43c27126eace410ac3121ac98338ed229c41bed3",
@@ -1728,26 +1728,26 @@
    "features/level_19.html": "b6e2d19598a95a581696c2a6d64c9945058314cd8ee0612baaab0df3374bfaec",
    "features/level_20.html": "e96aa4fe5361806aa64c479c845e0b64716cf949c6ef7f11f75d43ffc7d0af76",
    "fighting_styles.html": "3be8cf21404a99a29e20ebd1835d2b4bd37f2ee857d92a1e02bcdee70d9ff1e8",
-   "full_character_sheet.html": "47e0c8521a6ba26bbd73ebeceae475f180be3d437697e1545ebb2c35fdefb0b1",
+   "full_character_sheet.html": "78a66c2c32a736dffd5831899ded3b76f3b91fa2b91d93cf3432d02d38af5bd6",
    "items.html": "1d90f2ab9e586b0a5efcebef224977449445794bf57cc894be583047fb5a4d26"
   }
  },
  "Y2024PaladinVengeanceSeraphineWrathboundCharacterBuilder": {
   "full": {
    "character.html": "9a8f49add6e48034459562e27d2695b1b53a66152c42949108488a260134b3ee",
-   "features/level_01.html": "a5a67c72572bb684e22f914beb7cffd8d70e89ce7b88d84686f5dbb403820b67",
+   "features/level_01.html": "a51caa5baab04c8444bcc0bc73cd0a91a37d2f1cf10b1ff3fe77b61475da0cb3",
    "features/level_02.html": "e45dfecec1615144ebd8f79ed2031b6598588e3bcd8aea913bc41744ea77d859",
    "features/level_03.html": "7dc50f40345578fd7c2d61c9793218ab7afccc59ee8c27ed58e5ec68c10bc150",
    "fighting_styles.html": "10b532668bad3624a9ebc60e67144dc143fa3feb91d1462d5e0df694f9be16f6",
-   "full_character_sheet.html": "2a88edd9cc34c874dba6455e864dc87b9ca6d86aa7cdda6c683327fab1ecbbae",
+   "full_character_sheet.html": "ff265aadf4ef79ecf522259bcb17f1ec8c48d5ed10e531fd1d98b1a613d1daad",
    "items.html": "17ca62394ef829df2879fb409f9076c97407306cfb4b35c8984575fffaea4978"
   }
  },
  "Y2024RangerBeastMasterFennWildstriderCharacterBuilder": {
   "full": {
    "character.html": "254bbeb205bfc25900b235df82d9d20fe071dbbbed0d62508918fe81561fb99f",
-   "features/level_01.html": "0966e5f4602578c9a7593bb2ed05412ef820b7d74645a144ff6e3507379b3f1a",
-   "features/level_02.html": "cee8e1fcf930279bbee5e5cea9102eb543b9a42c4637823290568b15f9093b55",
+   "features/level_01.html": "1bb045ed8a0a9154bcd8b6aef480102baeacc1d0d88acc815d2f07cdc5bbd132",
+   "features/level_02.html": "2f3fc1e7948d2213e5542c56d943014b33493625a15cd202bc28166d8a18c6f1",
    "features/level_03.html": "08bce5d8698f9fd9c1adb70fc8fadb60bf54cfc77c41f5c652879fe33389b746",
    "features/level_04.html": "a33a91b6f58cc64ba3f889e09bd79d1992f8be016d7689b8973e0922a71ad31f",
    "features/level_05.html": "76a35da8760ec604881363b36fc95766a07aeceda824ac303d95cb41f18d5bb3",
@@ -1767,62 +1767,62 @@
    "features/level_19.html": "364046dd98efa459d7a895b97339a42c0d44ae701efec0f716d40dc0625690f3",
    "features/level_20.html": "8566afd14e682af54df991cc24e289687964eb1bb9662d71d7c25474beb74304",
    "fighting_styles.html": "f5a170a81d0ae4e36b814a439db8a9bf3391e734b2b5de95551c1b79354c6f6a",
-   "full_character_sheet.html": "d812409d1d53b4a30d267d0dac44cc1c6f509d900534116464e3a6e37ca8f0d0",
+   "full_character_sheet.html": "7655b03b5bd1bbf52746a964d94072928e3bf608b27b1007f64090ea6b9ff0b4",
    "items.html": "5cc6e2283c91c5d324adf4ed7e4367bbb68c947afdd4d42a9cf039db3d4775d2"
   }
  },
  "Y2024RangerFeyWandererAlderMistwalkerCharacterBuilder": {
   "full": {
    "character.html": "f2d83a6b477a63bbae88d98076696bfa83501013597b6dc72ef1e8aa7712fda7",
-   "features/level_01.html": "7e6e2ae82b1131126e3380e6b66bf3ea609881fa873cb3093d9d1fc0c0569e95",
-   "features/level_02.html": "7a74cba660fd9d7b0cbc962bca7dc85b4cc02c98042e774c9fc4f20726b22d58",
+   "features/level_01.html": "b71bf807e0b3885c9f48744fe862fb5a60791026565e42a5e41b2d7a9907da38",
+   "features/level_02.html": "b967bfdf76531f53af3cd8071202d7cd213a7b67c3cfabb7bf8e71f2ccce82b8",
    "features/level_03.html": "c07dfde0c636f9de16dde19c15d672ed1855ddad23a3e0ca9f58e948fb2cc99d",
    "fighting_styles.html": "9998a3fa2b92acd13f7c5e3f115f58a1a88da836d9fdc64ad16372cde08b7918",
-   "full_character_sheet.html": "6bdfeb7da358d5a82b97a134e5b7838b1fe041bebe7a48a8b0687f1d7e5604d8",
+   "full_character_sheet.html": "bc9ae18a8fb73a35768a34a1cffde8045f6400f868602c9af23b8ccbc9ef5aa5",
    "items.html": "2042a49c94d1a95dbdf11d4220c62c0e9ab4d0fbd02de8e8d36ce420cf8c10ed"
   }
  },
  "Y2024RangerGloomStalkerRavenDuskrunnerCharacterBuilder": {
   "full": {
    "character.html": "e0201190a34a8c3bc2a7991cf2b832824a1d92775f9cf807b352b2299eb3af54",
-   "features/level_01.html": "8752f390e5d45ea40564fabbb98cd7de87ca129c9ba968b3993718b9343215e7",
-   "features/level_02.html": "079b001ff91d4d6c36749b804ae338ac84bded2f1b8d808b205cd196daa6b71b",
+   "features/level_01.html": "17ffe4f851e8300d3d4465e24cfa88c8b1bfd713be3f8c94a39a01cc9f037199",
+   "features/level_02.html": "71459b36c772c7fb9196735fc55d8c73ae4da067c2eda73b4ae5705431e01e31",
    "features/level_03.html": "8c23ac55f44983e14fb8b85856911526504d88aedb4eb9547a7fefa750931e3a",
    "fighting_styles.html": "659294bb2b96533a57af1e6047b36b97090829e833fa0f245ff222ff8bc24290",
-   "full_character_sheet.html": "117f9d01c814c3fa51b47a99bcb054f3a6e9a7e1a930eae1fd56fe922f940004",
+   "full_character_sheet.html": "e5d5635a1e4ae24b1bb19c7c5615e9619302944272d49cfea9bd6193432430b9",
    "items.html": "d1e1cfd92cfb3dd53c5adf4653f6ea81db476cd4dfce6bd61b38dd25f16d9163"
   }
  },
  "Y2024RangerHollowWardenBrambleHollowguardCharacterBuilder": {
   "full": {
    "character.html": "cd6fb61901f6db051711b95fa00c901a202fae2ac0199637b6e986a586ff58dd",
-   "features/level_01.html": "14f38ff5dfd2e222b01f16762161ea784338b9222e392fe65c7bbdd32afe7903",
-   "features/level_02.html": "faaed24242653828a3356897a0b9a02d27b0bcb383008ffbcceab64af7473566",
+   "features/level_01.html": "ce0a28d805a9e3a99af0db993b6bf4acde748dda699943d4e0403a06367070fa",
+   "features/level_02.html": "99432097fe8b7b720e9812a06a55f22c716f40cc89e817a83507fda2c71eea72",
    "features/level_03.html": "417a0ebee77565e9717bb6b1e2f27faa52cb05ab83140802b17ca3cf7c652dab",
    "fighting_styles.html": "3114959e7bd363746333f60866188be2e236f5b9270fa8be4018125dbbe54f5b",
-   "full_character_sheet.html": "a091c9259bfc4a895c4b700bc49640908d2ebb524c8d855535e08610358a9b67",
+   "full_character_sheet.html": "9c57dc5d23473e4ad5a107e0924f178074a4cddf8bd5dbf4ae150a1ab617421c",
    "items.html": "068e2bfca0b62ced6730a99a1b42e40ba752cfb7ed90bd442935259d131c2628"
   }
  },
  "Y2024RangerHunterTalonSwiftarrowCharacterBuilder": {
   "full": {
    "character.html": "f52a8bc863a0d74e4abf449be6cc9922d009a8865c289577b6d8d514028fb753",
-   "features/level_01.html": "cbea113778b0e73ed8d407ba82bc82c8993fc6a3c405b5959a6f99834d7f37b6",
-   "features/level_02.html": "eb70d635aa365d8a65ace851a8dcd13919ae2f0c2a3cbbe8fbb0bb22abd2a482",
+   "features/level_01.html": "4a7931af5536c989d40279f54c627caa01cee3a04e707b0a381168f0e96a4931",
+   "features/level_02.html": "c9460a32e91a82365fad2d63e509e6d7c12d4f7e4085cc88c60b4a6238977a1f",
    "features/level_03.html": "f97a051e72a36373c23d2e17e2ce3af08cd98f94455a24a5d2ce1906d46e3f77",
    "fighting_styles.html": "eea924590452ef522c996be5e003445f6388b8e5e8ed7ce4ed197a1f63f30ef6",
-   "full_character_sheet.html": "f420be2ddb0050ad7385340d7395c07503f28a5528f46ef5f1983b19c4df9487",
+   "full_character_sheet.html": "b9a739c1217f51c53a96d556e24823d113406e1b72f2689c37418cc770e4e3c6",
    "items.html": "495c3e192dd6a26e82818c38ba6e39d9da4bdb8c794aa61e9e8b5303ea7c7aa0"
   }
  },
  "Y2024RangerWinterWalkerFrostIcevaneCharacterBuilder": {
   "full": {
    "character.html": "6099ff43bb25397890cec914a1cf41e094f7fdbd69b3537c7bf59e0658e9ca0f",
-   "features/level_01.html": "a6a79cc1f407d4d6e47aa13ea65993e63e1e54011c8f8b85fa2d5b3dbc8e4b9f",
-   "features/level_02.html": "bd0d15a0285bffc073f3c31c09b8b5e231b229a7258e3116c12672d8a932c19d",
+   "features/level_01.html": "c5bfca76a80b49209fab87380839e98c7fc925129905ab8c711dfd26a441c61a",
+   "features/level_02.html": "c219650d4ec7a327cde3334e07ed19e385eeaff3e3e822665f608c5ecb019ba5",
    "features/level_03.html": "eccda1edd31a13196f4d951869b23f7ad1c0347a95a7a24889d35686cbc1b83a",
    "fighting_styles.html": "eb17591df3d7f9c680944e29afbc579f94d43472a5ba0c97da559603fa702f4e",
-   "full_character_sheet.html": "8672f26813df698b67c7a7591b8e8c8edd437c21a848bb1eb7ba01490eb886af",
+   "full_character_sheet.html": "36dc6a5950e49cf8a7d31d93429b707da661b09a86b3f4736bd90aa1d916fb96",
    "items.html": "a85bc1be15e78ab3edbdc010e7c4401f630378fdb1bece5cf3cbeb303d87b134"
   }
  },
@@ -1864,7 +1864,7 @@
  "Y2024SorcererAberrantMindNyssaVoidwhisperCharacterBuilder": {
   "full": {
    "character.html": "8f163699240c12dff01a203eebed3133b6e9d423b6f84b7504f65b60e2bba3ac",
-   "features/level_01.html": "d88a8ae0c7c849f2c76b9a9a18bd02da6eed0668394eff5280dd81d17d9e8084",
+   "features/level_01.html": "2faf73c839b988c0aaae15bb9725d59c95c251e2a012f2d5d5ca2c113461e53c",
    "features/level_02.html": "6d4fef6d2a8f79d133b8665937b3aea28c4f123a3bd8fe0fc07ef9e79e83cdb4",
    "features/level_03.html": "3731621c8a31045bd054fc0a326c36d5e16733e08ded6c053ecd3a7afb8b175a",
    "features/level_04.html": "74202614212e3848fe681e4acfcc270018b83ddfb5d4342404928cc7b98723fa",
@@ -1882,7 +1882,7 @@
    "features/level_16.html": "426bc89d385736689d40d10aa2487fc684497fd8f228b608954addafd4e0d27e",
    "features/level_17.html": "f74d925ae56c0392f8be3106c9f86d169e3d2952c0d83ec4dd268e0e51c4d5dd",
    "features/level_18.html": "4e02b32c5235dbb63440fa52c48c0c3230c7166d792c7a11416d209e79e11e39",
-   "full_character_sheet.html": "c0843ccebd2e1547091b9e1a27f29651e0dc597a81fe5fc0baa1227d45912334",
+   "full_character_sheet.html": "3f931722b09486eacde5f6e5b3282edabe0d7d0a7cddd1a433dc3f5b342ec948",
    "items.html": "2e8732e288f5e440dae8658e5e36f9b7be5a917548997f68af227c38686f0b2b"
   }
  },
@@ -1901,17 +1901,17 @@
  "Y2024WarlockArchfeyThistleFeydreamCharacterBuilder": {
   "full": {
    "character.html": "defc83dffbd06cc4311e076fd21954d2985de8464aae1f19cc28769b7c9777f5",
-   "features/level_01.html": "1f322aa02679bc36c586a578d75f363e6c70ebdff794ea7f191ef970f2b7989a",
+   "features/level_01.html": "dcf0033f2cf80b30769d421083112fc564da2fece666fc2a23b9bdf2fd84b984",
    "features/level_02.html": "afd4ad101a5933e13a3f5019d5cc5589cbea74c0ceeb7d06da0faf13caa2f75f",
    "features/level_03.html": "4dce2ecf8311ceb134bf8ab1b664ac0e761db8da2c6b3649090e9af11098689b",
-   "full_character_sheet.html": "1fd1080f658ecb2cd58448071f0e616f3e263e305b9a46b8b4441781cc612a71",
+   "full_character_sheet.html": "2071b4bdd60d7167e8d8cc92e4a4fc7546c5057d0cee4cfbd055e7e36966ad34",
    "items.html": "bd2852ab1aaf79fa846202065a6118dea5b607402fb2cd7cee735890657a1c99"
   }
  },
  "Y2024WarlockCelestialSerenStarboundCharacterBuilder": {
   "full": {
    "character.html": "2b1a4acc8b55ac01a61df44fe321a30f27d3677d21fd2d2793eaf890994576c9",
-   "features/level_01.html": "9ec4f6763782b5a997296b1d2e32c2bdafa78fa225da5e2912855b0e44fca271",
+   "features/level_01.html": "ca490e1dbe2730bd43b87f29deb20fb4f85a2db164a6a5184af5365cd700debb",
    "features/level_02.html": "7d482e679d18653c99d4216a530359540682f4f5eae820a5592ece38488bf5a0",
    "features/level_03.html": "86d893bf6a11064149b07e69de125e1d41b9c5c9379b5c8e957951033ef9c917",
    "features/level_04.html": "b81fe98f128190cae90fefeaaf439ba0159d3bb40f2cfab77b2c32fe4eb45fa9",
@@ -1925,14 +1925,14 @@
    "features/level_12.html": "a51e08e6c5a2a6b6fcffe24785b2254af833de23ff2095fe05745a392b3d8175",
    "features/level_13.html": "2d8325c25335bcc29b0030775a889355903709320f4ae27ae066f68345b7e1b3",
    "features/level_14.html": "a3643f95364ab5c2fd0c6f617937a9bbd0363984c73735764c9b19f36b889825",
-   "full_character_sheet.html": "aefc6184d428614ef77962bf8668f3cd0b14dbf6b1866422493f6832c2b68d4e",
+   "full_character_sheet.html": "af042094789b274006f1e6dc5c8326e95563e43c7acb6d715e111d3e5719a3cf",
    "items.html": "4585168d61fcb3991fc4348e8bc98bb2f09796bc3f9ca7aee03eb0039549f951"
   }
  },
  "Y2024WarlockVestigeOrsolyaHollowvowCharacterBuilder": {
   "full": {
    "character.html": "a317b2869653fd08e5039a72e2d5a3abbbdbc95383486e1da440c11c758a735c",
-   "features/level_01.html": "cd34b544f2ec521658dbfcf736067cddd8286f1fcfc671ac0c8293f02dfcbb11",
+   "features/level_01.html": "150d5a1c23427aa04c4149aadd6d14efc0bc45e05ab1c2ac5edf493c490c4a50",
    "features/level_02.html": "8116ff76e76ac5ec010929ccae4ffb2008301da2399b1d649b4dd6d5b1f7ea74",
    "features/level_03.html": "6f900ee0cd00fe446723aaf2762db6afb2115ff7b4f52f9dc07c9287be90ca72",
    "features/level_04.html": "e48081fd9b809f3fb7f7283b1943afc67d560ec2c1ea2273ff8ec6864dbbe537",
@@ -1946,7 +1946,7 @@
    "features/level_12.html": "7ba432aa5bc6abf48d4e1db8a87abafad117ee8ff588789267760db7c00c99e7",
    "features/level_13.html": "c5a4cd37889e9dccce49329985f55f1e5fbc50bfcd774b970301b8cbc4a4da2f",
    "features/level_14.html": "3d7bed07cd8ea2fe862001d3110b6fba786b61ef33af4adda5fce3143c99fdce",
-   "full_character_sheet.html": "ee29bc6605a58a4c8e0933cd05f9bf3b224e93b60d13742158832142ece9e44c",
+   "full_character_sheet.html": "36a79be9d2ad0452d4f898027015cddee1acb0cf2440b2984aec02c34b6c363d",
    "items.html": "fb3fc469a11fbf8dc41d11092ebf002c9e95e46614c05def822793fb385d1ff8"
   }
  },
@@ -2027,7 +2027,7 @@
  "Y2024WizardNecromancyMordecaiAshgraveCharacterBuilder": {
   "full": {
    "character.html": "ab27194eb46deeecdb68a1b44c0b92d3d5dfad4cb117e2d1b8827e96abf72d3d",
-   "features/level_01.html": "1a6a09a331a464b33d9c88f2aae2bffe9cad89d20c5e3ac6c5f600a6afc6d73b",
+   "features/level_01.html": "20751c93db4c9338d59b77967740fb4c789ba07ea46f8d4246a67ee0b4809501",
    "features/level_02.html": "28d9224e50a6d7342f6325950c7202acfb51540bffdfcf7b2769aaefe225bbdc",
    "features/level_03.html": "4acdb217ebbb9c3ec14fb36b7d70be62da6ae72af1953dc23db0d00cad898b01",
    "features/level_04.html": "497939f6c207af6aeddd8a8f119d0fbdb9a8b8dc3cc543880f80381c1488fefa",
@@ -2047,7 +2047,7 @@
    "features/level_18.html": "81afae7b4ba0aee54f099c0b220801543f76de4e45c62bfa81e96717bc5fa41d",
    "features/level_19.html": "2e2d8724f18e0899ccff21182ac574b2b2e40dc5d1017355400b4ce6ea3fbf55",
    "features/level_20.html": "febe3b8c5a146bd25086c9df87b5d8bd5b4e7895f8b66c790f74396581207d7f",
-   "full_character_sheet.html": "7a83c284bc972051a50231d66bab374c3dfe3699cb9aaceea86585bcaf8687c6",
+   "full_character_sheet.html": "17e7b7813326068dbf81120fa73acf5535df6426976c2d8e9eb1f4b6d4aa483b",
    "items.html": "14850c2effb792243054815151cef48a515dbf5ce27f5ccac1bd9ce305250629"
   }
  },
@@ -2102,10 +2102,10 @@
  "Y2024_Artificer_Reanimator_Dessie": {
   "full": {
    "character.html": "8526c9340407306d286afc8cc2f20a0d28f6c07b3f8b477e3618e00a5d8e0956",
-   "features/level_01.html": "94c120d1be891c94bb3936e7db3acb2b279289fceffb40c8e21a7b4a62980c87",
+   "features/level_01.html": "31d9ea06ce34f91a7e97c8d1c30a8d2109d45fb3e0abd2a3ab315e15d341d72e",
    "features/level_02.html": "fdcc3203bc98b38935b4e2186b1a1df6edde90d7bca2c845404258f6b97643c5",
    "features/level_03.html": "6162be3f6d8bbe1216b9c7be3f301d4d1ab44520e0ab5be09dd4e47416678547",
-   "full_character_sheet.html": "89db260faa9fe8fff0fcba78bd7109900d8e8b2eb0fc88578c9b4b3b62d2e6b3",
+   "full_character_sheet.html": "d0e26208a1d2ca1b77654997658690ce03b80594565dccd82a6da99184f60d94",
    "items.html": "c464551cdd9089825c229355cd7e2e6d56ce8944ad4a66fedc8d450d15c57a28"
   }
  },
@@ -2144,10 +2144,10 @@
  "Y2024_Bard_Glamour_Thomas": {
   "full": {
    "character.html": "241de2276e1e59cfb89be14ac507c531d8a144b38edd02c244e35e35727ee5cc",
-   "features/level_01.html": "a1db12a94f7da3ffc7da313a456d1cdf8e82a55a0083efb8c604352fce4e6b4c",
+   "features/level_01.html": "d81143cc3e6e7e07488a978c722c41b8ba193133a4db8d4fe195babd6b021c27",
    "features/level_02.html": "7d6930537ba5a975fd53d0af8f9f79f70069d111daf0b7adbfcca26dec26d036",
    "features/level_03.html": "30733803f4609e0662b8d1787fe37e169b45ad3b535336953a432cf953bea00b",
-   "full_character_sheet.html": "c443d1b20c4d3e615103864572613ff6a099838ac3e208673a6ddfd7a13c311c",
+   "full_character_sheet.html": "b349de09e6cffb024d762e95c79639178f304c5ff96f427600ac4e40f1897ca1",
    "items.html": "b7c75be04e525487b71546d0e4d09670e78a5546eaabe82163083985065ee7c3"
   }
  },
@@ -2181,32 +2181,32 @@
  "Y2024_Bard_Swords_Thomas": {
   "full": {
    "character.html": "0ec1f3864f488343ab407e03677d3bf3f1f10f7518fb9cda72f0614470d9a335",
-   "features/level_01.html": "9429fca0fba134025948652c0610c0e3fa4a219fe11fd6dc4c0e7224ebb40dc2",
+   "features/level_01.html": "f3c55a9ce2c0b3b7e234ea0c9185ac04223680b018796c97af2731f73b3c8886",
    "features/level_02.html": "4e3904fd755c75f0553d8f5a3add416e479289bd6c164a46fe624f98eba37277",
    "features/level_03.html": "17106e0083c2fc7d03997f8425275f96620044fc23e38306691d4bb61e3f0c47",
    "fighting_styles.html": "4eff99ea629303a4d5061e10f827a56e3bf24a4caabbbb6a4a212accdbb12fa7",
-   "full_character_sheet.html": "5f049c008383fb60be6989f120a50021222430ff1aad97784d064b54ce825d58",
+   "full_character_sheet.html": "0b264b4017f61d1814a8d3f93079fd5075361fabeb870bd7dd5125cbb8a5fc98",
    "items.html": "35369bc2cff9f8f7fbe324d9ee1afb83c2016b1bd3a1886b6a4d8e72553facb0"
   }
  },
  "Y2024_Bard_Valor_Clover": {
   "full": {
    "character.html": "a8ee0a1736072c0f15e268411b5744ee1c15b990118156403dd6e21ea645ca16",
-   "features/level_01.html": "260f074a128c81db73f22d7fcf966b9e93051c622405c8fb6415fc62b250f8f7",
+   "features/level_01.html": "ffad1a4819c1e8740dd87d086b8c19a5fdc72642f44841c85139a6ff3414c56b",
    "features/level_02.html": "4c82db1b6964226cfddb0a09dd7b27b35e488404542a0b54052f3cae0483906e",
-   "features/level_03.html": "ec827099c821133f3c89b89a4367fb1b2d91b9caeccb6e45939485d02a7e8f49",
+   "features/level_03.html": "5567dd47daf9cbf58bb1ed4837cd6f39e0b80991bb6dce25c99f1acd3fdfa564",
    "features/level_04.html": "6528cc950e8da79d239739a7b28346104987602553554f335e4b4a043c615a2d",
-   "full_character_sheet.html": "db96b1b9291d2f788fcbfd665a48e1725985ca1facc923c16bf44c142756e025",
+   "full_character_sheet.html": "dc12bc06e927bfc6ede196faa3ade0683411f8e841c4e093bd0e34e9a54e9c37",
    "items.html": "a8d47e041c580b3d110b79d1af44f7a8d193e61da8261327cc31ab7e146e8eea"
   }
  },
  "Y2024_Bard_Valor_Thomas": {
   "full": {
    "character.html": "eb548f76598d23f3b762c61c04883a6a26398519d7b648583bd8868db35a82a8",
-   "features/level_01.html": "a81f3db411051d5b18583041c304cc6fed0eea5dcbdc5bf16c66e999be255650",
+   "features/level_01.html": "c14f8964fec393a6729946b658fb2169e94d61d32db2be7d059ed5bdebc8fb91",
    "features/level_02.html": "a2931a7ce89411e533215f4d3bbf7a4cbaa141dd92432ab641e2f9830bb15a1d",
-   "features/level_03.html": "ccd6efbb6242451f962d3941c3fe94e2918fbb949d0be8d129c094ed64eeb6fc",
-   "full_character_sheet.html": "84d9c6b1e2d2c4721b3812ba2916f6278df51dc7896366e542e2a6fdc03f77fe",
+   "features/level_03.html": "2c53433b0d7a3872dccb64b6e5aed26d5b81197ec042332bba4f337e7525ed76",
+   "full_character_sheet.html": "8c83f027590777feacbb0f8e785eda0a2b8126c9df6aeafb0aba401bf33e5aeb",
    "items.html": "9ade4e122a488da67971243f8d766765bf62b35aaf5ff7b31bc6941e03b9383c"
   }
  },
@@ -2245,31 +2245,31 @@
  "Y2024_Druid_Moon_Maggie": {
   "full": {
    "character.html": "9f8a94aba385af60621716962576117f889cd6d03f52981b5e57411883bda55b",
-   "features/level_01.html": "b5491cac35ed58818df4454e3d85d5149bc9f7ec7da6376d3aac4d84db4ee97a",
+   "features/level_01.html": "e1c0ed72b60ea0c5872db6d0043036fa74f0a5e1841cae3a04021e82452010d9",
    "features/level_02.html": "876c6e110eed04618ea214c631f4295d0fed709e983450bd4fe822da7ca07ef7",
    "features/level_03.html": "3514b458fb4682b9bf88a39496e1e14ca54ff1ad5fff828d7e479a7840807ddc",
-   "full_character_sheet.html": "9cbc28a816d01bfa3adec905e6a3558dad9886130922f43642ea7dd98f180565",
+   "full_character_sheet.html": "98c9d5322d1e9832b7283aff09c20281e8a350665106a32cb4621f41dde2550b",
    "items.html": "da667fbb5d956be5b259d35a0392274ecf01eec9c9eb8cfc58582cd8bab8764d"
   }
  },
  "Y2024_Druid_Moon_UrsalineNightpelt": {
   "full": {
    "character.html": "a3eadca25d31dd0227189311d1cfa190324a1fafa32542f31ceeb2a6154fe355",
-   "features/level_01.html": "685c776f9a966f5b548a08c4165c36608a607558c0961fc5277e117f5cba7495",
+   "features/level_01.html": "8d115c9a8f4b10cfff6a1df984364b8ed64b085cc564f34601bb799b50574f65",
    "features/level_02.html": "845187c14cec98a5b70f058e9d6f84df308104b63aad98aa70060d33cd862929",
    "features/level_03.html": "4bd3d105fe12bedebdd3f7bfa27aafd22b1fab694d8476d7670998b0ada1e75c",
-   "full_character_sheet.html": "4f28e6f6c95e47f9a5d4f0b276352d2be2376143aa5b518f07e77ed338121888",
+   "full_character_sheet.html": "a6074236fd83d22af0912216594e87c3a6e651d3f3ee9fd96a5174670cca32e4",
    "items.html": "298a48287c1f316c32633d9b6d5f7431fd16c6edfcd9e88073a1fc870c65c10f"
   }
  },
  "Y2024_Fighter_BattleMaster_ReynardSteelvow": {
   "full": {
    "character.html": "a965ee94778c134e9c704e23fdca83c8cb4ec8fad8f7c87b20bbc9f6b89478e1",
-   "features/level_01.html": "dc92f28de74a34fc2419bf3ba4f20a8047190bacab9785f574be565ad33f26d3",
+   "features/level_01.html": "d8c819e6325b1afe22991b3e2612f86d89da39aca348bcacc80f9d87b93fecb9",
    "features/level_02.html": "4ce51a25a544d46348940c38158d7eb499df5a1b2ccddd473fac0248fb149e9b",
    "features/level_03.html": "18dc99dca1e55b971fb8caa41d75bc8536114e942263cdc42713e34a9a0c8543",
    "fighting_styles.html": "32ae79f915c3df76c07c24e4157f7c0500b4f0df83fc50dbde704a7f56e399c9",
-   "full_character_sheet.html": "0ad4187461d03bed11a5c9c4e27372b7acc5963209efe40435c34e180a0d4862",
+   "full_character_sheet.html": "178dbceba8a0d13a20055f127bb44b73227ff8e1871528e7de6695bd298c0f7c",
    "items.html": "db86b911b270c1d0835e26b42385be35bcefca7fbdb2ef8aaf443666d4e0d7eb"
   }
  },
@@ -2342,7 +2342,7 @@
  "Y2024_Paladin_Devotion_ElricPactsworn": {
   "full": {
    "character.html": "bc69dd09ca9a08246fd53b2463f96271f1f54eb753b65ee3336ca4def0e6f164",
-   "features/level_01.html": "8397fc721844f4098ccbaf7950f86f3891dd610f21d807150e9a45ec4f97a73d",
+   "features/level_01.html": "725f1a077a95ee3c95f3856c083a74c145c5b54cd1d18c2312d0c205a97b85e7",
    "features/level_02.html": "61fbbc073a20d8d08da6b2396331d5d549333d4cb2db0f4166d86e5902938ce1",
    "features/level_03.html": "c78c9dd6649e19bd36626cd048a847d1ec160e515809ffc9b7c7ce8082b7056f",
    "features/level_04.html": "0c17eb0cb230e768cbbc2c1a66d86a89cd5112d8ea3b0bf7d575057387d8898c",
@@ -2362,14 +2362,14 @@
    "features/level_18.html": "aa7a144b211da119977ea7fb71a6a80b48aef6d1deb2ed08790b77a9b73c9552",
    "features/level_19.html": "fe4f309afd6c78aecd9a287dd447b7a245395274ffcaa92850b4d7324c932294",
    "fighting_styles.html": "d479f6acfb3a3089c54547ddae15cbff6835a52100fc01686f679bc25e3bde2d",
-   "full_character_sheet.html": "ea13081640e583c6b8471834ba92501ccc9d0bb70d1eb1b62ca731f61d66a3d1",
+   "full_character_sheet.html": "9b1bb53898de64724dfc1145bf1beaabb2f1a616fbab663d9a19bdbf24ef8586",
    "items.html": "3eb45fa53b9e02563d638f3db744d685a77f7a0a6390dda99655d2d8d32fab7a"
   }
  },
  "Y2024_Paladin_Glory_BalderSunoath": {
   "full": {
    "character.html": "76cbd27c992c7ec80bef6a771d6a35b2e146c08e90c4d7f174828cbe1e0cfd39",
-   "features/level_01.html": "ff4c028e877e46688673f5b65131b6bbf1374255d839c134bd5a3d3718d4b6a3",
+   "features/level_01.html": "8f22614b588f8e95a974bd3aec710cf52e18e1f245e2b51952419ce6df11dfb5",
    "features/level_02.html": "ac8b4c61e89ebf32e2a323d4f732c7f06bba19ae775487dc7835b4ffac97dfb0",
    "features/level_03.html": "cf058476c518b6c905e21ccc5e614544ff231498c4f7ad05e98c659b4c0a6520",
    "features/level_04.html": "f4d32adceaa871b2b7d518b0e823c6c787d1b43cf308ef4c40e28280dabbcf1c",
@@ -2390,26 +2390,26 @@
    "features/level_19.html": "4263bfc5de3ae3f5f184cd013d2817367dc31c4e8a5633d4def51a41675200ab",
    "features/level_20.html": "d1bb40c4de4a24023bf62f6e20d38113cc806fdb2f49cc6b4a511b1e9e9d08cf",
    "fighting_styles.html": "f7d6bef1dbf0cd6f7ea2ffff1c92eff0fe7af86443abd2e96ae9370c15f1de9f",
-   "full_character_sheet.html": "25d6fbebd973e18ffa8c2c95501aa5f84ac211003c8f422dc59d66204be91f82",
+   "full_character_sheet.html": "f1304050e0b6147bfff5b1940fc58c14cef10e59a010e953721ddb1e69113789",
    "items.html": "e456a27b7eaad84676309dc8d3ff05b74661c3cb6ff65178b6c0a39e2c2bcaa6"
   }
  },
  "Y2024_Paladin_Vengeance_NadiaIronvow": {
   "full": {
    "character.html": "4df5d667fc24c08272f5fdf27e8d6947305866fdf135876229f1233cfa999cda",
-   "features/level_01.html": "e58bab07a0ae2946db220e9a1d53179f21cec0ac28df50557d3cdf93514a447b",
+   "features/level_01.html": "ee06df4bde444e5444182c8ef78870849557f123ba6f6972fe366d7113713998",
    "features/level_02.html": "da391eb005ecd733a17c57a4a28373ab331932c8ff8bf22af4c0cded13bbb710",
    "features/level_03.html": "90971cfce50a9a112fbffe422d8fd0de889440b111062f79cf17ec431db538e9",
    "fighting_styles.html": "f7dcc2c64a2be682bf8aeb9f411312266fbbb9d7620991ddd471f684fc20dc86",
-   "full_character_sheet.html": "b2159528720b65a7aca507c9f817d1eace2a663e44a28fc090461edb66412dea",
+   "full_character_sheet.html": "2184b766bdb5e5e14d9df6398e956f824dfdd6696915fb7cf6e52e03dd87e820",
    "items.html": "b0eab98a6e0c95b65a94e0a5901d70c346161f59933ae595291460fe60c98258"
   }
  },
  "Y2024_Ranger_BeastMaster_OrinPackleader": {
   "full": {
    "character.html": "baad83137ba1058e44ea28fd54c15939eff90c00834c52e0d55d24e24b2a249b",
-   "features/level_01.html": "92f6146e848ba428d0672d8d2e0a9daa16c8d0f20071b1b1838febfa8b1d17e5",
-   "features/level_02.html": "9b63819e62aa533b6bcd36f655ce3a9b89f51a432d5a2c5f025736e5c5e5f212",
+   "features/level_01.html": "28c68cd453d3fa4ad621c3a7b0f19e553da945f3af9164884f06c6b7697994eb",
+   "features/level_02.html": "1f68b4ae384edadcc810d01d2b2c692548bfb4cfae1a5de87fe79aa643261ec5",
    "features/level_03.html": "14351f5cc43d3d9cd563d199c88e08abd5f8b8b19ca895e023d536f7416c3bf7",
    "features/level_04.html": "8ed210766fd72a4e1326ef8627862cfb28a7d03ac09ebe7627f2d72f89382abb",
    "features/level_05.html": "3c14d3bcb0fe2cdb623386e8c310269e5194f9a8445603b3109d64870b49ff47",
@@ -2429,29 +2429,29 @@
    "features/level_19.html": "068bf4ef9b4c223e1d14aba67a1a0192b6bd897062b3e2931f3a654a29d68f49",
    "features/level_20.html": "8780653d8a0f740f27548125262a24e9bf5efa2e720ceed2af732aed0e345f3b",
    "fighting_styles.html": "7f87a1afdb4900513bbf56351c907c37ff93ad76bc41c938a17b63d4e923941b",
-   "full_character_sheet.html": "cc25e3ea86d1eabbf85b5b95aa22652a2ab40a842251f9b7d6c4f34e5519e86e",
+   "full_character_sheet.html": "d50fbf93b4859c9c849897d9f63e47aa0508830385421d48fb834076c33c5f6d",
    "items.html": "5da59bc8131b357fd373cc02f80215c6bfca398b13d2bc9da76b9436e210cf38"
   }
  },
  "Y2024_Ranger_Drakewarden_Hanna": {
   "full": {
    "character.html": "ef4c5a1485071f4eb102c1466e38f765b9c49c57cb65f491e36612f1ef31653a",
-   "features/level_01.html": "4f6394ded74a7eabb70546017de48bbef4edf871947d04a0910fac6e236008bf",
-   "features/level_02.html": "a41b7a58434a1decfc985f200cefb4f8a6262cf96c3a593ab1ec18c449bc1b10",
+   "features/level_01.html": "48e72fb4423d3bde6d5394cc25e6d4c73c7a72b5b79aece43041bd74d9e8369b",
+   "features/level_02.html": "5b0c7af28799a38ee35e330b4c83708baa991912508440b813df3c2e4b0d3a8e",
    "features/level_03.html": "9ca54489f0765423c5b8e8458d837a8c2f9bc41dbdbb8b1c69ded5bca8807f56",
    "fighting_styles.html": "323f81bfa0c4c1b3678863d735440213b62bea6b40c128223235332e5e607724",
-   "full_character_sheet.html": "3bd796e4037c48d57f372e2d666f9b7c919195812f31e6c0ee9b8544a41fcd16",
+   "full_character_sheet.html": "14d4209843ae45116ce2396e00607c75753492f562d0f1986e9a3ed2f1b4bfe0",
    "items.html": "5c6809c85d3d8a9b0687b1876633ba1df41f1cd7856593f3b74f8614cd373f2d"
   }
  },
  "Y2024_Ranger_GloomStalker_NyxShadowtracker": {
   "full": {
    "character.html": "417665a5cebefb741ef66f9a67001a924f496c01b1263485f0fd157a66d40946",
-   "features/level_01.html": "28cef4d0000f0ad1189a4716b40ce98f0430b75d68d56d7ebc7d345961187d92",
-   "features/level_02.html": "09410f56e0fffd0079cb4fc988e4cbae66e7d38e48dfa9b44152d6f5f4c9f99d",
+   "features/level_01.html": "528b27aa58f8158b83e564fbe16f78c608ffcce24bfd85930841f9b26d882a25",
+   "features/level_02.html": "63025a82a8d77892d5166394bc1e434bf1790c705df0c9947c8cab54496b74d0",
    "features/level_03.html": "06064f89507178cc92961489c94478d59885158241aefca4721b65b9f4b0f778",
    "fighting_styles.html": "a0e72907b70758f7ca372450fa0a63a6ebd897ee751f6e4a2e77b2b2c12e98a3",
-   "full_character_sheet.html": "483c46986f3c1a5c76a7ee79d7a59d6e766d0c2fa4acb29dbc146160a150c9e8",
+   "full_character_sheet.html": "b607997ee2b3608ce4ccdca118611b179792cd0596300feb3110b2a9ab1c15f6",
    "items.html": "eb0f58675afeabfe12f9c4f935509f23b836228893b8bffba48560341bff1a55"
   }
  },
@@ -2480,7 +2480,7 @@
  "Y2024_Rogue_ShadowMonk_KagenVoidstep": {
   "full": {
    "character.html": "de2c465e22670937eb3b205ad969ba83ecf99a0cd2abb4b17ea1bf3150e5a21b",
-   "features/level_01.html": "6c0d265756ff0732cfe02f90f6709d507e8d384614598dec6760735637ddc750",
+   "features/level_01.html": "9c728e83faf01689e66848080250ae9509fece1522f8af7d17723ad65c26de27",
    "features/level_02.html": "d881e582cd2d03587153692a07b369226bd708becef20315098d532988442b6e",
    "features/level_03.html": "661a7abd55eb11288773bf107e44c3498b262b34e0d9574455068a9bad56d7d3",
    "features/level_04.html": "06e1d3d8095d4da8c0924d179a376c55869478256f58cc181752e846d2379174",
@@ -2499,7 +2499,7 @@
    "features/level_17.html": "30fec97961395c4fd9dc1ef7c9964197ff8a0ab18e75589b8a134aa0aed3782f",
    "features/level_18.html": "5f1929cbd9f70aba8c1f8c8fd2419c9809017d892a58b4e74f636f679fac8fbe",
    "features/level_19.html": "0da808052363731e4ca404d12ca9e4ce7a74a86c462e2ed3e6632462ad0f6609",
-   "full_character_sheet.html": "239943894973ad735878f6970e9e92b8165c7a2ac26e686019ac6ba069399c73",
+   "full_character_sheet.html": "d62438cd2c80be0a4bed16ac13844a505b3efdbbcb064fca10e88fe1ca045ad7",
    "items.html": "07ed8349956b94fa5d10e6da70cfc3e947b12566cc96cf3ccf51f8ec792dc9a7"
   }
  },
@@ -2518,23 +2518,23 @@
  "Y2024_Warlock_Archfey_CaelumBladefey": {
   "full": {
    "character.html": "243f148cffb19944110db57b8f2e94e6c085b776b2c1860d134f97271c7d7e59",
-   "features/level_01.html": "675d56a6ddc66604933fcbe57a953f4d5fca326267e9871e57adca0ed8d9b7ad",
+   "features/level_01.html": "9cccb8462969dc98c7449ff478a3476d7eed8bcf9ba43bf7480d3e066b942443",
    "features/level_02.html": "52f9015238f04c58b8bc2b13c5173b2724bac7cee7ab6f5fc7f94685a5939957",
    "features/level_03.html": "61056d5a9142c43c9121f77db92423935b6b4a5402fb9307e89234868158fd1c",
    "features/level_04.html": "90ab058d66472303d5d38eee3945aeeef14f5da9012759fcec9ecb9d10e9cbce",
    "features/level_05.html": "121a24136f505c90ebe834a6dcf62c32cb40ac7c2d92826eb7f56813ee4196da",
    "fighting_styles.html": "e7f8057b37d723264e68e19583be15d177ace98db5968236ab147e9a31944158",
-   "full_character_sheet.html": "9b64e53d6c3ae17b43f0bcdf9630337eb029d3f5a33ecd1bf57aedbd4b60cfae",
+   "full_character_sheet.html": "e48835f5d19533413afe1f540564ff41487125c88030ee09b71653788d29e091",
    "items.html": "eb9d4cc46b56a20d513ef78971e947e09feae5daffce04a1eb3fbb0082e1b7c3"
   }
  },
  "Y2024_Warlock_Archfey_WrennaThornpact": {
   "full": {
    "character.html": "d10c23750ecf5186599cf2ab73cee1befb357add39b068ead8bef51451801cd1",
-   "features/level_01.html": "d7aca8983c3404dfd0ca49cd1708caacaeb5f2074afd653dc19716b852f16840",
+   "features/level_01.html": "e68ecba66db2fcb023a64508619ab8f7bf2a393bd93a7891bf6860ecbd2058a0",
    "features/level_02.html": "155f9b67a5dd18546ff5db1d80ff26d73c9a6e1c5a1a74dcf2fdef81dd38d3f4",
    "features/level_03.html": "5feb821753cd0ec9d7d34cba0626b1272d70bca05ed7037be082129783e7e4f3",
-   "full_character_sheet.html": "9a0ff95bb859b02a6f9dd7662aa96f2d085f262a7ebd0f87b33c4f817fc69ad6",
+   "full_character_sheet.html": "3a1d1b8b204968e17624e269a18c90a0e435ab83f8f8b82a50c8456447cbe88e",
    "items.html": "941cfad04e6a24615eaf60ab2a766c5e7ac6f88eb022d7ac994d0cb8c07799f4"
   }
  },

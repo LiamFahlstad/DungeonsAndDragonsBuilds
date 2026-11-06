@@ -78,7 +78,9 @@ class Spellcasting(Feature):
 
 class ReplacingWeaponMasteries(Feature):
     def __init__(self):
-        super().__init__(name="Replacing Weapon Masteries", origin="Ranger Level 1")
+        super().__init__(
+            name="Replacing Weapon Masteries", origin="Ranger Level 1", passive=True
+        )
 
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         return [
@@ -172,7 +174,7 @@ class DeftExplorerExpertise(Feature):
 
 class DeftExplorerLanguages(Feature):
     def __init__(self):
-        super().__init__(name="Deft Explorer", origin="Ranger Level 2")
+        super().__init__(name="Deft Explorer", origin="Ranger Level 2", passive=True)
 
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         return [

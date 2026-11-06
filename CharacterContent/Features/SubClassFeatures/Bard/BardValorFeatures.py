@@ -59,7 +59,9 @@ class CombatInspiration(Feature):
 class MartialTraining(Feature):
     def __init__(self):
         super().__init__(
-            name="Martial Training", origin="College of Valor Bard Level 3"
+            name="Martial Training",
+            origin="College of Valor Bard Level 3",
+            passive=True,
         )
 
     def apply(self, ledger_writer: LedgerWriter):

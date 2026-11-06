@@ -9,7 +9,9 @@ SIZE = CreatureSize.SMALL  # Given by your species
 
 class Brave(Feature):
     def __init__(self):
-        super().__init__(name="Brave", origin="Halfling Trait", usage_tags=["buff"])
+        super().__init__(
+            name="Brave", origin="Halfling Trait", passive=True, usage_tags=["buff"]
+        )
 
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         return [
@@ -29,7 +31,9 @@ class Brave(Feature):
 
 class HalflingNimbleness(Feature):
     def __init__(self):
-        super().__init__(name="Halfling Nimbleness", origin="Halfling Trait")
+        super().__init__(
+            name="Halfling Nimbleness", origin="Halfling Trait", passive=True
+        )
 
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         return [
@@ -50,7 +54,9 @@ class HalflingNimbleness(Feature):
 
 class Luck(Feature):
     def __init__(self):
-        super().__init__(name="Luck", origin="Halfling Trait", usage_tags=["buff"])
+        super().__init__(
+            name="Luck", origin="Halfling Trait", passive=True, usage_tags=["buff"]
+        )
 
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         return [
@@ -69,7 +75,9 @@ class Luck(Feature):
 
 class NaturallyStealthy(Feature):
     def __init__(self):
-        super().__init__(name="Naturally Stealthy", origin="Halfling Trait")
+        super().__init__(
+            name="Naturally Stealthy", origin="Halfling Trait", passive=True
+        )
 
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         return [

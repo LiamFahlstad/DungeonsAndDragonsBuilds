@@ -12,7 +12,7 @@ SIZE = CreatureSize.MEDIUM  # Given by your species
 class Darkvision(Feature):
     def __init__(self, distance: int):
         self.distance = distance
-        super().__init__(name="Darkvision", origin="Khoravar Trait")
+        super().__init__(name="Darkvision", origin="Khoravar Trait", passive=True)
         self._sense = GrantSense(Sense.DARKVISION, self.distance)
 
     def apply(self, ledger_writer: LedgerWriter):
@@ -28,7 +28,10 @@ class Darkvision(Feature):
 class FeyAncestry(Feature):
     def __init__(self):
         super().__init__(
-            name="Fey Ancestry", origin="Khoravar Trait", usage_tags=["buff"]
+            name="Fey Ancestry",
+            origin="Khoravar Trait",
+            passive=True,
+            usage_tags=["buff"],
         )
 
     def get_improved_description(self, character: CharacterView) -> list[Block]:
@@ -78,7 +81,9 @@ class FeyGift(Feature):
 class SkillVersatility(Feature):
     def __init__(self, skill: Skill):
         self.skill = skill
-        super().__init__(name="Skill Versatility", origin="Khoravar Trait")
+        super().__init__(
+            name="Skill Versatility", origin="Khoravar Trait", passive=True
+        )
         self._choice = SkillProficiencyChoice(
             [skill], list(Skill), count=1, error_prefix="SkillVersatility"
         )

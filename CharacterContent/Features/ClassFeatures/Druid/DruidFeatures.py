@@ -149,7 +149,10 @@ class Druidic(Feature):
 class PrimalOrder(Feature):
     def __init__(self, order: PrimalOrderType = PrimalOrderType.MAGICIAN):
         super().__init__(
-            name="Primal Order", origin="Druid Level 1", usage_tags=["buff"]
+            name="Primal Order",
+            origin="Druid Level 1",
+            passive=True,
+            usage_tags=["buff"],
         )
         self.order = order
 

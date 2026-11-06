@@ -40,7 +40,7 @@ class Skillful(Feature):
 
 class Versatile(Feature):
     def __init__(self):
-        super().__init__(name="Versatile", origin="Human Trait")
+        super().__init__(name="Versatile", origin="Human Trait", passive=True)
 
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         return [
