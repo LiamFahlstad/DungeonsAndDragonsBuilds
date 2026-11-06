@@ -34,6 +34,7 @@ from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
 
+import Combat.PartyAllies as PartyAllies
 from Combat.LogFiles import read_json, write_json
 from Combat.PlayerCombatant import combatant_from_stat_block
 from Combat.PlayerLog import ENCOUNTER, has_round_events, log_ref
@@ -95,7 +96,9 @@ def _plain(data: dict) -> dict:
 def prepared_log(scenario, players: list[str], sheets: dict | None = None) -> dict:
     """What the log of `scenario` (a CombatScenario) starts as: its header,
     round 1, and its allies and monsters at full HP. `players` are the
-    character names of the party members taking part. Players' summons
+    character names of the party members taking part. The party's allies
+    taking part come first, marked as such (Combat/PartyAllies.py), so
+    opening the encounter can bring them to how they are now. Players' summons
     aren't in it: they join when they're summoned, or when one is still out
     from an earlier encounter (Combat/Summons.py). `sheets` (the party's
     Characters by name) is accepted for the callers that pass it; older logs
@@ -106,8 +109,12 @@ def prepared_log(scenario, players: list[str], sheets: dict | None = None) -> di
         "players": list(players),
         "round_number": 1,
         "combatants": [
+            PartyAllies.mark(combatant_from_stat_block(c))
+            for c in scenario.build_party_allies()
+        ]
+        + [
             combatant_from_stat_block(c)
-            for c in scenario.build_allies() + scenario.build_combatants()
+            for c in scenario.allies() + scenario.build_combatants()
         ],
     }
 

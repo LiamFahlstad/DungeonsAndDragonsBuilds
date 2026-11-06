@@ -51,6 +51,7 @@ def _build_party_state(player_log_path: str, campaign: Campaign) -> CombatAppQt:
         combat_log_dir=campaign.combat_log_dir,
         player_log_path=player_log_path,
         scenario_name=None,
+        party_allies=campaign.party_allies,
     )
 
 
@@ -119,11 +120,13 @@ def short_rest_dialog(app: CombatAppQt, parent: QWidget | None = None) -> QDialo
     short-rest-cadence feature use and Pact Magic slot comes back right
     away, and the
     window built here lets each player be healed a manually-entered amount
-    (Hit Dice spent). Returned unopened; the caller exec()s it."""
+    (Hit Dice spent), and so can each of the party's allies
+    (Combat/PartyAllies.py). Returned unopened; the caller exec()s it."""
     players = [c for c in app.characters if c.get("_is_player")]
     for char in players:
         _restore_feature_uses(app, char, SHORT_REST_CADENCES, note="short rest")
         _restore_pact_slots(app, char, note="short rest")
+    players += app._party_allies_to_rest()
 
     dlg = QDialog(parent)
     title = app.player_log_file.name if app.player_log_file else "party"

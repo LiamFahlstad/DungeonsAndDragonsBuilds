@@ -19,8 +19,8 @@ from PyQt6.QtWidgets import (
     QWidget,
 )
 
+import Combat.PartyAllies as PartyAllies
 import Combat.PlayerLog as PlayerLog
-from Combat.EncounterConfig import resolve_players
 from Combat.EncounterLogs import (
     ENDED_KEY,
     is_prepared,
@@ -31,6 +31,7 @@ from Combat.EncounterLogs import (
     scenario_log_path,
 )
 from Combat.LogFiles import BrokenLogError, read_json
+from Combat.PlayerCombatant import combatant_from_stat_block
 from Combat.Scenario import CombatScenario
 
 from .state import CombatWindowState
@@ -107,7 +108,7 @@ class EncountersMixin(CombatWindowState):
         known, else as its log says."""
         if self._party_names:
             try:
-                return resolve_players(scenario.players, self._party_names)
+                return scenario.members_taking_part(self._party_names)
             except KeyError:
                 pass
         if path.exists():
@@ -265,6 +266,54 @@ class EncountersMixin(CombatWindowState):
         self._initiative_widget = None
         self._scroll_area.setWidget(self._build_party_view())
 
+    def _party_allies_now(self) -> list[dict]:
+        """The party's allies, as the player log says they are now (at full
+        Hit Points without one): what the next encounter starts them with."""
+        allies = []
+        for spec in self._party_ally_specs:
+            for combatant in spec.build():
+                char = PartyAllies.mark(combatant_from_stat_block(combatant))
+                if self.player_log_file:
+                    PartyAllies.apply_state(
+                        char,
+                        PartyAllies.ally_state(
+                            char["name"],
+                            self.player_log_data["sessions"],
+                            self.player_log_file,
+                        ),
+                    )
+                self._apply_bloodied_condition(char)
+                allies.append(char)
+        return allies
+
+    def _party_allies_to_rest(self) -> list[dict]:
+        """The party's allies a rest now applies to: those in the encounter
+        loaded (not started yet), else all of them as they are now."""
+        if self.phase != "PARTY":
+            return [c for c in self.characters if PartyAllies.is_party_ally(c)]
+        return self._party_allies_now()
+
+    @staticmethod
+    def _party_line(char: dict) -> str:
+        """One member or ally of the party in the party view: HP, slots and
+        conditions."""
+        line = f"{char['name']}:  {char['hp']}/{char.get('max_hp', char['hp'])} HP"
+        if char.get("temp_hp"):
+            line += f"  (+{char['temp_hp']} temp)"
+        slots = char.get("spell_slots") or {}
+        if slots:
+            line += "  ·  Slots " + " ".join(
+                f"L{level}:{left}" for level, left in sorted(slots.items())
+            )
+        pact_slots = char.get("pact_slots") or {}
+        if pact_slots:
+            line += "  ·  Pact " + " ".join(
+                f"L{level}:{left}" for level, left in sorted(pact_slots.items())
+            )
+        if char.get("conditions"):
+            line += "  ·  " + ", ".join(char["conditions"])
+        return line
+
     def _build_party_view(self) -> QWidget:
         """The party as they are now, and what can be done between encounters."""
         container = QWidget()
@@ -291,22 +340,17 @@ class EncountersMixin(CombatWindowState):
             none.setStyleSheet("color: #a0a0b0;")
             outer.addWidget(none)
         for char in players:
-            line = f"{char['name']}:  {char['hp']}/{char.get('max_hp', char['hp'])} HP"
-            if char.get("temp_hp"):
-                line += f"  (+{char['temp_hp']} temp)"
-            slots = char.get("spell_slots") or {}
-            if slots:
-                line += "  ·  Slots " + " ".join(
-                    f"L{level}:{left}" for level, left in sorted(slots.items())
-                )
-            pact_slots = char.get("pact_slots") or {}
-            if pact_slots:
-                line += "  ·  Pact " + " ".join(
-                    f"L{level}:{left}" for level, left in sorted(pact_slots.items())
-                )
-            if char.get("conditions"):
-                line += "  ·  " + ", ".join(char["conditions"])
-            label = QLabel(line)
+            label = QLabel(self._party_line(char))
+            label.setStyleSheet("font-size: 13px;")
+            outer.addWidget(label)
+        allies = self._party_allies_now()
+        if allies:
+            allies_header = QLabel("Allies")
+            allies_header.setStyleSheet("color: #c9a84c; font-weight: bold;")
+            outer.addWidget(allies_header)
+        for char in allies:
+            label = QLabel(self._party_line(char))
+            label.setObjectName("partyAllyLine")
             label.setStyleSheet("font-size: 13px;")
             outer.addWidget(label)
         outer.addStretch()

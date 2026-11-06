@@ -39,7 +39,8 @@ python RunCombatSimulator.py --campaign time_loop_pr --player-log Combat/Campaig
 ```
 
 The party as they are now, with **Load Encounter...** (Ctrl+O), **Short Rest...**
-and **Long Rest**.
+and **Long Rest**. The party log picks this campaign by itself;
+`python RunCombatSimulator.py --campaign time_loop_pr --player-log` does the same.
 
 ## Encounters
 

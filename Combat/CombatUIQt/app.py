@@ -7,6 +7,7 @@ from PyQt6.QtCore import QSettings
 from PyQt6.QtWidgets import QApplication
 
 from Combat.Definitions import tracked_condition_names
+from Combat.EncounterConfig import CombatantSpec
 from Combat.PlayerCombatant import combatant_from_character, combatant_from_stat_block
 from Combat.Scenario import CombatScenario
 from Model.Creatures.Combatants import BasicCombatantData, Visibility
@@ -70,6 +71,7 @@ class CombatAppQt(
         scenario_name: str | None = None,
         scenarios: list[CombatScenario] | None = None,
         party_names: list[str] | None = None,
+        party_allies: list[CombatantSpec] | None = None,
     ):
         """`character_sheets` is the tracked party. Encounters come from the
         campaign's `scenarios`, each played from its log in `combat_log_dir`
@@ -83,7 +85,11 @@ class CombatAppQt(
         - Without one, `log_path` is a log to fight `combatants` in directly
           (tests and scripts).
         - With neither, the window shows the party between encounters, and
-          nothing is logged until an encounter is loaded."""
+          nothing is logged until an encounter is loaded.
+
+        `party_allies` are the allies who travel with the party
+        (PartySpec.allies): the party view and a short rest show them as
+        the player log says they are now (Combat/PartyAllies.py)."""
         self.combatants_per_column = combatants_per_column
 
         # ---- data ----
@@ -97,6 +103,7 @@ class CombatAppQt(
         self._party_names = list(
             party_names if party_names is not None else self._party_sheets
         )
+        self._party_ally_specs = list(party_allies or [])
         for c in combatants:
             self._add_basic_combatant(c)
 

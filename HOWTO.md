@@ -65,7 +65,7 @@ python RunItemSheets.py                  # every *_item_sheet() function in Buil
 |---|---|
 | `--scenario <id>` | Play an encounter from its campaign's `encounters.py` (its log is set up from the config when it's opened). Its campaign is picked automatically |
 | `--campaign <name>` | `curse_of_the_lich` (default), `time_loop_pr` or `grims_castle`. Used when there's no `--scenario` |
-| `--player-log <path>` | Track the party across sessions. The player log lists where the party has been (encounters, rests); their HP, conditions and slots are replayed from the encounter logs since the last long rest. Who takes part in an encounter comes from `encounters.py` |
+| `--player-log [<path>]` | Track the party across sessions. The player log lists where the party has been (encounters, rests); their HP, conditions and slots (and their allies') are replayed from the encounter logs since the last long rest. Who takes part in an encounter comes from `encounters.py`. A log in a campaign's `PlayerLogs/` picks that campaign; with no path, the campaign's own party log (`PlayerLogs/<party id>.json`) |
 | `--rest long\|short` | `long`: record a long rest in the player log (the party is fully rested from then on; statistics still count what came before). `short`: open the healing window. Needs `--player-log` |
 | `--difficulty` | Print the D&D 2024 encounter difficulty against the players taking part (allies' XP subtracted) and exit |
 
@@ -86,7 +86,8 @@ python RunCombatSimulator.py --scenario wrath_of_durmor --player-log $PL
 python RunCombatSimulator.py --scenario goblin_warband_ambush --difficulty
 python RunCombatSimulator.py --player-log $PL                                  # the party between encounters
 python RunCombatSimulator.py --player-log $PL --rest long
-python RunCombatSimulator.py --campaign time_loop_pr --player-log Combat/Campaigns/TimeLoopPR/PlayerLogs/main_party.json
+python RunCombatSimulator.py --player-log Combat/Campaigns/TimeLoopPR/PlayerLogs/main_party.json   # picks time_loop_pr
+python RunCombatSimulator.py --campaign time_loop_pr --player-log                                   # the same
 ```
 
 Exact per-campaign commands: [CurseOfTheLich](Combat/Campaigns/CurseOfTheLich/CHEATSHEET.md), [TimeLoopPR](Combat/Campaigns/TimeLoopPR/CHEATSHEET.md), [GrimsCastle](Combat/Campaigns/GrimsCastle/CHEATSHEET.md).

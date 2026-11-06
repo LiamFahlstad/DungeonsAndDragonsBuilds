@@ -1,6 +1,7 @@
 """A campaign's encounters config, Combat/Campaigns/<Campaign>/encounters.py:
-its tracked party and every encounter it can run, with the monsters, allies
-and players taking part. Combat/Campaigns/ENCOUNTERS.md documents the format.
+its tracked party (PartySpec: the players' characters and the allies who
+travel with them) and every encounter it can run, with the monsters, allies
+and party taking part. Combat/Campaigns/ENCOUNTERS.md documents the format.
 
 The config imports the stat-block and builder classes it uses, so a typo in
 one fails at import. Nothing here imports Qt."""
@@ -55,12 +56,36 @@ class CombatantSpec:
 
 
 @dataclass
+class PartySpec:
+    """The tracked party: the players' characters (`members`, CharacterBuilder
+    classes from Builds/Characters) and the allies who travel with them
+    (`allies`, NPCs and creatures such as a hireling or an animal companion).
+    Both join every encounter unless its `players` leaves them out, and both
+    are tracked from fight to fight in the player log PlayerLogs/<id>.json:
+    their Hit Points and conditions carry into the next fight until a long
+    rest. Each ally needs a `name`, which is how it's tracked
+    (Combat/PartyAllies.py)."""
+
+    members: list[type] = field(default_factory=list)
+    allies: list[CombatantSpec] = field(default_factory=list)
+    # Names the player log, PlayerLogs/<id>.json.
+    id: str = "main_party"
+
+    def ally_names(self) -> list[str]:
+        return [n for spec in self.allies for n in spec.names() if n]
+
+    def build_allies(self) -> list[BasicCombatantData]:
+        return [c for spec in self.allies for c in spec.build()]
+
+
+@dataclass
 class EncounterSpec:
     id: str
     title: str
     description: str = ""
     difficulty: str = ""
-    # Who takes part, as (parts of) character names; None means the whole party.
+    # Who takes part, as (parts of) the names of the party's members and
+    # allies; None means the whole party.
     players: list[str] | None = None
     monsters: list[CombatantSpec] = field(default_factory=list)
     allies: list[CombatantSpec] = field(default_factory=list)
@@ -72,14 +97,23 @@ class CampaignSpec:
     name: str
     title: str
     description: str
-    # CharacterBuilder classes from Builds/Characters, e.g.
-    # Y2024PaladinDevotionEdmundCharacterBuilder.
-    party: list[type]
+    # The tracked party. A plain list of CharacterBuilder classes (e.g.
+    # Y2024PaladinDevotionEdmundCharacterBuilder) is a party of just them.
+    party: PartySpec | list[type]
     encounters: list[EncounterSpec]
+
+    def __post_init__(self):
+        if not isinstance(self.party, PartySpec):
+            self.party = PartySpec(members=list(self.party))
+
+    @property
+    def party_spec(self) -> PartySpec:
+        assert isinstance(self.party, PartySpec)  # __post_init__ made it one
+        return self.party
 
 
 def build_party(spec: CampaignSpec) -> list:
-    return [builder().build() for builder in spec.party]
+    return [builder().build() for builder in spec.party_spec.members]
 
 
 def resolve_players(wanted: list[str] | None, party_names: list[str]) -> list[str]:
@@ -99,13 +133,72 @@ def resolve_players(wanted: list[str] | None, party_names: list[str]) -> list[st
     return [n for n in party_names if n in chosen]
 
 
+def split_taking_part(
+    wanted: list[str] | None, member_names: list[str], ally_names: list[str]
+) -> tuple[list[str], list[str]]:
+    """The party members and the party allies `wanted` names (as
+    resolve_players does, against both at once), each in party order."""
+    chosen = resolve_players(wanted, member_names + ally_names)
+    return (
+        [n for n in member_names if n in chosen],
+        [n for n in ally_names if n in chosen],
+    )
+
+
+def _combatant_problems(where: str, combatant: CombatantSpec) -> list[str]:
+    monster = combatant.monster.__name__
+    problems = []
+    if combatant.group is not None and not combatant.group.strip():
+        problems.append(f"{where}: {monster}: group must be a non-empty name")
+    if combatant.count < 1:
+        problems.append(f"{where}: {monster}: count must be at least 1")
+    return problems
+
+
+def _party_problems(party: PartySpec, member_names: list[str] | None) -> list[str]:
+    """A party id that can't name a log, and allies without a name or sharing
+    one (with each other or a member): they're tracked by name."""
+    problems = []
+    if not ID_PATTERN.match(party.id):
+        problems.append(
+            f"party id {party.id!r} must be snake_case (it names the player log)"
+        )
+    names = list(member_names or [])
+    for ally in party.allies:
+        problems += _combatant_problems("party ally", ally)
+        if not ally.name:
+            problems.append(
+                f"party ally {ally.monster.__name__}: needs a name (it's tracked by it)"
+            )
+        for name in filter(None, ally.names()):
+            if name in names:
+                problems.append(f"party ally {name!r}: name used twice in the party")
+            names.append(name)
+    return problems
+
+
+def _ally_matches(wanted: list[str], ally_names: list[str]):
+    """Without the members' names, only what names an ally can be checked:
+    raises KeyError for an entry matching more than one of them."""
+    for want in wanted:
+        matches = [n for n in ally_names if want.lower() in n.lower()]
+        if len(matches) > 1:
+            raise KeyError(f"player {want!r} matches {matches} in the party's allies")
+
+
 def validate(spec: CampaignSpec, party_names: list[str] | None = None) -> list[str]:
-    """Everything wrong with the config: bad or repeated ids, players not in
-    the party (checked when `party_names` is given), counts and layout below
-    1, groups that are empty names or span both sides."""
+    """Everything wrong with the config: bad or repeated ids, party allies
+    without a name of their own, players not in the party (checked when
+    `party_names`, the members' character names, is given; the party's
+    allies count as in it), counts and layout below 1, groups that are empty
+    names or span both sides, encounter combatants named like a party ally."""
     problems = []
     if not ID_PATTERN.match(spec.name):
         problems.append(f"campaign name {spec.name!r} must be snake_case")
+    party = spec.party_spec
+    problems += _party_problems(party, party_names)
+    ally_names = party.ally_names()
+    party_groups = {c.group for c in party.allies if c.group}
     seen = set()
     for encounter in spec.encounters:
         where = f"encounter {encounter.id!r}"
@@ -119,18 +212,21 @@ def validate(spec: CampaignSpec, party_names: list[str] | None = None) -> list[s
         if encounter.combatants_per_column < 1:
             problems.append(f"{where}: combatants_per_column must be at least 1")
         for combatant in encounter.monsters + encounter.allies:
-            monster = combatant.monster.__name__
-            if combatant.group is not None and not combatant.group.strip():
-                problems.append(f"{where}: {monster}: group must be a non-empty name")
-            if combatant.count < 1:
-                problems.append(f"{where}: {monster}: count must be at least 1")
+            problems += _combatant_problems(where, combatant)
+            for name in sorted(set(filter(None, combatant.names())) & set(ally_names)):
+                problems.append(
+                    f"{where}: {name!r} is a party ally's name; "
+                    "the encounter's own monsters and allies need others"
+                )
         monster_groups = {c.group for c in encounter.monsters if c.group}
-        ally_groups = {c.group for c in encounter.allies if c.group}
+        ally_groups = {c.group for c in encounter.allies if c.group} | party_groups
         for group in sorted(monster_groups & ally_groups):
             problems.append(f"{where}: group {group!r} has monsters and allies")
-        if party_names is not None:
-            try:
-                resolve_players(encounter.players, party_names)
-            except KeyError as error:
-                problems.append(f"{where}: {error.args[0]}")
+        try:
+            if party_names is not None:
+                split_taking_part(encounter.players, party_names, ally_names)
+            elif encounter.players is not None:
+                _ally_matches(encounter.players, ally_names)
+        except KeyError as error:
+            problems.append(f"{where}: {error.args[0]}")
     return problems

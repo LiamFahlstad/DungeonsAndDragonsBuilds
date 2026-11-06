@@ -15,7 +15,12 @@ from Builds.Characters.Y2024_Druid_Moon_Maggie import (
 from Builds.Characters.Y2024_Ranger_Drakewarden_Hanna import (
     Y2024RangerDrakewardenHannaCharacterBuilder,
 )
-from Combat.EncounterConfig import CampaignSpec, CombatantSpec, EncounterSpec
+from Combat.EncounterConfig import (
+    CampaignSpec,
+    CombatantSpec,
+    EncounterSpec,
+    PartySpec,
+)
 from Combat.Monsters.CR_0.monsters import Wolf
 from Combat.Monsters.CR_0.monsters_homebrew import DwarfLifeCleric, ElfDruidOfTheLand
 from Combat.Monsters.CR_1.monsters import (
@@ -33,12 +38,15 @@ CONFIG = CampaignSpec(
     name="time_loop_pr",
     title="Time Loop PR",
     description="A oneshot for four level 3 players. Every encounter below is logged in CombatLogs/<id>.json, empty until it's opened, then set up from its encounter below.",
-    party=[
-        Y2024ArtificerReanimatorDessieCharacterBuilder,
-        Y2024RangerDrakewardenHannaCharacterBuilder,
-        Y2024DruidMoonMaggieCharacterBuilder,
-        Y2024BardValorThomasCharacterBuilder,
-    ],
+    party=PartySpec(
+        id="main_party",
+        members=[
+            Y2024ArtificerReanimatorDessieCharacterBuilder,
+            Y2024RangerDrakewardenHannaCharacterBuilder,
+            Y2024DruidMoonMaggieCharacterBuilder,
+            Y2024BardValorThomasCharacterBuilder,
+        ],
+    ),
     encounters=[
         EncounterSpec(
             id="time_loop_pr_outside_the_gates",

@@ -3,7 +3,6 @@ import sys
 
 import Combat.Scenarios as Scenarios
 from Combat.CombatUIQt import CombatAppQt
-from Combat.EncounterConfig import resolve_players
 from Combat.EncounterLogs import scenario_log_path
 from Combat.LogFiles import BrokenLogError
 
@@ -24,14 +23,20 @@ if __name__ == "__main__":
         choices=sorted(Scenarios.CAMPAIGNS.keys()),
         default=None,
         help="Campaign to run: its encounters.py gives the party --player-log tracks "
-        "and the encounters Load Encounter offers. Defaults to --scenario's campaign, or "
-        f"'{Scenarios.DEFAULT_CAMPAIGN}' when no scenario is given.",
+        "and the encounters Load Encounter offers. Defaults to --scenario's campaign, "
+        "else the campaign whose PlayerLogs/ folder holds --player-log, else "
+        f"'{Scenarios.DEFAULT_CAMPAIGN}'.",
     )
     parser.add_argument(
         "--player-log",
+        nargs="?",
+        const="",
         default=None,
         help="Path to a persistent player log JSON file "
-        "(e.g. Combat/Campaigns/CurseOfTheLich/PlayerLogs/main_party.json). "
+        "(e.g. Combat/Campaigns/CurseOfTheLich/PlayerLogs/main_party.json), or "
+        "--player-log alone for the campaign's own party log "
+        "(PlayerLogs/<party id>.json). A log in a campaign's PlayerLogs/ folder "
+        "picks that campaign. "
         "It is the party's journal: one line per encounter or rest, each encounter pointing "
         "to its log with the details. The campaign's party is loaded and brought to its "
         "current HP/conditions/slots by replaying those logs since the last long rest. "
@@ -56,21 +61,28 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
 
-    if args.rest and not args.player_log:
+    if args.rest and args.player_log is None:
         parser.error("--rest requires --player-log")
 
     if args.difficulty and args.rest:
         parser.error("--difficulty cannot be combined with --rest")
 
-    if args.scenario:
-        campaign = Scenarios.SCENARIO_CAMPAIGNS[args.scenario]
-        if args.campaign and args.campaign != campaign.name:
-            parser.error(
-                f"--scenario {args.scenario} belongs to campaign '{campaign.name}', "
-                f"not '{args.campaign}'"
-            )
-    else:
-        campaign = Scenarios.CAMPAIGNS[args.campaign or Scenarios.DEFAULT_CAMPAIGN]
+    try:
+        campaign = Scenarios.pick_campaign(
+            args.scenario, args.campaign, args.player_log or None
+        )
+    except ValueError as error:
+        parser.error(str(error))
+    if args.player_log == "":
+        args.player_log = str(campaign.default_player_log)
+    elif args.player_log and not campaign.owns_player_log(args.player_log):
+        print(
+            f"Note: {args.player_log} isn't in any campaign's PlayerLogs/ folder; "
+            f"it's tracked with {campaign.name}'s party.",
+            file=sys.stderr,
+        )
+    if args.player_log:
+        print(f"Campaign: {campaign.display_title}, party log {args.player_log}")
 
     if args.rest:
         from Combat.CombatUIQt.rest import apply_long_rest, run_short_rest
@@ -97,9 +109,7 @@ if __name__ == "__main__":
             )
         allies = scenario.build_allies()
         party = campaign.players()
-        taking_part = resolve_players(
-            scenario.players, [cs.character_name for cs in party]
-        )
+        taking_part = scenario.members_taking_part([cs.character_name for cs in party])
         character_sheets = [cs for cs in party if cs.character_name in taking_part]
         if not character_sheets:
             parser.error(
@@ -160,6 +170,7 @@ if __name__ == "__main__":
             scenario_name=args.scenario,
             scenarios=campaign.scenarios,
             party_names=[cs.character_name for cs in party],
+            party_allies=campaign.party_allies,
         )
         app.run()
     except BrokenLogError as error:

@@ -4,6 +4,7 @@ from pathlib import Path
 
 from PyQt6.QtWidgets import QDialog, QMessageBox, QPushButton, QTextEdit, QVBoxLayout
 
+import Combat.PartyAllies as PartyAllies
 import Combat.PlayerLog as PlayerLog
 from Combat.Definitions import Action
 from Combat.EncounterLogs import (
@@ -260,6 +261,7 @@ class LoggingMixin(CombatWindowState):
         self.current_turn_idx = 0
         if not has_round_events(data):
             self._carry_summons_over(Path(path))
+            self._carry_party_allies_over(Path(path))
             self.phase = "INITIATIVE"
             self.initiative_order = []
             self._switch_to_initiative()
@@ -274,6 +276,23 @@ class LoggingMixin(CombatWindowState):
             (i for i, c in enumerate(self.initiative_order) if c["name"] == turn), 0
         )
         self._switch_to_combat()
+
+    def _carry_party_allies_over(self, log_path: Path):
+        """Bring the party's allies in the encounter log at `log_path` (one
+        not started yet) to how the player log says they are now: as the
+        last fight left them, healed by short rests since, or rested to full
+        by a long rest (Combat/PartyAllies.py)."""
+        if not self.player_log_file:
+            return
+        changed = PartyAllies.carry_over(
+            self.characters,
+            self.player_log_data["sessions"],
+            self.player_log_file,
+            log_path,
+        )
+        for char in changed:
+            char["spell_slots"] = _slots_by_level(char.get("spell_slots"))
+            self._apply_bloodied_condition(char)
 
     def _saved_initiative_order(self, data: dict) -> list[dict]:
         """self.characters in the turn order the log `data` saved. Anyone it

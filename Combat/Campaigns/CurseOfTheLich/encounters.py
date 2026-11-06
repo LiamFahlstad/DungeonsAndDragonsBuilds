@@ -22,7 +22,12 @@ from Builds.Characters.Y2024_Paladin_Devotion_Edmund import (
 from Builds.Characters.Y2024_Rogue_ArcaneTrickster_ThumSchtock import (
     Y2024RogueArcaneTricksterThumSchtockCharacterBuilder,
 )
-from Combat.EncounterConfig import CampaignSpec, CombatantSpec, EncounterSpec
+from Combat.EncounterConfig import (
+    CampaignSpec,
+    CombatantSpec,
+    EncounterSpec,
+    PartySpec,
+)
 from Combat.Monsters.CR_0.monsters import GoblinMinion, GoblinWarrior, Worg
 from Combat.Monsters.CR_0.monsters_homebrew import (
     Accursed,
@@ -53,14 +58,17 @@ CONFIG = CampaignSpec(
     name="curse_of_the_lich",
     title="Curse of the Lich",
     description="The tracked six-player campaign. Every encounter below is logged in CombatLogs/<id>.json, empty until it's opened, then set up from its encounter below.",
-    party=[
-        Y2024ArtificerCartographerObmarStalskaggCharacterBuilder,
-        Y2024PaladinDevotionEdmundCharacterBuilder,
-        Y2024BardValorCloverCharacterBuilder,
-        Y2024ClericLightGabrielGreybeardCharacterBuilder,
-        Y2024RogueArcaneTricksterThumSchtockCharacterBuilder,
-        Y2024MonkElementsKiviJattiCharacterBuilder,
-    ],
+    party=PartySpec(
+        id="main_party",
+        members=[
+            Y2024ArtificerCartographerObmarStalskaggCharacterBuilder,
+            Y2024PaladinDevotionEdmundCharacterBuilder,
+            Y2024BardValorCloverCharacterBuilder,
+            Y2024ClericLightGabrielGreybeardCharacterBuilder,
+            Y2024RogueArcaneTricksterThumSchtockCharacterBuilder,
+            Y2024MonkElementsKiviJattiCharacterBuilder,
+        ],
+    ),
     encounters=[
         EncounterSpec(
             id="ashelm_church",
