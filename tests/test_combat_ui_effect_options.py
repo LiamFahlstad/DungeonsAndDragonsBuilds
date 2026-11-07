@@ -15,7 +15,7 @@ from Builds.Characters.Y2024_Barbarian_Berserker_YmiraSkullcrusher import (
 from Builds.Characters.Y2024_Paladin_Devotion_Edmund import (
     Y2024PaladinDevotionEdmundCharacterBuilder as Edmund,
 )
-from CharacterContent.Spells.SpellFactory import SpellFactory
+from CharacterContent.Spells.SpellFactory import DataSpell, SpellFactory
 from Combat.CombatUIQt.effect_options import (
     ALL_SPELLS,
     FEATURES,
@@ -78,7 +78,11 @@ GAZE = {
 
 
 def _spell(name: str):
-    return next(s for s in SpellFactory.all_spells() if s.name == name)
+    """The spell without its checked mechanics, if it has any: these tests are
+    for reading its text, which every spell without them still relies on.
+    tests/test_spell_mechanics.py covers the checked data."""
+    data = SpellFactory._load_json()[name]
+    return DataSpell({key: value for key, value in data.items() if key != "mechanics"})
 
 
 def _option(name: str, char: dict | None = None):

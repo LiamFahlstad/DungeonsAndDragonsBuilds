@@ -3,6 +3,7 @@ from typing import Any, Optional
 import Core.Definitions as Definitions
 from Model.Content.Feature import FeatureTarget
 from Model.Content.FeatureText import Block, blocks_from_json
+from .Mechanics import SpellMechanics, parse_mechanics
 from .Spell import Spell
 
 
@@ -37,6 +38,7 @@ class DataSpell(Spell):
                 f"required field(s): {', '.join(missing)}"
             )
         self._data = spell_data
+        self._mechanics: Optional[SpellMechanics] = None
 
     @property
     def name(self) -> str:
@@ -106,6 +108,17 @@ class DataSpell(Spell):
             raise ValueError(
                 f"Invalid improved description for spell {self.name!r}: {error}"
             ) from error
+
+    @property
+    def mechanics(self) -> Optional[SpellMechanics]:
+        """What casting it rolls and does, if its source's mechanics file has
+        an entry for it. Parsed once; ValueError if the entry is wrong."""
+        value = self._data.get("mechanics")
+        if value is None:
+            return None
+        if self._mechanics is None:
+            self._mechanics = parse_mechanics(self.name, value)
+        return self._mechanics
 
     @property
     def target(self) -> Optional[FeatureTarget]:

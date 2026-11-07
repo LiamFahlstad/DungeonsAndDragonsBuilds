@@ -116,7 +116,14 @@ def _option_tooltip(option: EffectOption) -> str:
     """A picker row's tooltip: what the row says, then its rules text. Rich
     text, so Qt wraps it."""
     text = escape(option.tooltip, quote=False).replace("\n", "<br>")
-    return f"<b>{escape(option.row_text, quote=False)}</b><br>{text}"
+    source = ""
+    if option.kind == SPELL:
+        source = (
+            "<i>Filled in from checked spell data.</i><br>"
+            if option.is_curated
+            else "<i>Read from its rules text: check the form.</i><br>"
+        )
+    return f"<b>{escape(option.row_text, quote=False)}</b><br>{source}{text}"
 
 
 class ConditionsMixin(CombatWindowState):

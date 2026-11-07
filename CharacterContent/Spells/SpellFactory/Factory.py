@@ -48,6 +48,10 @@ class SpellFactory:
                 for name, blocks in cls._load_improved(path).items():
                     if name in source_data:
                         source_data[name]["improved_description"] = blocks
+                # So do the mechanics read from that wording.
+                for name, entry in cls._load_mechanics(path).items():
+                    if name in source_data:
+                        source_data[name]["mechanics"] = entry
                 merged.update(source_data)
             cls._cache = merged
         return cls._cache
@@ -61,6 +65,21 @@ class SpellFactory:
     def _load_improved(cls, path: str) -> dict[str, Any]:
         try:
             with open(cls.improved_path(path), "r", encoding="utf-8") as f:
+                return json.load(f)
+        except FileNotFoundError:
+            return {}
+
+    @staticmethod
+    def mechanics_path(path: str) -> str:
+        """spells_dnd2024.json -> spells_dnd2024_mechanics.json"""
+        return path[:-5] + "_mechanics.json"
+
+    @classmethod
+    def _load_mechanics(cls, path: str) -> dict[str, Any]:
+        """What casting each spell rolls and does (SpellFactory/Mechanics.py),
+        for the spells the source's companion file has checked."""
+        try:
+            with open(cls.mechanics_path(path), "r", encoding="utf-8") as f:
                 return json.load(f)
         except FileNotFoundError:
             return {}

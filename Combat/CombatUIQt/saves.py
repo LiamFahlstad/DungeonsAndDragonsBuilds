@@ -132,6 +132,8 @@ class EffectOption:
     # What each of `rolls` gains per slot level above spell_level, "" for none.
     upcast: tuple[str, ...] = ()
     spell_level: int = 0
+    # A spell filled in from its checked mechanics file, not read from its text.
+    is_curated: bool = False
 
     @property
     def row_text(self) -> str:

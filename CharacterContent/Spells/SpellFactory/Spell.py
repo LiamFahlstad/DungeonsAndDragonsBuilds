@@ -9,6 +9,7 @@ from Model.Content.FeatureText import Block, Option
 from Model.Content.Summons import SummonSpec
 from Model.View import CharacterView
 from .Enums import CastingTimeType, School
+from .Mechanics import SpellMechanics
 
 # The Option an improved description puts a spell's upcasting rules in,
 # named as the source text's own paragraph is (2024, then 2014 wording).
@@ -136,6 +137,13 @@ class Spell(ABC):
         object, area - see FeatureTarget), as stated in the spell's own description.
         Defaults to None for any Spell subclass that doesn't provide its own data for this.
         """
+        return None
+
+    @property
+    def mechanics(self) -> Optional[SpellMechanics]:
+        """What casting the spell rolls and does, as checked data
+        (SpellFactory/Mechanics.py), or None to read it from `description`.
+        Defaults to None for any Spell subclass that doesn't provide it."""
         return None
 
     @property

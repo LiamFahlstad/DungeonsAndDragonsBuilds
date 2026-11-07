@@ -3,9 +3,12 @@
 what it fills in on the form. Nothing here is rolled or spent, and nothing
 imports Qt, so it can be tested on plain dicts.
 
-Spells and features have no structured data for this, so their rules text is
-read, as strictly as it can be: a form the GM can correct beats a wrong number
-they don't notice, so what's unclear is left out and said in the option's note."""
+A spell with an entry in its source's mechanics file
+(CharacterContent/Spells/spells_<source>_mechanics.json) fills the form from
+that checked data. Other spells and features have no structured data for this,
+so their rules text is read, as strictly as it can be: a form the GM can
+correct beats a wrong number they don't notice, so what's unclear is left out
+and said in the option's note."""
 
 import re
 from collections.abc import Iterable
@@ -13,6 +16,7 @@ from dataclasses import dataclass
 from functools import lru_cache
 
 from CharacterContent.Spells.SpellFactory import SpellFactory
+from CharacterContent.Spells.SpellFactory.Mechanics import SpellMechanics
 from Core.Definitions import Condition
 
 from .monster_actions import (
@@ -176,6 +180,75 @@ class EffectText:
     until: tuple[str, str] | None = None
     # The upcasting and cantrip paragraphs, for working out higher levels.
     upgrades: tuple[str, ...] = ()
+
+
+def _curated_text(mechanics: SpellMechanics) -> EffectText:
+    """A spell's checked mechanics as what its text would say, for what
+    spell_option works out the same way either way. Its notes are the
+    entry's own, and what the form can't hold."""
+    save = mechanics.save
+    notes = list(mechanics.notes)
+    for damage in mechanics.damage:
+        if damage.damage_type is None:
+            choices = ", ".join(damage.choices)
+            notes.append(f"Its damage is of a type to choose ({choices}): give one.")
+    condition = mechanics.condition
+    if condition is not None and condition.alternatives:
+        others = " or ".join(condition.alternatives)
+        notes.append(f"The condition can be {others} instead.")
+    return EffectText(
+        ability=save.ability if save is not None else None,
+        is_attack=mechanics.roll == "attack",
+        half_on_save=save is not None and save.half_on_success,
+        repeat_save=save is not None and save.repeat,
+        condition=condition.name if condition is not None else "",
+        notes=tuple(notes),
+        adds_modifier=any(damage.add_modifier for damage in mechanics.damage),
+        states_damage=bool(mechanics.damage),
+        heals=mechanics.heal is not None,
+        until=condition.until if condition is not None else None,
+    )
+
+
+def _at_cantrip_level(dice: str, steps: tuple[tuple[int, str], ...], level: int) -> str:
+    """Curated cantrip dice at a character's level: its first die swapped for
+    the last step reached."""
+    reached = [step for at, step in steps if at <= level]
+    return DIE.sub(reached[-1], dice, count=1) if reached else dice
+
+
+def _curated_rolls(
+    mechanics: SpellMechanics, level: int, char_level: int, modifier: int | None
+) -> tuple[tuple[DamageRoll, ...], tuple[str, ...]]:
+    """The damage a curated spell deals for a caster of char_level, with the
+    modifier added to the parts that add it, and what each part gains per
+    slot level above the spell's (() when nothing does)."""
+    rolls = []
+    for damage in mechanics.damage:
+        dice = damage.dice
+        if level == 0:
+            dice = _at_cantrip_level(dice, damage.cantrip, char_level)
+        roll = DamageRoll(dice, damage.damage_type)
+        rolls.append(
+            _with_modifier(roll, modifier or 0) if damage.add_modifier else roll
+        )
+    upcast = tuple(damage.upcast for damage in mechanics.damage)
+    return tuple(rolls), upcast if level > 0 and any(upcast) else ()
+
+
+def _heal_note(mechanics: SpellMechanics, level: int, modifier: int | None) -> str:
+    """What a curated spell heals, which the form has no box for."""
+    heal = mechanics.heal
+    if heal is None:
+        return ""
+    dice = heal.dice
+    if heal.add_modifier and modifier is not None:
+        dice = _with_modifier(DamageRoll(dice, None), modifier).dice
+    amount = f"{dice} Hit Points"
+    if heal.add_modifier and modifier is None:
+        amount += " plus the spellcasting ability modifier"
+    more = f" ({heal.upcast} more per slot level above {level})" if heal.upcast else ""
+    return f"It heals {amount}{more}: apply that by hand."
 
 
 def _with_modifier(roll: DamageRoll, modifier: int) -> DamageRoll:
@@ -519,26 +592,52 @@ def _unknown_number_notes(
     return []
 
 
+def is_applicable(spell) -> bool:
+    """Whether the spell has anything for the Custom Effect form to apply.
+    Only a curated entry says it hasn't (Alarm); unchecked spells are offered."""
+    mechanics = spell.mechanics
+    return mechanics is None or mechanics.applicable
+
+
 def spell_option(spell, char: dict | None) -> EffectOption:
-    """What casting `spell` fills in, for char (or nobody yet). A monster's
+    """What casting `spell` fills in, for char (or nobody yet): from its
+    checked mechanics if it has them, otherwise from its text. A monster's
     cantrip stays at its own level: it has no character level."""
     who = char if char is not None else {}
-    text = read_effect_text(spell.description)
+    mechanics: SpellMechanics | None = spell.mechanics
+    if mechanics is not None:
+        text = _curated_text(mechanics)
+    else:
+        text = read_effect_text(spell.description)
     dc = _spell_save_dc(spell, who) if text.ability is not None else None
     bonus = _spell_attack_bonus(spell, who) if text.is_attack else None
-    rolls = text.damage
-    if spell.level == 0:
-        rolls = _with_cantrip_level(rolls, text.upgrades, _character_level(who))
-    modifier = _spell_modifier(spell, who) if text.adds_modifier else 0
-    rolls = tuple(_with_modifier(roll, modifier or 0) for roll in rolls)
+    heals_with_modifier = mechanics is not None and bool(
+        mechanics.heal and mechanics.heal.add_modifier
+    )
+    modifier = (
+        _spell_modifier(spell, who) if text.adds_modifier or heals_with_modifier else 0
+    )
     upcast: tuple[str, ...] = ()
-    if spell.level > 0 and rolls:
-        upcast = _upcast_dice(rolls, text.upgrades)
+    if mechanics is not None:
+        rolls, upcast = _curated_rolls(
+            mechanics, spell.level, _character_level(who), modifier
+        )
+    else:
+        rolls = text.damage
+        if spell.level == 0:
+            rolls = _with_cantrip_level(rolls, text.upgrades, _character_level(who))
+        rolls = tuple(_with_modifier(roll, modifier or 0) for roll in rolls)
+        if spell.level > 0 and rolls:
+            upcast = _upcast_dice(rolls, text.upgrades)
     slot = spell_slot_choices(who, spell.level)[0][1]
     notes = list(text.notes) + _unknown_number_notes(text, dc, bonus)
     if text.adds_modifier and modifier is None:
         notes.append("Add the spellcasting ability modifier to the damage.")
-    if rolls and not upcast and any(map(_ANY_UPCAST.search, text.upgrades)):
+    if mechanics is not None:
+        heal_note = _heal_note(mechanics, spell.level, modifier)
+        if heal_note:
+            notes.append(heal_note)
+    elif rolls and not upcast and any(map(_ANY_UPCAST.search, text.upgrades)):
         notes.append("Upcasting won't change the damage: work it out if you do.")
     if spell.level and has_slots(who) and slot is None:
         notes.append(f"No slot of level {spell.level} or higher left.")
@@ -548,6 +647,8 @@ def spell_option(spell, char: dict | None) -> EffectOption:
     badge = not (
         rolls or text.states_damage or text.heals or spell.duration_seconds == 0
     )
+    if mechanics is not None and mechanics.badge is not None:
+        badge = mechanics.badge
     condition = text.condition or (spell.name if badge else "")
     return EffectOption(
         name=spell.name,
@@ -570,6 +671,7 @@ def spell_option(spell, char: dict | None) -> EffectOption:
         concentration=spell.is_concentration,
         upcast=upcast,
         spell_level=spell.level,
+        is_curated=mechanics is not None,
     )
 
 
@@ -758,9 +860,15 @@ def effect_options(
         (ATTACKS, [_weapon_option(who, weapon, sheet) for weapon in weapons]),
         (f"{who.get('name')}'s Spells", [spell_option(s, who) for s in own_spells]),
         (FEATURES, [_feature_option(who, feature) for feature in features]),
+        # A caster's own spell is listed even with nothing to apply: picking
+        # it still spends the slot and the action, and holds Concentration.
         (
             ALL_SPELLS,
-            [spell_option(s, who) for s in all_spells if s.name not in own_names],
+            [
+                spell_option(s, who)
+                for s in all_spells
+                if s.name not in own_names and is_applicable(s)
+            ],
         ),
     ]
     return [(title, options) for title, options in categories if options]
