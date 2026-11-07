@@ -12,7 +12,11 @@ Run from the repo root. Everything for this oneshot lives in
   replayed from the encounter logs since the last long rest.
 
 Party: Dessie (Artificer), Hanna (Ranger), Maggie (Druid), Thomas (Bard), all
-level 3. After changing `encounters.py`, check it (this empties the logs of
+level 3. Two party allies travel with them: Mira, a child who can't attack
+(homebrew `Child`, CR 0, in `Combat/Monsters/CR_0/monsters_homebrew.py`), and
+The Cat (the official Cat). They join every encounter except the last, where
+Mira turns out to be the villain ("Mira, Princess of the Loop"). They're
+tracked like players from fight to fight. After changing `encounters.py`, check it (this empties the logs of
 fights not started yet):
 
 ```
@@ -53,7 +57,9 @@ and **Long Rest**. The party log picks this campaign by itself;
 
 When a log holds a fight in progress, the window asks whether to continue it or
 restart it (undoing it for the party too). Against the four level 3 players
-(`--difficulty`): Outside the Gates and The Drunk Oxe are 600 XP each (the Low
+(`--difficulty`): Outside the Gates is 700 XP, Low (680 net of Mira and the
+Cat): a human paladin, Cedric, hidden from the players at the start; a dwarf cleric, Brenna; an elf druid, Sylvaris,
+in Dire Wolf form; and an orc assassin, Durgash. The Drunk Oxe is 600 XP (the Low
 budget), and The Square is 1600 XP (the High budget): its guards alone are
 900 XP (Moderate), three pairs that each share one turn (two Gilded Sentinels,
 Animated Armor; two Watch Officers, Spy; two Guard Dogs, Wolf), and Mirelle,

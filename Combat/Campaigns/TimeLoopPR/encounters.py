@@ -15,22 +15,18 @@ from Builds.Characters.Y2024_Druid_Moon_Maggie import (
 from Builds.Characters.Y2024_Ranger_Drakewarden_Hanna import (
     Y2024RangerDrakewardenHannaCharacterBuilder,
 )
-from Combat.EncounterConfig import (
-    CampaignSpec,
-    CombatantSpec,
-    EncounterSpec,
-    PartySpec,
-)
-from Combat.Monsters.CR_0.monsters import Wolf
-from Combat.Monsters.CR_0.monsters_homebrew import DwarfLifeCleric, ElfDruidOfTheLand
+from Combat.EncounterConfig import CampaignSpec, CombatantSpec, EncounterSpec, PartySpec
+from Combat.Monsters.CR_0.monsters import Cat, Wolf
+from Combat.Monsters.CR_0.monsters_homebrew import Child, DwarfLifeCleric
 from Combat.Monsters.CR_1.monsters import (
     AnimatedArmor,
     BugbearWarrior,
+    DireWolf,
     Pirate,
     Spy,
     Tiger,
 )
-from Combat.Monsters.CR_1.monsters_homebrew import GoliathPaladinOfDevotion, OrcAssassin
+from Combat.Monsters.CR_1.monsters_homebrew import HumanPaladinOfDevotion, OrcAssassin
 from Combat.Monsters.CR_3.monsters_homebrew import MirelleTheGildedKnight
 from Combat.Monsters.CR_5.monsters_homebrew import MiraPrincessOfTheLoop
 
@@ -46,18 +42,28 @@ CONFIG = CampaignSpec(
             Y2024DruidMoonMaggieCharacterBuilder,
             Y2024BardValorThomasCharacterBuilder,
         ],
+        # Mira travels with the party as a child until the last encounter,
+        # where she turns out to be the villain; the final fight's `players`
+        # leaves both allies out.
+        allies=[
+            CombatantSpec(Child, "Mira"),
+            CombatantSpec(Cat, "The Cat"),
+        ],
     ),
     encounters=[
         EncounterSpec(
             id="time_loop_pr_outside_the_gates",
             title="Outside the Gates",
-            description="An easy fight against a rival adventuring party: one tank, one healer, one control, one DPS.",
-            difficulty="Low: 600 XP against the four level 3 players (Low starts at 600).",
+            description="An easy fight against a rival adventuring party: a human paladin tank, a dwarf healer, an elf druid wild-shaped into a dire wolf, and an orc assassin.",
+            difficulty="Low: 700 XP against the four level 3 players (Low 600, Moderate 900); 680 net of Mira and the Cat.",
             monsters=[
-                CombatantSpec(GoliathPaladinOfDevotion, "Korrath Skyshield"),
-                CombatantSpec(DwarfLifeCleric, "Brenna Emberhearth"),
-                CombatantSpec(ElfDruidOfTheLand, "Sylvaris Thornwhisper"),
-                CombatantSpec(OrcAssassin, "Grisha Nightfang"),
+                CombatantSpec(
+                    HumanPaladinOfDevotion, "Cedric", hidden_from_players=True
+                ),
+                CombatantSpec(DwarfLifeCleric, "Brenna"),
+                # Sylvaris is an elf druid, fighting wild-shaped as a dire wolf.
+                CombatantSpec(DireWolf, "Sylvaris"),
+                CombatantSpec(OrcAssassin, "Durgash"),
             ],
         ),
         EncounterSpec(
@@ -92,8 +98,12 @@ CONFIG = CampaignSpec(
             title="Mira",
             description="The final fight: Mira, the princess whose magic trapped the kingdom in the time loop, and her Warrior (Mirelle's stat block). Mira marks targets for the Warrior's greatsword, teleports it into reach and rewinds the blows it takes, recharging its Golden Arc. The first time she's Bloodied, two duplicates of her join in.",
             difficulty="Above High: 2500 XP, about 1.5x the High budget (1600). Mira adds 1800, the Warrior 700.",
+            # The party's allies (Mira the child and the Cat) stay out: Mira
+            # is the villain here. She goes by her stat block's name, "Mira,
+            # Princess of the Loop", because "Mira" is the party ally's name.
+            players=["Dessie", "Hanna", "Maggie", "Thomas"],
             monsters=[
-                CombatantSpec(MiraPrincessOfTheLoop, "Mira"),
+                CombatantSpec(MiraPrincessOfTheLoop),
                 CombatantSpec(MirelleTheGildedKnight, "Warrior"),
             ],
         ),

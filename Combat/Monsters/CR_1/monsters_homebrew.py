@@ -667,14 +667,14 @@ class GoblinKingCR1(ExtendedCombatantData):
         )
 
 
-class GoliathPaladinOfDevotion(ExtendedCombatantData):
-    """Tank: a simplified level 3 Oath of Devotion Paladin (Goliath, Stone Giant
-    ancestry). Taunts with Compelled Duel, smites with a radiant longsword and
-    soaks hits with Stone's Endurance."""
+class HumanPaladinOfDevotion(ExtendedCombatantData):
+    """Tank: a simplified level 3 Oath of Devotion Paladin (Human). Taunts
+    with Compelled Duel, smites with a radiant longsword and patches itself up
+    with Lay on Hands."""
 
     def __init__(self):
         super().__init__(
-            combatant_type="Goliath Paladin of Devotion",
+            combatant_type="Human Paladin of Devotion",
             hp=38,
             ac=16,
             temp_hp=0,
@@ -691,12 +691,12 @@ class GoliathPaladinOfDevotion(ExtendedCombatantData):
             spell_slots={},
             cr="1",
             monster_type=MonsterType.HUMANOID,
-            monster_type_note="Goliath, Paladin",
+            monster_type_note="Human, Paladin",
             alignment=Alignment.LAWFUL_GOOD,
             size=CreatureSize.MEDIUM,
             ac_note="scale mail, shield",
             hp_formula="7d8 + 7",
-            speed_ground_ft=35,
+            speed_ground_ft=30,
             speed_fly_ft=None,
             speed_climb_ft=None,
             speed_special_rules="",
@@ -709,7 +709,7 @@ class GoliathPaladinOfDevotion(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Passive Perception 10",
-            languages="Common, Giant",
+            languages="Common, Dwarvish",
             traits=[
                 MonsterAbility(
                     name="Divine Smite (2/Day)",
@@ -731,13 +731,13 @@ class GoliathPaladinOfDevotion(ExtendedCombatantData):
                     description="The paladin challenges one creature it can see within 30 feet. The target must succeed on a DC 11 Wisdom saving throw or, for 1 minute (Concentration), have Disadvantage on attack rolls against creatures other than the paladin, and must succeed on a DC 11 Wisdom saving throw to willingly move more than 30 feet away from it. The effect ends early if the paladin attacks or casts a spell at another creature.",
                 ),
             ],
-            bonus_actions=[],
-            reactions=[
+            bonus_actions=[
                 MonsterAbility(
-                    name="Stone's Endurance (2/Day)",
-                    description="When the paladin takes damage, it reduces the damage by 7 (1d12 + 1).",
+                    name="Lay on Hands",
+                    description="The paladin touches itself or another creature and restores Hit Points from a pool of 15 that refills when it finishes a Long Rest, or spends 5 from the pool to end the Poisoned condition on the creature.",
                 ),
             ],
+            reactions=[],
             legendary_actions=[],
             legendary_resistances=0,
             lair_actions=[],
