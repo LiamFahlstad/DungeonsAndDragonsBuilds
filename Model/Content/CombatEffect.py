@@ -1,14 +1,18 @@
-"""What one use of a feature does in a fight, said by the feature itself
-(Feature.combat_effects), so the combat simulator doesn't have to read it from
-the rules text. The combat UI's Custom Effect picker fills its form from these
-(Combat/CombatUIQt/effect_options.py), the way it fills a spell from its
-checked mechanics (CharacterContent/Spells/SpellFactory/Mechanics.py).
+"""What one use of a feature or a monster's ability does in a fight, said by
+the feature itself (Feature.combat_effects) or written on the ability
+(MonsterAbility.combat_effects), so the combat simulator doesn't have to read
+it from the rules text. The combat UI's Custom Effect picker fills its form
+from these (Combat/CombatUIQt/effect_options.py), the way it fills a spell
+from its checked mechanics (CharacterContent/Spells/SpellFactory/Mechanics.py).
 
-Unlike a spell's mechanics, a feature knows whose it is, so its numbers are
-worked out already: the DC, the dice at the character's level. Whatever is
-left unset falls back to what the feature already says - its DC from
-calculate_dc(), its action and duration from its FeatureActivation, a use
-spent if it has FeatureUses - so most effects only say what they roll and do:
+Unlike a spell's mechanics, a feature or a stat block knows whose it is, so
+its numbers are worked out already: the DC, the dice at the character's
+level. Whatever is left unset falls back to what the feature already says -
+its DC from calculate_dc(), its action and duration from its
+FeatureActivation, a use spent if it has FeatureUses - or, for a monster, to
+its stat block: the section the ability is in is its action, and a recharge
+or uses per day in its name are what it spends. Most effects only say what
+they roll and do:
 
     CombatEffect(
         name="Jolt to Life",
@@ -101,9 +105,10 @@ class CombatEffect:
     attack_bonus: int | None = None  # None: the user's spell attack bonus
     damage: tuple[CombatDamage, ...] = ()
     # Hit Points each target regains, or Temporary Hit Points it gains, at
-    # the character's level ("1d10 + 3"). Every target gets them, whatever
-    # the roll. The form has one amount box, so only one of damage, healing
-    # and temp_hp can be set: the rest go in the notes.
+    # the character's level ("1d10 + 3"), or "" for an amount the user types
+    # (Lay on Hands spends what it likes from a pool). Every target gets
+    # them, whatever the roll. The form has one amount box, so only one of
+    # damage, healing and temp_hp can be set: the rest go in the notes.
     healing: str | None = None
     temp_hp: str | None = None
     condition: CombatCondition | None = None
@@ -120,6 +125,47 @@ class CombatEffect:
     # For the user, about what the form can't do (healing, moving, a choice).
     notes: tuple[str, ...] = ()
 
+    @classmethod
+    def from_dict(cls, data: dict) -> "CombatEffect":
+        """The effect a saved fight's log holds as a plain dict (what
+        dataclasses.asdict and JSON make of it), back as itself."""
+        condition = data.get("condition")
+        ability = data.get("save_ability")
+        action = data.get("action_type")
+        return cls(
+            name=data.get("name", ""),
+            roll=data.get("roll", "none"),
+            save_ability=Ability(ability) if ability else None,
+            dc=data.get("dc"),
+            half_on_success=data.get("half_on_success", False),
+            repeat_save=data.get("repeat_save", False),
+            attack_bonus=data.get("attack_bonus"),
+            damage=tuple(
+                CombatDamage(
+                    d["dice"],
+                    DamageType(d["damage_type"]) if d.get("damage_type") else None,
+                    tuple(DamageType(c) for c in d.get("choices", ())),
+                )
+                for d in data.get("damage", ())
+            ),
+            healing=data.get("healing"),
+            temp_hp=data.get("temp_hp"),
+            condition=(
+                CombatCondition(
+                    condition["name"],
+                    until=tuple(condition["until"]) if condition.get("until") else None,  # type: ignore[arg-type]
+                    duration_seconds=condition.get("duration_seconds"),
+                )
+                if condition
+                else None
+            ),
+            action_type=ActionType(action) if action else None,
+            concentration=data.get("concentration", False),
+            spends_use=data.get("spends_use", True),
+            spell=data.get("spell"),
+            notes=tuple(data.get("notes", ())),
+        )
+
     def __post_init__(self):
         if self.roll not in ROLLS:
             raise ValueError(f"roll {self.roll!r} is not one of {list(ROLLS)}")
@@ -134,7 +180,7 @@ class CombatEffect:
         if any(not note.strip() for note in self.notes):
             raise ValueError("A note can't be empty")
         for field, dice in (("healing", self.healing), ("temp_hp", self.temp_hp)):
-            if dice is not None and not DICE.fullmatch(dice):
+            if dice and not DICE.fullmatch(dice):
                 raise ValueError(f"{field} {dice!r} is not dice like '2d4 + 3'")
         amounts = [
             bool(self.damage),

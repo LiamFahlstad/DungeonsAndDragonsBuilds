@@ -38,6 +38,7 @@ import Combat.PartyAllies as PartyAllies
 from Combat.LogFiles import read_json, write_json
 from Combat.PlayerCombatant import combatant_from_stat_block
 from Combat.PlayerLog import ENCOUNTER, has_round_events, log_ref
+from Model.Creatures.MonsterAbilities import MonsterAbility
 
 # When the fight was ended, in an encounter log and in its player-log entry.
 ENDED_KEY = "ended_at"
@@ -70,7 +71,12 @@ class LogJSONEncoder(json.JSONEncoder):
 
     def default(self, o):
         if dataclasses.is_dataclass(o) and not isinstance(o, type):
-            return dataclasses.asdict(o)
+            data = dataclasses.asdict(o)
+            # Most abilities have no combat effects written on them: leave the
+            # key out, so their logs read as they always have.
+            if isinstance(o, MonsterAbility) and not o.combat_effects:
+                data.pop("combat_effects", None)
+            return data
         return super().default(o)
 
 

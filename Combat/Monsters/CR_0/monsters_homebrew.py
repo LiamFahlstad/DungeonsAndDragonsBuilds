@@ -15,6 +15,7 @@ from Model.Creatures.MonsterAbilities import (
     SavingThrowEffect,
 )
 from Core.Definitions import Ability, Skill
+from Model.Content.CombatEffect import CombatCondition, CombatEffect
 
 
 class Accursed(ExtendedCombatantData):
@@ -564,6 +565,33 @@ class DwarfLifeCleric(ExtendedCombatantData):
                 MonsterAbility(
                     name="Life Domain Magic",
                     description="The cleric uses one of the following, each once per day. Cure Wounds: it touches a creature, which regains 13 (2d8 + 4) Hit Points. Bless: up to three creatures it can see within 30 feet add 1d4 to their attack rolls and saving throws for 1 minute (Concentration). Preserve Life: it presents its holy symbol and restores 15 Hit Points, divided as it chooses among any number of Bloodied creatures within 30 feet of it (which can include itself); a creature can't be restored to more than half its Hit Point maximum this way.",
+                    combat_effects=(
+                        CombatEffect(
+                            name="Cure Wounds",
+                            healing="2d8 + 4",
+                            notes=("Once per day.",),
+                        ),
+                        CombatEffect(
+                            name="Bless",
+                            condition=CombatCondition("Bless", duration_seconds=60),
+                            concentration=True,
+                            spell="Bless",
+                            notes=(
+                                "Once per day. Up to three creatures within 30 feet"
+                                " add 1d4 to their attack rolls and saving throws.",
+                            ),
+                        ),
+                        CombatEffect(
+                            name="Preserve Life",
+                            healing="",  # 15 shared out as the cleric chooses
+                            notes=(
+                                "Once per day. 15 Hit Points shared among Bloodied"
+                                " creatures within 30 feet, none above half its"
+                                " Hit Point maximum: type each one's share, a"
+                                " target at a time.",
+                            ),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[

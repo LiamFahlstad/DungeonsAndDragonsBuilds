@@ -24,5 +24,5 @@ Monsters are `ExtendedCombatantData` subclasses (`Model/Creatures/Combatants.py`
 
 - [.claude/skills/monster-stat-blocks/stat-block-template.md](stat-block-template.md): the exact class template, field order and formatting rules. Read it before **writing** a new monster.
 - `python .claude/skills/monster-stat-blocks/abilities.py [ClassName...]`: the structured ability classes, read live from the code (constructor, docstring, generated text).
-- [.claude/skills/monster-stat-blocks/monster-abilities.md](monster-abilities.md): every structured `MonsterAbility` subclass, its constructor, and the exact text it generates, plus how to add a new subclass. Read it before **writing or converting** abilities.
+- [.claude/skills/monster-stat-blocks/monster-abilities.md](monster-abilities.md): every structured `MonsterAbility` subclass, its constructor, and the exact text it generates, plus how to add a new subclass and when to write `combat_effects` (what the combat UI's Custom Effect picker fills in for an ability whose text it can't read). Read it before **writing or converting** abilities.
 - [.claude/skills/monster-stat-blocks/cr-guidelines.md](cr-guidelines.md): the DMG rough-numbers table by CR. Use it only when no sibling monster at the target CR is close enough to calibrate against.

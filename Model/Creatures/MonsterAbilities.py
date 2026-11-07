@@ -11,14 +11,28 @@ from enum import Enum
 from typing import Optional
 
 from Core.Definitions import Ability, DamageType
+from Model.Content.CombatEffect import CombatEffect
 
 
 @dataclass_decorator
 class MonsterAbility:
-    """A single ability (trait, action, etc.) from a monster's stat block."""
+    """A single ability (trait, action, etc.) from a monster's stat block.
+
+    `combat_effects` says what using it does in a fight, for the combat UI's
+    Custom Effect picker: one CombatEffect (Model/Content/CombatEffect.py) per
+    way to use it, each a row of its own. Leave it empty and the picker reads
+    the description instead, which works for the standard stat-block
+    sentences ("Melee Attack Roll: +5 ... Hit: 7 (1d8 + 3) Slashing damage")
+    and the structured subclasses below that write them. Set it where the
+    text can't be read (an old-style "must succeed on a DC 11 Wisdom saving
+    throw or ...", healing from a pool, a badge, a condition the text only
+    gives sometimes) or for an ability with several uses (a cleric's Life
+    Domain Magic: Cure Wounds, Bless, ...). Its recharge or uses per day stay
+    in its name, which is what the combat UI spends."""
 
     name: str
     description: str
+    combat_effects: tuple[CombatEffect, ...] = field(default=(), kw_only=True)
 
 
 _DC_PATTERN = re.compile(r"\bDC\s*(\d+)", re.IGNORECASE)

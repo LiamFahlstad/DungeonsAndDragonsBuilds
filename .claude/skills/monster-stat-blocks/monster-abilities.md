@@ -50,6 +50,38 @@ for ab in m.traits + m.actions + m.bonus_actions + m.reactions + m.legendary_act
 
 Imports: add the subclasses to the `from Model.Creatures.MonsterAbilities import (...)` block (alphabetical). Before you remove `MonsterAbility` from it, grep the file to confirm no entry still uses the plain class.
 
+## What the combat UI's Custom Effect picker makes of an ability (`combat_effects`)
+
+The combat UI's Custom Effect dialog lists every action, bonus action, reaction and legendary action, and fills in its form from the ability's text:
+- **Attacks and saves:** the standard stat-block sentences, which every subclass above writes.
+- **Hit Points:** "regains 9 (2d4 + 4) Hit Points" and "gains 10 Temporary Hit Points".
+- **Spells it casts:** "casts Fear", "uses Spellcasting to cast Mind Spike (level 3 version)", at the stat block's spell save DC.
+- **Another action it makes or uses:** "makes one Rend attack", "uses Dreadful Glare".
+
+When the text says something else, write what it does on the ability itself, with the same model features use (`Model/Content/CombatEffect.py`):
+
+```python
+MonsterAbility(
+    name="Compelled Duel (1/Day)",
+    description="The paladin challenges one creature ... must succeed on a DC 11 Wisdom saving throw or ...",
+    combat_effects=(
+        CombatEffect(
+            roll="save", save_ability=Ability.WISDOM, dc=11,
+            condition=CombatCondition("Compelled Duel", duration_seconds=60),
+            concentration=True,
+            notes=("It has Disadvantage on attack rolls against creatures other than the paladin ...",),
+        ),
+    ),
+)
+```
+
+- **Write it** (in a hand-maintained file only) for the following: old-style prose ("must succeed on a DC 11 Wisdom saving throw or"); healing from a pool (`healing=""` lets the GM type the amount); a badge that isn't a rules condition; a condition the text gives only sometimes ("if it had Advantage", which the reader would apply on every hit); and an ability with several uses (a cleric's Life Domain Magic gets one `CombatEffect` per use, each with a `name=`). Examples are the Time Loop PR monsters: `HumanPaladinOfDevotion`, `DwarfLifeCleric`, `MirelleTheGildedKnight` and `MiraPrincessOfTheLoop`.
+- **A trait is listed only once it has `combat_effects`** (a Divine Smite that's used, not a Pack Tactics that just is).
+- **Don't write it** for an ability whose text the picker already reads right. Its numbers would then be in two places that can drift apart. Never write it in a generated `monsters.py`.
+- **Costs stay in the name.** A recharge, uses per day and a legendary action's cost are still read from the name, and that's what the dialog spends. The stat-block section is the action.
+- **It doesn't change the balance score.** `monster_score.py` doesn't read `combat_effects`, but check the score anyway if you also changed the text.
+- **Check it** by running `./run_tests.sh -q tests/test_monster_combat_effects.py`.
+
 ## Adding a new subclass
 
 Add one only for a pattern with 3+ real occurrences that no subclass covers, or when the user asks. A one-off is simpler as plain text. (Frightful Presence was checked and rejected: its real stat blocks split across two inconsistent phrasings with fewer than 3 occurrences each. Re-check before proposing it again.)

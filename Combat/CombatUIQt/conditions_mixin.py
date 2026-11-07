@@ -53,6 +53,7 @@ from .saves import (
     DAMAGE_AMOUNT,
     FEATURE,
     HEALING,
+    MONSTER_ACTION,
     ROLL_MODES,
     SAVING_THROW,
     SPELL,
@@ -179,6 +180,12 @@ def _where_from(option: EffectOption) -> str:
         if option.is_curated:
             return f"{of}filled in from the feature's combat data."
         return f"{of}read from its rules text: check the form."
+    action = option.monster_action
+    if option.kind == MONSTER_ACTION and option.is_curated and action is not None:
+        of = ""
+        if action.name != option.name:
+            of = f"{escape(action.name, quote=False)}: "
+        return f"{of}filled in from the stat block's combat data."
     return ""
 
 

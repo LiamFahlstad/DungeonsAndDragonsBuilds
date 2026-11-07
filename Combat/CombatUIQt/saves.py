@@ -7,7 +7,7 @@ import re
 from collections.abc import Iterable
 from dataclasses import dataclass, field
 
-from Core.Rules import ability_modifier
+from Core.Rules import SPELL_SAVE_DC_BASE, ability_modifier
 
 from .amounts import AmountError, parse_damage
 from .attack_rolls import AttackRoll, rolled_attack
@@ -309,7 +309,13 @@ def known_spell_attack_bonus(char: dict | None) -> int | None:
         if sheet.spell_casting_ability is None:
             return None
         return sheet.calculate_attack_bonus()
-    return _number_in_stat_block(char, _SPELL_ATTACK)
+    bonus = _number_in_stat_block(char, _SPELL_ATTACK)
+    if bonus is None:
+        # Many stat blocks give only the DC. It's 8 + the same modifier and
+        # Proficiency Bonus the attack adds, so the attack is the DC - 8.
+        dc = _number_in_stat_block(char, _SPELL_SAVE_DC)
+        bonus = None if dc is None else dc - SPELL_SAVE_DC_BASE
+    return bonus
 
 
 def known_attack_bonus(char: dict | None) -> int | None:

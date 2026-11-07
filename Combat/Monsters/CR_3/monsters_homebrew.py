@@ -15,6 +15,7 @@ from Model.Creatures.MonsterAbilities import (
     SavingThrowEffect,
 )
 from Core.Definitions import Ability
+from Model.Content.CombatEffect import CombatDamage, CombatEffect
 
 
 class CantorOfTheBlackChoir(ExtendedCombatantData):
@@ -501,6 +502,20 @@ class MirelleTheGildedKnight(ExtendedCombatantData):
                     damage_bonus=3,
                     damage_type=DamageType.SLASHING,
                     additional_ruling="Once per turn, if Mirelle had Advantage on the attack roll and the target is Medium or smaller, the target also has the Prone condition.",
+                    # Its text would read as Prone on every hit: it's only
+                    # with Advantage, so it's the GM's to add.
+                    combat_effects=(
+                        CombatEffect(
+                            roll="attack",
+                            attack_bonus=5,
+                            damage=(CombatDamage("2d6 + 3", DamageType.SLASHING),),
+                            notes=(
+                                "Once per turn, with Advantage on the attack roll,"
+                                " a Medium or smaller target also has the Prone"
+                                " condition: add it by hand.",
+                            ),
+                        ),
+                    ),
                 ),
                 SavingThrowEffect(
                     name="Golden Arc (Recharge 5-6)",

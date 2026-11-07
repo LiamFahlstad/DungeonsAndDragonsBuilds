@@ -1,13 +1,15 @@
 """A monster's abilities as the combat UI uses them on its turn: to-hit bonus,
 damage dice, save DC and how often it can be used, read from the stat block's
 text, so that freeform abilities, structured ones and ones reloaded from a
-saved fight (plain dicts) all work the same."""
+saved fight (plain dicts) all work the same. An ability with combat effects
+written on it (MonsterAbility.combat_effects) is taken at its word instead."""
 
 import random
 import re
 from dataclasses import dataclass, field
 
 from Core.Definitions import DamageType
+from Model.Content.CombatEffect import CombatEffect
 
 # The stat blocks don't record this; nearly every legendary creature has 3.
 LEGENDARY_ACTIONS_PER_ROUND = 3
@@ -61,6 +63,9 @@ class MonsterAction:
     per_day: int | None = None
     legendary_cost: int = 0
     rider: str = ""  # what its text says besides that damage, conditions apart
+    # What its stat block says using it does (MonsterAbility.combat_effects),
+    # one per way to use it; () to read its text.
+    effects: tuple[CombatEffect, ...] = ()
 
     @property
     def is_limited(self) -> bool:
@@ -111,13 +116,49 @@ def ability_text(ability) -> tuple[str, str]:
     return ability.name, ability.description
 
 
+def ability_effects(ability) -> tuple[CombatEffect, ...]:
+    """The combat effects written on a MonsterAbility, or on the dict it
+    becomes in a saved combat log."""
+    if isinstance(ability, dict):
+        return tuple(
+            CombatEffect.from_dict(e) for e in ability.get("combat_effects", ())
+        )
+    return tuple(getattr(ability, "combat_effects", ()))
+
+
 def parse_action(ability, legendary: bool = False) -> MonsterAction:
+    """What an ability rolls and costs: from the combat effects written on it
+    (its first, for the turn column's buttons), or else from its text. What it
+    costs is in its name either way: a recharge, uses per day, a legendary
+    action's cost."""
     name, description = ability_text(ability)
-    attack = _ATTACK.search(description)
-    save = _SAVE.search(description)
     recharge = _RECHARGE.search(name)
     per_day = _PER_DAY.search(name)
     cost = _LEGENDARY_COST.search(f"{name} {description}")
+    recharge_on = int(recharge.group(1)) if recharge else None
+    uses_per_day = int(per_day.group(1)) if per_day else None
+    legendary_cost = (int(cost.group(1)) if cost else 1) if legendary else 0
+    effects = ability_effects(ability)
+    if effects:
+        first = effects[0]
+        return MonsterAction(
+            name=name,
+            description=description,
+            to_hit=first.attack_bonus if first.roll == "attack" else None,
+            save_ability=first.save_ability.value if first.save_ability else None,
+            save_dc=first.dc,
+            half_on_save=first.half_on_success,
+            damage=tuple(
+                DamageRoll(d.dice, d.damage_type.value if d.damage_type else None)
+                for d in first.damage
+            ),
+            effects=effects,
+            recharge_on=recharge_on,
+            per_day=uses_per_day,
+            legendary_cost=legendary_cost,
+        )
+    attack = _ATTACK.search(description)
+    save = _SAVE.search(description)
     damage, rider = _damage_rolls(description, attack is not None)
     return MonsterAction(
         name=name,
@@ -128,9 +169,9 @@ def parse_action(ability, legendary: bool = False) -> MonsterAction:
         half_on_save=bool(re.search(r"Success:\s*Half", description)),
         damage=damage,
         rider=rider,
-        recharge_on=int(recharge.group(1)) if recharge else None,
-        per_day=int(per_day.group(1)) if per_day else None,
-        legendary_cost=(int(cost.group(1)) if cost else 1) if legendary else 0,
+        recharge_on=recharge_on,
+        per_day=uses_per_day,
+        legendary_cost=legendary_cost,
     )
 
 

@@ -12,7 +12,7 @@ and said in the option's note."""
 
 import re
 from collections.abc import Iterable
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from functools import lru_cache
 
 from CharacterContent.Spells.SpellFactory import SpellFactory
@@ -27,9 +27,11 @@ from .monster_actions import (
     JOINED,
     DamageRoll,
     MonsterAction,
+    ability_effects,
     is_spent,
     legendary_actions_left,
     monster_actions,
+    parse_action,
     tidy_dice,
 )
 from .saves import (
@@ -47,6 +49,7 @@ from .saves import (
     damage_text,
     known_save_dc,
     known_spell_attack_bonus,
+    with_dice,
 )
 
 # EffectOption, what this module makes, is in saves.py beside CustomEffect,
@@ -54,6 +57,7 @@ from .saves import (
 
 ATTACKS = "Attacks"
 FEATURES = "Features"
+TRAITS = "Traits"  # a monster's, only those with combat effects written on them
 ALL_SPELLS = "All spells"
 # The long category, which starts folded away. Features start open: passive
 # ones aren't listed, nor those with nothing to apply (Feature.combat_effects).
@@ -163,15 +167,18 @@ _HEALS = re.compile(r"\bregains?\b[^.]*\bHit Points?\b")
 # 2d4 + 4 Temporary Hit Points". A number other than dice ("regains 1 Hit
 # Point", "equal to half the damage") is a rider, not what it does.
 _AMOUNT = r"\d+d\d+(?: \+ \d+)?"
+# A stat block writes the average first: "regains 13 (2d8 + 4) Hit Points".
 _HEAL_AMOUNT = re.compile(
     rf"\bregains?\s+(?:a number of\s+)?Hit Points equal to ({_AMOUNT})"
     r"(\s+plus your spellcasting ability modifier)?"
     rf"|\bregains?\s+({_AMOUNT}) Hit Points\b"
+    rf"|\bregains?\s+\d+ \(({_AMOUNT})\) Hit Points\b"
 )
 _TEMP_HP_AMOUNT = re.compile(
     rf"\bgains?\s+(?:a number of\s+)?Temporary Hit Points equal to ({_AMOUNT})"
     r"(\s+plus your spellcasting ability modifier)?"
     rf"|\bgains?\s+({_AMOUNT}|\d+) Temporary Hit Points\b"
+    rf"|\bgains?\s+\d+ \(({_AMOUNT})\) Temporary Hit Points\b"
 )
 _HEAL_UPCAST = re.compile(r"healing increases by (\d+d\d+)")
 # "5 additional Temporary Hit Points", "The Temporary Hit Points and the Cold
@@ -506,7 +513,7 @@ def _read_gain(body: str, upgrades: tuple[str, ...]) -> HitPointGain | None:
         more = next((m for m in map(upcast.search, upgrades) if m is not None), None)
         sentence = _SENTENCE_END.split(body[: match.start()])[-1]
         return HitPointGain(
-            match[1] or match[3],
+            match[1] or match[3] or match[4],
             temporary=temporary,
             add_modifier=bool(match[2]),
             upcast=next((g for g in more.groups() if g), "") if more else "",
@@ -819,36 +826,251 @@ def _monster_action_notes(action: MonsterAction) -> list[str]:
     return notes
 
 
-def _monster_action_option(char: dict, action: MonsterAction) -> EffectOption:
+def _availability(char: dict, action: MonsterAction, name: str) -> tuple[str, bool]:
+    """(the row's name, whether it's greyed out): spent, or a legendary
+    action costing more than are left."""
     spent = action.is_limited and is_spent(char, action)
     left = legendary_actions_left(char)
-    too_dear = action.legendary_cost > left
-    row_name = action.name
     if spent:
-        row_name = f"{action.name} (spent)"
-    elif too_dear:
-        row_name = f"{action.name} ({left} left)"
+        return f"{name} (spent)", True
+    if action.legendary_cost > left:
+        return f"{name} ({left} left)", True
+    return name, False
+
+
+def monster_action_options(
+    char: dict, action: MonsterAction, by_name: dict[str, MonsterAction]
+) -> list[EffectOption]:
+    """The picker's rows for one of char's stat-block abilities: one per
+    combat effect written on it; else the spells it casts ("The lich casts
+    Fear", "uses Spellcasting to cast Mind Spike (level 3 version)"); else
+    the action it's another way to use ("makes one Rend attack", "uses
+    Dreadful Glare"), from `by_name` (char's actions by name, recharge and
+    cost left off); else what its own text says. Each spends this ability:
+    its recharge, its uses per day or its legendary actions."""
+    if action.effects:
+        return [_described_monster_option(char, action, e) for e in action.effects]
+    spells = _spells_it_casts(action)
+    if spells:
+        return [_monster_spell_option(char, action, *cast) for cast in spells]
+    other = _action_it_uses(action, by_name)
+    if other is not None:
+        return [_as_other_action(char, action, other)]
+    return [_monster_action_option(char, action)]
+
+
+def _described_monster_option(
+    char: dict, action: MonsterAction, effect: CombatEffect
+) -> EffectOption:
+    """What one use written on a monster's ability fills in. Its action is the
+    stat block's section, which the turn column spends, so none is filled in
+    unless the effect says so."""
+    row_name, unavailable = _availability(char, action, effect.name or action.name)
+    return _described_option(
+        char,
+        effect,
+        name=action.name,
+        kind=MONSTER_ACTION,
+        tooltip=action.description,
+        row_name=row_name,
+        monster_action=action,
+        is_unavailable=unavailable,
+    )
+
+
+# "The lich casts Fear, using ...", "uses Spellcasting to cast Mind Spike
+# (level 3 version).", "casts Cure Wounds (level 2 version), Lesser
+# Restoration, or Remove Curse, using ...", "casts Counterspell or Shield in
+# response to ...". The names are checked against the spells there are.
+_CASTS = re.compile(
+    r"\bcasts? (?P<spells>[A-Z].*?)"
+    r"(?=, using|\.(?:\s|$)| in response| on that| on the| on a| at will)"
+)
+_LIST_ITEM = re.compile(r",? or |, ")
+_AT_LEVEL = re.compile(r"(?P<name>.+?)(?: \(level (?P<level>\d+) version\))?")
+
+
+def _spells_it_casts(
+    action: MonsterAction,
+) -> list[tuple[object, int | None, str]]:
+    """(spell, the level it's cast at if the text says, how often: "2/Day
+    each" or "") for each spell the ability's text casts: named ("casts
+    Fear"), or in a Spellcasting list ("At will: Thaumaturgy. 2/Day each: Hold
+    Person, Silence.")."""
+    found = []
+    for match in _CASTS.finditer(action.description):
+        for spell, level in _named_spells(match["spells"]):
+            found.append((spell, level, ""))
+    following = _FOLLOWING.search(action.description)
+    if following is not None:
+        for match in _SPELL_LIST.finditer(action.description, following.end()):
+            for spell, level in _named_spells(match["spells"]):
+                found.append((spell, level, match["often"]))
+    return found
+
+
+def _named_spells(text: str) -> list[tuple[object, int | None]]:
+    """The spells "A (level 2 version), B, or C" names that there are."""
+    named = []
+    for item in _LIST_ITEM.split(text):
+        match = _AT_LEVEL.fullmatch(item.strip())
+        if match is None:
+            continue
+        spell = _spell_named(match["name"])
+        if spell is not None:
+            named.append((spell, int(match["level"]) if match["level"] else None))
+    return named
+
+
+# "casts one of the following spells, ... (spell save DC 12):" and its lists.
+_FOLLOWING = re.compile(r"following spells[^:]*:")
+_SPELL_LIST = re.compile(r"(?P<often>At will|\d+/Day(?: each)?): (?P<spells>[^.]+)")
+
+
+def _spell_named(name: str):
+    return _spells_by_name().get(name.lower())
+
+
+@lru_cache(maxsize=1)
+def _spells_by_name() -> dict:
+    return {spell.name.lower(): spell for spell in SpellFactory.all_spells()}
+
+
+def _monster_spell_option(
+    char: dict, action: MonsterAction, spell, level: int | None, often: str = ""
+) -> EffectOption:
+    """Casting `spell` as `action`, at `level` if it's a higher one, with
+    char's spell save DC and attack bonus. It spends the action, not a slot or
+    the spell's casting time: the turn column counts the stat block's
+    section. Its condition is the spell's badge. `often` is how often its
+    Spellcasting allows it ("2/Day each"), for the GM to keep count of."""
+    option = spell_option(spell, char)
+    rolls, upcast = option.rolls, option.upcast
+    if level is not None and level > spell.level and upcast:
+        rolls = tuple(
+            with_dice(roll, dice, level - spell.level) if dice else roll
+            for roll, dice in zip(rolls, upcast)
+        )
+    name = action.name
+    if len(_spells_it_casts(action)) > 1:
+        name = f"{action.name}: {spell.name}"
+    row_name, unavailable = _availability(char, action, name)
+    at_level = f" at level {level}" if level and level > spell.level else ""
+    how_often = f" ({often})" if often and often.lower() != "at will" else ""
+    note = f"It casts {spell.name}{at_level}{how_often}." + (
+        f" {option.note}" if option.note else ""
+    )
+    summary = option.summary
+    if rolls != option.rolls:
+        summary = summary.replace(damage_text(option.rolls), damage_text(rolls))
+    return replace(
+        option,
+        name=name,
+        summary=summary,
+        kind=MONSTER_ACTION,
+        row_name=row_name,
+        note=_without_slot_note(note),
+        rolls=rolls,
+        upcast=(),
+        slot_level=None,
+        action_cost=None,
+        spell_name=spell.name,
+        monster_action=action,
+        is_unavailable=unavailable,
+    )
+
+
+def _without_slot_note(note: str) -> str:
+    """A monster's spell spends no slot of the caster's."""
+    return re.sub(r"\s*No slot of level \d+ or higher left\.", "", note).strip()
+
+
+# "The dragon makes one Rend attack.", "The mummy uses Dreadful Glare."
+_MAKES_ONE = re.compile(r"\bmakes one (?P<name>[A-Z][\w'’ -]*?) attack\b")
+_USES = re.compile(r"\buses (?P<name>[A-Z][\w'’ -]*?)(?=[.,]| to | on )")
+_NAME_ALONE = re.compile(r"\s*\(.*")
+
+
+def _action_it_uses(
+    action: MonsterAction, by_name: dict[str, MonsterAction]
+) -> MonsterAction | None:
+    """The other action this one makes or uses, when its whole point is that
+    (Pounce, Tail Swipe, a lich's Glare), and char has it."""
+    if action.is_rollable or action.save_ability is not None:
+        return None
+    for pattern in (_MAKES_ONE, _USES):
+        match = pattern.search(action.description)
+        if match is None:
+            continue
+        other = by_name.get(match["name"].lower())
+        if other is not None and other.name != action.name:
+            return other
+    return None
+
+
+def _as_other_action(
+    char: dict, action: MonsterAction, other: MonsterAction
+) -> EffectOption:
+    """What `other` fills in, used as `action`, which is what's spent."""
+    used = _monster_action_option(char, other)
+    row_name, unavailable = _availability(char, action, action.name)
+    base = _NAME_ALONE.sub("", other.name)
+    verb = "makes one" if _MAKES_ONE.search(action.description) else "uses"
+    rest = f"{base} attack" if verb == "makes one" else base
+    note = f"It {verb} {rest}." + (f" {used.note}" if used.note else "")
+    if _MOVES.search(action.description):
+        note += " It moves first: move it by hand."
+    return replace(
+        used,
+        name=action.name,
+        row_name=row_name,
+        note=note,
+        tooltip=action.description,
+        monster_action=action,
+        is_unavailable=unavailable,
+    )
+
+
+_MOVES = re.compile(r"\bmoves up to\b")
+
+
+def _monster_action_option(char: dict, action: MonsterAction) -> EffectOption:
+    """What an ability's own text fills in: its attack or save and damage, the
+    condition its hit or failed save gives, or the Hit Points it gives."""
+    row_name, unavailable = _availability(char, action, action.name)
     is_save = action.to_hit is None and action.save_ability is not None
     ability = _ABILITY_SHORT_NAMES.get(action.save_ability or "")
     condition, until = _monster_action_condition(action)
+    notes = _monster_action_notes(action)
+    rolls, amount_kind = action.damage, DAMAGE_AMOUNT
+    gain = None if action.is_rollable or is_save else _read_gain(action.description, ())
+    if gain is not None:
+        amount_kind = TEMP_HP if gain.temporary else HEALING
+        rolls = (DamageRoll(gain.dice, None),)
+    if action.name.startswith("Multiattack"):
+        notes.insert(0, "Pick each of its attacks in turn.")
+    summary = action.summary
+    if gain is not None:
+        summary = amount_text(gain.dice, amount_kind)
     return EffectOption(
         name=action.name,
         kind=MONSTER_ACTION,
         row_name=row_name,
-        summary=action.summary,
+        summary=summary,
         tooltip=action.description,
-        note=" ".join(_monster_action_notes(action)),
+        note=" ".join(notes),
         roll=ATTACK_ROLL if action.to_hit is not None else SAVING_THROW,
         ability=ability if is_save else None,
         dc=action.save_dc if is_save else None,
         bonus=action.to_hit,
         half_on_save=is_save and action.half_on_save,
         repeat_save=is_save and bool(_REPEATS_THE_SAVE.search(action.description)),
-        rolls=action.damage,
+        rolls=rolls,
+        amount_kind=amount_kind,
         condition=condition,
         until=until,
         monster_action=action,
-        is_unavailable=spent or too_dear,
+        is_unavailable=unavailable,
     )
 
 
@@ -965,12 +1187,55 @@ def _described_feature_option(
     feature's own: its DC, action, duration and uses."""
     sheet = char.get("_stat_block")
     description = (feature.get_description(sheet) if sheet is not None else None) or ""
+    counts_uses = feature.uses is not None and effect.spends_use
+    uses = feature_uses(char, feature, sheet) if counts_uses else None
+    lead, lead_notes = [], []
+    if uses is not None:
+        lead.append(f"{uses[0]}/{uses[1]}")
+        if uses[0] == 0:
+            lead_notes.append("No uses left.")
+    return _described_option(
+        char,
+        effect,
+        name=feature.name,
+        kind=FEATURE,
+        tooltip=description,
+        default_dc=feature.calculate_dc(sheet) if sheet is not None else None,
+        duration_seconds=_feature_duration(feature),
+        action_cost=feature_action_cost(feature),
+        lead=lead,
+        lead_notes=lead_notes,
+        counts_uses=counts_uses,
+        feature_name=feature.name,
+    )
+
+
+def _described_option(
+    char: dict,
+    effect: CombatEffect,
+    *,
+    name: str,
+    kind: str,
+    tooltip: str,
+    default_dc: int | None = None,
+    duration_seconds: int | None = None,
+    action_cost: str | None = None,
+    lead: Iterable[str] = (),
+    lead_notes: Iterable[str] = (),
+    **fields,
+) -> EffectOption:
+    """What a CombatEffect fills in, for a feature's use or a monster's
+    ability: exactly what it says, and for what it leaves unset, its owner's
+    defaults (`default_dc`, the `duration_seconds` and `action_cost`), then
+    char's own known DC and spell attack bonus. `lead` goes before its numbers
+    in the row (a feature's uses), `lead_notes` after its own notes, and
+    `fields` straight onto the EffectOption."""
     is_save = effect.roll == "save"
     is_attack = effect.roll == "attack"
     ability = effect.save_ability.short_name if effect.save_ability else None
     dc = None
     if is_save:
-        dc = effect.dc if effect.dc is not None else feature.calculate_dc(sheet)
+        dc = effect.dc if effect.dc is not None else default_dc
         dc = dc if dc is not None else known_save_dc(char)
     bonus = None
     if is_attack:
@@ -983,10 +1248,13 @@ def _described_feature_option(
         for damage in effect.damage
     )
     amount_kind = DAMAGE_AMOUNT
+    # An amount of "" is the user's to type (Lay on Hands' pool).
     if effect.healing is not None:
-        amount_kind, rolls = HEALING, (DamageRoll(effect.healing, None),)
+        amount_kind = HEALING
+        rolls = (DamageRoll(effect.healing, None),) if effect.healing else ()
     elif effect.temp_hp is not None:
-        amount_kind, rolls = TEMP_HP, (DamageRoll(effect.temp_hp, None),)
+        amount_kind = TEMP_HP
+        rolls = (DamageRoll(effect.temp_hp, None),) if effect.temp_hp else ()
     condition = effect.condition
     text = EffectText(
         ability=ability,
@@ -1000,24 +1268,17 @@ def _described_feature_option(
             choices = ", ".join(choice.value for choice in damage.choices)
             notes.append(f"Its damage is of a type to choose ({choices}): give one.")
     notes += _unknown_number_notes(text, dc, bonus)
-    counts_uses = feature.uses is not None and effect.spends_use
-    uses = feature_uses(char, feature, sheet) if counts_uses else None
-    parts = _roll_summary(text, dc, bonus, rolls, amount_kind)
-    if uses is not None:
-        parts.insert(0, f"{uses[0]}/{uses[1]}")
-        if uses[0] == 0:
-            notes.append("No uses left.")
-    duration = _feature_duration(feature)
+    notes += lead_notes
+    parts = [*lead, *_roll_summary(text, dc, bonus, rolls, amount_kind)]
     if condition is not None and condition.duration_seconds is not None:
-        duration = condition.duration_seconds
-    action_cost = feature_action_cost(feature)
+        duration_seconds = condition.duration_seconds
     if effect.action_type is not None:
         action_cost = FEATURE_ACTION_COSTS[effect.action_type.value]
     return EffectOption(
-        name=effect.name or feature.name,
-        kind=FEATURE,
+        name=effect.name or name,
+        kind=kind,
         summary="  ".join(parts),
-        tooltip=description,
+        tooltip=tooltip,
         note=" ".join(notes),
         roll=ATTACK_ROLL if is_attack else SAVING_THROW,
         ability=ability,
@@ -1027,15 +1288,14 @@ def _described_feature_option(
         repeat_save=effect.repeat_save,
         rolls=rolls,
         condition=condition.name if condition is not None else "",
-        duration_seconds=duration,
+        duration_seconds=duration_seconds,
         until=condition.until if condition is not None else None,
         action_cost=action_cost,
         concentration=effect.concentration,
-        counts_uses=counts_uses,
-        feature_name=feature.name,
         spell_name=effect.spell or "",
         amount_kind=amount_kind,
         is_curated=True,
+        **fields,
     )
 
 
@@ -1053,9 +1313,31 @@ def effect_options(
         (who.get("_spell_objects") or {}).values(), key=lambda s: (s.level, s.name)
     )
     own_names = {spell.name for spell in own_spells}
+    sections = monster_actions(who)
+    # A trait is listed only when combat effects say what to apply: most just
+    # are (Pack Tactics), but one like Divine Smite is used.
+    described_traits = [
+        parse_action(trait)
+        for trait in who.get("traits") or []
+        if ability_effects(trait)
+    ]
+    if described_traits:
+        sections.append((TRAITS, described_traits))
+    by_name = {
+        _NAME_ALONE.sub("", action.name).lower(): action
+        for _, actions in sections
+        for action in actions
+    }
     categories = [
-        (title, [_monster_action_option(who, action) for action in actions])
-        for title, actions in monster_actions(who)
+        (
+            title,
+            [
+                o
+                for action in actions
+                for o in monster_action_options(who, action, by_name)
+            ],
+        )
+        for title, actions in sections
     ]
     weapons = who.get("_weapons_objects") or []
     features = who.get("_feature_objects") or []

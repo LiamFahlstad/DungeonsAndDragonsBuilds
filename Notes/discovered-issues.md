@@ -230,6 +230,7 @@ Saving throws in the Custom Effect dialog count conditions per target (saves.py 
 
 **History**
 - 2026-11-02 main-session: found
+- 2026-11-07 main-session: The Custom Effect picker now offers the spells a monster's other abilities name ('casts Fear', 'uses Spellcasting to cast Mind Spike (level 3 version)') at the Spellcasting DC (effect_options.monster_action_options), but the Spellcasting row itself still has nothing to list until the scraped text has its spells again.
 
 ### DI-036 · Encounter difficulty treats 2024 XP budgets as floors, so it rates one tier too low
 - **Status:** open

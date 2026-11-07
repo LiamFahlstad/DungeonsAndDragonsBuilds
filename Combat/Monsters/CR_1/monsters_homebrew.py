@@ -13,6 +13,7 @@ from Model.Creatures.MonsterAbilities import (
     Multiattack,
     RangedAttack,
 )
+from Model.Content.CombatEffect import CombatCondition, CombatDamage, CombatEffect
 from Core.Definitions import Ability
 
 
@@ -714,6 +715,14 @@ class HumanPaladinOfDevotion(ExtendedCombatantData):
                 MonsterAbility(
                     name="Divine Smite (2/Day)",
                     description="Immediately after the paladin hits a creature with a melee weapon, the target takes an extra 9 (2d8) Radiant damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            damage=(CombatDamage("2d8", DamageType.RADIANT),),
+                            notes=(
+                                "Right after a melee weapon hit: target the creature it hit.",
+                            ),
+                        ),
+                    ),
                 ),
             ],
             actions=[
@@ -729,12 +738,42 @@ class HumanPaladinOfDevotion(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Compelled Duel (1/Day)",
                     description="The paladin challenges one creature it can see within 30 feet. The target must succeed on a DC 11 Wisdom saving throw or, for 1 minute (Concentration), have Disadvantage on attack rolls against creatures other than the paladin, and must succeed on a DC 11 Wisdom saving throw to willingly move more than 30 feet away from it. The effect ends early if the paladin attacks or casts a spell at another creature.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll="save",
+                            save_ability=Ability.WISDOM,
+                            dc=11,
+                            condition=CombatCondition(
+                                "Compelled Duel", duration_seconds=60
+                            ),
+                            concentration=True,
+                            notes=(
+                                "It has Disadvantage on attack rolls against"
+                                " creatures other than the paladin, and needs a"
+                                " DC 11 Wisdom save to willingly move more than"
+                                " 30 feet away from it.",
+                                "It ends early if the paladin attacks or casts a"
+                                " spell at another creature.",
+                            ),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[
                 MonsterAbility(
                     name="Lay on Hands",
                     description="The paladin touches itself or another creature and restores Hit Points from a pool of 15 that refills when it finishes a Long Rest, or spends 5 from the pool to end the Poisoned condition on the creature.",
+                    combat_effects=(
+                        CombatEffect(
+                            healing="",  # what it spends from the pool
+                            notes=(
+                                "Type the Hit Points it spends from its pool of 15"
+                                " (refilled on a Long Rest).",
+                                "Or 5 from the pool ends the Poisoned condition:"
+                                " take it off by hand.",
+                            ),
+                        ),
+                    ),
                 ),
             ],
             reactions=[],
