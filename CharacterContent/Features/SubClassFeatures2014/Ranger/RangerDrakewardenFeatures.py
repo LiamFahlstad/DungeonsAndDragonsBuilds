@@ -10,6 +10,7 @@ from Model.Content.Feature import (
     RegainedOn,
     FeatureDice,
 )
+from Model.Content.CombatEffect import CombatEffect
 from Core.Definitions import CreatureSize
 from Model.Creatures.Combatants import (
     Alignment,
@@ -183,6 +184,10 @@ class DraconicGift(Feature):
             description += f"\nYou chose {self._language}."
         return description
 
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # A cantrip, in the picker as a spell, and a language.
+        return []
+
 
 class DrakeCompanion(Feature):
     def __init__(self, damage_type: Optional[DamageType] = None):
@@ -281,6 +286,10 @@ class DrakeCompanion(Feature):
             character.get_proficiency_bonus(),
             DamageType(ctx.choice) if ctx.choice is not None else self.damage_type,
         )
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # It's summoned from its owner's card menu.
+        return []
 
 
 def _draconic_essence_choices(character: CharacterView) -> list[str]:

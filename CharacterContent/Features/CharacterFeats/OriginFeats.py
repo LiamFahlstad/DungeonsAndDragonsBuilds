@@ -7,6 +7,7 @@ from Model.Content.Feature import (
     RegainedOn,
     regained_on_from_uses,
 )
+from Model.Content.CombatEffect import CombatEffect
 from Model.Content.Improvements import (
     DamageResistance,
     GrantLanguage,
@@ -139,6 +140,10 @@ class Alert(OriginFeat):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # It changes Initiative only.
+        return []
 
 
 class Crafter(OriginFeat):
@@ -398,6 +403,10 @@ class MagicInitiate(OriginFeat):
             "Spell Change. Whenever you gain a new level, you can replace one of the spells you chose for this feat with a different spell of the same level from the chosen spell list.\n\n"
             "Repeatable. You can take this feat more than once, but you must choose a different spell list each time."
         )
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # Its spells are in the picker as spells.
+        return []
 
 
 def _resolve_spell_enum(value, enum_type: type) -> str:
@@ -1411,6 +1420,17 @@ class PortalJumper(OriginFeat):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        return [
+            CombatEffect(
+                name="Portal Step",
+                notes=(
+                    "Spend 15 feet of movement to teleport to an unoccupied space"
+                    " you can see within 15 feet. Once per turn.",
+                ),
+            )
+        ]
 
 
 class TransmutedAnatomy(OriginFeat):

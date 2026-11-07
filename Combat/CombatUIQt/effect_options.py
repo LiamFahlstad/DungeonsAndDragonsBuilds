@@ -18,6 +18,7 @@ from functools import lru_cache
 from CharacterContent.Spells.SpellFactory import SpellFactory
 from CharacterContent.Spells.SpellFactory.Mechanics import SpellMechanics
 from Core.Definitions import Condition
+from Model.Content.CombatEffect import CombatEffect
 
 from .monster_actions import (
     DAMAGE,
@@ -51,8 +52,9 @@ from .saves import (
 ATTACKS = "Attacks"
 FEATURES = "Features"
 ALL_SPELLS = "All spells"
-# The long categories, which start folded away.
-COLLAPSED_CATEGORIES = (FEATURES, ALL_SPELLS)
+# The long category, which starts folded away. Features start open: passive
+# ones aren't listed, nor those with nothing to apply (Feature.combat_effects).
+COLLAPSED_CATEGORIES = (ALL_SPELLS,)
 
 _ABILITY_SHORT_NAMES = dict(ABILITIES)
 _ABILITY_NAMES = "|".join(_ABILITY_SHORT_NAMES)
@@ -836,6 +838,92 @@ def _feature_option(char: dict, feature) -> EffectOption:
     )
 
 
+def feature_options(char: dict, feature) -> list[EffectOption]:
+    """The picker's rows for a feature: one per use its combat_effects()
+    describes, or, for one it doesn't describe, what its text says. A passive
+    feature it doesn't describe only changes the stat block, so it has none."""
+    sheet = char.get("_stat_block")
+    effects = feature.combat_effects(sheet) if sheet is not None else None
+    if effects is None:
+        return [] if feature.passive else [_feature_option(char, feature)]
+    return [_described_feature_option(char, feature, effect) for effect in effects]
+
+
+def _described_feature_option(
+    char: dict, feature, effect: CombatEffect
+) -> EffectOption:
+    """What one use a feature describes fills in. What it leaves unset is the
+    feature's own: its DC, action, duration and uses."""
+    sheet = char.get("_stat_block")
+    description = (feature.get_description(sheet) if sheet is not None else None) or ""
+    is_save = effect.roll == "save"
+    is_attack = effect.roll == "attack"
+    ability = effect.save_ability.short_name if effect.save_ability else None
+    dc = None
+    if is_save:
+        dc = effect.dc if effect.dc is not None else feature.calculate_dc(sheet)
+        dc = dc if dc is not None else known_save_dc(char)
+    bonus = None
+    if is_attack:
+        bonus = effect.attack_bonus
+        bonus = bonus if bonus is not None else known_spell_attack_bonus(char)
+    rolls = tuple(
+        DamageRoll(
+            damage.dice, damage.damage_type.value if damage.damage_type else None
+        )
+        for damage in effect.damage
+    )
+    condition = effect.condition
+    text = EffectText(
+        ability=ability,
+        is_attack=is_attack,
+        half_on_save=effect.half_on_success,
+        condition=condition.name if condition is not None else "",
+    )
+    notes = list(effect.notes)
+    for damage in effect.damage:
+        if damage.damage_type is None:
+            choices = ", ".join(choice.value for choice in damage.choices)
+            notes.append(f"Its damage is of a type to choose ({choices}): give one.")
+    notes += _unknown_number_notes(text, dc, bonus)
+    counts_uses = feature.uses is not None and effect.spends_use
+    uses = feature_uses(char, feature, sheet) if counts_uses else None
+    parts = _roll_summary(text, dc, bonus, rolls)
+    if uses is not None:
+        parts.insert(0, f"{uses[0]}/{uses[1]}")
+        if uses[0] == 0:
+            notes.append("No uses left.")
+    duration = _feature_duration(feature)
+    if condition is not None and condition.duration_seconds is not None:
+        duration = condition.duration_seconds
+    action_cost = feature_action_cost(feature)
+    if effect.action_type is not None:
+        action_cost = FEATURE_ACTION_COSTS[effect.action_type.value]
+    return EffectOption(
+        name=effect.name or feature.name,
+        kind=FEATURE,
+        summary="  ".join(parts),
+        tooltip=description,
+        note=" ".join(notes),
+        roll=ATTACK_ROLL if is_attack else SAVING_THROW,
+        ability=ability,
+        dc=dc,
+        bonus=bonus,
+        half_on_save=effect.half_on_success,
+        repeat_save=effect.repeat_save,
+        rolls=rolls,
+        condition=condition.name if condition is not None else "",
+        duration_seconds=duration,
+        until=condition.until if condition is not None else None,
+        action_cost=action_cost,
+        concentration=effect.concentration,
+        counts_uses=counts_uses,
+        feature_name=feature.name,
+        spell_name=effect.spell or "",
+        is_curated=True,
+    )
+
+
 def effect_options(
     char: dict | None, all_spells: Iterable | None = None
 ) -> list[tuple[str, list[EffectOption]]]:
@@ -859,7 +947,7 @@ def effect_options(
     categories += [
         (ATTACKS, [_weapon_option(who, weapon, sheet) for weapon in weapons]),
         (f"{who.get('name')}'s Spells", [spell_option(s, who) for s in own_spells]),
-        (FEATURES, [_feature_option(who, feature) for feature in features]),
+        (FEATURES, [o for feature in features for o in feature_options(who, feature)]),
         # A caster's own spell is listed even with nothing to apply: picking
         # it still spends the slot and the action, and holds Concentration.
         (

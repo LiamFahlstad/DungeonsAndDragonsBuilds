@@ -20,6 +20,7 @@ from Model.Content.Feature import (
     ActionType,
     RegainedOn,
 )
+from Model.Content.CombatEffect import CombatDamage, CombatEffect
 from Core.Rules import MAX_ABILITY_MODIFIER
 from Model.Content.Summons import (
     OnZeroHp,
@@ -77,6 +78,10 @@ class ReanimatorSpells(Feature):
         )
         return description
 
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # Its spells are in the picker as spells.
+        return []
+
 
 class ReanimatorSkillSet(Feature):
     def __init__(self):
@@ -100,6 +105,28 @@ class ReanimatorSkillSet(Feature):
 
     def number_of_uses(self, character: CharacterView) -> int:
         return max(1, character.get_intelligence_modifier())
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        level = character.get_class_level(CharacterClass.ARTIFICER)
+        dice = "4d4" if level >= 17 else "3d4" if level >= 11 else "2d4"
+        return [
+            CombatEffect(
+                name="Jolt to Life",
+                roll="save",
+                save_ability=Ability.DEXTERITY,
+                half_on_success=True,
+                damage=(CombatDamage(dice, DamageType.LIGHTNING),),
+                # It's a casting of Spare the Dying, which takes the Action.
+                action_type=ActionType.ACTION,
+                spell="Spare the Dying",
+                notes=(
+                    "Target the creatures of your choice within 10 feet of the"
+                    " creature you revive.",
+                    f"The revived creature regains {level} Hit Points: heal it by"
+                    " hand.",
+                ),
+            )
+        ]
 
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         # Jolt to Life's uses are in the panel below.
@@ -333,6 +360,10 @@ class ReanimatedCompanion(Feature):
             + format_reanimated_companion(character)
         )
         return description
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # It's summoned from its owner's card menu.
+        return []
 
 
 class StrangeModifications(Feature):

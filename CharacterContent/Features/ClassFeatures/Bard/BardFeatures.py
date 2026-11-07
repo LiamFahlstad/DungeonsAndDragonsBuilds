@@ -7,6 +7,7 @@ from Model.Content.Feature import (
     RegainedOn,
     FeatureDice,
 )
+from Model.Content.CombatEffect import CombatCondition, CombatEffect
 from Model.Content.Improvements import JackOfAllTradesBonus, SkillExpertiseChoice
 from Core.Definitions import (
     Ability,
@@ -85,6 +86,10 @@ class Spellcasting(Feature):
     def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # Its spells are in the picker as spells.
+        return []
+
 
 BARDIC_INSPIRATION_DIE = FeatureDice(
     "Bardic Inspiration Die",
@@ -156,6 +161,29 @@ class BardicInspiration(Feature):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # Valor's upgrade is granted as an extension of this feature.
+        from CharacterContent.Features.SubClassFeatures.Bard.BardValorFeatures import (
+            CombatInspiration,
+        )
+
+        die = BARDIC_INSPIRATION_DIE.at(character)
+        notes = [
+            f"Once within the hour, when the target fails a D20 Test, it can roll"
+            f" the {die} and add it to the d20. Take the badge off when it does."
+        ]
+        if character.has_feature(CombatInspiration):
+            notes.append(
+                f"Combat Inspiration: it can instead add the {die} to its AC against"
+                " an attack roll that hits it (a Reaction), or to the damage of an"
+                " attack roll it hits with."
+            )
+        return [
+            CombatEffect(
+                condition=CombatCondition("Bardic Inspiration"), notes=tuple(notes)
+            )
+        ]
 
 
 class ExpertiseLevel1(Feature):

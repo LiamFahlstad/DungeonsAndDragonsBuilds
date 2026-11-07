@@ -5,6 +5,8 @@ from typing import Callable, Literal, Sequence
 
 from Core.Definitions import CharacterClass
 from Core.Rules import MAX_LEVEL, MIN_LEVEL
+from Model.Content.ActionType import ActionType
+from Model.Content.CombatEffect import CombatEffect
 from Model.Content.Effect import Effect
 from Model.Content.FeatureText import Block
 from Model.Creatures.Combatants import ExtendedCombatantData
@@ -12,6 +14,9 @@ from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.Content.Summons import SummonContext, SummonSpec
 from Model.Spells import FeatureSpell
 from Model.View import CharacterView
+
+# ActionType (imported above) lives in its own module so CombatEffect can use
+# it too; everything else imports it from here.
 
 
 @dataclass
@@ -144,14 +149,6 @@ class FeatureDice:
         if self.scales_with is None:
             return self.at_level(character.character_level)
         return self.at_level(character.get_class_level(self.scales_with))
-
-
-class ActionType(str, Enum):
-    """Action economy cost to activate a feature."""
-
-    ACTION = "action"
-    BONUS_ACTION = "bonus_action"
-    REACTION = "reaction"
 
 
 class RegainedOn(str, Enum):
@@ -365,6 +362,18 @@ class Feature(Effect):
         ability modifier plus proficiency bonus), so the value can be reused
         anywhere it's needed instead of being recomputed inline. Return None
         (default) for features with no DC."""
+        return None
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect] | None:
+        """Override to say what using this feature does in a fight, for the
+        combat simulator's Custom Effect picker (Model/Content/CombatEffect.py
+        has the fields): one CombatEffect per way to use it, with the roll,
+        damage, condition and cost worked out for `character`. Return [] for
+        a feature with nothing to apply to a target in a fight (one that only
+        grants spells, proficiencies or a language, or one used from its own
+        control, like Wild Shape or a summon), which leaves it out of the
+        picker. Return None (default) for a feature not described yet: the
+        picker reads its rules text instead, and leaves out a passive one."""
         return None
 
     def regained_on(self, character: CharacterView) -> "RegainedOn | None":

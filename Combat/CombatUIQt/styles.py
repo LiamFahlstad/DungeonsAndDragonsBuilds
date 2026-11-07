@@ -101,9 +101,89 @@ QLabel#secondary {
     font-size: 11px;
 }
 
-/* What to check about a Custom Effect pick */
+/* The Custom Effect dialog */
+QLabel#effectWho {
+    font-size: 14px;
+    font-weight: bold;
+}
+/* What to check about a pick */
 QLabel#effectNote {
-    color: #d4b26a;
+    color: #f0d48a;
+    background-color: #2e2814;
+    border-left: 3px solid #c9a84c;
+    border-radius: 3px;
+    padding: 4px 8px;
+}
+QFrame#effectSection {
+    background-color: #16213e;
+    border: 1px solid #0f3460;
+    border-radius: 6px;
+}
+QFrame#effectSection QLabel,
+QFrame#effectSection QCheckBox,
+QScrollArea#targetRolls,
+QScrollArea#targetRolls > QWidget > QWidget {
+    background-color: transparent;
+}
+QLabel#effectSectionTitle {
+    color: #c9a84c;
+    font-weight: bold;
+    font-size: 11px;
+}
+QLabel#effectPreview {
+    color: #5ac8f5;
+    font-size: 12px;
+}
+QLabel#targetRowInfo {
+    color: #9fb4d0;
+    min-width: 64px;
+}
+QDialog#customEffectDialog QLineEdit {
+    border: 1px solid #1a4a80;
+}
+/* Colours only: a border or padding would lose the spin box's arrows */
+QDialog#customEffectDialog QSpinBox {
+    background-color: #0f3460;
+    color: #eaeaea;
+}
+/* A row of widgets inside a section shows the section through it */
+QWidget[effectRow="true"] {
+    background-color: transparent;
+}
+QDialog#customEffectDialog QLineEdit:focus {
+    border: 1px solid #c9a84c;
+}
+QTreeWidget#effectOptions, QTextBrowser#effectDetails {
+    background-color: #16213e;
+    border: 1px solid #0f3460;
+    border-radius: 4px;
+}
+QTreeWidget#effectOptions::item {
+    padding: 2px 0;
+}
+QTreeWidget#effectOptions::item:selected {
+    background-color: #1f4a7a;
+    color: #ffffff;
+}
+QTextBrowser#effectDetails {
+    font-size: 11px;
+    padding: 4px;
+}
+/* A row of chips: one click picks, and the chosen one is gold */
+QPushButton[segment="true"] {
+    padding: 2px 4px;
+    min-height: 20px;
+    border-radius: 3px;
+}
+QPushButton[segment="true"]:checked {
+    background-color: #c9a84c;
+    border: 1px solid #f0d078;
+    color: #1a1a2e;
+    font-weight: bold;
+}
+QPushButton[rollKind="true"] {
+    min-height: 26px;
+    font-size: 13px;
 }
 
 /* Condition badge */

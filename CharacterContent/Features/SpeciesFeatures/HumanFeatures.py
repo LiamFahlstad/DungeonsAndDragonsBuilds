@@ -1,5 +1,6 @@
 from Core.Definitions import CreatureSize, Skill
 from Model.Content.Feature import Feature
+from Model.Content.CombatEffect import CombatEffect
 from Model.Content.Improvements import SkillProficiencyChoice
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.View import CharacterView
@@ -18,6 +19,10 @@ class Resourceful(Feature):
 
     def get_description(self, character: CharacterView) -> str:
         return "You gain Heroic Inspiration whenever you finish a Long Rest.\n"
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # Heroic Inspiration after a Long Rest: nothing to apply.
+        return []
 
 
 class Skillful(Feature):

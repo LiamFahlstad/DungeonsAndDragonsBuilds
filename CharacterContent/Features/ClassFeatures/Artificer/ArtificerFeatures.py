@@ -6,6 +6,7 @@ from Model.Content.Feature import (
     ActionType,
     RegainedOn,
 )
+from Model.Content.CombatEffect import CombatEffect
 from Core.Rules import MAX_ABILITY_MODIFIER, MAX_LEVEL
 from Model.View import CharacterView
 from Utils import StringUtils
@@ -89,6 +90,10 @@ class Spellcasting(Feature):
     def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # Its spells are in the picker as spells.
+        return []
+
 
 class TinkersMagic(Feature):
     def __init__(self):
@@ -106,6 +111,16 @@ class TinkersMagic(Feature):
                 current_formula="Current amount: equal to your Intelligence modifier.",
             ),
         )
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        return [
+            CombatEffect(
+                notes=(
+                    "It makes one item from its list in a space within 5 feet:"
+                    " nothing happens to the targets.",
+                ),
+            )
+        ]
 
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         # Uses are in the panel below.
@@ -450,6 +465,10 @@ class ReplicateMagicItem(Feature):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.OBJECT
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # Making magic items isn't done in a fight.
+        return []
 
 
 class MagicItemTinker(Feature):

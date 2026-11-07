@@ -6,6 +6,7 @@ from Model.Content.Feature import (
     FeatureUses,
     RegainedOn,
 )
+from Model.Content.CombatEffect import CombatCondition, CombatEffect
 from Model.Content.Improvements import GrantSense, SkillExpertiseChoice, SpeedBonus
 import Core.Definitions as Definitions
 from Core.Definitions import Ability, CharacterClass, Skill
@@ -74,6 +75,10 @@ class Spellcasting(Feature):
 
     def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # Its spells are in the picker as spells.
+        return []
 
 
 class ReplacingWeaponMasteries(Feature):
@@ -148,6 +153,27 @@ class FavoredEnemy(Feature):
             return 5
         else:
             return 6
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        from CharacterContent.Spells.SpellFactory import SpellFactory
+
+        hunters_mark = SpellFactory.create("Hunter's Mark")
+        return [
+            CombatEffect(
+                name="Hunter's Mark (Favored Enemy)",
+                condition=CombatCondition(
+                    "Hunter's Mark", duration_seconds=hunters_mark.duration_seconds
+                ),
+                action_type=ActionType.BONUS_ACTION,  # the spell's casting time
+                concentration=hunters_mark.is_concentration,
+                spell=hunters_mark.name,
+                notes=(
+                    "Cast without a spell slot.",
+                    "Each attack roll that hits the target deals an extra 1d6"
+                    " Force damage: add it to the attack's damage.",
+                ),
+            )
+        ]
 
 
 class DeftExplorerExpertise(Feature):

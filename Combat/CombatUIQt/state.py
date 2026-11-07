@@ -260,6 +260,9 @@ class CombatWindowState:
     def _all_spells(self) -> list:
         raise NotImplementedError("SpellsMixin._all_spells")
 
+    def _spell_named(self, name: str):
+        raise NotImplementedError("SpellsMixin._spell_named")
+
     def _count_spell_cast(
         self, caster: dict, name: str, level: int, slot_level: int | None
     ):

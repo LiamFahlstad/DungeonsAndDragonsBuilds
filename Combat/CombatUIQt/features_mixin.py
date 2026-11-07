@@ -24,6 +24,9 @@ from .state import CombatWindowState
 from .undo import undoable
 from .tree_filter import filter_category_tree, first_visible_item
 
+# The color of a condition badge a feature puts on a creature.
+FEATURE_BADGE_COLOR = "#4c7ac9"
+
 
 class FeaturesMixin(CombatWindowState):
     """Mixin for feature-related methods."""
@@ -370,7 +373,7 @@ class FeaturesMixin(CombatWindowState):
 
         # Condition badge + tooltip on every recipient
         tooltip_html = self._feature_condition_tooltip(source, feature)
-        badge_color = "#4c7ac9"
+        badge_color = FEATURE_BADGE_COLOR
 
         # Duration -> a ticking bar on every recipient
         duration_value = (

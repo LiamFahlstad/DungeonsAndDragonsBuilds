@@ -9,6 +9,8 @@ import random
 
 import pytest
 from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QShortcut
+from PyQt6.QtTest import QTest
 from PyQt6.QtWidgets import (
     QApplication,
     QCheckBox,
@@ -19,8 +21,10 @@ from PyQt6.QtWidgets import (
     QMessageBox,
     QPushButton,
     QSpinBox,
+    QTextBrowser,
     QTreeWidget,
     QTreeWidgetItem,
+    QWidget,
 )
 
 from Builds.Characters.Y2024_Paladin_Devotion_Edmund import (
@@ -33,8 +37,11 @@ from Combat.Definitions import Action
 from Combat.CombatUIQt.attack_rolls import AttackRoll
 from Combat.CombatUIQt.saves import (
     ATTACK_ROLL,
+    FEATURE,
+    MONSTER_ACTION,
     SAVING_THROW,
     CustomEffect,
+    EffectOption,
     is_immune_to,
     known_attack_bonus,
     known_save_dc,
@@ -45,7 +52,7 @@ from Combat.CombatUIQt.saves import (
     save_modifier,
 )
 from Core.Definitions import Condition, DamageType
-from Model.Creatures.Combatants import DamageTypeEntry
+from Model.Creatures.Combatants import DamageTypeEntry, Visibility
 from tests._combat_ui import make_ui, open_dialog
 
 FIRE = DamageType.FIRE.value
@@ -433,6 +440,17 @@ def _apply(dlg):
     next(b for b in dlg.findChildren(QPushButton) if b.text() == "Apply").click()
 
 
+def _chips(dlg, row: str) -> dict[str, QPushButton]:
+    """A chip row's buttons, by their text without the & of a shortcut."""
+    widget = dlg.findChild(QWidget, row)
+    return {b.text().replace("&", ""): b for b in widget.findChildren(QPushButton)}
+
+
+def _choose_roll(dlg, kind: str):
+    """Click No roll, Saving throw or Attack roll, as the GM does."""
+    _chips(dlg, "rollKindButtons")[kind].click()
+
+
 def test_the_dialog_applies_all_of_it(fight, monkeypatch):
     ui, _, tiger, bandit = fight
     dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
@@ -511,10 +529,12 @@ def test_the_dialog_fits_the_smallest_window(fight, monkeypatch):
 def test_legendary_resistance_shows_only_when_a_target_has_any(fight, monkeypatch):
     ui, _, tiger, _ = fight
     dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    _choose_roll(dlg, SAVING_THROW)
     box = dlg.findChild(QCheckBox, "useLegendaryResistance")
     assert not box.isVisibleTo(dlg)
     tiger["legendary_resistances"] = 3
     dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    _choose_roll(dlg, SAVING_THROW)
     assert dlg.findChild(QCheckBox, "useLegendaryResistance").isVisibleTo(dlg)
 
 
@@ -1490,20 +1510,21 @@ def _attack_dialog(ui, monkeypatch):
 def test_the_dialog_asks_for_a_bonus_instead_of_a_dc(fight, monkeypatch):
     ui, *_ = fight
     dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    _choose_roll(dlg, SAVING_THROW)
     dc = dlg.findChild(QSpinBox, "saveDc")
     bonus = dlg.findChild(QSpinBox, "attackBonus")
-    ability = _combo(dlg, "saveAbility")
+    abilities = dlg.findChild(QWidget, "saveAbilityButtons")
 
     def labels() -> list[str]:
         return [label.text() for label in dlg.findChildren(type(ui.selected_label))]
 
-    assert dc.isVisibleTo(dlg) and ability.isVisibleTo(dlg)
+    assert dc.isVisibleTo(dlg) and abilities.isVisibleTo(dlg)
     assert not bonus.isVisibleTo(dlg)
     assert "Condition (on a failed save)" in labels()
 
     _combo(dlg, "rollKind").setCurrentText(ATTACK_ROLL)
     assert bonus.isVisibleTo(dlg)
-    assert not dc.isVisibleTo(dlg) and not ability.isVisibleTo(dlg)
+    assert not dc.isVisibleTo(dlg) and not abilities.isVisibleTo(dlg)
     assert _combo(dlg, "saveMode").isEnabled()
     assert "Condition (on a hit)" in labels()
 
@@ -1512,6 +1533,7 @@ def test_the_save_only_ticks_go_away_for_an_attack(fight, monkeypatch):
     ui, _, tiger, _ = fight
     tiger["legendary_resistances"] = 3
     dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    _choose_roll(dlg, SAVING_THROW)
     boxes = [
         dlg.findChild(QCheckBox, name)
         for name in ("halfOnSave", "repeatSave", "useLegendaryResistance")
@@ -1521,6 +1543,151 @@ def test_the_save_only_ticks_go_away_for_an_attack(fight, monkeypatch):
     assert not any(box.isVisibleTo(dlg) for box in boxes)
     _combo(dlg, "rollKind").setCurrentText("Saving throw")
     assert all(box.isVisibleTo(dlg) for box in boxes)
+
+
+# The roll chips: No roll, Saving throw and Attack roll, one click apart
+
+
+def test_no_roll_hides_both_rolls_controls(fight, monkeypatch):
+    ui, *_ = fight
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    _choose_roll(dlg, "No roll")
+    assert _combo(dlg, "saveAbility").currentData() is None
+    assert _combo(dlg, "rollKind").currentText() == SAVING_THROW
+    for name in ("saveDc", "attackBonus"):
+        assert not dlg.findChild(QSpinBox, name).isVisibleTo(dlg), name
+    for name in ("halfOnSave", "repeatSave"):
+        assert not dlg.findChild(QCheckBox, name).isVisibleTo(dlg), name
+    assert not dlg.findChild(QWidget, "saveModeButtons").isVisibleTo(dlg)
+    assert not any(
+        b.isVisibleTo(dlg) for b in dlg.findChildren(QLineEdit, "typedTotal")
+    )
+    labels = [label.text() for label in dlg.findChildren(QLabel)]
+    assert "Condition" in labels
+
+
+def test_the_roll_chip_shows_the_roll(fight, monkeypatch):
+    ui, *_ = fight
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    chips = _chips(dlg, "rollKindButtons")
+
+    def checked() -> list[str]:
+        return [text for text, chip in chips.items() if chip.isChecked()]
+
+    _choose_roll(dlg, ATTACK_ROLL)
+    assert checked() == [ATTACK_ROLL]
+    _combo(dlg, "rollKind").setCurrentText(SAVING_THROW)  # a pick sets the combos
+    combo = _combo(dlg, "saveAbility")
+    combo.setCurrentIndex(combo.findData("WIS"))
+    assert checked() == [SAVING_THROW]
+    _choose_roll(dlg, "No roll")
+    assert checked() == ["No roll"]
+    _chips(dlg, "rollKindButtons")["No roll"].click()  # clicked again: stays
+    assert checked() == ["No roll"]
+
+
+def test_a_saving_throw_after_no_roll_goes_back_to_its_ability(fight, monkeypatch):
+    ui, *_ = fight
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    _chips(dlg, "saveAbilityButtons")["WIS"].click()
+    _choose_roll(dlg, "No roll")
+    _choose_roll(dlg, SAVING_THROW)
+    assert _combo(dlg, "saveAbility").currentData() == "WIS"
+
+
+def test_a_saving_throw_starts_on_dexterity(fight, monkeypatch):
+    ui, *_ = fight
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    _choose_roll(dlg, SAVING_THROW)
+    assert _combo(dlg, "saveAbility").currentData() == "DEX"
+
+
+def test_an_ability_chip_makes_it_a_saving_throw(fight, monkeypatch):
+    ui, *_ = fight
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    _choose_roll(dlg, "No roll")
+    _chips(dlg, "saveAbilityButtons")["CON"].click()
+    assert _combo(dlg, "saveAbility").currentData() == "CON"
+    assert _chips(dlg, "rollKindButtons")[SAVING_THROW].isChecked()
+    assert dlg.findChild(QSpinBox, "saveDc").isVisibleTo(dlg)
+
+
+def test_an_attack_keeps_the_ability_for_a_save_after(fight, monkeypatch):
+    ui, *_ = fight
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    _chips(dlg, "saveAbilityButtons")["INT"].click()
+    _choose_roll(dlg, ATTACK_ROLL)
+    _choose_roll(dlg, SAVING_THROW)
+    assert _combo(dlg, "saveAbility").currentData() == "INT"
+
+
+def test_the_mode_and_action_chips_set_their_values(fight, monkeypatch):
+    ui, pirate, *_ = fight
+    ui._select_character(pirate)
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    _chips(dlg, "saveModeButtons")["Advantage"].click()  # no roll: nothing to
+    assert _combo(dlg, "saveMode").currentText() == "Neutral"
+    _choose_roll(dlg, SAVING_THROW)
+    _chips(dlg, "saveModeButtons")["Advantage"].click()
+    assert _combo(dlg, "saveMode").currentText() == "Advantage"
+    _chips(dlg, "actionCostButtons")["Bonus Action"].click()
+    assert _combo(dlg, "actionCost").currentData() == "Bonus Action"
+    _combo(dlg, "actionCost").setCurrentIndex(0)
+    assert _chips(dlg, "actionCostButtons")["None"].isChecked()
+
+
+def test_the_cost_chips_wait_for_a_source(fight, monkeypatch):
+    ui, *_ = fight
+    ui.selected_character = None
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    assert not dlg.findChild(QWidget, "actionCostButtons").isEnabled()
+
+
+def test_each_target_shows_its_save_bonus_and_ac(fight, monkeypatch):
+    ui, _, tiger, bandit = fight
+    bandit["visibility_states"] = [Visibility.HALF_COVER.value]
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+
+    def infos() -> list[str]:
+        rows = dlg.findChildren(QLabel, "targetRowInfo")
+        return [label.text() for label in rows if label.isVisibleTo(dlg)]
+
+    _chips(dlg, "saveAbilityButtons")["DEX"].click()
+    assert infos() == ["DEX +3", "DEX +3"]  # both have +3 to Dexterity saves
+    _chips(dlg, "saveAbilityButtons")["STR"].click()
+    assert infos() == ["STR +3", "STR +0"]  # their Strength modifiers: 17, 10
+    _choose_roll(dlg, ATTACK_ROLL)
+    # Half cover adds 2 to the Bandit's AC.
+    assert infos() == [f"AC {tiger['ac']}", f"AC {bandit['ac'] + 2} (cover)"]
+
+
+def test_the_preview_says_what_apply_will_do(fight, monkeypatch):
+    ui, pirate, *_ = fight
+    ui._select_character(pirate)
+    # Nothing in the preview is rolled: a die would fail the test.
+    monkeypatch.setattr(random, "randint", lambda *a: pytest.fail("rolled"))
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    _chips(dlg, "saveAbilityButtons")["DEX"].click()
+    dlg.findChild(QSpinBox, "saveDc").setValue(15)
+    dlg.findChild(QLineEdit, "effectDamage").setText("8d6")
+    _combo(dlg, "damageType").setCurrentIndex(_combo(dlg, "damageType").findData(FIRE))
+    _combo(dlg, "conditionName").setCurrentText("Prone")
+    _chips(dlg, "actionCostButtons")["Action"].click()
+    preview = dlg.findChild(QLabel, "effectPreview").text()
+    assert preview == (
+        "On 2 targets: DC 15 Dexterity save · 8d6 Fire, half on a save · Prone"
+        " · costs Action"
+    )
+
+
+def test_the_preview_of_an_attack(fight, monkeypatch):
+    ui, *_ = fight
+    dlg = _attack_dialog(ui, monkeypatch)
+    dlg.findChild(QSpinBox, "attackBonus").setValue(5)
+    _chips(dlg, "saveModeButtons")["Disadvantage"].click()
+    dlg.findChild(QLineEdit, "effectDamage").setText("2d6 fire")
+    preview = dlg.findChild(QLabel, "effectPreview").text()
+    assert preview == "On 2 targets: Attack +5 vs AC with Disadvantage · 2d6 fire"
 
 
 def test_legendary_resistance_stays_away_with_none_left_after_an_attack(
@@ -1815,7 +1982,229 @@ def test_the_categories(paladin, monkeypatch):
         "Features",
         "All spells",
     ]
-    assert [c.isExpanded() for c in categories] == [True, True, False, False]
+    # Only All spells is long enough to start folded.
+    assert [c.isExpanded() for c in categories] == [True, True, True, False]
+
+
+def _browsable(dlg) -> list[QTreeWidgetItem]:
+    """The rows Up and Down go through: those of unfolded categories."""
+    return [
+        row
+        for row in _rows(dlg)
+        if row.parent().isExpanded() and not row.isHidden() and not row.isDisabled()
+    ]
+
+
+def test_down_and_up_from_the_search_box_pick_as_they_go(paladin, monkeypatch):
+    ui, *_ = paladin
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    first, second = _browsable(dlg)[:2]
+    QTest.keyClick(_search(dlg), Qt.Key.Key_Down)
+    assert _tree(dlg).currentItem() is first
+    assert _form(dlg)["name"] == first.data(0, Qt.ItemDataRole.UserRole).name
+    QTest.keyClick(_search(dlg), Qt.Key.Key_Down)
+    assert _tree(dlg).currentItem() is second
+    assert _form(dlg)["name"] == second.data(0, Qt.ItemDataRole.UserRole).name
+    QTest.keyClick(_search(dlg), Qt.Key.Key_Up)
+    assert _tree(dlg).currentItem() is first
+    assert dlg.focusWidget() is _search(dlg)  # still typing
+
+
+def test_down_stops_at_the_last_row_it_can_show(paladin, monkeypatch):
+    ui, *_ = paladin
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    rows = _browsable(dlg)
+    for _ in range(len(rows) + 3):
+        QTest.keyClick(_search(dlg), Qt.Key.Key_Down)
+    # The last of Edmund's features: All spells is folded.
+    assert _tree(dlg).currentItem() is rows[-1]
+    assert rows[-1].parent().text(0) == "Features"
+
+
+def test_down_goes_through_the_search_results(paladin, monkeypatch):
+    ui, *_ = paladin
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    _search(dlg).setText("fireball")
+    QTest.keyClick(_search(dlg), Qt.Key.Key_Down)
+    QTest.keyClick(_search(dlg), Qt.Key.Key_Down)
+    assert _form(dlg)["name"] == "Delayed Blast Fireball"
+
+
+def test_enter_applies_the_row_reached_with_the_arrows(paladin, monkeypatch):
+    ui, edmund, tiger = paladin
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    _search(dlg).setText("hold person")
+    QTest.keyClick(_search(dlg), Qt.Key.Key_Down)
+    assert _form(dlg)["name"] == "Hold Person"
+    _search(dlg).returnPressed.emit()
+    assert dlg.result() == QDialog.DialogCode.Accepted
+    assert ui.history  # applied
+
+
+def test_escape_empties_the_search_before_it_closes(paladin, monkeypatch):
+    ui, *_ = paladin
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    rejected = []
+    dlg.rejected.connect(lambda: rejected.append(True))
+    _search(dlg).setText("fire")
+    QTest.keyClick(_search(dlg), Qt.Key.Key_Escape)
+    assert _search(dlg).text() == ""
+    assert not rejected
+    assert not _tree(dlg).topLevelItem(2).isHidden()  # the filter is gone
+
+
+def test_typing_in_the_list_types_in_the_search_box(paladin, monkeypatch):
+    ui, *_ = paladin
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    _tree(dlg).setFocus()
+    QTest.keyClicks(_tree(dlg), "bles")
+    assert _search(dlg).text() == "bles"
+
+
+def test_ctrl_enter_applies_from_anywhere(fight, monkeypatch):
+    ui, _, tiger, _ = fight
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    dlg.findChild(QLineEdit, "effectDamage").setText("6 fire")
+    shortcut = next(
+        s for s in dlg.findChildren(QShortcut) if s.key().toString() == "Ctrl+Return"
+    )
+    shortcut.activated.emit()
+    assert tiger["hp"] == tiger["max_hp"] - 6
+
+
+def test_the_details_show_the_picks_rules_text(paladin, monkeypatch):
+    ui, *_ = paladin
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    details = dlg.findChild(QTextBrowser, "effectDetails")
+    assert "Enter" in details.toPlainText()  # how to use it, before a pick
+    _search(dlg).setText("hold person")
+    _search(dlg).returnPressed.emit()
+    text = details.toPlainText()
+    assert text.startswith("Hold Person")
+    assert "Paralyzed condition" in text
+    dlg.findChild(QLineEdit, "effectName").textEdited.emit("My own")
+    assert "Enter" in details.toPlainText()  # the pick was dropped
+
+
+def test_a_row_shows_its_numbers_in_their_own_column(monster, monkeypatch):
+    ui, *_ = monster
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    row = _row(dlg, "Scimitar")
+    assert (row.text(0), row.text(1)) == ("Scimitar", "+4  1d6 + 2 Slashing")
+
+
+# A picked spell's, feature's or action's badge can be clicked to read it, as
+# Cast Spell's can
+
+
+def _badge(ui, char: dict, name: str):
+    """The clickable badge for condition `name` on char's card, or None."""
+    card = ui._card_widgets[id(char)]
+    return next((b for b in card.findChildren(QPushButton) if b.text() == name), None)
+
+
+def _clicked_popup(ui, monkeypatch, char: dict, name: str) -> tuple[str, str]:
+    """(heading, body) of the popup clicking char's `name` badge opens."""
+    shown = []
+    monkeypatch.setattr(
+        ui,
+        "_show_rule_popup",
+        lambda title, heading, body: shown.append((heading, body)),
+    )
+    badge = _badge(ui, char, name)
+    assert badge is not None, f"no clickable {name} badge"
+    badge.click()
+    assert len(shown) == 1, shown
+    return shown[0]
+
+
+def _apply_guidance(ui, monkeypatch, notes: str = ""):
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    _search(dlg).setText("guidance")
+    _search(dlg).returnPressed.emit()
+    assert _form(dlg)["condition"] == "Guidance"
+    dlg.findChild(QLineEdit, "conditionNotes").setText(notes)
+    _apply(dlg)
+
+
+def test_a_picked_spells_badge_shows_the_spell(paladin, monkeypatch):
+    ui, _, tiger = paladin
+    _apply_guidance(ui, monkeypatch)
+    assert "Guidance" in tiger["conditions"]
+    heading, body = _clicked_popup(ui, monkeypatch, tiger, "Guidance")
+    assert heading == "Guidance"
+    guidance = SpellFactory.create("Guidance")
+    assert guidance.description.split("\n")[0] in body
+    assert "<b>Duration:</b>" in body  # the spell's card, as Cast Spell's
+    assert _badge(ui, tiger, "Guidance").toolTip() == body
+
+
+def test_a_picked_spells_badge_has_the_schools_color(paladin, monkeypatch):
+    ui, _, tiger = paladin
+    _apply_guidance(ui, monkeypatch)
+    school = SpellFactory.create("Guidance").school
+    color = tiger["spell_condition_colors"]["Guidance"]
+    from CharacterContent.Spells.SpellFactory import Spell
+
+    assert color == Spell.get_school_color(school)
+
+
+def test_notes_come_before_the_spell(paladin, monkeypatch):
+    ui, _, tiger = paladin
+    _apply_guidance(ui, monkeypatch, notes="Stealth")
+    _, body = _clicked_popup(ui, monkeypatch, tiger, "Guidance")
+    assert body.startswith("<i>Stealth</i>")
+    assert "<b>Duration:</b>" in body
+
+
+def test_a_picked_actions_badge_shows_its_rules_text(fight, monkeypatch):
+    ui, _, tiger, _ = fight
+    action = EffectOption(
+        name="Sticky Web",
+        kind=MONSTER_ACTION,
+        tooltip="Dexterity Saving Throw: DC 12.\nFailure: the target is webbed.",
+    )
+    ui._give_effect_condition(tiger, CustomEffect("Sticky Web", "Webbed", pick=action))
+    heading, body = _clicked_popup(ui, monkeypatch, tiger, "Webbed")
+    assert heading == "Webbed"
+    assert "<b style='color:#c9a84c; font-size:14px;'>Sticky Web</b>" in body
+    assert "DC 12.<br>Failure: the target is webbed." in body
+
+
+def test_a_picked_features_badge_shows_the_feature(paladin, monkeypatch):
+    ui, edmund, tiger = paladin
+    feature = edmund["_feature_objects"][0]
+    option = EffectOption(name=feature.name, kind=FEATURE)
+    ui._give_effect_condition(tiger, CustomEffect(feature.name, "Blessed", pick=option))
+    _, body = _clicked_popup(ui, monkeypatch, tiger, "Blessed")
+    assert body == ui._feature_condition_tooltip(edmund, feature)
+
+
+def test_an_effect_typed_by_hand_shows_only_its_notes(fight, monkeypatch):
+    ui, _, tiger, _ = fight
+    ui._give_effect_condition(tiger, CustomEffect("Vines", "Tangled", notes="DC 13"))
+    _, body = _clicked_popup(ui, monkeypatch, tiger, "Tangled")
+    assert body == "DC 13"
+
+
+def test_a_spells_badge_shows_the_spell_after_a_restart(fight, monkeypatch):
+    """A spell's card isn't kept in the log, so a Bless badge restored with
+    the fight is read from the spell again."""
+    ui, _, tiger, _ = fight
+    tiger["conditions"].append("Bless")
+    ui._rebuild_card(tiger)
+    heading, body = _clicked_popup(ui, monkeypatch, tiger, "Bless")
+    assert heading == "Bless" and "<b>Duration:</b>" in body
+
+
+def test_a_rules_conditions_badge_still_shows_its_rule(fight, monkeypatch):
+    ui, _, tiger, _ = fight
+    shown = []
+    monkeypatch.setattr(ui, "_show_condition_info", shown.append)
+    tiger["conditions"].append("Prone")
+    ui._rebuild_card(tiger)
+    _badge(ui, tiger, "Prone").click()
+    assert shown == ["Prone"]
 
 
 def test_picking_a_monsters_attack(monster, monkeypatch):
@@ -2387,3 +2776,84 @@ def test_the_dialog_fits_with_eight_targets(tmp_path, monkeypatch):
     assert dlg.layout().totalHeightForWidth(dlg.width()) <= 600
     _combo(dlg, "rollKind").setCurrentText(ATTACK_ROLL)
     assert dlg.layout().totalHeightForWidth(dlg.width()) <= 600
+
+
+# ---------------------------------------------------------------------------
+# A feature described by its own combat_effects() (Model/Content/CombatEffect.py)
+# fills the form, and Apply spends it as Enable Feature would
+
+
+def _party_fight(tmp_path, builder):
+    """The player built by `builder`, the source, targeting a Tiger."""
+    ui = make_ui(tmp_path, [Tiger()], [builder().build()])
+    player, tiger = ui.characters
+    ui._initiative_inputs[id(player)].setText("15")
+    ui._initiative_inputs[id(tiger)].setText("10")
+    ui._start_combat()
+    ui._select_character(player)
+    ui._select_target_character(tiger)
+    return ui, player, tiger
+
+
+def _pick_and_apply(ui, monkeypatch, search: str) -> dict:
+    """Search for it, pick it, check where its numbers came from, and apply."""
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    _search(dlg).setText(search)
+    _search(dlg).returnPressed.emit()
+    details = dlg.findChild(QTextBrowser, "effectDetails").toPlainText()
+    assert "filled in from the feature's combat data" in details
+    form = _form(dlg)
+    _apply(dlg)
+    return form
+
+
+def test_jolt_to_life_rolls_its_save_and_spends_its_feature(tmp_path, monkeypatch):
+    from Builds.Characters.Y2024_Artificer_Reanimator_Dessie import (
+        Y2024ArtificerReanimatorDessieCharacterBuilder as Dessie,
+    )
+
+    ui, dessie, tiger = _party_fight(tmp_path, Dessie)
+    form = _pick_and_apply(ui, monkeypatch, "jolt")
+    assert (form["ability"], form["damage"], form["half"]) == (
+        "DEX",
+        "2d4 Lightning",
+        True,
+    )
+    assert dessie["feature_uses_used"] == {"Reanimator's Skill Set": 1}
+    assert dessie["action_uses"]["Action"] == 1
+    log = _log(ui)
+    assert "Dessie uses Reanimator's Skill Set" in log
+    assert "Dexterity save against Jolt to Life" in log
+
+
+def test_bardic_inspiration_puts_its_badge_on_the_target(tmp_path, monkeypatch):
+    from Builds.Characters.Y2024_Bard_Valor_Thomas import (
+        Y2024BardValorThomasCharacterBuilder as Thomas,
+    )
+
+    ui, thomas, tiger = _party_fight(tmp_path, Thomas)
+    _pick_and_apply(ui, monkeypatch, "bardic")
+    assert "Bardic Inspiration" in tiger["conditions"]
+    (timer,) = tiger["timed_conditions"]
+    assert timer["time_left"] == 60 * 60  # once within the next hour
+    assert thomas["feature_uses_used"] == {"Bardic Inspiration": 1}
+    assert thomas["action_uses"]["Bonus Action"] == 1
+    heading, body = _clicked_popup(ui, monkeypatch, tiger, "Bardic Inspiration")
+    assert heading == "Bardic Inspiration"
+    assert "Bard Level 1" in body  # the feature's card
+
+
+def test_favored_enemys_hunters_mark_is_the_spells_badge(tmp_path, monkeypatch):
+    from Builds.Characters.Y2024_Ranger_Drakewarden_Hanna import (
+        Y2024RangerDrakewardenHannaCharacterBuilder as Hanna,
+    )
+
+    ui, hanna, tiger = _party_fight(tmp_path, Hanna)
+    slots = dict(hanna["spell_slots"])
+    _pick_and_apply(ui, monkeypatch, "favored")
+    assert "Hunter's Mark" in tiger["conditions"]
+    assert "Concentrating" in hanna["conditions"]
+    assert hanna["spell_slots"] == slots  # cast without a slot
+    assert hanna["feature_uses_used"] == {"Favored Enemy": 1}
+    _, body = _clicked_popup(ui, monkeypatch, tiger, "Hunter's Mark")
+    assert "<b>Duration:</b> Concentration, up to 1 hour" in body  # the spell's card

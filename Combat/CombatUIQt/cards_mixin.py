@@ -24,6 +24,7 @@ from .monster_actions import (
     legendary_actions_left,
     legendary_resistances_left,
 )
+from .spells_mixin import spell_badge_color, spell_badge_description
 from .state import CombatWindowState, saved_label
 from .styles import QSS
 
@@ -498,6 +499,14 @@ class CardsMixin(CombatWindowState):
                     self._feature_condition_tooltip(owner, feature),
                     color or "#4c7ac9",
                 )
+        # The same for a spell's badge (Cast Spell's, or the Custom Effect
+        # dialog's for a picked spell like Guidance), whose card isn't kept
+        # either. A rules condition's badge shows its rule instead.
+        spell = None
+        if ConditionRule.from_name(cond) is None:
+            spell = self._spell_named(cond)
+        if spell is not None:
+            return spell_badge_description(spell), color or spell_badge_color(spell)
         return None, color
 
     def _add_visibility_badges(self, layout: QVBoxLayout, char: dict):

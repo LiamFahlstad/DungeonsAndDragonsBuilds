@@ -261,6 +261,12 @@ class SpellsMixin(CombatWindowState):
             )
         return self._spells_cache
 
+    def _spell_named(self, name: str):
+        """The spell called `name` (as a Cast Spell badge is), or None."""
+        if not hasattr(self, "_spells_by_name"):
+            self._spells_by_name = {s.name: s for s in self._all_spells()}
+        return self._spells_by_name.get(name)
+
     def _show_cast_spell_dialog(self):
         """Search the spell list (like Rules), the caster's own spells first,
         and cast one on the selected combatant, choosing the slot it uses.
@@ -543,36 +549,8 @@ class SpellsMixin(CombatWindowState):
         if action_cost is not None:
             self._add_action_use(action_cost)
 
-        from CharacterContent.Spells.SpellFactory import Spell
-
-        # Build tooltip HTML from the spell details
-        tags = []
-        if spell.is_concentration:
-            tags.append("Concentration")
-        if spell.is_ritual:
-            tags.append("Ritual")
-        tag_text = f" [{', '.join(tags)}]" if tags else ""
-
-        def level_label(level: int) -> str:
-            return "Cantrips" if level == 0 else f"Level {level}"
-
-        target_text = (
-            spell.target.value.replace("_", " ").title()
-            if spell.target is not None
-            else "None"
-        )
-
-        tooltip_html = (
-            f"<b style='color:#c9a84c; font-size:14px;'>{spell.name}</b>{tag_text}"
-            f"<br><span style='color:#a0a0b0;'>{level_label(spell.level)} · {spell.school}</span>"
-            f"<br><br><b>Casting Time:</b> {spell.casting_time}"
-            f"<br><b>Range:</b> {spell.range}"
-            f"<br><b>Target:</b> {target_text}"
-            f"<br><b>Components:</b> {spell.components}"
-            f"<br><b>Duration:</b> {spell.duration}"
-            f"<br><br>{spell.description.replace(chr(10) + chr(10), '<br><br>')}"
-        )
-        badge_color = Spell.get_school_color(spell.school)
+        tooltip_html = spell_badge_description(spell)
+        badge_color = spell_badge_color(spell)
 
         # Duration -> a ticking bar, always tracked on the caster (source) regardless
         # of who the badge lands on — _tick_active_spells/_clear_concentration_if_unused
@@ -611,3 +589,38 @@ class SpellsMixin(CombatWindowState):
 
         self._save_fight_state()
         self._refresh_selected_card()
+
+
+def spell_badge_description(spell) -> str:
+    """What a condition badge a spell put on a creature shows when clicked or
+    hovered: the spell's card (level, school, casting time, range, target,
+    components, duration) and its rules text, as HTML."""
+    tags = []
+    if spell.is_concentration:
+        tags.append("Concentration")
+    if spell.is_ritual:
+        tags.append("Ritual")
+    tag_text = f" [{', '.join(tags)}]" if tags else ""
+    level = "Cantrips" if spell.level == 0 else f"Level {spell.level}"
+    target_text = (
+        spell.target.value.replace("_", " ").title()
+        if spell.target is not None
+        else "None"
+    )
+    return (
+        f"<b style='color:#c9a84c; font-size:14px;'>{spell.name}</b>{tag_text}"
+        f"<br><span style='color:#a0a0b0;'>{level} · {spell.school}</span>"
+        f"<br><br><b>Casting Time:</b> {spell.casting_time}"
+        f"<br><b>Range:</b> {spell.range}"
+        f"<br><b>Target:</b> {target_text}"
+        f"<br><b>Components:</b> {spell.components}"
+        f"<br><b>Duration:</b> {spell.duration}"
+        f"<br><br>{spell.description.replace(chr(10) + chr(10), '<br><br>')}"
+    )
+
+
+def spell_badge_color(spell) -> str:
+    """A spell's condition badge's color: its school's."""
+    from CharacterContent.Spells.SpellFactory import Spell
+
+    return Spell.get_school_color(spell.school)

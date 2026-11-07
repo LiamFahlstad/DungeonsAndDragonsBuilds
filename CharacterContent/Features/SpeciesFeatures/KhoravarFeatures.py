@@ -1,5 +1,6 @@
 from Core.Definitions import CreatureSize, Skill, Sense
 from Model.Content.Feature import Feature
+from Model.Content.CombatEffect import CombatEffect
 from Model.Content.Improvements import SkillProficiencyChoice, GrantSense
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.View import CharacterView
@@ -77,6 +78,10 @@ class FeyGift(Feature):
             "spell you cast with this trait (chosen when you select this species)."
         )
 
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # A cantrip, in the picker as a spell.
+        return []
+
 
 class SkillVersatility(Feature):
     def __init__(self, skill: Skill):
@@ -120,3 +125,7 @@ class LethargyResilience(Feature):
 
     def get_description(self, character: CharacterView) -> str:
         return "When you fail a saving throw to avoid or end the Unconscious condition, you can succeed instead. Once you use this trait, you can’t do so again until you finish 1d4 Long Rests."
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # It turns its owner's own failed save into a success.
+        return []

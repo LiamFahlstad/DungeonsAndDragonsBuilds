@@ -12,6 +12,7 @@ from Model.Content.Feature import (
     FeatureUses,
     RegainedOn,
 )
+from Model.Content.CombatEffect import CombatEffect
 from Model.Content.Improvements import (
     GrantLanguage,
     SkillBonus,
@@ -106,6 +107,10 @@ class Spellcasting(Feature):
     def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # Its spells are in the picker as spells.
+        return []
+
 
 class Druidic(Feature):
     def __init__(self):
@@ -144,6 +149,10 @@ class Druidic(Feature):
             "You can use Druidic to leave hidden messages. You and others who know Druidic automatically spot such a message. Others spot the message's presence with a successful DC 15 Intelligence (Investigation) check but can't decipher it without magic."
         )
         return description
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # A language, and Speak with Animals, in the picker as a spell.
+        return []
 
 
 class PrimalOrder(Feature):
@@ -354,6 +363,10 @@ class WildShape(Feature):
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # It's used from the card menu or Enable Feature, which change the form.
+        return []
+
 
 class AdditionalWildShapeForms(Feature):
     def __init__(self, known_forms: list[CreatureForm], origin: str):
@@ -381,6 +394,18 @@ class WildCompanion(Feature):
                 action_type=ActionType.ACTION, duration="Until Long Rest"
             ),
         )
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        return [
+            CombatEffect(
+                spell="Find Familiar",
+                notes=(
+                    "It casts Find Familiar: spend a spell slot or a use of Wild"
+                    " Shape by hand.",
+                    "The familiar is Fey and disappears when you finish a Long Rest.",
+                ),
+            )
+        ]
 
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         return [

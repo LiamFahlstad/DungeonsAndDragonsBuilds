@@ -4,17 +4,19 @@ import re
 from html import escape
 
 from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QColor, QKeySequence, QShortcut
 from PyQt6.QtWidgets import (
     QCheckBox,
     QComboBox,
     QDialog,
-    QFrame,
     QHBoxLayout,
+    QHeaderView,
     QLabel,
     QLineEdit,
     QPushButton,
-    QScrollArea,
+    QSizePolicy,
     QSpinBox,
+    QTextBrowser,
     QTreeWidget,
     QTreeWidgetItem,
     QVBoxLayout,
@@ -26,13 +28,22 @@ from Combat.WildShape import current_form, form_badge
 from Core.Definitions import DamageType
 from Core.Rules import SECONDS_PER_ROUND
 from .amounts import AmountError, parse_amount
-from .attack_rolls import AttackRoll, parse_attack_roll
+from .attack_rolls import AttackRoll, cover_bonus, parse_attack_roll
+from .effect_dialog_widgets import (
+    SearchKeys,
+    chip,
+    chip_row,
+    row_widget,
+    section,
+    target_roll_rows,
+)
 from .effect_options import (
     COLLAPSED_CATEGORIES,
     effect_options,
     spell_slot_choices,
 )
-from .monster_actions import legendary_resistances_left
+from .features_mixin import FEATURE_BADGE_COLOR
+from .monster_actions import first_number, legendary_resistances_left
 from .player_view import note_condition_immunity
 from .saves import (
     ABILITIES,
@@ -50,7 +61,9 @@ from .saves import (
     roll_attack,
     roll_save,
     rolled_damage,
+    save_modifier,
 )
+from .spells_mixin import spell_badge_color, spell_badge_description
 from .stats import _default_stats, increment_named_stat
 from .state import CombatWindowState
 from .styles import QSS
@@ -83,10 +96,24 @@ CUSTOM_CONDITION_DURATIONS: list[tuple[str, dict | None]] = [
     ("1 hour", {"seconds": 60 * 60}),
 ]
 
-_CUSTOM_DIALOG_WIDTH = 900  # the main window's minimum
-_PICKER_WIDTH = 240
-# The typed-roll rows scroll past about four targets.
-_TYPED_ROWS_MAX_HEIGHT = 140
+# The Custom Effect dialog: as wide as the screen allows up to the preferred
+# width, never narrower than the minimum, which the chip rows need.
+_CUSTOM_DIALOG_WIDTH = 1040
+_PREFERRED_DIALOG_WIDTH = 1200
+_SCREEN_MARGIN = 60
+_PICKER_WIDTH = 340
+_SUMMARY_WIDTH = 150  # a picker row's numbers ("+6  1d8 + 4 Slashing")
+_SUMMARY_COLOR = "#9fb4d0"
+_DETAILS_MIN_HEIGHT = 90
+_BUTTON_WIDTH = 110
+# The roll kind with neither a saving throw nor an attack roll.
+NO_ROLL = "No roll"
+_DETAILS_HINT = (
+    "<p style='color:#a0a0b0'>Pick what was used and it fills in the form;"
+    " its rules text shows here. Or fill in the form by hand.</p>"
+    "<p style='color:#a0a0b0'><b>↑/↓</b> browse · <b>Enter</b> picks the top"
+    " match, <b>Enter</b> again applies · <b>Esc</b> empties the search</p>"
+)
 _NATURAL_ROLL = re.compile(r"nat(?:ural)?\s*\d+", re.IGNORECASE)
 _WHOLE_NUMBER = re.compile(r"-?\d+")
 MAX_SAVE_DC = 40
@@ -116,14 +143,91 @@ def _option_tooltip(option: EffectOption) -> str:
     """A picker row's tooltip: what the row says, then its rules text. Rich
     text, so Qt wraps it."""
     text = escape(option.tooltip, quote=False).replace("\n", "<br>")
-    source = ""
-    if option.kind == SPELL:
-        source = (
-            "<i>Filled in from checked spell data.</i><br>"
-            if option.is_curated
-            else "<i>Read from its rules text: check the form.</i><br>"
-        )
+    where = _where_from(option)
+    source = f"<i>{where}</i><br>" if where else ""
     return f"<b>{escape(option.row_text, quote=False)}</b><br>{source}{text}"
+
+
+def _where_from(option: EffectOption) -> str:
+    """Where a spell's or feature's pick got its numbers, or "" for an attack
+    or a monster's action, whose numbers are its own."""
+    if option.kind == SPELL:
+        if option.is_curated:
+            return "Filled in from checked spell data."
+        return "Read from its rules text: check the form."
+    if option.kind == FEATURE:
+        of = ""
+        if option.feature_name and option.feature_name != option.name:
+            of = f"{escape(option.feature_name, quote=False)}: "
+        if option.is_curated:
+            return f"{of}filled in from the feature's combat data."
+        return f"{of}read from its rules text: check the form."
+    return ""
+
+
+def _option_details(option: EffectOption) -> str:
+    """The Custom Effect dialog's rules text pane for a pick: its name, its
+    numbers, where its numbers came from, and its rules text."""
+    name = escape(option.row_name or option.name, quote=False)
+    lines = [f"<p style='margin:0'><b style='color:#c9a84c'>{name}</b></p>"]
+    if option.summary:
+        summary = escape(option.summary, quote=False)
+        lines.append(f"<p style='margin:0;color:{_SUMMARY_COLOR}'>{summary}</p>")
+    where = _where_from(option)
+    if where:
+        lines.append(f"<p style='margin:0;color:#a0a0b0'><i>{where}</i></p>")
+    if option.tooltip:
+        text = escape(option.tooltip, quote=False).replace("\n", "<br>")
+        lines.append(f"<p style='margin-top:6px'>{text}</p>")
+    return "".join(lines)
+
+
+def _who_text(source: dict | None, targets: list[dict]) -> str:
+    """The Custom Effect dialog's first line: the source, then its targets."""
+    names = ", ".join(escape(t["name"], quote=False) for t in targets)
+    on = f"<span style='color:#e74c3c'>{names}</span>"
+    if source is None:
+        return f"<span style='color:#a0a0b0'>No source</span> → {on}"
+    who = escape(source["name"], quote=False)
+    return f"<span style='color:#c9a84c'>{who}</span> → {on}"
+
+
+def _armor_text(target: dict) -> str:
+    """What an attack roll against target has to meet: "AC 15", with its
+    cover in it ("AC 17 (cover)"), or "AC ?" when that isn't known."""
+    armor = first_number(target.get("ac"))
+    if armor is None:
+        return "AC ?"
+    cover = cover_bonus(target)
+    return f"AC {armor + cover} (cover)" if cover else f"AC {armor}"
+
+
+def _damage_preview(text: str, chosen_type: str | None) -> str:
+    """The damage typed, for the preview line, with the dropdown's type when
+    the text names none. Nothing is rolled."""
+    text = text.strip()
+    if not text:
+        return ""
+    try:
+        parts = rolled_damage(_DICELESS.sub("1", text))
+    except AmountError:
+        return f"{text} (can't be read)"
+    if chosen_type is None or all(damage_type for _, damage_type in parts):
+        return text
+    return f"{text} {chosen_type}"
+
+
+def _count(number: int, noun: str) -> str:
+    return f"{number} {noun}" if number == 1 else f"{number} {noun}s"
+
+
+def _effect_dialog_width(window: QWidget | None) -> int:
+    """The Custom Effect dialog's width on the window's screen."""
+    screen = window.screen() if window is not None else None
+    if screen is None:
+        return _CUSTOM_DIALOG_WIDTH
+    room = screen.availableGeometry().width() - _SCREEN_MARGIN
+    return max(_CUSTOM_DIALOG_WIDTH, min(_PREFERRED_DIALOG_WIDTH, room))
 
 
 class ConditionsMixin(CombatWindowState):
@@ -431,7 +535,9 @@ class ConditionsMixin(CombatWindowState):
             )
             return True
         if option.kind == FEATURE:
-            self._count_feature_use(caster, option.name, option.counts_uses)
+            self._count_feature_use(
+                caster, option.feature_name or option.name, option.counts_uses
+            )
             return True
         if option.monster_action is not None:
             return self._spend_monster_action(caster, option.monster_action)
@@ -441,16 +547,29 @@ class ConditionsMixin(CombatWindowState):
         self, source: dict | None
     ) -> tuple[QLineEdit, QTreeWidget, dict[str, QTreeWidgetItem]]:
         """The Custom Effect dialog's search box and list of what the source
-        can use (effect_options), by category. What can't be used now is
-        greyed out."""
+        can use (effect_options), by category: a row's name, then its numbers.
+        What can't be used now is greyed out."""
         search_box = QLineEdit()
         search_box.setObjectName("effectSearch")
         search_box.setPlaceholderText("Search attacks, spells, features…")
-        search_box.setFixedWidth(_PICKER_WIDTH)
+        search_box.setClearButtonEnabled(True)
+        search_box.setToolTip(
+            "Type part of a name. ↑/↓ move through the list, Enter picks the"
+            " top match and Enter again applies it. Esc empties the search."
+        )
         tree = QTreeWidget()
         tree.setObjectName("effectOptions")
         tree.setHeaderHidden(True)
-        tree.setFixedWidth(_PICKER_WIDTH)
+        tree.setColumnCount(2)
+        tree.setUniformRowHeights(True)
+        tree.setTextElideMode(Qt.TextElideMode.ElideRight)
+        header = tree.header()
+        assert header is not None  # a tree always has one
+        header.setStretchLastSection(False)
+        header.setSectionResizeMode(0, QHeaderView.ResizeMode.Stretch)
+        header.setSectionResizeMode(1, QHeaderView.ResizeMode.Fixed)
+        tree.setColumnWidth(1, _SUMMARY_WIDTH)
+        summary_color = QColor(_SUMMARY_COLOR)
         category_items: dict[str, QTreeWidgetItem] = {}
         for title, options in effect_options(source, self._all_spells()):
             category = QTreeWidgetItem([title])
@@ -458,9 +577,13 @@ class ConditionsMixin(CombatWindowState):
             tree.addTopLevelItem(category)
             category_items[title] = category
             for option in options:
-                item = QTreeWidgetItem([option.row_text])
+                item = QTreeWidgetItem([option.row_name or option.name, option.summary])
                 item.setData(0, Qt.ItemDataRole.UserRole, option)
-                item.setToolTip(0, _option_tooltip(option))
+                tooltip = _option_tooltip(option)
+                item.setToolTip(0, tooltip)
+                item.setToolTip(1, tooltip)
+                if not option.is_unavailable:
+                    item.setForeground(1, summary_color)
                 category.addChild(item)
                 item.setDisabled(option.is_unavailable)
             category.setExpanded(title not in COLLAPSED_CATEGORIES)
@@ -513,6 +636,7 @@ class ConditionsMixin(CombatWindowState):
             if readable:
                 note_condition_immunity(target, effect.condition)
             return False
+        self._describe_effect_condition(target, effect)
         self._add_custom_condition(
             effect.condition, effect.duration, effect.notes, [target]
         )
@@ -528,6 +652,57 @@ class ConditionsMixin(CombatWindowState):
                 }
             )
         return True
+
+    def _describe_effect_condition(self, target: dict, effect: CustomEffect):
+        """What target's badge for the effect's condition shows when clicked
+        or hovered: the picked spell's card, as Cast Spell's badge has, the
+        picked feature's, or the rules text of the attack or action picked.
+        Notes typed in the dialog come first. Nothing for an effect typed in
+        by hand, whose badge shows its notes, if any."""
+        option = effect.pick
+        if option is None:
+            return
+        cond = effect.condition
+        notes = escape(effect.notes.strip(), quote=False)
+        notes = f"<i>{notes}</i><br><br>" if notes else ""
+        # A spell's card, for a spell or a feature's use that casts one.
+        spell_name = option.name if option.kind == SPELL else option.spell_name
+        if spell_name:
+            spell = self._spell_named(spell_name)
+            if spell is not None:
+                target.setdefault("spell_condition_descriptions", {})[cond] = (
+                    notes + spell_badge_description(spell)
+                )
+                target.setdefault("spell_condition_colors", {})[cond] = (
+                    spell_badge_color(spell)
+                )
+                return
+        owner = self.selected_character or self._current_turn_character()
+        if option.kind == FEATURE and owner is not None:
+            feature = next(
+                (
+                    f
+                    for f in owner.get("_feature_objects", [])
+                    if f.name == (option.feature_name or option.name)
+                ),
+                None,
+            )
+            if feature is not None:
+                target.setdefault("feature_condition_descriptions", {})[cond] = (
+                    notes + self._feature_condition_tooltip(owner, feature)
+                )
+                target.setdefault("feature_condition_colors", {})[
+                    cond
+                ] = FEATURE_BADGE_COLOR
+                return
+        if option.tooltip:
+            # A weapon's or a monster's action: its name and rules text.
+            name = escape(option.row_name or option.name, quote=False)
+            text = escape(option.tooltip, quote=False).replace("\n", "<br>")
+            target.setdefault("feature_condition_descriptions", {})[cond] = (
+                f"{notes}<b style='color:#c9a84c; font-size:14px;'>{name}</b>"
+                f"<br><br>{text}"
+            )
 
     def _drop_repeat_save(self, char: dict, condition: str):
         """Char has no more repeat save to end condition."""
@@ -641,69 +816,102 @@ class ConditionsMixin(CombatWindowState):
     def _show_custom_condition_dialog(self):
         """Set up an effect on every target (see _apply_custom_effect): what
         it costs the source, a saving throw or an attack roll, damage, and a
-        condition with its duration and a note."""
+        condition with its duration and a note. What the source can use is
+        listed on the left, and a pick fills in the form."""
         if not self.target_characters:
             self._show_status("Nothing applied: right-click a card to pick a target.")
             return
         source = self.selected_character or self._current_turn_character()
         caster = self.selected_character
+        targets = self.target_characters
 
         dlg = QDialog(self._window)
+        dlg.setObjectName("customEffectDialog")
         dlg.setWindowTitle("Custom Effect")
         dlg.setStyleSheet(QSS)
-        dlg.setFixedWidth(_CUSTOM_DIALOG_WIDTH)
-        outer = QHBoxLayout(dlg)
-        outer.setContentsMargins(14, 14, 14, 14)
-        outer.setSpacing(14)
-        # What the source can use, on the left: a pick fills in the form.
+        dlg.setMinimumWidth(_CUSTOM_DIALOG_WIDTH)
+        dlg.resize(_effect_dialog_width(self._window), 0)
+        outer = QVBoxLayout(dlg)
+        outer.setContentsMargins(14, 12, 14, 12)
+        outer.setSpacing(10)
+
+        # Who uses it on whom
+        who_lbl = QLabel(_who_text(source, targets))
+        who_lbl.setObjectName("effectWho")
+        who_lbl.setTextFormat(Qt.TextFormat.RichText)
+        who_lbl.setWordWrap(True)
+        who_lbl.setToolTip(
+            "Left-click a card for the source and right-click for targets"
+            " before opening this."
+        )
+        outer.addWidget(who_lbl)
+
+        body = QHBoxLayout()
+        body.setSpacing(14)
+        outer.addLayout(body, stretch=1)
+
+        # What the source can use, on the left: a pick fills in the form, and
+        # its rules text shows under the list.
         search_box, tree, category_items = self._effect_picker(source)
-        picker = QVBoxLayout()
+        details = QTextBrowser()
+        details.setObjectName("effectDetails")
+        details.setOpenLinks(False)
+        details.setMinimumHeight(_DETAILS_MIN_HEIGHT)
+        picker_box = QWidget()
+        picker_box.setFixedWidth(_PICKER_WIDTH)
+        picker = QVBoxLayout(picker_box)
+        picker.setContentsMargins(0, 0, 0, 0)
         picker.setSpacing(6)
         picker.addWidget(search_box)
-        picker.addWidget(tree, stretch=1)
-        outer.addLayout(picker)
-        layout = QVBoxLayout()
-        layout.setSpacing(8)
-        outer.addLayout(layout, stretch=1)
+        picker.addWidget(tree, stretch=3)
+        picker.addWidget(details, stretch=2)
+        body.addWidget(picker_box)
 
-        who = f"Targets: {', '.join(c['name'] for c in self.target_characters)}"
-        if source is not None:
-            who += f"\nSource: {source['name']}"
-        who_lbl = QLabel(who)
-        who_lbl.setObjectName("secondary")
-        who_lbl.setWordWrap(True)
-        layout.addWidget(who_lbl)
+        form = QVBoxLayout()
+        form.setSpacing(8)
+        body.addLayout(form, stretch=1)
 
         name_input = QLineEdit()
         name_input.setObjectName("effectName")
         name_input.setPlaceholderText("Name for the log (optional), e.g. Fireball")
-        layout.addWidget(name_input)
+        form.addWidget(name_input)
 
         # What to check about a pick, and what a monster's action does besides.
         note_lbl = QLabel("")
         note_lbl.setObjectName("effectNote")
         note_lbl.setWordWrap(True)
         note_lbl.hide()
-        layout.addWidget(note_lbl)
+        form.addWidget(note_lbl)
 
         columns = QHBoxLayout()
-        columns.setSpacing(20)
-        save_col = QVBoxLayout()
-        save_col.setSpacing(6)
-        effect_col = QVBoxLayout()
-        effect_col.setSpacing(6)
-        columns.addLayout(save_col, stretch=1)
-        columns.addLayout(effect_col, stretch=1)
-        layout.addLayout(columns)
+        columns.setSpacing(10)
+        # The columns keep their widths whatever they show, so switching
+        # between a saving throw and an attack roll doesn't move anything.
+        column_widgets = []
+        for stretch in (6, 5):
+            column = QWidget()
+            column.setSizePolicy(
+                QSizePolicy.Policy.Ignored, QSizePolicy.Policy.Preferred
+            )
+            column_layout = QVBoxLayout(column)
+            column_layout.setContentsMargins(0, 0, 0, 0)
+            column_layout.setSpacing(8)
+            columns.addWidget(column, stretch=stretch)
+            column_widgets.append(column_layout)
+        roll_col, effect_col = column_widgets
+        form.addLayout(columns, stretch=1)
 
-        # The saving throw or attack roll, and what it decides
-        save_col.addWidget(self._section_header("Roll"))
-        roll_row = QHBoxLayout()
+        # ── Roll: none, a saving throw or an attack roll, and what it decides
+        roll_frame, roll_box, _ = section("Roll")
+        roll_col.addWidget(roll_frame)
+        # The roll's value is two combo boxes, hidden behind the chips: an
+        # attack, or a saving throw with an ability, or None for no roll.
         roll_combo = QComboBox()
         roll_combo.setObjectName("rollKind")
         roll_combo.addItems((SAVING_THROW, ATTACK_ROLL))
         roll_combo.setCurrentText(self._custom_save["roll"])
-        roll_row.addWidget(roll_combo, stretch=1)
+        roll_combo.hide()
+        roll_box.addWidget(roll_combo)
         ability_combo = QComboBox()
         ability_combo.setObjectName("saveAbility")
         ability_combo.addItem("No saving throw", None)
@@ -712,21 +920,44 @@ class ConditionsMixin(CombatWindowState):
         ability_combo.setCurrentIndex(
             max(ability_combo.findData(self._custom_save["ability"]), 0)
         )
-        roll_row.addWidget(ability_combo, stretch=1)
-        save_col.addLayout(roll_row)
+        roll_box.addWidget(ability_combo)
 
-        dc_row = QHBoxLayout()
-        dc_label = QLabel("DC:")
-        dc_row.addWidget(dc_label)
+        kind_row, kind_layout = row_widget("rollKindButtons")
+        kind_layout.setSpacing(3)
+        kind_buttons = {
+            NO_ROLL: chip("&No roll", "Damage and the condition for everyone (Alt+N)"),
+            SAVING_THROW: chip("&Saving throw", "Each target saves (Alt+S)"),
+            ATTACK_ROLL: chip(
+                "&Attack roll", "The source rolls against each target's AC (Alt+A)"
+            ),
+        }
+        for button in kind_buttons.values():
+            button.setProperty("rollKind", True)
+            kind_layout.addWidget(button, stretch=1)
+        roll_box.addWidget(kind_row)
+
+        save_line, save_layout = row_widget()
+        save_layout.setSpacing(8)
+        ability_chips = chip_row(
+            ability_combo,
+            [(i, short, full) for i, (full, short) in enumerate(ABILITIES, start=1)],
+            "saveAbilityButtons",
+        )
+        save_layout.addWidget(ability_chips, stretch=1)
+        dc_label = QLabel("DC")
+        save_layout.addWidget(dc_label)
         dc_input = QSpinBox()
         dc_input.setObjectName("saveDc")
         dc_input.setRange(1, MAX_SAVE_DC)
         same_source = self._custom_save["source"] is source
         known_dc = None if same_source else known_save_dc(source)
         dc_input.setValue(known_dc or self._custom_save["dc"])
-        dc_row.addWidget(dc_input)
-        bonus_label = QLabel("Bonus:")
-        dc_row.addWidget(bonus_label)
+        save_layout.addWidget(dc_input)
+        roll_box.addWidget(save_line)
+
+        attack_line, attack_layout = row_widget()
+        bonus_label = QLabel("Attack bonus")
+        attack_layout.addWidget(bonus_label)
         bonus_input = QSpinBox()
         bonus_input.setObjectName("attackBonus")
         bonus_input.setRange(MIN_ATTACK_BONUS, MAX_ATTACK_BONUS)
@@ -735,17 +966,29 @@ class ConditionsMixin(CombatWindowState):
         bonus_input.setValue(
             self._custom_save["bonus"] if known_bonus is None else known_bonus
         )
-        dc_row.addWidget(bonus_input)
+        attack_layout.addWidget(bonus_input)
+        attack_layout.addStretch()
+        roll_box.addWidget(attack_line)
+
         mode_combo = QComboBox()
         mode_combo.setObjectName("saveMode")
         mode_combo.addItems(ROLL_MODES)
-        dc_row.addWidget(mode_combo, stretch=1)
-        save_col.addLayout(dc_row)
+        roll_box.addWidget(mode_combo)
+        mode_chips = chip_row(
+            mode_combo,
+            [
+                (0, "Neutral", "One d20"),
+                (1, "Advantage", "Two d20s, the higher counts, for every target"),
+                (2, "Disadvantage", "Two d20s, the lower counts, for every target"),
+            ],
+            "saveModeButtons",
+        )
+        roll_box.addWidget(mode_chips)
 
         half_box = QCheckBox("Half damage on a save")
         half_box.setObjectName("halfOnSave")
         half_box.setChecked(self._custom_save["half"])
-        save_col.addWidget(half_box)
+        roll_box.addWidget(half_box)
 
         repeat_box = QCheckBox("Repeat the save at the end of each turn")
         repeat_box.setObjectName("repeatSave")
@@ -753,93 +996,48 @@ class ConditionsMixin(CombatWindowState):
             "A save ends the condition. Monsters roll by themselves; players"
             " get a reminder."
         )
-        save_col.addWidget(repeat_box)
+        roll_box.addWidget(repeat_box)
 
+        resisters = [t for t in targets if legendary_resistances_left(t) > 0]
         resist_box = QCheckBox("Use Legendary Resistance on a failed save")
         resist_box.setObjectName("useLegendaryResistance")
-        can_resist = any(
-            legendary_resistances_left(t) > 0 for t in self.target_characters
+        resist_box.setToolTip(
+            "Left: "
+            + ", ".join(
+                f"{t['name']} {legendary_resistances_left(t)}" for t in resisters
+            )
         )
-        save_col.addWidget(resist_box)
-
-        def typed_rows(
-            chars: list[dict], object_name: str, hint: str
-        ) -> tuple[QWidget, dict[int, QLineEdit]]:
-            """A box for each of chars, for what was rolled at the table. Many
-            targets scroll, so the dialog still fits the smallest window."""
-            rows = QWidget()
-            rows_layout = QVBoxLayout(rows)
-            rows_layout.setContentsMargins(0, 0, 0, 0)
-            rows_layout.setSpacing(6)
-            inputs = {}
-            for char in chars:
-                row = QHBoxLayout()
-                row.addWidget(QLabel(char["name"]), stretch=1)
-                total_input = QLineEdit()
-                total_input.setObjectName(object_name)
-                total_input.setPlaceholderText(hint)
-                total_input.setAccessibleName(char["name"])
-                row.addWidget(total_input, stretch=1)
-                rows_layout.addLayout(row)
-                inputs[id(char)] = total_input
-            scroll = QScrollArea()
-            scroll.setWidget(rows)
-            scroll.setWidgetResizable(True)
-            scroll.setFrameShape(QFrame.Shape.NoFrame)
-            scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
-            scroll.setFixedHeight(min(rows.sizeHint().height(), _TYPED_ROWS_MAX_HEIGHT))
-            save_col.addWidget(scroll)
-            return scroll, inputs
+        can_resist = bool(resisters)
+        roll_box.addWidget(resist_box)
 
         # A roll made at the table is typed in; the rest are rolled. Each target
         # rolls a save for itself, and the source an attack against each one.
-        save_rows, typed_inputs = typed_rows(
-            self.target_characters, "typedTotal", "Total, or blank to roll"
+        rolls_hint = QLabel("Rolled at the table? Type it; blank rolls.")
+        rolls_hint.setObjectName("secondary")
+        roll_box.addWidget(rolls_hint)
+        save_rows, typed_inputs, save_infos = target_roll_rows(
+            targets,
+            "typedTotal",
+            "The total with the save bonus already in it, like 14 or 9+5."
+            " Blank rolls for them.",
         )
-        for total_input in typed_inputs.values():
-            total_input.setToolTip(
-                "The total with the save bonus already in it, like 14 or 9+5."
-                " Blank rolls for them."
-            )
-        attack_rows, attack_inputs = typed_rows(
-            self.target_characters, "typedAttack", "Total, or blank to roll"
+        roll_box.addWidget(save_rows)
+        attack_rows, attack_inputs, attack_infos = target_roll_rows(
+            targets,
+            "typedAttack",
+            "The total with the bonus already in it, like 17 or 12+5, or"
+            " nat 20 or nat 1. Blank rolls for the source.",
         )
-        for roll_input in attack_inputs.values():
-            roll_input.setToolTip(
-                "The total with the bonus already in it, like 17 or 12+5, or"
-                " nat 20 or nat 1. Blank rolls for the source."
-            )
+        roll_box.addWidget(attack_rows)
+        for target in targets:
+            info = attack_infos[id(target)]
+            info.setText(_armor_text(target))
+            info.setToolTip("What the attack roll has to meet, cover included")
+        roll_col.addStretch()
 
-        # What it costs the source
-        save_col.addWidget(self._section_header("Source"))
-        cost_row = QHBoxLayout()
-        slot_combo = QComboBox()
-        slot_combo.setObjectName("spellSlot")
-        slot_combo.addItem("No spell slot", None)
-        for label, level in spell_slot_choices(caster or {}, 1):
-            if level is not None:
-                slot_combo.addItem(label, level)
-        cost_row.addWidget(slot_combo, stretch=1)
-        action_combo = QComboBox()
-        action_combo.setObjectName("actionCost")
-        action_combo.addItem("No action", None)
-        for action_type in self.ACTION_ECONOMY_TYPES:
-            action_combo.addItem(action_type, action_type)
-        cost_row.addWidget(action_combo, stretch=1)
-        save_col.addLayout(cost_row)
-        concentrate_box = QCheckBox("Source concentrates on it")
-        concentrate_box.setObjectName("sourceConcentrates")
-        concentrate_box.setToolTip(
-            "Starts Concentrating, ending any other concentration. When it"
-            " ends, the condition comes off the targets."
-        )
-        save_col.addWidget(concentrate_box)
-        for widget in (slot_combo, action_combo, concentrate_box):
-            widget.setEnabled(caster is not None)
-        save_col.addStretch()
-
-        # The effect
-        effect_col.addWidget(self._section_header("Damage"))
+        # ── Damage
+        damage_frame, damage_box, _ = section("Damage")
+        effect_col.addWidget(damage_frame)
         damage_row = QHBoxLayout()
         damage_input = QLineEdit()
         damage_input.setObjectName("effectDamage")
@@ -856,15 +1054,16 @@ class ConditionsMixin(CombatWindowState):
                 max(type_combo.findData(source.get("_last_damage_type")), 0)
             )
         damage_row.addWidget(type_combo, stretch=2)
-        effect_col.addLayout(damage_row)
+        damage_box.addLayout(damage_row)
 
         resistances_box = QCheckBox("Count resistances and immunities")
         resistances_box.setObjectName("countResistances")
         resistances_box.setChecked(True)
-        effect_col.addWidget(resistances_box)
+        damage_box.addWidget(resistances_box)
 
-        condition_header = self._section_header("")
-        effect_col.addWidget(condition_header)
+        # ── Condition
+        condition_frame, condition_box, condition_header = section("Condition")
+        effect_col.addWidget(condition_frame)
         name_combo = QComboBox()
         name_combo.setObjectName("conditionName")
         name_combo.setEditable(True)
@@ -875,16 +1074,16 @@ class ConditionsMixin(CombatWindowState):
         name_edit = name_combo.lineEdit()
         assert name_edit is not None  # an editable combo box has one
         name_edit.setPlaceholderText("e.g. Hexed, Restrained by vines, -2 AC...")
-        effect_col.addWidget(name_combo)
+        condition_box.addWidget(name_combo)
 
         notes_input = QLineEdit()
         notes_input.setObjectName("conditionNotes")
         notes_input.setPlaceholderText("Notes (optional, shown on hover)")
-        effect_col.addWidget(notes_input)
+        condition_box.addWidget(notes_input)
 
-        effect_col.addWidget(QLabel("Duration:"))
         duration_combo = QComboBox()
         duration_combo.setObjectName("conditionDuration")
+        duration_combo.setToolTip("How long the condition lasts")
         for label, duration in CUSTOM_CONDITION_DURATIONS:
             if duration is not None and duration.get("of") == "source":
                 if source is None:
@@ -892,34 +1091,150 @@ class ConditionsMixin(CombatWindowState):
                 label = label.format(source=source["name"])
             duration_combo.addItem(label, duration)
         duration_combo.addItem("Custom...", "custom")
-        effect_col.addWidget(duration_combo)
+        condition_box.addWidget(duration_combo)
 
         custom_row = QHBoxLayout()
         amount_input = QSpinBox()
         amount_input.setObjectName("durationAmount")
-        amount_input.setRange(1, 9999)
+        amount_input.setRange(1, MAX_DURATION_AMOUNT)
         custom_row.addWidget(amount_input)
         unit_combo = QComboBox()
         unit_combo.setObjectName("durationUnit")
         unit_combo.addItems(list(CUSTOM_DURATION_UNITS))
-        custom_row.addWidget(unit_combo)
+        custom_row.addWidget(unit_combo, stretch=1)
         custom_widgets = (amount_input, unit_combo)
-        effect_col.addLayout(custom_row)
+        condition_box.addLayout(custom_row)
+
+        # ── What it costs the source
+        cost_title = f"Cost to {caster['name']}" if caster is not None else "Cost"
+        cost_frame, cost_box, _ = section(cost_title)
+        effect_col.addWidget(cost_frame)
+        slot_combo = QComboBox()
+        slot_combo.setObjectName("spellSlot")
+        slot_combo.addItem("No spell slot", None)
+        for label, level in spell_slot_choices(caster or {}, 1):
+            if level is not None:
+                slot_combo.addItem(label, level)
+        cost_box.addWidget(slot_combo)
+        action_combo = QComboBox()
+        action_combo.setObjectName("actionCost")
+        action_combo.addItem("No action", None)
+        for action_type in self.ACTION_ECONOMY_TYPES:
+            action_combo.addItem(action_type, action_type)
+        cost_box.addWidget(action_combo)
+        action_chips = chip_row(
+            action_combo,
+            [(0, "None", "Spends no action")]
+            + [
+                (i, action_type, f"Spends the source's {action_type}")
+                for i, action_type in enumerate(self.ACTION_ECONOMY_TYPES, start=1)
+            ],
+            "actionCostButtons",
+        )
+        cost_box.addWidget(action_chips)
+        concentrate_box = QCheckBox("Source concentrates on it")
+        concentrate_box.setObjectName("sourceConcentrates")
+        concentrate_box.setToolTip(
+            "Starts Concentrating, ending any other concentration. When it"
+            " ends, the condition comes off the targets."
+        )
+        cost_box.addWidget(concentrate_box)
+        for widget in (slot_combo, action_combo, concentrate_box):
+            widget.setEnabled(caster is not None)
+        if caster is None:
+            no_cost = QLabel("No source picked: left-click a card to spend from it.")
+            no_cost.setObjectName("secondary")
+            no_cost.setWordWrap(True)
+            cost_box.addWidget(no_cost)
         effect_col.addStretch()
+
+        # ── What Apply will do, what's wrong, and the buttons
+        preview_lbl = QLabel("")
+        preview_lbl.setObjectName("effectPreview")
+        preview_lbl.setWordWrap(True)
+        outer.addWidget(preview_lbl)
+
+        btn_row = QHBoxLayout()
+        footer = QVBoxLayout()
+        footer.setSpacing(2)
+        problem_lbl = QLabel("")
+        problem_lbl.setObjectName("statusLabel")
+        problem_lbl.setWordWrap(True)
+        footer.addWidget(problem_lbl)
+        keys_lbl = QLabel(
+            "↑↓ browse · Enter picks, again applies · Ctrl+Enter apply"
+            " · Alt+N/S/A roll · Ctrl+F search"
+        )
+        keys_lbl.setObjectName("secondary")
+        footer.addWidget(keys_lbl)
+        btn_row.addLayout(footer, stretch=1)
+        cancel_btn = QPushButton("Cancel")
+        cancel_btn.setAutoDefault(False)
+        cancel_btn.setMinimumWidth(_BUTTON_WIDTH)
+        apply_btn = QPushButton("Apply")
+        apply_btn.setObjectName("primaryBtn")
+        apply_btn.setAutoDefault(False)
+        apply_btn.setMinimumWidth(_BUTTON_WIDTH)
+        apply_btn.setToolTip(f"Apply to {_count(len(targets), 'target')} (Ctrl+Enter)")
+        btn_row.addWidget(cancel_btn)
+        btn_row.addWidget(apply_btn)
+        outer.addLayout(btn_row)
+
+        # The ability a saving throw goes back to after "No roll".
+        last_ability = {"value": ability_combo.currentData() or "DEX"}
+
+        def roll_kind() -> str:
+            if roll_combo.currentText() == ATTACK_ROLL:
+                return ATTACK_ROLL
+            return SAVING_THROW if ability_combo.currentData() is not None else NO_ROLL
+
+        def choose_kind(kind: str):
+            roll_combo.setCurrentText(
+                ATTACK_ROLL if kind == ATTACK_ROLL else SAVING_THROW
+            )
+            if kind == NO_ROLL:
+                ability_combo.setCurrentIndex(0)
+            elif kind == SAVING_THROW and ability_combo.currentData() is None:
+                ability_combo.setCurrentIndex(
+                    max(ability_combo.findData(last_ability["value"]), 1)
+                )
+            show_roll_controls()
+
+        for kind, button in kind_buttons.items():
+            button.clicked.connect(lambda _=False, k=kind: choose_kind(k))
 
         def show_custom_row():
             for widget in custom_widgets:
                 widget.setVisible(duration_combo.currentData() == "custom")
 
+        def show_save_bonuses():
+            ability = ability_combo.currentData()
+            if ability is not None:
+                last_ability["value"] = ability
+            for target in targets:
+                info = save_infos[id(target)]
+                if ability is None:
+                    info.setText("")
+                    continue
+                info.setText(f"{ability} {save_modifier(target, ability):+d}")
+                info.setToolTip(f"{target['name']}'s {ability} saving throw bonus")
+
         def show_roll_controls():
-            is_attack = roll_combo.currentText() == ATTACK_ROLL
-            has_save = not is_attack and ability_combo.currentData() is not None
-            for widget in (ability_combo, dc_label, dc_input, half_box, repeat_box):
-                widget.setVisible(not is_attack)
-            for widget in (bonus_label, bonus_input):
-                widget.setVisible(is_attack)
-            resist_box.setVisible(can_resist and not is_attack)
-            save_rows.setVisible(bool(typed_inputs) and not is_attack)
+            kind = roll_kind()
+            is_attack = kind == ATTACK_ROLL
+            has_save = kind == SAVING_THROW
+            for name, button in kind_buttons.items():
+                button.setChecked(name == kind)
+            save_line.setVisible(not is_attack)
+            for widget in (dc_label, dc_input):
+                widget.setVisible(has_save)
+            attack_line.setVisible(is_attack)
+            mode_chips.setVisible(kind != NO_ROLL)
+            for widget in (half_box, repeat_box):
+                widget.setVisible(has_save)
+            resist_box.setVisible(can_resist and has_save)
+            rolls_hint.setVisible(kind != NO_ROLL)
+            save_rows.setVisible(bool(typed_inputs) and has_save)
             attack_rows.setVisible(bool(attack_inputs) and is_attack)
             mode_combo.setEnabled(has_save or is_attack)
             for widget in (dc_input, half_box, repeat_box, resist_box):
@@ -927,8 +1242,12 @@ class ConditionsMixin(CombatWindowState):
             for total_input in typed_inputs.values():
                 total_input.setEnabled(has_save)
             condition_header.setText(
-                "Condition (on a hit)" if is_attack else "Condition (on a failed save)"
+                {
+                    ATTACK_ROLL: "Condition (on a hit)",
+                    SAVING_THROW: "Condition (on a failed save)",
+                }.get(kind, "Condition")
             )
+            show_save_bonuses()
 
         def show_typed_type(text: str):
             try:
@@ -938,27 +1257,82 @@ class ConditionsMixin(CombatWindowState):
             if parts[0][1] is not None:
                 type_combo.setCurrentIndex(type_combo.findData(parts[0][1]))
 
+        def show_preview():
+            """What Apply will do, in a line, so a wrong pick shows before it
+            lands. Nothing here is rolled."""
+            kind = roll_kind()
+            mode = mode_combo.currentText()
+            with_mode = f" with {mode}" if kind != NO_ROLL and mode != "Neutral" else ""
+            parts = []
+            if kind == SAVING_THROW:
+                parts.append(
+                    f"DC {dc_input.value()} {ability_combo.currentText()} save{with_mode}"
+                )
+            elif kind == ATTACK_ROLL:
+                parts.append(f"Attack {bonus_input.value():+d} vs AC{with_mode}")
+            damage = _damage_preview(damage_input.text(), type_combo.currentData())
+            if damage and kind == SAVING_THROW:
+                damage += (
+                    ", half on a save" if half_box.isChecked() else ", none on a save"
+                )
+            if damage:
+                parts.append(damage)
+            condition = name_combo.currentText().strip()
+            if condition:
+                lasts = duration_combo.currentText()
+                if duration_combo.currentData() == "custom":
+                    lasts = f"{amount_input.value()} {unit_combo.currentText()}"
+                if duration_combo.currentData() is not None:
+                    condition += f" ({lasts[0].lower()}{lasts[1:]})"
+                if kind == SAVING_THROW and repeat_box.isChecked():
+                    condition += ", save ends"
+                parts.append(condition)
+            costs = []
+            if caster is not None:
+                if slot_combo.currentData() is not None:
+                    costs.append(slot_combo.currentText())
+                if action_combo.currentData() is not None:
+                    costs.append(action_combo.currentText())
+                if concentrate_box.isChecked():
+                    costs.append("concentration")
+            if costs:
+                parts.append("costs " + ", ".join(costs))
+            if not parts:
+                preview_lbl.setText(
+                    "Pick something on the left, or fill in a roll, damage or a"
+                    " condition."
+                )
+                return
+            preview_lbl.setText(
+                f"On {_count(len(targets), 'target')}: " + " · ".join(parts)
+            )
+
         duration_combo.currentIndexChanged.connect(show_custom_row)
         roll_combo.currentIndexChanged.connect(show_roll_controls)
         ability_combo.currentIndexChanged.connect(show_roll_controls)
         damage_input.textChanged.connect(show_typed_type)
+        for signal in (
+            roll_combo.currentIndexChanged,
+            ability_combo.currentIndexChanged,
+            mode_combo.currentIndexChanged,
+            dc_input.valueChanged,
+            bonus_input.valueChanged,
+            half_box.toggled,
+            repeat_box.toggled,
+            damage_input.textChanged,
+            type_combo.currentIndexChanged,
+            name_combo.currentTextChanged,
+            duration_combo.currentIndexChanged,
+            amount_input.valueChanged,
+            unit_combo.currentIndexChanged,
+            slot_combo.currentIndexChanged,
+            action_combo.currentIndexChanged,
+            concentrate_box.toggled,
+        ):
+            signal.connect(show_preview)
         show_custom_row()
         show_roll_controls()
-
-        problem_lbl = QLabel("")
-        problem_lbl.setObjectName("statusLabel")
-        problem_lbl.setWordWrap(True)
-        layout.addWidget(problem_lbl)
-
-        btn_row = QHBoxLayout()
-        apply_btn = QPushButton("Apply")
-        apply_btn.setObjectName("primaryBtn")
-        apply_btn.setAutoDefault(False)
-        cancel_btn = QPushButton("Cancel")
-        cancel_btn.setAutoDefault(False)
-        btn_row.addWidget(apply_btn)
-        btn_row.addWidget(cancel_btn)
-        layout.addLayout(btn_row)
+        show_preview()
 
         # Enter in a text box and the Apply button can both fire; apply once.
         applied: list[bool] = []
@@ -1083,6 +1457,11 @@ class ConditionsMixin(CombatWindowState):
         # GM's edits by.
         picked: dict = {"option": None, "damage": "", "search": ""}
 
+        def show_details(option: EffectOption | None):
+            details.setHtml(
+                _option_details(option) if option is not None else _DETAILS_HINT
+            )
+
         def show_duration(seconds: int | None, until: tuple[str, str] | None):
             """Select a pick's duration: a turn, a time, or until removed. A
             turn of a source that isn't there falls back to until removed."""
@@ -1158,6 +1537,7 @@ class ConditionsMixin(CombatWindowState):
             notes_input.clear()
             show_duration(option.duration_seconds, option.until)
             problem_lbl.setText("")
+            show_details(option)
             picked.update(option=option, damage=damage, search=search_box.text())
 
         def drop_pick(name: str):
@@ -1170,6 +1550,7 @@ class ConditionsMixin(CombatWindowState):
             tree.clearSelection()
             note_lbl.setText("")
             note_lbl.hide()
+            show_details(None)
 
         def upcast():
             """A pick's damage at the slot now chosen, unless it's been edited."""
@@ -1191,6 +1572,11 @@ class ConditionsMixin(CombatWindowState):
             option = option_of(items[0]) if items else None
             if option is not None:
                 fill_from(option)
+
+        def on_current_changed(item: QTreeWidgetItem | None):
+            """A greyed row can't be picked, but its rules text can be read."""
+            if item is not None and item.isDisabled():
+                show_details(item.data(0, Qt.ItemDataRole.UserRole))
 
         def first_pickable() -> QTreeWidgetItem | None:
             match = first_visible_item(category_items)
@@ -1228,7 +1614,15 @@ class ConditionsMixin(CombatWindowState):
                 fill_from(option)
             do_apply()
 
+        def focus_search():
+            search_box.setFocus()
+            search_box.selectAll()
+
+        # Up and Down from the search box pick as they go (fill_from), so
+        # Enter applies the row they reached.
+        SearchKeys(search_box, tree)
         tree.itemSelectionChanged.connect(on_selection_changed)
+        tree.currentItemChanged.connect(on_current_changed)
         tree.itemActivated.connect(item_activated)
         search_box.returnPressed.connect(search_entered)
         slot_combo.currentIndexChanged.connect(upcast)
@@ -1242,7 +1636,14 @@ class ConditionsMixin(CombatWindowState):
         for total_input in [*typed_inputs.values(), *attack_inputs.values()]:
             total_input.returnPressed.connect(do_apply)
         cancel_btn.clicked.connect(dlg.reject)
+        for keys, action in (
+            ("Ctrl+Return", do_apply),
+            ("Ctrl+Enter", do_apply),
+            ("Ctrl+F", focus_search),
+        ):
+            QShortcut(QKeySequence(keys), dlg).activated.connect(action)
 
+        show_details(None)
         search_box.setFocus()
         dlg.exec()
 

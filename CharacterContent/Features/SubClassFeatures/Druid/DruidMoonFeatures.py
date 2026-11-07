@@ -6,6 +6,7 @@ from Model.Content.Feature import (
     RegainedOn,
     FeatureTarget,
 )
+from Model.Content.CombatEffect import CombatEffect
 from Core.Rules import MAX_ABILITY_MODIFIER
 from Model.View import CharacterView
 from Model.Content.FeatureText import Block, Facts, Paragraph, Table
@@ -52,6 +53,10 @@ class CircleForms(Feature):
         )
         return description
 
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # Wild Shape counts it when the form is taken.
+        return []
+
 
 class CircleOfTheMoonSpells(Feature):
     def __init__(self):
@@ -81,6 +86,10 @@ class CircleOfTheMoonSpells(Feature):
             "In addition, you can cast the spells from this feature while you're in a Wild Shape form."
         )
         return description
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # Its spells are in the picker as spells.
+        return []
 
 
 class ImprovedCircleForms(Feature):

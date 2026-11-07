@@ -129,10 +129,17 @@ class EffectOption:
     is_unavailable: bool = False
     # Whether using it counts against the feature's uses.
     counts_uses: bool = False
+    # The feature whose uses and stats it counts against, when one of its
+    # uses has a name of its own (Jolt to Life, of Reanimator's Skill Set).
+    feature_name: str = ""
+    # The spell a feature's use casts (Favored Enemy's Hunter's Mark): its
+    # condition is that spell's badge.
+    spell_name: str = ""
     # What each of `rolls` gains per slot level above spell_level, "" for none.
     upcast: tuple[str, ...] = ()
     spell_level: int = 0
-    # A spell filled in from its checked mechanics file, not read from its text.
+    # A spell filled in from its checked mechanics file, or a feature from its
+    # own combat_effects(), not read from its text.
     is_curated: bool = False
 
     @property
