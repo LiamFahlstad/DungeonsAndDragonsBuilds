@@ -54,10 +54,10 @@ CONFIG = CampaignSpec(
             description="An easy fight against a rival adventuring party: one tank, one healer, one control, one DPS.",
             difficulty="Low: 600 XP against the four level 3 players (Low starts at 600).",
             monsters=[
-                CombatantSpec(GoliathPaladinOfDevotion, "Paladin"),
-                CombatantSpec(DwarfLifeCleric, "Cleric"),
-                CombatantSpec(ElfDruidOfTheLand, "Druid"),
-                CombatantSpec(OrcAssassin, "Assassin"),
+                CombatantSpec(GoliathPaladinOfDevotion, "Korrath Skyshield"),
+                CombatantSpec(DwarfLifeCleric, "Brenna Emberhearth"),
+                CombatantSpec(ElfDruidOfTheLand, "Sylvaris Thornwhisper"),
+                CombatantSpec(OrcAssassin, "Grisha Nightfang"),
             ],
         ),
         EncounterSpec(
