@@ -78,13 +78,13 @@ def get_starter_class_builder():
         ],
         # One-shot party role: light-bearer and tinkerer. Only gear that can
         # matter on the adventure; climbing gear is left to Hanna, healing and
-        # maps to Maggie.
+        # maps to Maggie. Her slots are full (10 of 10 with the Backpack), so
+        # Maggie carries the lantern's oil and the crowbar.
         items=[
-            (Items.CrossbowBolts(), 1),  # one case of 20 bolts
+            (Items.Backpack(), 1),
+            (Items.Quiver(), 1),  # ammunition isn't tracked in this campaign
             (Items.TinkersTools(), 1),
             (Items.HoodedLantern(), 1),
-            (Items.FlasksOfOil(), 3),
-            (Items.Crowbar(), 1),
         ],
         base_class_level_features=ClassBuilder.BaseClassLevelFeatures(
             base_class_features_by_level={
@@ -122,14 +122,13 @@ class Y2024ArtificerReanimatorDessieCharacterBuilder(CharacterBuilder):
         )
         # Kingdom Saving Agency mission issue (the agency that recruited the
         # party): Dessie is the party's investigator. A magnifying glass for
-        # clues and evidence, and alchemist's fire as her emergency answer
-        # to a crowd closing in on her companion.
+        # clues and evidence, alchemist's fire as her emergency answer to a
+        # crowd closing in on her companion.
         self.add_adventuring_gear(
             "Kingdom Saving Agency",
             items=[
                 (Items.MagnifyingGlass(), 1),
-                (Items.AlchemistsFire(), 2),
-                (Items.PotionOfHealing(), 1),
+                (Items.AlchemistsFire(), 1),
             ],
             gold=10,  # travel expenses
         )

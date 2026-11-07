@@ -154,11 +154,10 @@ class Y2024BardValorThomasCharacterBuilder(CharacterBuilder):
         #
         # Only gear that can matter on the adventure; tools and light are
         # left to Dessie, healing and maps to Maggie, climbing gear to Hanna.
-        # Fine clothes and perfume (advantage on Persuasion vs. Indifferent
-        # creatures) get him through doors the others can't; ball bearings
-        # are a Sleight of Hand trick for covering a retreat. Two Potions of
-        # Healing, and a bigger purse than the others' travel money for
-        # bribes and buying information.
+        # Perfume (advantage on Persuasion vs. Indifferent creatures) gets
+        # him through doors the others can't. A backpack to carry it all (10
+        # of 10 slots; the Heavy Crossbow takes two), and a bigger purse than
+        # the others' travel money for bribes and buying information.
         self.add_adventuring_gear(
             "Kingdom Saving Agency",
             armor=[
@@ -171,12 +170,10 @@ class Y2024BardValorThomasCharacterBuilder(CharacterBuilder):
                 Weapons.HeavyCrossbow(),
             ],
             items=[
+                (Items.Backpack(), 1),
                 (Items.Lute(), 1),  # spellcasting focus
                 (Items.Quiver(), 1),  # ammunition isn't tracked in this campaign
-                (Items.FineClothes(), 1),
-                (Items.Perfume(), 2),
-                (Items.BallBearings(), 1),
-                (Items.PotionOfHealing(), 2),
+                (Items.Perfume(), 1),
             ],
             gold=25,  # travel expenses + bribe purse
         )

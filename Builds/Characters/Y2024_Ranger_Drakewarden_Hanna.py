@@ -14,7 +14,6 @@ from CharacterContent.Features.CharacterFeats import Backgrounds, OriginFeats
 from CharacterContent.Features.CombatFeatures import FightingStyles
 from CharacterContent.Items import Armor, Items, Weapons
 from CharacterContent.Species import Human
-from CharacterContent.Spells import SpellLists
 from CharacterContent.Spells.SpellLists import RangerLevel1Spells
 from Core.Definitions import Ability, DamageType, Skill
 from Model.AbilityScores import PointBuyAbilityScores
@@ -63,17 +62,15 @@ def get_starter_class_builder():
         ],
         # One-shot party role: scout and climber. Only gear that can matter on
         # the adventure; tools are left to Dessie, healing and maps to Maggie.
-        # Torches give her a light of her own when scouting away from
-        # Dessie's lantern (and something to set things on fire with).
+        # Her slots are full (10 of 10 with the Backpack; the Heavy Longbow
+        # takes two), so Maggie carries the tinderbox for Dessie's lantern.
+        # No spellcasting focus: Longstrider's pinch of dirt is her only
+        # material component.
         items=[
-            (Items.Arrows(), 2),  # two bundles of 20 arrows
-            (Items.DruidicFocus(), 1),
+            (Items.Backpack(), 1),
+            (Items.Arrows(), 1),  # one bundle of 20 arrows
             (Items.Rope(), 1),
             (Items.GrapplingHook(), 1),
-            (Items.HuntingTrap(), 1),
-            (Items.SignalWhistle(), 1),
-            (Items.Torch(), 5),
-            (Items.Tinderbox(), 1),
         ],
         base_class_level_features=ClassBuilder.BaseClassLevelFeatures(
             base_class_features_by_level={
@@ -114,16 +111,11 @@ class Y2024RangerDrakewardenHannaCharacterBuilder(CharacterBuilder):
             ),
         )
         # Kingdom Saving Agency mission issue (the agency that recruited the
-        # party): Hanna is the party's eyes. A spyglass for scouting ahead,
-        # a Darkvision scroll since none of the three can see in the dark,
-        # and manacles for bringing a target back alive.
+        # party): Hanna is the party's eyes. A spyglass for scouting ahead.
         self.add_adventuring_gear(
             "Kingdom Saving Agency",
             items=[
                 (Items.Spyglass(), 1),
-                (Items.Scroll(SpellLists.TransmutationLevel2Spells.DARKVISION), 1),
-                (Items.Manacles(), 1),
-                (Items.PotionOfHealing(), 1),
             ],
             gold=10,  # travel expenses
         )

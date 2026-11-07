@@ -13,7 +13,6 @@ from CharacterContent.Classes.SubClasses2024.DruidMoon import (
 from CharacterContent.Features.CharacterFeats import Backgrounds, OriginFeats
 from CharacterContent.Items import Armor, Items, Weapons
 from CharacterContent.Species import Halfling
-from CharacterContent.Spells import SpellLists
 from CharacterContent.Spells.SpellLists import (
     DruidLevel0Spells,
     DruidLevel1Spells,
@@ -68,11 +67,15 @@ def get_starter_class_builder():
         ],
         # One-shot party role: healer and mapmaker. Only gear that can matter
         # on the adventure; climbing gear is left to Hanna, light and tools to
-        # Dessie.
+        # Dessie. She carries the oil and tinderbox for Dessie's lantern and
+        # Dessie's crowbar, since Dessie and Hanna have no slots left.
         items=[
+            (Items.Backpack(), 1),
             (Items.DruidicFocus(), 1),
             (Items.HealersKit(), 1),
-            (Items.HerbalismKit(), 1),
+            (Items.FlasksOfOil(), 1),
+            (Items.Tinderbox(), 1),
+            (Items.Crowbar(), 1),
         ],
         tool_proficiencies=[CartographersTools()],
         base_class_level_features=ClassBuilder.BaseClassLevelFeatures(
@@ -111,16 +114,11 @@ class Y2024DruidMoonMaggieCharacterBuilder(CharacterBuilder):
         )
         # Kingdom Saving Agency mission issue (the agency that recruited the
         # party): Maggie is the party's healer and guide. The agency's map of
-        # the mission area for her cartographer's tools to annotate,
-        # antitoxin and a Lesser Restoration scroll for poisons and curses
-        # her healer's kit can't fix.
+        # the mission area.
         self.add_adventuring_gear(
             "Kingdom Saving Agency",
             items=[
                 (Items.Map(), 1),
-                (Items.Antitoxin(), 1),
-                (Items.Scroll(SpellLists.AbjurationLevel2Spells.LESSER_RESTORATION), 1),
-                (Items.PotionOfHealing(), 1),
             ],
             gold=10,  # travel expenses
         )

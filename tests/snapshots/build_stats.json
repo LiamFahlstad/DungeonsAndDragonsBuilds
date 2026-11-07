@@ -19067,7 +19067,7 @@
  },
  "Y2024_Artificer_Reanimator_Dessie": {
   "ac": 18,
-  "carry": 2,
+  "carry": 10,
   "expertise": [
    false,
    false,
@@ -20487,7 +20487,7 @@
  },
  "Y2024_Bard_Valor_Thomas": {
   "ac": 18,
-  "carry": 2,
+  "carry": 10,
   "expertise": [
    false,
    false,
@@ -21201,7 +21201,7 @@
  },
  "Y2024_Druid_Moon_Maggie": {
   "ac": 15,
-  "carry": 2,
+  "carry": 10,
   "expertise": [
    false,
    false,
@@ -23389,7 +23389,7 @@
  },
  "Y2024_Ranger_Drakewarden_Hanna": {
   "ac": 15,
-  "carry": 2,
+  "carry": 10,
   "expertise": [
    false,
    false,

@@ -60,6 +60,11 @@ class AbstractWeapon(Item, ABC):
     kind: Optional[WeaponProficiency] = None
     is_unarmed_strike = False
 
+    # Carrying capacity slots (house rule, see Core/Rules.py): a weapon with
+    # the Heavy property is bulky and takes two; any other weapon takes one.
+    _SLOTS = 1
+    _HEAVY_SLOTS = 2
+
     def __init__(
         self,
         player_is_proficient: bool = False,
@@ -68,7 +73,7 @@ class AbstractWeapon(Item, ABC):
         ability: Optional[Ability] = None,
         is_wearing: bool = True,
         category: ItemCategory = ItemCategory.WEAPON,
-        slots: int = 1,
+        slots: Optional[int] = None,
         improvements: Optional[list[CharacterImprovement]] = None,
         weapon_improvements: Optional[list[ItemImprovement]] = None,
     ):
@@ -109,13 +114,23 @@ class AbstractWeapon(Item, ABC):
             self.add_weapon_improvement(weapon_improvement)
         self.setup_improvements()
 
+        resolved_slots = (
+            slots
+            if slots is not None
+            else (
+                self._HEAVY_SLOTS
+                if WeaponProperty.HEAVY in self.properties
+                else self._SLOTS
+            )
+        )
+
         super().__init__(
             name=self.name,
             rarity=self.rarity,
             requires_attunement=self.requires_attunement,
             category=category,
             weight=self.weight,
-            slots=slots,
+            slots=resolved_slots,
             description_text=self.description_text,
             improvements=self.character_improvements + list(improvements or []),
             is_wearing=is_wearing,
