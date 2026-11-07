@@ -85,6 +85,7 @@ Good practices this setup follows:
 | `monster-balancer` | dnd-monster-balancer | sonnet | Bulk: iterate per monster until `check_monster.py` passes |
 | `monster-ability-converter` | dnd-monster-ability-refactor | sonnet | Bulk: rubric conversion, verified by exact text equality |
 | `spell-improved-descriptions` | dnd-spell-improved-descriptions | sonnet | Bulk: restructure many spells' rules text into blocks |
+| `spell-mechanics` | (new, 2026-11-07) | sonnet | Bulk: a rubric per field; `spell_mechanics.py check`/`compare` verify each entry |
 | `feature-card-tagger` | dnd-feature-action-tags | haiku | Bulk tagging; `tag_report.py check` validates it |
 
 `spell-summarizer` and `spell-usage-tagger` were removed on 2026-10-27: concise spell descriptions left the engine on 2026-10-14, and every spell is tagged. Tag a newly scraped spell in the main session with the `usage-tags` skill (`tag_report.py set-spell`).

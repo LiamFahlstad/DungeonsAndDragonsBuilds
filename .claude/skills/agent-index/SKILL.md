@@ -11,7 +11,7 @@ Every row comes from the agent's or skill's own frontmatter, so this can't drift
 
 **Picking:** use the specialist whose *use for* matches, and check its **points to** column for the "not for this, use that" neighbours. Fall back to `character-engine-dev` or `combat-simulator` for general work. Do small edits in the main session without an agent. A skill marked *main session* is used directly rather than preloaded.
 
-## Agents (16)
+## Agents (17)
 
 ### builds/
 
@@ -43,6 +43,7 @@ Every row comes from the agent's or skill's own frontmatter, so this can't drift
 | Agent | Model | Preloads | Use for | Points to |
 |---|---|---|---|---|
 | [`spell-improved-descriptions`](../../agents/spells/spell-improved-descriptions.md) | sonnet | `subagent-protocol` | Write, audit or fix improved descriptions for D&D spells | `character-engine-dev` |
+| [`spell-mechanics`](../../agents/spells/spell-mechanics.md) | sonnet | `subagent-protocol`, `spell-mechanics` | Add, review or fix checked spell mechanics entries - what casting a spell rolls and does - in… | `combat-simulator`, `spell-improved-descriptions` |
 
 ### tooling/
 
@@ -54,7 +55,7 @@ Every row comes from the agent's or skill's own frontmatter, so this can't drift
 | [`rules-checker`](../../agents/tooling/rules-checker.md) | opus | `subagent-protocol`, `rules-glossary` | Check an implementation against the D&D 2024 rules as written in the local Rules Glossary - features, feats, spells, species… | `character-engine-dev`, `combat-simulator`, `code-reviewer`, `test-bughunter` |
 | [`test-bughunter`](../../agents/tooling/test-bughunter.md) | opus | `subagent-protocol` | Write pytest tests for this D&D 5e engine AND hunt for bugs while doing it | `character-engine-dev`, `combat-simulator` |
 
-## Skills (13)
+## Skills (14)
 
 | Skill | Preloaded by | Scripts | Use for |
 |---|---|---|---|
@@ -68,7 +69,8 @@ Every row comes from the agent's or skill's own frontmatter, so this can't drift
 | [`rules-glossary`](../../skills/rules-glossary/SKILL.md) | `rules-checker` | `glossary_terms.py`, `scrape_rules_glossary.py` | Scrape the D&D 2024 Rules Glossary from D&D Beyond into a local tree of Markdown files under SourceTexts/RulesGlossary/ - one… |
 | [`run-apps`](../../skills/run-apps/SKILL.md) | `character-creator-gui`, `combat-simulator` | `screenshot.py` | How to launch and look at this repo's apps - the PyQt6 combat simulator, the Character Creator GUI and a build's HTML character… |
 | [`snapshot-diffs`](../../skills/snapshot-diffs/SKILL.md) | `character-engine-dev`, `equipment-inventory`, `subclass-implementer`, `code-reviewer`, `git-commit` | `snapshot_diff.py` | Read what actually changed when a golden snapshot test fails - a script that shows each build's changed stats by ability/skill… |
-| [`subagent-protocol`](../../skills/subagent-protocol/SKILL.md) | `character-creator-gui`, `character-engine-dev`, `equipment-inventory`, `subclass-implementer`, `combat-simulator`, `monster-ability-converter`, `monster-balancer`, `monster-designer`, `feature-card-tagger`, `feature-extension-auditor`, `spell-improved-descriptions`, `code-reviewer`, `content-scraper`, `git-commit`, `rules-checker`, `test-bughunter` | - | How every project subagent reports back and learns from its runs - the fixed final report sections, and when and how to record… |
+| [`spell-mechanics`](../../skills/spell-mechanics/SKILL.md) | `spell-mechanics` | `spell_mechanics.py` | Checked spell mechanics - what casting a spell rolls and does, stored in CharacterContent/Spells/spells_<source>_mechanics.json… |
+| [`subagent-protocol`](../../skills/subagent-protocol/SKILL.md) | `character-creator-gui`, `character-engine-dev`, `equipment-inventory`, `subclass-implementer`, `combat-simulator`, `monster-ability-converter`, `monster-balancer`, `monster-designer`, `feature-card-tagger`, `feature-extension-auditor`, `spell-improved-descriptions`, `spell-mechanics`, `code-reviewer`, `content-scraper`, `git-commit`, `rules-checker`, `test-bughunter` | - | How every project subagent reports back and learns from its runs - the fixed final report sections, and when and how to record… |
 | [`usage-tags`](../../skills/usage-tags/SKILL.md) | `feature-card-tagger` | `tag_report.py` | The rubric and tooling for usage_tags, the role chips on D&D feature and spell cards - where they are stored, how to decide them,… |
 | [`verify-agent-work`](../../skills/verify-agent-work/SKILL.md) | *main session* | `verify.py` | Verify what subagents actually changed before trusting their reports - diff the working tree against the files it claimed, fail… |
 
