@@ -153,9 +153,12 @@ def chosen_spells(args) -> list:
     wanted = set(args.name or [])
     if args.campaign:
         wanted |= campaign_spells(args.campaign)
+    # A name or campaign filter that finds no spells (a campaign without a
+    # party yet) picks none, not every spell.
+    by_name = bool(args.name or args.campaign)
     picked = []
     for spell in SpellFactory.all_spells():
-        if wanted and spell.name not in wanted:
+        if by_name and spell.name not in wanted:
             continue
         if args.level is not None and spell.level != args.level:
             continue

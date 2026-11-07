@@ -7,11 +7,11 @@
 | 1 Schema, `Mechanics.py` | **Done.** Final schema in the module docstring of [Mechanics.py](../CharacterContent/Spells/SpellFactory/Mechanics.py). It differs from the first draft below: `upcast` and `cantrip` sit on each damage entry, and `heal` has its own `upcast`. |
 | 2 Loader, `DataSpell.mechanics`, `Spell.mechanics = None` | **Done.** |
 | 3 Picker uses curated data, falls back to the text | **Done.** `EffectOption.is_curated`. The picker tooltip says "Filled in from checked spell data." or "Read from its rules text: check the form." |
-| 4 Seed script + full review | **Tooling done, review partly done.** `spell_mechanics.py draft` (in the `spell-mechanics` skill) prints a draft per spell with a check against the improved description, for review. It does not write high-confidence entries on its own, unlike the first draft below: every entry is reviewed before `add`. 49 entries are checked: 16 for variety (Alarm, Bless, Chromatic Orb, Cure Wounds, Faerie Fire, Fireball, Guiding Bolt, Hold Person, Ice Knife, Ice Storm, Magic Missile, Ray of Sickness, Shatter, Sleep, Spiritual Weapon, Toll the Dead), and every spell of the Time Loop PR party plus Eldritch Blast and Resistance (`todo --campaign time_loop_pr` prints 0). Absorb Elements is 2014-only, so it is in `spells_dnd5e_mechanics.json`. The other ~410 2024 spells are left for the `spell-mechanics` agent, a level at a time. |
+| 4 Seed script + full review | **Tooling done, review partly done.** `spell_mechanics.py draft` (in the `spell-mechanics` skill) prints a draft per spell with a check against the improved description, for review. It does not write high-confidence entries on its own, unlike the first draft below: every entry is reviewed before `add`. 49 entries are checked: 16 for variety (Alarm, Bless, Chromatic Orb, Cure Wounds, Faerie Fire, Fireball, Guiding Bolt, Hold Person, Ice Knife, Ice Storm, Magic Missile, Ray of Sickness, Shatter, Sleep, Spiritual Weapon, Toll the Dead), and every spell of the Time Loop PR party plus Eldritch Blast and Resistance (`todo --campaign time_loop_pr` prints 0). Absorb Elements is 2014-only, so it is in `spells_dnd5e_mechanics.json`. Left: 545 spells (408 in the 2024 file, 137 that only the 2014 data has), see Phase 2. |
 | 5 `applicable: false` | **Done as recommended.** Hidden under All spells, still listed in the caster's own spells. |
 | 6 Tests | **Done.** [test_spell_mechanics.py](../tests/test_spell_mechanics.py). The text-reading tests in `test_combat_ui_effect_options.py` drop the curated data so they keep testing the fallback. The consistency report is `spell_mechanics.py compare`. |
 | 7 Skill + agent | **Done.** The `spell-mechanics` skill (`.claude/skills/spell-mechanics/`: the rubric, and `spell_mechanics.py` with `check`, `todo`, `draft`, `add`, `compare`, `format`) and the `spell-mechanics` agent on sonnet (`.claude/agents/spells/`). |
-| 8 Later phases | **Not started.** |
+| 8 Later phases | **Not started.** Now Phase 2 (end of this file), which orders the remaining work. |
 
 ## Goal
 
@@ -275,3 +275,142 @@ and to track Concentration. Proposed:
 | 5 | `applicable: false` behaviour agreed and implemented | Test covers it |
 | 6 | Skill + agent | Agent index test passes |
 | 7 | Review batches, cantrips to level 9 | Every 2024 spell has an entry; validator clean; consistency report reviewed |
+
+## Phase 2: what's left (added 2026-11-07, after the first pass was pushed)
+
+The first pass is on main (495dc647, 293b70b3): the schema, loader, picker,
+tests, the `spell-mechanics` skill and agent, and 49 checked spells, including
+every spell of the Time Loop PR party. What's left, in the order to do it:
+
+| Spells without an entry | 2024 file | 2014 file | Total |
+|---|---|---|---|
+| Cantrips | 21 | 15 | 36 |
+| Level 1-3 | 171 | 62 | 233 |
+| Level 4-6 | 142 | 43 | 185 |
+| Level 7-9 | 74 | 17 | 91 |
+| **All** | **408** | **137** | **545** |
+
+(`python .claude/skills/spell-mechanics/spell_mechanics.py todo --level N` lists them.)
+
+### Step 9: Commit the `todo --campaign` fix
+
+`todo`, `draft` and `compare` treated a campaign whose party has no spells
+(Grim's Castle has no party yet) as no filter, and listed all 545 spells. The
+fix is in the working tree (`chosen_spells` in `spell_mechanics.py`) and needs a
+commit.
+
+### Step 10: Schema gaps the next spells run into
+
+The Curse of the Lich party's 23 missing spells show four things an entry
+can't say yet. Each would otherwise end up as a note. Close them before the
+bulk review, or the agent writes hundreds of notes that a later pass has to
+turn back into fields. Each one is a field in `Mechanics.py`, handling in
+`effect_options.py`, the rubric in the skill, and tests.
+
+| Gap | Spells | Proposed field | What the picker does with it |
+|---|---|---|---|
+| A badge that lasts until a turn edge | Chill Touch (no healing until the end of your next turn), Guiding Bolt, Vicious Mockery, Shield, Starry Wisp | `"badge_until": ["end", "source"]` | Sets `EffectOption.until` for the badge as it does for a condition, so the badge drops off on its own |
+| Several attacks or darts | Scorching Ray (3 rays), Magic Missile (3 darts), Eldritch Blast (beams by character level) | `"instances": {"count": 3, "upcast": 1}` or `{"cantrip": {"5": 2, "11": 3, "17": 4}}` | Works out the count at the chosen slot or level, and shows "3 rays: one attack roll each" in the row and note. Damage stays per instance |
+| Extra damage that only starts at a character level | Booming Blade, Green-Flame Blade, True Strike | Let a cantrip damage entry have `"dice": "0"` plus `cantrip` steps | No damage below level 5, then the step's dice. Today True Strike's 1d6 at level 5 is only a note |
+| Extra damage against some targets | Divine Smite (+1d8 against a Fiend or Undead), Toll the Dead (d12s if the target is hurt) | `"conditional": [{"dice": "1d8", "type": "Radiant", "when": "the target is a Fiend or an Undead"}]` | Becomes a generated note that includes the upcast. Later, it could be a checkbox in the dialog |
+
+**Decision for the user:** whether `instances` should only produce notes, or
+whether the dialog should get a repeat count (roll the attack and damage N
+times against the chosen targets). A repeat count is the bigger change, in
+`conditions_mixin.py` and `saves.py`.
+
+### Step 11: Variants (was in Step 8)
+
+Command (Approach/Drop/Flee/Grovel/Halt), Elementalism, Thaumaturgy, Ice Knife's
+explosion, Chromatic Orb's leap, Alter Self, Enlarge/Reduce, Bestow Curse and
+Contagion each have options with different mechanics. Proposed:
+`"variants": [{"name": "Grovel", ...partial entry...}]`, merged over the base
+entry. The picker shows one row per variant ("Command: Grovel"), and the base
+row stays for the slot and action. Do this before the bulk review gets to
+those spells (Command is level 1).
+
+### Step 12: Bulk review with the `spell-mechanics` agent
+
+1. **Curse of the Lich party first** (23 spells, `--campaign curse_of_the_lich`),
+   after Steps 10 and 11. These are the spells played most at the table.
+2. **Then a level at a time**, cantrips first, 2024 file and 2014 file in
+   separate runs. Batches of about 40-70 spells, so two or three levels per run
+   from level 4 up. Give each run its filter (for example "level 2 spells,
+   2024 file") and the instruction to use `todo` then `draft --out` then `add`.
+3. **After each run**, in the main session:
+   - run `verify-agent-work` with `--claimed` set to the two mechanics files;
+   - run `spell_mechanics.py compare` for that level and look at every
+     difference;
+   - spot-check five entries against their text, including one with damage and
+     one condition spell;
+   - curate what the agent wrote to its memory.
+   Sonnet is the right model per CLAUDE.md, because `check` and `compare` verify
+   it. Don't hand it to haiku: choosing what goes in notes versus fields is
+   exactly the kind of judgment haiku runs have gotten wrong here.
+4. **Data defects the agent should report, not work around:** Shield's casting
+   time is cut off ("targeted by the"). Spells whose text refers to a missing
+   table should be reported too. Log both with the `discovered-issues` skill.
+
+**Done when:** `todo` prints 0, `check` is OK, and the full suite passes.
+
+### Step 13: Spells cast by monsters
+
+Stat blocks name the spells they cast: the Lich, dragons ("uses Spellcasting to
+cast Fear", "cast Melf's Acid Arrow (level 4 version)"), and homebrew casters
+such as the Elf Druid of the Land (Entangle, Hold Person). Today a monster
+only has "All spells", with its DC and bonus taken from its Spellcasting text.
+Proposed:
+- parse the spell names out of a monster's Spellcasting actions in
+  `monster_actions.py`, matching them against `SpellFactory.spell_names()`;
+- list them as "<Monster>'s Spells" in `effect_options()`, at the level stated
+  ("level 4 version" as the slot level), filled from their entries;
+- leave the stat-block action rows as they are, since the monster uses them up.
+
+This is combat-simulator work, with a test for a generated monster and one for
+a homebrew monster.
+
+### Step 14: Keep entries in step with the text
+
+A re-scrape can change a spell's description, and its entry would then
+describe the old text without anyone noticing. Proposed: `add` stores a short
+hash of the description in a sidecar file. Use
+`spells_<source>_mechanics.lock.json` rather than the entry itself, which
+stays clean. `check` reports every spell whose text changed since it was
+checked, and a test runs `check`. Also add a line about checking mechanics to
+the `new-content-check` skill's "after scraping" steps, so a newly scraped spell
+shows up in `todo`.
+
+### Step 15: More of the form
+
+- **Healing and Temporary Hit Points:** a Heal box on the Custom Effect dialog,
+  filled from `heal`, plus a new `temp_hp` field (False Life, Heroism,
+  Armor of Agathys). The note tells the GM to apply it by hand until then.
+- **Two conditions:** let `EffectOption.condition` hold a tuple
+  (Tasha's Hideous Laughter: Prone and Incapacitated; Hypnotic Pattern;
+  Power Word Stun), and have the dialog apply each.
+- **Extra targets per slot level and duration upcasting** (Hold Person,
+  Invisibility, Hunter's Mark) stay notes. The picker has no target count to
+  fill.
+
+### Step 16: Beyond the combat picker (was in Step 8)
+
+- Spell cards on the character sheet: "DEX save · half" and "8d6 Fire" chips
+  from `mechanics`. This changes snapshots, so the `snapshot-diffs` skill
+  applies.
+- Features: the same data for features with a save or an attack (Breath
+  Weapon, Channel Divinity options, Stunning Strike), as a `mechanics=` kwarg
+  read by `_feature_option()`. This is a separate plan. Features are code, not
+  JSON, so the regex reading could be replaced per feature class.
+
+### Phase 2 order and done criteria
+
+| # | Step | Done when |
+|---|---|---|
+| 9 | Commit the `todo --campaign` fix | Pushed |
+| 10 | `badge_until`, `instances`, level-gated dice, `conditional` (after the user decides on a repeat count) | Parser and picker tests for each field; skill rubric updated |
+| 11 | `variants` | Command and Ice Knife give one picker row per variant; tests |
+| 12 | Curse of the Lich party, then all levels with the agent | `todo` prints 0; `check` OK; each batch verified and spot-checked |
+| 13 | Monsters' own spells in the picker | A Lich and a homebrew caster list their spells, filled from entries |
+| 14 | Description hashes | `check` flags a changed description; new-content-check mentions mechanics |
+| 15 | Heal/Temp HP box, two conditions | The dialog applies them; Cure Wounds and Tasha's fill them |
+| 16 | Sheet chips, features | Separate plans |
