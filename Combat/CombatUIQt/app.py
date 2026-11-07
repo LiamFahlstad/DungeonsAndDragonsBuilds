@@ -84,8 +84,10 @@ class CombatAppQt(
           run() opens (asking whether to continue or restart a fight in progress).
         - Without one, `log_path` is a log to fight `combatants` in directly
           (tests and scripts).
-        - With neither, the window shows the party between encounters, and
-          nothing is logged until an encounter is loaded.
+        - With neither, the window shows the party between encounters,
+          where what they do is logged, without turns, to the
+          between-encounters log (Combat/PlayerLog.py) when the party is
+          tracked, and nothing is logged when it isn't.
 
         `party_allies` are the allies who travel with the party
         (PartySpec.allies): the party view and a short rest show them as

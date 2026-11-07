@@ -4,9 +4,10 @@ tracked party between encounters or before a loaded encounter is started.
 A rest is an entry of its own in the player log (Combat/PlayerLog.py), and
 the party's state is replayed in that order. A long rest's entry is just the
 rest; a short rest's carries its few events (heals, regained feature uses
-and Pact Magic slots), since nothing between encounters has a log of its
-own. A loaded encounter that hasn't started gets its entry only once
-something happens in it, so a rest taken before it comes first."""
+and Pact Magic slots). A loaded encounter that hasn't started, or the
+between-encounters log, gets its entry only once something happens in it, so
+a rest taken before it comes first. A rest ends the stretch between
+encounters: what happens after it goes to a new between-encounters log."""
 
 from typing import Callable
 
@@ -43,7 +44,8 @@ class RestsMixin(CombatWindowState):
         self._long_rest_btn.setToolTip(tip)
 
     def _after_rest(self):
-        """Undo stops at a rest; the window shows the rested party."""
+        """Undo stops at a rest; the window shows the rested party, in a new
+        stretch between encounters when the rest was recorded."""
         self.history = []
         if self.phase == "PARTY":
             self._show_party_view()

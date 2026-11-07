@@ -48,8 +48,8 @@ class WindowMixin(CombatWindowState):
     """Mixin for window building and selection logic."""
 
     def _select_character(self, char: dict):
-        if self.phase == "PARTY":
-            return  # nothing is logged between encounters
+        if self._nothing_logged_here():
+            return
         self.selected_character = char
         self.selected_label.setText(f"Source: {char['name']}")
         self._more_info_btn.setEnabled(True)
@@ -68,8 +68,8 @@ class WindowMixin(CombatWindowState):
         from the anchor (the last card clicked without Shift) to char, in card
         order, and Ctrl + Shift + click adds that range. The clicked card
         always ends up last."""
-        if self.phase == "PARTY":
-            return  # nothing is logged between encounters
+        if self._nothing_logged_here():
+            return
         targets = self.target_characters
         anchor_idx = next(
             (i for i, c in enumerate(self.characters) if c is self._target_anchor),
@@ -108,6 +108,11 @@ class WindowMixin(CombatWindowState):
             for char in {id(c): c for c in previous + targets}.values():
                 self._rebuild_card(char)
         self._refresh_cards()
+
+    def _nothing_logged_here(self) -> bool:
+        """Between encounters without a tracked party: there's no log to
+        write anything to, so nothing can be picked or done."""
+        return self.phase == "PARTY" and self.log_file is None
 
     def _update_target_label(self):
         everyone_saved = len(self._saved_targets) == len(self.target_characters)
@@ -265,9 +270,9 @@ class WindowMixin(CombatWindowState):
         self._cards_container.hide()
 
         # The initiative screen, or between encounters the party view
+        # (shown once the panels it uses are built, at the end).
         if self.phase == "PARTY":
             self._initiative_widget = None
-            self._scroll_area.setWidget(self._build_party_view())
         else:
             self._initiative_widget = self._build_initiative_widget()
             self._scroll_area.setWidget(self._initiative_widget)
@@ -904,6 +909,9 @@ class WindowMixin(CombatWindowState):
         assert isinstance(app, QApplication)  # the window runs inside one
         app.focusChanged.connect(self._update_combo_sensitive_shortcuts)
         self._update_combo_sensitive_shortcuts(None, QApplication.focusWidget())
+
+        if self.phase == "PARTY":
+            self._show_party_view()
 
     @staticmethod
     def _make_divider() -> QFrame:

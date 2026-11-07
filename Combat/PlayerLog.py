@@ -8,17 +8,26 @@ The two logs split the work:
   campaign's encounters.py; see Combat/EncounterLogs.py) holds everything
   that happened in one fight, in detail: every event, players' included, with
   its structured action and value.
-- The player log holds one entry per encounter or rest, in the order the
-  party went through them:
+- A between-encounters log (CombatLogs/BetweenEncounters/<started>.json)
+  holds what happened between two encounters or rests: a spell cast on the
+  road, a trap's damage, a heal. It has an encounter log's shape (its events
+  are all in "round_1", as there are no turns, and "combatants" holds the
+  party's allies and summons as they were left), so it is replayed, counted
+  and carried over like one.
+- The player log holds one entry per encounter, rest or stretch between
+  them, in the order the party went through them:
 
       {"type": "encounter", "scenario": "goblin_warband_ambush",
        "log": "../CombatLogs/goblin_warband_ambush.json", "started_at": "..."}
+      {"type": "between_encounters",
+       "log": "../CombatLogs/BetweenEncounters/2026-11-07_14-02-11.json",
+       "started_at": "..."}
       {"type": "short_rest", "started_at": "...", "events": [<heals, ...>]}
       {"type": "long_rest", "started_at": "..."}
 
-  "log" is the encounter log's path relative to the player log's folder. A
-  short rest has no log of its own: its few events (heals, regained feature
-  uses) are kept on its line. Nothing else happens between encounters.
+  "log" is the log's path relative to the player log's folder. A short rest
+  has no log of its own: its few events (heals, regained feature uses) are
+  kept on its line.
 
 The party's current state (HP, conditions, spell slots, ...) is their
 character sheets with the player events of every log listed since the last
@@ -38,6 +47,10 @@ from Combat.LogFiles import read_json, write_json
 LONG_REST = "long_rest"
 SHORT_REST = "short_rest"
 ENCOUNTER = "encounter"
+BETWEEN_ENCOUNTERS = "between_encounters"
+# The folder, inside a campaign's CombatLogs/, of its between-encounters logs.
+BETWEEN_ENCOUNTERS_DIR = "BetweenEncounters"
+BETWEEN_ENCOUNTERS_TITLE = "Between encounters"
 
 
 _LOWERCASE_TITLE_WORDS = {"a", "an", "and", "at", "in", "of", "on", "the", "to"}
@@ -151,6 +164,33 @@ def long_rest_entry() -> dict:
     """A long rest: from here on the party starts from their full character
     sheets again. Earlier entries stay for the statistics."""
     return {"type": LONG_REST, "started_at": now()}
+
+
+def between_encounters_log_path(combat_log_dir: str | Path, started_at: str) -> Path:
+    """A new between-encounters log for a stretch that started at
+    `started_at` (now()): CombatLogs/BetweenEncounters/<its time>.json,
+    numbered when one of that name is already there."""
+    folder = Path(combat_log_dir) / BETWEEN_ENCOUNTERS_DIR
+    stem = started_at.replace("T", "_").replace(":", "-")
+    path = folder / f"{stem}.json"
+    number = 2
+    while path.exists():
+        path = folder / f"{stem}_{number}.json"
+        number += 1
+    return path
+
+
+def is_between_encounters_log(data: dict) -> bool:
+    """Whether `data` is a between-encounters log (its header's "type")."""
+    return data.get("type") == BETWEEN_ENCOUNTERS
+
+
+def current_between_encounters(sessions: list[dict]) -> dict | None:
+    """The between-encounters entry the party is still in: the last entry,
+    when it is one. An encounter or a rest after it ends that stretch."""
+    if sessions and sessions[-1].get("type") == BETWEEN_ENCOUNTERS:
+        return sessions[-1]
+    return None
 
 
 def append_long_rest(player_log_path: str | Path):

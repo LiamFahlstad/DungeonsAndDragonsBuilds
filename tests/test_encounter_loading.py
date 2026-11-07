@@ -2,9 +2,9 @@
 logs prepared from it (Combat/EncounterLogs.py, Combat/Tools/
 prepare_encounters.py), and the combat window playing them
 (Combat/CombatUIQt/encounters_mixin.py, rests_mixin.py): Load Encounter,
-Continue / Restart, End Encounter, the party view between encounters, rests,
-and how the encounter logs and the player log (Combat/PlayerLog.py) split the
-work."""
+Continue / Restart, End Encounter, the party between encounters and its
+between-encounters log, rests, and how the encounter logs and the player log
+(Combat/PlayerLog.py) split the work."""
 
 import dataclasses
 import json
@@ -458,10 +458,121 @@ def _in_fight(tmp_path, scenario=TIGER) -> CombatAppQt:
     return ui
 
 
-def test_between_encounters_the_window_shows_the_party_and_logs_nothing(tmp_path):
+def _between_log(ui):
+    """The between-encounters log the window is logging to."""
+    assert ui.phase == "PARTY" and ui.log_file is not None
+    assert ui.log_file.parent.name == PlayerLog.BETWEEN_ENCOUNTERS_DIR
+    return ui.log_file
+
+
+def _actions(path) -> list[str]:
+    """The actions of the events in the log at `path`, in order."""
+    data = json.loads(path.read_text(encoding="utf-8"))
+    return [e["action"] for e in data.get("round_1", []) if "action" in e]
+
+
+def test_between_encounters_the_window_shows_the_party_cards(tmp_path):
     ui = _ui(tmp_path)
-    assert ui.phase == "PARTY" and ui.log_file is None
+    log = _between_log(ui)
     assert [c["name"] for c in ui.characters] == _names()
+    assert ui._scroll_area.widget() is ui._cards_container
+    assert set(ui._card_widgets) == {id(c) for c in ui.characters}
+    assert ui._window.windowTitle() == "DnD Combat Engine — Between encounters"
+    assert not ui._next_turn_btn.isVisibleTo(ui._window)
+    ui._select_character(ui.characters[0])
+    assert ui.selected_character is ui.characters[0]
+    assert ui._add_combatant_btn.isEnabled()
+    assert not ui._end_encounter_btn.isEnabled()
+    # There are no turns, so no action economy to count.
+    ui._add_action_use("Action")
+    assert not ui.characters[0].get("action_uses")
+    # Nothing is written until something happens.
+    assert not log.exists() and _journal(tmp_path) == []
+
+
+def test_what_happens_between_encounters_is_logged_and_counts(tmp_path):
+    ui = _ui(tmp_path)
+    edmund, clover = _player(ui, "Edmund"), _player(ui, "Clover")
+    full_hp = edmund["hp"]
+    _hit(ui, clover, edmund, 6)
+    ui.heal_input.setText("2")
+    ui._apply_heal()
+    log = _between_log(ui)
+    (entry,) = _journal(tmp_path)
+    assert entry == {
+        "type": "between_encounters",
+        "log": f"../CombatLogs/BetweenEncounters/{log.name}",
+        "started_at": entry["started_at"],
+    }
+    data = json.loads(log.read_text(encoding="utf-8"))
+    assert data["type"] == "between_encounters" and data["players"] == _names()
+    assert _actions(log) == ["damage", "heal"]
+    # No turns, and nothing on the player link.
+    assert not any(e["text"].startswith("[") for e in data["round_1"])
+    assert not any(e.get("public") for e in data["round_1"])
+
+    # The next run carries on in the same stretch, the party as it left them.
+    ui = _ui(tmp_path)
+    assert ui.log_file == log
+    assert _player(ui, "Edmund")["hp"] == full_hp - 4
+    stats = ui._compute_player_log_stats()
+    assert stats["Edmund"]["damage_taken"] == 6
+    assert stats["Clover"]["healing_done"] == 2
+
+
+def test_an_encounter_or_a_rest_ends_the_stretch_between_encounters(tmp_path, say_yes):
+    ui = _ui(tmp_path)
+    _hit(ui, _player(ui, "Clover"), _player(ui, "Edmund"), 3)
+    first = _between_log(ui)
+
+    # An encounter loaded but never started changes nothing.
+    ui._load_encounter(TIGER, restart=False)
+    ui._end_encounter()
+    assert _between_log(ui) == first
+
+    ui._load_encounter(TIGER, restart=False)
+    _start(ui)
+    _hit(ui, _player(ui, "Tiger"), _player(ui, "Edmund"), 2)
+    ui._end_encounter()
+    second = _between_log(ui)
+    assert second != first and not second.exists()
+    _hit(ui, _player(ui, "Clover"), _player(ui, "Edmund"), 1)
+
+    ui._long_rest()
+    third = _between_log(ui)
+    assert third not in (first, second) and not third.exists()
+    assert [s["type"] for s in _journal(tmp_path)] == [
+        "between_encounters",
+        "encounter",
+        "between_encounters",
+        "long_rest",
+    ]
+    assert (_actions(first), _actions(second)) == (["damage"], ["damage"])
+
+
+def test_undo_between_encounters(tmp_path):
+    ui = _ui(tmp_path)
+    edmund = _player(ui, "Edmund")
+    full_hp = edmund["hp"]
+    _hit(ui, _player(ui, "Clover"), edmund, 5)
+    ui._undo_last()
+    assert edmund["hp"] == full_hp
+    assert _actions(_between_log(ui)) == []
+    assert _player(_ui(tmp_path), "Edmund")["hp"] == full_hp
+
+
+def test_someone_added_between_encounters_stays_until_the_stretch_ends(tmp_path):
+    ui = _ui(tmp_path)
+    ui._add_ad_hoc_combatant("Innkeeper", hp=8)
+    innkeeper = _player(ui, "Innkeeper")
+    assert id(innkeeper) in ui._card_widgets
+    assert [c["name"] for c in ui.characters] == [*_names(), "Innkeeper"]
+    assert [c["name"] for c in _ui(tmp_path).characters] == [*_names(), "Innkeeper"]
+
+
+def test_without_a_tracked_party_nothing_is_logged_between_encounters(tmp_path):
+    ui = _ui(tmp_path, player_log=False)
+    assert ui.phase == "PARTY" and ui.log_file is None
     view = ui._scroll_area.widget()
     assert view is not None
     texts = [label.text() for label in view.findChildren(QLabel)]
@@ -670,7 +781,7 @@ def test_end_encounter_records_it_and_goes_back_to_the_party(tmp_path, say_yes):
     assert fight["round_1"][-1]["text"] == "--- Tiger Den ended ---"
     (entry,) = _journal(tmp_path)
     assert entry[ENDED_KEY] == fight[ENDED_KEY]
-    assert ui.phase == "PARTY" and ui.log_file is None
+    _between_log(ui)
     assert [c["name"] for c in ui.characters] == _names()
     assert _player(ui, "Edmund")["hp"] == edmund["hp"]
 

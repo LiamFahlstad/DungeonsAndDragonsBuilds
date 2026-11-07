@@ -235,9 +235,16 @@ says so ("hidden: players see Hanna's Drake Companion as now").
 
 - `--scenario <id>` opens that encounter (asking to continue or restart a fight in
   progress), with the players its log lists.
-- Without `--scenario`, `--player-log` opens the party **between encounters**: their
-  current HP, slots and conditions, and their allies', with Load Encounter (Ctrl+O),
-  Short Rest and Long Rest. Nothing is logged between encounters.
+- Without `--scenario`, `--player-log` opens the party **between encounters**: the
+  cards of the party, their allies and the summons still out, as they are now, with
+  Load Encounter (Ctrl+O), Short Rest and Long Rest. There are no turns, but
+  everything else works as in a fight (spells, heals, damage, conditions, summons,
+  Add Combatant, Undo), and it is logged to a between-encounters log,
+  `CombatLogs/BetweenEncounters/<time>.json`, with a `"between_encounters"` line in
+  the player log pointing to it. It counts for the party like a fight: replayed
+  onto them, in the statistics, and carried over (allies, summons) into the next
+  encounter. A stretch lasts until an encounter is played or the party rests;
+  reopening the window in between continues it.
 - A player log in a campaign's `PlayerLogs/` folder belongs to that campaign:
   `--player-log` picks it (no `--campaign` needed), and a `--campaign` or
   `--scenario` of another campaign is refused. `--player-log` with no path uses

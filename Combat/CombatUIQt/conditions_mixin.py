@@ -1783,6 +1783,8 @@ class ConditionsMixin(CombatWindowState):
         None), this round. Tallies reset when it becomes that combatant's turn
         again (see _advance_turn).
         """
+        if self.phase == "PARTY":
+            return  # between encounters there are no turns to spend them in
         char = char or self.selected_character
         if not char:
             self._show_status("Nothing logged: left-click a card to pick a source.")

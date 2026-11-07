@@ -6,7 +6,7 @@ import json
 from pathlib import Path
 
 import pytest
-from PyQt6.QtWidgets import QLabel, QLineEdit, QPushButton
+from PyQt6.QtWidgets import QLineEdit, QPushButton
 
 import Combat.PartyAllies as PartyAllies
 import Combat.PlayerLog as PlayerLog
@@ -258,16 +258,21 @@ def test_an_ally_at_0_hp_is_dying_not_dead_and_stays_down(tmp_path):
     assert _char(ui, GREYPAW)["hp"] == 0
 
 
-def test_the_party_view_and_a_short_rest_have_the_allies(tmp_path):
+def test_between_encounters_and_a_short_rest_have_the_allies(tmp_path):
     ui = _ui(tmp_path)
     _fight(ui, DEN)
     full = _char(ui, GREYPAW)["max_hp"]
     _hit_greypaw(ui, 5)
     ui._leave_encounter()
-    view = ui._scroll_area.widget()
-    assert view is not None
-    lines = [label.text() for label in view.findChildren(QLabel, "partyAllyLine")]
-    assert lines == [f"{GREYPAW}:  {full - 5}/{full} HP"]
+    greypaw = _char(ui, GREYPAW)
+    assert greypaw["hp"] == full - 5 and id(greypaw) in ui._card_widgets
+    # Hurt again between encounters: that's logged, and counts from here on.
+    ui._select_character(greypaw)
+    ui._select_target_character(greypaw)
+    ui.damage_input.setText("1 slashing")
+    ui._apply_damage()
+    assert [c["name"] for c in _ui(tmp_path).characters] == [GREYPAW]
+    assert _char(_ui(tmp_path), GREYPAW)["hp"] == full - 6
 
     def heal_greypaw():
         dialog = short_rest_dialog(ui)
@@ -282,9 +287,9 @@ def test_the_party_view_and_a_short_rest_have_the_allies(tmp_path):
 
     ui._record_short_rest(heal_greypaw)
     (greypaw,) = ui._party_allies_now()
-    assert greypaw["hp"] == full - 2
+    assert greypaw["hp"] == full - 3
     ui._load_encounter(LAIR, restart=False)
-    assert _char(ui, GREYPAW)["hp"] == full - 2
+    assert _char(ui, GREYPAW)["hp"] == full - 3
 
 
 # ---------------------------------------------------------------------------

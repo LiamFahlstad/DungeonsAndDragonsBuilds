@@ -426,6 +426,8 @@ class TurnsMixin(CombatWindowState):
         if self.phase == "COMBAT":
             self.initiative_order.append(char)
             self._rebuild_cards()
+        elif self.phase == "PARTY":
+            self._rebuild_cards()  # between encounters: no turns to take
         else:
             self._add_initiative_row([char])
             self._check_start_button()

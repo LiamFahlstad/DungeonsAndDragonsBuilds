@@ -555,6 +555,28 @@ def test_a_summon_that_is_out_stays_out_into_the_next_encounter(tmp_path):
     assert _char(ui, "Hanna")["feature_uses_used"]["Drake Companion"] == 1
 
 
+def test_a_summon_made_between_encounters_joins_the_next_fight(tmp_path):
+    ui = _ui(tmp_path)
+    assert ui.phase == "PARTY"
+    _summon(ui, "Hanna", "Cold")
+    assert _names(ui) == ["Dessie", "Hanna", DRAKE] and ui.initiative_order == []
+    assert len(_events(ui, Action.SUMMON)) == 1
+    # Still out when the window is opened again, and in the next fight.
+    assert DRAKE in _names(_ui(tmp_path))
+    ui._load_encounter(LAIR, restart=False)
+    assert _names(ui) == ["Dessie", "Hanna", DRAKE, "Tiger"]
+    assert _char(ui, "Hanna")["feature_uses_used"]["Drake Companion"] == 1
+
+
+def test_a_summon_left_out_by_a_fight_is_there_between_encounters(tmp_path):
+    ui = _in_fight(tmp_path)
+    _summon(ui, "Hanna", "Cold")
+    _hit(ui, _char(ui, "Tiger"), _char(ui, DRAKE), 6)
+    ui._leave_encounter()
+    assert _names(ui) == ["Dessie", "Hanna", DRAKE]
+    assert _char(ui, DRAKE)["hp"] == 14
+
+
 def test_a_drake_that_died_stays_gone_even_after_a_long_rest(tmp_path):
     ui = _in_fight(tmp_path)
     _summon(ui, "Hanna", "Cold")

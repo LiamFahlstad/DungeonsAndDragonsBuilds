@@ -39,7 +39,9 @@ lists every encounter with how far its fight got ("Ready", "Round 4, 5 of 9
 standing", or "Ended in round 5"), with its description,
 difficulty, players and monsters. **Short Rest...** and **Long Rest** rest the
 party; they also work with an encounter loaded but not started, so the party
-can rest before it. Nothing else is logged between encounters.
+can rest before it. Between encounters the party's cards are shown with no
+turns, and what's done to them (spells, heals, damage, ...) is logged to
+`CombatLogs/BetweenEncounters/`, listed in the player log.
 
 ## Encounters
 

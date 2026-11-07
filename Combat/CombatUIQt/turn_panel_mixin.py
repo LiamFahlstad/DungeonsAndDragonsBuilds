@@ -3,7 +3,8 @@ up and next, what to remember as the turn starts, and the source's stat-block
 actions as buttons that roll and fill in the Damage field, so a monster's turn
 needs no dialog. Legendary actions, recharges and per-day uses are counted in
 the combatant's public keys, so undo and a saved fight keep them. The encounter
-log fills the bottom of the column, with its own scrollbar."""
+log fills the bottom of the column, with its own scrollbar. Between encounters
+the column says there are no turns, and shows the between-encounters log."""
 
 import random
 from textwrap import shorten
@@ -19,6 +20,8 @@ from PyQt6.QtWidgets import (
     QVBoxLayout,
     QWidget,
 )
+
+import Combat.PlayerLog as PlayerLog
 
 from .log_feed import LogFeed
 from .monster_actions import (
@@ -57,6 +60,8 @@ class TurnPanelMixin(CombatWindowState):
 
     # The players' screen, while it's open.
     _player_view: PlayerViewWindow | None
+    # The heading above the log at the bottom of the column.
+    _log_box_header: QLabel
 
     # ── Building and refreshing ─────────────────────────────────────────────
 
@@ -126,7 +131,8 @@ class TurnPanelMixin(CombatWindowState):
         layout = QVBoxLayout(box)
         layout.setContentsMargins(10, 6, 10, 10)
         layout.setSpacing(4)
-        layout.addWidget(self._section_header("Encounter Log"))
+        self._log_box_header = self._section_header("Encounter Log")
+        layout.addWidget(self._log_box_header)
         self._log_feed = LogFeed()
         layout.addWidget(self._log_feed)
         return box
@@ -134,12 +140,32 @@ class TurnPanelMixin(CombatWindowState):
     def _refresh_views(self):
         """Bring the turn column, the players' screen and the player link up
         to date."""
+        between = self.phase == "PARTY" and self.log_file is not None
+        self._log_box_header.setText("Log" if between else "Encounter Log")
         if self.phase == "COMBAT" and self.initiative_order:
             self._refresh_turn_labels()
             self._refresh_action_buttons()
             self._refresh_next_button()
             self._log_feed.show_log(self._read_log())
+        elif between:
+            self._refresh_between_encounters_labels()
+            self._refresh_action_buttons()
+            self._log_feed.show_log(self._read_log())
         self._refresh_player_view()
+
+    def _refresh_between_encounters_labels(self):
+        """The top of the column between encounters, in place of whose turn
+        it is: there are none, and where what's done goes."""
+        assert self.log_file is not None
+        self._turn_now_label.setText(PlayerLog.BETWEEN_ENCOUNTERS_TITLE)
+        self._turn_next_label.setText(
+            "No turns: spells, heals, damage and conditions are logged to "
+            f"{PlayerLog.BETWEEN_ENCOUNTERS_DIR}/{self.log_file.name} and count "
+            "for the party like a fight's. Loading an encounter or resting ends "
+            "this stretch."
+        )
+        self._turn_reminders_label.setText("")
+        self._legendary_ready_label.setText("")
 
     def _hidden_turn_note(self) -> str:
         """During the turn of monsters the players can't see, what the players'

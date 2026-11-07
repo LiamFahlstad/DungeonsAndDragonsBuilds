@@ -1,8 +1,9 @@
 """Encounter mixin for CombatAppQt: play the campaign's encounters from their
 logs (Combat/EncounterLogs.py), at launch (--scenario) or from the Load
 Encounter dialog, setting up an empty log from its config when it's opened,
-continuing a fight in progress or restarting it; end one; and the party view
-shown between encounters, where nothing is logged."""
+continuing a fight in progress or restarting it; end one; and the party
+between encounters, where what the party does (spells, heals, damage, ...)
+is logged without turns to the between-encounters log (Combat/PlayerLog.py)."""
 
 from pathlib import Path
 
@@ -169,10 +170,12 @@ class EncountersMixin(CombatWindowState):
         title = "DnD Combat Engine"
         if self._scenario_name:
             title += f" — {self._scenario_title(self._scenario_name)}"
+        elif self.phase == "PARTY" and self.log_file is not None:
+            title += f" — {PlayerLog.BETWEEN_ENCOUNTERS_TITLE}"
         self._window.setWindowTitle(title)
         self._log_status_label.setText(self._log_status_text())
         self._end_encounter_btn.setEnabled(self._scenario_name is not None)
-        self._add_combatant_btn.setEnabled(self.phase != "PARTY")
+        self._add_combatant_btn.setEnabled(not self._nothing_logged_here())
         self._refresh_rest_buttons()
 
     def _clear_encounter_state(self):
@@ -239,8 +242,8 @@ class EncountersMixin(CombatWindowState):
         self._leave_encounter()
 
     def _leave_encounter(self):
-        """Back to the whole party between encounters: no monsters, and
-        nothing is logged until an encounter is loaded."""
+        """Back to the whole party between encounters: no monsters, and what
+        happens is logged to the between-encounters log."""
         self.characters = [c for c in self.characters if c.get("_is_player")]
         self._scenario_name = None
         self._clear_encounter_state()
@@ -254,17 +257,51 @@ class EncountersMixin(CombatWindowState):
     # ── The party view, between encounters ───────────────────────────────
 
     def _show_party_view(self):
+        """The party between encounters. A tracked party's cards are shown,
+        with its allies and the summons still out, and everything the side
+        panel does to them is logged, with no turns, to the between-encounters
+        log (_start_between_encounters). Without one, a list of the party."""
         old = self._scroll_area.takeWidget()
         if old is not None and old is not self._cards_container:
             old.deleteLater()
-        self._cards_container.hide()
         self._init_tracker_container.hide()
         self._turn_divider.hide()
         self._prev_turn_btn.hide()
         self._next_turn_btn.hide()
-        self._turn_panel.hide()
         self._initiative_widget = None
-        self._scroll_area.setWidget(self._build_party_view())
+        self._start_between_encounters()
+        if self.log_file is None:
+            self._cards_container.hide()
+            self._turn_panel.hide()
+            self._scroll_area.setWidget(self._build_party_view())
+        else:
+            self._scroll_area.setWidget(self._cards_container)
+            self._cards_container.show()
+            self._turn_panel.show()
+            self._rebuild_cards()
+            self._refresh_cards()
+        self._refresh_encounter_labels()
+        self._refresh_views()
+
+    def _start_between_encounters(self):
+        """Put the party in the window as they are now, ready to log what
+        they do between encounters: in the stretch the player log ends with,
+        with its allies and summons as that log left them, or in a new one
+        (after an encounter or a rest), with the party's allies and the
+        summons still out from earlier, as the player log says they are."""
+        self.characters = [c for c in self.characters if c.get("_is_player")]
+        self._clear_encounter_state()
+        data = self._use_between_encounters_log()
+        if self.log_file is None:
+            return
+        for char in self.characters:
+            # The action economy is a turn's; there are none here.
+            char["action_uses"] = {}
+        if data is not None:
+            self._take_combatants_from(data)
+            return
+        self._take_combatants_from({"combatants": self._party_allies_now()})
+        self._carry_summons_over(self.log_file)
 
     def _party_allies_now(self) -> list[dict]:
         """The party's allies, as the player log says they are now (at full
@@ -326,8 +363,8 @@ class EncountersMixin(CombatWindowState):
         header.setStyleSheet("color: #c9a84c; font-size: 16px; font-weight: bold;")
         outer.addWidget(header)
         hint = QLabel(
-            "Load an encounter (Ctrl+O) to play a fight, or rest the party. "
-            "Nothing is logged between encounters."
+            "Load an encounter (Ctrl+O) to play a fight. Run with --player-log "
+            "to track the party, and what they do between encounters."
         )
         hint.setWordWrap(True)
         hint.setStyleSheet("color: #a0a0b0;")

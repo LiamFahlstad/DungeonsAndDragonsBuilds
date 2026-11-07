@@ -8,7 +8,7 @@ from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QTextEdit
 
 from Combat.EncounterLogs import TURN_PREFIX, event_text
-from Combat.PlayerLog import is_round_key
+from Combat.PlayerLog import is_between_encounters_log, is_round_key
 
 _MINIMUM_HEIGHT = 120
 _ROUND_STYLE = "color: #c9a84c; font-weight: bold; margin: 8px 0 0 0;"
@@ -23,10 +23,13 @@ def _paragraph(style: str, text: str) -> str:
 def log_feed_html(data: dict) -> str:
     """The rounds of the encounter log `data`, oldest first. A heading per turn
     replaces the "[Goblin's turn]" every line starts with, which would take up
-    the column's width, and one per round the round's own "--- Round 2 ---"."""
+    the column's width, and one per round the round's own "--- Round 2 ---".
+    A between-encounters log has no rounds, so no round heading."""
+    between = is_between_encounters_log(data)
     parts = []
     for number in sorted(int(k.split("_", 1)[1]) for k in filter(is_round_key, data)):
-        parts.append(_paragraph(_ROUND_STYLE, f"Round {number}"))
+        if not between:
+            parts.append(_paragraph(_ROUND_STYLE, f"Round {number}"))
         turn = None
         for event in data[f"round_{number}"]:
             text = event_text(event)

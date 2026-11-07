@@ -87,8 +87,10 @@ class CombatWindowState:
     initiative_order: list[dict]
     current_turn_idx: int
     player_log_file: Path | None
-    # The encounter log events are written to (LoggingMixin._use_log_file);
-    # None between encounters, when nothing is logged.
+    # The log events are written to: the encounter's
+    # (LoggingMixin._use_log_file), or between encounters the
+    # between-encounters log (_use_between_encounters_log); None when nothing
+    # is logged (no tracked party between encounters).
     log_file: Path | None
     # The tracked party's character sheets by character name (_set_party).
     _party_sheets: dict
@@ -603,6 +605,18 @@ class CombatWindowState:
 
     def _show_party_view(self):
         raise NotImplementedError("EncountersMixin._show_party_view")
+
+    def _start_between_encounters(self):
+        raise NotImplementedError("EncountersMixin._start_between_encounters")
+
+    def _use_between_encounters_log(self) -> dict | None:
+        raise NotImplementedError("LoggingMixin._use_between_encounters_log")
+
+    def _take_combatants_from(self, data: dict):
+        raise NotImplementedError("LoggingMixin._take_combatants_from")
+
+    def _nothing_logged_here(self) -> bool:
+        raise NotImplementedError("WindowMixin._nothing_logged_here")
 
     def _build_party_view(self) -> QWidget:
         raise NotImplementedError("EncountersMixin._build_party_view")

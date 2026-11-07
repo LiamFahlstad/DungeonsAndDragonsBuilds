@@ -110,8 +110,9 @@ class UndoPoint:
 
 
 def undoable(method):
-    """Make a CombatAppQt method one step of undo (see the module docstring).
-    Before combat starts there's nothing to undo, so it just runs."""
+    """Make a CombatAppQt method one step of undo (see the module docstring),
+    in a fight and between encounters. Before a fight starts there's nothing
+    to undo, so it just runs."""
     params = inspect.signature(method).parameters.values()
     takes_varargs = any(p.kind is p.VAR_POSITIONAL for p in params)
     positional = sum(
@@ -124,7 +125,10 @@ def undoable(method):
             # A Qt signal passes its own arguments (clicked's `checked`) to
             # whatever it's connected to; drop the ones the method doesn't take.
             args = args[: positional - 1]
-        if self._open_undo_point is not None or self.phase != "COMBAT":
+        if self._open_undo_point is not None or self.phase not in (
+            "COMBAT",
+            "PARTY",
+        ):
             return method(self, *args, **kwargs)
         point = UndoPoint.capture(self)
         point.operation = method.__name__

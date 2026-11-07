@@ -37,8 +37,10 @@ if __name__ == "__main__":
         "--player-log alone for the campaign's own party log "
         "(PlayerLogs/<party id>.json). A log in a campaign's PlayerLogs/ folder "
         "picks that campaign. "
-        "It is the party's journal: one line per encounter or rest, each encounter pointing "
-        "to its log with the details. The campaign's party is loaded and brought to its "
+        "It is the party's journal: one line per encounter, rest or stretch between "
+        "encounters, each encounter and stretch pointing to its log with the details "
+        "(what happens between encounters is logged to "
+        "CombatLogs/BetweenEncounters/). The campaign's party is loaded and brought to its "
         "current HP/conditions/slots by replaying those logs since the last long rest. "
         "Who of the party takes part in an encounter is in encounters.py.",
     )

@@ -102,8 +102,20 @@ class LoggingMixin(CombatWindowState):
             self._write_log(data)
 
     def _read_log(self) -> dict:
-        """The encounter log's contents; {} between encounters."""
-        if self.log_file is None or not self.log_file.exists():
+        """The log's contents: the encounter's, or between encounters the
+        between-encounters log's, which until its first event is just its
+        header (it's written then). {} when nothing is logged."""
+        if self.log_file is None:
+            return {}
+        if not self.log_file.exists():
+            if self.phase == "PARTY":
+                return {
+                    "type": PlayerLog.BETWEEN_ENCOUNTERS,
+                    "title": PlayerLog.BETWEEN_ENCOUNTERS_TITLE,
+                    "players": [
+                        c["name"] for c in self.characters if c.get("_is_player")
+                    ],
+                }
             return {}
         return read_json(self.log_file)
 
@@ -139,9 +151,10 @@ class LoggingMixin(CombatWindowState):
         party's state is replayed from on the next run (see Combat/PlayerLog.py).
         Without an action, `value` isn't kept: {"condition": name} just says what
         the line is about, for may_read_log_line. `public` False keeps a line off
-        the player link whatever it says. During a short rest the events are
-        collected for its player-log entry instead (RestsMixin). Returns whether
-        players can read the line."""
+        the player link whatever it says. Between encounters it goes to the
+        between-encounters log, where players read nothing. During a short rest
+        the events are collected for its player-log entry instead (RestsMixin).
+        Returns whether players can read the line."""
         self._clear_status()
         turn_name = self._current_turn_name() if note_turn else None
         event: dict[str, object] = {
@@ -156,7 +169,7 @@ class LoggingMixin(CombatWindowState):
             self._rest_events.append(event)
             return False
         if self.log_file is None:
-            # Between encounters nothing is logged (see EncountersMixin).
+            # No encounter, and no tracked party to log between encounters.
             print(f"Not logged (no encounter loaded): {event['text']}")
             return False
         # Before combat, nobody has perceived anyone yet.
@@ -227,29 +240,7 @@ class LoggingMixin(CombatWindowState):
         already in the window, on the initiative screen for a fight that
         hasn't started, or straight into combat to continue one."""
         data = read_json(path)
-        # Logs only ever hold non-player combatants (see _write_log), so splice
-        # them in alongside the players rather than replacing self.characters.
-        players = [c for c in self.characters if c.get("_is_player")]
-        self.characters = players + data.get("combatants", [])
-        player_state = data.get(PLAYER_FIGHT_STATE_KEY, {})
-        for char in self.characters:
-            # A continued fight knows its order, not the rolls behind it; a
-            # player's roll may be from an earlier fight in this window.
-            char.pop(INITIATIVE_KEY, None)
-            char["spell_slots"] = _slots_by_level(char.get("spell_slots"))
-            if char.get("_is_player"):
-                char["pact_slots"] = _slots_by_level(char.get("pact_slots"))
-                for key in PLAYER_FIGHT_KEYS:
-                    char.pop(key, None)
-                char.update(player_state.get(char["name"], {}))
-            else:
-                # An older log's companion_of / companion_choice.
-                upgrade_keys(char)
-            stats = char.setdefault("stats", {})
-            for key in STAT_KEYS:
-                stats.setdefault(key, 0)
-            for key in DICT_STAT_KEYS:
-                stats.setdefault(key, {})
+        self._take_combatants_from(data)
         self.round_number = data.get("round_number", 1)
         self.history = []
         self.selected_character = None
@@ -276,6 +267,34 @@ class LoggingMixin(CombatWindowState):
             (i for i, c in enumerate(self.initiative_order) if c["name"] == turn), 0
         )
         self._switch_to_combat()
+
+    def _take_combatants_from(self, data: dict):
+        """Put the combatants of the log `data` in the window next to the
+        players already in it, and give the players what the log kept of
+        them (PLAYER_FIGHT_STATE_KEY) in place of any they had."""
+        # Logs only ever hold non-player combatants (see _write_log), so splice
+        # them in alongside the players rather than replacing self.characters.
+        players = [c for c in self.characters if c.get("_is_player")]
+        self.characters = players + data.get("combatants", [])
+        player_state = data.get(PLAYER_FIGHT_STATE_KEY, {})
+        for char in self.characters:
+            # A continued fight knows its order, not the rolls behind it; a
+            # player's roll may be from an earlier fight in this window.
+            char.pop(INITIATIVE_KEY, None)
+            char["spell_slots"] = _slots_by_level(char.get("spell_slots"))
+            if char.get("_is_player"):
+                char["pact_slots"] = _slots_by_level(char.get("pact_slots"))
+                for key in PLAYER_FIGHT_KEYS:
+                    char.pop(key, None)
+                char.update(player_state.get(char["name"], {}))
+            else:
+                # An older log's companion_of / companion_choice.
+                upgrade_keys(char)
+            stats = char.setdefault("stats", {})
+            for key in STAT_KEYS:
+                stats.setdefault(key, 0)
+            for key in DICT_STAT_KEYS:
+                stats.setdefault(key, {})
 
     def _carry_party_allies_over(self, log_path: Path):
         """Bring the party's allies in the encounter log at `log_path` (one
@@ -338,8 +357,8 @@ class LoggingMixin(CombatWindowState):
         self._replay_player_log(PlayerLog.with_events(recent, self.player_log_file))
 
     def _use_log_file(self, path: Path | None):
-        """Log to the encounter log at `path` from now on (None: between
-        encounters, nothing is logged), under its entry in the party's
+        """Log to the encounter log at `path` from now on (None: nothing is
+        logged; see _use_between_encounters_log), under its entry in the party's
         journal: the existing one when the party has been in this fight before
         (continued), else a new one, which is only written once something
         happens in the log (see _write_log)."""
@@ -358,6 +377,34 @@ class LoggingMixin(CombatWindowState):
                 "started_at": PlayerLog.now(),
             },
         )
+
+    def _use_between_encounters_log(self) -> dict | None:
+        """Log to the party's between-encounters log from now on: the one the
+        player log ends with, which continues (its contents are returned), or
+        else a new one (None is returned). A new one, like an encounter's
+        entry, is only written, and added to the player log, once something
+        happens in it (see _write_log). Without a tracked party nothing is
+        logged between encounters."""
+        self.log_file = None
+        self._player_log_session = None
+        if not self.player_log_file:
+            return None
+        session = PlayerLog.current_between_encounters(self.player_log_data["sessions"])
+        if session is not None and session.get("log"):
+            path = PlayerLog.resolve_log(self.player_log_file, session["log"])
+            if path.exists():
+                self.log_file = path
+                self._player_log_session = session
+                return read_json(path)
+        started_at = PlayerLog.now()
+        path = PlayerLog.between_encounters_log_path(self._combat_log_dir, started_at)
+        self.log_file = path
+        self._player_log_session = {
+            "type": PlayerLog.BETWEEN_ENCOUNTERS,
+            "log": PlayerLog.log_ref(self.player_log_file, path),
+            "started_at": started_at,
+        }
+        return None
 
     def _rebuild_players_from_log(self):
         """Reset every player to their character sheet and replay the party's
@@ -602,8 +649,11 @@ class LoggingMixin(CombatWindowState):
         return f"Tracking players in {self.player_log_file.name} — {where}"
 
     def _show_current_log(self):
-        """Display the round-by-round event history of the active encounter log."""
-        if self.log_file is None or not self.log_file.exists():
+        """Display the round-by-round event history of the active encounter
+        log, or between encounters what has happened since the last
+        encounter or rest."""
+        between = self.phase == "PARTY"
+        if self.log_file is None or (not between and not self.log_file.exists()):
             QMessageBox.information(
                 self._window,
                 "Encounter Log",
@@ -621,7 +671,8 @@ class LoggingMixin(CombatWindowState):
         )
 
         dlg = QDialog(self._window)
-        dlg.setWindowTitle(f"Encounter Log — {self.log_file.name}")
+        heading = "Between Encounters" if between else "Encounter Log"
+        dlg.setWindowTitle(f"{heading} — {self.log_file.name}")
         dlg.setMinimumSize(480, 500)
         from .styles import QSS
 
@@ -639,7 +690,9 @@ class LoggingMixin(CombatWindowState):
             lines = []
             for key in round_keys:
                 round_num = key.split("_", 1)[1]
-                lines.append(f"Round {round_num}")
+                # Between encounters there are no rounds.
+                if not between:
+                    lines.append(f"Round {round_num}")
                 for event in data[key]:
                     lines.append(f"  • {event_text(event)}")
                 lines.append("")
@@ -697,7 +750,8 @@ class LoggingMixin(CombatWindowState):
         for i, session in reversed(list(enumerate(sessions))):
             line = f"  {session.get('started_at', '')[:16].replace('T', ' ')}  "
             line += session_label(session)
-            if "log" in session:
+            between = session.get("type") == PlayerLog.BETWEEN_ENCOUNTERS
+            if "log" in session and not between:
                 status = read_log_status(
                     PlayerLog.resolve_log(self.player_log_file, session["log"])
                 )

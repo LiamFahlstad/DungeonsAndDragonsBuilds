@@ -10,8 +10,8 @@ A short rest reuses CombatAppQt to reconstruct the party's current state
 without ever calling `.run()`, and opens a small standalone window — not the
 main combat window — to manually heal each player and regain any
 short-rest-cadence feature uses (e.g. Channel Divinity) and Pact Magic slots.
-Those events are recorded on the short rest's own line in the player log (no
-encounter log is written between encounters).
+Those events are recorded on the short rest's own line in the player log (a
+short rest has no log of its own).
 """
 
 import sys

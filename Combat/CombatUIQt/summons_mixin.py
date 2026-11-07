@@ -269,7 +269,7 @@ class SummonsMixin(CombatWindowState):
         Action; the summon comes out at full Hit Points in the turn order
         (right after owner, or where its own initiative roll puts it),
         replacing the oldest one when there's no room for it."""
-        if self.phase == "PARTY":
+        if self._nothing_logged_here():
             self._show_status("No summon: open an encounter first.")
             return
         if self._char_death_state(owner) != "alive":
@@ -350,7 +350,8 @@ class SummonsMixin(CombatWindowState):
         """Put the summons `new` in the window and, when the fight is on, in
         the turn order, keeping whoever's turn it is: right after their
         owners, or, one that rolls its own initiative, where its roll puts it
-        (before the fight, a row of its own on the initiative screen).
+        (before the fight, a row of its own on the initiative screen; between
+        encounters, right after their owners, with no turns to take).
         Returns each roll, by name."""
         for char in new:
             char["stats"] = _default_stats()
@@ -568,7 +569,7 @@ class SummonsMixin(CombatWindowState):
     def _add_already_summoned(self, option: SummonOption):
         """Add a summon made before the fight (Add Combatant): out at full
         Hit Points after its owner, spending nothing."""
-        if self.phase == "PARTY":
+        if self._nothing_logged_here():
             return
         owner, feature, spec = option.owner, option.feature, option.spec
         ctx = SummonContext(choice=option.choice)
