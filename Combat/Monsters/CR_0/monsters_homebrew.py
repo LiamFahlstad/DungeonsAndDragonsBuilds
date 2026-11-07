@@ -652,3 +652,61 @@ class ElfDruidOfTheLand(ExtendedCombatantData):
             lair_actions=[],
             mythic_actions=[],
         )
+
+
+class Child(ExtendedCombatantData):
+    """A young child travelling with the party as a noncombatant ally (Mira in
+    the Time Loop PR oneshot). Scaled down from the official Commoner, with
+    its Club taken away: it can't attack. monster_score.py still puts it at
+    0.44 for CR 0."""
+
+    def __init__(self):
+        super().__init__(
+            combatant_type="Child",
+            description="A small, wide-eyed child who follows the party everywhere and is no use at all in a fight.",
+            hp=3,
+            ac=11,
+            temp_hp=0,
+            conditions=[],
+            ability_scores={
+                Ability.STRENGTH: 6,
+                Ability.DEXTERITY: 12,
+                Ability.CONSTITUTION: 10,
+                Ability.INTELLIGENCE: 10,
+                Ability.WISDOM: 10,
+                Ability.CHARISMA: 12,
+            },
+            saving_throws={},
+            spell_slots={},
+            cr="0",
+            monster_type=MonsterType.HUMANOID,
+            monster_type_note="",
+            alignment=Alignment.NEUTRAL,
+            size=CreatureSize.SMALL,
+            ac_note="",
+            hp_formula="1d6",
+            speed_ground_ft=25,
+            speed_fly_ft=None,
+            speed_climb_ft=None,
+            speed_special_rules="",
+            skills={Skill.STEALTH: 3},
+            damage_vulnerabilities=[],
+            damage_resistances=[],
+            damage_immunities=[],
+            condition_immunities=[],
+            senses="Passive Perception 10",
+            languages="Common",
+            traits=[
+                MonsterAbility(
+                    name="Just a Child",
+                    description="The child can't take the Attack action or make attack rolls. On its turn it can still move and take the Dash, Disengage, Dodge, Help, Hide or Search action.",
+                ),
+            ],
+            actions=[],
+            bonus_actions=[],
+            reactions=[],
+            legendary_actions=[],
+            legendary_resistances=0,
+            lair_actions=[],
+            mythic_actions=[],
+        )
