@@ -71,9 +71,17 @@ are fixing that entry on purpose.
   (Eldritch Blast's extra beams are a note). Use `add_modifier` when the text
   adds "your spellcasting ability modifier". When the caster picks the type,
   use `"type": null` with `choices`.
-- **`heal`.** Use it for Hit Points regained. Temporary Hit Points are not
-  healing, so they go in `notes` (False Life). The form has no healing box, so
-  the picker turns `heal` into a note.
+- **`heal`.** Use it for Hit Points each target regains now (Cure Wounds,
+  Healing Word); the picker fills the form's amount box with it, set to
+  Healing. Hit Points regained later, or "equal to half the damage dealt"
+  (Vampiric Touch), go in `notes`.
+- **`temp_hp`.** The same for Temporary Hit Points (False Life, Armor of
+  Agathys), with the Temp HP box. Its `upcast` may be a flat number ("5" for
+  "5 additional Temporary Hit Points for each spell slot level"). An entry
+  has at most one of `heal` and `temp_hp`, and a spell that deals damage
+  fills the box with the damage, so its Hit Points become a note anyway. When
+  the caster gets them ("You gain ..."), say so in `notes`: the dialog gives
+  them to its targets.
 - **`condition`.** Use it only for a rules condition (`Core.Definitions.Condition`)
   that the effect gives. Use `until` only when it lasts until the start or end of
   a turn (`["end", "target"]` = the end of the target's next turn; `"source"` =

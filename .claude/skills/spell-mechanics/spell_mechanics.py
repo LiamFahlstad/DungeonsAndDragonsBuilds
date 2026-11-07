@@ -44,6 +44,7 @@ KEY_ORDER = (
     "save",
     "damage",
     "heal",
+    "temp_hp",
     "condition",
     "badge",
     "notes",
@@ -59,11 +60,6 @@ CASTER = {
         }
     ],
 }
-_HEAL = re.compile(
-    r"regains?\s+(?:a number of\s+)?Hit Points equal to (\d+d\d+)"
-    r"(\s+plus your spellcasting ability modifier)?|regains?\s+(\d+d\d+)"
-)
-_HEAL_UPCAST = re.compile(r"healing increases by (\d+d\d+)")
 
 
 # ---------------------------------------------------------------------------
@@ -252,14 +248,14 @@ def draft_entry(spell) -> tuple[dict, list[str]]:
             damage[0]["cantrip"] = steps
     if damage:
         entry["damage"] = damage
-    heal = _HEAL.search(spell.description)
-    if heal is not None:
-        entry["heal"] = {"dice": heal[1] or heal[3]}
-        if heal[2]:
-            entry["heal"]["add_modifier"] = True
-        more = _HEAL_UPCAST.search(spell.description)
-        if more is not None:
-            entry["heal"]["upcast"] = more[1]
+    gain = text.gain  # the combat UI's own reading of healing
+    if gain is not None:
+        key = "temp_hp" if gain.temporary else "heal"
+        entry[key] = {"dice": gain.dice}
+        if gain.add_modifier:
+            entry[key]["add_modifier"] = True
+        if gain.upcast:
+            entry[key]["upcast"] = gain.upcast
     if text.condition:
         condition: dict = {"name": text.condition}
         if text.until:

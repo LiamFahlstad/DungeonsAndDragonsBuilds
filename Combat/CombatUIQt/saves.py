@@ -45,6 +45,13 @@ _SPELL_SAVE_DC = re.compile(r"spell save DC\s+(\d+)")
 _SPELL_ATTACK = re.compile(r"([+-]\d+) to hit with spell attacks")
 
 
+# What the Custom dialog's amount box is: damage, Hit Points regained, or
+# Temporary Hit Points.
+DAMAGE_AMOUNT = "Damage"
+HEALING = "Healing"
+TEMP_HP = "Temp HP"
+AMOUNT_KINDS = (DAMAGE_AMOUNT, HEALING, TEMP_HP)
+
 # What an EffectOption is, which decides what using it counts as.
 MONSTER_ACTION = "monster action"
 WEAPON = "weapon"
@@ -72,6 +79,10 @@ class CustomEffect:
     # The same with its dice rolled twice over, for a critical hit.
     critical_damage: list[tuple[int, str]] = field(default_factory=list)
     count_resistances: bool = True
+    # Hit Points regained, and Temporary Hit Points given, rolled once for
+    # everyone. Every target gets them, whatever the roll.
+    healing: int = 0
+    temp_hp: int = 0
     # What it costs the source.
     slot_level: int | None = None
     action_cost: str | None = None
@@ -135,8 +146,12 @@ class EffectOption:
     # The spell a feature's use casts (Favored Enemy's Hunter's Mark): its
     # condition is that spell's badge.
     spell_name: str = ""
-    # What each of `rolls` gains per slot level above spell_level, "" for none.
+    # What each of `rolls` gains per slot level above spell_level, "" for none:
+    # dice, or a flat number (False Life's 5 Temporary Hit Points).
     upcast: tuple[str, ...] = ()
+    # What `rolls` are: damage (with types), or Hit Points regained or
+    # Temporary Hit Points given (without).
+    amount_kind: str = DAMAGE_AMOUNT
     spell_level: int = 0
     # A spell filled in from its checked mechanics file, or a feature from its
     # own combat_effects(), not read from its text.
@@ -184,7 +199,10 @@ def damage_text(rolls: Iterable[DamageRoll]) -> str:
 
 
 def with_dice(roll: DamageRoll, dice: str, times: int) -> DamageRoll:
-    """Roll with `times` more of dice: more of the same die, or added on."""
+    """Roll with `times` more of dice: more of the same die, or added on. A
+    flat number is added on ("2d4 + 4" with 5 twice is "2d4 + 4 + 10")."""
+    if "d" not in dice:
+        return DamageRoll(f"{roll.dice} + {int(dice) * times}", roll.damage_type)
     count, sides = map(int, dice.split("d"))
     first = DIE.search(roll.dice)
     if first is not None and int(first[2]) == sides:
@@ -343,3 +361,18 @@ def read_damage(
     if len(complete) != len(typed):
         return [], "Damage needs a type: pick one, or type 8d6 fire."
     return complete, ""
+
+
+def read_hit_points(text: str, kind: str) -> tuple[int, str]:
+    """Hit Points regained or Temporary Hit Points (`kind`, HEALING or
+    TEMP_HP) from the Custom dialog, with any dice rolled once, as (amount,
+    what's wrong with it, if anything). 0 for nothing typed."""
+    if not text.strip():
+        return 0, ""
+    try:
+        parts = rolled_damage(text)
+    except AmountError as error:
+        return 0, f"{kind}: {error}."
+    if any(damage_type for _, damage_type in parts):
+        return 0, f"{kind} has no damage type: type 2d8 + 3, or a total."
+    return sum(amount for amount, _ in parts), ""

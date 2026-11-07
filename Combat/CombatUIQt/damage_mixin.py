@@ -463,69 +463,76 @@ class DamageMixin(CombatWindowState):
             return
 
         source = self.selected_character or self._current_turn_character()
-        source_name = source["name"] if source is not None else None
-
-        dead = []
-        for char in list(self.target_characters):
-            death_state = self._char_death_state(char)
-            # A dead creature can't regain Hit Points until it is revived
-            # (the card's Revive button).
-            if death_state == "dead":
-                dead.append(char["name"])
-                continue
-            was_downed = death_state != "alive"
-
-            pre_hp = char["hp"]
-            char["hp"] = min(char["hp"] + heal, char["max_hp"])
-            actual_heal = char["hp"] - pre_hp
-
-            char.setdefault("stats", _default_stats())
-            char["stats"]["healing_received"] = (
-                char["stats"].get("healing_received", 0) + actual_heal
-            )
-            if source is not None:
-                source.setdefault("stats", _default_stats())
-                source["stats"]["healing_done"] = (
-                    source["stats"].get("healing_done", 0) + actual_heal
-                )
-
-            heal_value = {
-                "heal": actual_heal,
-                "source_name": source_name,
-                "target_name": char["name"],
-            }
-
-            source_suffix = f" from {source_name}" if source_name else ""
-
-            if was_downed and char["hp"] > 0:
-                char["death_saves_fail"] = 0
-                char["death_saves_success"] = 0
-                self._log_event(
-                    f"{char['name']} regains consciousness with {char['hp']} HP{source_suffix}",
-                    character=char["name"],
-                    action=Action.HEAL,
-                    value=heal_value,
-                )
-                # Regaining any Hit Points ends the Unconscious from 0 HP.
-                self._remove_condition_from(char, Condition.UNCONSCIOUS.value)
-            else:
-                self._log_event(
-                    f"{char['name']} heals {actual_heal} HP{source_suffix}",
-                    character=char["name"],
-                    action=Action.HEAL,
-                    value=heal_value,
-                )
-
-            # Auto-apply bloodied condition, attributed to whoever healed
-            self._apply_bloodied_condition(char, source=source)
-            self._note_health(char)
-
-            self._rebuild_card(char)
+        dead = [
+            char["name"]
+            for char in list(self.target_characters)
+            if not self._heal_target(char, heal, source)
+        ]
         if dead:
             names = ", ".join(dead)
             self._show_status(f"Not healed: {names} is dead. Use Revive on the card.")
         if len(dead) < len(self.target_characters):
             self.heal_input.clear()
+
+    def _heal_target(self, char: dict, heal: int, source: dict | None) -> bool:
+        """char regains `heal` Hit Points from source, up to its maximum,
+        counted in both their stats and logged; one at 0 HP comes to. Returns
+        False for a dead creature, which can't regain Hit Points until it's
+        revived (the card's Revive button). Heal and the Custom Effect dialog
+        share it."""
+        death_state = self._char_death_state(char)
+        if death_state == "dead":
+            return False
+        was_downed = death_state != "alive"
+        source_name = source["name"] if source is not None else None
+
+        pre_hp = char["hp"]
+        char["hp"] = min(char["hp"] + heal, char["max_hp"])
+        actual_heal = char["hp"] - pre_hp
+
+        char.setdefault("stats", _default_stats())
+        char["stats"]["healing_received"] = (
+            char["stats"].get("healing_received", 0) + actual_heal
+        )
+        if source is not None:
+            source.setdefault("stats", _default_stats())
+            source["stats"]["healing_done"] = (
+                source["stats"].get("healing_done", 0) + actual_heal
+            )
+
+        heal_value = {
+            "heal": actual_heal,
+            "source_name": source_name,
+            "target_name": char["name"],
+        }
+
+        source_suffix = f" from {source_name}" if source_name else ""
+
+        if was_downed and char["hp"] > 0:
+            char["death_saves_fail"] = 0
+            char["death_saves_success"] = 0
+            self._log_event(
+                f"{char['name']} regains consciousness with {char['hp']} HP{source_suffix}",
+                character=char["name"],
+                action=Action.HEAL,
+                value=heal_value,
+            )
+            # Regaining any Hit Points ends the Unconscious from 0 HP.
+            self._remove_condition_from(char, Condition.UNCONSCIOUS.value)
+        else:
+            self._log_event(
+                f"{char['name']} heals {actual_heal} HP{source_suffix}",
+                character=char["name"],
+                action=Action.HEAL,
+                value=heal_value,
+            )
+
+        # Auto-apply bloodied condition, attributed to whoever healed
+        self._apply_bloodied_condition(char, source=source)
+        self._note_health(char)
+
+        self._rebuild_card(char)
+        return True
 
     @undoable
     def _revive(self, char: dict):

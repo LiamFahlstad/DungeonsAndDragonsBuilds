@@ -274,6 +274,9 @@ class CombatWindowState:
     def _give_temp_hp(self, target: dict, amount: int, source: dict | None):
         raise NotImplementedError("DamageMixin._give_temp_hp")
 
+    def _heal_target(self, char: dict, heal: int, source: dict | None) -> bool:
+        raise NotImplementedError("DamageMixin._heal_target")
+
     def _summon_owner(self, char: dict) -> dict | None:
         raise NotImplementedError("SummonsMixin._summon_owner")
 

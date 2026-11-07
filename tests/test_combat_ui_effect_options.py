@@ -26,9 +26,12 @@ from Combat.CombatUIQt.effect_options import (
 from Combat.CombatUIQt.saves import (
     EffectOption,
     ATTACK_ROLL,
+    DAMAGE_AMOUNT,
     FEATURE,
+    HEALING,
     MONSTER_ACTION,
     SAVING_THROW,
+    TEMP_HP,
     read_damage,
 )
 from Combat.Monsters.CR_1.monsters import Ghoul
@@ -170,8 +173,10 @@ def test_damage_with_no_roll_isnt_filled_in_but_said(name):
 
 
 def test_healing_is_not_damage():
+    """It fills the amount box as healing, with no damage type."""
     cure = _option("Cure Wounds")
-    assert cure.damage == ""
+    assert cure.amount_kind == HEALING
+    assert [roll.damage_type for roll in cure.rolls] == [None]
     assert cure.ability is None
 
 
@@ -578,3 +583,61 @@ def test_only_a_feature_thats_used_can_be_applied_by_itself(
         "Feature", FEATURE, counts_uses=counts_uses, action_cost=action_cost
     )
     assert option.is_tracked is tracked
+
+
+# ---------------------------------------------------------------------------
+# Hit Points a spell gives, read from its text: they fill the amount box
+
+
+@pytest.mark.parametrize(
+    "name, kind, amount, at_slot",
+    [
+        # "regain Hit Points equal to 2d4 plus your spellcasting ability modifier"
+        ("Mass Healing Word", HEALING, "2d4", {3: "2d4"}),
+        # "regain 2d8 Hit Points"; "The healing increases by 1d8" above 2
+        ("Prayer of Healing", HEALING, "2d8", {3: "3d8"}),
+        ("Regenerate", HEALING, "4d8 + 15", {}),
+        # "You gain 5 Temporary Hit Points"; they "increase by 5" above 1
+        ("Armor of Agathys", TEMP_HP, "5", {3: "5 + 10"}),
+    ],
+)
+def test_hit_points_from_the_text(name, kind, amount, at_slot):
+    option = spell_option(_spell(name), {})
+    assert not option.is_curated
+    assert (option.amount_kind, option.damage) == (kind, amount)
+    for slot, expected in at_slot.items():
+        assert option.damage_at(slot) == expected
+
+
+@pytest.mark.parametrize(
+    "name",
+    [
+        "Chill Touch",  # "can't regain Hit Points"
+        "Aura of Life",  # "regains 1 Hit Point", a rider on later turns
+        "Heroism",  # "equal to your spellcasting ability modifier", each turn
+    ],
+)
+def test_hit_points_that_arent_given_now(name):
+    option = spell_option(_spell(name), {})
+    assert option.amount_kind == DAMAGE_AMOUNT
+    assert not any(roll.damage_type is None for roll in option.rolls)
+
+
+def test_damage_stays_in_the_box_and_hit_points_become_a_note():
+    """Conjure Constructs deals 3d6 Force damage and gives the target 1d6 +
+    the modifier Temporary Hit Points: one amount box, so the damage."""
+    option = spell_option(_spell("Conjure Constructs"), CASTER)
+    assert option.amount_kind == DAMAGE_AMOUNT
+    assert "Force" in option.damage
+    assert "It also gives 1d6" in option.note and "Temporary Hit Points" in option.note
+
+
+def test_the_casters_own_temporary_hit_points():
+    """Armor of Agathys: "You gain 5 Temporary Hit Points"."""
+    option = spell_option(_spell("Armor of Agathys"), {})
+    assert "pick the caster as the target" in option.note
+
+
+def test_a_creatures_healing_is_a_targets():
+    """Cure Wounds: "A creature you touch regains ..."."""
+    assert "caster as the target" not in spell_option(_spell("Cure Wounds"), {}).note

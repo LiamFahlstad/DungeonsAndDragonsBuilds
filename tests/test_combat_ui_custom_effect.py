@@ -37,9 +37,12 @@ from Combat.Definitions import Action
 from Combat.CombatUIQt.attack_rolls import AttackRoll
 from Combat.CombatUIQt.saves import (
     ATTACK_ROLL,
+    DAMAGE_AMOUNT,
     FEATURE,
+    HEALING,
     MONSTER_ACTION,
     SAVING_THROW,
+    TEMP_HP,
     CustomEffect,
     EffectOption,
     is_immune_to,
@@ -2857,3 +2860,174 @@ def test_favored_enemys_hunters_mark_is_the_spells_badge(tmp_path, monkeypatch):
     assert hanna["feature_uses_used"] == {"Favored Enemy": 1}
     _, body = _clicked_popup(ui, monkeypatch, tiger, "Hunter's Mark")
     assert "<b>Duration:</b> Concentration, up to 1 hour" in body  # the spell's card
+
+
+# ---------------------------------------------------------------------------
+# Healing and Temporary Hit Points: the amount box's other kinds, which every
+# target gets, whatever the roll
+
+
+def _amount_kind(dlg, kind: str):
+    _chips(dlg, "amountKindButtons")[kind].click()
+
+
+def _hurt(char: dict, by: int):
+    char["hp"] = char["max_hp"] - by
+
+
+def test_healing_heals_every_target(fight, monkeypatch):
+    ui, pirate, tiger, bandit = fight
+    _hurt(tiger, 10)
+    _hurt(bandit, 3)
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    _amount_kind(dlg, HEALING)
+    dlg.findChild(QLineEdit, "effectDamage").setText("5")
+    _apply(dlg)
+    assert tiger["hp"] == tiger["max_hp"] - 5
+    assert bandit["hp"] == bandit["max_hp"]  # no more than its maximum
+    assert "Tiger heals 5 HP" in _log(ui)
+    assert "heals 5" in ui._action_result_label.text()
+    assert len(ui.history) == 1  # one undo
+
+
+def test_healing_dice_are_rolled_once_for_everyone(fight, monkeypatch):
+    ui, _, tiger, bandit = fight
+    _hurt(tiger, 20)
+    _hurt(bandit, 20)
+    rolls = iter([3, 5])
+    monkeypatch.setattr(random, "randint", lambda low, high: next(rolls))
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    _amount_kind(dlg, HEALING)
+    dlg.findChild(QLineEdit, "effectDamage").setText("2d8 + 3")
+    _apply(dlg)
+    assert tiger["hp"] == bandit["hp"] - bandit["max_hp"] + tiger["max_hp"]
+    assert tiger["max_hp"] - tiger["hp"] == 20 - (3 + 5 + 3)
+
+
+def test_healing_brings_a_player_at_0_hit_points_to(paladin_fight, monkeypatch):
+    """Regaining any Hit Points ends the Unconscious from 0 Hit Points."""
+    ui, edmund, _ = paladin_fight
+    edmund["hp"] = 0
+    edmund["conditions"].append("Unconscious")
+    edmund["death_saves_fail"] = 1
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    _amount_kind(dlg, HEALING)
+    dlg.findChild(QLineEdit, "effectDamage").setText("4")
+    _apply(dlg)
+    assert edmund["hp"] == 4
+    assert "Unconscious" not in edmund["conditions"]
+    assert edmund["death_saves_fail"] == 0
+    assert "Edmund regains consciousness with 4 HP" in _log(ui)
+
+
+def test_healing_goes_to_every_target_whatever_the_save(fight, monkeypatch):
+    """The save still decides the condition: those who save don't get it."""
+    ui, _, tiger, bandit = fight
+    _hurt(tiger, 10)
+    _hurt(bandit, 10)
+    _d20s(monkeypatch, 20, 1)  # the Tiger saves, the Bandit doesn't
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    _chips(dlg, "saveAbilityButtons")["DEX"].click()
+    dlg.findChild(QSpinBox, "saveDc").setValue(15)
+    _amount_kind(dlg, HEALING)
+    dlg.findChild(QLineEdit, "effectDamage").setText("6")
+    _combo(dlg, "conditionName").setCurrentText("Prone")
+    _apply(dlg)
+    assert tiger["hp"] == bandit["hp"] - bandit["max_hp"] + tiger["max_hp"]
+    assert tiger["max_hp"] - tiger["hp"] == 4  # both healed 6
+    assert "Prone" not in tiger["conditions"]
+    assert "Prone" in bandit["conditions"]
+
+
+def test_temporary_hit_points_for_every_target(fight, monkeypatch):
+    ui, _, tiger, bandit = fight
+    bandit["temp_hp"] = 9  # they don't stack: the higher stays
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    _amount_kind(dlg, TEMP_HP)
+    dlg.findChild(QLineEdit, "effectDamage").setText("7")
+    _apply(dlg)
+    assert tiger["temp_hp"] == 7
+    assert bandit["temp_hp"] == 9
+    assert tiger["hp"] == tiger["max_hp"]  # no damage
+    assert "7 temp HP" in ui._action_result_label.text()
+
+
+def test_healing_has_no_damage_type(fight, monkeypatch):
+    ui, _, tiger, _ = fight
+    _hurt(tiger, 10)
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    _amount_kind(dlg, HEALING)
+    dlg.findChild(QLineEdit, "effectDamage").setText("5 fire")
+    _apply(dlg)
+    assert tiger["hp"] == tiger["max_hp"] - 10
+    assert ui.history == []
+    labels = [label.text() for label in dlg.findChildren(QLabel)]
+    assert any("Healing has no damage type" in text for text in labels), labels
+
+
+def test_healing_alone_is_enough_to_apply(fight, monkeypatch):
+    ui, _, tiger, _ = fight
+    _hurt(tiger, 2)
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    _choose_roll(dlg, "No roll")
+    _amount_kind(dlg, HEALING)
+    dlg.findChild(QLineEdit, "effectDamage").setText("2")
+    _apply(dlg)
+    assert tiger["hp"] == tiger["max_hp"]
+
+
+def test_the_damage_only_controls_go_away_for_healing(fight, monkeypatch):
+    ui, *_ = fight
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    _choose_roll(dlg, SAVING_THROW)
+    damage_only = [
+        _combo(dlg, "damageType"),
+        dlg.findChild(QCheckBox, "countResistances"),
+        dlg.findChild(QCheckBox, "halfOnSave"),
+    ]
+    assert all(widget.isVisibleTo(dlg) for widget in damage_only)
+    for kind in (HEALING, TEMP_HP):
+        _amount_kind(dlg, kind)
+        assert not any(widget.isVisibleTo(dlg) for widget in damage_only), kind
+    _amount_kind(dlg, DAMAGE_AMOUNT)
+    assert all(widget.isVisibleTo(dlg) for widget in damage_only)
+    labels = [label.text() for label in dlg.findChildren(QLabel)]
+    assert "Damage" in labels
+
+
+def test_the_preview_of_healing(fight, monkeypatch):
+    ui, *_ = fight
+    monkeypatch.setattr(random, "randint", lambda *a: pytest.fail("rolled"))
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    _choose_roll(dlg, "No roll")
+    _amount_kind(dlg, HEALING)
+    dlg.findChild(QLineEdit, "effectDamage").setText("2d8 + 3")
+    preview = dlg.findChild(QLabel, "effectPreview").text()
+    assert preview == "On 2 targets: heals 2d8 + 3 for all"
+
+
+def test_picking_cure_wounds_fills_in_healing(paladin, monkeypatch):
+    """2d8 plus Edmund's spellcasting ability modifier, his Charisma."""
+    ui, edmund, tiger = paladin
+    _hurt(tiger, 20)
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    _search(dlg).setText("cure wounds")
+    _search(dlg).returnPressed.emit()
+    modifier = edmund["_stat_block"].get_charisma_modifier()
+    assert _combo(dlg, "amountKind").currentText() == HEALING
+    assert _form(dlg)["damage"] == f"2d8 + {modifier}"
+    assert not _combo(dlg, "damageType").isVisibleTo(dlg)
+    _apply(dlg)
+    assert tiger["hp"] > tiger["max_hp"] - 20
+    assert "Edmund casts Cure Wounds" in _log(ui)
+
+
+def test_picking_a_damage_spell_after_healing_is_damage_again(paladin, monkeypatch):
+    ui, *_ = paladin
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    _search(dlg).setText("cure wounds")
+    _search(dlg).returnPressed.emit()
+    _search(dlg).setText("fireball")
+    _search(dlg).returnPressed.emit()
+    assert _combo(dlg, "amountKind").currentText() == DAMAGE_AMOUNT
+    assert _form(dlg)["damage"] == "8d6 Fire"

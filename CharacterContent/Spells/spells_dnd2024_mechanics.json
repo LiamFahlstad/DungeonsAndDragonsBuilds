@@ -72,8 +72,9 @@
   },
   "False Life": {
     "roll": "none",
+    "temp_hp": {"dice": "2d4 + 4", "upcast": "5"},
     "notes": [
-      "You gain 2d4 + 4 Temporary Hit Points (5 more per slot level above 1): apply that by hand."
+      "They're the caster's: pick the caster as the target."
     ]
   },
   "Feather Fall": {

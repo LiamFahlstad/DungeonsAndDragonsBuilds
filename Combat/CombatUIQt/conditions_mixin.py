@@ -39,6 +39,7 @@ from .effect_dialog_widgets import (
 )
 from .effect_options import (
     COLLAPSED_CATEGORIES,
+    amount_text as _amount_text,
     effect_options,
     spell_slot_choices,
 )
@@ -47,17 +48,22 @@ from .monster_actions import first_number, legendary_resistances_left
 from .player_view import note_condition_immunity
 from .saves import (
     ABILITIES,
+    AMOUNT_KINDS,
     ATTACK_ROLL,
+    DAMAGE_AMOUNT,
     FEATURE,
+    HEALING,
     ROLL_MODES,
     SAVING_THROW,
     SPELL,
+    TEMP_HP,
     CustomEffect,
     EffectOption,
     is_immune_to,
     known_attack_bonus,
     known_save_dc,
     read_damage,
+    read_hit_points,
     roll_attack,
     roll_save,
     rolled_damage,
@@ -108,6 +114,17 @@ _DETAILS_MIN_HEIGHT = 90
 _BUTTON_WIDTH = 110
 # The roll kind with neither a saving throw nor an attack roll.
 NO_ROLL = "No roll"
+# The amount box's title and hint, for what it holds.
+_AMOUNT_TITLES = {
+    DAMAGE_AMOUNT: "Damage",
+    HEALING: "Healing (every target)",
+    TEMP_HP: "Temporary Hit Points (every target)",
+}
+_AMOUNT_HINTS = {
+    DAMAGE_AMOUNT: "e.g. 8d6, 28, 2d6 sl + 1d4 fi",
+    HEALING: "e.g. 2d8 + 3, 10",
+    TEMP_HP: "e.g. 2d4 + 4, 5",
+}
 _DETAILS_HINT = (
     "<p style='color:#a0a0b0'>Pick what was used and it fills in the form;"
     " its rules text shows here. Or fill in the form by hand.</p>"
@@ -435,7 +452,8 @@ class ConditionsMixin(CombatWindowState):
         over, and a miss takes nothing. With a saving throw, each one rolls, and
         a save halves the damage (or avoids it) and avoids the condition. With
         neither, everyone takes it all, except those marked ½ Saved, who saved
-        by hand and count the same."""
+        by hand and count the same. Healing and Temporary Hit Points go to
+        every target first, whatever the roll."""
         living = [
             t for t in self.target_characters if self._char_death_state(t) != "dead"
         ]
@@ -473,6 +491,11 @@ class ConditionsMixin(CombatWindowState):
         attacks = []
         applied = []
         for target in living:
+            # Hit Points go to every target, whatever the roll decides.
+            if effect.healing:
+                self._heal_target(target, effect.healing, source)
+            if effect.temp_hp:
+                self._give_temp_hp(target, effect.temp_hp, source)
             saved = any(target is s for s in self._saved_targets)
             damage = effect.damage
             if effect.attack_bonus is not None:
@@ -808,6 +831,10 @@ class ConditionsMixin(CombatWindowState):
                 f" {len(results) - saved} failed"
             )
         words += [f"{amount} {damage_type}" for amount, damage_type in effect.damage]
+        if effect.healing:
+            words.append(f"heals {effect.healing}")
+        if effect.temp_hp:
+            words.append(f"{effect.temp_hp} temp HP")
         if effect.condition:
             words.append(effect.condition)
         self._action_result_label.setText(" · ".join(words))
@@ -1035,9 +1062,23 @@ class ConditionsMixin(CombatWindowState):
             info.setToolTip("What the attack roll has to meet, cover included")
         roll_col.addStretch()
 
-        # ── Damage
-        damage_frame, damage_box, _ = section("Damage")
+        # ── Damage, or Hit Points regained, or Temporary Hit Points
+        damage_frame, damage_box, amount_header = section("Damage")
         effect_col.addWidget(damage_frame)
+        amount_combo = QComboBox()
+        amount_combo.setObjectName("amountKind")
+        amount_combo.addItems(AMOUNT_KINDS)
+        damage_box.addWidget(amount_combo)
+        amount_chips = chip_row(
+            amount_combo,
+            [
+                (0, DAMAGE_AMOUNT, "Each target it lands on takes it"),
+                (1, HEALING, "Every target regains it, whatever the roll"),
+                (2, TEMP_HP, "Every target gains it, whatever the roll"),
+            ],
+            "amountKindButtons",
+        )
+        damage_box.addWidget(amount_chips)
         damage_row = QHBoxLayout()
         damage_input = QLineEdit()
         damage_input.setObjectName("effectDamage")
@@ -1060,6 +1101,24 @@ class ConditionsMixin(CombatWindowState):
         resistances_box.setObjectName("countResistances")
         resistances_box.setChecked(True)
         damage_box.addWidget(resistances_box)
+
+        def amount_kind() -> str:
+            return amount_combo.currentText()
+
+        def show_amount_controls():
+            """The box's title, hint and the damage-only controls, for what
+            the amount is."""
+            kind = amount_kind()
+            is_damage = kind == DAMAGE_AMOUNT
+            amount_header.setText(_AMOUNT_TITLES[kind])
+            damage_input.setPlaceholderText(_AMOUNT_HINTS[kind])
+            damage_input.setToolTip(
+                "Dice are rolled once, for everyone it hits"
+                if is_damage
+                else "Dice are rolled once, for every target"
+            )
+            for widget in (type_combo, resistances_box):
+                widget.setVisible(is_damage)
 
         # ── Condition
         condition_frame, condition_box, condition_header = section("Condition")
@@ -1230,8 +1289,9 @@ class ConditionsMixin(CombatWindowState):
                 widget.setVisible(has_save)
             attack_line.setVisible(is_attack)
             mode_chips.setVisible(kind != NO_ROLL)
-            for widget in (half_box, repeat_box):
-                widget.setVisible(has_save)
+            repeat_box.setVisible(has_save)
+            # Hit Points aren't halved by a save: every target gets them.
+            half_box.setVisible(has_save and amount_kind() == DAMAGE_AMOUNT)
             resist_box.setVisible(can_resist and has_save)
             rolls_hint.setVisible(kind != NO_ROLL)
             save_rows.setVisible(bool(typed_inputs) and has_save)
@@ -1250,6 +1310,8 @@ class ConditionsMixin(CombatWindowState):
             show_save_bonuses()
 
         def show_typed_type(text: str):
+            if amount_kind() != DAMAGE_AMOUNT:
+                return  # healing has no type
             try:
                 parts = rolled_damage(_DICELESS.sub("1", text))
             except AmountError:
@@ -1270,13 +1332,21 @@ class ConditionsMixin(CombatWindowState):
                 )
             elif kind == ATTACK_ROLL:
                 parts.append(f"Attack {bonus_input.value():+d} vs AC{with_mode}")
-            damage = _damage_preview(damage_input.text(), type_combo.currentData())
-            if damage and kind == SAVING_THROW:
-                damage += (
-                    ", half on a save" if half_box.isChecked() else ", none on a save"
+            amount = amount_kind()
+            if amount == DAMAGE_AMOUNT:
+                damage = _damage_preview(damage_input.text(), type_combo.currentData())
+                if damage and kind == SAVING_THROW:
+                    damage += (
+                        ", half on a save"
+                        if half_box.isChecked()
+                        else ", none on a save"
+                    )
+                if damage:
+                    parts.append(damage)
+            elif damage_input.text().strip():
+                parts.append(
+                    _amount_text(damage_input.text().strip(), amount) + " for all"
                 )
-            if damage:
-                parts.append(damage)
             condition = name_combo.currentText().strip()
             if condition:
                 lasts = duration_combo.currentText()
@@ -1299,8 +1369,8 @@ class ConditionsMixin(CombatWindowState):
                 parts.append("costs " + ", ".join(costs))
             if not parts:
                 preview_lbl.setText(
-                    "Pick something on the left, or fill in a roll, damage or a"
-                    " condition."
+                    "Pick something on the left, or fill in a roll, damage,"
+                    " healing or a condition."
                 )
                 return
             preview_lbl.setText(
@@ -1310,8 +1380,11 @@ class ConditionsMixin(CombatWindowState):
         duration_combo.currentIndexChanged.connect(show_custom_row)
         roll_combo.currentIndexChanged.connect(show_roll_controls)
         ability_combo.currentIndexChanged.connect(show_roll_controls)
+        amount_combo.currentIndexChanged.connect(show_amount_controls)
+        amount_combo.currentIndexChanged.connect(show_roll_controls)
         damage_input.textChanged.connect(show_typed_type)
         for signal in (
+            amount_combo.currentIndexChanged,
             roll_combo.currentIndexChanged,
             ability_combo.currentIndexChanged,
             mode_combo.currentIndexChanged,
@@ -1331,6 +1404,7 @@ class ConditionsMixin(CombatWindowState):
         ):
             signal.connect(show_preview)
         show_custom_row()
+        show_amount_controls()
         show_roll_controls()
         show_preview()
 
@@ -1389,7 +1463,15 @@ class ConditionsMixin(CombatWindowState):
                 (s for s in suggestions if s.lower() == typed_condition.lower()),
                 typed_condition,
             )
-            damage, problem = read_damage(damage_input.text(), type_combo.currentData())
+            kind = amount_kind()
+            damage: list[tuple[int, str]] = []
+            hit_points = 0
+            if kind == DAMAGE_AMOUNT:
+                damage, problem = read_damage(
+                    damage_input.text(), type_combo.currentData()
+                )
+            else:
+                hit_points, problem = read_hit_points(damage_input.text(), kind)
             if problem:
                 problem_lbl.setText(problem)
                 return
@@ -1400,10 +1482,13 @@ class ConditionsMixin(CombatWindowState):
                 not is_attack
                 and ability is None
                 and not damage
+                and not hit_points
                 and not condition
                 and not spends
             ):
-                problem_lbl.setText("Add a saving throw, damage or a condition.")
+                problem_lbl.setText(
+                    "Add a saving throw, damage, healing or a condition."
+                )
                 return
             totals = typed_totals() if ability is not None else {}
             attacks = typed_attacks() if is_attack else {}
@@ -1423,7 +1508,7 @@ class ConditionsMixin(CombatWindowState):
                 "source": source,
             }
             critical_damage = []
-            if is_attack:
+            if is_attack and kind == DAMAGE_AMOUNT:
                 critical_damage, _ = read_damage(
                     damage_input.text(), type_combo.currentData(), critical=True
                 )
@@ -1436,6 +1521,8 @@ class ConditionsMixin(CombatWindowState):
                     damage=damage,
                     critical_damage=critical_damage,
                     count_resistances=resistances_box.isChecked(),
+                    healing=hit_points if kind == HEALING else 0,
+                    temp_hp=hit_points if kind == TEMP_HP else 0,
                     slot_level=slot_combo.currentData(),
                     action_cost=action_combo.currentData(),
                     concentration=concentrate_box.isChecked(),
@@ -1531,6 +1618,7 @@ class ConditionsMixin(CombatWindowState):
             concentrate_box.setChecked(option.concentration)
             # A type left from before would disagree with the pick's damage.
             type_combo.setCurrentIndex(0)
+            amount_combo.setCurrentText(option.amount_kind)
             damage = option.damage_at(slot_combo.currentData())
             damage_input.setText(damage)
             name_combo.setCurrentText(option.condition)

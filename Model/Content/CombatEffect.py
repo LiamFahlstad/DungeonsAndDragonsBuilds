@@ -100,6 +100,12 @@ class CombatEffect:
     repeat_save: bool = False
     attack_bonus: int | None = None  # None: the user's spell attack bonus
     damage: tuple[CombatDamage, ...] = ()
+    # Hit Points each target regains, or Temporary Hit Points it gains, at
+    # the character's level ("1d10 + 3"). Every target gets them, whatever
+    # the roll. The form has one amount box, so only one of damage, healing
+    # and temp_hp can be set: the rest go in the notes.
+    healing: str | None = None
+    temp_hp: str | None = None
     condition: CombatCondition | None = None
     # None: the feature's FeatureActivation action_type (and none if it has
     # none). Set it when using it takes an action the feature doesn't say,
@@ -127,3 +133,15 @@ class CombatEffect:
             raise ValueError("An attack_bonus is for an 'attack' only")
         if any(not note.strip() for note in self.notes):
             raise ValueError("A note can't be empty")
+        for field, dice in (("healing", self.healing), ("temp_hp", self.temp_hp)):
+            if dice is not None and not DICE.fullmatch(dice):
+                raise ValueError(f"{field} {dice!r} is not dice like '2d4 + 3'")
+        amounts = [
+            bool(self.damage),
+            self.healing is not None,
+            self.temp_hp is not None,
+        ]
+        if sum(amounts) > 1:
+            raise ValueError(
+                "Only one of damage, healing and temp_hp: the rest go in notes"
+            )

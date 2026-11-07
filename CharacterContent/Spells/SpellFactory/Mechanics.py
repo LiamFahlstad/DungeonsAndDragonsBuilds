@@ -15,6 +15,7 @@ An entry, every field optional:
       "save": {"ability": "DEX", "half_on_success": true, "repeat": true},
       "damage": [{"dice": "8d6", "type": "Fire", "upcast": "1d6"}],
       "heal": {"dice": "2d8", "add_modifier": true, "upcast": "2d8"},
+      "temp_hp": {"dice": "2d4 + 4", "upcast": "5"},   # or "heal", not both
       "condition": {"name": "Paralyzed", "until": ["end", "target"]},
       "badge": false,             # the spell's own name as a badge on the target
       "notes": ["..."]            # for the GM, about what the form can't say
@@ -24,6 +25,9 @@ A damage entry can also have "add_modifier" (the caster's spellcasting
 modifier is added), "choices" with "type": null (the caster picks the type),
 and "cantrip" ({"5": "2d8", "11": "3d8", "17": "4d8"}: its dice once the
 caster reaches each character level). A condition can have "alternatives".
+"heal" is Hit Points regained and "temp_hp" Temporary Hit Points; the Custom
+Effect form has one amount box, so an entry has at most one of them, and a
+"temp_hp" upcast can be a flat number.
 """
 
 import re
@@ -38,6 +42,8 @@ CANTRIP_LEVELS = ("5", "11", "17")
 # "1d6", or "1d4 + 1" (Magic Missile's dart).
 DICE = re.compile(r"\d+d\d+(?: [+-] \d+)?")
 _UPCAST_DICE = re.compile(r"\d+d\d+")
+_UPCAST_DICE_OR_NUMBER = re.compile(r"\d+d\d+|\d+")
+_DICE_OR_NUMBER = re.compile(rf"{DICE.pattern}|\d+")
 # ("start" or "end", "source" or "target"): "until the end of its next turn"
 # is ("end", "target"), as the combat UI's EffectOption.until has it.
 _UNTIL_EDGES = ("start", "end")
@@ -87,6 +93,7 @@ class SpellMechanics:
     save: SaveSpec | None = None
     damage: tuple[DamageSpec, ...] = ()
     heal: HealSpec | None = None
+    temp_hp: HealSpec | None = None
     condition: ConditionSpec | None = None
     badge: bool | None = None  # None: as the combat UI decides
     notes: tuple[str, ...] = ()
@@ -180,14 +187,22 @@ class _Reader:
             if level in data
         )
 
-    def heal(self, value: Any) -> HealSpec:
-        data = self.mapping(value, "heal", ("dice", "add_modifier", "upcast"))
+    def heal(self, value: Any, field: str = "heal") -> HealSpec:
+        data = self.mapping(value, field, ("dice", "add_modifier", "upcast"))
+        # Temporary Hit Points are often a number: "You gain 5 Temporary Hit
+        # Points", "5 additional Temporary Hit Points for each slot level".
+        temporary = field == "temp_hp"
         upcast = data.get("upcast", "")
         if upcast:
-            self.dice(upcast, "heal.upcast", _UPCAST_DICE)
+            pattern = _UPCAST_DICE_OR_NUMBER if temporary else _UPCAST_DICE
+            self.dice(upcast, f"{field}.upcast", pattern)
         return HealSpec(
-            dice=self.dice(data.get("dice"), "heal.dice"),
-            add_modifier=self.flag(data, "add_modifier", "heal"),
+            dice=self.dice(
+                data.get("dice"),
+                f"{field}.dice",
+                _DICE_OR_NUMBER if temporary else DICE,
+            ),
+            add_modifier=self.flag(data, "add_modifier", field),
             upcast=upcast,
         )
 
@@ -218,6 +233,7 @@ _ENTRY_KEYS = (
     "save",
     "damage",
     "heal",
+    "temp_hp",
     "condition",
     "badge",
     "notes",
@@ -236,6 +252,8 @@ def parse_mechanics(spell_name: str, value: Any) -> SpellMechanics:
     damage_list = data.get("damage", [])
     if not isinstance(damage_list, list):
         read.fail("damage", f"expected a list, got {damage_list!r}")
+    if "heal" in data and "temp_hp" in data:
+        read.fail("temp_hp", "one of 'heal' and 'temp_hp': put the other in notes")
     badge = data.get("badge")
     if badge is not None and not isinstance(badge, bool):
         read.fail("badge", f"expected true or false, got {badge!r}")
@@ -248,6 +266,7 @@ def parse_mechanics(spell_name: str, value: Any) -> SpellMechanics:
             for index, entry in enumerate(damage_list)
         ),
         heal=read.heal(data["heal"]) if "heal" in data else None,
+        temp_hp=read.heal(data["temp_hp"], "temp_hp") if "temp_hp" in data else None,
         condition=read.condition(data["condition"]) if "condition" in data else None,
         badge=badge,
         notes=read.strings(data.get("notes", []), "notes"),

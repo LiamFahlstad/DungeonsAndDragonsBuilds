@@ -35,10 +35,13 @@ from .monster_actions import (
 from .saves import (
     ABILITIES,
     ATTACK_ROLL,
+    DAMAGE_AMOUNT,
     FEATURE,
+    HEALING,
     MONSTER_ACTION,
     SAVING_THROW,
     SPELL,
+    TEMP_HP,
     WEAPON,
     EffectOption,
     damage_text,
@@ -155,11 +158,49 @@ _UNTIL_A_TURN = re.compile(
 )
 _THE_TARGETS = re.compile(r"(?:its|their|the (?:target|creature)['’]s)", re.IGNORECASE)
 _HEALS = re.compile(r"\bregains?\b[^.]*\bHit Points?\b")
+# Hit Points a spell gives each target now: "regains Hit Points equal to 2d4
+# plus your spellcasting ability modifier", "regain 2d8 Hit Points", "gain
+# 2d4 + 4 Temporary Hit Points". A number other than dice ("regains 1 Hit
+# Point", "equal to half the damage") is a rider, not what it does.
+_AMOUNT = r"\d+d\d+(?: \+ \d+)?"
+_HEAL_AMOUNT = re.compile(
+    rf"\bregains?\s+(?:a number of\s+)?Hit Points equal to ({_AMOUNT})"
+    r"(\s+plus your spellcasting ability modifier)?"
+    rf"|\bregains?\s+({_AMOUNT}) Hit Points\b"
+)
+_TEMP_HP_AMOUNT = re.compile(
+    rf"\bgains?\s+(?:a number of\s+)?Temporary Hit Points equal to ({_AMOUNT})"
+    r"(\s+plus your spellcasting ability modifier)?"
+    rf"|\bgains?\s+({_AMOUNT}|\d+) Temporary Hit Points\b"
+)
+_HEAL_UPCAST = re.compile(r"healing increases by (\d+d\d+)")
+# "5 additional Temporary Hit Points", "The Temporary Hit Points and the Cold
+# damage both increase by 5", "the number of Temporary Hit Points you gain
+# from this spell increases by 5".
+_TEMP_HP_UPCAST = re.compile(
+    r"(\d+d\d+|\d+) additional Temporary Hit Points"
+    r"|Temporary Hit Points[^.,]*?\bincreases? by (\d+d\d+|\d+)"
+)
+# "You gain 2d4 + 4 Temporary Hit Points": the caster's, not a target's. It's
+# what comes before the amount in its sentence.
+_JUST_YOU = re.compile(r"\s*You\s*")
 # Where a monster's hit stops and a save it forces begins.
 _HIT_ENDS = re.compile(r"\b\w+ Saving Throw:|\bFailure:")
 _FLAT_ONE = "1d1"  # how a weapon writes an Unarmed Strike's damage
 # What an ExtraDamage's note says when the weapon doesn't always deal it.
 _NOT_ALWAYS = re.compile(r"\b(?:activate|chosen|when|while|if|only)\b", re.IGNORECASE)
+
+
+@dataclass(frozen=True)
+class HitPointGain:
+    """Hit Points an effect gives each target: regained, or temporary."""
+
+    dice: str
+    temporary: bool = False
+    add_modifier: bool = False
+    upcast: str = ""  # per slot level above the spell's: dice, or a number
+    # "You gain ...": they're the caster's.
+    is_the_casters: bool = False
 
 
 @dataclass(frozen=True)
@@ -180,6 +221,8 @@ class EffectText:
     heals: bool = False
     # The condition's duration, when that's a turn (see EffectOption.until).
     until: tuple[str, str] | None = None
+    # Hit Points it gives each target now, if any.
+    gain: HitPointGain | None = None
     # The upcasting and cantrip paragraphs, for working out higher levels.
     upgrades: tuple[str, ...] = ()
 
@@ -209,7 +252,21 @@ def _curated_text(mechanics: SpellMechanics) -> EffectText:
         states_damage=bool(mechanics.damage),
         heals=mechanics.heal is not None,
         until=condition.until if condition is not None else None,
+        gain=_curated_gain(mechanics),
     )
+
+
+def _curated_gain(mechanics: SpellMechanics) -> HitPointGain | None:
+    """A curated spell's healing or Temporary Hit Points, as the text's."""
+    for spec, temporary in ((mechanics.heal, False), (mechanics.temp_hp, True)):
+        if spec is not None:
+            return HitPointGain(
+                spec.dice,
+                temporary=temporary,
+                add_modifier=spec.add_modifier,
+                upcast=spec.upcast,
+            )
+    return None
 
 
 def _at_cantrip_level(dice: str, steps: tuple[tuple[int, str], ...], level: int) -> str:
@@ -238,19 +295,19 @@ def _curated_rolls(
     return tuple(rolls), upcast if level > 0 and any(upcast) else ()
 
 
-def _heal_note(mechanics: SpellMechanics, level: int, modifier: int | None) -> str:
-    """What a curated spell heals, which the form has no box for."""
-    heal = mechanics.heal
-    if heal is None:
-        return ""
-    dice = heal.dice
-    if heal.add_modifier and modifier is not None:
+def _gain_note(gain: HitPointGain, level: int, modifier: int | None) -> str:
+    """The Hit Points a spell that also deals damage gives, which the form's
+    one amount box can't hold beside the damage."""
+    dice = gain.dice
+    if gain.add_modifier and modifier is not None:
         dice = _with_modifier(DamageRoll(dice, None), modifier).dice
-    amount = f"{dice} Hit Points"
-    if heal.add_modifier and modifier is None:
+    what = "Temporary Hit Points" if gain.temporary else "Hit Points"
+    amount = f"{dice} {what}"
+    if gain.add_modifier and modifier is None:
         amount += " plus the spellcasting ability modifier"
-    more = f" ({heal.upcast} more per slot level above {level})" if heal.upcast else ""
-    return f"It heals {amount}{more}: apply that by hand."
+    more = f" ({gain.upcast} more per slot level above {level})" if gain.upcast else ""
+    verb = "gives" if gain.temporary else "heals"
+    return f"It also {verb} {amount}{more}: apply that by hand."
 
 
 def _with_modifier(roll: DamageRoll, modifier: int) -> DamageRoll:
@@ -432,7 +489,30 @@ def read_effect_text(text: str) -> EffectText:
         heals=bool(_HEALS.search(body)),
         until=until,
         upgrades=upgrades,
+        gain=_read_gain(body, upgrades),
     )
+
+
+def _read_gain(body: str, upgrades: tuple[str, ...]) -> HitPointGain | None:
+    """The Hit Points the text gives each target, and what more a higher slot
+    gives."""
+    for pattern, upcast, temporary in (
+        (_HEAL_AMOUNT, _HEAL_UPCAST, False),
+        (_TEMP_HP_AMOUNT, _TEMP_HP_UPCAST, True),
+    ):
+        match = pattern.search(body)
+        if match is None:
+            continue
+        more = next((m for m in map(upcast.search, upgrades) if m is not None), None)
+        sentence = _SENTENCE_END.split(body[: match.start()])[-1]
+        return HitPointGain(
+            match[1] or match[3],
+            temporary=temporary,
+            add_modifier=bool(match[2]),
+            upcast=next((g for g in more.groups() if g), "") if more else "",
+            is_the_casters=bool(_JUST_YOU.fullmatch(sentence)),
+        )
+    return None
 
 
 def _upcast_dice(
@@ -566,7 +646,11 @@ def _character_level(char: dict) -> int:
 
 
 def _roll_summary(
-    text: EffectText, dc: int | None, bonus: int | None, rolls: Iterable[DamageRoll]
+    text: EffectText,
+    dc: int | None,
+    bonus: int | None,
+    rolls: Iterable[DamageRoll],
+    amount_kind: str = DAMAGE_AMOUNT,
 ) -> list[str]:
     """The numbers a row shows for what `text` says."""
     parts = []
@@ -574,14 +658,23 @@ def _roll_summary(
         parts.append("attack" if bonus is None else f"{bonus:+d}")
     elif text.ability is not None:
         parts.append(f"DC {dc or '?'} {text.ability}")
-    damage = damage_text(rolls)
-    if damage:
-        parts.append(damage)
+    amount = damage_text(rolls)
+    if amount:
+        parts.append(amount_text(amount, amount_kind))
     if text.half_on_save:
         parts.append("half on save")
     if text.condition:
         parts.append(text.condition)
     return parts
+
+
+def amount_text(amount: str, amount_kind: str) -> str:
+    """ "8d6 Fire", "heals 2d4 + 3", "2d4 + 4 temp HP"."""
+    if amount_kind == HEALING:
+        return f"heals {amount}"
+    if amount_kind == TEMP_HP:
+        return f"{amount} temp HP"
+    return amount
 
 
 def _unknown_number_notes(
@@ -613,11 +706,10 @@ def spell_option(spell, char: dict | None) -> EffectOption:
         text = read_effect_text(spell.description)
     dc = _spell_save_dc(spell, who) if text.ability is not None else None
     bonus = _spell_attack_bonus(spell, who) if text.is_attack else None
-    heals_with_modifier = mechanics is not None and bool(
-        mechanics.heal and mechanics.heal.add_modifier
-    )
+    gain = text.gain
+    gains_modifier = gain is not None and gain.add_modifier
     modifier = (
-        _spell_modifier(spell, who) if text.adds_modifier or heals_with_modifier else 0
+        _spell_modifier(spell, who) if text.adds_modifier or gains_modifier else 0
     )
     upcast: tuple[str, ...] = ()
     if mechanics is not None:
@@ -635,11 +727,27 @@ def spell_option(spell, char: dict | None) -> EffectOption:
     notes = list(text.notes) + _unknown_number_notes(text, dc, bonus)
     if text.adds_modifier and modifier is None:
         notes.append("Add the spellcasting ability modifier to the damage.")
-    if mechanics is not None:
-        heal_note = _heal_note(mechanics, spell.level, modifier)
-        if heal_note:
-            notes.append(heal_note)
-    elif rolls and not upcast and any(map(_ANY_UPCAST.search, text.upgrades)):
+    amount_kind = DAMAGE_AMOUNT
+    if gain is not None and rolls:
+        # One amount box: the damage goes in it, the Hit Points by hand.
+        notes.append(_gain_note(gain, spell.level, modifier))
+    elif gain is not None:
+        amount_kind = TEMP_HP if gain.temporary else HEALING
+        roll = DamageRoll(gain.dice, None)
+        rolls = (_with_modifier(roll, modifier or 0) if gain.add_modifier else roll,)
+        upcast = (gain.upcast,) if spell.level > 0 and gain.upcast else ()
+        if gain.add_modifier and modifier is None:
+            notes.append(
+                f"Add the spellcasting ability modifier to the {amount_kind.lower()}."
+            )
+        if gain.is_the_casters:
+            notes.append("They're the caster's: pick the caster as the target.")
+    elif (
+        mechanics is None
+        and rolls
+        and not upcast
+        and any(map(_ANY_UPCAST.search, text.upgrades))
+    ):
         notes.append("Upcasting won't change the damage: work it out if you do.")
     if spell.level and has_slots(who) and slot is None:
         notes.append(f"No slot of level {spell.level} or higher left.")
@@ -655,7 +763,7 @@ def spell_option(spell, char: dict | None) -> EffectOption:
     return EffectOption(
         name=spell.name,
         kind=SPELL,
-        summary="  ".join(_roll_summary(text, dc, bonus, rolls)),
+        summary="  ".join(_roll_summary(text, dc, bonus, rolls, amount_kind)),
         tooltip=spell.description,
         note=" ".join(notes),
         roll=ATTACK_ROLL if text.is_attack else SAVING_THROW,
@@ -672,6 +780,7 @@ def spell_option(spell, char: dict | None) -> EffectOption:
         action_cost=casting_time_cost(spell),
         concentration=spell.is_concentration,
         upcast=upcast,
+        amount_kind=amount_kind,
         spell_level=spell.level,
         is_curated=mechanics is not None,
     )
@@ -873,6 +982,11 @@ def _described_feature_option(
         )
         for damage in effect.damage
     )
+    amount_kind = DAMAGE_AMOUNT
+    if effect.healing is not None:
+        amount_kind, rolls = HEALING, (DamageRoll(effect.healing, None),)
+    elif effect.temp_hp is not None:
+        amount_kind, rolls = TEMP_HP, (DamageRoll(effect.temp_hp, None),)
     condition = effect.condition
     text = EffectText(
         ability=ability,
@@ -888,7 +1002,7 @@ def _described_feature_option(
     notes += _unknown_number_notes(text, dc, bonus)
     counts_uses = feature.uses is not None and effect.spends_use
     uses = feature_uses(char, feature, sheet) if counts_uses else None
-    parts = _roll_summary(text, dc, bonus, rolls)
+    parts = _roll_summary(text, dc, bonus, rolls, amount_kind)
     if uses is not None:
         parts.insert(0, f"{uses[0]}/{uses[1]}")
         if uses[0] == 0:
@@ -920,6 +1034,7 @@ def _described_feature_option(
         counts_uses=counts_uses,
         feature_name=feature.name,
         spell_name=effect.spell or "",
+        amount_kind=amount_kind,
         is_curated=True,
     )
 

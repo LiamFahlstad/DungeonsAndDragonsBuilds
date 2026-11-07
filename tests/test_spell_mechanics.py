@@ -25,7 +25,7 @@ from Combat.CombatUIQt.effect_options import (
     read_effect_text,
     spell_option,
 )
-from Combat.CombatUIQt.saves import ATTACK_ROLL, SAVING_THROW
+from Combat.CombatUIQt.saves import ATTACK_ROLL, HEALING, SAVING_THROW, TEMP_HP
 
 SOURCE = "CharacterContent/Spells/spells_dnd2024.json"
 MECHANICS = SpellFactory.mechanics_path(SOURCE)
@@ -314,13 +314,17 @@ def test_the_modifier_is_added_when_known_and_asked_for_when_not():
     assert "modifier" in weapon.note
 
 
-def test_healing_is_a_note():
+def test_healing_fills_the_amount_box():
+    """Cure Wounds: 2d8 plus the modifier, 2d8 more per slot level above 1.
+    This caster's modifier isn't known, so the note says to add it."""
     cure = _option("Cure Wounds")
-    assert cure.damage == ""
+    assert cure.amount_kind == HEALING
+    assert cure.damage == "2d8"
+    assert cure.damage_at(3) == "6d8"
     assert cure.ability is None
     assert cure.condition == ""  # no badge for healing
-    assert "heals 2d8 Hit Points plus" in cure.note
-    assert "2d8 more per slot level above 1" in cure.note
+    assert cure.summary == "heals 2d8"
+    assert "Add the spellcasting ability modifier to the healing." in cure.note
 
 
 def test_a_spell_with_nothing_to_roll_is_its_own_badge():
@@ -393,8 +397,38 @@ def test_true_strike_is_a_weapon_attack():
 
 
 def test_healing_word_heals_with_the_modifier():
-    word = _option("Healing Word")
-    assert "2d4 Hit Points plus the spellcasting ability modifier" in word.note
+    """2d4 plus the spellcasting ability modifier: Thomas's Charisma."""
+    from Builds.Characters.Y2024_Bard_Valor_Thomas import (
+        Y2024BardValorThomasCharacterBuilder as Thomas,
+    )
+    from Combat.PlayerCombatant import combatant_from_character
+
+    sheet = Thomas().build()
+    word = _option("Healing Word", combatant_from_character(sheet))
+    assert word.damage == f"2d4 + {sheet.get_charisma_modifier()}"
+    assert word.note == ""
+
+
+def test_false_life_gives_temporary_hit_points():
+    """2d4 + 4 Temporary Hit Points, 5 more per slot level above 1, to the
+    caster."""
+    life = _option("False Life")
+    assert life.amount_kind == TEMP_HP
+    assert life.damage == "2d4 + 4"
+    assert life.damage_at(3) == "2d4 + 4 + 10"
+    assert "the caster as the target" in life.note
+
+
+def test_an_entry_has_one_amount_of_hit_points():
+    with pytest.raises(ValueError, match="one of 'heal' and 'temp_hp'"):
+        parse_mechanics("X", {"heal": {"dice": "1d4"}, "temp_hp": {"dice": "1d4"}})
+
+
+def test_only_temporary_hit_points_upcast_by_a_number():
+    """False Life's "5 additional Temporary Hit Points" per slot level."""
+    assert parse_mechanics("X", {"temp_hp": {"dice": "5", "upcast": "5"}}).temp_hp
+    with pytest.raises(ValueError):
+        parse_mechanics("X", {"heal": {"dice": "1d4", "upcast": "5"}})
 
 
 def test_an_entry_in_a_2014_file():

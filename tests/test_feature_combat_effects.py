@@ -28,7 +28,7 @@ from CharacterContent.Features.SubClassFeatures.Artificer.ArtificerReanimatorFea
 )
 from Combat.Campaigns.TimeLoopPR.Campaign import CAMPAIGN
 from Combat.CombatUIQt.effect_options import effect_options, feature_options
-from Combat.CombatUIQt.saves import ATTACK_ROLL, SAVING_THROW
+from Combat.CombatUIQt.saves import ATTACK_ROLL, HEALING, SAVING_THROW, TEMP_HP
 from Combat.PlayerCombatant import combatant_from_character
 from Core.Definitions import Ability, CharacterClass, DamageType
 from Model.Content.CombatEffect import CombatCondition, CombatDamage, CombatEffect
@@ -341,3 +341,32 @@ def test_a_use_that_spends_nothing():
     feature.uses = _feature(_sheet(Thomas), "Bardic Inspiration").uses
     (row,) = _options(feature)
     assert not row.counts_uses
+
+
+# Healing and Temporary Hit Points a feature gives each target
+
+
+def test_a_feature_that_heals_fills_the_healing_box():
+    (row,) = _options(_Described([CombatEffect(healing="1d10 + 3")]))
+    assert (row.amount_kind, row.damage) == (HEALING, "1d10 + 3")
+    assert row.summary == "heals 1d10 + 3"
+
+
+def test_a_feature_that_gives_temporary_hit_points():
+    (row,) = _options(_Described([CombatEffect(temp_hp="5")]))
+    assert (row.amount_kind, row.damage) == (TEMP_HP, "5")
+
+
+@pytest.mark.parametrize(
+    "kwargs",
+    [
+        {"healing": "1d4", "temp_hp": "1d4"},
+        {"healing": "1d4", "damage": (CombatDamage("1d6", DamageType.FIRE),)},
+        {"temp_hp": "5", "damage": (CombatDamage("1d6", DamageType.FIRE),)},
+        {"healing": "lots"},
+        {"temp_hp": "1d"},
+    ],
+)
+def test_one_amount_box_and_dice_in_it(kwargs):
+    with pytest.raises(ValueError):
+        CombatEffect(**kwargs)
