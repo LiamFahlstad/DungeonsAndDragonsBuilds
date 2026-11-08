@@ -37,7 +37,12 @@ from Combat.PlayerCombatant import combatant_from_stat_block
 from Core.Definitions import Ability, DamageType
 from Core.Rules import SPELL_SAVE_DC_BASE
 from Model.Content.ActionType import ActionType
-from Model.Content.CombatEffect import CombatCondition, CombatDamage, CombatEffect
+from Model.Content.CombatEffect import (
+    CombatCondition,
+    CombatDamage,
+    CombatEffect,
+    CombatHitPoints,
+)
 from Model.Creatures.MonsterAbilities import MeleeAttack, MonsterAbility
 
 STUTTER = CombatEffect(
@@ -46,7 +51,7 @@ STUTTER = CombatEffect(
     dc=15,
     repeat_save=True,
     damage=(CombatDamage("2d8", DamageType.PSYCHIC),),
-    condition=CombatCondition("Stutter Time", until=("end", "target")),
+    conditions=(CombatCondition("Stutter Time", until=("end", "target")),),
     notes=("Slowed.",),
 )
 
@@ -102,13 +107,13 @@ def test_written_effects_come_back_from_the_log():
     "effect",
     [
         STUTTER,
-        CombatEffect(name="Cure Wounds", healing="2d8 + 4"),
-        CombatEffect(healing=""),
-        CombatEffect(temp_hp="10", action_type=ActionType.REACTION),
+        CombatEffect(name="Cure Wounds", healing=CombatHitPoints("2d8 + 4")),
+        CombatEffect(healing=CombatHitPoints()),
+        CombatEffect(temp_hp=CombatHitPoints("10"), action_type=ActionType.REACTION),
         CombatEffect(roll="attack", attack_bonus=5, concentration=True, spell="Bless"),
         CombatEffect(
             damage=(CombatDamage("2d6", None, (DamageType.FIRE, DamageType.COLD)),),
-            condition=CombatCondition("Prone", duration_seconds=60),
+            conditions=(CombatCondition("Prone", duration_seconds=60),),
             spends_use=False,
         ),
     ],
@@ -118,6 +123,16 @@ def test_every_field_survives_json(effect):
 
     plain = json.loads(json.dumps(dataclasses.asdict(effect)))
     assert CombatEffect.from_dict(plain) == effect
+    assert CombatEffect.from_dict(effect.to_dict()) == effect
+
+
+def test_a_log_from_before_hit_points_had_a_type_still_reads():
+    """Logs written before 2026-11-08 keep healing and temp_hp as dice text."""
+    old = {"name": "Cure Wounds", "healing": "2d8 + 4", "temp_hp": None}
+    assert CombatEffect.from_dict(old) == CombatEffect(
+        name="Cure Wounds", healing=CombatHitPoints("2d8 + 4")
+    )
+    assert CombatEffect.from_dict({"healing": ""}).healing == CombatHitPoints()
 
 
 def test_a_written_effect_sets_the_turn_buttons_numbers():
@@ -415,6 +430,7 @@ def test_a_spellcasting_list_has_a_row_per_spell():
     assert names == {
         "Spellcasting: Thaumaturgy",
         "Spellcasting: Toll the Dead",
+        "Spellcasting: Toll the Dead (hurt target)",
         "Spellcasting: Hold Person",
         "Spellcasting: Silence",
         "Spellcasting: Bestow Curse",

@@ -12,7 +12,14 @@ from Model.Content.Improvements import (
     GrantArmorTraining,
     GrantWeaponProficiency,
 )
-from Core.Definitions import Ability, CharacterClass, Skill, ArmorType
+from Core.Definitions import Ability, CharacterClass, DamageType, Skill, ArmorType
+from Model.Content.CombatEffect import (
+    CombatCondition,
+    CombatDamage,
+    CombatEffect,
+    CombatHitPoints,
+    with_bonus,
+)
 from CharacterContent.Items.Weapons import WeaponProficiency
 from Model.Content.FeatureText import Block, Facts, Option, Paragraph, dc_formula
 from CharacterContent.Features.ClassFeatures.SpellcastingTable import (
@@ -271,6 +278,48 @@ class ChannelDivinity(Feature):
 
     def calculate_dc(self, character: CharacterView) -> int:
         return character.calculate_difficulty_class_for_ability(Ability.WISDOM)
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # A subclass's options (Radiance of the Dawn) are extensions of this
+        # feature and list their own uses of it.
+        spark = with_bonus(
+            DIVINE_SPARK_DICE.at(character), character.get_wisdom_modifier()
+        )
+        spark_target = "Another creature you can see within 30 feet."
+        return [
+            CombatEffect(
+                name="Divine Spark: heal",
+                healing=CombatHitPoints(spark),
+                notes=(spark_target,),
+            ),
+            CombatEffect(
+                name="Divine Spark: harm",
+                roll="save",
+                save_ability=Ability.CONSTITUTION,
+                half_on_success=True,
+                damage=(
+                    CombatDamage(
+                        spark, None, (DamageType.NECROTIC, DamageType.RADIANT)
+                    ),
+                ),
+                notes=(spark_target,),
+            ),
+            CombatEffect(
+                name="Turn Undead",
+                roll="save",
+                save_ability=Ability.WISDOM,
+                conditions=(
+                    CombatCondition("Frightened"),
+                    CombatCondition("Incapacitated"),
+                ),
+                notes=(
+                    "Each Undead of your choice within 30 feet.",
+                    "On its turns it moves as far from you as it can. It ends"
+                    " early on a creature that takes any damage, or if you have"
+                    " the Incapacitated condition or die.",
+                ),
+            ),
+        ]
 
     def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.SHORT_OR_LONG_REST

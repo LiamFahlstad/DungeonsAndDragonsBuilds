@@ -2168,7 +2168,9 @@ def test_a_picked_actions_badge_shows_its_rules_text(fight, monkeypatch):
         kind=MONSTER_ACTION,
         tooltip="Dexterity Saving Throw: DC 12.\nFailure: the target is webbed.",
     )
-    ui._give_effect_condition(tiger, CustomEffect("Sticky Web", "Webbed", pick=action))
+    ui._give_effect_condition(
+        tiger, CustomEffect("Sticky Web", "Webbed", pick=action), "Webbed"
+    )
     heading, body = _clicked_popup(ui, monkeypatch, tiger, "Webbed")
     assert heading == "Webbed"
     assert "<b style='color:#c9a84c; font-size:14px;'>Sticky Web</b>" in body
@@ -2179,14 +2181,18 @@ def test_a_picked_features_badge_shows_the_feature(paladin, monkeypatch):
     ui, edmund, tiger = paladin
     feature = edmund["_feature_objects"][0]
     option = EffectOption(name=feature.name, kind=FEATURE)
-    ui._give_effect_condition(tiger, CustomEffect(feature.name, "Blessed", pick=option))
+    ui._give_effect_condition(
+        tiger, CustomEffect(feature.name, "Blessed", pick=option), "Blessed"
+    )
     _, body = _clicked_popup(ui, monkeypatch, tiger, "Blessed")
     assert body == ui._feature_condition_tooltip(edmund, feature)
 
 
 def test_an_effect_typed_by_hand_shows_only_its_notes(fight, monkeypatch):
     ui, _, tiger, _ = fight
-    ui._give_effect_condition(tiger, CustomEffect("Vines", "Tangled", notes="DC 13"))
+    ui._give_effect_condition(
+        tiger, CustomEffect("Vines", "Tangled", notes="DC 13"), "Tangled"
+    )
     _, body = _clicked_popup(ui, monkeypatch, tiger, "Tangled")
     assert body == "DC 13"
 
@@ -2531,8 +2537,10 @@ def test_a_spell_attack_is_one_line_the_player_link_reads(paladin, monkeypatch):
     monkeypatch.setattr(random, "randint", lambda low, high: 10)
     _apply(dlg)
     texts = [event["text"] for event in ui._read_log()["round_1"]]
+    # One line for the cast, none more for the attack; its badge is its own.
     assert [text for text in texts if "Chill Touch" in text] == [
-        "[Edmund's turn] Edmund casts Chill Touch"
+        "[Edmund's turn] Edmund casts Chill Touch",
+        "[Edmund's turn] Tiger gains Chill Touch from Edmund",
     ]
     (round_log,) = ui._public_log()
     lines = [line for turn in round_log["turns"] for line in turn["lines"]]

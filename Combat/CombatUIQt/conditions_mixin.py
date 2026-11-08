@@ -1,6 +1,7 @@
 """Conditions mixin for CombatAppQt."""
 
 import re
+from dataclasses import replace
 from html import escape
 
 from PyQt6.QtCore import Qt
@@ -51,6 +52,7 @@ from .saves import (
     ABILITIES,
     AMOUNT_KINDS,
     ATTACK_ROLL,
+    CONDITION_JOINER,
     DAMAGE_AMOUNT,
     FEATURE,
     HEALING,
@@ -61,6 +63,7 @@ from .saves import (
     TEMP_HP,
     CustomEffect,
     EffectOption,
+    condition_names,
     is_immune_to,
     known_attack_bonus,
     known_save_dc,
@@ -140,6 +143,9 @@ _WHOLE_NUMBER = re.compile(r"-?\d+")
 MAX_SAVE_DC = 40
 MIN_ATTACK_BONUS = -10
 MAX_ATTACK_BONUS = 30
+# The most times one Apply repeats an effect (Scorching Ray at a level 9
+# slot has 10 rays).
+MAX_EFFECT_TIMES = 20
 # How long a concentration effect runs with no time on it: the longest there is
 # in general use, for the GM to end by hand or by losing concentration.
 LONGEST_CONCENTRATION = 60 * 60
@@ -480,7 +486,8 @@ class ConditionsMixin(CombatWindowState):
             if (
                 pick is not None
                 and pick.kind == SPELL
-                and not self._can_cast_or_say(caster, pick.name)
+                and pick.counts_uses
+                and not self._can_cast_or_say(caster, pick.spell_name or pick.name)
             ):
                 return
             if not self._go_ahead_anyway(
@@ -542,14 +549,17 @@ class ConditionsMixin(CombatWindowState):
                 )
                 if not any(c is target for c in self.characters):
                     continue  # a summon that vanished at 0 HP
-            if not effect.condition or saved:
+            if saved:
                 continue
-            row = {"target": target["name"], "condition": effect.condition}
-            already_had = effect.condition in target["conditions"]
-            held_by_a_spell = self._held_by_effect(row)
-            if self._give_effect_condition(target, effect):
-                if held_by_a_spell or not already_had:
-                    applied.append(row)
+            for condition in effect.conditions:
+                row = {"target": target["name"], "condition": condition}
+                already_had = condition in target["conditions"]
+                held_by_a_spell = self._held_by_effect(row)
+                if self._give_effect_condition(target, effect, condition):
+                    if held_by_a_spell or not already_had:
+                        applied.append(row)
+            if effect.repeat_save and effect.ability is not None:
+                self._track_repeat_save(target, effect)
 
         if effect.concentration and caster is not None:
             self._hold_concentration(caster, label, effect, applied)
@@ -566,6 +576,13 @@ class ConditionsMixin(CombatWindowState):
         if attacks:  # last, as logging clears the status line
             self._show_status("; ".join(attacks))
 
+    @undoable
+    def _apply_custom_effects(self, effects: list[CustomEffect]):
+        """Several Custom dialog effects as one step (the rays of one
+        Scorching Ray): undone together."""
+        for effect in effects:
+            self._apply_custom_effect(effect)
+
     def _use_pick(self, caster: dict, effect: CustomEffect) -> bool | None:
         """Count what the dialog's pick was as used by caster, as Cast Spell,
         Enable Feature and the turn column's buttons do. Returns whether that
@@ -573,11 +590,12 @@ class ConditionsMixin(CombatWindowState):
         option = effect.pick
         assert option is not None  # the caller checks
         if option.kind == SPELL:
-            if not self._can_cast_or_say(caster, option.name):
+            if not option.counts_uses:
+                return False  # part of a cast already counted (Ice Knife's burst)
+            spell = option.spell_name or option.name
+            if not self._can_cast_or_say(caster, spell):
                 return None
-            self._count_spell_cast(
-                caster, option.name, option.spell_level, effect.slot_level
-            )
+            self._count_spell_cast(caster, spell, option.spell_level, effect.slot_level)
             return True
         if option.kind == FEATURE:
             self._count_feature_use(
@@ -596,7 +614,7 @@ class ConditionsMixin(CombatWindowState):
         option = effect.pick
         if option is None:
             return lacks
-        if option.kind == SPELL:
+        if option.kind == SPELL and option.counts_uses:
             lacks.insert(
                 0, spell_slot_lack(caster, option.spell_level, effect.slot_level)
             )
@@ -691,37 +709,47 @@ class ConditionsMixin(CombatWindowState):
         caster.setdefault("active_spells", []).append(entry)
         self._rebuild_card(caster)
 
-    def _give_effect_condition(self, target: dict, effect: CustomEffect) -> bool:
-        """Give target the effect's condition, unless it's died of the effect
-        or is immune. Returns whether it has it from this effect now."""
+    def _give_effect_condition(
+        self, target: dict, effect: CustomEffect, condition: str
+    ) -> bool:
+        """Give target one of the effect's conditions, unless it's died of
+        the effect or is immune. Returns whether it has it from this effect
+        now."""
         if self._char_death_state(target) == "dead":
             return False
-        if is_immune_to(target, effect.condition):
+        if is_immune_to(target, condition):
             readable = self._log_event(
-                f"{target['name']} is immune to {effect.condition}",
+                f"{target['name']} is immune to {condition}",
                 character=target["name"],
             )
             if readable:
-                note_condition_immunity(target, effect.condition)
+                note_condition_immunity(target, condition)
             return False
-        self._describe_effect_condition(target, effect)
-        self._add_custom_condition(
-            effect.condition, effect.duration, effect.notes, [target]
-        )
-        if effect.repeat_save and effect.ability is not None:
-            self._drop_repeat_save(target, effect.condition)
-            target.setdefault("repeat_saves", []).append(
-                {
-                    "condition": effect.condition,
-                    "ability": effect.ability,
-                    "dc": effect.dc,
-                    "mode": effect.mode,
-                    "use_legendary_resistance": effect.use_legendary_resistance,
-                }
-            )
+        self._describe_effect_condition(target, effect, condition)
+        self._add_custom_condition(condition, effect.duration, effect.notes, [target])
         return True
 
-    def _describe_effect_condition(self, target: dict, effect: CustomEffect):
+    def _track_repeat_save(self, target: dict, effect: CustomEffect):
+        """The save target repeats at the end of each of its turns, ending
+        every condition the effect gave it: one save for them all (Turn
+        Undead's Frightened and Incapacitated)."""
+        given = [c for c in effect.conditions if c in target["conditions"]]
+        if not given:
+            return
+        first, *also = given
+        self._drop_repeat_save(target, first)
+        entry = {
+            "condition": first,
+            "ability": effect.ability,
+            "dc": effect.dc,
+            "mode": effect.mode,
+            "use_legendary_resistance": effect.use_legendary_resistance,
+        }
+        if also:
+            entry["also"] = also
+        target.setdefault("repeat_saves", []).append(entry)
+
+    def _describe_effect_condition(self, target: dict, effect: CustomEffect, cond: str):
         """What target's badge for the effect's condition shows when clicked
         or hovered: the picked spell's card, as Cast Spell's badge has, the
         picked feature's, or the rules text of the attack or action picked.
@@ -730,11 +758,10 @@ class ConditionsMixin(CombatWindowState):
         option = effect.pick
         if option is None:
             return
-        cond = effect.condition
         notes = escape(effect.notes.strip(), quote=False)
         notes = f"<i>{notes}</i><br><br>" if notes else ""
         # A spell's card, for a spell or a feature's use that casts one.
-        spell_name = option.name if option.kind == SPELL else option.spell_name
+        spell_name = option.spell_name or (option.name if option.kind == SPELL else "")
         if spell_name:
             spell = self._spell_named(spell_name)
             if spell is not None:
@@ -848,13 +875,18 @@ class ConditionsMixin(CombatWindowState):
                 saved = True
         name = char["name"]
         if saved:
+            ended = [condition, *entry.get("also", ())]
             self._log_event(
-                f"{name} ends {condition} with a DC {entry['dc']} {ability}"
-                f" save{rolled}{note}",
+                f"{name} ends {' and '.join(ended)} with a DC {entry['dc']}"
+                f" {ability} save{rolled}{note}",
                 character=name,
             )
-            self._remove_condition_from(char, condition)
-            self._turn_start_notes.append(f"{name} saved{rolled}: {condition} ends")
+            for each in ended:
+                if each in char["conditions"]:
+                    self._remove_condition_from(char, each)
+            self._turn_start_notes.append(
+                f"{name} saved{rolled}: {' and '.join(ended)} ends"
+            )
         else:
             self._log_event(
                 f"{name} fails a DC {entry['dc']} {ability} save and keeps"
@@ -1146,6 +1178,19 @@ class ConditionsMixin(CombatWindowState):
         resistances_box.setObjectName("countResistances")
         resistances_box.setChecked(True)
         damage_box.addWidget(resistances_box)
+        times_line, times_layout = row_widget()
+        times_layout.addWidget(QLabel("Times"))
+        times_input = QSpinBox()
+        times_input.setObjectName("effectTimes")
+        times_input.setRange(1, MAX_EFFECT_TIMES)
+        times_input.setToolTip(
+            "Repeat it against each target, each time with its own attack roll,"
+            " save and damage roll (Scorching Ray's rays, Eldritch Blast's"
+            " beams). It costs the source once."
+        )
+        times_layout.addWidget(times_input)
+        times_layout.addStretch()
+        damage_box.addWidget(times_line)
 
         def amount_kind() -> str:
             return amount_combo.currentText()
@@ -1502,11 +1547,11 @@ class ConditionsMixin(CombatWindowState):
                 return
             is_attack = roll_combo.currentText() == ATTACK_ROLL
             ability = None if is_attack else ability_combo.currentData()
-            typed_condition = name_combo.currentText().strip()
-            # "stunned" is Stunned, so the rules see it as they should.
-            condition = next(
-                (s for s in suggestions if s.lower() == typed_condition.lower()),
-                typed_condition,
+            # "stunned" is Stunned, so the rules see it as they should; and
+            # "Frightened + Incapacitated" is both.
+            condition = CONDITION_JOINER.join(
+                next((s for s in suggestions if s.lower() == typed.lower()), typed)
+                for typed in condition_names(name_combo.currentText())
             )
             kind = amount_kind()
             damage: list[tuple[int, str]] = []
@@ -1557,37 +1602,80 @@ class ConditionsMixin(CombatWindowState):
                 critical_damage, _ = read_damage(
                     damage_input.text(), type_combo.currentData(), critical=True
                 )
-            self._apply_custom_effect(
-                CustomEffect(
-                    name=name_input.text().strip(),
-                    condition=condition,
-                    duration=duration,
-                    notes=notes_input.text(),
-                    damage=damage,
-                    critical_damage=critical_damage,
-                    count_resistances=resistances_box.isChecked(),
-                    healing=hit_points if kind == HEALING else 0,
-                    temp_hp=hit_points if kind == TEMP_HP else 0,
-                    slot_level=slot_combo.currentData(),
-                    action_cost=action_combo.currentData(),
-                    concentration=concentrate_box.isChecked(),
-                    attack_bonus=bonus_input.value() if is_attack else None,
-                    typed_attacks=attacks,
-                    ability=ability,
-                    dc=dc_input.value(),
-                    mode=mode_combo.currentText(),
-                    half_on_save=half_box.isChecked(),
-                    use_legendary_resistance=resist_box.isChecked(),
-                    repeat_save=repeat_box.isChecked(),
-                    typed_totals=totals,
-                    pick=pick,
-                )
+            effect = CustomEffect(
+                name=name_input.text().strip(),
+                condition=condition,
+                duration=duration,
+                notes=notes_input.text(),
+                damage=damage,
+                critical_damage=critical_damage,
+                count_resistances=resistances_box.isChecked(),
+                healing=hit_points if kind == HEALING else 0,
+                temp_hp=hit_points if kind == TEMP_HP else 0,
+                slot_level=slot_combo.currentData(),
+                action_cost=action_combo.currentData(),
+                concentration=concentrate_box.isChecked(),
+                attack_bonus=bonus_input.value() if is_attack else None,
+                typed_attacks=attacks,
+                ability=ability,
+                dc=dc_input.value(),
+                mode=mode_combo.currentText(),
+                half_on_save=half_box.isChecked(),
+                use_legendary_resistance=resist_box.isChecked(),
+                repeat_save=repeat_box.isChecked(),
+                typed_totals=totals,
+                pick=pick,
             )
+            times = times_input.value()
+            if times == 1:
+                self._apply_custom_effect(effect)
+            else:
+                self._apply_custom_effects(repeated(effect, times))
             dlg.accept()
+
+        def repeated(effect: CustomEffect, times: int) -> list[CustomEffect]:
+            """`effect` `times` over: each with its own damage roll, named
+            "Scorching Ray (2 of 3)" in the log, and only the first costing
+            the source anything or using the totals typed in."""
+            kind = amount_kind()
+            effects = []
+            for index in range(times):
+                each = replace(effect, name=f"{effect.name} ({index + 1} of {times})")
+                if index:
+                    damage: list[tuple[int, str]] = []
+                    critical: list[tuple[int, str]] = []
+                    hit_points = 0
+                    if kind == DAMAGE_AMOUNT:
+                        damage, _ = read_damage(
+                            damage_input.text(), type_combo.currentData()
+                        )
+                        if effect.attack_bonus is not None:
+                            critical, _ = read_damage(
+                                damage_input.text(),
+                                type_combo.currentData(),
+                                critical=True,
+                            )
+                    else:
+                        hit_points, _ = read_hit_points(damage_input.text(), kind)
+                    each = replace(
+                        each,
+                        damage=damage,
+                        critical_damage=critical,
+                        healing=hit_points if kind == HEALING else 0,
+                        temp_hp=hit_points if kind == TEMP_HP else 0,
+                        slot_level=None,
+                        action_cost=None,
+                        concentration=False,
+                        typed_attacks={},
+                        typed_totals={},
+                        pick=None,
+                    )
+                effects.append(each)
+            return effects
 
         # The pick, and the damage and search it was made with, to tell the
         # GM's edits by.
-        picked: dict = {"option": None, "damage": "", "search": ""}
+        picked: dict = {"option": None, "damage": "", "times": 1, "search": ""}
 
         def show_details(option: EffectOption | None):
             details.setHtml(
@@ -1666,12 +1754,16 @@ class ConditionsMixin(CombatWindowState):
             amount_combo.setCurrentText(option.amount_kind)
             damage = option.damage_at(slot_combo.currentData())
             damage_input.setText(damage)
+            times = option.instances_at(slot_combo.currentData())
+            times_input.setValue(times)
             name_combo.setCurrentText(option.condition)
             notes_input.clear()
             show_duration(option.duration_seconds, option.until)
             problem_lbl.setText("")
             show_details(option)
-            picked.update(option=option, damage=damage, search=search_box.text())
+            picked.update(
+                option=option, damage=damage, times=times, search=search_box.text()
+            )
 
         def drop_pick(name: str):
             """Typing another name makes it the GM's own effect: nothing is
@@ -1686,9 +1778,15 @@ class ConditionsMixin(CombatWindowState):
             show_details(None)
 
         def upcast():
-            """A pick's damage at the slot now chosen, unless it's been edited."""
+            """A pick's damage and times at the slot now chosen, unless they've
+            been edited."""
             option = picked["option"]
-            if option is None or damage_input.text() != picked["damage"]:
+            if option is None:
+                return
+            if times_input.value() == picked["times"]:
+                picked["times"] = option.instances_at(slot_combo.currentData())
+                times_input.setValue(picked["times"])
+            if damage_input.text() != picked["damage"]:
                 return
             damage = option.damage_at(slot_combo.currentData())
             damage_input.setText(damage)

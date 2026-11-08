@@ -1,4 +1,10 @@
+from dataclasses import replace
+
+from CharacterContent.Features.ClassFeatures.Bard.BardFeatures import (
+    BARDIC_INSPIRATION_DIE,
+)
 from Core.Definitions import ArmorType
+from Model.Content.CombatEffect import CombatEffect
 from Model.Content.Feature import Feature, FeatureActivation, ActionType, FeatureTarget
 from Model.Content.Improvements import GrantArmorTraining, GrantWeaponProficiency
 from CharacterContent.Items.Weapons import WeaponProficiency
@@ -14,6 +20,23 @@ class CombatInspiration(Feature):
             origin="College of Valor Bard Level 3",
             usage_tags=["buff"],
         )
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # It changes how Bardic Inspiration's die can be spent.
+        return []
+
+    def adjust_combat_effect(
+        self, character: CharacterView, source: str, effect: CombatEffect
+    ) -> CombatEffect:
+        if source != "Bardic Inspiration":
+            return effect
+        die = BARDIC_INSPIRATION_DIE.at(character)
+        note = (
+            f"Combat Inspiration: it can instead add the {die} to its AC against"
+            " an attack roll that hits it (a Reaction), or to the damage of an"
+            " attack roll it hits with."
+        )
+        return replace(effect, notes=effect.notes + (note,))
 
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         return [

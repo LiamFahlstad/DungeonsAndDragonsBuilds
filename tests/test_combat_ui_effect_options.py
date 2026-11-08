@@ -81,11 +81,13 @@ GAZE = {
 
 
 def _spell(name: str):
-    """The spell without its checked mechanics, if it has any: these tests are
+    """The spell without its combat effects, if it has any: these tests are
     for reading its text, which every spell without them still relies on.
-    tests/test_spell_mechanics.py covers the checked data."""
+    tests/test_spell_combat_effects.py covers the described ones."""
     data = SpellFactory._load_json()[name]
-    return DataSpell({key: value for key, value in data.items() if key != "mechanics"})
+    return DataSpell(
+        {key: value for key, value in data.items() if key != "combat_effects"}
+    )
 
 
 def _option(name: str, char: dict | None = None):

@@ -1,5 +1,13 @@
 # Plan: curated spell mechanics for the Custom Effect picker
 
+> **Superseded in part (2026-11-08)** by [combat-effects-plan.md](combat-effects-plan.md).
+> Spells now use the same `CombatEffect` model as features and monster
+> abilities: `SpellFactory/Mechanics.py` is gone, and the entries moved to
+> `spells_<source>_combat_effects.json` (lists of `CombatEffect` dicts; `[]`
+> replaces `applicable: false`; a badge is an explicit `condition`). Phase 2's
+> Steps 10, 11, 15 and 16 continue there. The schema and file names below are
+> the historical first version.
+
 ## Status (2026-11-07)
 
 | Step | State |

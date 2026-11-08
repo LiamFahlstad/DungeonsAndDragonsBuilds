@@ -392,6 +392,27 @@ One full ./run_tests.sh -q run on 2026-11-05 ended '9303 passed ... 1 warning' w
 **History**
 - 2026-11-05 main-session: found
 
+### DI-060 · pyright errors in two combat-effects test files (test doubles not typed as CharacterView / Combatant)
+- **Status:** open
+- **Area:** test-bughunter
+- **Where:** `tests/test_feature_combat_effects.py:204`, `tests/test_monster_combat_effects.py:349`
+
+./typecheck.sh on these files reports: _ArtificerAt passed where Feature.combat_effects expects a CharacterView (a duck-typed stub), and a Combatant constructed without combatant_type/hp/ac/temp_hp/conditions. Both predate the combat-effects refactor (2026-11-08) and the tests pass. Fix: give the stubs the type the call expects (a Protocol, or cast in the test), or build a real object.
+
+**History**
+- 2026-11-08 main-session: found
+- 2026-11-08 main-session: Also about 30 errors of the same kind (Optional Qt accessors, QTest.keyClick overloads) in tests/test_combat_ui_custom_effect.py and tests/test_combat_ui_player_server.py, outside the lines changed on 2026-11-09.
+
+### DI-061 · Homebrew Mira, Princess of the Loop has 6 MonsterAbility entries; the house rule is at most 4
+- **Status:** open
+- **Area:** monster-balancer
+- **Where:** `Combat/Monsters/CR_5/monsters_homebrew.py:MiraPrincessOfTheLoop`
+
+check_monster.py 'Mira, Princess of the Loop': score 0.55 OK, implied CR 5.15 OK, but 'abilities 6/4 FAIL house rule is at most 4 (1 trait)'. Present since the monster was added (c1a7b8aa); not caused by the combat-effects refactor (2026-11-08), which only changed Rewind's temp_hp to CombatHitPoints('10'). Fix: merge or drop abilities to 4 and rebalance to 0.4-0.6, or record an explicit exception if the campaign needs all six.
+
+**History**
+- 2026-11-08 main-session: found
+
 ## Fixed
 
 ### DI-001 · Temporary Hit Points stack instead of keeping one amount

@@ -48,10 +48,10 @@ class SpellFactory:
                 for name, blocks in cls._load_improved(path).items():
                     if name in source_data:
                         source_data[name]["improved_description"] = blocks
-                # So do the mechanics read from that wording.
-                for name, entry in cls._load_mechanics(path).items():
+                # So do the combat effects read from that wording.
+                for name, entry in cls._load_combat_effects(path).items():
                     if name in source_data:
-                        source_data[name]["mechanics"] = entry
+                        source_data[name]["combat_effects"] = entry
                 merged.update(source_data)
             cls._cache = merged
         return cls._cache
@@ -70,16 +70,16 @@ class SpellFactory:
             return {}
 
     @staticmethod
-    def mechanics_path(path: str) -> str:
-        """spells_dnd2024.json -> spells_dnd2024_mechanics.json"""
-        return path[:-5] + "_mechanics.json"
+    def combat_effects_path(path: str) -> str:
+        """spells_dnd2024.json -> spells_dnd2024_combat_effects.json"""
+        return path[:-5] + "_combat_effects.json"
 
     @classmethod
-    def _load_mechanics(cls, path: str) -> dict[str, Any]:
-        """What casting each spell rolls and does (SpellFactory/Mechanics.py),
-        for the spells the source's companion file has checked."""
+    def _load_combat_effects(cls, path: str) -> dict[str, Any]:
+        """What casting each spell does in a fight (Spell.combat_effects), for
+        the spells the source's companion file has checked."""
         try:
-            with open(cls.mechanics_path(path), "r", encoding="utf-8") as f:
+            with open(cls.combat_effects_path(path), "r", encoding="utf-8") as f:
                 return json.load(f)
         except FileNotFoundError:
             return {}

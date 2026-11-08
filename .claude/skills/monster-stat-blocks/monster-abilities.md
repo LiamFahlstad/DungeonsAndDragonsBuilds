@@ -67,7 +67,7 @@ MonsterAbility(
     combat_effects=(
         CombatEffect(
             roll="save", save_ability=Ability.WISDOM, dc=11,
-            condition=CombatCondition("Compelled Duel", duration_seconds=60),
+            conditions=(CombatCondition("Compelled Duel", duration_seconds=60),),
             concentration=True,
             notes=("It has Disadvantage on attack rolls against creatures other than the paladin ...",),
         ),
@@ -75,7 +75,7 @@ MonsterAbility(
 )
 ```
 
-- **Write it** (in a hand-maintained file only) for the following: old-style prose ("must succeed on a DC 11 Wisdom saving throw or"); healing from a pool (`healing=""` lets the GM type the amount); a badge that isn't a rules condition; a condition the text gives only sometimes ("if it had Advantage", which the reader would apply on every hit); and an ability with several uses (a cleric's Life Domain Magic gets one `CombatEffect` per use, each with a `name=`). Examples are the Time Loop PR monsters: `HumanPaladinOfDevotion`, `DwarfLifeCleric`, `MirelleTheGildedKnight` and `MiraPrincessOfTheLoop`.
+- **Write it** (in a hand-maintained file only) for the following: old-style prose ("must succeed on a DC 11 Wisdom saving throw or"); healing from a pool (`healing=CombatHitPoints()`, with no dice, lets the GM type the amount); a badge that isn't a rules condition; a condition the text gives only sometimes ("if it had Advantage", which the reader would apply on every hit); and an ability with several uses (a cleric's Life Domain Magic gets one `CombatEffect` per use, each with a `name=`). Examples are the Time Loop PR monsters: `HumanPaladinOfDevotion`, `DwarfLifeCleric`, `MirelleTheGildedKnight` and `MiraPrincessOfTheLoop`.
 - **A trait is listed only once it has `combat_effects`** (a Divine Smite that's used, not a Pack Tactics that just is).
 - **Don't write it** for an ability whose text the picker already reads right. Its numbers would then be in two places that can drift apart. Never write it in a generated `monsters.py`.
 - **Costs stay in the name.** A recharge, uses per day and a legendary action's cost are still read from the name, and that's what the dialog spends. The stat-block section is the action.

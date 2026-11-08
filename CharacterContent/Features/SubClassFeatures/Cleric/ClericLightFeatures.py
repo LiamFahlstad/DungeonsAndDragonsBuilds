@@ -1,4 +1,5 @@
-from Core.Definitions import Ability
+from Core.Definitions import Ability, CharacterClass, DamageType
+from Model.Content.CombatEffect import CombatDamage, CombatEffect
 from Model.Content.Feature import (
     Feature,
     FeatureUses,
@@ -77,6 +78,25 @@ class RadianceOfTheDawn(Feature):
             ),
         ]
 
+    def calculate_dc(self, character: CharacterView) -> int:
+        return character.calculate_difficulty_class_for_ability(Ability.WISDOM)
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # A use of Channel Divinity, which it's granted as an extension of.
+        level = character.get_class_level(CharacterClass.CLERIC)
+        return [
+            CombatEffect(
+                roll="save",
+                save_ability=Ability.CONSTITUTION,
+                half_on_success=True,
+                damage=(CombatDamage(f"2d10 + {level}", DamageType.RADIANT),),
+                notes=(
+                    "Each creature of your choice in a 30-foot Emanation from"
+                    " you. Magical Darkness in it is dispelled.",
+                ),
+            )
+        ]
+
     def get_description(self, character: CharacterView) -> str:
         description = "As a Magic action, you present your Holy Symbol and expend a use of your Channel Divinity to emit a flash of light in a 30-foot Emanation originating from yourself. Any magical Darkness—such as that created by the Darkness spell—in that area is dispelled. Additionally, each creature of your choice in that area must make a Constitution saving throw, taking Radiant damage equal to 2d10 plus your Cleric level on a failed save or half as much damage on a successful one."
         return description
@@ -136,6 +156,17 @@ class WardingFlare(Feature):
 
     def number_of_uses(self, character: CharacterView) -> int:
         return max(1, character.get_wisdom_modifier())
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        return [
+            CombatEffect(
+                notes=(
+                    "A creature you can see within 30 feet makes an attack roll:"
+                    " it has Disadvantage on it. Pick that creature's attack"
+                    " next and roll with Disadvantage.",
+                )
+            )
+        ]
 
 
 class ImprovedWardingFlare(Feature):

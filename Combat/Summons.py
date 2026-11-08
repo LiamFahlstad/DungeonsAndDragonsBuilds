@@ -428,7 +428,8 @@ def carried_state(previous: dict, rested: bool = False) -> dict:
     state = {key: previous[key] for key in CARRIED_KEYS if key in previous}
     state.setdefault("hidden_from_players", False)
     ending = {e.get("name") for e in previous.get("timed_conditions", [])}
-    ending |= {e.get("condition") for e in previous.get("repeat_saves", [])}
+    for entry in previous.get("repeat_saves", []):
+        ending |= {entry.get("condition"), *entry.get("also", ())}
     if "conditions" in state:
         state["conditions"] = [c for c in state["conditions"] if c not in ending]
     if state.get("hp", 1) <= 0:

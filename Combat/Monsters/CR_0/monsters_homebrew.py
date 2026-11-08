@@ -15,7 +15,11 @@ from Model.Creatures.MonsterAbilities import (
     SavingThrowEffect,
 )
 from Core.Definitions import Ability, Skill
-from Model.Content.CombatEffect import CombatCondition, CombatEffect
+from Model.Content.CombatEffect import (
+    CombatCondition,
+    CombatEffect,
+    CombatHitPoints,
+)
 
 
 class Accursed(ExtendedCombatantData):
@@ -568,12 +572,12 @@ class DwarfLifeCleric(ExtendedCombatantData):
                     combat_effects=(
                         CombatEffect(
                             name="Cure Wounds",
-                            healing="2d8 + 4",
+                            healing=CombatHitPoints("2d8 + 4"),
                             notes=("Once per day.",),
                         ),
                         CombatEffect(
                             name="Bless",
-                            condition=CombatCondition("Bless", duration_seconds=60),
+                            conditions=(CombatCondition("Bless", duration_seconds=60),),
                             concentration=True,
                             spell="Bless",
                             notes=(
@@ -583,7 +587,7 @@ class DwarfLifeCleric(ExtendedCombatantData):
                         ),
                         CombatEffect(
                             name="Preserve Life",
-                            healing="",  # 15 shared out as the cleric chooses
+                            healing=CombatHitPoints(),  # 15 shared out as the cleric chooses
                             notes=(
                                 "Once per day. 15 Hit Points shared among Bloodied"
                                 " creatures within 30 feet, none above half its"

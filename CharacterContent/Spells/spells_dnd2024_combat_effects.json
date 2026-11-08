@@ -1,0 +1,576 @@
+{
+  "Alarm": [],
+  "Bless": [
+    {
+      "conditions": [{"name": "Bless"}],
+      "notes": [
+        "Each target adds 1d4 to its attack rolls and saving throws for the duration. Up to three creatures, one more per slot level above 1."
+      ]
+    }
+  ],
+  "Burning Hands": [
+    {
+      "roll": "save",
+      "save_ability": "Dexterity",
+      "half_on_success": true,
+      "damage": [
+        {"dice": "3d6", "damage_type": "Fire", "upcast": "1d6"}
+      ],
+      "notes": [
+        "Each creature in a 15-foot Cone. Flammable objects in it that aren't worn or carried start burning."
+      ]
+    }
+  ],
+  "Charm Person": [
+    {
+      "roll": "save",
+      "save_ability": "Wisdom",
+      "conditions": [{"name": "Charmed"}],
+      "notes": [
+        "Humanoids only. The target has Advantage on the save if you or your allies are fighting it.",
+        "It ends early if you or your allies damage the target. One more target per slot level above 1."
+      ]
+    }
+  ],
+  "Chill Touch": [
+    {
+      "roll": "attack",
+      "damage": [
+        {"dice": "1d10", "damage_type": "Necrotic", "cantrip": {"5": "2d10", "11": "3d10", "17": "4d10"}}
+      ],
+      "conditions": [{"name": "Chill Touch", "until": ["end", "source"]}],
+      "notes": [
+        "A melee spell attack. On a hit, the target can't regain Hit Points until the end of your next turn."
+      ]
+    }
+  ],
+  "Chromatic Orb": [
+    {
+      "roll": "attack",
+      "damage": [
+        {"dice": "3d8", "damage_type": null, "choices": ["Acid", "Cold", "Fire", "Lightning", "Poison", "Thunder"], "upcast": "1d8"}
+      ],
+      "notes": [
+        "If two or more of the d8s match, the orb leaps to another target within 30 feet: a new attack and damage roll. With a level 2+ slot it can leap as many times as the slot's level, each creature once."
+      ]
+    }
+  ],
+  "Command": [
+    {
+      "name": "Command: Approach",
+      "roll": "save",
+      "save_ability": "Wisdom",
+      "conditions": [{"name": "Command", "until": ["end", "target"]}],
+      "notes": [
+        "On its next turn, the target moves toward you by the shortest and most direct route, ending its turn if it moves within 5 feet of you.",
+        "One more target per slot level above 1."
+      ]
+    },
+    {
+      "name": "Command: Drop",
+      "roll": "save",
+      "save_ability": "Wisdom",
+      "conditions": [{"name": "Command", "until": ["end", "target"]}],
+      "notes": [
+        "On its next turn, the target drops whatever it is holding and then ends its turn.",
+        "One more target per slot level above 1."
+      ]
+    },
+    {
+      "name": "Command: Flee",
+      "roll": "save",
+      "save_ability": "Wisdom",
+      "conditions": [{"name": "Command", "until": ["end", "target"]}],
+      "notes": [
+        "On its next turn, the target spends its turn moving away from you by the fastest available means.",
+        "One more target per slot level above 1."
+      ]
+    },
+    {
+      "name": "Command: Grovel",
+      "roll": "save",
+      "save_ability": "Wisdom",
+      "conditions": [{"name": "Prone"}],
+      "notes": [
+        "On its next turn, the target has the Prone condition and then ends its turn.",
+        "One more target per slot level above 1."
+      ]
+    },
+    {
+      "name": "Command: Halt",
+      "roll": "save",
+      "save_ability": "Wisdom",
+      "conditions": [{"name": "Command", "until": ["end", "target"]}],
+      "notes": [
+        "On its next turn, the target doesn't move and takes no action or Bonus Action.",
+        "One more target per slot level above 1."
+      ]
+    }
+  ],
+  "Cure Wounds": [
+    {
+      "healing": {"dice": "2d8", "upcast": "2d8", "add_modifier": true}
+    }
+  ],
+  "Disguise Self": [],
+  "Dissonant Whispers": [
+    {
+      "roll": "save",
+      "save_ability": "Wisdom",
+      "half_on_success": true,
+      "damage": [
+        {"dice": "3d6", "damage_type": "Psychic", "upcast": "1d6"}
+      ],
+      "notes": [
+        "On a failed save, the target must immediately use its Reaction, if available, to move as far away from you as it can by the safest route."
+      ]
+    }
+  ],
+  "Divine Smite": [
+    {
+      "damage": [
+        {"dice": "2d8", "damage_type": "Radiant", "upcast": "1d8"},
+        {"dice": "1d8", "damage_type": "Radiant", "when": "the target is a Fiend or an Undead"}
+      ],
+      "notes": [
+        "Cast right after hitting a target with a Melee weapon or an Unarmed Strike: pick that target. On a critical hit, roll the dice twice."
+      ]
+    }
+  ],
+  "Eldritch Blast": [
+    {
+      "roll": "attack",
+      "damage": [
+        {"dice": "1d10", "damage_type": "Force"}
+      ],
+      "instances": {"count": 1, "cantrip": {"5": 2, "11": 3, "17": 4}, "noun": "beam"},
+      "notes": [
+        "The beams can go at one target or several: lower Times and apply again for the others."
+      ]
+    }
+  ],
+  "Ensnaring Strike": [
+    {
+      "roll": "save",
+      "save_ability": "Strength",
+      "conditions": [{"name": "Restrained"}],
+      "notes": [
+        "Cast right after hitting with a weapon. A Large or larger creature has Advantage on the save. On a success the spell ends.",
+        "While Restrained, the target takes 1d6 Piercing damage (1d6 more per slot level above 1) at the start of each of its turns. It or a creature within reach can take an action to make a Strength (Athletics) check against your spell save DC to end the spell."
+      ]
+    }
+  ],
+  "Entangle": [
+    {
+      "roll": "save",
+      "save_ability": "Strength",
+      "conditions": [{"name": "Restrained"}],
+      "notes": [
+        "Each creature other than you in the 20-foot square. The area is Difficult Terrain for the duration.",
+        "A Restrained creature can take an action to make a Strength (Athletics) check against your spell save DC to free itself."
+      ]
+    }
+  ],
+  "Faerie Fire": [
+    {
+      "roll": "save",
+      "save_ability": "Dexterity",
+      "conditions": [{"name": "Faerie Fire"}],
+      "notes": [
+        "An affected creature sheds Dim Light, can't benefit from the Invisible condition, and attack rolls against it have Advantage if the attacker can see it."
+      ]
+    }
+  ],
+  "False Life": [
+    {
+      "temp_hp": {"dice": "2d4 + 4", "upcast": "5"},
+      "notes": [
+        "They're the caster's: pick the caster as the target."
+      ]
+    }
+  ],
+  "Feather Fall": [
+    {
+      "conditions": [{"name": "Feather Fall"}],
+      "notes": [
+        "Up to five falling creatures descend 60 feet per round and take no damage from the fall when they land, which ends the spell for them."
+      ]
+    }
+  ],
+  "Fireball": [
+    {
+      "roll": "save",
+      "save_ability": "Dexterity",
+      "half_on_success": true,
+      "damage": [
+        {"dice": "8d6", "damage_type": "Fire", "upcast": "1d6"}
+      ]
+    }
+  ],
+  "Fog Cloud": [],
+  "Friends": [
+    {
+      "roll": "save",
+      "save_ability": "Wisdom",
+      "conditions": [{"name": "Charmed"}],
+      "notes": [
+        "The target succeeds automatically if it isn't a Humanoid, if you're fighting it, or if you've cast this on it in the past 24 hours.",
+        "The spell ends early if the target takes damage or you make an attack roll, deal damage or force a saving throw."
+      ]
+    }
+  ],
+  "Grease": [
+    {
+      "roll": "save",
+      "save_ability": "Dexterity",
+      "conditions": [{"name": "Prone"}],
+      "notes": [
+        "The 10-foot square is Difficult Terrain for the duration. A creature that enters it or ends its turn there makes the save again or falls Prone."
+      ]
+    }
+  ],
+  "Guidance": [
+    {
+      "conditions": [{"name": "Guidance"}],
+      "notes": [
+        "A willing creature adds 1d4 to ability checks with the skill you choose."
+      ]
+    }
+  ],
+  "Guiding Bolt": [
+    {
+      "roll": "attack",
+      "damage": [
+        {"dice": "4d6", "damage_type": "Radiant", "upcast": "1d6"}
+      ],
+      "notes": [
+        "On a hit, the next attack roll against the target before the end of your next turn has Advantage."
+      ]
+    }
+  ],
+  "Healing Word": [
+    {
+      "healing": {"dice": "2d4", "upcast": "2d4", "add_modifier": true}
+    }
+  ],
+  "Hold Person": [
+    {
+      "roll": "save",
+      "save_ability": "Wisdom",
+      "repeat_save": true,
+      "conditions": [{"name": "Paralyzed"}],
+      "notes": [
+        "Humanoids only. One more target per slot level above 2."
+      ]
+    }
+  ],
+  "Hunter's Mark": [
+    {
+      "conditions": [{"name": "Hunter's Mark"}],
+      "notes": [
+        "You deal an extra 1d6 Force damage to the target whenever you hit it with an attack roll, and have Advantage on Wisdom (Perception or Survival) checks to find it.",
+        "If it drops to 0 Hit Points, a Bonus Action moves the mark to a new creature."
+      ]
+    }
+  ],
+  "Ice Knife": [
+    {
+      "name": "Ice Knife: shard",
+      "roll": "attack",
+      "damage": [
+        {"dice": "1d10", "damage_type": "Piercing"}
+      ],
+      "notes": [
+        "Hit or miss, the shard then explodes: pick Ice Knife: explosion next."
+      ]
+    },
+    {
+      "name": "Ice Knife: explosion",
+      "roll": "save",
+      "save_ability": "Dexterity",
+      "damage": [
+        {"dice": "2d6", "damage_type": "Cold", "upcast": "1d6"}
+      ],
+      "spends_use": false,
+      "notes": [
+        "The target and each creature within 5 feet of it. Part of the same casting: it spends no slot."
+      ]
+    }
+  ],
+  "Ice Storm": [
+    {
+      "roll": "save",
+      "save_ability": "Dexterity",
+      "half_on_success": true,
+      "damage": [
+        {"dice": "2d10", "damage_type": "Bludgeoning", "upcast": "1d10"},
+        {"dice": "4d6", "damage_type": "Cold"}
+      ],
+      "notes": [
+        "The ground in the Cylinder is Difficult Terrain until the end of your next turn."
+      ]
+    }
+  ],
+  "Invisibility": [
+    {
+      "conditions": [{"name": "Invisible"}],
+      "notes": [
+        "It ends right after the target makes an attack roll, deals damage or casts a spell. One more target per slot level above 2."
+      ]
+    }
+  ],
+  "Longstrider": [
+    {
+      "conditions": [{"name": "Longstrider"}],
+      "notes": [
+        "The target's Speed increases by 10 feet. One more target per slot level above 1."
+      ]
+    }
+  ],
+  "Magic Missile": [
+    {
+      "damage": [
+        {"dice": "1d4 + 1", "damage_type": "Force"}
+      ],
+      "instances": {"count": 3, "upcast": 1, "noun": "dart"},
+      "notes": [
+        "Each dart strikes a creature of your choice: lower Times and apply again to split them."
+      ]
+    }
+  ],
+  "Message": [],
+  "Minor Illusion": [],
+  "Moonbeam": [
+    {
+      "roll": "save",
+      "save_ability": "Constitution",
+      "half_on_success": true,
+      "damage": [
+        {"dice": "2d10", "damage_type": "Radiant", "upcast": "1d10"}
+      ],
+      "notes": [
+        "A shape-shifted creature that fails reverts to its true form. A creature also saves when the Cylinder moves into its space, and when it enters or ends its turn there (once per turn). A Magic action moves the Cylinder up to 60 feet."
+      ]
+    }
+  ],
+  "Produce Flame": [
+    {
+      "roll": "attack",
+      "damage": [
+        {"dice": "1d8", "damage_type": "Fire", "cantrip": {"5": "2d8", "11": "3d8", "17": "4d8"}}
+      ],
+      "notes": [
+        "Casting it (a Bonus Action) makes the flame; hurling it is a Magic action, on this turn or a later one."
+      ]
+    }
+  ],
+  "Ray of Sickness": [
+    {
+      "roll": "attack",
+      "damage": [
+        {"dice": "2d8", "damage_type": "Poison", "upcast": "1d8"}
+      ],
+      "conditions": [{"name": "Poisoned", "until": ["end", "source"]}]
+    }
+  ],
+  "Resistance": [
+    {
+      "conditions": [{"name": "Resistance"}],
+      "notes": [
+        "Choose a damage type: when the creature takes damage of that type, it reduces the total by 1d4, once per turn."
+      ]
+    }
+  ],
+  "Sacred Flame": [
+    {
+      "roll": "save",
+      "save_ability": "Dexterity",
+      "damage": [
+        {"dice": "1d8", "damage_type": "Radiant", "cantrip": {"5": "2d8", "11": "3d8", "17": "4d8"}}
+      ],
+      "notes": [
+        "The target gains no benefit from Half Cover or Three-Quarters Cover for this save."
+      ]
+    }
+  ],
+  "Scorching Ray": [
+    {
+      "roll": "attack",
+      "damage": [
+        {"dice": "2d6", "damage_type": "Fire"}
+      ],
+      "instances": {"count": 3, "upcast": 1, "noun": "ray"},
+      "notes": [
+        "The rays can go at one target or several: lower Times and apply again for the others."
+      ]
+    }
+  ],
+  "Shatter": [
+    {
+      "roll": "save",
+      "save_ability": "Constitution",
+      "half_on_success": true,
+      "damage": [
+        {"dice": "3d8", "damage_type": "Thunder", "upcast": "1d8"}
+      ],
+      "notes": [
+        "A Construct has Disadvantage on the save."
+      ]
+    }
+  ],
+  "Shield": [
+    {
+      "conditions": [{"name": "Shield"}],
+      "notes": [
+        "+5 to your AC until the start of your next turn, including against the triggering attack, and no damage from Magic Missile."
+      ]
+    }
+  ],
+  "Shield of Faith": [
+    {
+      "conditions": [{"name": "Shield of Faith"}],
+      "notes": [
+        "A creature of your choice gets a +2 bonus to AC for the duration."
+      ]
+    }
+  ],
+  "Sleep": [
+    {
+      "roll": "save",
+      "save_ability": "Wisdom",
+      "conditions": [{"name": "Incapacitated", "until": ["end", "target"]}],
+      "notes": [
+        "At the end of its next turn the target repeats the save: on a failure it has the Unconscious condition for the duration. It wakes if it takes damage or someone within 5 feet takes an action to shake it. Creatures that don't sleep, or are immune to Exhaustion, succeed automatically."
+      ]
+    }
+  ],
+  "Spare the Dying": [
+    {
+      "notes": [
+        "A creature with 0 Hit Points that isn't dead becomes Stable. Range 15 feet, doubling at character levels 5, 11 and 17."
+      ]
+    }
+  ],
+  "Speak with Animals": [],
+  "Spike Growth": [
+    {
+      "notes": [
+        "The 20-foot-radius area is Difficult Terrain. A creature takes 2d4 Piercing damage for every 5 feet it moves into or within it.",
+        "A creature that can't see the area when it's cast needs a Search action and a Wisdom (Perception or Survival) check against your spell save DC to spot the danger."
+      ]
+    }
+  ],
+  "Spiritual Weapon": [
+    {
+      "roll": "attack",
+      "damage": [
+        {"dice": "1d8", "damage_type": "Force", "upcast": "1d8", "add_modifier": true}
+      ],
+      "notes": [
+        "On later turns, a Bonus Action moves the force up to 20 feet and repeats the attack."
+      ]
+    }
+  ],
+  "Starry Wisp": [
+    {
+      "roll": "attack",
+      "damage": [
+        {"dice": "1d8", "damage_type": "Radiant", "cantrip": {"5": "2d8", "11": "3d8", "17": "4d8"}}
+      ],
+      "notes": [
+        "On a hit, until the end of your next turn the target sheds Dim Light in a 10-foot radius and can't benefit from the Invisible condition."
+      ]
+    }
+  ],
+  "Suggestion": [
+    {
+      "roll": "save",
+      "save_ability": "Wisdom",
+      "conditions": [{"name": "Charmed"}],
+      "notes": [
+        "The target must be able to hear and understand you. It ends early if you or your allies damage it, or when the suggested activity is done."
+      ]
+    }
+  ],
+  "Tasha's Hideous Laughter": [
+    {
+      "roll": "save",
+      "save_ability": "Wisdom",
+      "repeat_save": true,
+      "conditions": [{"name": "Incapacitated"}, {"name": "Prone"}],
+      "notes": [
+        "It can't end the Prone condition on itself. It also repeats the save each time it takes damage, with Advantage.",
+        "One more target per slot level above 1."
+      ]
+    }
+  ],
+  "Thaumaturgy": [],
+  "Thunderwave": [
+    {
+      "roll": "save",
+      "save_ability": "Constitution",
+      "half_on_success": true,
+      "damage": [
+        {"dice": "2d8", "damage_type": "Thunder", "upcast": "1d8"}
+      ],
+      "notes": [
+        "Each creature in a 15-foot Cube from you. On a failed save it's also pushed 10 feet away from you."
+      ]
+    }
+  ],
+  "Toll the Dead": [
+    {
+      "roll": "save",
+      "save_ability": "Wisdom",
+      "damage": [
+        {"dice": "1d8", "damage_type": "Necrotic", "cantrip": {"5": "2d8", "11": "3d8", "17": "4d8"}}
+      ],
+      "notes": [
+        "For a target that has all its Hit Points: pick the hurt-target row for one that's missing any."
+      ]
+    },
+    {
+      "name": "Toll the Dead (hurt target)",
+      "roll": "save",
+      "save_ability": "Wisdom",
+      "damage": [
+        {"dice": "1d12", "damage_type": "Necrotic", "cantrip": {"5": "2d12", "11": "3d12", "17": "4d12"}}
+      ],
+      "notes": [
+        "For a target missing any of its Hit Points."
+      ]
+    }
+  ],
+  "True Strike": [
+    {
+      "roll": "attack",
+      "notes": [
+        "One attack with the weapon used in the casting, using your spellcasting ability for its attack and damage rolls: give the weapon's damage. It can deal Radiant damage instead of its own type.",
+        "Extra Radiant damage: 1d6 from character level 5, 2d6 from 11, 3d6 from 17."
+      ]
+    }
+  ],
+  "Vicious Mockery": [
+    {
+      "roll": "save",
+      "save_ability": "Wisdom",
+      "damage": [
+        {"dice": "1d6", "damage_type": "Psychic", "cantrip": {"5": "2d6", "11": "3d6", "17": "4d6"}}
+      ],
+      "notes": [
+        "On a failed save, the target also has Disadvantage on the next attack roll it makes before the end of its next turn."
+      ]
+    }
+  ],
+  "Witch Bolt": [
+    {
+      "roll": "attack",
+      "damage": [
+        {"dice": "2d12", "damage_type": "Lightning", "upcast": "1d12"}
+      ],
+      "notes": [
+        "On each of your later turns, a Bonus Action deals 1d12 Lightning damage to the target automatically, even if the first attack missed. It ends if the target is out of range or has Total Cover from you."
+      ]
+    }
+  ]
+}

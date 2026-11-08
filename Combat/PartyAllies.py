@@ -58,7 +58,8 @@ def _left_fight_as(char: dict) -> dict:
     the next fight, with its "max_hp" to cap healing at."""
     state = {key: char[key] for key in CARRIED_KEYS if key in char}
     ending = {e.get("name") for e in char.get("timed_conditions", [])}
-    ending |= {e.get("condition") for e in char.get("repeat_saves", [])}
+    for entry in char.get("repeat_saves", []):
+        ending |= {entry.get("condition"), *entry.get("also", ())}
     if "conditions" in state:
         state["conditions"] = [c for c in state["conditions"] if c not in ending]
     state["max_hp"] = char.get("max_hp", char.get("hp", 0))

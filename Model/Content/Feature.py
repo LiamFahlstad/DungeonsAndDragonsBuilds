@@ -373,8 +373,27 @@ class Feature(Effect):
         grants spells, proficiencies or a language, or one used from its own
         control, like Wild Shape or a summon), which leaves it out of the
         picker. Return None (default) for a feature not described yet: the
-        picker reads its rules text instead, and leaves out a passive one."""
+        picker reads its rules text instead, and leaves out a passive one.
+
+        A use that casts a spell (`spell="Hunter's Mark"`) takes that spell's
+        own combat effect, if it has one, with what this effect sets on top:
+        say only how this feature's casting differs (no slot, another action).
+        """
         return None
+
+    def adjust_combat_effect(
+        self, character: CharacterView, source: str, effect: CombatEffect
+    ) -> CombatEffect:
+        """Override when this feature changes what using another of the
+        character's features or spells does in a fight (Combat Inspiration:
+        two more ways to spend a Bardic Inspiration die). It sees every
+        effect of the character's features and spells, so check `source` (the
+        feature's or spell's name) first, and return
+        dataclasses.replace(effect, ...). Applied in no particular order, like
+        apply(): only add (a note, a damage part, add_modifier), never undo or
+        read what another feature added. Returns `effect` unchanged (default)
+        for features that change no other effect."""
+        return effect
 
     def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         """Override to return when this feature's expended resource (uses, hit

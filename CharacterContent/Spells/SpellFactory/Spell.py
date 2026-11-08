@@ -4,12 +4,12 @@ from typing import Optional
 
 import Core.Definitions as Definitions
 from CharacterContent.Summons.SpellSummons import SPELL_SUMMONS
+from Model.Content.CombatEffect import CombatEffect
 from Model.Content.Feature import FeatureTarget
 from Model.Content.FeatureText import Block, Option
 from Model.Content.Summons import SummonSpec
 from Model.View import CharacterView
 from .Enums import CastingTimeType, School
-from .Mechanics import SpellMechanics
 
 # The Option an improved description puts a spell's upcasting rules in,
 # named as the source text's own paragraph is (2024, then 2014 wording).
@@ -139,11 +139,16 @@ class Spell(ABC):
         """
         return None
 
-    @property
-    def mechanics(self) -> Optional[SpellMechanics]:
-        """What casting the spell rolls and does, as checked data
-        (SpellFactory/Mechanics.py), or None to read it from `description`.
-        Defaults to None for any Spell subclass that doesn't provide it."""
+    def combat_effects(
+        self, character: Optional[CharacterView] = None
+    ) -> Optional[list[CombatEffect]]:
+        """What casting the spell does in a fight, as Feature.combat_effects
+        says it for a feature (Model/Content/CombatEffect.py): one CombatEffect
+        per way to cast it, [] when it has nothing to apply to a target (Alarm),
+        or None (default) when it isn't described yet, so the combat UI reads
+        its `description` instead. The caster's numbers (DC, attack bonus,
+        modifier, cantrip and slot level) are left for whoever casts it, so
+        `character` is only for a hand-written spell that needs it."""
         return None
 
     @property

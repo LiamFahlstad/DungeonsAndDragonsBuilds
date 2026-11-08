@@ -1,9 +1,10 @@
 from typing import Any, Optional
 
 import Core.Definitions as Definitions
+from Model.View import CharacterView
+from Model.Content.CombatEffect import CombatEffect
 from Model.Content.Feature import FeatureTarget
 from Model.Content.FeatureText import Block, blocks_from_json
-from .Mechanics import SpellMechanics, parse_mechanics
 from .Spell import Spell
 
 
@@ -38,7 +39,7 @@ class DataSpell(Spell):
                 f"required field(s): {', '.join(missing)}"
             )
         self._data = spell_data
-        self._mechanics: Optional[SpellMechanics] = None
+        self._combat_effects: Optional[list[CombatEffect]] = None
 
     @property
     def name(self) -> str:
@@ -109,16 +110,27 @@ class DataSpell(Spell):
                 f"Invalid improved description for spell {self.name!r}: {error}"
             ) from error
 
-    @property
-    def mechanics(self) -> Optional[SpellMechanics]:
-        """What casting it rolls and does, if its source's mechanics file has
-        an entry for it. Parsed once; ValueError if the entry is wrong."""
-        value = self._data.get("mechanics")
+    def combat_effects(
+        self, character: Optional[CharacterView] = None
+    ) -> Optional[list[CombatEffect]]:
+        """Its entry in its source's combat effects file
+        (spells_<source>_combat_effects.json), or None without one. Read once;
+        ValueError naming the spell and the field if the entry is wrong."""
+        value = self._data.get("combat_effects")
         if value is None:
             return None
-        if self._mechanics is None:
-            self._mechanics = parse_mechanics(self.name, value)
-        return self._mechanics
+        if self._combat_effects is None:
+            where = f"spell {self.name!r}"
+            if not isinstance(value, list):
+                raise ValueError(
+                    f"Invalid combat effect of {where}: expected a list of"
+                    f" effects, got {value!r}"
+                )
+            self._combat_effects = [
+                CombatEffect.from_dict(effect, f"{where}[{index}]")
+                for index, effect in enumerate(value)
+            ]
+        return list(self._combat_effects)
 
     @property
     def target(self) -> Optional[FeatureTarget]:

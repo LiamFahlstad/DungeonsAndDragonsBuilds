@@ -13,10 +13,12 @@ from Model.Content.Improvements import (
 )
 from Core.Definitions import (
     Ability,
+    DamageType,
     Language,
     Skill,
     CharacterClass,
 )
+from Model.Content.CombatEffect import CombatDamage, CombatEffect
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.View import CharacterView
 from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table, dc_formula
@@ -101,6 +103,28 @@ class SneakAttack(Feature):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        weapon_types = (
+            DamageType.BLUDGEONING,
+            DamageType.PIERCING,
+            DamageType.SLASHING,
+        )
+        return [
+            CombatEffect(
+                damage=(
+                    CombatDamage(SNEAK_ATTACK_DICE.at(character), None, weapon_types),
+                ),
+                notes=(
+                    "Once per turn, right after you hit a creature with an attack"
+                    " roll using a Finesse or a Ranged weapon: pick it. The"
+                    " damage is the weapon's type.",
+                    "You need Advantage on the roll, or an ally without the"
+                    " Incapacitated condition within 5 feet of the target and no"
+                    " Disadvantage. On a critical hit, roll the dice twice.",
+                ),
+            )
+        ]
 
 
 class ThievesCant(Feature):

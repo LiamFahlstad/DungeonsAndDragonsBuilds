@@ -4,6 +4,7 @@ form from. The TimeLoopPR party's features are described first, so every one
 of theirs is checked here. Expected values come from the rules text of each
 feature, never from the code's own output."""
 
+from dataclasses import replace
 from functools import cache
 
 import pytest
@@ -16,6 +17,15 @@ from Builds.Characters.Y2024_Bard_Lore_TobiasGreyquill import (
 )
 from Builds.Characters.Y2024_Bard_Valor_Thomas import (
     Y2024BardValorThomasCharacterBuilder as Thomas,
+)
+from Builds.Characters.Y2024_Cleric_Light_GabrielGreybeard import (
+    Y2024ClericLightGabrielGreybeardCharacterBuilder as Gabriel,
+)
+from Builds.Characters.Y2024_Paladin_Devotion_Edmund import (
+    Y2024PaladinDevotionEdmundCharacterBuilder as Edmund,
+)
+from Builds.Characters.Y2024_Rogue_ArcaneTrickster_ThumSchtock import (
+    Y2024RogueArcaneTricksterThumSchtockCharacterBuilder as Thum,
 )
 from Builds.Characters.Y2024_Druid_Moon_Maggie import (
     Y2024DruidMoonMaggieCharacterBuilder as Maggie,
@@ -31,8 +41,13 @@ from Combat.CombatUIQt.effect_options import effect_options, feature_options
 from Combat.CombatUIQt.saves import ATTACK_ROLL, HEALING, SAVING_THROW, TEMP_HP
 from Combat.PlayerCombatant import combatant_from_character
 from Core.Definitions import Ability, CharacterClass, DamageType
-from Model.Content.CombatEffect import CombatCondition, CombatDamage, CombatEffect
-from Model.Content.Feature import ActionType, Feature
+from Model.Content.CombatEffect import (
+    CombatCondition,
+    CombatDamage,
+    CombatEffect,
+    CombatHitPoints,
+)
+from Model.Content.Feature import ActionType, Feature, FeatureActivation
 
 HOUR = 60 * 60
 
@@ -257,13 +272,16 @@ def test_bardic_inspiration_is_a_badge_for_an_hour():
 
 
 def test_combat_inspiration_is_in_a_valor_bards_note():
+    """Combat Inspiration adds to Bardic Inspiration's effect
+    (Feature.adjust_combat_effect): two more ways to spend the die."""
     (effect,) = _effects(Thomas, "Bardic Inspiration")
-    assert any(n.startswith("Combat Inspiration:") for n in effect.notes)
+    assert not any("Combat Inspiration" in n for n in effect.notes)
+    note = _rows(Thomas)["Bardic Inspiration"].note
+    assert "Combat Inspiration: it can instead add the 1d6 to its AC" in note
 
 
 def test_a_lore_bard_has_no_combat_inspiration():
-    (effect,) = _effects(Tobias, "Bardic Inspiration")
-    assert not any("Combat Inspiration" in n for n in effect.notes)
+    assert "Combat Inspiration" not in _rows(Tobias)["Bardic Inspiration"].note
 
 
 # ---------------------------------------------------------------------------
@@ -320,7 +338,7 @@ def test_its_own_dc_and_a_condition_until_a_turn():
         save_ability=Ability.WISDOM,
         dc=15,
         repeat_save=True,
-        condition=CombatCondition("Frightened", until=("end", "source")),
+        conditions=(CombatCondition("Frightened", until=("end", "source")),),
     )
     (row,) = _options(_Described([effect]))
     assert (row.ability, row.dc, row.repeat_save) == ("WIS", 15, True)
@@ -347,26 +365,185 @@ def test_a_use_that_spends_nothing():
 
 
 def test_a_feature_that_heals_fills_the_healing_box():
-    (row,) = _options(_Described([CombatEffect(healing="1d10 + 3")]))
+    (row,) = _options(_Described([CombatEffect(healing=CombatHitPoints("1d10 + 3"))]))
     assert (row.amount_kind, row.damage) == (HEALING, "1d10 + 3")
     assert row.summary == "heals 1d10 + 3"
 
 
 def test_a_feature_that_gives_temporary_hit_points():
-    (row,) = _options(_Described([CombatEffect(temp_hp="5")]))
+    (row,) = _options(_Described([CombatEffect(temp_hp=CombatHitPoints("5"))]))
     assert (row.amount_kind, row.damage) == (TEMP_HP, "5")
+
+
+# A use that casts a spell, and features that change other effects
+
+
+def test_a_use_that_casts_a_spell_takes_the_spells_effect():
+    """Fireball cast by a feature: the spell's save and damage, the feature's
+    own note first, and the spell's casting time and Concentration (none)."""
+    (row,) = _options(
+        _Described([CombatEffect(spell="Fireball", notes=("Without a slot.",))])
+    )
+    assert (row.ability, row.half_on_save, row.damage) == ("DEX", True, "8d6 Fire")
+    assert row.note.startswith("Without a slot.")
+    assert row.action_cost == "Action" and not row.concentration
+    assert row.slot_level is None
+
+
+def test_what_the_use_says_wins_over_the_spell():
+    (row,) = _options(
+        _Described(
+            [
+                CombatEffect(
+                    spell="Hunter's Mark",
+                    conditions=(CombatCondition("Marked", until=("end", "source")),),
+                    action_type=ActionType.REACTION,
+                )
+            ]
+        )
+    )
+    assert row.condition == "Marked" and row.until == ("end", "source")
+    assert row.action_cost == "Reaction"
+    assert row.concentration  # still the spell's
+    assert "1d6 Force" in row.note  # and its notes
+
+
+def test_a_features_own_action_wins_over_the_spells_casting_time():
+    """Wild Companion's Magic action casts Find Familiar (1 hour to cast)."""
+    feature = _Described([CombatEffect(spell="Hunter's Mark")])
+    feature.activation = FeatureActivation(action_type=ActionType.ACTION)
+    (row,) = _options(feature)
+    assert row.action_cost == "Action"
+
+
+class _Adds(Feature):
+    """Adds a note to the effects of the feature or spell named `source`."""
+
+    def __init__(self, source: str, note: str):
+        super().__init__(name=f"Adds to {source}")
+        self.source, self.note = source, note
+
+    def adjust_combat_effect(self, character, source, effect):
+        if source != self.source:
+            return effect
+        return replace(effect, notes=effect.notes + (self.note,))
+
+
+def test_a_feature_adjusts_only_the_source_it_names(monkeypatch):
+    char = combatant_from_character(_sheet(Thomas))
+    sheet = char["_stat_block"]
+    real = sheet.iter_features_with_extensions
+    adders = [_Adds("Test Feature", "From the hook."), _Adds("Other", "Never.")]
+    monkeypatch.setattr(
+        sheet, "iter_features_with_extensions", lambda: [*real(), *adders]
+    )
+    (row,) = feature_options(char, _Described([CombatEffect(notes=("Own.",))]))
+    assert row.note == "Own. From the hook."
+    fireball = dict(effect_options(char, all_spells=[]))
+    assert all("Never." not in o.note for rows in fireball.values() for o in rows)
 
 
 @pytest.mark.parametrize(
     "kwargs",
     [
-        {"healing": "1d4", "temp_hp": "1d4"},
-        {"healing": "1d4", "damage": (CombatDamage("1d6", DamageType.FIRE),)},
-        {"temp_hp": "5", "damage": (CombatDamage("1d6", DamageType.FIRE),)},
-        {"healing": "lots"},
-        {"temp_hp": "1d"},
+        {"healing": CombatHitPoints("1d4"), "temp_hp": CombatHitPoints("1d4")},
+        {
+            "healing": CombatHitPoints("1d4"),
+            "damage": (CombatDamage("1d6", DamageType.FIRE),),
+        },
+        {
+            "temp_hp": CombatHitPoints("5"),
+            "damage": (CombatDamage("1d6", DamageType.FIRE),),
+        },
+        # Hit Points are a CombatHitPoints, not bare dice.
+        {"healing": "1d4"},
     ],
 )
-def test_one_amount_box_and_dice_in_it(kwargs):
+def test_one_amount_box_and_hit_points_as_hit_points(kwargs):
     with pytest.raises(ValueError):
         CombatEffect(**kwargs)
+
+
+@pytest.mark.parametrize("dice", ["lots", "1d"])
+def test_hit_points_that_arent_dice_are_refused(dice):
+    with pytest.raises(ValueError):
+        CombatHitPoints(dice)
+
+
+# ---------------------------------------------------------------------------
+# The Curse of the Lich party: Gabriel (Light Domain Cleric), Edmund
+# (Devotion Paladin), Thum Schtock (Arcane Trickster Rogue)
+
+
+def _level(builder, character_class) -> int:
+    return _sheet(builder).get_class_level(character_class)
+
+
+def test_divine_spark_heals_or_harms():
+    """1d8 + Wisdom modifier at Cleric levels below 7: healing, or a
+    Constitution save for Necrotic or Radiant damage, half on a success."""
+    rows = _rows(Gabriel)
+    wisdom = _sheet(Gabriel).get_wisdom_modifier()
+    heal, harm = rows["Divine Spark: heal"], rows["Divine Spark: harm"]
+    assert (heal.amount_kind, heal.damage) == (HEALING, f"1d8 + {wisdom}")
+    assert (harm.ability, harm.half_on_save) == ("CON", True)
+    assert harm.damage == f"1d8 + {wisdom}"
+    assert "Necrotic, Radiant" in harm.note
+    for row in (heal, harm):
+        assert row.feature_name == "Channel Divinity" and row.counts_uses
+        assert row.action_cost == "Action"
+
+
+def test_turn_undead_frightens_and_incapacitates_for_a_minute():
+    row = _rows(Gabriel)["Turn Undead"]
+    assert (row.ability, row.dc) == (
+        "WIS",
+        _sheet(Gabriel).calculate_difficulty_class_for_ability(Ability.WISDOM),
+    )
+    assert row.condition == "Frightened + Incapacitated"
+    assert row.duration_seconds == 60
+    assert "Undead" in row.note
+
+
+def test_radiance_of_the_dawn_is_a_use_of_channel_divinity():
+    """An extension of Channel Divinity: a Constitution save for 2d10 +
+    Cleric level Radiant damage, half on a success."""
+    row = _rows(Gabriel)["Radiance of the Dawn"]
+    level = _level(Gabriel, CharacterClass.CLERIC)
+    assert (row.ability, row.half_on_save) == ("CON", True)
+    assert row.damage == f"2d10 + {level} Radiant"
+    assert row.feature_name == "Channel Divinity" and row.counts_uses
+
+
+def test_warding_flare_is_a_reaction_with_its_own_uses():
+    row = _rows(Gabriel)["Warding Flare"]
+    assert row.action_cost == "Reaction"
+    assert row.feature_name == "Warding Flare" and row.counts_uses
+    assert "Disadvantage" in row.note
+
+
+def test_lay_on_hands_heals_what_the_gm_types_from_the_pool():
+    row = _rows(Edmund)["Lay on Hands"]
+    pool = 5 * _level(Edmund, CharacterClass.PALADIN)
+    assert (row.amount_kind, row.damage) == (HEALING, "")
+    assert row.action_cost == "Bonus Action"
+    assert f"({pool} after a Long Rest)" in row.note
+    assert "Poisoned" in row.note
+
+
+def test_paladins_smite_casts_divine_smite_without_a_slot():
+    row = _rows(Edmund)["Divine Smite (Paladin's Smite)"]
+    assert row.damage == "2d8 Radiant"
+    assert row.spell_name == "Divine Smite" and row.slot_level is None
+    assert row.action_cost == "Bonus Action"  # the spell's casting time
+    assert row.note.startswith("Without a spell slot, once per Long Rest.")
+    assert "If the target is a Fiend or an Undead: 1d8 Radiant more" in row.note
+
+
+def test_sneak_attack_is_its_dice_of_the_weapons_type():
+    """(Rogue level + 1) // 2 d6, once per turn, on a creature hit."""
+    row = _rows(Thum)["Sneak Attack"]
+    dice = (_level(Thum, CharacterClass.ROGUE) + 1) // 2
+    assert row.damage == f"{dice}d6"
+    assert row.action_cost is None and not row.counts_uses
+    assert "Finesse or a Ranged weapon" in row.note

@@ -1005,7 +1005,7 @@ def test_a_hidden_attackers_hit_shows_no_defense(limited):
 def test_a_failed_condition_shows_an_immunity(limited):
     ui, _, tiger, _ = limited
     tiger["condition_immunities"] = ["Frightened"]
-    ui._give_effect_condition(tiger, CustomEffect("Fear", "Frightened"))
+    ui._give_effect_condition(tiger, CustomEffect("Fear", "Frightened"), "Frightened")
     QApplication.processEvents()
     assert _defense_notes(ui) == "Immune to Frightened"
 
@@ -1013,7 +1013,7 @@ def test_a_failed_condition_shows_an_immunity(limited):
 def test_petrified_explains_immunity_to_poisoned(limited):
     ui, _, tiger, _ = limited
     tiger["conditions"].append("Petrified")
-    ui._give_effect_condition(tiger, CustomEffect("Venom", "Poisoned"))
+    ui._give_effect_condition(tiger, CustomEffect("Venom", "Poisoned"), "Poisoned")
     QApplication.processEvents()
     assert "is immune to Poisoned" in _gm_log(ui)
     assert _defense_notes(ui) == ""
@@ -1023,7 +1023,7 @@ def test_a_condition_immunity_on_a_hidden_monster_stays_hidden(limited):
     ui, _, tiger, _ = limited
     tiger["condition_immunities"] = ["Frightened"]
     tiger["conditions"].append("Invisible")
-    ui._give_effect_condition(tiger, CustomEffect("Fear", "Frightened"))
+    ui._give_effect_condition(tiger, CustomEffect("Fear", "Frightened"), "Frightened")
     tiger["conditions"].remove("Invisible")
     ui._refresh_views()
     assert _defense_notes(ui) == ""
@@ -1056,7 +1056,7 @@ def test_a_fight_left_and_continued_keeps_the_defenses(tmp_path):
     tiger["damage_resistances"] = _defenses("Fire")
     tiger["condition_immunities"] = ["Frightened"]
     _hit_with(ui, tiger, tiger, DamageType.FIRE)
-    ui._give_effect_condition(tiger, CustomEffect("Fear", "Frightened"))
+    ui._give_effect_condition(tiger, CustomEffect("Fear", "Frightened"), "Frightened")
     ui._save_fight_state()
     ui._load_encounter(PIRATE, restart=False)
     _start(ui, 9)

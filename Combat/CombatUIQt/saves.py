@@ -58,6 +58,15 @@ WEAPON = "weapon"
 SPELL = "spell"
 FEATURE = "feature"
 
+# Between the conditions one effect gives, in the Condition box: "Frightened
+# + Incapacitated". Each lands on every target, and they end together.
+CONDITION_JOINER = " + "
+
+
+def condition_names(text: str) -> list[str]:
+    """The conditions a Condition box's text names, in order."""
+    return [name.strip() for name in text.split(CONDITION_JOINER) if name.strip()]
+
 
 @dataclass
 class SaveResult:
@@ -107,6 +116,12 @@ class CustomEffect:
     # along with the rest. Defined below, as effect_options needs this module.
     pick: "EffectOption | None" = None
 
+    @property
+    def conditions(self) -> list[str]:
+        """Each condition it gives: `condition` can name several, joined by
+        CONDITION_JOINER ("Frightened + Incapacitated")."""
+        return condition_names(self.condition)
+
 
 @dataclass(frozen=True)
 class EffectOption:
@@ -153,9 +168,19 @@ class EffectOption:
     # Temporary Hit Points given (without).
     amount_kind: str = DAMAGE_AMOUNT
     spell_level: int = 0
-    # A spell filled in from its checked mechanics file, or a feature from its
-    # own combat_effects(), not read from its text.
+    # A spell, feature or monster ability filled in from its combat effects,
+    # not read from its text.
     is_curated: bool = False
+    # How many times one use rolls and deals its damage (Scorching Ray's
+    # rays), and how many more per slot level above spell_level.
+    instances: int = 1
+    instances_upcast: int = 0
+
+    def instances_at(self, slot_level: int | None) -> int:
+        """The count with a spell cast using a slot of slot_level (None: at its
+        own level)."""
+        levels_up = max((slot_level or self.spell_level) - self.spell_level, 0)
+        return self.instances + self.instances_upcast * levels_up
 
     @property
     def row_text(self) -> str:

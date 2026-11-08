@@ -43,7 +43,7 @@ Every row comes from the agent's or skill's own frontmatter, so this can't drift
 | Agent | Model | Preloads | Use for | Points to |
 |---|---|---|---|---|
 | [`spell-improved-descriptions`](../../agents/spells/spell-improved-descriptions.md) | sonnet | `subagent-protocol` | Write, audit or fix improved descriptions for D&D spells | `character-engine-dev` |
-| [`spell-mechanics`](../../agents/spells/spell-mechanics.md) | sonnet | `subagent-protocol`, `spell-mechanics` | Add, review or fix checked spell mechanics entries - what casting a spell rolls and does - in… | `combat-simulator`, `spell-improved-descriptions` |
+| [`spell-mechanics`](../../agents/spells/spell-mechanics.md) | sonnet | `subagent-protocol`, `spell-mechanics` | Add, review or fix spells' combat effects - what casting a spell rolls and does - as CombatEffect entries in… | `combat-simulator`, `spell-improved-descriptions` |
 
 ### tooling/
 
@@ -69,7 +69,7 @@ Every row comes from the agent's or skill's own frontmatter, so this can't drift
 | [`rules-glossary`](../../skills/rules-glossary/SKILL.md) | `rules-checker` | `glossary_terms.py`, `scrape_rules_glossary.py` | Scrape the D&D 2024 Rules Glossary from D&D Beyond into a local tree of Markdown files under SourceTexts/RulesGlossary/ - one… |
 | [`run-apps`](../../skills/run-apps/SKILL.md) | `character-creator-gui`, `combat-simulator` | `screenshot.py` | How to launch and look at this repo's apps - the PyQt6 combat simulator, the Character Creator GUI and a build's HTML character… |
 | [`snapshot-diffs`](../../skills/snapshot-diffs/SKILL.md) | `character-engine-dev`, `equipment-inventory`, `subclass-implementer`, `code-reviewer`, `git-commit` | `snapshot_diff.py` | Read what actually changed when a golden snapshot test fails - a script that shows each build's changed stats by ability/skill… |
-| [`spell-mechanics`](../../skills/spell-mechanics/SKILL.md) | `spell-mechanics` | `spell_mechanics.py` | Checked spell mechanics - what casting a spell rolls and does, stored in CharacterContent/Spells/spells_<source>_mechanics.json… |
+| [`spell-mechanics`](../../skills/spell-mechanics/SKILL.md) | `spell-mechanics` | `spell_mechanics.py` | Spells' combat effects - what casting a spell rolls and does, stored as lists of CombatEffect dicts in… |
 | [`subagent-protocol`](../../skills/subagent-protocol/SKILL.md) | `character-creator-gui`, `character-engine-dev`, `equipment-inventory`, `subclass-implementer`, `combat-simulator`, `monster-ability-converter`, `monster-balancer`, `monster-designer`, `feature-card-tagger`, `feature-extension-auditor`, `spell-improved-descriptions`, `spell-mechanics`, `code-reviewer`, `content-scraper`, `git-commit`, `rules-checker`, `test-bughunter` | - | How every project subagent reports back and learns from its runs - the fixed final report sections, and when and how to record… |
 | [`usage-tags`](../../skills/usage-tags/SKILL.md) | `feature-card-tagger` | `tag_report.py` | The rubric and tooling for usage_tags, the role chips on D&D feature and spell cards - where they are stored, how to decide them,… |
 | [`verify-agent-work`](../../skills/verify-agent-work/SKILL.md) | *main session* | `verify.py` | Verify what subagents actually changed before trusting their reports - diff the working tree against the files it claimed, fail… |

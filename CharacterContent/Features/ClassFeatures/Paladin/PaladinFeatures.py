@@ -8,6 +8,7 @@ from Model.Content.Feature import (
     RegainedOn,
 )
 from Model.Content.Improvements import SavingThrowBonus
+from Model.Content.CombatEffect import CombatEffect, CombatHitPoints
 from Core.Definitions import Ability, CharacterClass
 from CharacterContent.Spells.SpellLists import PaladinLevel1Spells
 from Model.Spells import FeatureSpell
@@ -46,6 +47,20 @@ class LayOnHands(Feature):
                     ),
                 )
             ),
+        ]
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        pool = 5 * character.get_class_level(Definitions.CharacterClass.PALADIN)
+        return [
+            CombatEffect(
+                healing=CombatHitPoints(),  # what it spends from the pool
+                notes=(
+                    f"Type the Hit Points spent from the pool ({pool} after a Long"
+                    " Rest). Touch: the target can be you.",
+                    "Or spend 5 from the pool to end the Poisoned condition on"
+                    " the target, healing nothing: take it off by hand.",
+                ),
+            )
         ]
 
     def get_description(self, character: CharacterView) -> str:
@@ -135,6 +150,16 @@ class PaladinsSmite(Feature):
 
     def granted_spells(self) -> list[FeatureSpell]:
         return [FeatureSpell(PaladinLevel1Spells.DIVINE_SMITE)]
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # Its free casting; the spell itself is in the caster's spells.
+        return [
+            CombatEffect(
+                name="Divine Smite (Paladin's Smite)",
+                spell="Divine Smite",
+                notes=("Without a spell slot, once per Long Rest.",),
+            )
+        ]
 
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         return [

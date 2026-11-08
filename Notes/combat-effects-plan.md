@@ -1,0 +1,353 @@
+# Plan: one way to say what Features and Spells do in a fight
+
+## How to use this document
+
+This is a living plan. Whoever works on combat effects updates it in the same
+change:
+
+- tick the step in **Status**;
+- when the code shows a better way than the plan, do the better thing and
+  write down what changed and why in **Revisions**;
+- add new questions to **Open questions** (with a suggestion), and move them
+  to **Decisions** once answered;
+- log bugs found along the way with the `discovered-issues` skill and list
+  their ids in **Discovered issues**.
+
+## Status (2026-11-09)
+
+| Phase | Step | State |
+|---|---|---|
+| 1 | 1.1 Scaling amounts on `CombatEffect` (`CombatHitPoints`; `upcast`, `cantrip`, `add_modifier` on `CombatDamage`) | **Done** |
+| 1 | 1.2 Strict `to_dict()` / `from_dict(data, where)`, tolerant of old logs | **Done** |
+| 1 | 1.3 `Spell.combat_effects()`; `DataSpell` reads its entry | **Done** |
+| 1 | 1.4 Text reading returns a draft `CombatEffect` | **Dropped** (R4) |
+| 1 | 1.5 One converter for described spells, features and monster abilities | **Done** (`_described_option`; R5) |
+| 1 | 1.6 Migrate the spell JSON, delete `SpellMechanics` | **Done** |
+| 2 | Q1 Golden picker rows as a test | **Done**: `tests/test_picker_rows.py`, one golden per party member, homebrew monster and all described spells, in `tests/snapshots/picker_rows/` |
+| 2 | 2.1 Several conditions (`conditions` tuple) | **Done** (R12, R13). Damage plus Hit Points together: **dropped** (R9) |
+| 2 | 2.2 Dialog applies every condition; one repeat save ends them all | **Done**. The second amount box: dropped (R9) |
+| 2 | 2.3 `instances` and a Times box in the dialog | **Done** |
+| 2 | 2.4 Spell variants (a row per effect) | **Done** (Q3 resolved as suggested; R15) |
+| 2 | 2.5 A use that casts a spell takes the spell's effect | **Done** |
+| 2 | 2.6 `Feature.adjust_combat_effect` hook | **Done** |
+| 2 | 2.7 Conditional extra damage (`when`) | **Done**, as a generated note (R14) |
+| 2 | Extensions list their own uses under their parent | **Done** (R10, new) |
+| 3 | Lasting effects (3.1-3.6) | Not started: **next** |
+| 4 | One `combat-effects` skill; feature agent; content rollout | Partly: the skill's rubric and script cover every new field; first content batch below |
+| 5 | Sheet chips, monster score | Not started |
+
+**Content described so far.** Spells: 56 entries (2024) + 1 (2014). Added
+2026-11-09: Burning Hands, Charm Person, Chill Touch, Command (5 options),
+Divine Smite, Sacred Flame, Scorching Ray, Shield of Faith; upgraded from notes
+to fields: Eldritch Blast and Magic Missile (`instances`), Ice Knife (two
+steps), Tasha's Hideous Laughter (two conditions), Toll the Dead (a row for a
+hurt target). Features of the Curse of the Lich party: Channel Divinity (Divine
+Spark heal and harm, Turn Undead), Radiance of the Dawn, Warding Flare, Lay on
+Hands, Paladin's Smite, Sneak Attack.
+
+**Verified 2026-11-09:** full suite passes (9,793); every picker-row change
+reviewed field by field against the previous golden.
+
+## Decisions
+
+Accepted as recommended when the user said "go ahead with plan" (2026-11-08):
+
+1. **Spells stay JSON, features stay Python**, in one shared format.
+2. **`CombatEffect` stays flat** (`roll="save", save_ability=...`).
+3. **Several attacks from one use get a repeat count in the dialog** (built:
+   the Times box).
+4. **Modifiers are added automatically to rolls the simulator makes**, and
+   shown as a reminder next to totals typed in from the table (Phase 3).
+5. **Lasting effects are plain dicts on the combatant**, so undo and log
+   replay keep working (Phase 3).
+
+"Continue and do as you recommend" (2026-11-09) accepted Q1 and Q3 as
+suggested.
+
+## Goal
+
+The Custom Effect dialog is what the GM uses for almost everything in a fight.
+Whatever is picked in it (a spell, a feature, a monster's ability, a weapon)
+should be filled in **by one model, through one code path**, so that:
+
+1. a spell and a feature that do the same kind of thing are written the same
+   way and fill the form the same way;
+2. adding a new kind of mechanic means changing one model, one validator and
+   one adapter, not three of each;
+3. the same descriptions can later drive **mechanical effects**: Bless adding
+   1d4 to the saves the simulator rolls, Shield raising AC until the caster's
+   next turn, Rage halving damage, Hunter's Mark adding 1d6 to hits.
+
+## Design principles
+
+1. **One vocabulary.** `CombatEffect` and its parts describe what a use does.
+   Spells, features, monster abilities (and later weapons) all produce it.
+2. **Two notations, one format.** Features write it in Python, spells in
+   JSON. The JSON is exactly what `to_dict()` writes and `from_dict()` reads;
+   fight logs store the same fields. One validator checks all of them.
+3. **The model describes the rules, not the form.** The adapter that fills the
+   dialog decides what fits and turns the rest into notes.
+4. **Content never imports Combat.** The vocabulary lives in `Model/Content/`.
+5. **Caster numbers are worked out when used** (DC, attack bonus, spellcasting
+   modifier, slot and character level). A feature may work out its own.
+6. **`None`, `[]` and a list mean the same everywhere.** Not described yet /
+   nothing to apply / one picker row per item.
+7. **Notes are the escape hatch, and a repeated note is a missing field.**
+8. **The simulator never guesses positions or table decisions:** it prompts
+   with a pre-filled form.
+9. **Order doesn't matter** for `adjust_combat_effect` hooks: they only add.
+10. **Nothing lands on a target unless the effect says so.** No implicit
+    badges.
+11. **An extension's uses are its parent's** (R10): an extension that describes
+    combat effects adds rows under its parent and spends the parent's uses
+    unless it has its own; one that only changes the parent uses the hook.
+
+## The design as built
+
+### The model (`Model/Content/CombatEffect.py`)
+
+```python
+CombatDamage(dice, damage_type, choices=(), upcast="", cantrip=(), add_modifier=False, when="")
+CombatHitPoints(dice="", upcast="", add_modifier=False)   # dice "": the user types it
+CombatCondition(name, until=None, duration_seconds=None)  # a rules condition or a badge
+CombatInstances(count, upcast=0, cantrip=(), noun="")     # Scorching Ray: 3, +1 per slot, "ray"
+CombatEffect(
+    name="", roll="none", save_ability=None, dc=None, half_on_success=False,
+    repeat_save=False, attack_bonus=None,
+    damage=(), healing=None, temp_hp=None, conditions=(), instances=None,
+    action_type=None, concentration=False, spends_use=True, spell=None, notes=(),
+)
+with_bonus("1d8", 4) == "1d8 + 4"
+```
+
+- `from_dict` still reads logs from before: hit points as plain dice text,
+  cantrip steps as pairs, and one `"condition"` (read as `conditions`).
+- `spends_use=False` on a spell's effect: a later step of one casting (Ice
+  Knife's explosion), which spends no slot, action or cast.
+
+### A spell's entry
+
+```json
+"Scorching Ray": [
+  {"roll": "attack", "damage": [{"dice": "2d6", "damage_type": "Fire"}],
+   "instances": {"count": 3, "upcast": 1, "noun": "ray"}}
+],
+"Command": [
+  {"name": "Command: Grovel", "roll": "save", "save_ability": "Wisdom",
+   "conditions": [{"name": "Prone"}]},
+  ...
+],
+"Divine Smite": [
+  {"damage": [{"dice": "2d8", "damage_type": "Radiant", "upcast": "1d8"},
+              {"dice": "1d8", "damage_type": "Radiant", "when": "the target is a Fiend or an Undead"}]}
+],
+"Alarm": []
+```
+
+### The picker (`Combat/CombatUIQt/effect_options.py`)
+
+- `spell_options(spell, char)`: `None` → the text reading; `[]` → a row that
+  only spends the cast; else one row per effect. Every spell row carries
+  `spell_name`; `counts_uses` says whether it spends a cast. `spell_option` is
+  the first row.
+- `feature_options(char, feature)`: its own rows (or the text reading), then
+  `_extension_options`: each described extension's rows, spending the parent's
+  uses unless the extension has its own.
+- `_described_feature_option`: a use with `spell=` takes that spell's effect
+  (`_casting`); defaults come from the effect, then the feature (or its
+  parent), then the spell. Then the hooks (`_adjusted`).
+- `_described_option` fills the `EffectOption`. Several conditions are joined
+  with `CONDITION_JOINER` (" + ") into its `condition`; `instances` and
+  `instances_upcast` give the Times count (`instances_at(slot)`); damage with a
+  `when` becomes a note ("If the target is a Fiend or an Undead: 1d8 Radiant
+  more (1d8 more per slot level above 1). Add it for those targets.").
+- A monster's spells: a row per way to cast each (`_monster_spell_options`).
+
+### The dialog (`Combat/CombatUIQt/conditions_mixin.py`)
+
+- **Condition box:** "Frightened + Incapacitated" gives both; each is matched
+  to a rules condition by name. One repeat-save entry per effect holds the
+  first condition and `"also"` the rest; a successful save ends them all
+  (`PartyAllies.py` and `Summons.py` read `also` too).
+- **Times box** (Damage section): filled from the pick, and from the slot as
+  it changes; Apply repeats the effect that many times against each target,
+  each with its own attack roll, save and damage roll, named "Scorching Ray
+  (2 of 3)" in the log. Only the first costs anything; it's one undo step
+  (`_apply_custom_effects`).
+- **Spending a spell row** uses `spell_name`, not the row's name.
+
+### Lasting effects (Phase 3, design unchanged, next)
+
+A `CombatCondition` on a target becomes an `ActiveEffect` on that combatant:
+one record with its name, source, the caster, duration, concentration link,
+how it ends, and its modifiers and triggers. It replaces the scattered
+`timed_conditions`, `repeat_saves`, `*_condition_descriptions` and colour maps
+with one list, `char["active_effects"]`, of plain dicts (Decision 5).
+
+| Modifier | Examples |
+|---|---|
+| `D20Bonus(rolls, amount, ability=None)` | Bless (+1d4 attack and saves), Bane (-1d4), Guidance |
+| `D20Mode(rolls, mode, ability=None)` | Restrained (Disadvantage on DEX saves and attacks), Dodge |
+| `AttacksAgainst(mode)` | Faerie Fire, Restrained, Blinded, Dodge |
+| `ArmorClass(bonus)` | Shield (+5), Shield of Faith (+2), Haste (+2) |
+| `Resistance(types)` / `Immunity` / `Vulnerability` | Rage, Absorb Elements, Protection from Energy |
+| `ExtraDamageFrom(source, amount, type)` | Hunter's Mark, Hex: on the target, "hits from the caster deal 1d6 more" |
+| `ExtraDamageOnHit(amount, type)` | Rage damage, Divine Favor: on the attacker |
+| `NoHealing` | Chill Touch (now a badge with a note) |
+| `Note(text)` | anything not modelled, shown on the card |
+
+Triggers: `AtTurnStart(effect)`, `AtTurnEnd(effect)` (today's repeat save is
+one), `WhenHit(effect)`. Position-dependent ones are prompts. The rules
+conditions become data in the same vocabulary. Modifiers count in the rolls
+the simulator makes; for typed totals they're reminders (Decision 4). Start
+with a vertical slice: Restrained, Bless, Shield of Faith, Rage, Hunter's
+Mark, Heroism. The modifier types go in a sibling module,
+`Model/Content/CombatModifiers.py` (R1); the interpreter in a new Qt-free
+`Combat/Effects/` (R5).
+
+| # | Step | Done when |
+|---|---|---|
+| 3.1 | `ActiveEffect` and `char["active_effects"]`; old keys read through it. Undo, log replay, the player view keep working. | Combat UI tests pass; an old fight log still replays |
+| 3.2 | Rules conditions as data; `roll_save`, attack resolution and AC read modifiers. | Restrained, Prone, Blinded, Paralyzed behave as before, from data; rules-checker run on the table |
+| 3.3 | `D20Bonus`, `D20Mode`, `AttacksAgainst`, `ArmorClass`, `Resistance`. | Bless adds 1d4 to a rolled save; Shield of Faith raises AC |
+| 3.4 | `ExtraDamageFrom` / `ExtraDamageOnHit`. | Hunter's Mark adds 1d6 Force on its caster's hits |
+| 3.5 | Triggers and prompts. | Heroism gives temp HP at turn start; Spirit Guardians prompts |
+| 3.6 | Concentration ends every `ActiveEffect` it holds. | Dropping Bless removes it from every target |
+
+### Phase 4: content and tooling
+
+1. Rename the `spell-mechanics` skill and agent to `combat-effects` (Q2), add
+   the principles above and a feature rubric (what the first batch of features
+   showed: an extension's row, `with_bonus`, a feature casting a spell), and
+   give the script a features mode (`todo --campaign` for features too) and a
+   `notes` report (principle 7).
+2. A `feature-combat-effects` agent (opus) that writes `combat_effects()` for a
+   named class, subclass or party.
+3. Content: the rest of the Curse of the Lich party (Kivi's Monk features,
+   Obmar's, Edmund's Channel Divinity; their 2014-only spells), then Time Loop
+   PR, then spells level by level and features class by class.
+4. A coverage line per campaign.
+
+### Phase 5: beyond the dialog (optional)
+
+Sheet chips ("DEX save · half · 8d6 Fire") from the same data;
+`monster_score.py` reads `combat_effects`.
+
+## Revisions (better solutions found while building)
+
+- **R1. `CombatEffect` stays in `Model/Content/CombatEffect.py`**, not a new
+  `Model/Content/Combat/` package with a shim.
+- **R2. No `Amount` wrapper:** scaling fields on `CombatDamage`, and
+  `CombatHitPoints` for healing and temp HP.
+- **R3. Badges are explicit** (principle 10); a row doesn't repeat a badge
+  named like itself in its summary.
+- **R4. The text reading stays its own path** (`EffectText`), the shrinking
+  legacy fallback.
+- **R5. No `sources.py` / `resolve.py` yet:** `_described_option` with the
+  source's defaults is the resolve step.
+- **R6. A use that casts a spell takes the feature's action first** (Wild
+  Companion).
+- **R7. `spell=` keeps its name** (no rename to `casts=`).
+- **R8. `[]` entries carry no notes** (Fog Cloud's was dropped).
+- **R9. No second amount box, and still one of damage / healing / temp HP per
+  effect.** Looking for real cases: damage and healing *to the same targets*
+  from independent dice almost never happens. What happens is damage to the
+  targets plus Hit Points *to the caster* worked out from it (Vampiric Touch's
+  half the damage, Life Transference). That needs "to the caster, from the
+  damage dealt", a Phase 3 trigger, not a second box. The one-amount rule
+  stays in the model, which is true to the rules for every effect described.
+- **R10. Extensions list their own uses under their parent.** Radiance of the
+  Dawn is granted as an extension of Channel Divinity, and extensions never
+  reached the picker. The alternatives were Channel Divinity checking for its
+  subclass (the backward reach the hook removed) or a hook that adds rows.
+  Treating an extension's `combat_effects()` as more uses of its parent fits
+  the existing `extends=` model, and the hook stays for "changes the parent"
+  (Combat Inspiration).
+- **R11. Golden picker rows: one file per test, keyed by category and name.**
+  The tests run in parallel, so one shared golden file was corrupted by
+  concurrent rewrites; index-based keys made every insertion look like a
+  rewrite of every later row.
+- **R12. Several conditions in the dialog are one text, joined by " + ".**
+  The plan left the UI open. A list widget would be more code and more clicks;
+  the text is visible, editable and matches how the GM already types custom
+  conditions. `CustomEffect.conditions` splits it.
+- **R13. One repeat save per effect, not per condition.** Tasha's ends on one
+  successful save; two entries would have rolled two saves. The entry keeps
+  `condition` (the first) for older readers and adds `also`.
+- **R14. A replacement isn't a `when`.** Toll the Dead's d12s *replace* its
+  d8s for a hurt target, so it's a second row ("Toll the Dead (hurt target)"),
+  not conditional extra damage. `when` is only for damage added on top.
+- **R15. Spell rows count their cast through `counts_uses`, like features.**
+  It was only meaningful for features; now every spell row sets it, and a
+  later step of one casting (`spends_use=False`) clears it.
+
+## Open questions (with suggestions)
+
+- **Q2. When to rename `spell-mechanics` → `combat-effects` (skill, agent,
+  script) and `EffectOption.is_curated` → `is_described`?** *Suggestion:* in
+  Phase 4, together with the feature agent.
+- **Q4. Should a cast spell's notes all come along?** (Jolt to Life shows
+  Spare the Dying's range.) *Suggestion:* keep it; revisit if a row gets noisy.
+- **Q5. Hook notes follow the sheet's feature order.** *Suggestion:* add a
+  shuffled-order test when a second hook on the same source exists.
+- **Q6. Agonizing Blast, Empowered Evocation, Potent Cantrip, Potent
+  Spellcasting** are natural hook users. *Suggestion:* write each when a party
+  has it.
+- **Q7. "Ends a condition" is now the most repeated note** (Lay on Hands'
+  Poisoned, and spells like Lesser Restoration, Remove Curse, Calm Emotions).
+  *Suggestion:* an `ends_conditions: tuple[str, ...]` field, applied by the
+  dialog as "take these off each target". Do it with Phase 3.1, since
+  `ActiveEffect` is what it removes.
+- **Q8. Paladin's Smite is once per Long Rest but has no `FeatureUses`,** so
+  the picker can't count its free casting. *Suggestion:* give it
+  `FeatureUses(1, regain_all_on="long rest")`; that adds a use box to its sheet
+  card, so read the snapshot diff before regenerating.
+- **Q9. Times splits across targets by applying again** (three rays: two at
+  one target, one at another means two Applies). *Suggestion:* good enough at
+  the table; a per-target count is only worth it if the GM asks.
+- **Q10. Repeated *saves* (Times with a saving throw)** are possible but no
+  described effect uses them yet. *Suggestion:* leave it until one does, then
+  test it.
+
+## Discovered issues
+
+- **DI-060** (open): pre-existing pyright errors in the combat-effects tests;
+  the Qt dialog test files (`test_combat_ui_custom_effect.py`,
+  `test_combat_ui_player_server.py`) have about 30 more of the same kind
+  (Optional Qt accessors, `QTest.keyClick` overloads). All tests pass.
+- **DI-061** (open): homebrew Mira, Princess of the Loop has 6 abilities; the
+  house rule is at most 4.
+- Found and fixed: the text-reading tests dropped a spell's data by its old
+  key name; the single golden file broke under parallel test runs (R11).
+
+## Testing strategy
+
+- **Model:** invalid combinations raise; `to_dict`/`from_dict` round-trips; old
+  logs still read (`test_monster_combat_effects.py`,
+  `test_spell_combat_effects.py`).
+- **Data:** every spell entry reads and is exactly what `to_dict()` writes;
+  conditions are rules conditions or the spell's own badge; cantrip steps only
+  on cantrips (`spell_mechanics.py check` too).
+- **Picker:** expected values from the rules text, per spell and feature
+  (`test_spell_combat_effects.py`, `test_feature_combat_effects.py`).
+- **Dialog:** several conditions and one repeat save, Times with one cost and
+  one undo, variant rows spending the right thing, an extension spending its
+  parent's uses (`test_combat_ui_effect_steps.py`).
+- **Golden picker rows:** `test_picker_rows.py`. Read the diff before
+  `UPDATE_SNAPSHOTS=1`.
+- **Phase 3:** rules tests take expected values from the Rules Glossary, and
+  the `rules-checker` agent reviews the condition table.
+
+## Checklist: adding a field to the model
+
+1. The field on the dataclass, with `__post_init__` checks.
+2. `to_dict` / `from_dict` (strict, and tolerant of older logs if it replaces
+   something).
+3. The picker: what `_described_option` / `_effect_amounts` do with it, or the
+   note it makes.
+4. The dialog, if it changes what Apply does.
+5. The rubric in the skill, with an example.
+6. Tests: validation, round-trip, one real source using it, and the golden
+   rows diff read.
+7. If notes said this before: update those sources.
+8. Update this plan's Status and, if the design moved, Revisions.

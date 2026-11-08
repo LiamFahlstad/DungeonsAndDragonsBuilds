@@ -14,7 +14,12 @@ from Model.Creatures.MonsterAbilities import (
     SavingThrowEffect,
 )
 from Core.Definitions import Ability
-from Model.Content.CombatEffect import CombatCondition, CombatDamage, CombatEffect
+from Model.Content.CombatEffect import (
+    CombatCondition,
+    CombatDamage,
+    CombatEffect,
+    CombatHitPoints,
+)
 
 
 class TheChoirmasterOfHollowHymns(ExtendedCombatantData):
@@ -191,7 +196,7 @@ class MiraPrincessOfTheLoop(ExtendedCombatantData):
                             dc=15,
                             repeat_save=True,
                             damage=(CombatDamage("2d8", DamageType.PSYCHIC),),
-                            condition=CombatCondition("Stutter Time"),
+                            conditions=(CombatCondition("Stutter Time"),),
                             notes=(
                                 "Slowed: its Speed is halved, it can't take Bonus"
                                 " Actions or Reactions, and it takes 3 (1d6)"
@@ -209,8 +214,10 @@ class MiraPrincessOfTheLoop(ExtendedCombatantData):
                     description="Mira marks one creature she can see within 120 feet until the start of her next turn; attack rolls against it have Advantage. She can then teleport herself, or one willing ally she can see within 60 feet of her, up to 30 feet to an unoccupied space she can see.",
                     combat_effects=(
                         CombatEffect(
-                            condition=CombatCondition(
-                                "Temporal Shift", until=("start", "source")
+                            conditions=(
+                                CombatCondition(
+                                    "Temporal Shift", until=("start", "source")
+                                ),
                             ),
                             notes=(
                                 "Attack rolls against it have Advantage.",
@@ -227,7 +234,7 @@ class MiraPrincessOfTheLoop(ExtendedCombatantData):
                     description="Trigger: Mira or an ally she can see within 60 feet of her takes damage. Response: Mira turns the moment back. The creature has Resistance to that damage and gains 10 Temporary Hit Points, and one of its abilities with a Recharge recharges.",
                     combat_effects=(
                         CombatEffect(
-                            temp_hp="10",
+                            temp_hp=CombatHitPoints("10"),
                             notes=(
                                 "It has Resistance to the damage that set this"
                                 " off: heal back half of it by hand.",

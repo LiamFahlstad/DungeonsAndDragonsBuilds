@@ -13,7 +13,12 @@ from Model.Creatures.MonsterAbilities import (
     Multiattack,
     RangedAttack,
 )
-from Model.Content.CombatEffect import CombatCondition, CombatDamage, CombatEffect
+from Model.Content.CombatEffect import (
+    CombatCondition,
+    CombatDamage,
+    CombatEffect,
+    CombatHitPoints,
+)
 from Core.Definitions import Ability
 
 
@@ -743,8 +748,8 @@ class HumanPaladinOfDevotion(ExtendedCombatantData):
                             roll="save",
                             save_ability=Ability.WISDOM,
                             dc=11,
-                            condition=CombatCondition(
-                                "Compelled Duel", duration_seconds=60
+                            conditions=(
+                                CombatCondition("Compelled Duel", duration_seconds=60),
                             ),
                             concentration=True,
                             notes=(
@@ -765,7 +770,7 @@ class HumanPaladinOfDevotion(ExtendedCombatantData):
                     description="The paladin touches itself or another creature and restores Hit Points from a pool of 15 that refills when it finishes a Long Rest, or spends 5 from the pool to end the Poisoned condition on the creature.",
                     combat_effects=(
                         CombatEffect(
-                            healing="",  # what it spends from the pool
+                            healing=CombatHitPoints(),  # what it spends from the pool
                             notes=(
                                 "Type the Hit Points it spends from its pool of 15"
                                 " (refilled on a Long Rest).",
