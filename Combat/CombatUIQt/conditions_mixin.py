@@ -46,6 +46,7 @@ from .effect_options import (
 from .features_mixin import FEATURE_BADGE_COLOR
 from .monster_actions import first_number, legendary_resistances_left
 from .player_view import note_condition_immunity
+from .resources import feature_lack, monster_action_lack, spell_slot_lack
 from .saves import (
     ABILITIES,
     AMOUNT_KINDS,
@@ -111,6 +112,8 @@ _SCREEN_MARGIN = 60
 _PICKER_WIDTH = 340
 _SUMMARY_WIDTH = 150  # a picker row's numbers ("+6  1d8 + 4 Slashing")
 _SUMMARY_COLOR = "#9fb4d0"
+# A row the source is out of (spent, too few legendary actions left).
+_UNAVAILABLE_COLOR = "#6a6a7a"
 _DETAILS_MIN_HEIGHT = 90
 _BUTTON_WIDTH = 110
 # The roll kind with neither a saving throw nor an attack roll.
@@ -336,10 +339,11 @@ class ConditionsMixin(CombatWindowState):
             if cond == CombatStatus.CONCENTRATING.value:
                 char.pop("concentration_checks", None)
                 self._end_concentration_spells(char)
-            # Taking the Wild Shape badge off is leaving the form early.
+            # Taking the Wild Shape badge off is leaving the form early. The
+            # badge is gone already, so the form goes too, without asking.
             form = current_form(char)
             if form is not None and cond == form_badge(form):
-                self._leave_wild_shape(char)
+                self._leave_wild_shape(char, ask=False)
             self._rebuild_card(char)
 
     @undoable
@@ -472,7 +476,18 @@ class ConditionsMixin(CombatWindowState):
         label = effect.name or effect.condition or "the effect"
         logged_use = False
         if caster is not None:
-            if effect.pick is not None:
+            pick = effect.pick
+            if (
+                pick is not None
+                and pick.kind == SPELL
+                and not self._can_cast_or_say(caster, pick.name)
+            ):
+                return
+            if not self._go_ahead_anyway(
+                caster, f"Use {label}", self._effect_lacks(caster, effect)
+            ):
+                return
+            if pick is not None:
                 used = self._use_pick(caster, effect)
                 if used is None:
                     return
@@ -480,7 +495,7 @@ class ConditionsMixin(CombatWindowState):
             if effect.slot_level is not None:
                 self._cast_spell_slot_level(effect.slot_level)
             if effect.action_cost is not None:
-                self._add_action_use(effect.action_cost)
+                self._add_action_use(effect.action_cost, ask=False)
             if effect.concentration:
                 self._start_concentration(caster, label)
         if (
@@ -570,15 +585,34 @@ class ConditionsMixin(CombatWindowState):
             )
             return True
         if option.monster_action is not None:
-            return self._spend_monster_action(caster, option.monster_action)
+            # _apply_custom_effect asked already if it's spent (_effect_lacks).
+            return self._spend_monster_action(caster, option.monster_action, ask=False)
         return False
+
+    def _effect_lacks(self, caster: dict, effect: CustomEffect) -> list[str | None]:
+        """What caster is out of that the effect spends: its pick's slot,
+        uses or recharge, and its action."""
+        lacks = [self._action_lack(caster, effect.action_cost)]
+        option = effect.pick
+        if option is None:
+            return lacks
+        if option.kind == SPELL:
+            lacks.insert(
+                0, spell_slot_lack(caster, option.spell_level, effect.slot_level)
+            )
+        elif option.kind == FEATURE and option.counts_uses:
+            lacks.insert(0, feature_lack(caster, option.feature_name or option.name))
+        elif option.monster_action is not None:
+            lacks.insert(0, monster_action_lack(caster, option.monster_action))
+        return lacks
 
     def _effect_picker(
         self, source: dict | None
     ) -> tuple[QLineEdit, QTreeWidget, dict[str, QTreeWidgetItem]]:
         """The Custom Effect dialog's search box and list of what the source
         can use (effect_options), by category: a row's name, then its numbers.
-        What can't be used now is greyed out."""
+        What the source is out of now is greyed out, but can still be
+        picked: applying it asks first (_go_ahead_anyway)."""
         search_box = QLineEdit()
         search_box.setObjectName("effectSearch")
         search_box.setPlaceholderText("Search attacks, spells, features…")
@@ -600,6 +634,7 @@ class ConditionsMixin(CombatWindowState):
         header.setSectionResizeMode(1, QHeaderView.ResizeMode.Fixed)
         tree.setColumnWidth(1, _SUMMARY_WIDTH)
         summary_color = QColor(_SUMMARY_COLOR)
+        unavailable_color = QColor(_UNAVAILABLE_COLOR)
         category_items: dict[str, QTreeWidgetItem] = {}
         for title, options in effect_options(source, self._all_spells()):
             category = QTreeWidgetItem([title])
@@ -612,10 +647,13 @@ class ConditionsMixin(CombatWindowState):
                 tooltip = _option_tooltip(option)
                 item.setToolTip(0, tooltip)
                 item.setToolTip(1, tooltip)
-                if not option.is_unavailable:
+                if option.is_unavailable:
+                    # Still the GM's to pick: applying it asks first.
+                    item.setForeground(0, unavailable_color)
+                    item.setForeground(1, unavailable_color)
+                else:
                     item.setForeground(1, summary_color)
                 category.addChild(item)
-                item.setDisabled(option.is_unavailable)
             category.setExpanded(title not in COLLAPSED_CATEGORIES)
 
         def apply_filter(query: str):
@@ -1778,16 +1816,26 @@ class ConditionsMixin(CombatWindowState):
                 self._remove_condition_from(target, cond)
 
     @undoable
-    def _add_action_use(self, action_type: str, char: dict | None = None):
+    def _add_action_use(
+        self, action_type: str, char: dict | None = None, *, ask: bool = True
+    ):
         """Log a use of Action/Bonus Action/Reaction for char (the source if
         None), this round. Tallies reset when it becomes that combatant's turn
-        again (see _advance_turn).
+        again (see _advance_turn). When char has used it already this round,
+        the GM is asked whether to log it anyway, unless the caller asked
+        already, along with the rest of what it costs (ask=False).
         """
         if self.phase == "PARTY":
             return  # between encounters there are no turns to spend them in
         char = char or self.selected_character
         if not char:
             self._show_status("Nothing logged: left-click a card to pick a source.")
+            return
+        if ask and not self._go_ahead_anyway(
+            char,
+            f"Log another {action_type}",
+            [self._action_lack(char, action_type)],
+        ):
             return
         counts = char.setdefault("action_uses", {})
         counts[action_type] = counts.get(action_type, 0) + 1

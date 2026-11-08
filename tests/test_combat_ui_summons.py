@@ -61,7 +61,7 @@ from Model.Content.Summons import (
     SummonSpec,
     SummonTurn,
 )
-from tests._combat_ui import qapp
+from tests._combat_ui import answer_out_of_resources, qapp
 from tests._snapshot_helpers import build
 
 DESSIE_BUILD = "Y2024_Artificer_Reanimator_Dessie"
@@ -343,9 +343,10 @@ def test_two_summons_of_one_owner_get_their_own_names(tmp_path):
     ]
 
 
-def test_summoning_the_drake_again_replaces_it_and_without_a_slot_does_nothing(
-    tmp_path,
+def test_summoning_the_drake_again_replaces_it_and_without_a_slot_asks(
+    tmp_path, monkeypatch
 ):
+    answer_out_of_resources(monkeypatch)  # Summoning again is another Action.
     ui = _in_fight(tmp_path)
     hanna = _char(ui, "Hanna")
     _summon(ui, "Hanna", "Fire")
@@ -363,9 +364,19 @@ def test_summoning_the_drake_again_replaces_it_and_without_a_slot_does_nothing(
 
     hanna["spell_slots"] = {1: 0}
     _hit(ui, _char(ui, "Tiger"), drake, 5)
+    asked = answer_out_of_resources(monkeypatch, yes=False)
     _summon(ui, "Hanna", "Poison")
     assert (_char(ui, DRAKE)["hp"], _char(ui, DRAKE)[CHOICE_KEY]) == (15, "Acid")
-    assert "no spell slot left" in ui._status_label.text()
+    assert "Drake Companion: no use of Drake Companion and no spell slot left" in (
+        asked[0]
+    )
+    assert "out of resources" in ui._status_label.text()
+    # Yes summons it unpaid: nothing more is spent.
+    answer_out_of_resources(monkeypatch, yes=True)
+    _summon(ui, "Hanna", "Poison")
+    assert (_char(ui, DRAKE)["hp"], _char(ui, DRAKE)[CHOICE_KEY]) == (20, "Poison")
+    assert hanna["spell_slots"] == {1: 0}
+    assert hanna["feature_uses_used"]["Drake Companion"] == 1
 
 
 def test_enable_feature_summons_a_companion_with_no_choice_to_make(tmp_path):
@@ -423,7 +434,10 @@ def test_the_drake_offers_every_draconic_essence():
     assert [e.damage_types for e in own.damage_immunities or []] == [[DamageType.FIRE]]
 
 
-def test_a_reanimated_companion_cant_be_made_while_its_out(tmp_path):
+def test_a_reanimated_companion_cant_be_made_while_its_out(tmp_path, monkeypatch):
+    answer_out_of_resources(
+        monkeypatch
+    )  # Summoning again is another Action this round.
     ui = _in_fight(tmp_path)
     dessie = _char(ui, "Dessie")
     _summon(ui, "Dessie")
@@ -456,7 +470,10 @@ def test_a_reanimated_companion_cant_be_made_while_its_out(tmp_path):
     ]
 
 
-def test_a_slot_paid_summon_isnt_replayed_as_a_use(tmp_path):
+def test_a_slot_paid_summon_isnt_replayed_as_a_use(tmp_path, monkeypatch):
+    answer_out_of_resources(
+        monkeypatch
+    )  # Summoning again is another Action this round.
     ui = _in_fight(tmp_path)
     _summon(ui, "Hanna", "Fire")
     _summon(ui, "Hanna", "Cold")  # with a spell slot
@@ -857,13 +874,14 @@ def test_the_card_menu_pays_with_a_slot_instead_of_the_use(tmp_path):
     assert "Summon Drake Companion (1 use left)" in _menu_texts(ui, hanna)
 
 
-def test_a_way_to_pay_thats_gone_summons_nothing(tmp_path):
+def test_a_way_to_pay_thats_gone_asks_first(tmp_path, monkeypatch):
     ui = _in_fight(tmp_path)
     hanna = _char(ui, "Hanna")
     feature, spec = _spec_of(hanna["_stat_block"], "Drake Companion")
+    asked = answer_out_of_resources(monkeypatch, yes=False)
     ui._summon(hanna, feature, spec, "Fire", SummonPayment(slot_level=2))
     assert DRAKE not in _names(ui)
-    assert "can't pay with a level 2 slot" in ui._status_label.text()
+    assert "can't pay with a level 2 slot" in asked[0]
     assert _events(ui, Action.SUMMON) == []
 
 
@@ -871,7 +889,10 @@ def test_a_way_to_pay_thats_gone_summons_nothing(tmp_path):
 # Logging: Action.SUMMON and Action.DISMISS
 
 
-def test_summoning_and_dismissing_are_logged_on_the_owner(tmp_path):
+def test_summoning_and_dismissing_are_logged_on_the_owner(tmp_path, monkeypatch):
+    answer_out_of_resources(
+        monkeypatch
+    )  # Summoning again is another Action this round.
     ui = _in_fight(tmp_path)
     _summon(ui, "Hanna", "Cold")  # her use
     _summon(ui, "Hanna", "Fire")  # a level 1 slot; the Cold one goes
@@ -999,7 +1020,10 @@ def test_a_dismissed_summon_isnt_brought_back_from_an_earlier_encounter(tmp_path
     assert _can_be_seen(_char(ui, REANIMATED))
 
 
-def test_a_summon_dismissed_and_summoned_again_is_still_out(tmp_path):
+def test_a_summon_dismissed_and_summoned_again_is_still_out(tmp_path, monkeypatch):
+    answer_out_of_resources(
+        monkeypatch
+    )  # Summoning again is another Action this round.
     ui = _in_fight(tmp_path)
     _summon(ui, "Hanna", "Cold")
     ui._dismiss_summon(_char(ui, DRAKE))
@@ -1056,6 +1080,9 @@ def _d20(monkeypatch, roll: int):
 
 
 def test_one_owner_can_have_two_summons_out(tmp_path, owl, monkeypatch):
+    answer_out_of_resources(
+        monkeypatch
+    )  # Summoning again is another Action this round.
     alert, spec = owl
     ui = _in_fight(tmp_path)  # Hanna 15, Tiger 10, Dessie 5
     hanna = _char(ui, "Hanna")

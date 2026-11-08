@@ -9,7 +9,7 @@ from PyQt6.QtWidgets import QDialog, QMessageBox
 from CharacterContent.Spells.SpellFactory import SpellFactory
 from Combat.Combatants import Pirate, Tiger
 from Combat.CombatUIQt.undo import _combat_data
-from tests._combat_ui import make_ui
+from tests._combat_ui import answer_out_of_resources, make_ui
 
 
 @pytest.fixture(autouse=True)
@@ -96,7 +96,8 @@ def test_undo_takes_back_operations_newest_first(fight):
     assert tiger["hp"] == 30
 
 
-def test_an_undone_hit_leaves_the_log(fight):
+def test_an_undone_hit_leaves_the_log(fight, monkeypatch):
+    answer_out_of_resources(monkeypatch)  # The second Action this round asks first.
     # The log is replayed to rebuild the party next session, so an undone
     # action must not stay in it.
     ui, _, _ = fight
@@ -150,7 +151,10 @@ def test_one_undo_takes_back_damage_to_every_target(fight):
     assert _everything(ui) == before
 
 
-def test_one_undo_takes_back_a_whole_spell_cast(fight):
+def test_one_undo_takes_back_a_whole_spell_cast(fight, monkeypatch):
+    answer_out_of_resources(
+        monkeypatch
+    )  # The Pirate has no level 2 slot for Hold Person.
     # Hold Person on the Tiger: the caster spends an Action and starts
     # Concentrating with a 1-minute timer, the Tiger gets the spell's badge.
     ui, pirate, tiger = fight

@@ -17,6 +17,7 @@ from .conditions_mixin import ConditionsMixin
 from .damage_mixin import DamageMixin
 from .dialogs_mixin import DialogsMixin
 from .encounters_mixin import EncountersMixin
+from .resources import ResourcesMixin
 from .rests_mixin import RestsMixin
 from .features_mixin import FeaturesMixin
 from .logging_mixin import LoggingMixin
@@ -49,6 +50,7 @@ class CombatAppQt(
     DialogsMixin,
     EncountersMixin,
     RestsMixin,
+    ResourcesMixin,
     TimerMixin,
     RollsMixin,
     WindowMixin,

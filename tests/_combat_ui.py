@@ -17,6 +17,7 @@ from PyQt6.QtWidgets import (  # noqa: E402
     QFrame,
     QLabel,
     QLayout,
+    QMessageBox,
     QProgressBar,
     QPushButton,
     QScrollArea,
@@ -70,6 +71,22 @@ def open_dialog(monkeypatch, show) -> QDialog:
     show()
     assert len(opened) == 1, opened
     return opened[0]
+
+
+def answer_out_of_resources(monkeypatch, yes: bool = True) -> list[str]:
+    """Answer the combat UI's "out of resources ... anyway?" question
+    (resources.py) with Yes or No without blocking on it, and return the
+    text of each one asked, in order."""
+    asked: list[str] = []
+
+    def answer(parent, title, text, *args, **kwargs):
+        asked.append(text)
+        if yes:
+            return QMessageBox.StandardButton.Yes
+        return QMessageBox.StandardButton.No
+
+    monkeypatch.setattr(QMessageBox, "question", answer)
+    return asked
 
 
 # ---------------------------------------------------------------------------

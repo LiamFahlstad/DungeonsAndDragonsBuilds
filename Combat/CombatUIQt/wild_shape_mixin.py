@@ -68,7 +68,7 @@ class WildShapeMixin(CombatWindowState):
             assert action is not None  # addAction with a text always makes one
             action.setCheckable(True)
             action.setChecked(form == form_now)
-            action.setEnabled(left > 0)
+            # With no uses left, _assume_wild_shape asks whether to anyway.
             action.triggered.connect(
                 lambda _=False, c=char, f=form: self._assume_wild_shape(c, f)
             )
@@ -95,9 +95,6 @@ class WildShapeMixin(CombatWindowState):
         sheet = char.get("_stat_block")
         if feature is None or not isinstance(sheet, Character):
             return
-        if self._wild_shape_uses_left(char) <= 0:
-            self._show_status(f"No Wild Shape: {char['name']} has no uses left.")
-            return
         # Incapacitated: "You can't take any action, Bonus Action, or Reaction."
         incapacitated = INCAPACITATING_CONDITIONS.intersection(char["conditions"])
         if incapacitated:
@@ -106,10 +103,20 @@ class WildShapeMixin(CombatWindowState):
                 " and can't take a Bonus Action."
             )
             return
-        self._count_feature_use(char, feature.name, counts_uses=True)
         action_cost = feature_action_cost(feature)
+        lacks = [
+            (
+                f"{feature.name}: no uses left"
+                if self._wild_shape_uses_left(char) <= 0
+                else None
+            ),
+            self._action_lack(char, action_cost),
+        ]
+        if not self._go_ahead_anyway(char, f"Take {form} form", lacks):
+            return
+        self._count_feature_use(char, feature.name, counts_uses=True)
         if action_cost is not None:
-            self._add_action_use(action_cost, char)
+            self._add_action_use(action_cost, char, ask=False)
         if current_form(char) is not None:
             self._leave_wild_shape(char, reason="Wild Shape again")
 
@@ -131,16 +138,33 @@ class WildShapeMixin(CombatWindowState):
         self._refresh_views()
 
     @undoable
-    def _leave_wild_shape(self, char: dict, reason: str | None = None):
+    def _leave_wild_shape(
+        self, char: dict, reason: str | None = None, *, ask: bool = True
+    ):
         """char leaves its form: by choice (reason None), a Bonus Action, or
-        because of `reason` ("Unconscious", "Wild Shape again"), no action."""
-        form = leave_form(char)
-        if form is None:
+        because of `reason` ("Unconscious", "Wild Shape again"), no action.
+        With its Bonus Action used already, the GM is asked whether to leave
+        anyway, unless the form's badge is already off (ask=False)."""
+        form_now = current_form(char)
+        if form_now is None:
             return
         feature = wild_shape_feature(char)
         action_cost = feature_action_cost(feature) if feature is not None else None
-        if reason is None and action_cost is not None:
-            self._add_action_use(action_cost, char)
+        pays = reason is None and action_cost is not None
+        if (
+            pays
+            and ask
+            and not self._go_ahead_anyway(
+                char, f"Leave {form_now} form", [self._action_lack(char, action_cost)]
+            )
+        ):
+            return
+        form = leave_form(char)
+        if form is None:
+            return
+        if pays:
+            assert action_cost is not None  # pays says so
+            self._add_action_use(action_cost, char, ask=False)
         because = f" ({reason})" if reason else ""
         self._log_event(
             f"{char['name']} leaves {form} form{because}",

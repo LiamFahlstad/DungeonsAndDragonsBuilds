@@ -36,6 +36,7 @@ from .monster_actions import (
     start_of_turn_traits,
 )
 from .player_server import PLAYER_PORT
+from .resources import legendary_resistance_lack, monster_action_lack
 from .player_view import (
     PlayerViewRow,
     PlayerViewWindow,
@@ -231,8 +232,8 @@ class TurnPanelMixin(CombatWindowState):
     def _legendary_resistance_button(self, char: dict) -> QPushButton:
         left = legendary_resistances_left(char)
         button = QPushButton(f"Use Legendary Resistance ({left} left)")
-        button.setEnabled(left > 0)
-        button.clicked.connect(lambda: self._use_legendary_resistance(char))
+        # With none left, it asks whether to anyway.
+        button.clicked.connect(lambda: self._use_legendary_resistance(char, ask=True))
         return button
 
     def _action_row(self, char: dict, action: MonsterAction) -> QWidget:
@@ -253,7 +254,7 @@ class TurnPanelMixin(CombatWindowState):
         button = QPushButton(f"{name}\n{action.summary}" if action.summary else name)
         button.setObjectName("monsterActionBtn")
         button.setToolTip(action.description)
-        button.setEnabled(not spent)
+        # A spent one still works: _spend_monster_action asks first.
         button.clicked.connect(lambda: self._use_monster_action(char, action))
         layout.addWidget(button, stretch=1)
         if spent or char.get("spent_abilities", {}).get(action.name):
@@ -274,20 +275,21 @@ class TurnPanelMixin(CombatWindowState):
         self._roll_action(action)
         self._refresh_views()
 
-    def _spend_monster_action(self, char: dict, action: MonsterAction) -> bool | None:
+    def _spend_monster_action(
+        self, char: dict, action: MonsterAction, *, ask: bool = True
+    ) -> bool | None:
         """Count a use of the action, if it's one that's counted: a recharge or
         per-day use, or the legendary actions it costs. Shared with the Custom
-        Effect dialog. Returns whether it logged the use, or None, having said
-        why, if the action can't be used now."""
-        if action.is_limited and is_spent(char, action):
-            self._show_status(f"{action.name} isn't ready.")
+        Effect dialog. When it's spent or costs more legendary actions than are
+        left, the GM is asked whether to use it anyway, unless the caller has
+        asked already (ask=False). Returns whether it logged the use, or None
+        if the GM said no."""
+        lack = monster_action_lack(char, action)
+        if ask and not self._go_ahead_anyway(char, f"Use {action.name}", [lack]):
             return None
         if action.legendary_cost:
             left = legendary_actions_left(char)
-            if left < action.legendary_cost:
-                self._show_status(f"{char['name']} has {left} legendary actions left.")
-                return None
-            char["legendary_actions_left"] = left - action.legendary_cost
+            char["legendary_actions_left"] = max(left - action.legendary_cost, 0)
         if action.is_limited:
             spent = char.setdefault("spent_abilities", {})
             spent[action.name] = spent.get(action.name, 0) + 1
@@ -364,13 +366,21 @@ class TurnPanelMixin(CombatWindowState):
         return None if armor is None else total >= armor
 
     @undoable
-    def _use_legendary_resistance(self, char: dict):
+    def _use_legendary_resistance(self, char: dict, *, ask: bool = False):
+        """Spend one of char's Legendary Resistances. With none left, it's
+        used only if `ask` (the turn column's button) and the GM says yes."""
         left = legendary_resistances_left(char)
-        if left <= 0:
+        if left <= 0 and not (
+            ask
+            and self._go_ahead_anyway(
+                char, "Use Legendary Resistance", [legendary_resistance_lack(char)]
+            )
+        ):
             return
-        char["legendary_resistances_left"] = left - 1
+        left = max(left - 1, 0)
+        char["legendary_resistances_left"] = left
         self._log_event(
-            f"{char['name']} uses Legendary Resistance ({left - 1} left)",
+            f"{char['name']} uses Legendary Resistance ({left} left)",
             character=char["name"],
         )
         self._rebuild_card(char)

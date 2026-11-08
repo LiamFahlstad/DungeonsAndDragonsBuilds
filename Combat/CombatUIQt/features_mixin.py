@@ -18,6 +18,7 @@ from Model.Content.Feature import FeatureTarget
 from Combat.Definitions import Action
 from Presentation.FeatureCards import feature_label
 from .effect_options import feature_action_cost
+from .resources import feature_lack
 from .stats import _default_stats, increment_named_stat
 from .styles import QSS
 from .state import CombatWindowState
@@ -364,12 +365,18 @@ class FeaturesMixin(CombatWindowState):
                 return
             recipients = self.target_characters
 
-        self._count_feature_use(source, feature.name, feature.uses is not None)
-
         # Action economy: the source spends the action, regardless of who it affects
         action_cost = feature_action_cost(feature)
+        lacks = [
+            feature_lack(source, feature.name),
+            self._action_lack(source, action_cost),
+        ]
+        if not self._go_ahead_anyway(source, f"Use {feature.name}", lacks):
+            return
+
+        self._count_feature_use(source, feature.name, feature.uses is not None)
         if action_cost is not None:
-            self._add_action_use(action_cost)
+            self._add_action_use(action_cost, ask=False)
 
         # Condition badge + tooltip on every recipient
         tooltip_html = self._feature_condition_tooltip(source, feature)

@@ -19,6 +19,7 @@ from Combat.Definitions import Action, CombatStatus
 from Combat.PlayerCombatant import max_pact_slots
 from Core.Definitions import Condition
 from .effect_options import PactSlot, casting_time_cost, has_slots, spell_slot_choices
+from .resources import spell_slot_lack
 from .stats import _default_stats, increment_named_stat, spell_slots_used_key
 from .styles import QSS
 from .state import CombatWindowState
@@ -537,6 +538,15 @@ class SpellsMixin(CombatWindowState):
                 return
             recipients = self.target_characters
 
+        # Action economy: the caster spends the action, regardless of who it affects
+        action_cost = casting_time_cost(spell)
+        lacks = [
+            spell_slot_lack(source, spell.level, slot_level),
+            self._action_lack(source, action_cost),
+        ]
+        if not self._go_ahead_anyway(source, f"Cast {spell.name}", lacks):
+            return
+
         self._count_spell_cast(source, spell.name, spell.level, slot_level)
         if slot_level is not None:
             self._cast_spell_slot_level(slot_level)
@@ -544,10 +554,8 @@ class SpellsMixin(CombatWindowState):
         if spell.is_concentration:
             self._start_concentration(source, spell.name)
 
-        # Action economy: the caster spends the action, regardless of who it affects
-        action_cost = casting_time_cost(spell)
         if action_cost is not None:
-            self._add_action_use(action_cost)
+            self._add_action_use(action_cost, ask=False)
 
         tooltip_html = spell_badge_description(spell)
         badge_color = spell_badge_color(spell)

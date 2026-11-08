@@ -114,6 +114,10 @@ CARRYING_CAPACITY_BASE_SLOTS = 3
 # A round, in which every combatant takes one turn, lasts about 6 seconds.
 SECONDS_PER_ROUND = 6
 
+# A creature has one Action and one Bonus Action on its turn, and one Reaction,
+# which comes back at the start of its turn. Each is counted per round.
+ACTIONS_PER_TURN = 1
+
 # ── Psionic Energy Dice ──────────────────────────────────────────────────────
 
 # The Psi Warrior and Soulknife Energy Dice tables are the same table, read by

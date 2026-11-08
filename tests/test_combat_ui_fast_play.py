@@ -35,7 +35,7 @@ from Combat.CombatUIQt.styles import QSS
 from Combat.EncounterLogs import PLAYER_FIGHT_STATE_KEY, LogJSONEncoder
 from Core.Definitions import CreatureSize, DamageType
 from Model.Creatures.Combatants import DamageTypeEntry
-from tests._combat_ui import make_ui, open_dialog
+from tests._combat_ui import answer_out_of_resources, make_ui, open_dialog
 
 FIRE = DamageType.FIRE.value
 SLASHING = DamageType.SLASHING.value
@@ -522,7 +522,8 @@ def test_a_save_ability_says_the_dc_and_is_spent(dragon, monkeypatch):
     assert ui.damage_input.text() == "6 Fire"
     name = BREATH["name"]
     assert pirate["spent_abilities"] == {name: 1}
-    assert not _action(ui, "Fire Breath (Recharge").isEnabled()
+    ui._refresh_views()
+    assert _action(ui, f"{name} (spent)").isEnabled()  # it asks first now
     assert f"Pirate uses {name}" in str(
         json.loads(json.dumps(ui._read_log(), cls=LogJSONEncoder))
     )
@@ -532,11 +533,28 @@ def test_a_spent_ability_can_be_made_ready(dragon):
     ui, pirate, *_ = dragon
     _action(ui, "Screech").click()
     ui._refresh_views()
-    assert not _action(ui, "Screech").isEnabled()
+    assert _action(ui, "Screech").text().startswith(f"{SCREECH['name']} (spent)")
     _action(ui, "↺").click()
     assert pirate["spent_abilities"] == {}
     ui._refresh_views()
-    assert _action(ui, "Screech").isEnabled()
+    assert "(spent)" not in _action(ui, "Screech").text()
+
+
+def test_a_spent_ability_asks_before_its_used_again(dragon, monkeypatch):
+    ui, pirate, *_ = dragon
+    name = SCREECH["name"]
+    _action(ui, "Screech").click()
+    ui._refresh_views()
+    asked = answer_out_of_resources(monkeypatch, yes=False)
+    _action(ui, "Screech").click()
+    assert asked == [f"Pirate is out of:\n\n•  {name}: spent\n\nUse {name} anyway?"]
+    assert pirate["spent_abilities"] == {name: 1}
+    assert "out of resources" in _status(ui)
+    answer_out_of_resources(monkeypatch, yes=True)
+    ui._refresh_views()
+    _action(ui, "Screech").click()
+    assert pirate["spent_abilities"] == {name: 2}
+    assert _log_text(ui).count(f"Pirate uses {name}") == 2
 
 
 def test_using_an_ability_is_one_undo(dragon):
@@ -550,9 +568,15 @@ def test_legendary_actions_count_down_by_their_cost(dragon, monkeypatch):
     ui, pirate, *_ = dragon
     _action(ui, "Wing Buffet").click()
     assert pirate["legendary_actions_left"] == 1
+    asked = answer_out_of_resources(monkeypatch, yes=False)
     assert ui._use_monster_action(pirate, parse_action(WING, legendary=True)) is None
-    assert "1 legendary actions left" in _status(ui)
+    assert "Legendary actions: 1 left, 2 needed" in asked[0]
     assert pirate["legendary_actions_left"] == 1
+    ui._refresh_views()
+    _action(ui, "Lash").click()
+    assert pirate["legendary_actions_left"] == 0
+    # Used anyway, it takes none below 0.
+    answer_out_of_resources(monkeypatch, yes=True)
     ui._refresh_views()
     _action(ui, "Lash").click()
     assert pirate["legendary_actions_left"] == 0
@@ -567,6 +591,20 @@ def test_legendary_resistance_counts_down(dragon):
     assert "uses Legendary Resistance (2 left)" in _log_text(ui)
     ui._undo_last()
     assert "legendary_resistances_left" not in pirate
+
+
+def test_legendary_resistance_with_none_left_asks(dragon, monkeypatch):
+    ui, pirate, *_ = dragon
+    pirate["legendary_resistances_left"] = 0
+    ui._refresh_views()
+    asked = answer_out_of_resources(monkeypatch, yes=False)
+    _action(ui, "Use Legendary Resistance (0 left)").click()
+    assert "Legendary Resistance: none left" in asked[0]
+    assert "uses Legendary Resistance" not in _log_text(ui)
+    answer_out_of_resources(monkeypatch, yes=True)
+    _action(ui, "Use Legendary Resistance (0 left)").click()
+    assert pirate["legendary_resistances_left"] == 0
+    assert "uses Legendary Resistance (0 left)" in _log_text(ui)
 
 
 def test_the_card_shows_what_is_left(dragon):
@@ -1363,7 +1401,8 @@ def test_an_error_in_a_click_is_said_not_fatal(fight, capsys):
     assert "a bug" in capsys.readouterr().err
 
 
-def test_a_spell_ended_by_a_new_cast_isnt_logged_as_a_cast(fight):
+def test_a_spell_ended_by_a_new_cast_isnt_logged_as_a_cast(fight, monkeypatch):
+    answer_out_of_resources(monkeypatch)  # Two casts are two Actions this round.
     ui, pirate, *_ = fight
     ui._apply_cast_spell(SpellFactory.create("Hold Person"))
     ui._apply_cast_spell(SpellFactory.create("Hold Person"))
@@ -1634,7 +1673,8 @@ def test_a_settled_save_doesnt_come_back(tmp_path):
     assert PLAYER_FIGHT_STATE_KEY not in ui._read_log()
 
 
-def test_a_new_concentration_spell_clears_the_old_save(fight):
+def test_a_new_concentration_spell_clears_the_old_save(fight, monkeypatch):
+    answer_out_of_resources(monkeypatch)  # Two casts are two Actions this round.
     ui, pirate, _, _ = fight
     ui._apply_cast_spell(SpellFactory.create("Hold Person"))
     pirate["concentration_checks"] = [10]

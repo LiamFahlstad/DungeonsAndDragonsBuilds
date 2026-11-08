@@ -32,7 +32,7 @@ from Combat.WildShape import (
     wild_shape_feature,
 )
 from Core.Definitions import Ability, CharacterClass, Skill
-from tests._combat_ui import make_ui, qapp
+from tests._combat_ui import answer_out_of_resources, make_ui, qapp
 from tests._snapshot_helpers import build
 
 # Circle of the Moon Druid 3 (Circle Forms): WIS 17, forms Brown Bear, Dire
@@ -256,17 +256,49 @@ def test_attacks_against_a_druid_in_a_form_use_its_ac(fight):
     assert first_number(char["ac"]) == 16
 
 
-def test_no_uses_left_means_no_wild_shape(fight):
+def test_no_uses_left_asks_before_wild_shape(fight, monkeypatch):
     ui, char, _ = fight
     ui._assume_wild_shape(char, "Brown Bear")
+    char["action_uses"] = {}  # a new round: only the uses run out
     ui._assume_wild_shape(char, "Tiger")
+    char["action_uses"] = {}
+    asked = answer_out_of_resources(monkeypatch, yes=False)
     ui._assume_wild_shape(char, "Dire Wolf")
     assert current_form(char) == "Tiger"
     assert char["feature_uses_used"]["Wild Shape"] == 2
-    assert "no uses left" in ui._status_label.text()
+    assert "Wild Shape: no uses left" in asked[0]
+    assert "Take Dire Wolf form anyway?" in asked[0]
+    assert "out of resources" in ui._status_label.text()
+    # The GM says yes: the use is counted past the last one.
+    answer_out_of_resources(monkeypatch, yes=True)
+    ui._assume_wild_shape(char, "Dire Wolf")
+    assert current_form(char) == "Dire Wolf"
+    assert char["feature_uses_used"]["Wild Shape"] == 3
+    assert ui._wild_shape_uses_left(char) == 0
 
 
-def test_a_new_form_ends_the_old_one(fight):
+def test_no_uses_left_still_offers_the_forms(fight, monkeypatch):
+    ui, char, _ = fight
+    char["feature_uses_used"] = {"Wild Shape": 2}
+    menu = ui._wild_shape_menu(char)
+    assert menu.title() == "Wild Shape (0 left)"
+    assert all(a.isEnabled() for a in menu.actions())
+
+
+def test_a_second_bonus_action_asks_before_leaving(fight, monkeypatch):
+    ui, char, _ = fight
+    ui._assume_wild_shape(char, "Brown Bear")
+    asked = answer_out_of_resources(monkeypatch, yes=False)
+    ui._leave_wild_shape(char)
+    assert current_form(char) == "Brown Bear"
+    assert "Bonus Action: already used this turn" in asked[0]
+    assert char["action_uses"] == {"Bonus Action": 1}
+
+
+def test_a_new_form_ends_the_old_one(fight, monkeypatch):
+    answer_out_of_resources(
+        monkeypatch
+    )  # Wild Shape twice is two Bonus Actions this round.
     ui, char, _ = fight
     ui._assume_wild_shape(char, "Brown Bear")
     ui._assume_wild_shape(char, "Tiger")
@@ -276,7 +308,10 @@ def test_a_new_form_ends_the_old_one(fight):
     assert char["ac"] == combatant_from_character(_sheet(MOON))["ac"]
 
 
-def test_leaving_by_choice_is_a_bonus_action(fight):
+def test_leaving_by_choice_is_a_bonus_action(fight, monkeypatch):
+    answer_out_of_resources(
+        monkeypatch
+    )  # Taking the form and leaving it is two Bonus Actions this round.
     ui, char, _ = fight
     ac = char["ac"]
     ui._assume_wild_shape(char, "Brown Bear")
@@ -316,7 +351,10 @@ def test_an_incapacitated_druid_cant_wild_shape(fight):
     assert "can't take a Bonus Action" in ui._status_label.text()
 
 
-def test_a_short_rest_gives_back_one_use_of_wild_shape(fight):
+def test_a_short_rest_gives_back_one_use_of_wild_shape(fight, monkeypatch):
+    answer_out_of_resources(
+        monkeypatch
+    )  # Wild Shape twice is two Bonus Actions this round.
     ui, char, _ = fight
     ui._assume_wild_shape(char, "Brown Bear")
     ui._assume_wild_shape(char, "Tiger")
@@ -462,7 +500,12 @@ def test_a_druid_is_still_in_their_form_on_the_next_run(tmp_path):
     assert druid["feature_uses_used"]["Wild Shape"] == 1
 
 
-def test_a_druid_who_left_their_form_is_themselves_on_the_next_run(tmp_path):
+def test_a_druid_who_left_their_form_is_themselves_on_the_next_run(
+    tmp_path, monkeypatch
+):
+    answer_out_of_resources(
+        monkeypatch
+    )  # Taking the form and leaving it is two Bonus Actions this round.
     ui = _wild_shape_in_a_fight(tmp_path)
     ui._leave_wild_shape(_party_druid(ui))
     druid = _party_druid(_party_ui(tmp_path))

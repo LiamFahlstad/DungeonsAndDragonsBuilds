@@ -178,18 +178,20 @@ class SummonsMixin(CombatWindowState):
     ):
         """menu's entry that summons spec, paid the cheapest way (a submenu
         of its choices, `current` checked), and, when owner can pay another
-        way too, a "using..." submenu of those; greyed out when it can't be
-        summoned now."""
-        greyed = None
+        way too, a "using..." submenu of those; greyed out while one is out
+        that it can't make another beside. When owner can't pay for it, the
+        entry says so, and _summon asks whether to summon it anyway."""
         payments = self._payments(owner, feature, spec)
         if self._room_for(owner, feature, spec, SummonContext()) is None:
-            greyed = f"{_summon_label(spec)} (one is already out)"
-        elif not payments:
-            greyed = f"{_summon_label(spec)} ({_unpaid_text(feature, spec)})"
-        if greyed is not None:
-            action = menu.addAction(greyed)
+            action = menu.addAction(f"{_summon_label(spec)} (one is already out)")
             assert action is not None  # addAction with a text always makes one
             action.setEnabled(False)
+            return
+        if not payments:
+            label = f"{_summon_label(spec)} ({_unpaid_text(feature, spec)})"
+            self._add_summon_entry(
+                menu, label, owner, sheet, feature, spec, current, None
+            )
             return
         label = f"{_summon_label(spec)} ({payments[0].text})"
         self._add_summon_entry(menu, label, owner, sheet, feature, spec, current, None)
@@ -289,20 +291,20 @@ class SummonsMixin(CombatWindowState):
                 f" {feature.name} can't make another while it is."
             )
             return
+        # Out of what it costs, the GM can summon it anyway, unpaid.
+        unpaid = None
         if payment is None:
-            self._show_status(
-                f"No summon: {owner['name']} has {_unpaid_text(feature, spec)}."
-            )
-            return
-        if payment not in payments:
-            self._show_status(
-                f"No summon: {owner['name']} can't pay with {payment.text} now."
-            )
-            return
-        self._pay_for_summon(owner, payment)
+            unpaid = f"{feature.name}: {_unpaid_text(feature, spec)}"
+        elif payment not in payments:
+            unpaid = f"{feature.name}: can't pay with {payment.text} now"
         action_cost = feature_action_cost(feature)
+        lacks = [unpaid, self._action_lack(owner, action_cost)]
+        if not self._go_ahead_anyway(owner, f"Summon {spec.name}", lacks):
+            return
+        if payment is not None and unpaid is None:
+            self._pay_for_summon(owner, payment)
         if action_cost is not None:
-            self._add_action_use(action_cost, owner)
+            self._add_action_use(action_cost, owner, ask=False)
         new, rolls = self._bring_in(owner, feature, spec, ctx, gone)
         chosen = f" ({choice})" if choice else ""
         self._log_event(

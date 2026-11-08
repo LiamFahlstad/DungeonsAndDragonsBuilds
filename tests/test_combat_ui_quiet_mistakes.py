@@ -16,7 +16,7 @@ from CharacterContent.Spells.SpellFactory import SpellFactory
 from Combat.Combatants import Pirate, Tiger
 from Combat.CombatUIQt.spells_mixin import spell_slot_choices
 from Core.Definitions import DamageType
-from tests._combat_ui import make_ui, open_dialog
+from tests._combat_ui import answer_out_of_resources, make_ui, open_dialog
 
 FIRE = DamageType.FIRE.value
 
@@ -213,8 +213,21 @@ def test_out_of_slots_says_so_on_the_button(caster, monkeypatch):
         label.text() == "No slot of level 2 or higher left."
         for label in dlg.findChildren(QLabel)
     )
+    asked = answer_out_of_resources(monkeypatch, yes=True)
     _cast_button(dlg).click()
+    assert "Spell slots: none of level 2 or higher left" in asked[0]
     assert pirate["spell_slots"] == {1: 3, 2: 0, 3: 0}
+    assert any("casts Hold Person" in e["text"] for e in ui._read_log()["round_1"])
+
+
+def test_out_of_slots_and_no_casts_nothing(caster, monkeypatch):
+    ui, pirate, _ = caster
+    pirate["spell_slots"] = {1: 3, 2: 0, 3: 0}
+    dlg = _spell_dialog(ui, monkeypatch, "Hold Person")
+    answer_out_of_resources(monkeypatch, yes=False)
+    _cast_button(dlg).click()
+    assert not any("casts Hold Person" in e["text"] for e in ui._read_log()["round_1"])
+    assert "out of resources" in _status(ui)
 
 
 def test_undoing_a_cast_gives_the_slot_back(caster, monkeypatch):

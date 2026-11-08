@@ -153,8 +153,16 @@ class CombatWindowState:
 
     # ── Methods one mixin calls on another ──────────────────────────────────
 
-    def _add_action_use(self, action_type: str, char: dict | None = None):
+    def _add_action_use(
+        self, action_type: str, char: dict | None = None, *, ask: bool = True
+    ):
         raise NotImplementedError("ConditionsMixin._add_action_use")
+
+    def _action_lack(self, char: dict, action_type: str | None) -> str | None:
+        raise NotImplementedError("ResourcesMixin._action_lack")
+
+    def _go_ahead_anyway(self, char: dict, doing: str, lacks: list[str | None]) -> bool:
+        raise NotImplementedError("ResourcesMixin._go_ahead_anyway")
 
     def _add_ad_hoc_combatant(self, name: str, hp: int = 10, ac: int = 10):
         raise NotImplementedError("TurnsMixin._add_ad_hoc_combatant")
@@ -253,10 +261,12 @@ class CombatWindowState:
     ) -> tuple[bool | None, str]:
         raise NotImplementedError("DamageMixin._resolve_attack_roll")
 
-    def _use_legendary_resistance(self, char: dict):
+    def _use_legendary_resistance(self, char: dict, *, ask: bool = False):
         raise NotImplementedError("TurnPanelMixin._use_legendary_resistance")
 
-    def _spend_monster_action(self, char: dict, action: MonsterAction) -> bool | None:
+    def _spend_monster_action(
+        self, char: dict, action: MonsterAction, *, ask: bool = True
+    ) -> bool | None:
         raise NotImplementedError("TurnPanelMixin._spend_monster_action")
 
     def _all_spells(self) -> list:
@@ -327,7 +337,9 @@ class CombatWindowState:
     def _pick_wild_shape_form(self, char: dict):
         raise NotImplementedError("WildShapeMixin._pick_wild_shape_form")
 
-    def _leave_wild_shape(self, char: dict, reason: str | None = None):
+    def _leave_wild_shape(
+        self, char: dict, reason: str | None = None, *, ask: bool = True
+    ):
         raise NotImplementedError("WildShapeMixin._leave_wild_shape")
 
     def _can_cast_or_say(self, caster: dict, spell_name: str) -> bool:

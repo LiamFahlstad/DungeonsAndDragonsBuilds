@@ -56,7 +56,7 @@ from Combat.CombatUIQt.saves import (
 )
 from Core.Definitions import Condition, DamageType
 from Model.Creatures.Combatants import DamageTypeEntry, Visibility
-from tests._combat_ui import make_ui, open_dialog
+from tests._combat_ui import answer_out_of_resources, make_ui, open_dialog
 
 FIRE = DamageType.FIRE.value
 
@@ -2034,6 +2034,7 @@ def test_down_goes_through_the_search_results(paladin, monkeypatch):
 
 
 def test_enter_applies_the_row_reached_with_the_arrows(paladin, monkeypatch):
+    answer_out_of_resources(monkeypatch)  # Edmund has no slot for the spell picked.
     ui, edmund, tiger = paladin
     dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
     _search(dlg).setText("hold person")
@@ -2320,6 +2321,7 @@ def test_the_search_filters(paladin, monkeypatch):
 
 
 def test_enter_picks_the_top_match_then_applies(paladin, monkeypatch):
+    answer_out_of_resources(monkeypatch)  # Edmund has no slot for the spell picked.
     ui, _, tiger = paladin
     dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
     _search(dlg).setText("hold person")
@@ -2343,6 +2345,7 @@ def test_enter_with_no_match_does_nothing(paladin, monkeypatch):
 
 
 def test_double_clicking_applies(paladin, monkeypatch):
+    answer_out_of_resources(monkeypatch)  # Edmund has no slot for the spell picked.
     ui, _, tiger = paladin
     dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
     monkeypatch.setattr(random, "randint", lambda low, high: 1)
@@ -2385,6 +2388,7 @@ def test_a_hand_edit_survives_a_slot_change(paladin, monkeypatch):
 
 
 def test_every_field_stays_editable_after_a_pick(paladin, monkeypatch):
+    answer_out_of_resources(monkeypatch)  # Edmund has no level 2 slot for Hold Person.
     ui, _, tiger = paladin
     dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
     _pick(dlg, "Hold Person")
@@ -2396,19 +2400,59 @@ def test_every_field_stays_editable_after_a_pick(paladin, monkeypatch):
     assert "Paralyzed" not in tiger["conditions"]
 
 
-def test_a_greyed_action_cant_be_picked(monster, monkeypatch):
-    ui, pirate, _ = monster
-    pirate["spent_abilities"] = {BREATH["name"]: 1}
+def test_a_greyed_action_can_be_picked_and_asks_first(monster, monkeypatch):
+    ui, pirate, tiger = monster
+    name = BREATH["name"]
+    pirate["spent_abilities"] = {name: 1}
     dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
-    row = _row(dlg, BREATH["name"])
-    assert row.isDisabled()
+    row = _row(dlg, name)
+    assert not row.isDisabled()
     assert "(spent)" in row.text(0)
-    _tree(dlg).setCurrentItem(row)
-    _tree(dlg).itemActivated.emit(row, 0)
-    _search(dlg).setText("fire breath")  # only the greyed one
-    _search(dlg).returnPressed.emit()
-    assert _form(dlg)["name"] == ""
+    _pick(dlg, name)
+    assert _form(dlg)["name"] == name
+    asked = answer_out_of_resources(monkeypatch, yes=False)
+    _apply(dlg)
+    assert asked == [f"Pirate is out of:\n\n•  {name}: spent\n\nUse {name} anyway?"]
+    assert pirate["spent_abilities"] == {name: 1}
+    assert tiger["hp"] == tiger["max_hp"]
     assert ui.history == []
+    # Yes uses it all the same.
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    _pick(dlg, name)
+    answer_out_of_resources(monkeypatch, yes=True)
+    monkeypatch.setattr(random, "randint", lambda low, high: 1)
+    _apply(dlg)
+    assert pirate["spent_abilities"] == {name: 2}
+    assert tiger["hp"] < tiger["max_hp"]
+
+
+def test_one_question_lists_everything_the_source_is_out_of(paladin, monkeypatch):
+    ui, edmund, tiger = paladin
+    edmund["action_uses"] = {"Action": 1}
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    _pick(dlg, "Hold Person")
+    asked = answer_out_of_resources(monkeypatch, yes=False)
+    _apply(dlg)
+    assert asked == [
+        "Edmund is out of:\n\n"
+        "•  Spell slots: none of level 2 or higher left\n"
+        "•  Action: already used this turn\n\n"
+        "Use Hold Person anyway?"
+    ]
+    assert "Hold Person" not in tiger["conditions"]
+    assert edmund["action_uses"] == {"Action": 1}
+    assert ui.history == []
+
+
+def test_a_feature_with_no_uses_left_asks_first(paladin, monkeypatch):
+    ui, edmund, _ = paladin
+    edmund["feature_uses_used"] = {"Channel Divinity": 99}
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    _pick(dlg, "Channel Divinity")
+    asked = answer_out_of_resources(monkeypatch, yes=True)
+    _apply(dlg)
+    assert "Channel Divinity: no uses left" in asked[0]
+    assert edmund["feature_uses_used"] == {"Channel Divinity": 100}
 
 
 def test_a_hand_typed_effect_still_spends_nothing_else(monster, monkeypatch):
@@ -2543,7 +2587,10 @@ def test_a_legendary_action_costing_more_than_is_left_is_greyed(monster, monkeyp
     ui, pirate, _ = monster
     pirate["legendary_actions_left"] = 1
     dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
-    assert _row(dlg, GAZE["name"]).isDisabled()
+    row = _row(dlg, GAZE["name"])
+    assert "(1 left)" in row.text(0)
+    assert row.foreground(0).color().name() == "#6a6a7a"
+    assert not row.isDisabled()  # still the GM's to pick: applying it asks
 
 
 def test_without_a_source_a_monster_spends_nothing(monster, monkeypatch):
@@ -2660,6 +2707,7 @@ def test_a_spells_turn_long_condition_gets_that_duration(paladin, monkeypatch):
 
 
 def test_enter_after_a_new_search_picks_again(paladin, monkeypatch):
+    answer_out_of_resources(monkeypatch)  # Edmund has no slot for the spell picked.
     """Fire Bolt picked, then "fireball" typed: Enter picks Fireball, it
     doesn't cast Fire Bolt."""
     ui, *_ = paladin
