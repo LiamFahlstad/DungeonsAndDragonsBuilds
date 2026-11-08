@@ -413,6 +413,26 @@ check_monster.py 'Mira, Princess of the Loop': score 0.55 OK, implied CR 5.15 OK
 **History**
 - 2026-11-08 main-session: found
 
+### DI-062 · Five spell records have malformed components text, so SpellClassConverter leaves them as JSON
+- **Status:** open
+- **Area:** content-scraper
+- **Where:** `CharacterContent/Spells/spells_dnd2024.json`, `CharacterContent/Spells/spells_dnd5e.json`
+
+SpellRules stores components as Component flags plus a material (Notes/combat-effects-plan.md, Spells as classes), so a record's components must read 'V, S, M (...)'. These don't: Ashardalon's Stride 'V,S'; Gate 'V, S, M(a diamond worth 5,000+ GP)'; Imprisonment 'V, S, M(a statuette of the target worth 5,000+ GP)'; Yolande's Regal Presence 'Component: V, S, M (a miniature tiara)'; Gate Seal None. They're scrape errors: fix them in the scraper (never by hand in the source JSON), re-scrape, and the converter takes them.
+
+**History**
+- 2026-11-08 main-session: found
+
+### DI-063 · Wildemount Dunamancy spells have a school or class with a note, which SpellRules' enums can't hold
+- **Status:** open
+- **Area:** character-engine-dev
+- **Where:** `CharacterContent/Spells/SpellFactory/ClassSpell.py`
+
+15 spells (Dark Star, Fortune's Favor, Gift of Alacrity, Gravity Fissure, Gravity Sinkhole, Immovable Object, Magnify Gravity, Pulse Wave, Ravenous Void, Reality Break, Sapping Sting, Temporal Shunt, Tether Essence, Time Ravage, Wristpocket) have a school like 'Evocation (Dunamancy:Graviturgy)' or a class 'Wizard (Dunamancy)'. SpellRules.school is a School and classes are CharacterClass, so SpellClassConverter leaves them as JSON. Fix: a SpellRules note field (e.g. school_note='Dunamancy: Graviturgy', and the Dunamancy classes as a note too), shown on the card as the JSON shows it now.
+
+**History**
+- 2026-11-08 main-session: found
+
 ## Fixed
 
 ### DI-001 · Temporary Hit Points stack instead of keeping one amount

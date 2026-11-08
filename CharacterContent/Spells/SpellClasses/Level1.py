@@ -4,7 +4,8 @@ CharacterContent/Spells/SpellClassConverter.py; edit them by hand from
 then on: each class is its spell's one source."""
 
 from CharacterContent.Spells.SpellFactory.ClassSpell import ClassSpell, SpellRules
-from Core.Definitions import Ability, DamageType
+from CharacterContent.Spells.SpellFactory.Enums import Component, School
+from Core.Definitions import Ability, CharacterClass, Condition, DamageType
 from Model.Content.CombatEffect import (
     CombatCondition,
     CombatDamage,
@@ -21,11 +22,17 @@ class AbsorbElements(ClassSpell):
     rules = SpellRules(
         name="Absorb Elements",
         level=1,
-        school="Abjuration",
-        classes=("Artificer", "Druid", "Ranger", "Sorcerer", "Wizard"),
+        school=School.ABJURATION,
+        classes=(
+            CharacterClass.ARTIFICER,
+            CharacterClass.DRUID,
+            CharacterClass.RANGER,
+            CharacterClass.SORCERER,
+            CharacterClass.WIZARD,
+        ),
         casting_time="1 reaction, which you take when you take acid, cold, fire, lightning, or thunder damage",
         range="Self",
-        components="S",
+        components=(Component.SOMATIC,),
         duration="1 round",
         source="Xanathar's Guide to Everything",
         description=(
@@ -83,11 +90,16 @@ class Alarm(ClassSpell):
     rules = SpellRules(
         name="Alarm",
         level=1,
-        school="Abjuration",
-        classes=("Artificer", "Ranger", "Wizard"),
+        school=School.ABJURATION,
+        classes=(
+            CharacterClass.ARTIFICER,
+            CharacterClass.RANGER,
+            CharacterClass.WIZARD,
+        ),
         casting_time="1 minute or Ritual",
         range="30 feet",
-        components="V, S, M (a bell and silver wire)",
+        components=(Component.VERBAL, Component.SOMATIC, Component.MATERIAL),
+        material="a bell and silver wire",
         duration="8 hours",
         source="Player's Handbook",
         description=(
@@ -144,11 +156,12 @@ class Bless(ClassSpell):
     rules = SpellRules(
         name="Bless",
         level=1,
-        school="Enchantment",
-        classes=("Cleric", "Paladin"),
+        school=School.ENCHANTMENT,
+        classes=(CharacterClass.CLERIC, CharacterClass.PALADIN),
         casting_time="Action",
         range="30 feet",
-        components="V, S, M (a Holy Symbol worth 5+ GP)",
+        components=(Component.VERBAL, Component.SOMATIC, Component.MATERIAL),
+        material="a Holy Symbol worth 5+ GP",
         duration="Concentration, up to 1 minute",
         source="Player's Handbook",
         description=(
@@ -198,11 +211,11 @@ class BurningHands(ClassSpell):
     rules = SpellRules(
         name="Burning Hands",
         level=1,
-        school="Evocation",
-        classes=("Sorcerer", "Wizard"),
+        school=School.EVOCATION,
+        classes=(CharacterClass.SORCERER, CharacterClass.WIZARD),
         casting_time="Action",
         range="Self",
-        components="V, S",
+        components=(Component.VERBAL, Component.SOMATIC),
         duration="Instantaneous",
         source="Player's Handbook",
         description=(
@@ -262,11 +275,17 @@ class CharmPerson(ClassSpell):
     rules = SpellRules(
         name="Charm Person",
         level=1,
-        school="Enchantment",
-        classes=("Bard", "Druid", "Sorcerer", "Warlock", "Wizard"),
+        school=School.ENCHANTMENT,
+        classes=(
+            CharacterClass.BARD,
+            CharacterClass.DRUID,
+            CharacterClass.SORCERER,
+            CharacterClass.WARLOCK,
+            CharacterClass.WIZARD,
+        ),
         casting_time="Action",
         range="30 feet",
-        components="V, S",
+        components=(Component.VERBAL, Component.SOMATIC),
         duration="1 hour",
         source="Player's Handbook",
         description=(
@@ -316,7 +335,7 @@ class CharmPerson(ClassSpell):
             CombatEffect(
                 roll="save",
                 save_ability=Ability.WISDOM,
-                conditions=(CombatCondition("Charmed"),),
+                conditions=(CombatCondition(Condition.CHARMED),),
                 notes=(
                     "Humanoids only. The target has Advantage on the save if you or your allies are fighting it.",
                     "It ends early if you or your allies damage the target. One more target per slot level above 1.",
@@ -329,11 +348,12 @@ class ChromaticOrb(ClassSpell):
     rules = SpellRules(
         name="Chromatic Orb",
         level=1,
-        school="Evocation",
-        classes=("Sorcerer", "Wizard"),
+        school=School.EVOCATION,
+        classes=(CharacterClass.SORCERER, CharacterClass.WIZARD),
         casting_time="Action",
         range="90 feet",
-        components="V, S, M (a diamond worth 50+ GP)",
+        components=(Component.VERBAL, Component.SOMATIC, Component.MATERIAL),
+        material="a diamond worth 50+ GP",
         duration="Instantaneous",
         source="Player's Handbook",
         description=(
@@ -429,11 +449,11 @@ class Command(ClassSpell):
     rules = SpellRules(
         name="Command",
         level=1,
-        school="Enchantment",
-        classes=("Bard", "Cleric", "Paladin"),
+        school=School.ENCHANTMENT,
+        classes=(CharacterClass.BARD, CharacterClass.CLERIC, CharacterClass.PALADIN),
         casting_time="Action",
         range="60 feet",
-        components="V",
+        components=(Component.VERBAL,),
         duration="Instantaneous",
         source="Player's Handbook",
         description=(
@@ -526,7 +546,7 @@ class Command(ClassSpell):
                 name="Command: Grovel",
                 roll="save",
                 save_ability=Ability.WISDOM,
-                conditions=(CombatCondition("Prone"),),
+                conditions=(CombatCondition(Condition.PRONE),),
                 notes=(
                     "On its next turn, the target has the Prone condition and then ends its turn.",
                     "One more target per slot level above 1.",
@@ -549,11 +569,18 @@ class CureWounds(ClassSpell):
     rules = SpellRules(
         name="Cure Wounds",
         level=1,
-        school="Abjuration",
-        classes=("Artificer", "Bard", "Cleric", "Druid", "Paladin", "Ranger"),
+        school=School.ABJURATION,
+        classes=(
+            CharacterClass.ARTIFICER,
+            CharacterClass.BARD,
+            CharacterClass.CLERIC,
+            CharacterClass.DRUID,
+            CharacterClass.PALADIN,
+            CharacterClass.RANGER,
+        ),
         casting_time="Action",
         range="Touch",
-        components="V, S",
+        components=(Component.VERBAL, Component.SOMATIC),
         duration="Instantaneous",
         source="Player's Handbook",
         description=(
@@ -594,11 +621,16 @@ class DisguiseSelf(ClassSpell):
     rules = SpellRules(
         name="Disguise Self",
         level=1,
-        school="Illusion",
-        classes=("Artificer", "Bard", "Sorcerer", "Wizard"),
+        school=School.ILLUSION,
+        classes=(
+            CharacterClass.ARTIFICER,
+            CharacterClass.BARD,
+            CharacterClass.SORCERER,
+            CharacterClass.WIZARD,
+        ),
         casting_time="Action",
         range="Self",
-        components="V, S",
+        components=(Component.VERBAL, Component.SOMATIC),
         duration="1 hour",
         source="Player's Handbook",
         description=(
@@ -648,11 +680,11 @@ class DissonantWhispers(ClassSpell):
     rules = SpellRules(
         name="Dissonant Whispers",
         level=1,
-        school="Enchantment",
-        classes=("Bard",),
+        school=School.ENCHANTMENT,
+        classes=(CharacterClass.BARD,),
         casting_time="Action",
         range="60 feet",
-        components="V",
+        components=(Component.VERBAL,),
         duration="Instantaneous",
         source="Player's Handbook",
         description=(
@@ -714,11 +746,11 @@ class DivineSmite(ClassSpell):
     rules = SpellRules(
         name="Divine Smite",
         level=1,
-        school="Evocation",
-        classes=("Paladin",),
+        school=School.EVOCATION,
+        classes=(CharacterClass.PALADIN,),
         casting_time="Bonus Action, which you take immediately after hitting a target with a Melee weapon or an Unarmed Strike",
         range="Self",
-        components="V",
+        components=(Component.VERBAL,),
         duration="Instantaneous",
         source="Player's Handbook",
         description=(
@@ -778,11 +810,11 @@ class EnsnaringStrike(ClassSpell):
     rules = SpellRules(
         name="Ensnaring Strike",
         level=1,
-        school="Conjuration",
-        classes=("Ranger",),
+        school=School.CONJURATION,
+        classes=(CharacterClass.RANGER,),
         casting_time="Bonus Action, which you take immediately after hitting a creature with a weapon",
         range="Self",
-        components="V",
+        components=(Component.VERBAL,),
         duration="Concentration, up to 1 minute",
         source="Player's Handbook",
         description=(
@@ -834,7 +866,7 @@ class EnsnaringStrike(ClassSpell):
             CombatEffect(
                 roll="save",
                 save_ability=Ability.STRENGTH,
-                conditions=(CombatCondition("Restrained"),),
+                conditions=(CombatCondition(Condition.RESTRAINED),),
                 notes=(
                     "Cast right after hitting with a weapon. A Large or larger creature has Advantage on the save. On a success the spell ends.",
                     "While Restrained, the target takes 1d6 Piercing damage (1d6 more per slot level above 1) at the start of each of its turns. It or a creature within reach can take an action to make a Strength (Athletics) check against your spell save DC to end the spell.",
@@ -847,11 +879,11 @@ class Entangle(ClassSpell):
     rules = SpellRules(
         name="Entangle",
         level=1,
-        school="Conjuration",
-        classes=("Druid", "Ranger"),
+        school=School.CONJURATION,
+        classes=(CharacterClass.DRUID, CharacterClass.RANGER),
         casting_time="Action",
         range="90 feet",
-        components="V, S",
+        components=(Component.VERBAL, Component.SOMATIC),
         duration="Concentration, up to 1 minute",
         source="Player's Handbook",
         description=(
@@ -896,7 +928,7 @@ class Entangle(ClassSpell):
             CombatEffect(
                 roll="save",
                 save_ability=Ability.STRENGTH,
-                conditions=(CombatCondition("Restrained"),),
+                conditions=(CombatCondition(Condition.RESTRAINED),),
                 notes=(
                     "Each creature other than you in the 20-foot square. The area is Difficult Terrain for the duration.",
                     "A Restrained creature can take an action to make a Strength (Athletics) check against your spell save DC to free itself.",
@@ -909,11 +941,11 @@ class FaerieFire(ClassSpell):
     rules = SpellRules(
         name="Faerie Fire",
         level=1,
-        school="Evocation",
-        classes=("Artificer", "Bard", "Druid"),
+        school=School.EVOCATION,
+        classes=(CharacterClass.ARTIFICER, CharacterClass.BARD, CharacterClass.DRUID),
         casting_time="Action",
         range="60 feet",
-        components="V",
+        components=(Component.VERBAL,),
         duration="Concentration, up to 1 minute",
         source="Player's Handbook",
         description=(
@@ -970,11 +1002,16 @@ class FalseLife(ClassSpell):
     rules = SpellRules(
         name="False Life",
         level=1,
-        school="Necromancy",
-        classes=("Artificer", "Sorcerer", "Wizard"),
+        school=School.NECROMANCY,
+        classes=(
+            CharacterClass.ARTIFICER,
+            CharacterClass.SORCERER,
+            CharacterClass.WIZARD,
+        ),
         casting_time="Action",
         range="Self",
-        components="V, S, M (a drop of alcohol)",
+        components=(Component.VERBAL, Component.SOMATIC, Component.MATERIAL),
+        material="a drop of alcohol",
         duration="Instantaneous",
         source="Player's Handbook",
         description=(
@@ -1019,11 +1056,17 @@ class FeatherFall(ClassSpell):
     rules = SpellRules(
         name="Feather Fall",
         level=1,
-        school="Transmutation",
-        classes=("Artificer", "Bard", "Sorcerer", "Wizard"),
+        school=School.TRANSMUTATION,
+        classes=(
+            CharacterClass.ARTIFICER,
+            CharacterClass.BARD,
+            CharacterClass.SORCERER,
+            CharacterClass.WIZARD,
+        ),
         casting_time="Reaction, which you take when you or a creature you can see within 60 feet of you falls",
         range="60 feet",
-        components="V, M (a small feather or piece of down)",
+        components=(Component.VERBAL, Component.MATERIAL),
+        material="a small feather or piece of down",
         duration="1 minute",
         source="Player's Handbook",
         description="Choose up to five falling creatures within range. A falling creature’s rate of descent slows to 60 feet per round until the spell ends. If a creature lands before the spell ends, the creature takes no damage from the fall, and the spell ends for that creature.",
@@ -1071,11 +1114,16 @@ class FogCloud(ClassSpell):
     rules = SpellRules(
         name="Fog Cloud",
         level=1,
-        school="Conjuration",
-        classes=("Druid", "Ranger", "Sorcerer", "Wizard"),
+        school=School.CONJURATION,
+        classes=(
+            CharacterClass.DRUID,
+            CharacterClass.RANGER,
+            CharacterClass.SORCERER,
+            CharacterClass.WIZARD,
+        ),
         casting_time="Action",
         range="120 feet",
-        components="V, S",
+        components=(Component.VERBAL, Component.SOMATIC),
         duration="Concentration, up to 1 hour",
         source="Player's Handbook",
         description=(
@@ -1116,11 +1164,16 @@ class Grease(ClassSpell):
     rules = SpellRules(
         name="Grease",
         level=1,
-        school="Conjuration",
-        classes=("Artificer", "Sorcerer", "Wizard"),
+        school=School.CONJURATION,
+        classes=(
+            CharacterClass.ARTIFICER,
+            CharacterClass.SORCERER,
+            CharacterClass.WIZARD,
+        ),
         casting_time="Action",
         range="60 feet",
-        components="V, S, M (a bit of pork rind or butter)",
+        components=(Component.VERBAL, Component.SOMATIC, Component.MATERIAL),
+        material="a bit of pork rind or butter",
         duration="1 minute",
         source="Player's Handbook",
         description=(
@@ -1156,7 +1209,7 @@ class Grease(ClassSpell):
             CombatEffect(
                 roll="save",
                 save_ability=Ability.DEXTERITY,
-                conditions=(CombatCondition("Prone"),),
+                conditions=(CombatCondition(Condition.PRONE),),
                 notes=(
                     "The 10-foot square is Difficult Terrain for the duration. A creature that enters it or ends its turn there makes the save again or falls Prone.",
                 ),
@@ -1168,11 +1221,11 @@ class GuidingBolt(ClassSpell):
     rules = SpellRules(
         name="Guiding Bolt",
         level=1,
-        school="Evocation",
-        classes=("Cleric",),
+        school=School.EVOCATION,
+        classes=(CharacterClass.CLERIC,),
         casting_time="Action",
         range="120 feet",
-        components="V, S",
+        components=(Component.VERBAL, Component.SOMATIC),
         duration="1 round",
         source="Player's Handbook",
         description=(
@@ -1224,11 +1277,11 @@ class HealingWord(ClassSpell):
     rules = SpellRules(
         name="Healing Word",
         level=1,
-        school="Abjuration",
-        classes=("Bard", "Cleric", "Druid"),
+        school=School.ABJURATION,
+        classes=(CharacterClass.BARD, CharacterClass.CLERIC, CharacterClass.DRUID),
         casting_time="Bonus Action",
         range="60 feet",
-        components="V",
+        components=(Component.VERBAL,),
         duration="Instantaneous",
         source="Player's Handbook",
         description=(
@@ -1272,11 +1325,11 @@ class HuntersMark(ClassSpell):
     rules = SpellRules(
         name="Hunter's Mark",
         level=1,
-        school="Divination",
-        classes=("Ranger",),
+        school=School.DIVINATION,
+        classes=(CharacterClass.RANGER,),
         casting_time="Bonus Action",
         range="90 feet",
-        components="V",
+        components=(Component.VERBAL,),
         duration="Concentration, up to 1 hour",
         source="Player's Handbook",
         description=(
@@ -1338,11 +1391,12 @@ class IceKnife(ClassSpell):
     rules = SpellRules(
         name="Ice Knife",
         level=1,
-        school="Conjuration",
-        classes=("Druid", "Sorcerer", "Wizard"),
+        school=School.CONJURATION,
+        classes=(CharacterClass.DRUID, CharacterClass.SORCERER, CharacterClass.WIZARD),
         casting_time="Action",
         range="60 feet",
-        components="S, M (a drop of water or a piece of ice)",
+        components=(Component.SOMATIC, Component.MATERIAL),
+        material="a drop of water or a piece of ice",
         duration="Instantaneous",
         source="Player's Handbook",
         description=(
@@ -1416,11 +1470,18 @@ class Longstrider(ClassSpell):
     rules = SpellRules(
         name="Longstrider",
         level=1,
-        school="Transmutation",
-        classes=("Artificer", "Bard", "Druid", "Ranger", "Wizard"),
+        school=School.TRANSMUTATION,
+        classes=(
+            CharacterClass.ARTIFICER,
+            CharacterClass.BARD,
+            CharacterClass.DRUID,
+            CharacterClass.RANGER,
+            CharacterClass.WIZARD,
+        ),
         casting_time="Action",
         range="Touch",
-        components="V, S, M (a pinch of dirt)",
+        components=(Component.VERBAL, Component.SOMATIC, Component.MATERIAL),
+        material="a pinch of dirt",
         duration="1 hour",
         source="Player's Handbook",
         description=(
@@ -1467,11 +1528,11 @@ class MagicMissile(ClassSpell):
     rules = SpellRules(
         name="Magic Missile",
         level=1,
-        school="Evocation",
-        classes=("Sorcerer", "Wizard"),
+        school=School.EVOCATION,
+        classes=(CharacterClass.SORCERER, CharacterClass.WIZARD),
         casting_time="Action",
         range="120 feet",
-        components="V, S",
+        components=(Component.VERBAL, Component.SOMATIC),
         duration="Instantaneous",
         source="Player's Handbook",
         description=(
@@ -1524,11 +1585,11 @@ class RayOfSickness(ClassSpell):
     rules = SpellRules(
         name="Ray of Sickness",
         level=1,
-        school="Necromancy",
-        classes=("Sorcerer", "Wizard"),
+        school=School.NECROMANCY,
+        classes=(CharacterClass.SORCERER, CharacterClass.WIZARD),
         casting_time="Action",
         range="60 feet",
-        components="V, S",
+        components=(Component.VERBAL, Component.SOMATIC),
         duration="Instantaneous",
         source="Player's Handbook",
         description=(
@@ -1566,7 +1627,9 @@ class RayOfSickness(ClassSpell):
             CombatEffect(
                 roll="attack",
                 damage=(CombatDamage("2d8", DamageType.POISON, upcast="1d8"),),
-                conditions=(CombatCondition("Poisoned", until=("end", "source")),),
+                conditions=(
+                    CombatCondition(Condition.POISONED, until=("end", "source")),
+                ),
             )
         ]
 
@@ -1575,11 +1638,11 @@ class Shield(ClassSpell):
     rules = SpellRules(
         name="Shield",
         level=1,
-        school="Abjuration",
-        classes=("Sorcerer", "Wizard"),
+        school=School.ABJURATION,
+        classes=(CharacterClass.SORCERER, CharacterClass.WIZARD),
         casting_time="Reaction, which you take when you are hit by an attack roll or targeted by the",
         range="Self",
-        components="V, S",
+        components=(Component.VERBAL, Component.SOMATIC),
         duration="1 round",
         source="Player's Handbook",
         description="An imperceptible barrier of magical force protects you. Until the start of your next turn, you have a +5 bonus to AC, including against the triggering attack, and you take no damage from Magic Missile .",
@@ -1629,11 +1692,12 @@ class ShieldOfFaith(ClassSpell):
     rules = SpellRules(
         name="Shield of Faith",
         level=1,
-        school="Abjuration",
-        classes=("Cleric", "Paladin"),
+        school=School.ABJURATION,
+        classes=(CharacterClass.CLERIC, CharacterClass.PALADIN),
         casting_time="Bonus Action",
         range="60 feet",
-        components="V, S, M (a prayer scroll)",
+        components=(Component.VERBAL, Component.SOMATIC, Component.MATERIAL),
+        material="a prayer scroll",
         duration="Concentration, up to 10 minutes",
         source="Player's Handbook",
         description="A shimmering field surrounds a creature of your choice within range, granting it a +2 bonus to AC for the duration.",
@@ -1673,11 +1737,12 @@ class Sleep(ClassSpell):
     rules = SpellRules(
         name="Sleep",
         level=1,
-        school="Enchantment",
-        classes=("Bard", "Sorcerer", "Wizard"),
+        school=School.ENCHANTMENT,
+        classes=(CharacterClass.BARD, CharacterClass.SORCERER, CharacterClass.WIZARD),
         casting_time="Action",
         range="60 feet",
-        components="V, S, M (a pinch of sand or rose petals)",
+        components=(Component.VERBAL, Component.SOMATIC, Component.MATERIAL),
+        material="a pinch of sand or rose petals",
         duration="Concentration, up to 1 minute",
         source="Player's Handbook",
         description=(
@@ -1729,7 +1794,9 @@ class Sleep(ClassSpell):
             CombatEffect(
                 roll="save",
                 save_ability=Ability.WISDOM,
-                conditions=(CombatCondition("Incapacitated", until=("end", "target")),),
+                conditions=(
+                    CombatCondition(Condition.INCAPACITATED, until=("end", "target")),
+                ),
                 notes=(
                     "At the end of its next turn the target repeats the save: on a failure it has the Unconscious condition for the duration. It wakes if it takes damage or someone within 5 feet takes an action to shake it. Creatures that don't sleep, or are immune to Exhaustion, succeed automatically.",
                 ),
@@ -1741,11 +1808,16 @@ class SpeakWithAnimals(ClassSpell):
     rules = SpellRules(
         name="Speak with Animals",
         level=1,
-        school="Divination",
-        classes=("Bard", "Druid", "Ranger", "Warlock"),
+        school=School.DIVINATION,
+        classes=(
+            CharacterClass.BARD,
+            CharacterClass.DRUID,
+            CharacterClass.RANGER,
+            CharacterClass.WARLOCK,
+        ),
         casting_time="Action or Ritual",
         range="Self",
-        components="V, S",
+        components=(Component.VERBAL, Component.SOMATIC),
         duration="10 minutes",
         source="Player's Handbook",
         description=(
@@ -1792,11 +1864,12 @@ class TashasHideousLaughter(ClassSpell):
     rules = SpellRules(
         name="Tasha's Hideous Laughter",
         level=1,
-        school="Enchantment",
-        classes=("Bard", "Warlock", "Wizard"),
+        school=School.ENCHANTMENT,
+        classes=(CharacterClass.BARD, CharacterClass.WARLOCK, CharacterClass.WIZARD),
         casting_time="Action",
         range="30 feet",
-        components="V, S, M (a tart and a feather)",
+        components=(Component.VERBAL, Component.SOMATIC, Component.MATERIAL),
+        material="a tart and a feather",
         duration="Concentration, up to 1 minute",
         source="Player's Handbook",
         description=(
@@ -1843,7 +1916,10 @@ class TashasHideousLaughter(ClassSpell):
                 roll="save",
                 save_ability=Ability.WISDOM,
                 repeat_save=True,
-                conditions=(CombatCondition("Incapacitated"), CombatCondition("Prone")),
+                conditions=(
+                    CombatCondition(Condition.INCAPACITATED),
+                    CombatCondition(Condition.PRONE),
+                ),
                 notes=(
                     "It can't end the Prone condition on itself. It also repeats the save each time it takes damage, with Advantage.",
                     "One more target per slot level above 1.",
@@ -1856,11 +1932,16 @@ class Thunderwave(ClassSpell):
     rules = SpellRules(
         name="Thunderwave",
         level=1,
-        school="Evocation",
-        classes=("Bard", "Druid", "Sorcerer", "Wizard"),
+        school=School.EVOCATION,
+        classes=(
+            CharacterClass.BARD,
+            CharacterClass.DRUID,
+            CharacterClass.SORCERER,
+            CharacterClass.WIZARD,
+        ),
         casting_time="Action",
         range="Self",
-        components="V, S",
+        components=(Component.VERBAL, Component.SOMATIC),
         duration="Instantaneous",
         source="Player's Handbook",
         description=(
@@ -1926,11 +2007,16 @@ class WitchBolt(ClassSpell):
     rules = SpellRules(
         name="Witch Bolt",
         level=1,
-        school="Evocation",
-        classes=("Sorcerer", "Warlock", "Wizard"),
+        school=School.EVOCATION,
+        classes=(
+            CharacterClass.SORCERER,
+            CharacterClass.WARLOCK,
+            CharacterClass.WIZARD,
+        ),
         casting_time="Action",
         range="60 feet",
-        components="V, S, M (a twig struck by lightning)",
+        components=(Component.VERBAL, Component.SOMATIC, Component.MATERIAL),
+        material="a twig struck by lightning",
         duration="Concentration, up to 1 minute",
         source="Player's Handbook",
         description=(

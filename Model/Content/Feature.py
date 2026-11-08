@@ -18,6 +18,10 @@ from Model.View import CharacterView
 # ActionType (imported above) lives in its own module so CombatEffect can use
 # it too; everything else imports it from here.
 
+# A feature's or spell's functional role, shown as a chip on its card (the
+# usage-tags skill has the rubric).
+UsageTag = Literal["heal", "buff", "control", "damage", "utility", "summon"]
+
 
 @dataclass
 class FeatureUses:
@@ -285,10 +289,7 @@ class Feature(Effect):
         name: str | None = None,
         origin: str | None = None,
         passive: bool = False,
-        usage_tags: (
-            list[Literal["heal", "buff", "control", "damage", "utility", "summon"]]
-            | None
-        ) = None,
+        usage_tags: list[UsageTag] | None = None,
         activation: "FeatureActivation | None" = None,
         uses: "FeatureUses | None" = None,
         dice: "FeatureDice | Sequence[FeatureDice] | None" = None,

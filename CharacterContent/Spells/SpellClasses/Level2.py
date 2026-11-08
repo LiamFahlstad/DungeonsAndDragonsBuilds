@@ -4,7 +4,8 @@ CharacterContent/Spells/SpellClassConverter.py; edit them by hand from
 then on: each class is its spell's one source."""
 
 from CharacterContent.Spells.SpellFactory.ClassSpell import ClassSpell, SpellRules
-from Core.Definitions import Ability, DamageType
+from CharacterContent.Spells.SpellFactory.Enums import Component, School
+from Core.Definitions import Ability, CharacterClass, Condition, DamageType
 from Model.Content.CombatEffect import (
     CombatCondition,
     CombatDamage,
@@ -20,11 +21,19 @@ class HoldPerson(ClassSpell):
     rules = SpellRules(
         name="Hold Person",
         level=2,
-        school="Enchantment",
-        classes=("Bard", "Cleric", "Druid", "Sorcerer", "Warlock", "Wizard"),
+        school=School.ENCHANTMENT,
+        classes=(
+            CharacterClass.BARD,
+            CharacterClass.CLERIC,
+            CharacterClass.DRUID,
+            CharacterClass.SORCERER,
+            CharacterClass.WARLOCK,
+            CharacterClass.WIZARD,
+        ),
         casting_time="Action",
         range="60 feet",
-        components="V, S, M (a straight piece of iron)",
+        components=(Component.VERBAL, Component.SOMATIC, Component.MATERIAL),
+        material="a straight piece of iron",
         duration="Concentration, up to 1 minute",
         source="Player's Handbook",
         description=(
@@ -71,7 +80,7 @@ class HoldPerson(ClassSpell):
                 roll="save",
                 save_ability=Ability.WISDOM,
                 repeat_save=True,
-                conditions=(CombatCondition("Paralyzed"),),
+                conditions=(CombatCondition(Condition.PARALYZED),),
                 notes=("Humanoids only. One more target per slot level above 2.",),
             )
         ]
@@ -81,11 +90,18 @@ class Invisibility(ClassSpell):
     rules = SpellRules(
         name="Invisibility",
         level=2,
-        school="Illusion",
-        classes=("Artificer", "Bard", "Sorcerer", "Warlock", "Wizard"),
+        school=School.ILLUSION,
+        classes=(
+            CharacterClass.ARTIFICER,
+            CharacterClass.BARD,
+            CharacterClass.SORCERER,
+            CharacterClass.WARLOCK,
+            CharacterClass.WIZARD,
+        ),
         casting_time="Action",
         range="Touch",
-        components="V, S, M (an eyelash in gum arabic)",
+        components=(Component.VERBAL, Component.SOMATIC, Component.MATERIAL),
+        material="an eyelash in gum arabic",
         duration="Concentration, up to 1 hour",
         source="Player's Handbook",
         description=(
@@ -125,7 +141,7 @@ class Invisibility(ClassSpell):
     ) -> list[CombatEffect]:
         return [
             CombatEffect(
-                conditions=(CombatCondition("Invisible"),),
+                conditions=(CombatCondition(Condition.INVISIBLE),),
                 notes=(
                     "It ends right after the target makes an attack roll, deals damage or casts a spell. One more target per slot level above 2.",
                 ),
@@ -137,11 +153,12 @@ class Moonbeam(ClassSpell):
     rules = SpellRules(
         name="Moonbeam",
         level=2,
-        school="Evocation",
-        classes=("Druid",),
+        school=School.EVOCATION,
+        classes=(CharacterClass.DRUID,),
         casting_time="Action",
         range="120 feet",
-        components="V, S, M (a moonseed leaf)",
+        components=(Component.VERBAL, Component.SOMATIC, Component.MATERIAL),
+        material="a moonseed leaf",
         duration="Concentration, up to 1 minute",
         source="Player's Handbook",
         description=(
@@ -211,11 +228,11 @@ class ScorchingRay(ClassSpell):
     rules = SpellRules(
         name="Scorching Ray",
         level=2,
-        school="Evocation",
-        classes=("Sorcerer", "Wizard"),
+        school=School.EVOCATION,
+        classes=(CharacterClass.SORCERER, CharacterClass.WIZARD),
         casting_time="Action",
         range="120 feet",
-        components="V, S",
+        components=(Component.VERBAL, Component.SOMATIC),
         duration="Instantaneous",
         source="Player's Handbook",
         description=(
@@ -263,11 +280,12 @@ class Shatter(ClassSpell):
     rules = SpellRules(
         name="Shatter",
         level=2,
-        school="Evocation",
-        classes=("Bard", "Sorcerer", "Wizard"),
+        school=School.EVOCATION,
+        classes=(CharacterClass.BARD, CharacterClass.SORCERER, CharacterClass.WIZARD),
         casting_time="Action",
         range="60 feet",
-        components="V, S, M (a chip of mica)",
+        components=(Component.VERBAL, Component.SOMATIC, Component.MATERIAL),
+        material="a chip of mica",
         duration="Instantaneous",
         source="Player's Handbook",
         description=(
@@ -334,11 +352,12 @@ class SpikeGrowth(ClassSpell):
     rules = SpellRules(
         name="Spike Growth",
         level=2,
-        school="Transmutation",
-        classes=("Druid", "Ranger"),
+        school=School.TRANSMUTATION,
+        classes=(CharacterClass.DRUID, CharacterClass.RANGER),
         casting_time="Action",
         range="150 feet",
-        components="V, S, M (seven thorns)",
+        components=(Component.VERBAL, Component.SOMATIC, Component.MATERIAL),
+        material="seven thorns",
         duration="Concentration, up to 10 minutes",
         source="Player's Handbook",
         description=(
@@ -393,11 +412,11 @@ class SpiritualWeapon(ClassSpell):
     rules = SpellRules(
         name="Spiritual Weapon",
         level=2,
-        school="Evocation",
-        classes=("Cleric",),
+        school=School.EVOCATION,
+        classes=(CharacterClass.CLERIC,),
         casting_time="Bonus Action",
         range="60 feet",
-        components="V, S",
+        components=(Component.VERBAL, Component.SOMATIC),
         duration="Concentration, up to 1 minute",
         source="Player's Handbook",
         description=(
@@ -461,11 +480,17 @@ class Suggestion(ClassSpell):
     rules = SpellRules(
         name="Suggestion",
         level=2,
-        school="Enchantment",
-        classes=("Bard", "Sorcerer", "Warlock", "Wizard"),
+        school=School.ENCHANTMENT,
+        classes=(
+            CharacterClass.BARD,
+            CharacterClass.SORCERER,
+            CharacterClass.WARLOCK,
+            CharacterClass.WIZARD,
+        ),
         casting_time="Action",
         range="30 feet",
-        components="V, M (a drop of honey)",
+        components=(Component.VERBAL, Component.MATERIAL),
+        material="a drop of honey",
         duration="Concentration, up to 8 hours",
         source="Player's Handbook",
         description=(
@@ -516,7 +541,7 @@ class Suggestion(ClassSpell):
             CombatEffect(
                 roll="save",
                 save_ability=Ability.WISDOM,
-                conditions=(CombatCondition("Charmed"),),
+                conditions=(CombatCondition(Condition.CHARMED),),
                 notes=(
                     "The target must be able to hear and understand you. It ends early if you or your allies damage it, or when the suggested activity is done.",
                 ),

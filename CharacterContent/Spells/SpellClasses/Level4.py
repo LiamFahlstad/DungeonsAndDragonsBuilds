@@ -4,7 +4,8 @@ CharacterContent/Spells/SpellClassConverter.py; edit them by hand from
 then on: each class is its spell's one source."""
 
 from CharacterContent.Spells.SpellFactory.ClassSpell import ClassSpell, SpellRules
-from Core.Definitions import Ability, DamageType
+from CharacterContent.Spells.SpellFactory.Enums import Component, School
+from Core.Definitions import Ability, CharacterClass, DamageType
 from Model.Content.CombatEffect import CombatDamage, CombatEffect
 from Model.Content.Feature import FeatureTarget
 from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table
@@ -15,11 +16,12 @@ class IceStorm(ClassSpell):
     rules = SpellRules(
         name="Ice Storm",
         level=4,
-        school="Evocation",
-        classes=("Druid", "Sorcerer", "Wizard"),
+        school=School.EVOCATION,
+        classes=(CharacterClass.DRUID, CharacterClass.SORCERER, CharacterClass.WIZARD),
         casting_time="Action",
         range="300 feet",
-        components="V, S, M (a mitten)",
+        components=(Component.VERBAL, Component.SOMATIC, Component.MATERIAL),
+        material="a mitten",
         duration="Instantaneous",
         source="Player's Handbook",
         description=(

@@ -8,11 +8,12 @@ the JSON (DataSpell). See Notes/combat-effects-plan.md, "Spells as classes".
         rules = SpellRules(
             name="Fireball",
             level=3,
-            school="Evocation",
-            classes=("Sorcerer", "Wizard"),
+            school=School.EVOCATION,
+            classes=(CharacterClass.SORCERER, CharacterClass.WIZARD),
             casting_time="Action",
             range="150 feet",
-            components="V, S, M (a ball of bat guano and sulfur)",
+            components=(Component.VERBAL, Component.SOMATIC, Component.MATERIAL),
+            material="a ball of bat guano and sulfur",
             duration="Instantaneous",
             source="Player's Handbook",
             usage_tags=("damage",),
@@ -22,6 +23,10 @@ the JSON (DataSpell). See Notes/combat-effects-plan.md, "Spells as classes".
         def combat_effects(self, character=None) -> list[CombatEffect]:
             return [CombatEffect(roll="save", save_ability=Ability.DEXTERITY, ...)]
 
+What has a fixed set of values is an enum (the school, the classes, the
+components); the casting time, range and duration stay the source's words,
+which Spell's casting_time_type, range_feet and duration_seconds read.
+
 CharacterContent/Spells/SpellClassConverter.py writes such a class from a
 spell's JSON record and its companion files; from then on the class is the
 spell's one source, edited by hand.
@@ -30,8 +35,10 @@ spell's one source, edited by hand.
 from dataclasses import dataclass
 from typing import ClassVar, Optional
 
-from Model.Content.Feature import FeatureTarget
+from Core.Definitions import CharacterClass
+from Model.Content.Feature import FeatureTarget, UsageTag
 
+from .Enums import Component, School
 from .Spell import Spell
 
 
@@ -39,19 +46,22 @@ from .Spell import Spell
 class SpellRules:
     """What a spell's card and the rules say about it, as the spell sources
     record it (spells_<source>.json): the fields every spell has, plus the
-    sheet's usage_tags and target (spells_<source>_extended.json)."""
+    sheet's usage_tags and target (spells_<source>_extended.json).
+    `components` are in their card order (V, S, M); `material` is what the M
+    is, and only goes with it."""
 
     name: str
     level: int
-    school: str
-    classes: tuple[str, ...]
+    school: School
+    classes: tuple[CharacterClass, ...]
     casting_time: str
     range: str
-    components: str
+    components: tuple[Component, ...]
     duration: str
     source: str
     description: str
-    usage_tags: tuple[str, ...] = ()
+    material: str = ""
+    usage_tags: tuple[UsageTag, ...] = ()
     target: Optional[FeatureTarget] = None
 
     def __post_init__(self):
@@ -59,6 +69,13 @@ class SpellRules:
             raise ValueError("A spell needs a name")
         if not 0 <= self.level <= 9:
             raise ValueError(f"{self.name}: level {self.level} isn't 0-9")
+        order = list(Component)
+        if list(self.components) != sorted(set(self.components), key=order.index):
+            raise ValueError(
+                f"{self.name}: components {self.components} aren't V, S, M once each"
+            )
+        if self.material and Component.MATERIAL not in self.components:
+            raise ValueError(f"{self.name}: a material without Component.MATERIAL")
 
 
 class ClassSpell(Spell):
@@ -79,11 +96,15 @@ class ClassSpell(Spell):
 
     @property
     def school(self) -> str:
+        return self.rules.school.value
+
+    @property
+    def school_enum(self) -> School:
         return self.rules.school
 
     @property
     def classes(self) -> list[str]:
-        return list(self.rules.classes)
+        return [character_class.value for character_class in self.rules.classes]
 
     @property
     def casting_time(self) -> str:
@@ -95,7 +116,30 @@ class ClassSpell(Spell):
 
     @property
     def components(self) -> str:
-        return self.rules.components
+        """As the card writes them: "V, S, M (a ball of bat guano and sulfur)"."""
+        parts = []
+        for component in self.rules.components:
+            if component is Component.MATERIAL and self.rules.material:
+                parts.append(f"M ({self.rules.material})")
+            else:
+                parts.append(component.value)
+        return ", ".join(parts)
+
+    @property
+    def has_verbal(self) -> bool:
+        return Component.VERBAL in self.rules.components
+
+    @property
+    def has_somatic(self) -> bool:
+        return Component.SOMATIC in self.rules.components
+
+    @property
+    def has_material(self) -> bool:
+        return Component.MATERIAL in self.rules.components
+
+    @property
+    def material_description(self) -> Optional[str]:
+        return self.rules.material or None if self.has_material else None
 
     @property
     def duration(self) -> str:

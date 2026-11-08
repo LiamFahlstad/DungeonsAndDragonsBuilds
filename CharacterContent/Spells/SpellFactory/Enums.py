@@ -24,3 +24,11 @@ class CastingTimeType(Enum):
     REACTION = "Reaction"
     MINUTE = "Minute"
     HOUR = "Hour"
+
+
+class Component(Enum):
+    """A spell's components, as its card writes them: "V, S, M (...)"."""
+
+    VERBAL = "V"
+    SOMATIC = "S"
+    MATERIAL = "M"

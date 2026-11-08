@@ -41,6 +41,8 @@ if str(ROOT) not in sys.path:
 
 from CharacterContent.Spells.SpellFactory import DataSpell, SpellFactory  # noqa: E402
 from CharacterContent.Spells.SpellFactory.ClassSpell import SpellRules  # noqa: E402
+from CharacterContent.Spells.SpellFactory.Enums import Component, School  # noqa: E402
+from Core.Definitions import CharacterClass, Condition  # noqa: E402
 
 CLASSES_DIR = ROOT / "CharacterContent" / "Spells" / "SpellClasses"
 PACKAGE = "CharacterContent.Spells.SpellClasses"
@@ -48,7 +50,11 @@ PACKAGE = "CharacterContent.Spells.SpellClasses"
 # What the generated code can name, and where each comes from.
 _IMPORTS = {
     "Ability": "Core.Definitions",
+    "CharacterClass": "Core.Definitions",
+    "Condition": "Core.Definitions",
     "DamageType": "Core.Definitions",
+    "Component": "CharacterContent.Spells.SpellFactory.Enums",
+    "School": "CharacterContent.Spells.SpellFactory.Enums",
     "ActionType": "Model.Content.ActionType",
     "CombatCondition": "Model.Content.CombatEffect",
     "CombatDamage": "Model.Content.CombatEffect",
@@ -71,6 +77,23 @@ _IMPORTS = {
 _POSITIONAL = {("Option", "blocks"), ("CombatDamage", "choices")}
 # Written all by keyword: ten strings in a row say nothing by position.
 _BY_KEYWORD = {"SpellRules"}
+# The order a reader wants them in, where it isn't the fields' own order
+# (a field with a default has to come after those without).
+_READING_ORDER = {"SpellRules": {"material": "components"}}
+# Text a model keeps as text but that names an enum member, written as the
+# member: CombatCondition("Prone") is CombatCondition(Condition.PRONE). A
+# badge's name ("Bless") stays text.
+_AS_ENUM = {("CombatCondition", "name"): Condition}
+# "V, S, M (a ball of bat guano and sulfur)", every part optional, in order.
+_COMPONENTS = re.compile(r"(?P<v>V)?(?:, )?(?P<s>S)?(?:, )?(?:M \((?P<m>.+)\))?")
+
+
+class CannotConvert(ValueError):
+    """A spell whose JSON says something the class's enums can't: a class
+    or school with a note ("Wizard (Dunamancy)"), components written
+    another way. It stays JSON until it's converted by hand."""
+
+
 # Record keys the rules don't need: the 2014 source's "ritual" is in its
 # casting time too.
 _IGNORED_KEYS = {"ritual"}
@@ -104,6 +127,9 @@ def source_of(value) -> str:
         args = []
         for field in dataclasses.fields(value):
             item = getattr(value, field.name)
+            enum_type = _AS_ENUM.get((name, field.name))
+            if enum_type is not None and item in {m.value for m in enum_type}:
+                item = enum_type(item)
             has_default = (
                 field.default is not dataclasses.MISSING
                 or field.default_factory is not dataclasses.MISSING
@@ -130,6 +156,12 @@ def source_of(value) -> str:
                 args.append(source_of(item))
             elif item != default:
                 args.append(f"{field.name}={source_of(item)}")
+        for field_name, after in _READING_ORDER.get(name, {}).items():
+            moved = next((a for a in args if a.startswith(f"{field_name}=")), None)
+            anchor = next((a for a in args if a.startswith(f"{after}=")), None)
+            if moved is not None and anchor is not None:
+                args.remove(moved)
+                args.insert(args.index(anchor) + 1, moved)
         return f"{name}({', '.join(args)})"
     if isinstance(value, tuple):
         if len(value) == 1:
@@ -165,18 +197,22 @@ def class_source(spell: DataSpell) -> str:
         raise ValueError(
             f"{spell.name}: record keys the converter can't keep: {unknown}"
         )
+    components, material = _components(spell)
     rules = SpellRules(
         name=spell.name,
         level=spell.level,
-        school=spell.school,
-        classes=tuple(spell.classes),
+        school=_enum(spell, "school", School, spell.school),
+        classes=tuple(
+            _enum(spell, "class", CharacterClass, name) for name in spell.classes
+        ),
         casting_time=spell.casting_time,
         range=spell.range,
-        components=spell.components,
+        components=components,
+        material=material,
         duration=spell.duration,
         source=spell.source,
         description=spell.description,
-        usage_tags=tuple(spell.usage_tags),
+        usage_tags=tuple(spell.usage_tags),  # type: ignore[arg-type]
         target=spell.target,
     )
     lines = [
@@ -201,6 +237,39 @@ def class_source(spell: DataSpell) -> str:
             f"        return {source_of(effects)}",
         ]
     return "\n".join(lines) + "\n"
+
+
+def _enum(spell, what: str, enum_type, value):
+    try:
+        return enum_type(value)
+    except ValueError:
+        raise CannotConvert(
+            f"{spell.name}: {what} {value!r} isn't a {enum_type.__name__}"
+        ) from None
+
+
+def _components(spell) -> tuple[tuple[Component, ...], str]:
+    """(components, material) for the record's "V, S, M (...)", which must
+    read back exactly as it's written."""
+    text = spell.components or ""
+    match = _COMPONENTS.fullmatch(text)
+    if match is not None:
+        components = tuple(
+            component
+            for component, there in (
+                (Component.VERBAL, match["v"]),
+                (Component.SOMATIC, match["s"]),
+                (Component.MATERIAL, match["m"] is not None),
+            )
+            if there
+        )
+        material = match["m"] or ""
+        parts = [c.value for c in components if c is not Component.MATERIAL]
+        if material:
+            parts.append(f"M ({material})")
+        if ", ".join(parts) == text and components:
+            return components, material
+    raise CannotConvert(f"{spell.name}: components {text!r} aren't 'V, S, M (...)'")
 
 
 # ---------------------------------------------------------------------------
@@ -359,6 +428,11 @@ def differences(json_spell, class_spell) -> list[str]:
         "is_concentration",
         "is_ritual",
         "range_feet",
+        "school_enum",
+        "has_verbal",
+        "has_somatic",
+        "has_material",
+        "material_description",
     )
     found = [
         f"{field}: JSON {getattr(json_spell, field)!r}, class {getattr(class_spell, field)!r}"
@@ -419,10 +493,20 @@ def main() -> int:
         print("Nothing to convert.")
         return 0
     by_level: dict[int, dict[str, str]] = {}
+    left = []
     for spell in todo:
-        by_level.setdefault(spell.level, {})[class_name(spell.name)] = class_source(
-            spell
-        )
+        try:
+            source = class_source(spell)
+        except CannotConvert as reason:
+            left.append(str(reason))
+            continue
+        by_level.setdefault(spell.level, {})[class_name(spell.name)] = source
+    for reason in left:
+        print("LEFT AS JSON", reason)
+    todo = [s for s in todo if class_name(s.name) in by_level.get(s.level, {})]
+    if not todo:
+        print("Nothing to convert.")
+        return 0
     if args.dry_run:
         for classes in by_level.values():
             for source in classes.values():

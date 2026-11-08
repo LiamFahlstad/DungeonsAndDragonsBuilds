@@ -200,8 +200,11 @@ way, so a spell and a feature read alike and use the same tools.
 ```python
 class Fireball(ClassSpell):
     rules = SpellRules(
-        name="Fireball", level=3, school="Evocation", classes=("Sorcerer", "Wizard"),
-        casting_time="Action", range="150 feet", components="V, S, M (...)",
+        name="Fireball", level=3, school=School.EVOCATION,
+        classes=(CharacterClass.SORCERER, CharacterClass.WIZARD),
+        casting_time="Action", range="150 feet",
+        components=(Component.VERBAL, Component.SOMATIC, Component.MATERIAL),
+        material="a ball of bat guano and sulfur",
         duration="Instantaneous", source="Player's Handbook",
         description=("...\n" "Using a Higher-Level Spell Slot. ..."),
         usage_tags=("damage",), target=FeatureTarget.AREA,
@@ -218,6 +221,14 @@ class Fireball(ClassSpell):
 - `SpellRules` is the record's fields plus `usage_tags` and `target`; what the
   spell does is methods, as on a Feature. Per-grant data (casting ability,
   ruling, grant source) stays the constructor's, as for every Spell.
+- **What has a fixed set of values is an enum** (R19): `school` a `School`,
+  `classes` `CharacterClass`es, `components` `Component` flags in card order
+  plus a `material` text, `usage_tags` the shared `UsageTag` literal (as on
+  Feature), `target` a `FeatureTarget`, and in combat effects a rules
+  condition is `CombatCondition(Condition.PRONE)` (a badge keeps its text
+  name). `ClassSpell` turns them back into the card's text, so the `Spell`
+  interface is unchanged. `casting_time`, `range`, `duration` and `source`
+  stay the source's words.
 - One module per level in `CharacterContent/Spells/SpellClasses/`
   (`Cantrips.py`, `Level1.py`, ...), each ending in `SPELLS = [...]`;
   `SpellClasses/__init__.py` builds `SPELL_CLASSES` by name and refuses two
@@ -248,6 +259,7 @@ module's own imports and classes when adding to it.
 |---|---|---|
 | S.1 | `ClassSpell` + `SpellRules`, the factory preferring classes, the converter, `tests/test_spell_classes.py`; the skills, agents, HOWTO and IMPROVED_DESCRIPTIONS.md say where a class spell is edited | **Done** |
 | S.2 | Convert the spells with combat effects (57: the ones where the JSON hit its limits) | **Done**: picker goldens and sheet snapshots unchanged; the converter's check passed for all 57 |
+| S.2b | The converter writes enums where the values are a fixed set (R19), and leaves a spell it can't express as JSON with the reason (`CannotConvert`) | **Done**: the 57 regenerated with enums; 574 of the 594 spells can be converted, the 20 others are DI-062 and DI-063 |
 | S.3 | Write new combat effects in classes, not JSON: convert a spell, then edit its `combat_effects()`. Teach `spell_mechanics.py draft` to print a class's method instead of a JSON entry, and give the `spell-mechanics` agent classes in scope | Not started |
 | S.4 | Convert the rest (Q11) and retire the companion files: once every spell of a source has a class, its `_extended`/`_improved`/`_combat_effects` files and `DataSpell`'s companion handling go | Not started |
 | S.5 | Drift check: a re-scrape that changes a converted spell's record must be noticed (Q12) | Not started |
@@ -370,6 +382,19 @@ Sheet chips ("DEX save · half · 8d6 Fire") from the same data;
   converting 57 spells silently dropped ~460 test cases. They now run over
   every spell that has one, class or JSON; only the tests about the files
   themselves stay on JSON entries.
+- **R19. Enums where the values are a fixed set, text where they aren't.**
+  School, classes, components, usage tags and rules conditions are closed
+  sets that code filters and checks on, so a typo should fail when the class
+  is imported, not show up as a missing chip. Casting time, range and
+  duration are not: the sources word them differently ("Action" / "1
+  action"), attach triggers and notes ("Reaction, which you take when..."),
+  and `casting_time_type`, `range_feet` and `duration_seconds` already read
+  what code needs from them; a structured form would have to reproduce every
+  wording to keep the cards unchanged. Source names are a closed set in
+  principle but the data has duplicate spellings (Q14). The converter
+  refuses a record that doesn't fit rather than normalizing it: changing a
+  card's text is a decision for a person, and the parity check would have to
+  allow it.
 
 ## Open questions (with suggestions)
 
@@ -417,6 +442,16 @@ Sheet chips ("DEX save · half · 8d6 Fire") from the same data;
   its `print` calls as debug output. *Suggestion:* keep it there (it
   belongs with the spells and the generator) and teach the check that a
   module with a `__main__` block may print.
+- **Q14. Sourcebooks as an enum?** `source` has 25 values, several of them
+  the same book spelled two ways ("Forgotten Realms - Heroes of Faerun" /
+  "Forgotten Realms: Heroes of Faer�n", "Player's Handbook 2024" / "...
+  (BR)"). *Suggestion:* a `Sourcebook` enum with one member per book and the
+  scraped spellings mapped onto it in the scrapers, then `SpellRules.source`
+  becomes the enum. Do it with a re-scrape, not in the converter.
+- **Q15. A note on a school or class** (Wildemount's Dunamancy, DI-063).
+  *Suggestion:* `SpellRules.school_note: str = ""`, written by the converter
+  from "(Dunamancy:Graviturgy)", shown on the card after the school, and the
+  "Wizard (Dunamancy)" class read as Wizard plus that note.
 
 ## Discovered issues
 
@@ -426,6 +461,11 @@ Sheet chips ("DEX save · half · 8d6 Fire") from the same data;
   (Optional Qt accessors, `QTest.keyClick` overloads). All tests pass.
 - **DI-061** (open): homebrew Mira, Princess of the Loop has 6 abilities; the
   house rule is at most 4.
+- **DI-062** (open): five spell records have malformed components ('V,S',
+  'M(a diamond ...)', a stray 'Component: ', none at all), so the converter
+  leaves them as JSON. A scraper fix.
+- **DI-063** (open): 15 Dunamancy spells have a school or class with a note
+  (Q15), so the converter leaves them as JSON.
 - Found and fixed: the text-reading tests dropped a spell's data by its old
   key name; the single golden file broke under parallel test runs (R11).
 

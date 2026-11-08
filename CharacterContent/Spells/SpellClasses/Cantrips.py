@@ -4,7 +4,8 @@ CharacterContent/Spells/SpellClassConverter.py; edit them by hand from
 then on: each class is its spell's one source."""
 
 from CharacterContent.Spells.SpellFactory.ClassSpell import ClassSpell, SpellRules
-from Core.Definitions import Ability, DamageType
+from CharacterContent.Spells.SpellFactory.Enums import Component, School
+from Core.Definitions import Ability, CharacterClass, Condition, DamageType
 from Model.Content.CombatEffect import (
     CombatCondition,
     CombatDamage,
@@ -20,11 +21,15 @@ class ChillTouch(ClassSpell):
     rules = SpellRules(
         name="Chill Touch",
         level=0,
-        school="Necromancy",
-        classes=("Sorcerer", "Warlock", "Wizard"),
+        school=School.NECROMANCY,
+        classes=(
+            CharacterClass.SORCERER,
+            CharacterClass.WARLOCK,
+            CharacterClass.WIZARD,
+        ),
         casting_time="Action",
         range="Touch",
-        components="V, S",
+        components=(Component.VERBAL, Component.SOMATIC),
         duration="Instantaneous",
         source="Player's Handbook",
         description=(
@@ -88,11 +93,11 @@ class EldritchBlast(ClassSpell):
     rules = SpellRules(
         name="Eldritch Blast",
         level=0,
-        school="Evocation",
-        classes=("Warlock",),
+        school=School.EVOCATION,
+        classes=(CharacterClass.WARLOCK,),
         casting_time="Action",
         range="120 feet",
-        components="V, S",
+        components=(Component.VERBAL, Component.SOMATIC),
         duration="Instantaneous",
         source="Player's Handbook",
         description=(
@@ -154,11 +159,17 @@ class Friends(ClassSpell):
     rules = SpellRules(
         name="Friends",
         level=0,
-        school="Enchantment",
-        classes=("Bard", "Sorcerer", "Warlock", "Wizard"),
+        school=School.ENCHANTMENT,
+        classes=(
+            CharacterClass.BARD,
+            CharacterClass.SORCERER,
+            CharacterClass.WARLOCK,
+            CharacterClass.WIZARD,
+        ),
         casting_time="Action",
         range="10 feet",
-        components="S, M (some makeup)",
+        components=(Component.SOMATIC, Component.MATERIAL),
+        material="some makeup",
         duration="Concentration, up to 1 minute",
         source="Player's Handbook",
         description=(
@@ -204,7 +215,7 @@ class Friends(ClassSpell):
             CombatEffect(
                 roll="save",
                 save_ability=Ability.WISDOM,
-                conditions=(CombatCondition("Charmed"),),
+                conditions=(CombatCondition(Condition.CHARMED),),
                 notes=(
                     "The target succeeds automatically if it isn't a Humanoid, if you're fighting it, or if you've cast this on it in the past 24 hours.",
                     "The spell ends early if the target takes damage or you make an attack roll, deal damage or force a saving throw.",
@@ -217,11 +228,11 @@ class Guidance(ClassSpell):
     rules = SpellRules(
         name="Guidance",
         level=0,
-        school="Divination",
-        classes=("Artificer", "Cleric", "Druid"),
+        school=School.DIVINATION,
+        classes=(CharacterClass.ARTIFICER, CharacterClass.CLERIC, CharacterClass.DRUID),
         casting_time="Action",
         range="Touch",
-        components="V, S",
+        components=(Component.VERBAL, Component.SOMATIC),
         duration="Concentration, up to 1 minute",
         source="Player's Handbook",
         description="You touch a willing creature and choose a skill. Until the spell ends, the creature adds 1d4 to any ability check using the chosen skill.",
@@ -261,11 +272,18 @@ class Message(ClassSpell):
     rules = SpellRules(
         name="Message",
         level=0,
-        school="Transmutation",
-        classes=("Artificer", "Bard", "Druid", "Sorcerer", "Wizard"),
+        school=School.TRANSMUTATION,
+        classes=(
+            CharacterClass.ARTIFICER,
+            CharacterClass.BARD,
+            CharacterClass.DRUID,
+            CharacterClass.SORCERER,
+            CharacterClass.WIZARD,
+        ),
         casting_time="Action",
         range="120 feet",
-        components="S, M (a copper wire)",
+        components=(Component.SOMATIC, Component.MATERIAL),
+        material="a copper wire",
         duration="1 round",
         source="Player's Handbook",
         description=(
@@ -311,11 +329,17 @@ class MinorIllusion(ClassSpell):
     rules = SpellRules(
         name="Minor Illusion",
         level=0,
-        school="Illusion",
-        classes=("Bard", "Sorcerer", "Warlock", "Wizard"),
+        school=School.ILLUSION,
+        classes=(
+            CharacterClass.BARD,
+            CharacterClass.SORCERER,
+            CharacterClass.WARLOCK,
+            CharacterClass.WIZARD,
+        ),
         casting_time="Action",
         range="30 feet",
-        components="S, M (a bit of fleece)",
+        components=(Component.SOMATIC, Component.MATERIAL),
+        material="a bit of fleece",
         duration="1 minute",
         source="Player's Handbook",
         description=(
@@ -393,11 +417,11 @@ class ProduceFlame(ClassSpell):
     rules = SpellRules(
         name="Produce Flame",
         level=0,
-        school="Conjuration",
-        classes=("Druid",),
+        school=School.CONJURATION,
+        classes=(CharacterClass.DRUID,),
         casting_time="Bonus Action",
         range="Self",
-        components="V, S",
+        components=(Component.VERBAL, Component.SOMATIC),
         duration="10 minutes",
         source="Player's Handbook",
         description=(
@@ -475,11 +499,11 @@ class Resistance(ClassSpell):
     rules = SpellRules(
         name="Resistance",
         level=0,
-        school="Abjuration",
-        classes=("Artificer", "Cleric", "Druid"),
+        school=School.ABJURATION,
+        classes=(CharacterClass.ARTIFICER, CharacterClass.CLERIC, CharacterClass.DRUID),
         casting_time="Action",
         range="Touch",
-        components="V, S",
+        components=(Component.VERBAL, Component.SOMATIC),
         duration="Concentration, up to 1 minute",
         source="Player's Handbook",
         description="You touch a willing creature and choose a damage type: Acid, Bludgeoning, Cold, Fire, Lightning, Necrotic, Piercing, Poison, Radiant, Slashing, or Thunder. When the creature takes damage of the chosen type before the spell ends, the creature reduces the total damage taken by 1d4. A creature can benefit from this spell only once per turn.",
@@ -529,11 +553,11 @@ class SacredFlame(ClassSpell):
     rules = SpellRules(
         name="Sacred Flame",
         level=0,
-        school="Evocation",
-        classes=("Cleric",),
+        school=School.EVOCATION,
+        classes=(CharacterClass.CLERIC,),
         casting_time="Action",
         range="60 feet",
-        components="V, S",
+        components=(Component.VERBAL, Component.SOMATIC),
         duration="Instantaneous",
         source="Player's Handbook",
         description=(
@@ -599,11 +623,11 @@ class SpareTheDying(ClassSpell):
     rules = SpellRules(
         name="Spare the Dying",
         level=0,
-        school="Necromancy",
-        classes=("Artificer", "Cleric", "Druid"),
+        school=School.NECROMANCY,
+        classes=(CharacterClass.ARTIFICER, CharacterClass.CLERIC, CharacterClass.DRUID),
         casting_time="Action",
         range="15 feet",
-        components="V, S",
+        components=(Component.VERBAL, Component.SOMATIC),
         duration="Instantaneous",
         source="Player's Handbook",
         description=(
@@ -659,11 +683,11 @@ class StarryWisp(ClassSpell):
     rules = SpellRules(
         name="Starry Wisp",
         level=0,
-        school="Evocation",
-        classes=("Bard", "Druid"),
+        school=School.EVOCATION,
+        classes=(CharacterClass.BARD, CharacterClass.DRUID),
         casting_time="Action",
         range="60 feet",
-        components="V, S",
+        components=(Component.VERBAL, Component.SOMATIC),
         duration="Instantaneous",
         source="Player's Handbook",
         description=(
@@ -726,11 +750,11 @@ class Thaumaturgy(ClassSpell):
     rules = SpellRules(
         name="Thaumaturgy",
         level=0,
-        school="Transmutation",
-        classes=("Cleric",),
+        school=School.TRANSMUTATION,
+        classes=(CharacterClass.CLERIC,),
         casting_time="Action",
         range="30 feet",
-        components="V",
+        components=(Component.VERBAL,),
         duration="Up to 1 minute",
         source="Player's Handbook",
         description=(
@@ -798,11 +822,11 @@ class TollTheDead(ClassSpell):
     rules = SpellRules(
         name="Toll the Dead",
         level=0,
-        school="Necromancy",
-        classes=("Cleric", "Warlock", "Wizard"),
+        school=School.NECROMANCY,
+        classes=(CharacterClass.CLERIC, CharacterClass.WARLOCK, CharacterClass.WIZARD),
         casting_time="Action",
         range="60 feet",
-        components="V, S",
+        components=(Component.VERBAL, Component.SOMATIC),
         duration="Instantaneous",
         source="Player's Handbook",
         description=(
@@ -888,11 +912,18 @@ class TrueStrike(ClassSpell):
     rules = SpellRules(
         name="True Strike",
         level=0,
-        school="Divination",
-        classes=("Artificer", "Bard", "Sorcerer", "Warlock", "Wizard"),
+        school=School.DIVINATION,
+        classes=(
+            CharacterClass.ARTIFICER,
+            CharacterClass.BARD,
+            CharacterClass.SORCERER,
+            CharacterClass.WARLOCK,
+            CharacterClass.WIZARD,
+        ),
         casting_time="Action",
         range="Self",
-        components="S, M (a weapon with which you have proficiency and that is worth 1+ CP)",
+        components=(Component.SOMATIC, Component.MATERIAL),
+        material="a weapon with which you have proficiency and that is worth 1+ CP",
         duration="Instantaneous",
         source="Player's Handbook",
         description=(
@@ -963,11 +994,11 @@ class ViciousMockery(ClassSpell):
     rules = SpellRules(
         name="Vicious Mockery",
         level=0,
-        school="Enchantment",
-        classes=("Bard",),
+        school=School.ENCHANTMENT,
+        classes=(CharacterClass.BARD,),
         casting_time="Action",
         range="60 feet",
-        components="V",
+        components=(Component.VERBAL,),
         duration="Instantaneous",
         source="Player's Handbook",
         description=(

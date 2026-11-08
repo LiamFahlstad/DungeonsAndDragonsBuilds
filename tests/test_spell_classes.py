@@ -22,7 +22,8 @@ from CharacterContent.Spells.SpellFactory import (
     SpellFactory,
     SpellRules,
 )
-from Core.Definitions import Ability, DamageType
+from CharacterContent.Spells.SpellFactory.Enums import Component, School
+from Core.Definitions import Ability, CharacterClass, Condition, DamageType
 from Model.Content.CombatEffect import (
     CombatCondition,
     CombatDamage,
@@ -115,24 +116,70 @@ def test_every_module_lists_its_classes():
 
 
 def test_rules_need_a_name_and_a_level():
-    def rules(name: str, level: int) -> SpellRules:
-        return SpellRules(
-            name=name,
-            level=level,
-            school="Evocation",
-            classes=(),
-            casting_time="Action",
-            range="Self",
-            components="V",
-            duration="Instantaneous",
-            source="Homebrew",
-            description="",
-        )
+    with pytest.raises(ValueError):
+        _rules(name=" ")
+    with pytest.raises(ValueError):
+        _rules(name="Big Bang", level=10)
 
+
+def _rules(**changes) -> SpellRules:
+    values = dict(
+        name="Test Spell",
+        level=1,
+        school=School.EVOCATION,
+        classes=(CharacterClass.WIZARD,),
+        casting_time="Action",
+        range="Self",
+        components=(Component.VERBAL,),
+        duration="Instantaneous",
+        source="Homebrew",
+        description="",
+    )
+    values.update(changes)
+    return SpellRules(**values)  # type: ignore[arg-type]
+
+
+class _Test(ClassSpell):
+    rules = _rules(
+        components=(Component.VERBAL, Component.SOMATIC, Component.MATERIAL),
+        material="a pinch of salt",
+        classes=(CharacterClass.CLERIC, CharacterClass.WIZARD),
+    )
+
+
+def test_the_enums_read_as_the_cards_text():
+    spell = _Test()
+    assert spell.components == "V, S, M (a pinch of salt)"
+    assert (spell.has_verbal, spell.has_somatic, spell.has_material) == (
+        True,
+        True,
+        True,
+    )
+    assert spell.material_description == "a pinch of salt"
+    assert (spell.school, spell.school_enum) == ("Evocation", School.EVOCATION)
+    assert spell.classes == ["Cleric", "Wizard"]
+    assert all(type(name) is str for name in spell.classes)
+
+
+@pytest.mark.parametrize(
+    "components, material",
+    [
+        ((Component.SOMATIC, Component.VERBAL), ""),  # not in card order
+        ((Component.VERBAL, Component.VERBAL), ""),
+        ((Component.VERBAL,), "a pinch of salt"),  # a material without an M
+    ],
+)
+def test_components_are_v_s_m_once_each(components, material):
     with pytest.raises(ValueError):
-        rules(" ", 1)
-    with pytest.raises(ValueError):
-        rules("Big Bang", 10)
+        _rules(components=components, material=material)
+
+
+def test_a_rules_condition_is_kept_as_its_name():
+    """CombatCondition(Condition.PRONE) is CombatCondition("Prone"): the
+    dialog and the logs see text, whichever way the class wrote it."""
+    prone = CombatCondition(Condition.PRONE)
+    assert prone == CombatCondition("Prone")
+    assert type(prone.name) is str
 
 
 # ---------------------------------------------------------------------------
@@ -176,11 +223,17 @@ def test_rules_need_a_name_and_a_level():
         ],
         FeatureTarget.AREA,
         "One line\nanother line\n",
+        _Test.rules,
     ],
 )
 def test_written_source_reads_back_as_the_same_value(value):
     names = {
         "Ability": Ability,
+        "CharacterClass": CharacterClass,
+        "Component": Component,
+        "Condition": Condition,
+        "School": School,
+        "SpellRules": SpellRules,
         "DamageType": DamageType,
         "CombatCondition": CombatCondition,
         "CombatDamage": CombatDamage,
@@ -194,6 +247,41 @@ def test_written_source_reads_back_as_the_same_value(value):
         "Table": Table,
     }
     assert eval(converter.source_of(value), names) == value
+
+
+def test_written_source_uses_enums_where_there_are_some():
+    assert converter.source_of(CombatCondition("Prone")) == (
+        "CombatCondition(Condition.PRONE)"
+    )
+    assert converter.source_of(CombatCondition("Bless")) == "CombatCondition('Bless')"
+    rules = converter.source_of(_Test.rules)
+    assert "school=School.EVOCATION" in rules
+    assert "classes=(CharacterClass.CLERIC, CharacterClass.WIZARD)" in rules
+    # The material is written beside its component, not after the text.
+    assert rules.index("material=") == rules.index("components=") + len(
+        "components=(Component.VERBAL, Component.SOMATIC, Component.MATERIAL), "
+    )
+
+
+def _record(**changes) -> DataSpell:
+    record = dict(SpellFactory._load_json()["Fireball"])
+    record.update(changes)
+    return DataSpell(record)
+
+
+@pytest.mark.parametrize(
+    "changes",
+    [
+        {"school": "Evocation (Dunamancy)"},
+        {"classes": ["Wizard (Dunamancy)"]},
+        {"components": "V,S"},
+        {"components": "V, S, M(a diamond)"},
+        {"components": None},
+    ],
+)
+def test_a_spell_the_enums_cant_say_is_left_as_json(changes):
+    with pytest.raises(converter.CannotConvert):
+        converter.class_source(_record(**changes))
 
 
 @pytest.mark.parametrize(

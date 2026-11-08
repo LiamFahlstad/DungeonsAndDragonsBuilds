@@ -46,7 +46,7 @@ import re
 from dataclasses import dataclass, fields
 from typing import Any, Literal
 
-from Core.Definitions import Ability, DamageType
+from Core.Definitions import Ability, Condition, DamageType
 from Model.Content.ActionType import ActionType
 
 # "2d4", "1d8 + 3", or a flat "5".
@@ -132,6 +132,10 @@ class CombatCondition:
     duration_seconds: int | None = None
 
     def __post_init__(self):
+        # A rules condition can be given as itself (Condition.PRONE); it's
+        # kept as its name, as a badge's is, so logs and the dialog see text.
+        if isinstance(self.name, Condition):
+            object.__setattr__(self, "name", self.name.value)
         if not self.name.strip():
             raise ValueError("A condition needs a name")
         if self.until is not None:
