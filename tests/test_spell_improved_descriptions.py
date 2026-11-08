@@ -1,6 +1,7 @@
 """
 Improved spell descriptions (CharacterContent/Spells/IMPROVED_DESCRIPTIONS.md):
-the same rules as a spell's source text, as FeatureText blocks in a
+the same rules as a spell's source text, as FeatureText blocks, in a spell's
+class (CharacterContent/Spells/SpellClasses) or in a
 spells_<source>_improved.json. Shown on the card instead of the source;
 RunCharacterCreator.py --source-text prints the source instead.
 """
@@ -39,6 +40,11 @@ def _improved_entries():
 
 ENTRIES = _improved_entries()
 ENTRY_IDS = [f"{path.rsplit('/', 1)[-1]}:{name}" for path, name, _ in ENTRIES]
+# Every spell with an improved description, in a JSON file or in its class.
+IMPROVED = sorted(
+    (s for s in SpellFactory.all_spells() if s.improved_description is not None),
+    key=lambda spell: spell.name,
+)
 
 
 def _source(path):
@@ -53,53 +59,58 @@ def _card(spell, source_text=False) -> str:
 
 
 @pytest.mark.parametrize("path,name,blocks", ENTRIES, ids=ENTRY_IDS)
-class TestEveryImprovedDescription:
+class TestEveryImprovedDescriptionEntry:
     def test_it_names_a_spell_in_its_own_source(self, path, name, blocks):
         # An entry keyed by a misspelled name, or written for a spell another
         # source holds, would be silently dropped by the factory.
         assert name in _source(path)
 
-    def test_it_renders(self, path, name, blocks):
-        assert improved_description_to_html(blocks_from_json(blocks))
+    def test_it_is_the_one_the_factory_loads(self, path, name, blocks):
+        # A higher-priority source holding the same spell wins outright, so
+        # this entry would never be shown; so does the spell's class.
+        spell = SpellFactory.create(name)
+        assert spell.improved_description == blocks_from_json(blocks)
 
-    def test_it_keeps_the_upcasting_rules(self, path, name, blocks):
+
+@pytest.mark.parametrize("spell", IMPROVED, ids=[s.name for s in IMPROVED])
+class TestEveryImprovedDescription:
+    def test_it_renders(self, spell):
+        assert improved_description_to_html(spell.improved_description)
+
+    def test_it_keeps_the_upcasting_rules(self, spell):
         # The source's upcasting and cantrip scaling paragraphs each become
         # an Option of the same name - the scroll card drops upcasting by it.
-        description = _source(path)[name]["description"]
         option_names = {
             block.name
-            for block in blocks_from_json(blocks)
+            for block in spell.improved_description
             if isinstance(block, Option)
         }
         for heading in (*UPCAST_OPTION_NAMES, "Cantrip Upgrade"):
-            if heading in description:
-                assert heading in option_names, f"{name}: no {heading!r} Option"
+            if heading in spell.description:
+                assert heading in option_names, f"{spell.name}: no {heading!r} Option"
 
-    def test_its_flavor_is_quoted_from_the_source(self, path, name, blocks):
+    def test_its_flavor_is_quoted_from_the_source(self, spell):
         # A Flavor row quotes the source text (or the aidedd text when the
         # source's is missing); it never paraphrases or adds flavor. Its
         # first letter may be capitalized and a period added, nothing more.
-        source = _source(path)[name]["description"] or _source(
+        source = spell.description or _source(
             "CharacterContent/Spells/spells_aidedd.json"
-        ).get(name, {}).get("description", "")
+        ).get(spell.name, {}).get("description", "")
         source = source.replace("�", "'").replace("’", "'").replace("‘", "'")
+        blocks = spell.improved_description
         for block in blocks:
-            for label, value in block.get("facts", ()):
+            if not isinstance(block, Facts):
+                continue
+            for label, value in block.rows:
                 if label != "Flavor":
                     continue
-                assert block is blocks[0], f"{name}: Flavor isn't the card's first row"
+                assert block is blocks[0], f"{spell.name}: Flavor isn't first"
                 for sentence in value.rstrip(".").split(". "):
                     sentence = sentence.rstrip(".")
                     assert (
                         sentence in source
                         or sentence[0].lower() + sentence[1:] in source
-                    ), f"{name}: Flavor isn't verbatim: {sentence!r}"
-
-    def test_it_is_the_one_the_factory_loads(self, path, name, blocks):
-        # A higher-priority source holding the same spell wins outright, so
-        # this entry would never be shown.
-        spell = SpellFactory.create(name)
-        assert spell.improved_description == blocks_from_json(blocks)
+                    ), f"{spell.name}: Flavor isn't verbatim: {sentence!r}"
 
 
 class TestSpellCard:
@@ -129,12 +140,10 @@ class TestSpellCard:
         assert "feature-box" not in html
 
     def test_spells_without_one_keep_their_source_text(self):
-        # Fireball's record with its improved description taken out, so the
+        # Fireball's JSON record without an improved description, so the
         # test doesn't depend on which spells have one yet.
-        fireball = SpellFactory.create("Fireball")
-        assert isinstance(fireball, DataSpell)
-        data = dict(fireball._data)
-        del data["improved_description"]
+        data = dict(SpellFactory._load_json()["Fireball"])
+        data.pop("improved_description", None)
         html = _card(DataSpell(data))
         assert "low roar" in html
         assert "feature-box" not in html

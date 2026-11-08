@@ -13,7 +13,7 @@ change:
 - log bugs found along the way with the `discovered-issues` skill and list
   their ids in **Discovered issues**.
 
-## Status (2026-11-09)
+## Status (2026-11-09, evening)
 
 | Phase | Step | State |
 |---|---|---|
@@ -32,7 +32,8 @@ change:
 | 2 | 2.6 `Feature.adjust_combat_effect` hook | **Done** |
 | 2 | 2.7 Conditional extra damage (`when`) | **Done**, as a generated note (R14) |
 | 2 | Extensions list their own uses under their parent | **Done** (R10, new) |
-| 3 | Lasting effects (3.1-3.6) | Not started: **next** |
+| S | **Spells as classes** (new direction, 2026-11-09; see its section) | S.1 base class, factory and converter **done**; S.2 the 57 spells with combat effects converted **done**; S.3-S.5 not started |
+| 3 | Lasting effects (3.1-3.6) | Not started |
 | 4 | One `combat-effects` skill; feature agent; content rollout | Partly: the skill's rubric and script cover every new field; first content batch below |
 | 5 | Sheet chips, monster score | Not started |
 
@@ -64,6 +65,13 @@ Accepted as recommended when the user said "go ahead with plan" (2026-11-08):
 "Continue and do as you recommend" (2026-11-09) accepted Q1 and Q3 as
 suggested.
 
+6. **Spells become classes, like Features, with the JSON as the fallback when
+   a spell has no class** (the user, 2026-11-09: "spells in JSON format have
+   reached their limit"). This replaces Decision 1 for spells: a spell's
+   rules, improved description and combat effects are Python in its class;
+   the scraped JSON stays as the source of record for spells not converted
+   yet. See "Spells as classes".
+
 ## Goal
 
 The Custom Effect dialog is what the GM uses for almost everything in a fight.
@@ -82,9 +90,11 @@ should be filled in **by one model, through one code path**, so that:
 
 1. **One vocabulary.** `CombatEffect` and its parts describe what a use does.
    Spells, features, monster abilities (and later weapons) all produce it.
-2. **Two notations, one format.** Features write it in Python, spells in
-   JSON. The JSON is exactly what `to_dict()` writes and `from_dict()` reads;
-   fight logs store the same fields. One validator checks all of them.
+2. **Python first, one format.** Features and spells with a class write it in
+   Python; a spell not converted yet can still have a JSON entry, exactly
+   what `to_dict()` writes and `from_dict()` reads, and fight logs store the
+   same fields. One validator checks all of them. (Was "features in Python,
+   spells in JSON" until Decision 6.)
 3. **The model describes the rules, not the form.** The adapter that fills the
    dialog decides what fits and turns the rest into notes.
 4. **Content never imports Combat.** The vocabulary lives in `Model/Content/`.
@@ -176,7 +186,73 @@ with_bonus("1d8", 4) == "1d8 + 4"
   (`_apply_custom_effects`).
 - **Spending a spell row** uses `spell_name`, not the row's name.
 
-### Lasting effects (Phase 3, design unchanged, next)
+## Spells as classes (new direction, 2026-11-09)
+
+**Why.** The JSON was enough for what a form shows, but the next steps need
+what data can't say well: an effect that depends on the caster (a choice
+made at casting, a subclass feature), shared helpers (dice at a slot), the
+Phase 3 modifiers and triggers, summons, and one place to read a spell
+whole. Features already do all this as classes. Spells should work the same
+way, so a spell and a feature read alike and use the same tools.
+
+**What it looks like.** `CharacterContent/Spells/SpellFactory/ClassSpell.py`:
+
+```python
+class Fireball(ClassSpell):
+    rules = SpellRules(
+        name="Fireball", level=3, school="Evocation", classes=("Sorcerer", "Wizard"),
+        casting_time="Action", range="150 feet", components="V, S, M (...)",
+        duration="Instantaneous", source="Player's Handbook",
+        description=("...\n" "Using a Higher-Level Spell Slot. ..."),
+        usage_tags=("damage",), target=FeatureTarget.AREA,
+    )
+
+    @property
+    def improved_description(self) -> list[Block]:
+        return [Facts(...), Table(...), Option("Using a Higher-Level Spell Slot", (...))]
+
+    def combat_effects(self, character=None) -> list[CombatEffect]:
+        return [CombatEffect(roll="save", save_ability=Ability.DEXTERITY, ...)]
+```
+
+- `SpellRules` is the record's fields plus `usage_tags` and `target`; what the
+  spell does is methods, as on a Feature. Per-grant data (casting ability,
+  ruling, grant source) stays the constructor's, as for every Spell.
+- One module per level in `CharacterContent/Spells/SpellClasses/`
+  (`Cantrips.py`, `Level1.py`, ...), each ending in `SPELLS = [...]`;
+  `SpellClasses/__init__.py` builds `SPELL_CLASSES` by name and refuses two
+  classes for one spell.
+- `SpellFactory.create(name)` gives the class if there is one, else the
+  `DataSpell` of the JSON record; `all_spells()` and `spell_names()` include
+  spells only a class has (homebrew needs no JSON at all).
+- **One source per spell.** Converting takes the spell's entries out of its
+  source's companion files (`_extended`, `_improved`, `_combat_effects`);
+  `tests/test_spell_classes.py` fails if one is left, and
+  `spell_mechanics.py check`/`add` point at the class. The scraped
+  `spells_<source>.json` record stays: it's the fallback, what scrapers
+  write, and what a re-scrape is compared against.
+
+**The converter** (`python -m CharacterContent.Spells.SpellClassConverter`,
+`--name`, `--described`, `--level N`, `--all`, `--dry-run`, `--keep-json`)
+writes each class from the record and its companions, as readable code
+(keywords for `SpellRules`, the description one source paragraph per line,
+blocks and effects as constructor calls), formats it with Black, then
+imports it and compares it with the JSON spell: every rules field, tags,
+target, improved description, combat effects, and the derived duration,
+Concentration, ritual and range. Only when every class matches does it
+remove the companion entries; otherwise it takes the classes back out. It
+never touches a spell that has a class (hand edits are safe) and keeps a
+module's own imports and classes when adding to it.
+
+| # | Step | State / done when |
+|---|---|---|
+| S.1 | `ClassSpell` + `SpellRules`, the factory preferring classes, the converter, `tests/test_spell_classes.py`; the skills, agents, HOWTO and IMPROVED_DESCRIPTIONS.md say where a class spell is edited | **Done** |
+| S.2 | Convert the spells with combat effects (57: the ones where the JSON hit its limits) | **Done**: picker goldens and sheet snapshots unchanged; the converter's check passed for all 57 |
+| S.3 | Write new combat effects in classes, not JSON: convert a spell, then edit its `combat_effects()`. Teach `spell_mechanics.py draft` to print a class's method instead of a JSON entry, and give the `spell-mechanics` agent classes in scope | Not started |
+| S.4 | Convert the rest (Q11) and retire the companion files: once every spell of a source has a class, its `_extended`/`_improved`/`_combat_effects` files and `DataSpell`'s companion handling go | Not started |
+| S.5 | Drift check: a re-scrape that changes a converted spell's record must be noticed (Q12) | Not started |
+
+## Lasting effects (Phase 3, design unchanged)
 
 A `CombatCondition` on a target becomes an `ActiveEffect` on that combatant:
 one record with its name, source, the caster, duration, concentration link,
@@ -280,6 +356,20 @@ Sheet chips ("DEX save · half · 8d6 Fire") from the same data;
 - **R15. Spell rows count their cast through `counts_uses`, like features.**
   It was only meaningful for features; now every spell row sets it, and a
   later step of one casting (`spends_use=False`) clears it.
+- **R16. A spell class holds its rules in one `SpellRules` record, not ten
+  overridden properties.** Features take their metadata as constructor
+  keywords, but a spell's constructor already belongs to its grant (casting
+  ability, ruling). A class-level record keeps the two apart, reads like the
+  JSON it came from, and lets the converter write it in one call.
+- **R17. Spell classes live in one module per level, not one file per spell.**
+  900 files would bury the folder, and features are grouped by class too.
+  The converter appends to a module safely (it parses it, keeps hand-written
+  classes and imports, and rebuilds only the import block and `SPELLS`).
+- **R18. Rules tests follow the spell, not the file.** The improved-description
+  and combat-effects rules tests were parametrized over the JSON entries, so
+  converting 57 spells silently dropped ~460 test cases. They now run over
+  every spell that has one, class or JSON; only the tests about the files
+  themselves stay on JSON entries.
 
 ## Open questions (with suggestions)
 
@@ -308,6 +398,25 @@ Sheet chips ("DEX save · half · 8d6 Fire") from the same data;
 - **Q10. Repeated *saves* (Times with a saving throw)** are possible but no
   described effect uses them yet. *Suggestion:* leave it until one does, then
   test it.
+- **Q11. Convert all spells now, or as they're described?** All at once
+  (`--all`: about 900 classes over both editions) gives one source right
+  away and lets S.4 delete the companion files and `DataSpell`'s merging; but
+  the `spell-improved-descriptions` agent's JSON workflow then has to move to
+  classes in the same step, and the diff is large. *Suggestion:* first S.3
+  (new combat effects go into classes), then convert level by level with the
+  agents' workflow switched over, cantrips first; delete the companion files
+  in S.4 once nothing is left in them.
+- **Q12. A converted spell no longer notices a re-scrape.** Its class keeps
+  the text it was converted from, and the scraped record can change under
+  it. *Suggestion:* the converter stores a hash of the record it converted
+  from as a class attribute (`rules_from = "sha1:..."`), and a test lists
+  every class whose record changed since, for a person to merge by hand.
+  (This replaces spell-mechanics-plan Step 14's lock file.)
+- **Q13. Where should the converter live?** It's a command-line tool in
+  content code (beside `SpellGenerator.py`), so `review-house-rules` flags
+  its `print` calls as debug output. *Suggestion:* keep it there (it
+  belongs with the spells and the generator) and teach the check that a
+  module with a `__main__` block may print.
 
 ## Discovered issues
 

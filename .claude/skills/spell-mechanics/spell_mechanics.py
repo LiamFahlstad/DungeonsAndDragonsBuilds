@@ -1,6 +1,8 @@
 """Check, compare, draft and add spells' combat effects: the entries of
 CharacterContent/Spells/spells_<source>_combat_effects.json that the combat
-UI's Custom Effect picker fills its form from. An entry is a list of
+UI's Custom Effect picker fills its form from. A spell written as a class
+(CharacterContent/Spells/SpellClasses) has its combat effects in its class
+instead: `todo` counts it as described, and `add` refuses it. An entry is a list of
 CombatEffect dicts (Model/Content/CombatEffect.py: what to_dict() writes and
 from_dict() reads), one per way to cast the spell, or [] for a spell with
 nothing to apply.
@@ -382,6 +384,11 @@ def cmd_check(_args) -> int:
                 problems.append(
                     f"{rel}: {name!r} is never used: {winner} wins for that spell"
                 )
+            if name in SpellFactory._spell_classes():
+                problems.append(
+                    f"{rel}: {name!r} is never used: the spell has a class"
+                    " (CharacterContent/Spells/SpellClasses); edit its class"
+                )
             spell = DataSpell(source[name])
             problems += [f"{rel}: {p}" for p in entry_problems(name, value, spell)]
         if text != dumps(normalized(entries)):
@@ -434,6 +441,13 @@ def cmd_add(args) -> int:
         source_path = winning_source(name, all_sources)
         if source_path is None:
             problems.append(f"{name!r} is not a spell")
+            continue
+        if name in SpellFactory._spell_classes():
+            module = SpellFactory._spell_classes()[name].__module__
+            problems.append(
+                f"{name!r} has a class ({module}): write its combat_effects()"
+                " there, not in a JSON entry"
+            )
             continue
         spell = DataSpell(all_sources[source_path][name])
         found = entry_problems(name, value, spell)

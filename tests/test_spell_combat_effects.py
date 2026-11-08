@@ -1,7 +1,8 @@
-"""Spells' combat effects (CharacterContent/Spells/spells_<source>_combat_effects.json:
-lists of Model/Content/CombatEffect.py's CombatEffect, as to_dict() writes
-them) and how the combat UI's Custom Effect picker fills its form from them
-instead of reading the spell's text.
+"""Spells' combat effects - Model/Content/CombatEffect.py's CombatEffect, in a
+spell's class (CharacterContent/Spells/SpellClasses) or as to_dict() writes
+them in CharacterContent/Spells/spells_<source>_combat_effects.json - and how
+the combat UI's Custom Effect picker fills its form from them instead of
+reading the spell's text.
 
 Expected values come from each spell's 2024 rules text, read by hand: Fireball
 is a Dexterity save for 8d6 Fire, half on a success, 1d6 more per slot level
@@ -70,6 +71,15 @@ def _effects_files() -> dict[str, dict]:
 
 
 def _all_described() -> list[str]:
+    """Every spell with combat effects, in its class or a JSON entry."""
+    return sorted(
+        spell.name
+        for spell in SpellFactory.all_spells()
+        if spell.combat_effects() is not None
+    )
+
+
+def _json_entries() -> list[str]:
     return sorted(name for entries in _effects_files().values() for name in entries)
 
 
@@ -81,6 +91,10 @@ def _effects(spell) -> list[CombatEffect]:
 
 def test_there_are_combat_effects_files():
     assert SOURCE in _effects_files()
+
+
+def test_there_are_described_spells():
+    assert len(_all_described()) >= 50
 
 
 @pytest.mark.parametrize("source", sorted(_effects_files()))
@@ -100,7 +114,7 @@ def test_entries_are_sorted_by_name(source):
     assert names == sorted(names)
 
 
-@pytest.mark.parametrize("name", _all_described())
+@pytest.mark.parametrize("name", _json_entries())
 def test_every_entry_reads_and_is_written_as_to_dict_writes_it(name):
     """Read back and written again, an entry is unchanged: no default value
     written out, no key the model doesn't have."""
@@ -297,22 +311,35 @@ def test_a_spell_without_an_entry_is_not_described():
     assert _unchecked_spell().combat_effects() is None
 
 
+def _in_both_sources_without_a_class() -> str:
+    """A spell the 2024 and the 2014 sources both have, with no class."""
+    classes = set(SpellFactory._spell_classes())
+    with open("CharacterContent/Spells/spells_dnd5e.json", encoding="utf-8") as f:
+        in_2014 = set(json.load(f))
+    return next(
+        name
+        for name in sorted(_load(SOURCE))
+        if name in in_2014 and name not in classes
+    )
+
+
 def test_an_entry_rides_only_on_its_own_sources_record(monkeypatch):
-    """An entry is for its source's wording: a 2014 file's Fireball entry
-    isn't the 2024 Fireball's, which wins the merge."""
+    """An entry is for its source's wording: a 2014 file's entry isn't for
+    the 2024 spell of the same name, which wins the merge."""
+    name = _in_both_sources_without_a_class()
     source_2014 = "CharacterContent/Spells/spells_dnd5e.json"
     entry_2014 = [{"roll": "save", "save_ability": "Constitution"}]
     real_load = SpellFactory._load_combat_effects.__func__
 
     def load(cls, path):
         if path == source_2014:
-            return {"Fireball": entry_2014}
+            return {name: entry_2014}
         return {} if path == SOURCE else real_load(cls, path)
 
     monkeypatch.setattr(SpellFactory, "_load_combat_effects", classmethod(load))
     monkeypatch.setattr(SpellFactory, "_cache", None)
-    assert "combat_effects" not in SpellFactory._load_json()["Fireball"]
-    assert SpellFactory.create("Fireball").combat_effects() is None
+    assert "combat_effects" not in SpellFactory._load_json()[name]
+    assert SpellFactory.create(name).combat_effects() is None
 
 
 @pytest.mark.parametrize("entry", [[{"roll": "check"}], {"roll": "save"}])

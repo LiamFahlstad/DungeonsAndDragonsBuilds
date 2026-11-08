@@ -5,13 +5,6 @@
     ],
     "target": "area"
   },
-  "Absorb Elements": {
-    "usage_tags": [
-      "buff",
-      "damage"
-    ],
-    "target": "self"
-  },
   "Acid Splash": {
     "target": "area"
   },

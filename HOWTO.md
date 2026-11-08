@@ -157,6 +157,7 @@ Hand-made monsters go in `Combat/Monsters/CR_<x>/monsters_homebrew.py`.
 | `python Scrapers/DnD2024SpellScraper.py` | `CharacterContent/Spells/spells_dnd2024.json` |
 | `python Scrapers/DnD5eSpellScraper.py` | `CharacterContent/Spells/spells_dnd5e.json` |
 | `python Scrapers/AideddSpellScraper.py` | `CharacterContent/Spells/spells_aidedd.json` (for names already in the two files above) |
+| `python -m CharacterContent.Spells.SpellClassConverter --name <spell>` (or `--described`, `--level N`, `--all`; `--dry-run`) | Turns spells' JSON into classes in `CharacterContent/Spells/SpellClasses/`, which the factory then uses; checks each against its JSON and takes it out of the companion files. Skips spells that have a class |
 | `python -m CharacterContent.Spells.SpellGenerator` | Regenerates `CharacterContent/Spells/SpellLists.py`. **Run after any spell JSON change** |
 | `python Presentation/SpellCompendium.py` | `CharacterContent/Spells/AllSpells.html` (every spell, grouped by level) |
 

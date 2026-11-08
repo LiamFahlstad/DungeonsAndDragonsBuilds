@@ -11,12 +11,6 @@
     ],
     "target": "ally"
   },
-  "Alarm": {
-    "usage_tags": [
-      "control"
-    ],
-    "target": "area"
-  },
   "Alter Self": {
     "usage_tags": [
       "damage"
@@ -257,12 +251,6 @@
     ],
     "target": "self"
   },
-  "Bless": {
-    "usage_tags": [
-      "buff"
-    ],
-    "target": "ally"
-  },
   "Blight": {
     "usage_tags": [
       "damage"
@@ -294,12 +282,6 @@
       "control"
     ],
     "target": "self"
-  },
-  "Burning Hands": {
-    "usage_tags": [
-      "damage"
-    ],
-    "target": "area"
   },
   "Buzzing Bee": {
     "usage_tags": [
@@ -347,25 +329,6 @@
     ],
     "target": "enemy"
   },
-  "Charm Person": {
-    "usage_tags": [
-      "control"
-    ],
-    "target": "enemy"
-  },
-  "Chill Touch": {
-    "usage_tags": [
-      "damage",
-      "heal"
-    ],
-    "target": "enemy"
-  },
-  "Chromatic Orb": {
-    "usage_tags": [
-      "damage"
-    ],
-    "target": "enemy"
-  },
   "Circle of Death": {
     "usage_tags": [
       "damage"
@@ -408,12 +371,6 @@
       "control"
     ],
     "target": "area"
-  },
-  "Command": {
-    "usage_tags": [
-      "control"
-    ],
-    "target": "enemy"
   },
   "Commune": {
     "usage_tags": [
@@ -609,12 +566,6 @@
     ],
     "target": "ally"
   },
-  "Cure Wounds": {
-    "usage_tags": [
-      "heal"
-    ],
-    "target": "ally"
-  },
   "Dancing Lights": {
     "usage_tags": [
       "utility"
@@ -722,12 +673,6 @@
     ],
     "target": "area"
   },
-  "Disguise Self": {
-    "usage_tags": [
-      "utility"
-    ],
-    "target": "self"
-  },
   "Disintegrate": {
     "usage_tags": [
       "control",
@@ -755,12 +700,6 @@
     ],
     "target": "area"
   },
-  "Dissonant Whispers": {
-    "usage_tags": [
-      "damage"
-    ],
-    "target": "enemy"
-  },
   "Distorted Distance": {
     "usage_tags": [
       "buff",
@@ -780,12 +719,6 @@
       "damage"
     ],
     "target": "self"
-  },
-  "Divine Smite": {
-    "usage_tags": [
-      "damage"
-    ],
-    "target": "enemy"
   },
   "Divine Word": {
     "usage_tags": [
@@ -862,12 +795,6 @@
     ],
     "target": "area"
   },
-  "Eldritch Blast": {
-    "usage_tags": [
-      "damage"
-    ],
-    "target": "enemy"
-  },
   "Elemental Weapon": {
     "usage_tags": [
       "buff",
@@ -913,20 +840,6 @@
     ],
     "target": "creature"
   },
-  "Ensnaring Strike": {
-    "usage_tags": [
-      "buff",
-      "control",
-      "damage"
-    ],
-    "target": "enemy"
-  },
-  "Entangle": {
-    "usage_tags": [
-      "control"
-    ],
-    "target": "area"
-  },
   "Enthrall": {
     "usage_tags": [
       "control"
@@ -971,29 +884,11 @@
     ],
     "target": "object"
   },
-  "Faerie Fire": {
-    "usage_tags": [
-      "control"
-    ],
-    "target": "area"
-  },
-  "False Life": {
-    "usage_tags": [
-      "heal"
-    ],
-    "target": "self"
-  },
   "Fear": {
     "usage_tags": [
       "control"
     ],
     "target": "area"
-  },
-  "Feather Fall": {
-    "usage_tags": [
-      "buff"
-    ],
-    "target": "ally"
   },
   "Feign Death": {
     "usage_tags": [
@@ -1065,12 +960,6 @@
     ],
     "target": "area"
   },
-  "Fireball": {
-    "usage_tags": [
-      "damage"
-    ],
-    "target": "area"
-  },
   "Flame Blade": {
     "usage_tags": [
       "damage"
@@ -1102,12 +991,6 @@
       "buff"
     ],
     "target": "ally"
-  },
-  "Fog Cloud": {
-    "usage_tags": [
-      "control"
-    ],
-    "target": "area"
   },
   "Forbiddance": {
     "usage_tags": [
@@ -1150,14 +1033,6 @@
       "control"
     ],
     "target": "ally"
-  },
-  "Friends": {
-    "usage_tags": [
-      "control",
-      "damage",
-      "heal"
-    ],
-    "target": "enemy"
   },
   "Gaseous Form": {
     "usage_tags": [
@@ -1229,12 +1104,6 @@
     ],
     "target": "area"
   },
-  "Grease": {
-    "usage_tags": [
-      "control"
-    ],
-    "target": "area"
-  },
   "Greater Invisibility": {
     "usage_tags": [
       "buff"
@@ -1259,18 +1128,6 @@
       "control"
     ],
     "target": "area"
-  },
-  "Guidance": {
-    "usage_tags": [
-      "buff"
-    ],
-    "target": "ally"
-  },
-  "Guiding Bolt": {
-    "usage_tags": [
-      "damage"
-    ],
-    "target": "enemy"
   },
   "Gust of Wind": {
     "usage_tags": [
@@ -1310,12 +1167,6 @@
     "target": "ally"
   },
   "Heal": {
-    "usage_tags": [
-      "heal"
-    ],
-    "target": "ally"
-  },
-  "Healing Word": {
     "usage_tags": [
       "heal"
     ],
@@ -1367,12 +1218,6 @@
     ],
     "target": "enemy"
   },
-  "Hold Person": {
-    "usage_tags": [
-      "control"
-    ],
-    "target": "enemy"
-  },
   "Holy Aura": {
     "usage_tags": [
       "buff",
@@ -1400,27 +1245,9 @@
     ],
     "target": "area"
   },
-  "Hunter's Mark": {
-    "usage_tags": [
-      "damage"
-    ],
-    "target": "enemy"
-  },
   "Hypnotic Pattern": {
     "usage_tags": [
       "control"
-    ],
-    "target": "area"
-  },
-  "Ice Knife": {
-    "usage_tags": [
-      "damage"
-    ],
-    "target": "enemy"
-  },
-  "Ice Storm": {
-    "usage_tags": [
-      "damage"
     ],
     "target": "area"
   },
@@ -1481,12 +1308,6 @@
       "control"
     ],
     "target": "enemy"
-  },
-  "Invisibility": {
-    "usage_tags": [
-      "damage"
-    ],
-    "target": "ally"
   },
   "Invulnerability": {
     "usage_tags": [
@@ -1605,12 +1426,6 @@
     ],
     "target": "self"
   },
-  "Longstrider": {
-    "usage_tags": [
-      "buff"
-    ],
-    "target": "ally"
-  },
   "Mage Armor": {
     "usage_tags": [
       "buff"
@@ -1633,12 +1448,6 @@
   "Magic Jar": {
     "usage_tags": [
       "buff"
-    ],
-    "target": "enemy"
-  },
-  "Magic Missile": {
-    "usage_tags": [
-      "damage"
     ],
     "target": "enemy"
   },
@@ -1709,12 +1518,6 @@
     ],
     "target": "object"
   },
-  "Message": {
-    "usage_tags": [
-      "utility"
-    ],
-    "target": "ally"
-  },
   "Meteor Swarm": {
     "usage_tags": [
       "damage"
@@ -1741,12 +1544,6 @@
       "heal"
     ],
     "target": "enemy"
-  },
-  "Minor Illusion": {
-    "usage_tags": [
-      "utility"
-    ],
-    "target": "object"
   },
   "Mirage Arcane": {
     "usage_tags": [
@@ -1788,12 +1585,6 @@
       "buff"
     ],
     "target": "self"
-  },
-  "Moonbeam": {
-    "usage_tags": [
-      "damage"
-    ],
-    "target": "area"
   },
   "Mordenkainen's Faithful Hound": {
     "usage_tags": [
@@ -2008,12 +1799,6 @@
     ],
     "target": "area"
   },
-  "Produce Flame": {
-    "usage_tags": [
-      "damage"
-    ],
-    "target": "enemy"
-  },
   "Programmed Illusion": {
     "usage_tags": [
       "control"
@@ -2083,12 +1868,6 @@
     ],
     "target": "enemy"
   },
-  "Ray of Sickness": {
-    "usage_tags": [
-      "damage"
-    ],
-    "target": "enemy"
-  },
   "Regenerate": {
     "usage_tags": [
       "heal"
@@ -2104,12 +1883,6 @@
   "Remove Curse": {
     "usage_tags": [
       "heal"
-    ],
-    "target": "ally"
-  },
-  "Resistance": {
-    "usage_tags": [
-      "buff"
     ],
     "target": "ally"
   },
@@ -2146,23 +1919,11 @@
     ],
     "target": "self"
   },
-  "Sacred Flame": {
-    "usage_tags": [
-      "damage"
-    ],
-    "target": "enemy"
-  },
   "Sanctuary": {
     "usage_tags": [
       "damage"
     ],
     "target": "ally"
-  },
-  "Scorching Ray": {
-    "usage_tags": [
-      "damage"
-    ],
-    "target": "enemy"
   },
   "Scrying": {
     "usage_tags": [
@@ -2213,25 +1974,6 @@
     ],
     "target": "self"
   },
-  "Shatter": {
-    "usage_tags": [
-      "damage"
-    ],
-    "target": "area"
-  },
-  "Shield": {
-    "usage_tags": [
-      "buff",
-      "control"
-    ],
-    "target": "self"
-  },
-  "Shield of Faith": {
-    "usage_tags": [
-      "buff"
-    ],
-    "target": "ally"
-  },
   "Shillelagh": {
     "usage_tags": [
       "buff"
@@ -2276,12 +2018,6 @@
     ],
     "target": "ally"
   },
-  "Sleep": {
-    "usage_tags": [
-      "control"
-    ],
-    "target": "enemy"
-  },
   "Sleet Storm": {
     "usage_tags": [
       "control"
@@ -2307,18 +2043,6 @@
       "damage"
     ],
     "target": "enemy"
-  },
-  "Spare the Dying": {
-    "usage_tags": [
-      "heal"
-    ],
-    "target": "ally"
-  },
-  "Speak with Animals": {
-    "usage_tags": [
-      "utility"
-    ],
-    "target": "self"
   },
   "Speak with Dead": {
     "usage_tags": [
@@ -2350,13 +2074,6 @@
     ],
     "target": "ally"
   },
-  "Spike Growth": {
-    "usage_tags": [
-      "control",
-      "damage"
-    ],
-    "target": "area"
-  },
   "Spirit Guardians": {
     "usage_tags": [
       "damage"
@@ -2371,22 +2088,9 @@
     ],
     "target": "creature"
   },
-  "Spiritual Weapon": {
-    "usage_tags": [
-      "damage"
-    ],
-    "target": "enemy"
-  },
   "Staggering Smite": {
     "usage_tags": [
       "control",
-      "damage"
-    ],
-    "target": "enemy"
-  },
-  "Starry Wisp": {
-    "usage_tags": [
-      "buff",
       "damage"
     ],
     "target": "enemy"
@@ -2428,12 +2132,6 @@
       "damage"
     ],
     "target": "area"
-  },
-  "Suggestion": {
-    "usage_tags": [
-      "control"
-    ],
-    "target": "enemy"
   },
   "Summon Aberration": {
     "usage_tags": [
@@ -2551,12 +2249,6 @@
     ],
     "target": "object"
   },
-  "Tasha's Hideous Laughter": {
-    "usage_tags": [
-      "buff"
-    ],
-    "target": "enemy"
-  },
   "Telekinesis": {
     "usage_tags": [
       "control"
@@ -2588,12 +2280,6 @@
     ],
     "target": "object"
   },
-  "Thaumaturgy": {
-    "usage_tags": [
-      "utility"
-    ],
-    "target": "object"
-  },
   "Thorn Whip": {
     "usage_tags": [
       "damage"
@@ -2613,24 +2299,11 @@
     ],
     "target": "enemy"
   },
-  "Thunderwave": {
-    "usage_tags": [
-      "control",
-      "damage"
-    ],
-    "target": "area"
-  },
   "Time Stop": {
     "usage_tags": [
       "buff"
     ],
     "target": "self"
-  },
-  "Toll the Dead": {
-    "usage_tags": [
-      "damage"
-    ],
-    "target": "enemy"
   },
   "Tongues": {
     "usage_tags": [
@@ -2682,12 +2355,6 @@
     ],
     "target": "ally"
   },
-  "True Strike": {
-    "usage_tags": [
-      "damage"
-    ],
-    "target": "self"
-  },
   "Tsunami": {
     "usage_tags": [
       "damage"
@@ -2710,12 +2377,6 @@
     "usage_tags": [
       "damage",
       "heal"
-    ],
-    "target": "enemy"
-  },
-  "Vicious Mockery": {
-    "usage_tags": [
-      "damage"
     ],
     "target": "enemy"
   },
@@ -2844,12 +2505,6 @@
       "heal"
     ],
     "target": "self"
-  },
-  "Witch Bolt": {
-    "usage_tags": [
-      "damage"
-    ],
-    "target": "enemy"
   },
   "Wither and Bloom": {
     "usage_tags": [

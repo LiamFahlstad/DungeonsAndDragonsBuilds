@@ -27,18 +27,6 @@
       ]}
     ]}}
   ],
-  "Alarm": [
-    {"paragraph": "You set an alarm against intrusion."},
-    {"facts": [
-      ["Warded area", "A door, a window, or an area within range that is no larger than a 20-foot Cube"],
-      ["Trigger", "Until the spell ends, an alarm alerts you whenever a creature touches or enters the warded area"],
-      ["Exceptions", "When you cast the spell, you can designate creatures that won't set off the alarm"]
-    ]},
-    {"table": {"columns": ["Alarm (choose one)", "Effect"], "rows": [
-      ["Audible", "The sound of a handbell for 10 seconds within 60 feet of the warded area"],
-      ["Mental", "A mental ping alerts you if you are within 1 mile of the warded area; it awakens you if you're asleep"]
-    ]}}
-  ],
   "Alter Self": [
     {"paragraph": "You alter your physical form, choosing one option below. For the duration, you can take a Magic action to swap it for a different option."},
     {"option": {"name": "Aquatic Adaptation", "blocks": [
@@ -483,17 +471,6 @@
       ["Effect", "Whenever a creature makes an attack roll against you before the spell ends, the attacker subtracts 1d4 from the attack roll"]
     ]}
   ],
-  "Bless": [
-    {"facts": [
-      ["Targets", "Up to three creatures within range"],
-      ["Effect", "Whenever a target makes an attack roll or a saving throw before the spell ends, it adds 1d4 to the roll"]
-    ]},
-    {"option": {"name": "Using a Higher-Level Spell Slot", "blocks": [
-      {"facts": [
-        ["Targets", "+1 creature for each spell slot level above 1"]
-      ]}
-    ]}}
-  ],
   "Blight": [
     {"facts": [
       ["Target", "A creature that you can see within range"],
@@ -562,24 +539,6 @@
       ["Effect", "For the duration, any creature has Disadvantage on attack rolls against you"],
       ["Unaffected", "An attacker is immune to this effect if it perceives you with Blindsight or Truesight"]
     ]}
-  ],
-  "Burning Hands": [
-    {"facts": [
-      ["Flavor", "A thin sheet of flames shoots forth from you."],
-      ["Area", "15-foot Cone"],
-      ["Save", "Dexterity, made by each creature in the Cone"]
-    ]},
-    {"table": {"columns": ["Failed save", "Successful save"], "rows": [
-      ["3d6 Fire damage", "Half as much damage"]
-    ]}},
-    {"facts": [
-      ["Objects", "Flammable objects in the Cone that aren't being worn or carried start burning"]
-    ]},
-    {"option": {"name": "Using a Higher-Level Spell Slot", "blocks": [
-      {"facts": [
-        ["Damage", "+1d6 for each spell slot level above 1"]
-      ]}
-    ]}}
   ],
   "Buzzing Bee": [
     {"facts": [
@@ -695,60 +654,6 @@
       ]}
     ]}}
   ],
-  "Charm Person": [
-    {"paragraph": "You try to charm a Humanoid."},
-    {"facts": [
-      ["Target", "One Humanoid you can see within range"],
-      ["Save", "Wisdom, with Advantage if you or your allies are fighting it"],
-      ["Failed save", "Charmed until the spell ends or until you or your allies damage it"],
-      ["Charmed", "The Charmed creature is Friendly to you"],
-      ["Afterward", "When the spell ends, the target knows it was Charmed by you"]
-    ]},
-    {"option": {"name": "Using a Higher-Level Spell Slot", "blocks": [
-      {"facts": [
-        ["Targets", "+1 creature for each spell slot level above 1"]
-      ]}
-    ]}}
-  ],
-  "Chill Touch": [
-    {"facts": [
-      ["Flavor", "Channeling the chill of the grave, make a melee spell attack against a target within reach."],
-      ["Target", "A target within your reach"],
-      ["Attack", "Melee spell attack"],
-      ["On a hit", "1d10 Necrotic damage, and the target can't regain Hit Points until the end of your next turn"]
-    ]},
-    {"option": {"name": "Cantrip Upgrade", "blocks": [
-      {"table": {"columns": ["Character level", "Damage"], "rows": [
-        ["1", "1d10"],
-        ["5", "2d10"],
-        ["11", "3d10"],
-        ["17", "4d10"]
-      ]}}
-    ]}}
-  ],
-  "Chromatic Orb": [
-    {"paragraph": "You hurl an orb of energy at a target, and it can leap on to others."},
-    {"facts": [
-      ["Target", "A target within range"],
-      ["Type", "Acid, Cold, Fire, Lightning, Poison, or Thunder (choose when casting)"],
-      ["Attack", "Ranged spell attack"],
-      ["On a hit", "3d8 damage of the chosen type"]
-    ]},
-    {"option": {"name": "Leap", "blocks": [
-      {"facts": [
-        ["Trigger", "You roll the same number on two or more of the d8s"],
-        ["New target", "A different target of your choice within 30 feet of the target; make a new attack roll and a new damage roll"],
-        ["Leaps", "One with a level 1 slot; it can't leap again unless cast with a level 2+ slot"],
-        ["Each creature", "Can be targeted only once per casting"]
-      ]}
-    ]}},
-    {"option": {"name": "Using a Higher-Level Spell Slot", "blocks": [
-      {"facts": [
-        ["Damage", "+1d8 for each spell slot level above 1"],
-        ["Leaps", "Up to the level of the slot expended"]
-      ]}
-    ]}}
-  ],
   "Circle of Death": [
     {"facts": [
       ["Flavor", "Negative energy ripples out."],
@@ -821,26 +726,6 @@
       ["Failed save", "Blinded until the end of your next turn"],
       ["Successful save", "No effect"]
     ]}
-  ],
-  "Command": [
-    {"paragraph": "You speak a one-word command to a creature, which it must obey on its next turn."},
-    {"facts": [
-      ["Target", "A creature you can see within range"],
-      ["Save", "Wisdom"],
-      ["Failed save", "The target follows the command on its next turn"]
-    ]},
-    {"table": {"columns": ["Command", "On its next turn, the target..."], "rows": [
-      ["Approach", "Moves toward you by the shortest and most direct route, ending its turn if it moves within 5 feet of you"],
-      ["Drop", "Drops whatever it's holding, then ends its turn"],
-      ["Flee", "Spends its turn moving away from you by the fastest available means"],
-      ["Grovel", "Has the Prone condition, then ends its turn"],
-      ["Halt", "Doesn't move and takes no action or Bonus Action"]
-    ]}},
-    {"option": {"name": "Using a Higher-Level Spell Slot", "blocks": [
-      {"facts": [
-        ["Targets", "+1 creature for each spell slot level above 1"]
-      ]}
-    ]}}
   ],
   "Commune": [
     {"facts": [
@@ -1356,18 +1241,6 @@
       ["Effect", "While in the aura, you and your allies each deal an extra 1d4 Radiant damage when hitting with a weapon or an Unarmed Strike"]
     ]}
   ],
-  "Cure Wounds": [
-    {"paragraph": "A creature you touch regains Hit Points."},
-    {"facts": [
-      ["Target", "A creature you touch"],
-      ["Healing", "2d8 + your spellcasting ability modifier"]
-    ]},
-    {"option": {"name": "Using a Higher-Level Spell Slot", "blocks": [
-      {"facts": [
-        ["Healing", "+2d8 for each spell slot level above 1"]
-      ]}
-    ]}}
-  ],
   "Dancing Lights": [
     {"paragraph": "You create hovering lights that you can move around."},
     {"facts": [
@@ -1556,15 +1429,6 @@
       ]}
     ]}}
   ],
-  "Disguise Self": [
-    {"paragraph": "You make yourself look different, including your clothing, armor, weapons, and other belongings on your person."},
-    {"facts": [
-      ["Size", "You can seem 1 foot shorter or taller, and heavier or lighter"],
-      ["Shape", "Must keep your basic arrangement of limbs; otherwise the illusion is up to you"],
-      ["Touch", "Fails physical inspection: if you add a hat, objects pass through it, and anyone who touches it feels nothing"],
-      ["Seeing through", "A creature must take the Study action to inspect your appearance and succeed on an Intelligence (Investigation) check against your spell save DC"]
-    ]}
-  ],
   "Disintegrate": [
     {"facts": [
       ["Flavor", "You launch a green ray at a target you can see within range."],
@@ -1619,21 +1483,6 @@
       ]}
     ]}}
   ],
-  "Dissonant Whispers": [
-    {"facts": [
-      ["Flavor", "One creature of your choice that you can see within range hears a discordant melody in its mind."],
-      ["Target", "One creature of your choice that you can see within range"],
-      ["Save", "Wisdom"]
-    ]},
-    {"table": {"columns": ["Failed save", "Successful save"], "rows": [
-      ["3d6 Psychic damage, and it must immediately use its Reaction, if available, to move as far away from you as it can, using the safest route", "Half as much damage only"]
-    ]}},
-    {"option": {"name": "Using a Higher-Level Spell Slot", "blocks": [
-      {"facts": [
-        ["Damage", "+1d6 for each spell slot level above 1"]
-      ]}
-    ]}}
-  ],
   "Divination": [
     {"facts": [
       ["Flavor", "This spell puts you in contact with a god or a god's servants."],
@@ -1647,18 +1496,6 @@
     {"facts": [
       ["Effect", "Until the spell ends, your attacks with weapons deal an extra 1d4 Radiant damage on a hit"]
     ]}
-  ],
-  "Divine Smite": [
-    {"facts": [
-      ["Trigger", "Immediately after you hit a target with a Melee weapon or an Unarmed Strike"],
-      ["Damage", "The target takes an extra 2d8 Radiant damage from the attack"],
-      ["Fiend or Undead", "The damage increases by 1d8 if the target is a Fiend or an Undead"]
-    ]},
-    {"option": {"name": "Using a Higher-Level Spell Slot", "blocks": [
-      {"facts": [
-        ["Damage", "+1d8 for each spell slot level above 1"]
-      ]}
-    ]}}
   ],
   "Divine Word": [
     {"facts": [
@@ -1815,25 +1652,6 @@
       ["Fire Play", "Light or snuff out a candle, a torch, or a campfire"]
     ]}}
   ],
-  "Eldritch Blast": [
-    {"facts": [
-      ["Flavor", "You hurl a beam of crackling energy."],
-      ["Target", "One creature or object within range"],
-      ["Attack", "Ranged spell attack"],
-      ["On a hit", "1d10 Force damage"]
-    ]},
-    {"option": {"name": "Cantrip Upgrade", "blocks": [
-      {"table": {"columns": ["Character level", "Beams"], "rows": [
-        ["1", "1"],
-        ["5", "2"],
-        ["11", "3"],
-        ["17", "4"]
-      ]}},
-      {"facts": [
-        ["Beams", "Direct them at the same target or different ones, with a separate attack roll for each beam"]
-      ]}
-    ]}}
-  ],
   "Elemental Weapon": [
     {"paragraph": "A nonmagical weapon you touch becomes a magic weapon."},
     {"facts": [
@@ -1938,34 +1756,6 @@
       ["Damage with its weapons or Unarmed Strikes", "+1d4 on a hit", "-1d4 on a hit (not below 1)"]
     ]}}
   ],
-  "Ensnaring Strike": [
-    {"facts": [
-      ["Flavor", "As you hit the target, grasping vines appear on it, and it makes a Strength saving throw."],
-      ["Trigger", "Immediately after you hit a creature with a weapon"],
-      ["Save", "Strength; a Large or larger creature has Advantage"],
-      ["Failed save", "Restrained until the spell ends"],
-      ["Successful save", "The vines shrivel away, and the spell ends"]
-    ]},
-    {"facts": [
-      ["While Restrained", "The target takes 1d6 Piercing damage at the start of each of its turns"],
-      ["Escape", "The target or a creature within reach of it can take an action to make a Strength (Athletics) check against your spell save DC; on a success, the spell ends"]
-    ]},
-    {"option": {"name": "Using a Higher-Level Spell Slot", "blocks": [
-      {"facts": [
-        ["Damage", "+1d6 for each spell slot level above 1"]
-      ]}
-    ]}}
-  ],
-  "Entangle": [
-    {"facts": [
-      ["Flavor", "Grasping plants sprout from the ground in a 20-foot square within range."],
-      ["Area", "20-foot square within range"],
-      ["Terrain", "The ground in the area is Difficult Terrain for the duration; the plants disappear when the spell ends"],
-      ["Save", "Strength, made by each creature (other than you) in the area when you cast the spell"],
-      ["Failed save", "Restrained until the spell ends"],
-      ["Escape", "A Restrained creature can take an action to make a Strength (Athletics) check against your spell save DC, freeing itself on a success"]
-    ]}
-  ],
   "Enthrall": [
     {"facts": [
       ["Flavor", "You weave a distracting string of words."],
@@ -2042,27 +1832,6 @@
       ["Skilled items", "You can't create items that require a high degree of skill, such as weapons and armor, unless you have proficiency with the type of Artisan's Tools used to craft such objects"]
     ]}
   ],
-  "Faerie Fire": [
-    {"paragraph": "Objects and creatures in an area are outlined in light, revealing them."},
-    {"facts": [
-      ["Area", "20-foot Cube within range"],
-      ["Color", "Blue, green, or violet (your choice)"],
-      ["Objects", "Every object in the Cube is outlined"],
-      ["Creatures", "Each creature in the Cube is outlined if it fails a Dexterity save"],
-      ["Outlined", "Sheds Dim Light in a 10-foot radius and can't benefit from the Invisible condition"],
-      ["Attacks", "Attack rolls against an outlined creature or object have Advantage if the attacker can see it"]
-    ]}
-  ],
-  "False Life": [
-    {"facts": [
-      ["Temporary Hit Points", "You gain 2d4 + 4 Temporary Hit Points"]
-    ]},
-    {"option": {"name": "Using a Higher-Level Spell Slot", "blocks": [
-      {"facts": [
-        ["Temporary Hit Points", "+5 for each spell slot level above 1"]
-      ]}
-    ]}}
-  ],
   "Fear": [
     {"facts": [
       ["Area", "30-foot Cone"],
@@ -2076,15 +1845,6 @@
         ["Repeat save", "If it ends its turn in a space where it doesn't have line of sight to you, it makes a Wisdom saving throw; on a success, the spell ends on that creature"]
       ]}
     ]}}
-  ],
-  "Feather Fall": [
-    {"paragraph": "You slow the fall of up to five creatures."},
-    {"facts": [
-      ["Trigger", "You or a creature you can see within 60 feet of you falls"],
-      ["Targets", "Up to five falling creatures within range"],
-      ["Descent", "A falling creature's rate of descent slows to 60 feet per round until the spell ends"],
-      ["Landing", "If a creature lands before the spell ends, it takes no damage from the fall, and the spell ends for that creature"]
-    ]}
   ],
   "Feign Death": [
     {"paragraph": "You touch a willing creature and put it into a cataleptic state that is indistinguishable from death."},
@@ -2244,24 +2004,6 @@
       ["Burning", "Flammable objects in the area that aren't being worn or carried start burning"]
     ]}
   ],
-  "Fireball": [
-    {"facts": [
-      ["Flavor", "A bright streak flashes from you to a point you choose within range and then blossoms with a low roar into a fiery explosion."],
-      ["Area", "20-foot-radius Sphere centered on a point you choose within range"],
-      ["Save", "Dexterity, made by each creature in the area"]
-    ]},
-    {"table": {"columns": ["Failed save", "Successful save"], "rows": [
-      ["8d6 Fire damage", "Half as much damage"]
-    ]}},
-    {"facts": [
-      ["Objects", "Flammable objects in the area that aren't being worn or carried start burning"]
-    ]},
-    {"option": {"name": "Using a Higher-Level Spell Slot", "blocks": [
-      {"facts": [
-        ["Damage", "+1d6 for each spell slot level above 3"]
-      ]}
-    ]}}
-  ],
   "Flame Blade": [
     {"facts": [
       ["Flavor", "You evoke a fiery blade in your free hand."],
@@ -2354,19 +2096,6 @@
       ]}
     ]}}
   ],
-  "Fog Cloud": [
-    {"paragraph": "You create a Sphere of fog."},
-    {"facts": [
-      ["Area", "20-foot-radius Sphere centered on a point within range"],
-      ["Visibility", "The Sphere is Heavily Obscured"],
-      ["Lasts", "For the duration, or until a strong wind (such as one created by Gust of Wind) disperses it"]
-    ]},
-    {"option": {"name": "Using a Higher-Level Spell Slot", "blocks": [
-      {"facts": [
-        ["Radius", "+20 feet for each spell slot level above 1"]
-      ]}
-    ]}}
-  ],
   "Forbiddance": [
     {"facts": [
       ["Area", "A ward against magical travel that protects up to 40,000 square feet of floor space to a height of 30 feet above the floor"],
@@ -2445,17 +2174,6 @@
         ["Targets", "+1 creature for each spell slot level above 4"]
       ]}
     ]}}
-  ],
-  "Friends": [
-    {"facts": [
-      ["Flavor", "You magically emanate a sense of friendship toward one creature you can see within range."],
-      ["Target", "One creature you can see within range"],
-      ["Save", "Wisdom"],
-      ["Failed save", "Charmed for the duration"],
-      ["Auto-success", "The target succeeds automatically if it isn't a Humanoid, if you're fighting it, or if you have cast this spell on it within the past 24 hours"],
-      ["Ends early", "If the target takes damage, or if you make an attack roll, deal damage, or force anyone to make a saving throw"],
-      ["Afterward", "When the spell ends, the target knows it was Charmed by you"]
-    ]}
   ],
   "Gaseous Form": [
     {"paragraph": "A willing creature you touch shape-shifts, along with everything it's wearing and carrying, into a misty cloud for the duration."},
@@ -2615,16 +2333,6 @@
       ]}
     ]}}
   ],
-  "Grease": [
-    {"paragraph": "Nonflammable grease covers the ground."},
-    {"facts": [
-      ["Area", "10-foot square centered on a point within range"],
-      ["Terrain", "Difficult Terrain for the duration"],
-      ["Save", "Dexterity, made by each creature standing in the area when the grease appears, and by a creature that enters the area or ends its turn there"],
-      ["Failed save", "The creature has the Prone condition"],
-      ["Successful save", "No effect"]
-    ]}
-  ],
   "Greater Invisibility": [
     {"paragraph": "A creature you touch turns invisible."},
     {"facts": [
@@ -2698,26 +2406,6 @@
         ["Gust of Wind", "In one corridor or room (the wind blows continuously while the spell lasts)"],
         ["Suggestion", "In one 5-foot square; any creature that enters that square receives the suggestion mentally"]
       ]}}
-    ]}}
-  ],
-  "Guidance": [
-    {"paragraph": "You touch a willing creature and choose a skill."},
-    {"facts": [
-      ["Target", "A willing creature you touch"],
-      ["Effect", "Until the spell ends, the creature adds 1d4 to any ability check using the chosen skill"]
-    ]}
-  ],
-  "Guiding Bolt": [
-    {"facts": [
-      ["Flavor", "You hurl a bolt of light toward a creature within range."],
-      ["Target", "A creature within range"],
-      ["Attack", "Ranged spell attack"],
-      ["On a hit", "4d6 Radiant damage, and the next attack roll made against it before the end of your next turn has Advantage"]
-    ]},
-    {"option": {"name": "Using a Higher-Level Spell Slot", "blocks": [
-      {"facts": [
-        ["Damage", "+1d6 for each spell slot level above 1"]
-      ]}
     ]}}
   ],
   "Gust of Wind": [
@@ -2821,18 +2509,6 @@
       ]}
     ]}}
   ],
-  "Healing Word": [
-    {"paragraph": "A creature you can see regains Hit Points."},
-    {"facts": [
-      ["Target", "A creature of your choice that you can see within range"],
-      ["Healing", "2d4 + your spellcasting ability modifier"]
-    ]},
-    {"option": {"name": "Using a Higher-Level Spell Slot", "blocks": [
-      {"facts": [
-        ["Healing", "+2d4 for each spell slot level above 1"]
-      ]}
-    ]}}
-  ],
   "Heat Metal": [
     {"facts": [
       ["Flavor", "You cause the object to glow red-hot."],
@@ -2923,20 +2599,6 @@
       ]}
     ]}}
   ],
-  "Hold Person": [
-    {"paragraph": "You paralyze a Humanoid you can see."},
-    {"facts": [
-      ["Target", "A Humanoid you can see within range"],
-      ["Save", "Wisdom"],
-      ["Failed save", "The target has the Paralyzed condition for the duration"],
-      ["Repeat save", "At the end of each of its turns; on a success, the spell ends on the target"]
-    ]},
-    {"option": {"name": "Using a Higher-Level Spell Slot", "blocks": [
-      {"facts": [
-        ["Targets", "+1 Humanoid for each spell slot level above 2"]
-      ]}
-    ]}}
-  ],
   "Homunculus Servant": [
     {"paragraph": "You summon a special homunculus."},
     {"facts": [
@@ -2977,22 +2639,6 @@
       ]}
     ]}}
   ],
-  "Hunter's Mark": [
-    {"paragraph": "You magically mark a creature as your quarry."},
-    {"facts": [
-      ["Target", "One creature you can see within range"],
-      ["Extra damage", "1d6 Force damage whenever you hit it with an attack roll"],
-      ["Tracking", "Advantage on Wisdom (Perception or Survival) checks to find it"],
-      ["Move the mark", "If the target drops to 0 Hit Points before the spell ends, you can take a Bonus Action to move the mark to a new creature you can see within range"]
-    ]},
-    {"option": {"name": "Using a Higher-Level Spell Slot", "blocks": [
-      {"table": {"columns": ["Slot level", "Concentration lasts up to"], "rows": [
-        ["1-2", "1 hour"],
-        ["3-4", "8 hours"],
-        ["5+", "24 hours"]
-      ]}}
-    ]}}
-  ],
   "Hypnotic Pattern": [
     {"facts": [
       ["Flavor", "You create a twisting pattern of colors in a 30-foot Cube within range. The pattern appears for a moment and vanishes."],
@@ -3001,46 +2647,6 @@
       ["Failed save", "Charmed for the duration; while Charmed, the creature has the Incapacitated condition and a Speed of 0"],
       ["Ends early", "For an affected creature, if it takes any damage or if someone else uses an action to shake it out of its stupor"]
     ]}
-  ],
-  "Ice Knife": [
-    {"paragraph": "You fling a shard of ice that explodes."},
-    {"facts": [
-      ["Target", "One creature within range"],
-      ["Attack", "Ranged spell attack"],
-      ["On a hit", "1d10 Piercing damage"]
-    ]},
-    {"option": {"name": "Explosion", "blocks": [
-      {"facts": [
-        ["When", "Hit or miss, the shard then explodes"],
-        ["Targets", "The target and each creature within 5 feet of it"],
-        ["Save", "Dexterity"],
-        ["Failed save", "2d6 Cold damage"],
-        ["Successful save", "No damage"]
-      ]}
-    ]}},
-    {"option": {"name": "Using a Higher-Level Spell Slot", "blocks": [
-      {"facts": [
-        ["Cold damage", "+1d6 for each spell slot level above 1"]
-      ]}
-    ]}}
-  ],
-  "Ice Storm": [
-    {"paragraph": "Hail falls in an area."},
-    {"facts": [
-      ["Area", "20-foot-radius, 40-foot-high Cylinder centered on a point within range"],
-      ["Save", "Dexterity, made by each creature in the Cylinder"]
-    ]},
-    {"table": {"columns": ["Failed save", "Successful save"], "rows": [
-      ["2d10 Bludgeoning damage and 4d6 Cold damage", "Half as much damage"]
-    ]}},
-    {"facts": [
-      ["Terrain", "Hailstones turn ground in the Cylinder into Difficult Terrain until the end of your next turn"]
-    ]},
-    {"option": {"name": "Using a Higher-Level Spell Slot", "blocks": [
-      {"facts": [
-        ["Bludgeoning damage", "+1d10 for each spell slot level above 4"]
-      ]}
-    ]}}
   ],
   "Identify": [
     {"paragraph": "You touch an object or a creature throughout the spell's casting."},
@@ -3107,19 +2713,6 @@
     {"option": {"name": "Using a Higher-Level Spell Slot", "blocks": [
       {"facts": [
         ["Targets", "+1 creature for each spell slot level above 1"]
-      ]}
-    ]}}
-  ],
-  "Invisibility": [
-    {"paragraph": "A creature you touch turns invisible."},
-    {"facts": [
-      ["Target", "A creature you touch"],
-      ["Effect", "The Invisible condition until the spell ends"],
-      ["Ends early", "Immediately after the target makes an attack roll, deals damage, or casts a spell"]
-    ]},
-    {"option": {"name": "Using a Higher-Level Spell Slot", "blocks": [
-      {"facts": [
-        ["Targets", "+1 creature for each spell slot level above 2"]
       ]}
     ]}}
   ],
@@ -3307,17 +2900,6 @@
       ["Blocked by", "Any thickness of lead blocking a direct path between you and the object"]
     ]}
   ],
-  "Longstrider": [
-    {"facts": [
-      ["Target", "A creature you touch"],
-      ["Effect", "Its Speed increases by 10 feet until the spell ends"]
-    ]},
-    {"option": {"name": "Using a Higher-Level Spell Slot", "blocks": [
-      {"facts": [
-        ["Targets", "+1 creature for each spell slot level above 1"]
-      ]}
-    ]}}
-  ],
   "Mage Armor": [
     {"facts": [
       ["Target", "A willing creature who isn't wearing armor"],
@@ -3388,20 +2970,6 @@
         ["Your soul", "If the container is destroyed or the spell ends, your soul returns to your body. If your body is more than 100 feet away from you or if your body is dead, you die"],
         ["Another soul", "If another creature's soul is in the container when it is destroyed, the creature's soul returns to its body if the body is alive and within 100 feet. Otherwise, that creature dies"],
         ["Container", "When the spell ends, the container is destroyed"]
-      ]}
-    ]}}
-  ],
-  "Magic Missile": [
-    {"facts": [
-      ["Flavor", "You create three glowing darts of magical force."],
-      ["Darts", "Three"],
-      ["Targets", "Each dart strikes a creature of your choice that you can see within range"],
-      ["Damage", "1d4 + 1 Force damage per dart"],
-      ["Striking", "The darts all strike simultaneously, and you can direct them to hit one creature or several"]
-    ]},
-    {"option": {"name": "Using a Higher-Level Spell Slot", "blocks": [
-      {"facts": [
-        ["Darts", "+1 dart for each spell slot level above 1"]
       ]}
     ]}}
   ],
@@ -3533,15 +3101,6 @@
       ["Magic items", "It can physically repair a magic item, but it can't restore magic to such an object"]
     ]}
   ],
-  "Message": [
-    {"paragraph": "You point toward a creature within range and whisper a message."},
-    {"facts": [
-      ["Target", "A creature within range"],
-      ["Effect", "The target (and only the target) hears the message and can reply in a whisper that only you can hear"],
-      ["Through objects", "You can cast it through solid objects if you are familiar with the target and know it is beyond the barrier"],
-      ["Blocked by", "Magical silence; 1 foot of stone, metal, or wood; or a thin sheet of lead"]
-    ]}
-  ],
   "Mind Sliver": [
     {"paragraph": "You try to temporarily sliver the mind of one creature."},
     {"facts": [
@@ -3580,26 +3139,6 @@
         ["Damage", "+1d8 for each spell slot level above 2"]
       ]}
     ]}}
-  ],
-  "Minor Illusion": [
-    {"paragraph": "You create a sound or an image of an object within range. The illusion ends if you cast this spell again."},
-    {"option": {"name": "Sound", "blocks": [
-      {"facts": [
-        ["Volume", "Anything from a whisper to a scream"],
-        ["Sound", "Your voice, someone else's voice, a lion's roar, a beating of drums, or any other sound you choose"],
-        ["Timing", "Continuous for the duration, or discrete sounds at different times before the spell ends"]
-      ]}
-    ]}},
-    {"option": {"name": "Image", "blocks": [
-      {"facts": [
-        ["Size", "An object no larger than a 5-foot Cube, such as a chair, muddy footprints, or a small chest"],
-        ["Senses", "Visual only: no sound, light, smell, or any other sensory effect"],
-        ["Touch", "Physical interaction reveals it as an illusion, since things pass through it"]
-      ]}
-    ]}},
-    {"facts": [
-      ["Seeing through", "A creature that takes the Study action to examine the illusion can make an Intelligence (Investigation) check against your spell save DC; on a success, it determines that it is an illusion, and the illusion becomes faint to it"]
-    ]}
   ],
   "Mirage Arcane": [
     {"facts": [
@@ -3671,22 +3210,6 @@
         ["8", "365 days ago"],
         ["9", "Any time in the creature's past"]
       ]}}
-    ]}}
-  ],
-  "Moonbeam": [
-    {"facts": [
-      ["Flavor", "A silvery beam of pale light shines down in a 5-foot-radius, 40-foot-high Cylinder centered on a point within range."],
-      ["Area", "5-foot-radius, 40-foot-high Cylinder centered on a point within range, filled with Dim Light"],
-      ["Move", "You can take a Magic action on later turns to move the Cylinder up to 60 feet"],
-      ["Save", "Constitution, when the Cylinder appears, when it moves into a creature's space, and when a creature enters it or ends its turn there; a creature makes this save only once per turn"]
-    ]},
-    {"table": {"columns": ["Failed save", "Successful save"], "rows": [
-      ["2d10 Radiant damage; a shape-shifted creature (from Polymorph, for example) reverts to its true form and can't shape-shift until it leaves the Cylinder", "Half as much damage only"]
-    ]}},
-    {"option": {"name": "Using a Higher-Level Spell Slot", "blocks": [
-      {"facts": [
-        ["Damage", "+1d10 for each spell slot level above 2"]
-      ]}
     ]}}
   ],
   "Mordenkainen's Faithful Hound": [
@@ -4159,31 +3682,6 @@
       ]}
     ]}}
   ],
-  "Produce Flame": [
-    {"facts": [
-      ["Flavor", "A flickering flame appears in your hand and remains there for the duration."],
-      ["Appears", "In your hand, where it remains for the duration"],
-      ["Light", "Bright Light in a 20-foot radius and Dim Light for an additional 20 feet"],
-      ["Harmless", "The flame emits no heat and ignites nothing"],
-      ["Ends early", "If you cast this spell again"]
-    ]},
-    {"option": {"name": "Hurl Flame", "blocks": [
-      {"facts": [
-        ["Action", "Magic action, until the spell ends"],
-        ["Target", "A creature or an object within 60 feet of you"],
-        ["Attack", "Ranged spell attack"],
-        ["On a hit", "1d8 Fire damage"]
-      ]}
-    ]}},
-    {"option": {"name": "Cantrip Upgrade", "blocks": [
-      {"table": {"columns": ["Character level", "Damage"], "rows": [
-        ["1", "1d8"],
-        ["5", "2d8"],
-        ["11", "3d8"],
-        ["17", "4d8"]
-      ]}}
-    ]}}
-  ],
   "Programmed Illusion": [
     {"facts": [
       ["Illusion", "You create an illusion of an object, a creature, or some other visible phenomenon within range that activates when a specific trigger occurs"],
@@ -4297,19 +3795,6 @@
       ]}}
     ]}}
   ],
-  "Ray of Sickness": [
-    {"facts": [
-      ["Flavor", "You shoot a greenish ray at a creature within range."],
-      ["Target", "A creature within range"],
-      ["Attack", "Ranged spell attack"],
-      ["On a hit", "2d8 Poison damage, and the target has the Poisoned condition until the end of your next turn"]
-    ]},
-    {"option": {"name": "Using a Higher-Level Spell Slot", "blocks": [
-      {"facts": [
-        ["Damage", "+1d8 for each spell slot level above 1"]
-      ]}
-    ]}}
-  ],
   "Regenerate": [
     {"facts": [
       ["Target", "A creature you touch"],
@@ -4346,15 +3831,6 @@
     {"paragraph": "At your touch, all curses affecting one creature or object end."},
     {"facts": [
       ["Cursed magic item", "Its curse remains, but the spell breaks its owner's Attunement to the object so it can be removed or discarded"]
-    ]}
-  ],
-  "Resistance": [
-    {"paragraph": "You touch a willing creature and protect it against one type of damage."},
-    {"facts": [
-      ["Target", "A willing creature you touch"],
-      ["Damage type", "Choose one: Acid, Bludgeoning, Cold, Fire, Lightning, Necrotic, Piercing, Poison, Radiant, Slashing, or Thunder"],
-      ["Effect", "When the creature takes damage of the chosen type before the spell ends, it reduces the total damage taken by 1d4"],
-      ["Limit", "A creature can benefit from this spell only once per turn"]
     ]}
   ],
   "Resurrection": [
@@ -4405,24 +3881,6 @@
       ["Spell ends", "Anything inside the space drops out"]
     ]}
   ],
-  "Sacred Flame": [
-    {"facts": [
-      ["Flavor", "Flame-like radiance descends on a creature that you can see within range."],
-      ["Target", "A creature you can see within range"],
-      ["Save", "Dexterity"],
-      ["Failed save", "1d8 Radiant damage"],
-      ["Successful save", "No damage"],
-      ["Cover", "The target gains no benefit from Half Cover or Three-Quarters Cover for this save"]
-    ]},
-    {"option": {"name": "Cantrip Upgrade", "blocks": [
-      {"table": {"columns": ["Character level", "Damage"], "rows": [
-        ["1", "1d8"],
-        ["5", "2d8"],
-        ["11", "3d8"],
-        ["17", "4d8"]
-      ]}}
-    ]}}
-  ],
   "Sanctuary": [
     {"paragraph": "You ward a creature against attacks and damaging spells."},
     {"facts": [
@@ -4432,20 +3890,6 @@
       ["Areas", "Doesn't protect the warded creature from areas of effect"],
       ["Ends early", "If the warded creature makes an attack roll, casts a spell, or deals damage"]
     ]}
-  ],
-  "Scorching Ray": [
-    {"facts": [
-      ["Flavor", "You hurl three fiery rays."],
-      ["Rays", "Three"],
-      ["Targets", "One target within range, or several"],
-      ["Attack", "A ranged spell attack for each ray"],
-      ["On a hit", "2d6 Fire damage"]
-    ]},
-    {"option": {"name": "Using a Higher-Level Spell Slot", "blocks": [
-      {"facts": [
-        ["Rays", "+1 ray for each spell slot level above 2"]
-      ]}
-    ]}}
   ],
   "Scrying": [
     {"facts": [
@@ -4551,39 +3995,6 @@
       ["Ends early", "This spell also ends if the target takes any damage"]
     ]}
   ],
-  "Shatter": [
-    {"facts": [
-      ["Flavor", "A loud noise erupts from a point of your choice within range."],
-      ["Area", "10-foot-radius Sphere centered on a point of your choice within range"],
-      ["Save", "Constitution, made by each creature in the area; a Construct has Disadvantage"]
-    ]},
-    {"table": {"columns": ["Failed save", "Successful save"], "rows": [
-      ["3d8 Thunder damage", "Half as much damage"]
-    ]}},
-    {"facts": [
-      ["Objects", "A nonmagical object in the area that isn't being worn or carried also takes the damage"]
-    ]},
-    {"option": {"name": "Using a Higher-Level Spell Slot", "blocks": [
-      {"facts": [
-        ["Damage", "+1d8 for each spell slot level above 2"]
-      ]}
-    ]}}
-  ],
-  "Shield": [
-    {"facts": [
-      ["Flavor", "An imperceptible barrier of magical force protects you."],
-      ["Trigger", "You are hit by an attack roll or targeted by the Magic Missile spell"],
-      ["AC", "+5 until the start of your next turn, including against the triggering attack"],
-      ["Magic Missile", "You take no damage from it until the start of your next turn"]
-    ]}
-  ],
-  "Shield of Faith": [
-    {"facts": [
-      ["Flavor", "A shimmering field surrounds a creature of your choice within range, granting it a +2 bonus to AC for the duration."],
-      ["Target", "A creature of your choice within range"],
-      ["Effect", "+2 bonus to AC for the duration"]
-    ]}
-  ],
   "Shillelagh": [
     {"facts": [
       ["Flavor", "A Club or Quarterstaff you are holding is imbued with nature's power."],
@@ -4680,21 +4091,6 @@
       ["Casting again", "If you cast this spell again, any simulacrum you created with this spell is instantly destroyed"]
     ]}
   ],
-  "Sleep": [
-    {"facts": [
-      ["Area", "5-foot-radius Sphere centered on a point within range"],
-      ["Targets", "Each creature of your choice in the area"],
-      ["Save", "Wisdom"],
-      ["Auto-success", "Creatures that don't sleep, such as elves, or that have Immunity to the Exhaustion condition automatically succeed on saves against this spell"]
-    ]},
-    {"table": {"columns": ["Save", "If it fails"], "rows": [
-      ["First save", "Incapacitated until the end of its next turn, when it repeats the save"],
-      ["Second save", "Unconscious for the duration"]
-    ]}},
-    {"facts": [
-      ["Waking", "The spell ends on a target if it takes damage, or someone within 5 feet of it takes an action to shake it out of the spell's effect"]
-    ]}
-  ],
   "Sleet Storm": [
     {"paragraph": "Until the spell ends, sleet falls in an area."},
     {"facts": [
@@ -4774,30 +4170,6 @@
         ["17", "4d8"]
       ]}}
     ]}}
-  ],
-  "Spare the Dying": [
-    {"paragraph": "You stabilize a dying creature."},
-    {"facts": [
-      ["Target", "A creature within range that has 0 Hit Points and isn't dead"],
-      ["Effect", "The creature becomes Stable"]
-    ]},
-    {"option": {"name": "Cantrip Upgrade", "blocks": [
-      {"table": {"columns": ["Character level", "Range"], "rows": [
-        ["1", "15 feet"],
-        ["5", "30 feet"],
-        ["11", "60 feet"],
-        ["17", "120 feet"]
-      ]}}
-    ]}}
-  ],
-  "Speak with Animals": [
-    {"paragraph": "For the duration, you can talk with Beasts."},
-    {"facts": [
-      ["Talking", "You can comprehend and verbally communicate with Beasts"],
-      ["Influence", "You can use any of the Influence action's skill options with them"],
-      ["Topics", "Most Beasts have little to say about topics that don't pertain to survival or companionship"],
-      ["At minimum", "A Beast can give you information about nearby locations and monsters, including whatever it has perceived within the past day"]
-    ]}
   ],
   "Speak with Dead": [
     {"facts": [
@@ -4881,16 +4253,6 @@
       ]}
     ]}}
   ],
-  "Spike Growth": [
-    {"facts": [
-      ["Flavor", "The ground in a 20-foot-radius Sphere centered on a point within range sprouts hard spikes and thorns."],
-      ["Area", "20-foot-radius Sphere centered on a point within range"],
-      ["Terrain", "Difficult Terrain for the duration"],
-      ["Damage", "When a creature moves into or within the area, it takes 2d4 Piercing damage for every 5 feet it travels"],
-      ["Camouflage", "The transformation of the ground is camouflaged to look natural"],
-      ["Spotting it", "Any creature that can't see the area when the spell is cast must take a Search action and succeed on a Wisdom (Perception or Survival) check against your spell save DC to recognize the terrain as hazardous before entering it"]
-    ]}
-  ],
   "Spirit Guardians": [
     {"facts": [
       ["Flavor", "Protective spirits flit around you in a 15-foot Emanation for the duration."],
@@ -4939,20 +4301,6 @@
       ]}
     ]}}
   ],
-  "Spiritual Weapon": [
-    {"facts": [
-      ["Flavor", "You create a floating, spectral force that resembles a weapon of your choice and lasts for the duration."],
-      ["Appears", "In a space of your choice within range"],
-      ["Attack", "When you cast the spell, you can immediately make one melee spell attack against one creature within 5 feet of the force"],
-      ["On a hit", "1d8 + your spellcasting ability modifier Force damage"],
-      ["Later turns", "As a Bonus Action on your later turns, you can move the force up to 20 feet and repeat the attack against a creature within 5 feet of it"]
-    ]},
-    {"option": {"name": "Using a Higher-Level Spell Slot", "blocks": [
-      {"facts": [
-        ["Damage", "+1d8 for each spell slot level above 2"]
-      ]}
-    ]}}
-  ],
   "Staggering Smite": [
     {"facts": [
       ["Trigger", "Immediately after you hit a creature with a Melee weapon or an Unarmed Strike"],
@@ -4964,22 +4312,6 @@
       {"facts": [
         ["Extra damage", "+1d6 for each spell slot level above 4"]
       ]}
-    ]}}
-  ],
-  "Starry Wisp": [
-    {"facts": [
-      ["Flavor", "You launch a mote of light at one creature or object within range."],
-      ["Target", "One creature or object within range"],
-      ["Attack", "Ranged spell attack"],
-      ["On a hit", "1d8 Radiant damage, and until the end of your next turn, the target emits Dim Light in a 10-foot radius and can't benefit from the Invisible condition"]
-    ]},
-    {"option": {"name": "Cantrip Upgrade", "blocks": [
-      {"table": {"columns": ["Character level", "Damage"], "rows": [
-        ["1", "1d8"],
-        ["5", "2d8"],
-        ["11", "3d8"],
-        ["17", "4d8"]
-      ]}}
     ]}}
   ],
   "Steel Wind Strike": [
@@ -5028,17 +4360,6 @@
     {"facts": [
       ["Target", "One willing creature you touch"],
       ["Effect", "Until the spell ends, Resistance to Bludgeoning, Piercing, and Slashing damage"]
-    ]}
-  ],
-  "Suggestion": [
-    {"paragraph": "You suggest a course of activity to a creature, which it pursues while Charmed."},
-    {"facts": [
-      ["Target", "One creature you can see within range that can hear and understand you"],
-      ["Suggestion", "No more than 25 words; it must sound achievable and not involve anything that would obviously deal damage to the target or its allies"],
-      ["Save", "Wisdom"],
-      ["Failed save", "Charmed for the duration, or until you or your allies deal damage to it; it pursues the suggestion to the best of its ability"],
-      ["Done early", "If the activity can be completed sooner, the spell ends for the target when it completes it"],
-      ["Examples", "\"Fetch the key to the cult's treasure vault, and give the key to me.\" \"Stop fighting, leave this library peacefully, and don't return.\""]
     ]}
   ],
   "Summon Aberration": [
@@ -5492,19 +4813,6 @@
       ["Unconsumed", "Potions obtained from the cauldron that aren't consumed disappear when you cast this spell again"]
     ]}
   ],
-  "Tasha's Hideous Laughter": [
-    {"facts": [
-      ["Target", "One creature of your choice you can see within range"],
-      ["Save", "Wisdom"],
-      ["Failed save", "Prone and Incapacitated for the duration; it laughs uncontrollably if capable of laughter, and it can't end the Prone condition on itself"],
-      ["Repeat save", "At the end of each of its turns, and each time it takes damage (with Advantage when triggered by damage); on a success, the spell ends"]
-    ]},
-    {"option": {"name": "Using a Higher-Level Spell Slot", "blocks": [
-      {"facts": [
-        ["Targets", "+1 creature for each spell slot level above 1"]
-      ]}
-    ]}}
-  ],
   "Telekinesis": [
     {"paragraph": "You gain the ability to move or manipulate creatures or objects by thought."},
     {"facts": [
@@ -5618,23 +4926,6 @@
       ]}
     ]}}
   ],
-  "Thaumaturgy": [
-    {"facts": [
-      ["Flavor", "You manifest a minor wonder within range."]
-    ]},
-    {"paragraph": "You create one of the effects below within range."},
-    {"facts": [
-      ["Active effects", "Up to three of its 1-minute effects at a time, from repeated castings"]
-    ]},
-    {"table": {"columns": ["Effect", "What it does", "Lasts"], "rows": [
-      ["Altered Eyes", "The appearance of your eyes changes", "1 minute"],
-      ["Booming Voice", "Your voice booms up to three times as loud as normal, and you have Advantage on Charisma (Intimidation) checks", "1 minute"],
-      ["Fire Play", "Flames flicker, brighten, dim, or change color", "1 minute"],
-      ["Invisible Hand", "An unlocked door or window flies open or slams shut", "Instantaneous"],
-      ["Phantom Sound", "A sound from a point of your choice within range, such as a rumble of thunder, the cry of a raven, or ominous whispers", "Instantaneous"],
-      ["Tremors", "Harmless tremors in the ground", "1 minute"]
-    ]}}
-  ],
   "Thorn Whip": [
     {"facts": [
       ["Flavor", "You create a vine-like whip covered in thorns that lashes out at your command toward a creature in range."],
@@ -5684,45 +4975,6 @@
       ]}
     ]}}
   ],
-  "Thunderwave": [
-    {"facts": [
-      ["Flavor", "You unleash a wave of thunderous energy."],
-      ["Area", "15-foot Cube originating from you"],
-      ["Save", "Constitution, made by each creature in the area"]
-    ]},
-    {"table": {"columns": ["Failed save", "Successful save"], "rows": [
-      ["2d8 Thunder damage and pushed 10 feet away from you", "Half as much damage only"]
-    ]}},
-    {"facts": [
-      ["Objects", "Unsecured objects entirely within the Cube are pushed 10 feet away from you"],
-      ["Sound", "A thunderous boom audible within 300 feet"]
-    ]},
-    {"option": {"name": "Using a Higher-Level Spell Slot", "blocks": [
-      {"facts": [
-        ["Damage", "+1d8 for each spell slot level above 1"]
-      ]}
-    ]}}
-  ],
-  "Toll the Dead": [
-    {"facts": [
-      ["Flavor", "You point at one creature you can see within range, and the single chime of a dolorous bell is audible within 10 feet of the target."],
-      ["Sound", "The chime is audible within 10 feet of the target"],
-      ["Target", "One creature you can see within range"],
-      ["Save", "Wisdom"]
-    ]},
-    {"table": {"columns": ["Target", "Failed save", "Successful save"], "rows": [
-      ["At full Hit Points", "1d8 Necrotic damage", "No damage"],
-      ["Missing any Hit Points", "1d12 Necrotic damage", "No damage"]
-    ]}},
-    {"option": {"name": "Cantrip Upgrade", "blocks": [
-      {"table": {"columns": ["Character level", "Full Hit Points", "Missing Hit Points"], "rows": [
-        ["1", "1d8", "1d12"],
-        ["5", "2d8", "2d12"],
-        ["11", "3d8", "3d12"],
-        ["17", "4d8", "4d12"]
-      ]}}
-    ]}}
-  ],
   "Tongues": [
     {"paragraph": "You grant the creature you touch the ability to understand and be understood in any language."},
     {"facts": [
@@ -5762,25 +5014,6 @@
       ["Truesight", "For the duration, the willing creature you touch has Truesight with a range of 120 feet"]
     ]}
   ],
-  "True Strike": [
-    {"facts": [
-      ["Flavor", "Guided by a flash of magical insight, you make one attack with the weapon used in the spell's casting."],
-      ["Attack", "One attack with the weapon used in the spell's casting"],
-      ["Attack and damage", "Use your spellcasting ability instead of Strength or Dexterity"],
-      ["Damage type", "If the attack deals damage, it can be Radiant damage or the weapon's normal damage type (your choice)"]
-    ]},
-    {"option": {"name": "Cantrip Upgrade", "blocks": [
-      {"table": {"columns": ["Character level", "Extra Radiant damage"], "rows": [
-        ["1", "None"],
-        ["5", "1d6"],
-        ["11", "2d6"],
-        ["17", "3d6"]
-      ]}},
-      {"facts": [
-        ["Extra damage", "Always Radiant, whichever type the attack deals"]
-      ]}
-    ]}}
-  ],
   "Unseen Servant": [
     {"paragraph": "You create an Invisible, mindless, shapeless, Medium force that performs simple tasks at your command until the spell ends."},
     {"facts": [
@@ -5809,23 +5042,6 @@
       {"facts": [
         ["Damage", "+1d6 for each spell slot level above 3"]
       ]}
-    ]}}
-  ],
-  "Vicious Mockery": [
-    {"facts": [
-      ["Flavor", "You unleash a string of insults laced with subtle enchantments at one creature you can see or hear within range."],
-      ["Target", "One creature you can see or hear within range"],
-      ["Save", "Wisdom"],
-      ["Failed save", "1d6 Psychic damage, and Disadvantage on the next attack roll it makes before the end of its next turn"],
-      ["Successful save", "No effect"]
-    ]},
-    {"option": {"name": "Cantrip Upgrade", "blocks": [
-      {"table": {"columns": ["Character level", "Damage"], "rows": [
-        ["1", "1d6"],
-        ["5", "2d6"],
-        ["11", "3d6"],
-        ["17", "4d6"]
-      ]}}
     ]}}
   ],
   "Vitriolic Sphere": [
@@ -6086,21 +5302,6 @@
         ["Loose materials", "Loose, lightweight materials brought into the wall fly upward"],
         ["Projectiles", "Arrows, bolts, and other ordinary projectiles launched at targets behind the wall are deflected upward and miss automatically; boulders hurled by Giants or siege engines, and similar projectiles, are unaffected"],
         ["Gaseous form", "Creatures in gaseous form can't pass through it"]
-      ]}
-    ]}}
-  ],
-  "Witch Bolt": [
-    {"facts": [
-      ["Flavor", "A beam of crackling energy lances toward a creature within range, forming a sustained arc of lightning between you and the target."],
-      ["Target", "A creature within range"],
-      ["Attack", "Ranged spell attack"],
-      ["On a hit", "2d12 Lightning damage"],
-      ["Later turns", "On each of your subsequent turns, you can take a Bonus Action to deal 1d12 Lightning damage to the target automatically, even if the first attack missed"],
-      ["Ends early", "If the target is ever outside the spell's range or if it has Total Cover from you"]
-    ]},
-    {"option": {"name": "Using a Higher-Level Spell Slot", "blocks": [
-      {"facts": [
-        ["Initial damage", "+1d12 for each spell slot level above 1"]
       ]}
     ]}}
   ],

@@ -28,6 +28,10 @@ rubric for every field.
   `effect_options.py` or any test. If the model can't say something a spell needs, put it in `notes` and
   report it under Concerns.
 - Don't overwrite an existing entry (`--force`) unless your task says to fix it.
+- A spell with a class in `CharacterContent/Spells/SpellClasses/` has its
+  combat effects in that class's `combat_effects()`, not in JSON (`add`
+  refuses it). If your task includes one, editing that method is in scope;
+  run `./run_tests.sh -q tests/test_spell_classes.py` too.
 
 ## Done means
 

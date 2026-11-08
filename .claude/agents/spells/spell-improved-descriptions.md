@@ -141,3 +141,9 @@ For edits to existing entries, load the JSON, change the specific rows (assert t
 - Test results (spell tests, full suite), and which builds' snapshots were refreshed vs. failing before you started.
 
 Never edit `spells_<source>.json` or `_extended.json`.
+
+A spell that has a class in `CharacterContent/Spells/SpellClasses/` (the
+factory uses it instead of the JSON) gets no JSON entry: its improved
+description is the class's `improved_description` property. Edit it there,
+with the same blocks written as Python, and run
+`./run_tests.sh -q tests/test_spell_classes.py tests/test_spell_improved_descriptions.py`.

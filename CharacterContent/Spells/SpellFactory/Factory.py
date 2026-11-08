@@ -7,12 +7,15 @@ from .Spell import Spell
 
 
 class SpellFactory:
-    """Factory that loads spells from multiple JSON sources and merges them.
+    """Factory for every spell: a spell written as a class
+    (CharacterContent/Spells/SpellClasses, see SpellFactory/ClassSpell.py)
+    if it has one, otherwise its JSON record.
 
-    Sources are merged whole-record (never per-field) in priority order,
-    highest priority first. For any given spell name, the entire record from
-    the highest-priority source that has that name wins outright; lower
-    priority sources only fill in spells missing from higher ones.
+    The JSON sources are merged whole-record (never per-field) in priority
+    order, highest priority first. For any given spell name, the entire record
+    from the highest-priority source that has that name wins outright; lower
+    priority sources only fill in spells missing from higher ones. A class
+    wins over all of them.
     """
 
     # Highest priority first; each subsequent path only fills gaps.
@@ -92,11 +95,15 @@ class SpellFactory:
         additional_ruling: Optional[str] = None,
         grant_source: Optional[str] = None,
     ) -> Spell:
-        """Create a Spell object from the name."""
+        """Create a Spell object from the name: its class, or its record."""
+        spell_class = cls._spell_classes().get(spell_name)
+        if spell_class is not None:
+            return spell_class(spell_casting_ability, additional_ruling, grant_source)
         data = cls._load_json()
         if spell_name not in data:
             raise ValueError(
-                f"Spell {spell_name!r} not found in any of {cls.json_paths}."
+                f"Spell {spell_name!r} has no class and isn't in any of"
+                f" {cls.json_paths}."
             )
         return DataSpell(
             spell_data=data[spell_name],
@@ -106,14 +113,25 @@ class SpellFactory:
         )
 
     @classmethod
-    def all_spells(cls):
-        """Return all Spell objects."""
-        return [DataSpell(info) for info in cls._load_json().values()]
+    def all_spells(cls) -> list[Spell]:
+        """Every spell: its class if it has one, otherwise its record."""
+        return [cls.create(name) for name in cls.spell_names()]
 
     @classmethod
-    def spell_names(cls):
-        """Return a list of spell names."""
-        return list(cls._load_json().keys())
+    def spell_names(cls) -> list[str]:
+        """Every spell's name: those of the JSON records, then those only a
+        class has."""
+        names = list(cls._load_json())
+        known = set(names)
+        return names + [name for name in cls._spell_classes() if name not in known]
+
+    @staticmethod
+    def _spell_classes() -> dict:
+        """The spells written as classes, by name. Imported when first asked
+        for: the classes import this package's ClassSpell."""
+        from CharacterContent.Spells.SpellClasses import SPELL_CLASSES
+
+        return SPELL_CLASSES
 
 
 if __name__ == "__main__":

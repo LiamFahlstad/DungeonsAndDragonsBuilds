@@ -17,6 +17,18 @@ lands on the 2014 one. A spell with no entry keeps its source text.
 `RunCharacterCreator.py --source-text` prints the source text instead, for
 checking an improved description against it.
 
+## Spells written as classes
+
+A spell can also be a Python class in `CharacterContent/Spells/SpellClasses/`
+(`Cantrips.py`, `Level1.py`, ...; base `SpellFactory/ClassSpell.py`), and the
+factory then uses the class instead of the JSON. Such a spell's improved
+description is its class's `improved_description` property, written with the
+same blocks as Python (`Facts(...)`, `Option(...)`), and it has no entry in
+the `_improved.json` file. Edit the class, never add a JSON entry for it
+(`tests/test_spell_classes.py` fails if one is there).
+`python -m CharacterContent.Spells.SpellClassConverter --name <spell>` turns a
+spell's JSON into its class.
+
 ## Format
 
 A list of blocks, each an object with one key naming its type:

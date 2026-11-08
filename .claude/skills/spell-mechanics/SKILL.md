@@ -34,6 +34,15 @@ An entry is a **list**:
 
 A spell without an entry is "not described yet" and is read from its text.
 
+**A spell written as a class** (`CharacterContent/Spells/SpellClasses/`,
+see `SpellFactory/ClassSpell.py`) has its combat effects in the class's
+`combat_effects()` method instead, as the same `CombatEffect` objects written
+in Python, and no JSON entry (`check` reports one, `add` refuses it). To
+describe such a spell, edit its class. To make a JSON spell a class, run
+`python -m CharacterContent.Spells.SpellClassConverter --name <spell>`: it
+writes the class from the record and every companion entry, checks the class
+gives the same as the JSON did, and takes the spell out of the companion files.
+
 ```json
 "Fireball": [
   {
