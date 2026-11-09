@@ -24,6 +24,12 @@ companion files: built by the factory, it must give the same rules, tags,
 target, improved description and combat effects as the JSON did. The casting
 time, range, components and duration are compared as what they mean
 (SpellFields), not as text: the class writes them in the 2024 wording.
+
+The spell-mechanics skill's script uses it as a library: convert() with
+combat effects of its own writes a spell's class with those instead of its
+record's, and set_combat_effects() gives a class that exists a
+combat_effects() method (a new one, or in place of the one it has). Both
+check what they wrote the same way, and put every file back if it's wrong.
 """
 
 import argparse
@@ -35,7 +41,9 @@ import json
 import re
 import subprocess
 import sys
+from dataclasses import dataclass, field
 from pathlib import Path
+from typing import Callable, Optional
 
 ROOT = Path(__file__).resolve().parents[2]
 if str(ROOT) not in sys.path:
@@ -51,6 +59,7 @@ from CharacterContent.Spells.SpellFactory.SpellFields import (  # noqa: E402
     Range,
 )
 from Core.Definitions import CharacterClass, Condition  # noqa: E402
+from Model.Content.CombatEffect import CombatEffect  # noqa: E402
 
 CLASSES_DIR = ROOT / "CharacterContent" / "Spells" / "SpellClasses"
 PACKAGE = "CharacterContent.Spells.SpellClasses"
@@ -205,8 +214,10 @@ def module_name(level: int) -> str:
     return "Cantrips" if level == 0 else f"Level{level}"
 
 
-def class_source(spell: DataSpell) -> str:
-    """The class for `spell`, a JSON spell with its companions merged."""
+def class_source(spell: DataSpell, effects: Optional[list[CombatEffect]] = None) -> str:
+    """The class for `spell`, a JSON spell with its companions merged;
+    given `effects`, its combat_effects() gives those instead of what the
+    record says."""
     data = spell._data
     unknown = set(data) - _RULE_KEYS - _COMPANION_KEYS - _IGNORED_KEYS
     if unknown:
@@ -243,15 +254,51 @@ def class_source(spell: DataSpell) -> str:
             "    def improved_description(self) -> list[Block]:",
             f"        return {source_of(blocks)}",
         ]
-    effects = spell.combat_effects()
+    if effects is None:
+        effects = spell.combat_effects()
     if effects is not None:
-        lines += [
-            "",
-            "    def combat_effects(",
-            "        self, character: CharacterView | None = None",
-            "    ) -> list[CombatEffect]:",
-            f"        return {source_of(effects)}",
-        ]
+        lines += [""] + effects_method(effects)
+    return "\n".join(lines) + "\n"
+
+
+def effects_method(effects: list[CombatEffect]) -> list[str]:
+    """The lines of a class's combat_effects() method giving `effects`."""
+    return [
+        "    def combat_effects(",
+        "        self, character: CharacterView | None = None",
+        "    ) -> list[CombatEffect]:",
+        f"        return {source_of(effects)}",
+    ]
+
+
+def with_effects_method(text: str, class_name: str, effects: list[CombatEffect]) -> str:
+    """`text`, a SpellClasses module, with the class `class_name`'s
+    combat_effects() giving `effects`: the method it has is replaced (with
+    any decorators), or a new one is added at the end of the class."""
+    tree = ast.parse(text)
+    node = next(
+        (n for n in tree.body if isinstance(n, ast.ClassDef) and n.name == class_name),
+        None,
+    )
+    if node is None:
+        raise ValueError(f"The module has no class {class_name!r}")
+    lines = text.splitlines()
+    method = effects_method(effects)
+    old = next(
+        (
+            n
+            for n in node.body
+            if isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef))
+            and n.name == "combat_effects"
+        ),
+        None,
+    )
+    if old is not None:
+        first = min([old.lineno] + [d.lineno for d in old.decorator_list])
+        lines[first - 1 : old.end_lineno] = method
+    else:
+        end = node.end_lineno or node.lineno
+        lines[end:end] = [""] + method
     return "\n".join(lines) + "\n"
 
 
@@ -300,11 +347,17 @@ def add_to_module(path: Path, level: int, classes: dict[str, str]) -> str:
     text = (
         path.read_text(encoding="utf-8") if path.exists() else _module_docstring(level)
     )
+    return module_with(text, classes)
+
+
+def module_with(text: str, classes: dict[str, str]) -> str:
+    """add_to_module() on a module's text. With no `classes`, the module's
+    imports and SPELLS list brought up to date with what its code uses."""
     tree = ast.parse(text)
     existing = {node.name for node in tree.body if isinstance(node, ast.ClassDef)}
     clash = existing & set(classes)
     if clash:
-        raise ValueError(f"{path.name} already has class(es) {sorted(clash)}")
+        raise ValueError(f"The module already has class(es) {sorted(clash)}")
     lines = text.splitlines()
     # Drop the imports and the SPELLS list; they're written again below.
     drop: set[int] = set()
@@ -332,7 +385,8 @@ def add_to_module(path: Path, level: int, classes: dict[str, str]) -> str:
     head = "\n".join(body.splitlines()[:docstring_end])
     rest = "\n".join(body.splitlines()[docstring_end:]).strip("\n")
     new_code = "\n\n\n".join(source.rstrip("\n") for source in classes.values())
-    rest = f"{rest}\n\n\n{new_code}" if rest else new_code
+    if new_code:
+        rest = f"{rest}\n\n\n{new_code}" if rest else new_code
     for name in _names_used(rest):
         kept_imports.setdefault(_IMPORTS[name], set()).add(name)
     import_lines = other_imports + [
@@ -411,8 +465,11 @@ def companion_paths(source_path: str) -> list[Path]:
 # Checking
 
 
-def differences(json_spell, class_spell) -> list[str]:
-    """Where the class says something else than the JSON did."""
+def differences(
+    json_spell, class_spell, effects: Optional[list[CombatEffect]] = None
+) -> list[str]:
+    """Where the class says something else than the JSON did; given
+    `effects`, its combat effects are checked against those instead."""
     checks = (
         "name",
         "level",
@@ -442,7 +499,8 @@ def differences(json_spell, class_spell) -> list[str]:
         for field in checks
         if getattr(json_spell, field) != getattr(class_spell, field)
     ]
-    if json_spell.combat_effects() != class_spell.combat_effects():
+    wanted = json_spell.combat_effects() if effects is None else effects
+    if wanted != class_spell.combat_effects():
         found.append("combat_effects differ")
     return found
 
@@ -473,6 +531,152 @@ def chosen(args) -> list[DataSpell]:
     return sorted(spells, key=lambda s: (s.level, s.name))
 
 
+@dataclass
+class Result:
+    """What convert() or set_combat_effects() did: the spells it wrote, those
+    it left as JSON and why, and what was wrong (then nothing was kept)."""
+
+    done: list[str] = field(default_factory=list)
+    left: list[str] = field(default_factory=list)
+    problems: list[str] = field(default_factory=list)
+    written: list[Path] = field(default_factory=list)
+
+
+def convert(
+    spells: list[DataSpell],
+    effects: Optional[dict[str, list[CombatEffect]]] = None,
+    keep_json: bool = False,
+) -> Result:
+    """Write a class for each of `spells` (JSON spells without one), check
+    each gives what its JSON gave, then take the spells out of the companion
+    files (unless `keep_json`). A spell named in `effects` gets those combat
+    effects instead of its record's, and is checked against them. A spell
+    the classes can't say (CannotConvert) is left as JSON, in `left`."""
+    effects = effects or {}
+    result = Result()
+    by_level: dict[int, dict[str, str]] = {}
+    for spell in spells:
+        try:
+            source = class_source(spell, effects.get(spell.name))
+        except CannotConvert as reason:
+            result.left.append(str(reason))
+            continue
+        by_level.setdefault(spell.level, {})[class_name(spell.name)] = source
+    todo = [s for s in spells if class_name(s.name) in by_level.get(s.level, {})]
+    if not todo:
+        return result
+
+    CLASSES_DIR.mkdir(exist_ok=True)
+    texts = {
+        CLASSES_DIR
+        / f"{module_name(level)}.py": add_to_module(
+            CLASSES_DIR / f"{module_name(level)}.py", level, classes
+        )
+        for level, classes in sorted(by_level.items())
+    }
+
+    def check(spell_classes: dict) -> list[str]:
+        problems = []
+        for spell in todo:
+            made = spell_classes[spell.name]()
+            found = differences(spell, made, effects.get(spell.name))
+            problems += [f"{spell.name}: {d}" for d in found]
+        return problems
+
+    result.problems, result.written = _write_checked(texts, check, new_init=True)
+    if result.problems:
+        return result
+    result.done = [spell.name for spell in todo]
+    if not keep_json:
+        for spell in todo:
+            for path in companion_paths(winning_source(spell.name)):
+                if not path.exists():
+                    continue
+                text = path.read_text(encoding="utf-8")
+                new = remove_entry(text, spell.name)
+                if new != text:
+                    path.write_text(new, encoding="utf-8", newline="")
+    return result
+
+
+def set_combat_effects(effects: dict[str, list[CombatEffect]]) -> Result:
+    """Give each spell named in `effects`, which must have a class, a
+    combat_effects() method returning those effects: in place of the one its
+    class has, or a new one. Checked as convert() checks: if any class then
+    gives something else, every file is put back."""
+    from CharacterContent.Spells.SpellClasses import SPELL_CLASSES
+
+    unknown = sorted(set(effects) - set(SPELL_CLASSES))
+    if unknown:
+        raise ValueError(f"No class for the spell(s) {unknown}")
+    texts: dict[Path, str] = {}
+    for name, spell_effects in effects.items():
+        spell_class = SPELL_CLASSES[name]
+        path = CLASSES_DIR / f"{spell_class.__module__.rsplit('.', 1)[-1]}.py"
+        text = texts.get(path) or path.read_text(encoding="utf-8")
+        texts[path] = with_effects_method(text, spell_class.__name__, spell_effects)
+    texts = {path: module_with(text, {}) for path, text in texts.items()}
+
+    def check(spell_classes: dict) -> list[str]:
+        return [
+            f"{name}: combat_effects differ"
+            for name, wanted in effects.items()
+            if spell_classes[name]().combat_effects() != wanted
+        ]
+
+    result = Result()
+    result.problems, result.written = _write_checked(texts, check)
+    if not result.problems:
+        result.done = list(effects)
+    return result
+
+
+def _write_checked(
+    texts: dict[Path, str],
+    check: Callable[[dict], list[str]],
+    new_init: bool = False,
+) -> tuple[list[str], list[Path]]:
+    """Write each module's new text (and, with `new_init`, the package's
+    __init__.py listing the modules), format them with Black, import the
+    package afresh and run `check` on its SPELL_CLASSES. On a problem, or a
+    module that doesn't import, every file is put back as it was. Returns
+    the problems and the files written."""
+    before = {
+        path: path.read_text(encoding="utf-8") for path in CLASSES_DIR.glob("*.py")
+    }
+    written = []
+    for path, text in texts.items():
+        path.write_text(text, encoding="utf-8", newline="\n")
+        written.append(path)
+    if new_init:
+        init = CLASSES_DIR / "__init__.py"
+        init.write_text(package_init(), encoding="utf-8", newline="\n")
+        written.append(init)
+    # Not check=True: a module Black can't parse fails the import below,
+    # which puts the files back.
+    subprocess.run([sys.executable, "-m", "black", "-q", *map(str, written)])
+    _forget_classes()
+    try:
+        problems = check(importlib.import_module(PACKAGE).SPELL_CLASSES)
+    except Exception as error:  # a class that doesn't even import
+        problems = [f"the classes don't import: {error!r}"]
+    if problems:
+        for path in written:
+            if path in before:
+                path.write_text(before[path], encoding="utf-8", newline="\n")
+            else:
+                path.unlink()
+        _forget_classes()
+    return problems, written
+
+
+def _forget_classes() -> None:
+    """Drop the imported SpellClasses modules, so the next import reads the
+    files as they are now."""
+    for name in [m for m in list(sys.modules) if m.startswith(PACKAGE)]:
+        del sys.modules[name]
+
+
 def main() -> int:
     sys.stdout.reconfigure(encoding="utf-8")  # type: ignore[union-attr]
     parser = argparse.ArgumentParser(description=(__doc__ or "").split("\n\n")[0])
@@ -495,80 +699,31 @@ def main() -> int:
     if not todo:
         print("Nothing to convert.")
         return 0
-    by_level: dict[int, dict[str, str]] = {}
-    left = []
-    for spell in todo:
-        try:
-            source = class_source(spell)
-        except CannotConvert as reason:
-            left.append(str(reason))
-            continue
-        by_level.setdefault(spell.level, {})[class_name(spell.name)] = source
-    for reason in left:
-        print("LEFT AS JSON", reason)
-    todo = [s for s in todo if class_name(s.name) in by_level.get(s.level, {})]
-    if not todo:
-        print("Nothing to convert.")
-        return 0
     if args.dry_run:
-        for classes in by_level.values():
-            for source in classes.values():
-                print(source)
-        print(f"{len(todo)} class(es), nothing written")
+        count = 0
+        for spell in todo:
+            try:
+                print(class_source(spell))
+                count += 1
+            except CannotConvert as reason:
+                print("LEFT AS JSON", reason)
+        print(f"{count} class(es), nothing written")
         return 0
 
-    CLASSES_DIR.mkdir(exist_ok=True)
-    before = {
-        path: path.read_text(encoding="utf-8") for path in CLASSES_DIR.glob("*.py")
-    }
-    written = []
-    for level, classes in sorted(by_level.items()):
-        path = CLASSES_DIR / f"{module_name(level)}.py"
-        path.write_text(
-            add_to_module(path, level, classes), encoding="utf-8", newline="\n"
-        )
-        written.append(path)
-    init = CLASSES_DIR / "__init__.py"
-    init.write_text(package_init(), encoding="utf-8", newline="\n")
-    written.append(init)
-    subprocess.run(
-        [sys.executable, "-m", "black", "-q", *map(str, written)], check=True
-    )
-
-    # Check every class against the JSON it came from, before the JSON goes.
-    for name in [m for m in list(sys.modules) if m.startswith(PACKAGE)]:
-        del sys.modules[name]
-    try:
-        classes_module = importlib.import_module(PACKAGE)
-        problems = []
-        for spell in todo:
-            made = classes_module.SPELL_CLASSES[spell.name]()
-            problems += [f"{spell.name}: {d}" for d in differences(spell, made)]
-    except Exception as error:  # a class that doesn't even import
-        problems = [f"the classes don't import: {error!r}"]
-    if problems:
-        for path in written:
-            if path in before:
-                path.write_text(before[path], encoding="utf-8", newline="\n")
-            else:
-                path.unlink()
-        for problem in problems:
+    result = convert(todo, keep_json=args.keep_json)
+    for reason in result.left:
+        print("LEFT AS JSON", reason)
+    if result.problems:
+        for problem in result.problems:
             print("PROBLEM", problem)
         print("Nothing kept: the classes were taken back out.")
         return 1
-
-    if not args.keep_json:
-        for spell in todo:
-            for path in companion_paths(winning_source(spell.name)):
-                if not path.exists():
-                    continue
-                text = path.read_text(encoding="utf-8")
-                new = remove_entry(text, spell.name)
-                if new != text:
-                    path.write_text(new, encoding="utf-8", newline="")
-    for path in written:
+    if not result.done:
+        print("Nothing to convert.")
+        return 0
+    for path in result.written:
         print(f"wrote {path.relative_to(ROOT).as_posix()}")
-    print(f"{len(todo)} spell(s) converted and checked against their JSON")
+    print(f"{len(result.done)} spell(s) converted and checked against their JSON")
     return 0
 
 

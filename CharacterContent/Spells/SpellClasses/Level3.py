@@ -17,11 +17,7 @@ from CharacterContent.Spells.SpellFactory.SpellFields import (
     Range,
 )
 from Core.Definitions import Ability, CharacterClass, DamageType
-from Model.Content.CombatEffect import (
-    CombatDamage,
-    CombatEffect,
-    EffectRoll,
-)
+from Model.Content.CombatEffect import CombatDamage, CombatEffect, EffectRoll
 from Model.Content.Feature import FeatureTarget
 from Model.Content.FeatureText import Block, Facts, Option, Table
 from Model.View import CharacterView
@@ -96,4 +92,64 @@ class Fireball(ClassSpell):
         ]
 
 
-SPELLS = [Fireball]
+class LightningBolt(ClassSpell):
+    rules = SpellRules(
+        name="Lightning Bolt",
+        level=3,
+        school=School.EVOCATION,
+        classes=(CharacterClass.SORCERER, CharacterClass.WIZARD),
+        casting_time=CastingTime(CastingTimeType.ACTION),
+        range=Range(RangeType.SELF),
+        components=Components(
+            verbal=True, somatic=True, material="a bit of fur and a crystal rod"
+        ),
+        duration=Duration(DurationType.INSTANTANEOUS),
+        source="Player's Handbook",
+        description=(
+            "A stroke of lightning forming a 100-foot-long, 5-foot-wide Line blasts out from you in a direction you choose. Each creature in the Line makes a Dexterity saving throw, taking 8d6 Lightning damage on a failed save or half as much damage on a successful one.\n"
+            "Using a Higher-Level Spell Slot. The damage increases by 1d6 for each spell slot level above 3."
+        ),
+        usage_tags=("damage",),
+        target=FeatureTarget.AREA,
+    )
+
+    @property
+    def improved_description(self) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Flavor",
+                        "A stroke of lightning forming a 100-foot-long, 5-foot-wide Line blasts out from you in a direction you choose.",
+                    ),
+                    (
+                        "Area",
+                        "Line 100 feet long and 5 feet wide, in a direction you choose",
+                    ),
+                    ("Save", "Dexterity, made by each creature in the Line"),
+                )
+            ),
+            Table(
+                ("Failed save", "Successful save"),
+                (("8d6 Lightning damage", "Half as much damage"),),
+            ),
+            Option(
+                "Using a Higher-Level Spell Slot",
+                (Facts((("Damage", "+1d6 for each spell slot level above 3"),)),),
+            ),
+        ]
+
+    def combat_effects(
+        self, character: CharacterView | None = None
+    ) -> list[CombatEffect]:
+        return [
+            CombatEffect(
+                roll=EffectRoll.SAVE,
+                save_ability=Ability.DEXTERITY,
+                half_on_success=True,
+                damage=(CombatDamage("8d6", DamageType.LIGHTNING, upcast="1d6"),),
+            )
+        ]
+
+
+SPELLS = [Fireball, LightningBolt]

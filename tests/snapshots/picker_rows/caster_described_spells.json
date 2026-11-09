@@ -870,6 +870,34 @@
    "until": null,
    "upcast": []
   },
+  "All spells | Lightning Bolt": {
+   "ability": "DEX",
+   "action_cost": "Action",
+   "amount_kind": "Damage",
+   "bonus": null,
+   "concentration": false,
+   "condition": "",
+   "counts_uses": true,
+   "damage": "8d6 Lightning",
+   "dc": 15,
+   "duration_seconds": 0,
+   "feature_name": "",
+   "half_on_save": true,
+   "is_curated": true,
+   "is_unavailable": false,
+   "note": "",
+   "repeat_save": false,
+   "roll": "Saving throw",
+   "row_name": "",
+   "slot_level": "None",
+   "spell_level": 3,
+   "spell_name": "Lightning Bolt",
+   "summary": "DC 15 DEX  8d6 Lightning  half on save",
+   "until": null,
+   "upcast": [
+    "1d6"
+   ]
+  },
   "All spells | Longstrider": {
    "ability": null,
    "action_cost": "Action",

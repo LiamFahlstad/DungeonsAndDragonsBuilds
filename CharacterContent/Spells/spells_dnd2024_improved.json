@@ -2858,21 +2858,6 @@
       ]}
     ]}}
   ],
-  "Lightning Bolt": [
-    {"facts": [
-      ["Flavor", "A stroke of lightning forming a 100-foot-long, 5-foot-wide Line blasts out from you in a direction you choose."],
-      ["Area", "Line 100 feet long and 5 feet wide, in a direction you choose"],
-      ["Save", "Dexterity, made by each creature in the Line"]
-    ]},
-    {"table": {"columns": ["Failed save", "Successful save"], "rows": [
-      ["8d6 Lightning damage", "Half as much damage"]
-    ]}},
-    {"option": {"name": "Using a Higher-Level Spell Slot", "blocks": [
-      {"facts": [
-        ["Damage", "+1d6 for each spell slot level above 3"]
-      ]}
-    ]}}
-  ],
   "Locate Animals or Plants": [
     {"paragraph": "You find the nearest creature or plant of a kind you name."},
     {"facts": [

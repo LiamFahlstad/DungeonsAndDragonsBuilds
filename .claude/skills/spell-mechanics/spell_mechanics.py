@@ -1,34 +1,38 @@
-"""Check, compare, draft and add spells' combat effects: the entries of
-CharacterContent/Spells/spells_<source>_combat_effects.json that the combat
-UI's Custom Effect picker fills its form from. A spell written as a class
-(CharacterContent/Spells/SpellClasses) has its combat effects in its class
-instead: `todo` counts it as described, and `add` refuses it. An entry is a list of
-CombatEffect dicts (Model/Content/CombatEffect.py: what to_dict() writes and
-from_dict() reads), one per way to cast the spell, or [] for a spell with
-nothing to apply.
+"""Check, compare, draft and add spells' combat effects: what a spell's
+combat_effects() returns, which the combat UI's Custom Effect picker fills
+its form from. They are written in Python, in the spell's class
+(CharacterContent/Spells/SpellClasses): a list of CombatEffect objects
+(Model/Content/CombatEffect.py), one per way to cast the spell, or [] for a
+spell with nothing to apply. `add` turns a JSON spell into a class to give
+it its effects (CharacterContent/Spells/SpellClassConverter.py). Only a
+spell the converter can't write as a class keeps its effects in JSON, in
+CharacterContent/Spells/spells_<source>_combat_effects.json, as to_dict()
+writes them.
 
 Usage (from the repo root):
     python .claude/skills/spell-mechanics/spell_mechanics.py check
-        # every entry reads, is a spell its source wins, follows the rubric's checks, and the files are canonical (exit 1 if not)
+        # every class's effects and every JSON entry follow the rubric's checks (exit 1 if not)
     python .claude/skills/spell-mechanics/spell_mechanics.py todo [--level N] [--class Wizard] [--campaign time_loop_pr] [--name X ...]
-        # spells without an entry, and the file each belongs in
-    python .claude/skills/spell-mechanics/spell_mechanics.py draft [filters as todo] --out <scratch>/draft.json
-        # a draft entry per spell without one, read from its text, and a review sheet on stdout
-    python .claude/skills/spell-mechanics/spell_mechanics.py add <entries.json> [--force]
-        # merge reviewed entries into the right file(s), checked and formatted
+        # spells without combat effects, and where each one's go
+    python .claude/skills/spell-mechanics/spell_mechanics.py draft [filters as todo] --out <scratch>/draft.py
+        # a draft per spell without effects, read from its text, as Python, and a review sheet on stdout
+    python .claude/skills/spell-mechanics/spell_mechanics.py add <scratch>/draft.py [--force]
+        # check the reviewed EFFECTS and write each into its spell's class (made from its JSON if need be)
     python .claude/skills/spell-mechanics/spell_mechanics.py compare [filters as todo] [--all]
-        # where each checked entry and the text reading disagree (only the disagreements unless --all)
+        # where each spell's effects and the text reading disagree (only the disagreements unless --all)
     python .claude/skills/spell-mechanics/spell_mechanics.py format
-        # rewrite every combat effects file in canonical format
+        # rewrite every JSON combat effects file in canonical format
 
 A draft is a starting point, never an entry: the text reading it comes from is
-what these entries exist to replace. Review every field against the spell's
+what these effects exist to replace. Review every field against the spell's
 description before `add`.
 """
 
 import argparse
 import json
 import re
+import runpy
+import subprocess
 import sys
 from dataclasses import fields
 from pathlib import Path
@@ -36,10 +40,12 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(ROOT))
 
+from CharacterContent.Spells import SpellClassConverter as converter  # noqa: E402
 from CharacterContent.Spells.SpellFactory import DataSpell, SpellFactory  # noqa: E402
 from Combat.CombatUIQt import effect_options as eo  # noqa: E402
 from Core.Definitions import Ability, Condition  # noqa: E402
 from Model.Content.CombatEffect import CombatEffect  # noqa: E402
+from Model.Content.FeatureText import Facts, Option  # noqa: E402
 
 # The order an effect's keys are written in: CombatEffect's own.
 KEY_ORDER = tuple(field.name for field in fields(CombatEffect))
@@ -59,7 +65,7 @@ CASTER = {
 
 
 # ---------------------------------------------------------------------------
-# Files
+# JSON files (only for spells that can't be a class)
 
 
 def effects_file(source_path: str) -> Path:
@@ -153,14 +159,38 @@ def write(path: Path, entries: dict) -> None:
         f.write(dumps(normalized(entries)))
 
 
+# ---------------------------------------------------------------------------
+# The rubric's checks
+
+
+def effect_problems(name: str, effects: list[CombatEffect], spell) -> list[str]:
+    """Where a spell's effects break a rubric rule a script can check: a
+    condition that's neither a rules condition nor the spell's own badge,
+    cantrip dice on a levelled spell, upcast dice on a cantrip."""
+    problems = []
+    for index, effect in enumerate(effects):
+        for condition in effect.conditions:
+            if condition.name not in _CONDITIONS | {name}:
+                problems.append(
+                    f"{name!r}[{index}]: condition {condition.name!r} is neither"
+                    " a rules condition nor the spell's own name (its badge)"
+                )
+        if spell.level > 0 and any(d.cantrip for d in effect.damage):
+            problems.append(
+                f"{name!r}[{index}]: cantrip steps on a level {spell.level} spell"
+            )
+        if spell.level == 0 and any(d.upcast for d in effect.damage):
+            problems.append(f"{name!r}[{index}]: upcast on a cantrip")
+    return problems
+
+
 def entry_problems(name: str, value, spell) -> list[str]:
-    """What's wrong with a spell's entry: it doesn't read, it isn't written
-    as to_dict() would write it, or it breaks a rubric rule a script can
-    check (a condition that's neither a rules condition nor the spell's own
-    badge, cantrip dice on a levelled spell)."""
+    """What's wrong with a spell's JSON entry: it doesn't read, it isn't
+    written as to_dict() would write it, or it breaks a rubric check."""
     if not isinstance(value, list):
         return [f"{name!r}: expected a list of effects, got {value!r}"]
     problems = []
+    effects = []
     for index, data in enumerate(value):
         try:
             effect = CombatEffect.from_dict(data, f"spell {name!r}[{index}]")
@@ -172,27 +202,8 @@ def entry_problems(name: str, value, spell) -> list[str]:
                 f"{name!r}[{index}]: not as to_dict() writes it (a default"
                 f" value written out?): {json.dumps(effect.to_dict())}"
             )
-        for condition in effect.conditions:
-            if condition.name not in _CONDITIONS | {name}:
-                problems.append(
-                    f"{name!r}[{index}]: condition {condition.name!r} is neither"
-                    " a rules condition nor the spell's own name (its badge)"
-                )
-        if (
-            spell is not None
-            and spell.level > 0
-            and any(d.cantrip for d in effect.damage)
-        ):
-            problems.append(
-                f"{name!r}[{index}]: cantrip steps on a level {spell.level} spell"
-            )
-        if (
-            spell is not None
-            and spell.level == 0
-            and any(d.upcast for d in effect.damage)
-        ):
-            problems.append(f"{name!r}[{index}]: upcast on a cantrip")
-    return problems
+        effects.append(effect)
+    return problems + effect_problems(name, effects, spell)
 
 
 # ---------------------------------------------------------------------------
@@ -237,13 +248,30 @@ def chosen_spells(args) -> list:
     return sorted(picked, key=lambda spell: (spell.level, spell.name))
 
 
-def text_only(spell) -> DataSpell:
-    """The spell without its checked combat effects: what the picker reads
-    from its text."""
-    data = SpellFactory._load_json()[spell.name]
+def text_only(spell) -> DataSpell | None:
+    """The spell as its scraped record, without combat effects: what the
+    picker reads from its text. None for a spell only a class has."""
+    data = SpellFactory._load_json().get(spell.name)
+    if data is None:
+        return None
     return DataSpell(
         {key: value for key, value in data.items() if key != "combat_effects"}
     )
+
+
+def destination(spell) -> str:
+    """Where `add` writes the spell's effects."""
+    classes = SpellFactory._spell_classes()
+    if spell.name in classes:
+        module = classes[spell.name].__module__.rsplit(".", 1)[-1]
+        return f"class in {module}.py"
+    try:
+        converter.class_source(spell)
+    except converter.CannotConvert as reason:
+        source = winning_source(spell.name, sources()) or "?"
+        target = SpellFactory.combat_effects_path(source).split("/")[-1]
+        return f"JSON in {target} (can't be a class: {reason})"
+    return f"new class in {converter.module_name(spell.level)}.py"
 
 
 # ---------------------------------------------------------------------------
@@ -256,13 +284,13 @@ def improved_facts(spell) -> list[tuple[str, str]]:
     rows: list[tuple[str, str]] = []
 
     def walk(blocks):
-        for block in blocks or []:
-            if "facts" in block:
-                rows.extend((label, value) for label, value in block["facts"])
-            if "option" in block:
-                walk(block["option"].get("blocks"))
+        for block in blocks or ():
+            if isinstance(block, Facts):
+                rows.extend((label, value) for label, value in block.rows)
+            elif isinstance(block, Option):
+                walk(block.blocks)
 
-    walk(SpellFactory._load_json()[spell.name].get("improved_description"))
+    walk(spell.improved_description)
     return rows
 
 
@@ -277,15 +305,18 @@ def improved_reading(spell) -> dict:
         reading["roll"] = "save"
         word = re.match(r"\s*([A-Za-z]*)", labels["save"])[1]  # type: ignore[index]
         reading["save_ability"] = _SHORT_ABILITY.get(word, word)
-    for label in ("failed save", "on a hit", "damage"):
-        if label in labels:
-            reading["dice"] += re.findall(r"\d+d\d+", labels[label])
+    # Every row with one of these labels, in order: a spell often has two
+    # "Damage" rows, what it deals and, later, "+1d6 for each slot level".
+    for wanted in ("failed save", "on a hit", "damage"):
+        for label, value in facts:
+            if label.lower() == wanted and not value.lstrip().startswith("+"):
+                reading["dice"] += re.findall(r"\d+d\d+", value)
     return reading
 
 
 def draft_entry(spell) -> tuple[list, list[str]]:
-    """A draft entry (one effect) read from the spell's text, and what to
-    check about it."""
+    """A draft entry (one effect, as to_dict() data) read from the spell's
+    text, and what to check about it."""
     text = eo.read_effect_text(spell.description)
     effect: dict = {}
     if text.is_attack:
@@ -361,6 +392,56 @@ def draft_entry(spell) -> tuple[list, list[str]]:
     return [effect], checks
 
 
+def draft_source(entry: list) -> tuple[str, str | None]:
+    """A draft entry as Python: CombatEffect calls with enums, as the
+    spell's class will say it. One the model refuses (a damage type to
+    choose with no choices yet) stays a dict, with the reason, so `add`
+    refuses it until it's written out."""
+    try:
+        effects = [CombatEffect.from_dict(data) for data in entry]
+    except ValueError as error:
+        return repr(entry), str(error)
+    return converter.source_of(effects), None
+
+
+_DRAFT_HEAD = '''"""Combat effects drafted from each spell's text by spell_mechanics.py
+draft: a starting point, never an entry. Review every effect against the
+spell's full description (the review sheet) and the skill's rubric, then
+    python .claude/skills/spell-mechanics/spell_mechanics.py add <this file>
+which writes each spell's list into its class's combat_effects().
+"""
+'''
+
+
+def draft_module(drafts: dict[str, tuple[str, list[str]]]) -> str:
+    """The draft file: EFFECTS, each spell's draft as Python with its checks
+    as comments above it, and the imports that needs."""
+    body = ["EFFECTS = {"]
+    for name, (source, checks) in drafts.items():
+        body += [f"    # {line}" for check in checks for line in check.splitlines()]
+        body.append(f"    {name!r}: {source},")
+    body.append("}")
+    code = "\n".join(body) + "\n"
+    names = converter._names_used(code)
+    by_module: dict[str, set[str]] = {}
+    for name in names:
+        by_module.setdefault(converter._IMPORTS[name], set()).add(name)
+    imports = [
+        f"from {module} import {', '.join(sorted(items))}"
+        for module, items in sorted(by_module.items())
+    ]
+    return _DRAFT_HEAD + "\n" + "\n".join(imports) + "\n\n" + code
+
+
+def load_effects(path: str) -> dict:
+    """The EFFECTS a reviewed draft file defines."""
+    namespace = runpy.run_path(path)
+    effects = namespace.get("EFFECTS")
+    if not isinstance(effects, dict):
+        sys.exit(f"{path} defines no EFFECTS dict")
+    return effects
+
+
 # ---------------------------------------------------------------------------
 # Commands
 
@@ -368,6 +449,21 @@ def draft_entry(spell) -> tuple[list, list[str]]:
 def cmd_check(_args) -> int:
     problems = []
     all_sources = sources()
+    classes = SpellFactory._spell_classes()
+    described = 0
+    for name, spell_class in sorted(classes.items()):
+        where = spell_class.__module__.rsplit(".", 1)[-1] + ".py"
+        try:
+            spell = spell_class()
+            effects = spell.combat_effects()
+        except Exception as error:  # a class whose effects don't build
+            problems.append(f"{where}: {name!r}: {error!r}")
+            continue
+        if effects is None:
+            continue
+        described += 1
+        problems += [f"{where}: {p}" for p in effect_problems(name, effects, spell)]
+    print(f"spell classes: {described} of {len(classes)} with combat effects")
     for source_path, source in all_sources.items():
         path = effects_file(source_path)
         if not path.exists():
@@ -384,7 +480,7 @@ def cmd_check(_args) -> int:
                 problems.append(
                     f"{rel}: {name!r} is never used: {winner} wins for that spell"
                 )
-            if name in SpellFactory._spell_classes():
+            if name in classes:
                 problems.append(
                     f"{rel}: {name!r} is never used: the spell has a class"
                     " (CharacterContent/Spells/SpellClasses); edit its class"
@@ -401,73 +497,122 @@ def cmd_check(_args) -> int:
 
 
 def cmd_todo(args) -> int:
-    all_sources = sources()
     missing = [s for s in chosen_spells(args) if s.combat_effects() is None]
     for spell in missing:
-        source = winning_source(spell.name, all_sources) or "?"
-        target = SpellFactory.combat_effects_path(source).split("/")[-1]
-        print(f"L{spell.level} {spell.name:32} -> {target}")
-    print(f"{len(missing)} spell(s) without an entry")
+        print(f"L{spell.level} {spell.name:32} -> {destination(spell)}")
+    print(f"{len(missing)} spell(s) without combat effects")
     return 0
 
 
 def cmd_draft(args) -> int:
-    drafts = {}
+    drafts: dict[str, tuple[str, list[str]]] = {}
     for spell in chosen_spells(args):
         if spell.combat_effects() is not None:
             continue
         entry, checks = draft_entry(spell)
-        drafts[spell.name] = entry
+        source, refused = draft_source(entry)
+        if refused:
+            checks.append(
+                f"NOT AN EFFECT YET ({refused}): write it as CombatEffect(...)"
+            )
+        checks.insert(0, f"{spell.name}: level {spell.level}, -> {destination(spell)}")
+        drafts[spell.name] = (source, checks)
         print(f"===== {spell.name} (level {spell.level}, {spell.source})")
         print(f"Casting time: {spell.casting_time} | Duration: {spell.duration}")
         print(spell.description)
-        print("Draft:", json.dumps(entry, ensure_ascii=False))
-        for check in checks:
+        print("Draft:", source)
+        for check in checks[1:]:
             print("Check:", check)
         print()
     if args.out:
-        Path(args.out).write_text(dumps(drafts), encoding="utf-8")
+        Path(args.out).write_text(draft_module(drafts), encoding="utf-8")
+        subprocess.run([sys.executable, "-m", "black", "-q", args.out], check=False)
         print(f"{len(drafts)} draft(s) written to {args.out}")
     return 0
 
 
 def cmd_add(args) -> int:
-    with open(args.file, encoding="utf-8") as f:
-        new = json.load(f)
+    new = load_effects(args.file)
     all_sources = sources()
-    by_file: dict[Path, dict] = {}
+    records = SpellFactory._load_json()
+    classes = SpellFactory._spell_classes()
+    to_set: dict[str, list[CombatEffect]] = {}
+    to_convert: dict[str, list[CombatEffect]] = {}
+    to_json: dict[str, list[CombatEffect]] = {}
+    unchanged = []
     problems = []
     for name, value in new.items():
-        source_path = winning_source(name, all_sources)
-        if source_path is None:
+        if name not in classes and name not in records:
             problems.append(f"{name!r} is not a spell")
             continue
-        if name in SpellFactory._spell_classes():
-            module = SpellFactory._spell_classes()[name].__module__
+        if not isinstance(value, list) or not all(
+            isinstance(effect, CombatEffect) for effect in value
+        ):
             problems.append(
-                f"{name!r} has a class ({module}): write its combat_effects()"
-                " there, not in a JSON entry"
+                f"{name!r}: expected a list of CombatEffect, got {value!r}"
+                " (a draft that didn't build? write it as CombatEffect(...))"
             )
             continue
-        spell = DataSpell(all_sources[source_path][name])
-        found = entry_problems(name, value, spell)
+        spell = SpellFactory.create(name)
+        found = effect_problems(name, value, spell)
         if found:
             problems += found
             continue
-        path = effects_file(source_path)
-        entries = by_file.setdefault(path, load_json(path))
-        if name in entries and not args.force and entries[name] != value:
-            problems.append(f"{name!r} already has an entry (use --force)")
+        old = spell.combat_effects()
+        if old == value:
+            unchanged.append(name)
             continue
-        entries[name] = value
+        if old is not None and not args.force:
+            problems.append(f"{name!r} already has combat effects (use --force)")
+            continue
+        if name in classes:
+            to_set[name] = value
+            continue
+        try:
+            converter.class_source(DataSpell(records[name]), value)
+        except converter.CannotConvert as reason:
+            print(f"JSON {name!r}: can't be a class ({reason})")
+            to_json[name] = value
+            continue
+        to_convert[name] = value
     if problems:
         for problem in problems:
             print("PROBLEM", problem)
         print("Nothing written.")
         return 1
+
+    status = 0
+    if to_convert:
+        result = converter.convert(
+            [DataSpell(records[name]) for name in to_convert], to_convert
+        )
+        status |= _report(result, "converted to a class, with these effects")
+    if to_set:
+        result = converter.set_combat_effects(to_set)
+        status |= _report(result, "combat_effects() written in its class")
+    by_file: dict[Path, dict] = {}
+    for name, value in to_json.items():
+        path = effects_file(winning_source(name, all_sources) or "")
+        entries = by_file.setdefault(path, load_json(path))
+        entries[name] = [effect.to_dict() for effect in value]
     for path, entries in by_file.items():
         write(path, entries)
         print(f"{path.relative_to(ROOT).as_posix()}: {len(entries)} entries")
+    for name in unchanged:
+        print(f"{name}: unchanged")
+    return status
+
+
+def _report(result, what: str) -> int:
+    if result.problems:
+        for problem in result.problems:
+            print("PROBLEM", problem)
+        print("Nothing kept of that step: its files were put back.")
+        return 1
+    for name in result.done:
+        print(f"{name}: {what}")
+    for path in result.written:
+        print(f"  wrote {path.relative_to(ROOT).as_posix()}")
     return 0
 
 
@@ -487,8 +632,12 @@ def cmd_compare(args) -> int:
     for spell in chosen_spells(args):
         if spell.combat_effects() is None:
             continue
+        record = text_only(spell)
+        if record is None:
+            print(f"{spell.name}: no scraped record, no text reading to compare")
+            continue
         curated = eo.spell_option(spell, CASTER)
-        read = eo.spell_option(text_only(spell), CASTER)
+        read = eo.spell_option(record, CASTER)
         differences = [
             f"{label}: checked {get(curated)!r}, text {get(read)!r}"
             for label, get in _COMPARED
@@ -527,7 +676,7 @@ def main() -> int:
         if name == "compare":
             command.add_argument("--all", action="store_true")
     add = commands.add_parser("add")
-    add.add_argument("file")
+    add.add_argument("file", help="a reviewed draft: a .py file defining EFFECTS")
     add.add_argument("--force", action="store_true")
     args = parser.parse_args()
     handler = {

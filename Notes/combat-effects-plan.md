@@ -13,7 +13,7 @@ change:
 - log bugs found along the way with the `discovered-issues` skill and list
   their ids in **Discovered issues**.
 
-## Status (2026-11-09, evening)
+## Status (2026-11-09, night)
 
 | Phase | Step | State |
 |---|---|---|
@@ -32,12 +32,13 @@ change:
 | 2 | 2.6 `Feature.adjust_combat_effect` hook | **Done** |
 | 2 | 2.7 Conditional extra damage (`when`) | **Done**, as a generated note (R14) |
 | 2 | Extensions list their own uses under their parent | **Done** (R10, new) |
-| S | **Spells as classes** (new direction, 2026-11-09; see its section) | S.1 base class, factory and converter **done**; S.2 the 57 spells with combat effects converted **done**; S.2c card lines as dataclasses **done** (R20); S.3-S.5 not started |
+| S | **Spells as classes** (new direction, 2026-11-09; see its section) | S.1 base class, factory and converter **done**; S.2 the 57 spells with combat effects converted **done**; S.2c card lines as dataclasses **done** (R20); S.3 new effects go into classes **done** (R22); S.4-S.5 not started |
 | 3 | Lasting effects (3.1-3.6) | Not started |
 | 4 | One `combat-effects` skill; feature agent; content rollout | Partly: the skill's rubric and script cover every new field; first content batch below |
 | 5 | Sheet chips, monster score | Not started |
 
-**Content described so far.** Spells: 56 entries (2024) + 1 (2014). Added
+**Content described so far.** Spells: 57 (2024) + 1 (2014), all as classes;
+Lightning Bolt (2026-11-09) was the first written through S.3's `add`. Added
 2026-11-09: Burning Hands, Charm Person, Chill Touch, Command (5 options),
 Divine Smite, Sacred Flame, Scorching Ray, Shield of Faith; upgraded from notes
 to fields: Eldritch Blast and Magic Missile (`instances`), Ice Knife (two
@@ -46,8 +47,8 @@ hurt target). Features of the Curse of the Lich party: Channel Divinity (Divine
 Spark heal and harm, Turn Undead), Radiance of the Dawn, Warding Flare, Lay on
 Hands, Paladin's Smite, Sneak Attack.
 
-**Verified 2026-11-09:** full suite passes (9,793); every picker-row change
-reviewed field by field against the previous golden.
+**Verified 2026-11-09 (after S.3):** full suite passes (9,917); every
+picker-row change reviewed field by field against the previous golden.
 
 ## Decisions
 
@@ -270,7 +271,7 @@ module's own imports and classes when adding to it.
 | S.2b | The converter writes enums where the values are a fixed set (R19), and leaves a spell it can't express as JSON with the reason (`CannotConvert`) | **Done**: the 57 regenerated with enums; 574 of the 594 spells can be converted, the 20 others are DI-062 and DI-063 |
 | S.2c | Casting time, range, components and duration as `SpellFields` dataclasses (R20); the converter compares them by meaning; the 57 regenerated | **Done**: every record of the three sources reads and writes back (`tests/test_spell_fields.py`); old and new derived values agree on all 1,391 records but one fix (Yolande's Regal Presence now has V); one card changed (Absorb Elements "1 reaction, ..." -> "Reaction, ...") |
 | S.2d | Combat effects' `roll` and `until` as enums (`EffectRoll`, `TurnEdge`, `TurnOf`; R21), written by the converter and used by every Python effect (spell classes, features, homebrew monsters, tests) | **Done**: picker goldens and sheet snapshots unchanged |
-| S.3 | Write new combat effects in classes, not JSON: convert a spell, then edit its `combat_effects()`. Teach `spell_mechanics.py draft` to print a class's method instead of a JSON entry, and give the `spell-mechanics` agent classes in scope | Not started |
+| S.3 | Write new combat effects in classes, not JSON: convert a spell, then edit its `combat_effects()`. Teach `spell_mechanics.py draft` to print a class's method instead of a JSON entry, and give the `spell-mechanics` agent classes in scope | **Done** (R22): `draft --out` writes a Python `EFFECTS` module; `add` converts the spell with those effects (`SpellClassConverter.convert(..., effects)`) or sets the method on its class (`set_combat_effects`), both checked and rolled back on a problem; JSON only for the spells that can't be classes; `check` covers class spells; skill, agent and tests updated. Lightning Bolt added through it (one new picker row, read) |
 | S.4 | Convert the rest (Q11) and retire the companion files: once every spell of a source has a class, its `_extended`/`_improved`/`_combat_effects` files and `DataSpell`'s companion handling go | Not started |
 | S.5 | Drift check: a re-scrape that changes a converted spell's record must be noticed (Q12) | Not started |
 
@@ -430,6 +431,22 @@ Sheet chips ("DEX save · half · 8d6 Fire") from the same data;
   a pattern when built), as do `when`, `noun`, `notes` and `spell`.
   `damage_type`, `save_ability`, `action_type` and condition names already
   were enums.
+- **R22. Describing a spell is one scripted step that writes its class**
+  (S.3, 2026-11-09). The plan said "convert, then edit `combat_effects()`";
+  done by hand that is two steps, the second an unchecked edit in a
+  2,000-line module. Instead the draft is a Python module
+  (`EFFECTS = {"Fireball": [CombatEffect(...)]}`, with enums and the checks
+  as comments), so the reviewer already works in the class's own language,
+  and `add` does the rest: the rubric checks, then the converter writes the
+  class with those effects (or replaces / adds the method on a class that
+  exists, by its AST span, then refreshes the module's imports), Black, a
+  fresh import and a parity check, and every file put back on a problem.
+  So describing a spell also converts it, moving its improved description
+  and tags into the class: Q11's "as they're described" happens on its own.
+  A draft the model refuses (a damage type to choose, no choices yet) stays
+  a dict so `add` refuses it. The spells that can't be classes (DI-062,
+  DI-063) still get JSON entries from `add`, so the JSON reader stays until
+  Q15 is decided.
 
 ## Open questions (with suggestions)
 
@@ -507,7 +524,10 @@ Sheet chips ("DEX save · half · 8d6 Fire") from the same data;
 - **DI-065** (open): the 2014 records' `"ritual": true` is ignored, so 2014-only
   ritual spells don't show as rituals (their casting time doesn't say so).
 - Found and fixed: the text-reading tests dropped a spell's data by its old
-  key name; the single golden file broke under parallel test runs (R11).
+  key name; the single golden file broke under parallel test runs (R11);
+  `draft`'s cross-check with the improved description kept only the last
+  "Damage" row (the "+1d6 per slot level" one), so nearly every levelled
+  spell's draft said "Improved description DIFFERS" (S.3).
 
 ## Testing strategy
 

@@ -1395,12 +1395,6 @@
     ],
     "target": "enemy"
   },
-  "Lightning Bolt": {
-    "usage_tags": [
-      "damage"
-    ],
-    "target": "area"
-  },
   "Lightning Ring": {
     "usage_tags": [
       "control",

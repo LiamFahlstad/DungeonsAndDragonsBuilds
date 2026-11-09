@@ -425,3 +425,141 @@ def test_adding_to_a_module_keeps_what_is_there(tmp_path):
     assert text.rstrip().endswith("SPELLS = [New, Old]")
     with pytest.raises(ValueError, match="already has"):
         converter.add_to_module(path, 1, {"Old": "class Old(ClassSpell):\n    pass\n"})
+
+
+# ---------------------------------------------------------------------------
+# Writing combat effects into a class (the spell-mechanics skill's `add`)
+
+_EFFECTS = [
+    CombatEffect(
+        roll=EffectRoll.SAVE,
+        save_ability=Ability.CONSTITUTION,
+        damage=(CombatDamage("2d6", DamageType.THUNDER, upcast="1d6"),),
+        conditions=(CombatCondition(Condition.PRONE),),
+    )
+]
+
+
+def _class_from_source(source: str) -> type:
+    """The class `source` (one class, as class_source() writes it) defines,
+    with every name the converter can import."""
+    namespace: dict = {}
+    for name, module in converter._IMPORTS.items():
+        namespace[name] = getattr(__import__(module, fromlist=[name]), name)
+    exec(source, namespace)
+    return next(
+        value
+        for value in namespace.values()
+        if isinstance(value, type)
+        and issubclass(value, ClassSpell)
+        and value is not ClassSpell
+    )
+
+
+def test_a_class_can_be_written_with_other_combat_effects():
+    """convert() with effects: the class gives those, not the record's
+    (here, none), and keeps everything else the record says."""
+    spell = _record()
+    assert spell.combat_effects() is None
+    made = _class_from_source(converter.class_source(spell, _EFFECTS))()
+    assert made.combat_effects() == _EFFECTS
+    assert converter.differences(spell, made, _EFFECTS) == []
+    # Checked against the record's effects instead, they differ.
+    assert converter.differences(spell, made) == ["combat_effects differ"]
+
+
+_MODULE = '''"""Doc."""
+
+from CharacterContent.Spells.SpellFactory.ClassSpell import ClassSpell
+
+
+class HasOne(ClassSpell):
+    x = 1
+
+    @staticmethod
+    def combat_effects(character=None):
+        # written by hand
+        return []
+
+    def summons(self):
+        return []
+
+
+class HasNone(ClassSpell):
+    x = 2
+
+
+SPELLS = [HasNone, HasOne]
+'''
+
+
+def test_a_classs_combat_effects_method_is_replaced_or_added():
+    text = converter.with_effects_method(_MODULE, "HasOne", _EFFECTS)
+    text = converter.with_effects_method(text, "HasNone", _EFFECTS)
+    text = converter.module_with(text, {})
+    # The old method went, decorator and comment included; the rest stayed.
+    assert "written by hand" not in text and "@staticmethod" not in text
+    assert "def summons(self):" in text
+    assert text.count("def combat_effects(") == 2
+    # What the new code names is imported now, and SPELLS is unchanged.
+    assert "from Model.Content.CombatEffect import" in text
+    assert text.rstrip().endswith("SPELLS = [HasNone, HasOne]")
+    namespace: dict = {}
+    exec(text, namespace)
+    for name in ("HasOne", "HasNone"):
+        assert namespace[name]().combat_effects() == _EFFECTS
+    assert (namespace["HasOne"].x, namespace["HasNone"].x) == (1, 2)
+    with pytest.raises(ValueError, match="no class"):
+        converter.with_effects_method(_MODULE, "Missing", _EFFECTS)
+
+
+@pytest.fixture
+def classes_package(tmp_path, monkeypatch):
+    """An empty stand-in for SpellClasses, so _write_checked can write and
+    import modules without touching the real ones."""
+    package = tmp_path / "spell_classes_stand_in"
+    package.mkdir()
+    # Like the real one, it imports its modules.
+    (package / "__init__.py").write_text(
+        "from . import Level1\n\nSPELL_CLASSES = {}\n", encoding="utf-8"
+    )
+    (package / "Level1.py").write_text("X = 1\n", encoding="utf-8")
+    monkeypatch.syspath_prepend(str(tmp_path))
+    monkeypatch.setattr(converter, "CLASSES_DIR", package)
+    monkeypatch.setattr(converter, "PACKAGE", package.name)
+    yield package
+    converter._forget_classes()
+
+
+@pytest.mark.parametrize(
+    "new_text, problem",
+    [
+        ("X = 2\n", ["the check says no"]),  # the check fails
+        ("X = (\n", None),  # it doesn't even parse
+    ],
+)
+def test_written_classes_that_fail_their_check_are_put_back(
+    classes_package, new_text, problem
+):
+    level1, level2 = classes_package / "Level1.py", classes_package / "Level2.py"
+    problems, written = converter._write_checked(
+        {level1: new_text, level2: "Y = 1\n"},
+        lambda classes: ["the check says no"],
+    )
+    if problem is not None:
+        assert problems == problem
+    else:
+        assert problems and "don't import" in problems[0]
+    assert written == [level1, level2]
+    assert level1.read_text(encoding="utf-8") == "X = 1\n"
+    assert not level2.exists()
+
+
+def test_written_classes_that_pass_their_check_are_kept(classes_package):
+    level1 = classes_package / "Level1.py"
+    seen = []
+    problems, _ = converter._write_checked(
+        {level1: "X=2\n"}, lambda classes: seen.append(classes) or []
+    )
+    assert problems == [] and seen == [{}]
+    assert level1.read_text(encoding="utf-8") == "X = 2\n"  # Black ran
