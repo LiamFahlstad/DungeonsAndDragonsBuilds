@@ -1,6 +1,6 @@
 # rules-checker lessons
 
-- 2026-10-27: Combat/ conditions (Grappled etc.) are only labels + reference text (Combat/Definitions.py); no escape DC, Speed 0 or auto-ending is simulated. Don't hunt for grapple mechanics there.
+- 2026-11-09: Combat conditions now count in rolls/AC/damage through Model/Content/RulesConditions.py + Combat/Effects/modifiers.py (a `when` = noted, never counted); Speed 0, escape DCs and auto-ending are still not simulated. Invisible/cover live in char["visibility_states"], not "conditions". Probe the plans with plain dicts {"name","conditions","visibility_states"}, no Qt needed.
 - 2026-10-27: Feats have no file under SourceTexts/; the feat class's get_description() holds the source wording. Monk text is SourceTexts/ClassTexts/monk.txt.
 - 2026-10-27: Martial Arts reaches the Unarmed Strike only through MonkBase default_equipment (starting class). A multiclass that doesn't start as Monk shows a 1d1 Str strike; check such builds when judging unarmed numbers. Logged as DI-024 (2026-10-28); check its status before re-reporting.
 - 2026-10-28: To probe one feat without a build, copy tests/conftest.py make_sources (CharacterSources + ClassLevels + AbilityScores), add_effect(feat), then Character(sources). Use get_skill_modifier for a skill total; get_skill_bonus is only the extra bonuses (returns 0).

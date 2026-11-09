@@ -202,26 +202,6 @@ _add_ability_rows treats scores as modifiers unless one is over 10, so a Commone
 **History**
 - 2026-10-31 main-session: found
 
-### DI-033 · Monster action rolls ignore the target's Half or Three-Quarters Cover
-- **Status:** open
-- **Area:** combat-simulator
-- **Where:** `Combat/CombatUIQt/turn_panel_mixin.py:299`
-
-_attack_hits compares the total with the target's bare AC, though Half Cover (+2) and Three-Quarters Cover (+5) are tracked in the target's visibility_states and SourceTexts/RulesGlossary/Combat/Attacks/Cover.md adds them to AC. Example: a monster action rolling 14 against an AC 13 target with Half Cover (effective AC 15) shows HIT and fills the Damage field; by the rules it misses. The 'vs AC' text at line 260 shows the bare AC too. Fix: one helper for a target's effective AC (first_number plus the cover bonus, the highest grade only), used here and by any other attack check.
-
-**History**
-- 2026-11-01 code-reviewer: found
-
-### DI-034 · Attack rolls don't count conditions: Advantage/Disadvantage from Restrained, Paralyzed, Blinded, Poisoned etc., and Paralyzed/Unconscious critical hits
-- **Status:** open
-- **Area:** combat-simulator
-- **Where:** `Combat/CombatUIQt/saves.py:roll_attack`, `Combat/CombatUIQt/turn_panel_mixin.py:_roll_d20_for_attack`
-
-Saving throws in the Custom Effect dialog count conditions per target (saves.py _with_conditions), but none of the three attack paths do: roll_attack (Custom Effect), the monster action buttons, and the Attack roll field. In the Custom Effect dialog one Advantage setting covers every target, so a +5 attack on a Paralyzed Tiger and a healthy Bandit can't be rolled correctly in one go. Attack rolls against Blinded, Paralyzed, Petrified, Restrained, Stunned or Unconscious creatures have Advantage; a Blinded, Poisoned, Prone or Restrained attacker has Disadvantage. Prone targets and the automatic critical hits on Paralyzed/Unconscious depend on being within 5 feet, which the UI doesn't know, so those need flagging for the GM rather than applying. Documented as not counted in KEYBOARD_SHORTCUTS.md.
-
-**History**
-- 2026-11-02 main-session: found
-
 ### DI-035 · Monster Spellcasting entries have lost their spell lists: the text stops at the colon
 - **Status:** open
 - **Area:** content-scraper
@@ -424,6 +404,36 @@ Both dnd2024 and dnd5e records for Shield end their casting_time at 'targeted by
 **History**
 - 2026-11-08 main-session: found
 
+### DI-066 · Saving throws ignore cover's +2/+5 to Dexterity saves
+- **Status:** open
+- **Area:** combat-simulator
+- **Where:** `Combat/CombatUIQt/saves.py:roll_save`
+
+Cover.md: Half Cover gives +2 to AC and Dexterity saving throws, Three-Quarters Cover +5. attack_rolls.cover_bonus counts it in AC only; roll_save adds save_modifier alone, so a Fireball against a monster behind Half Cover rolls its DEX save 2 low, and the dialog's 'DEX +3' row doesn't show it. Fix: add cover_bonus to rolled DEX saves (and show it in _save_text); natural fit for plan step 3.3's D20Bonus, with cover as a modifier source.
+
+**History**
+- 2026-11-09 main-session: found
+
+### DI-067 · Combat UI: a creature whose Unconscious ends isn't left Prone
+- **Status:** open
+- **Area:** combat-simulator
+- **Where:** `Combat/CombatUIQt/damage_mixin.py:535, Combat/CombatUIQt/damage_mixin.py:567, Combat/CombatUIQt/rest.py:204`
+
+Unconscious.md: 'When this condition ends, you remain Prone.' Unconscious now gives Prone through HasConditions (Combat/Effects/modifiers.py held_conditions), so removing Unconscious (healing from 0 HP, Revive, Short Rest healing) also removes the Prone it gave, and nothing adds a Prone of its own. The healed creature's attack rolls then lose Prone's Disadvantage, and attacks against it lose the Prone notes, until the GM adds Prone by hand. Fix: when Unconscious is removed, add Prone unless the creature already holds it (and it isn't immune), logged like any other condition.
+
+**History**
+- 2026-11-09 rules-checker: found
+
+### DI-068 · Combat UI: Invisible is a visibility state, so the Invisible condition's rules never reach the attack notes
+- **Status:** open
+- **Area:** combat-simulator
+- **Where:** `Combat/Effects/modifiers.py:44 held_conditions, Model/Creatures/Combatants.py:71 Visibility.INVISIBLE`
+
+The GM marks a creature Invisible through the visibility combo (char['visibility_states']), and the spells add an 'Invisibility'/'Greater Invisibility' badge; held_conditions only reads char['conditions'] and matches 'Invisible' or 'Invisible ...'. So attack_plan never shows Invisible.md's 'Attack rolls against you have Disadvantage, and your attack rolls have Advantage. If a creature can somehow see you, you don't gain this benefit against that creature.' for the usual way a creature becomes Invisible. Fix: have held_conditions also read the Invisible visibility state (or the UI add the condition with it).
+
+**History**
+- 2026-11-09 rules-checker: found
+
 ## Fixed
 
 ### DI-001 · Temporary Hit Points stack instead of keeping one amount
@@ -583,6 +593,29 @@ rank_addresses keeps only 192.168/16, 10/8 and 172.16/12, but Tailscale uses 100
 - 2026-11-01 main-session: found
 - 2026-11-01 main-session: marked in-progress
 - 2026-11-01 main-session: marked fixed; rank_addresses now keeps 100.64.0.0/10, ranked last, with tests. Not tried with a real Tailscale connection.
+
+### DI-033 · Monster action rolls ignore the target's Half or Three-Quarters Cover
+- **Status:** fixed · 2026-11-09 · uncommitted
+- **Area:** combat-simulator
+- **Where:** `Combat/CombatUIQt/turn_panel_mixin.py:299`
+
+_attack_hits compares the total with the target's bare AC, though Half Cover (+2) and Three-Quarters Cover (+5) are tracked in the target's visibility_states and SourceTexts/RulesGlossary/Combat/Attacks/Cover.md adds them to AC. Example: a monster action rolling 14 against an AC 13 target with Half Cover (effective AC 15) shows HIT and fills the Damage field; by the rules it misses. The 'vs AC' text at line 260 shows the bare AC too. Fix: one helper for a target's effective AC (first_number plus the cover bonus, the highest grade only), used here and by any other attack check.
+
+**History**
+- 2026-11-01 code-reviewer: found
+- 2026-11-09 main-session: marked fixed; Plan step 3.2: _roll_action checks the one target's AC with attack_rolls.armor_bonus (cover plus modifiers), and 'vs AC' shows that AC.
+
+### DI-034 · Attack rolls don't count conditions: Advantage/Disadvantage from Restrained, Paralyzed, Blinded, Poisoned etc., and Paralyzed/Unconscious critical hits
+- **Status:** fixed · 2026-11-09 · uncommitted
+- **Area:** combat-simulator
+- **Where:** `Combat/CombatUIQt/saves.py:roll_attack`, `Combat/CombatUIQt/turn_panel_mixin.py:_roll_d20_for_attack`
+
+Saving throws in the Custom Effect dialog count conditions per target (saves.py _with_conditions), but none of the three attack paths do: roll_attack (Custom Effect), the monster action buttons, and the Attack roll field. In the Custom Effect dialog one Advantage setting covers every target, so a +5 attack on a Paralyzed Tiger and a healthy Bandit can't be rolled correctly in one go. Attack rolls against Blinded, Paralyzed, Petrified, Restrained, Stunned or Unconscious creatures have Advantage; a Blinded, Poisoned, Prone or Restrained attacker has Disadvantage. Prone targets and the automatic critical hits on Paralyzed/Unconscious depend on being within 5 feet, which the UI doesn't know, so those need flagging for the GM rather than applying. Documented as not counted in KEYBOARD_SHORTCUTS.md.
+
+**History**
+- 2026-11-02 main-session: found
+- 2026-11-09 main-session: marked in-progress; Plan step 3.2: conditions as data (Combat/Effects)
+- 2026-11-09 main-session: marked fixed; Plan step 3.2 (R27): the Custom dialog's rolls and a monster's action buttons count the attacker's and target's conditions from Model/Content/RulesConditions.py; position/sight-dependent ones (Prone, Paralyzed/Unconscious crits, Invisible, Frightened, Grappled) are noted, not counted; a typed roll stays as typed.
 
 ### DI-044 · Short Rest gave back every spent use of a feature that regains only one
 - **Status:** fixed

@@ -13,7 +13,7 @@ change:
 - log bugs found along the way with the `discovered-issues` skill and list
   their ids in **Discovered issues**.
 
-## Status (2026-11-09, S.4 done: every spell is a class)
+## Status (2026-11-09, 3.2 done: the rules conditions are data)
 
 | Phase | Step | State |
 |---|---|---|
@@ -33,7 +33,7 @@ change:
 | 2 | 2.7 Conditional extra damage (`when`) | **Done**, as a generated note (R14) |
 | 2 | Extensions list their own uses under their parent | **Done** (R10, new) |
 | S | **Spells as classes** (new direction, 2026-11-09; see its section) | S.1 base class, factory and converter **done**; S.2 the 57 spells with combat effects converted **done**; S.2c card lines as dataclasses **done** (R20); S.3 new effects go into classes **done** (R22); S.5 drift check **done** (R23); S.4 **done** (R26): all 594 spells are classes, the agents' tools switched over (R24), Q15 and DI-065 done (R25), every companion file deleted and nothing reads them |
-| 3 | Lasting effects (3.1-3.6) | Not started |
+| 3 | Lasting effects (3.1-3.6) | 3.2 **done** (R27), ahead of 3.1: the rules conditions are data, and saves, attack rolls (all three paths), AC, damage Resistance and condition immunity read them. 3.1, 3.3-3.6 not started |
 | 4 | One `combat-effects` skill; feature agent; content rollout | Partly: the skill's rubric and script cover every new field; first content batch below |
 | 5 | Sheet chips, monster score | Not started |
 
@@ -59,6 +59,13 @@ in the 2024 wording (R20: "1 action" -> "Action", "1 Hour" -> "1 hour",
 minutes", the badge still shown), Gate's and Yolande's Regal Presence's
 components slips (DI-062), and Ceremony's Ritual tag on three builds
 (DI-065); Armor of Agathys' "1 hour" in six More Info goldens.
+
+**Verified 2026-11-09 (3.2, R27):** full suite passes; picker goldens and
+sheet snapshots unchanged; pyright clean on the changed files; 175 new tests
+(`test_combat_modifiers.py`, `test_combat_ui_condition_rolls.py`) with
+expected values from the glossary's condition entries. The rules-checker
+found every counted modifier right, sentence by sentence, and 7 gaps: 5 fixed
+(see R27's last point), 2 logged (DI-067, DI-068).
 
 **Verified 2026-11-09 (S.4 done, R26):** full suite passes (10,011; six fewer than before
 R26's last step, the removed `blocks_from_json` tests); no snapshot changed;
@@ -338,7 +345,7 @@ Mark, Heroism. The modifier types go in a sibling module,
 | # | Step | Done when |
 |---|---|---|
 | 3.1 | `ActiveEffect` and `char["active_effects"]`; old keys read through it. Undo, log replay, the player view keep working. | Combat UI tests pass; an old fight log still replays |
-| 3.2 | Rules conditions as data; `roll_save`, attack resolution and AC read modifiers. | Restrained, Prone, Blinded, Paralyzed behave as before, from data; rules-checker run on the table |
+| 3.2 | Rules conditions as data; `roll_save`, attack resolution and AC read modifiers. | **Done** (R27): saves behave as before, from data; attack rolls now count conditions too (DI-034), the monster action buttons cover as well (DI-033); rules-checker run on the table |
 | 3.3 | `D20Bonus`, `D20Mode`, `AttacksAgainst`, `ArmorClass`, `Resistance`. | Bless adds 1d4 to a rolled save; Shield of Faith raises AC |
 | 3.4 | `ExtraDamageFrom` / `ExtraDamageOnHit`. | Hunter's Mark adds 1d6 Force on its caster's hits |
 | 3.5 | Triggers and prompts. | Heroism gives temp HP at turn start; Spirit Guardians prompts |
@@ -546,6 +553,62 @@ Sheet chips ("DEX save · half · 8d6 Fire") from the same data;
   the skills, HOWTO and IMPROVED_DESCRIPTIONS.md say "every spell is a
   class".
 
+- **R27. 3.2 before 3.1: the modifiers come from the conditions a combatant
+  already has** (2026-11-09). 3.2 doesn't need `ActiveEffect`: the rules
+  conditions live in `char["conditions"]` by name, so the interpreter
+  (`Combat/Effects/modifiers.py`, `modifiers_on(char)`) reads them there,
+  a longer custom name counting as before. 3.1 adds `active_effects` as a
+  second source of the same `(source, modifier)` pairs, and nothing that
+  reads them changes. What the plan didn't foresee:
+  - **The table is its own module**, `Model/Content/RulesConditions.py`
+    (`CONDITION_RULES`, one entry per glossary sentence), beside the
+    vocabulary in `Model/Content/CombatModifiers.py` (R1).
+  - **More modifier types than the plan's list**, each one a sentence the
+    conditions say: `AutoFail` (STR and DEX saves), `CriticalHitsAgainst`,
+    `ConditionImmunity` (Petrified's Poisoned), `HasConditions` (Paralyzed
+    is Incapacitated; Unconscious, Incapacitated and Prone), and `Note` for
+    every sentence that changes no roll, AC or damage. `D20Mode`'s rolls
+    are a `D20Test` (attack roll, saving throw, ability check, initiative).
+  - **`when` on a modifier, as on `CombatDamage`** (R14): what depends on
+    where creatures are or what they see (Prone, Invisible, Frightened,
+    Grappled, the Critical Hit from within 5 feet) is never counted, only
+    noted ("Tiger is Prone (not counted): Advantage if the attacker is
+    within 5 feet of it, Disadvantage if ..."). Principle 8 says prompt; a
+    note is the prompt until the dialog knows distances.
+  - **Attack rolls changed, on purpose.** "Behave as before" held for saves
+    (same rolls, same notes, one reworded: "Restrained: Disadvantage,
+    cancelling Advantage"), but "attack resolution reads modifiers" meant
+    attacks gain what they never had (DI-034): the Custom dialog's rolls
+    and a monster's action buttons count the attacker's and the target's
+    conditions per target, with the dialog's mode, cancelling as the rules
+    say. The log line says why (", Tiger is Restrained: Advantage"; the
+    player link's parser drops it).
+  - **A typed total is used as it is** (Decision 4): only an automatic
+    failure overrides it, and a hit still says to check for a Critical
+    Hit. The reminder comes before the roll instead, in the dialog's
+    target rows ("DEX +3, Disadvantage", "DEX fails", "AC 15, Advantage",
+    the reasons in the tooltip).
+  - **AC reads modifiers** through `attack_rolls.armor_bonus` (cover plus
+    `ArmorClass`), used by the dialog, the Attack roll field and now the
+    monster action buttons, which ignored cover (DI-033). No condition has
+    one; Shield of Faith will (3.3). A note about AC takes the whole bonus
+    off, so it stays true when the effect ends.
+  - **The other hard-coded rules went too:** Petrified's Resistance and
+    Poisoned immunity (damage, `is_immune_to`, the player view's "says
+    nothing about it") and `INCAPACITATING_CONDITIONS` (now the conditions
+    that give Incapacitated) come from the table.
+  - **`D20Bonus` is in the vocabulary but not counted yet:** Exhaustion's
+    is per level, which isn't tracked, so it is noted as before. Counting
+    it is 3.3.
+  - **The rules-checker's fixes:** an uncounted mode that would cancel the
+    counted one says so (an Unconscious target from farther than 5 feet:
+    "..., a straight roll then"); a monster's action counts its own
+    conditions with no target or several; a condition another makes it
+    immune to does nothing (Petrified's Poisoned, Immunity: "doesn't affect
+    you in any way"); a longer name ("Stunned by Stunning Strike") breaks
+    Concentration and blocks Wild Shape (`incapacitates`); Invisible's
+    Concealed note has the equipment sentence.
+
 ## Open questions (with suggestions)
 
 - **Q2. When to rename `spell-mechanics` → `combat-effects` (skill, agent,
@@ -592,6 +655,13 @@ Sheet chips ("DEX save · half · 8d6 Fire") from the same data;
   (BR)"). *Suggestion:* a `Sourcebook` enum with one member per book and the
   scraped spellings mapped onto it in the scrapers, then `SpellRules.source`
   becomes the enum. Do it with a re-scrape, not in the converter.
+- **Q16. Should Invisible count by default?** The glossary gives its
+  Advantage/Disadvantage "unless a creature can somehow see you", so the
+  usual case applies, but 3.2 gives both a `when` and only notes them
+  (principle 8). *Suggestion:* count them, with "unless it can see it" as
+  the note the GM can override with the mode buttons; decide together with
+  DI-068, which makes the simulator see Invisible at all.
+
 ## Discovered issues
 
 - **DI-060** (open): pre-existing pyright errors in the combat-effects tests;
@@ -600,17 +670,27 @@ Sheet chips ("DEX save · half · 8d6 Fire") from the same data;
   (Optional Qt accessors, `QTest.keyClick` overloads). All tests pass.
 - **DI-061** (open): homebrew Mira, Princess of the Loop has 6 abilities; the
   house rule is at most 4.
-- **DI-062** (open): five spell records had malformed components ('V,S',
+- **DI-062** (fixed): five spell records had malformed components ('V,S',
   'M(a diamond ...)', a stray 'Component: ', none at all). Since R20 the
   converter reads the first four. Gate Seal's (none) was a scraper bug,
-  fixed and re-scraped (R26). The other four records still want a scraper
-  fix.
+  fixed and re-scraped (R26). The other four are typos on the wiki itself,
+  copied faithfully; their classes have the right components.
 - **DI-063** (fixed, R25): 15 Dunamancy spells had a school or class with a
   note; they are classes with a `school_note`.
 - **DI-064** (open): Shield's casting time is cut off in the 2024 and 2014
   records ("...or targeted by the"); aidedd has the whole trigger.
 - **DI-065** (fixed, R25): the 2014 records' `"ritual": true` was ignored, so
   2014-only ritual spells didn't show as rituals; Ceremony now does.
+- **DI-033** (fixed, 3.2): a monster's action buttons ignored the target's
+  cover; `_target_armor` adds `armor_bonus` (cover and modifiers).
+- **DI-034** (fixed, 3.2): attack rolls didn't count conditions.
+- **DI-067** (open, rules-checker, 3.2): Unconscious ends without leaving
+  Prone ("When this condition ends, you remain Prone"); since Prone is now
+  given through `HasConditions`, it goes with it.
+- **DI-068** (open, rules-checker, 3.2): Invisible as a visibility state or
+  spell badge isn't read by `held_conditions`, so its notes never show.
+- **DI-066** (open, found in 3.2): saving throws ignore cover's +2/+5 to
+  Dexterity saves. Fits 3.3 (a `D20Bonus` from cover).
 - **DI-010** (open, hit again twice in S.4): `UPDATE_SNAPSHOTS=1` over many
   builds loses writes (JSONDecodeErrors, 27 builds unwritten), because
   `pytest.ini` runs `-n auto` without `--dist loadgroup`, so conftest's
