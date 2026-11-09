@@ -13,7 +13,7 @@ change:
 - log bugs found along the way with the `discovered-issues` skill and list
   their ids in **Discovered issues**.
 
-## Status (2026-11-09, night)
+## Status (2026-11-09, late night)
 
 | Phase | Step | State |
 |---|---|---|
@@ -32,7 +32,7 @@ change:
 | 2 | 2.6 `Feature.adjust_combat_effect` hook | **Done** |
 | 2 | 2.7 Conditional extra damage (`when`) | **Done**, as a generated note (R14) |
 | 2 | Extensions list their own uses under their parent | **Done** (R10, new) |
-| S | **Spells as classes** (new direction, 2026-11-09; see its section) | S.1 base class, factory and converter **done**; S.2 the 57 spells with combat effects converted **done**; S.2c card lines as dataclasses **done** (R20); S.3 new effects go into classes **done** (R22); S.4-S.5 not started |
+| S | **Spells as classes** (new direction, 2026-11-09; see its section) | S.1 base class, factory and converter **done**; S.2 the 57 spells with combat effects converted **done**; S.2c card lines as dataclasses **done** (R20); S.3 new effects go into classes **done** (R22); S.5 drift check **done** (R23); S.4 not started |
 | 3 | Lasting effects (3.1-3.6) | Not started |
 | 4 | One `combat-effects` skill; feature agent; content rollout | Partly: the skill's rubric and script cover every new field; first content batch below |
 | 5 | Sheet chips, monster score | Not started |
@@ -72,6 +72,10 @@ suggested.
    rules, improved description and combat effects are Python in its class;
    the scraped JSON stays as the source of record for spells not converted
    yet. See "Spells as classes".
+7. **Q12 as suggested** ("continue with plan", 2026-11-09): a converted
+   class carries a hash of the record it came from, and a test lists every
+   class whose record changed since, for a person to merge by hand. Built
+   in S.5 (R23).
 
 ## Goal
 
@@ -273,7 +277,7 @@ module's own imports and classes when adding to it.
 | S.2d | Combat effects' `roll` and `until` as enums (`EffectRoll`, `TurnEdge`, `TurnOf`; R21), written by the converter and used by every Python effect (spell classes, features, homebrew monsters, tests) | **Done**: picker goldens and sheet snapshots unchanged |
 | S.3 | Write new combat effects in classes, not JSON: convert a spell, then edit its `combat_effects()`. Teach `spell_mechanics.py draft` to print a class's method instead of a JSON entry, and give the `spell-mechanics` agent classes in scope | **Done** (R22): `draft --out` writes a Python `EFFECTS` module; `add` converts the spell with those effects (`SpellClassConverter.convert(..., effects)`) or sets the method on its class (`set_combat_effects`), both checked and rolled back on a problem; JSON only for the spells that can't be classes; `check` covers class spells; skill, agent and tests updated. Lightning Bolt added through it (one new picker row, read) |
 | S.4 | Convert the rest (Q11) and retire the companion files: once every spell of a source has a class, its `_extended`/`_improved`/`_combat_effects` files and `DataSpell`'s companion handling go | Not started |
-| S.5 | Drift check: a re-scrape that changes a converted spell's record must be noticed (Q12) | Not started |
+| S.5 | Drift check: a re-scrape that changes a converted spell's record must be noticed (Q12) | **Done** (R23): every class carries `converted_from = RecordStamp(file, sha1)`, written by the converter and backfilled on the 58 classes (all 58 agreed with their records by meaning first); `test_no_class_has_drifted_from_its_record` fails on a changed record; `SpellClassConverter --drift` shows what to merge, `--accept <spell>` re-stamps; HOWTO and the `content-scraper` agent say to run it after a re-scrape |
 
 ## Lasting effects (Phase 3, design unchanged)
 
@@ -447,6 +451,18 @@ Sheet chips ("DEX save · half · 8d6 Fire") from the same data;
   a dict so `add` refuses it. The spells that can't be classes (DI-062,
   DI-063) still get JSON entries from `add`, so the JSON reader stays until
   Q15 is decided.
+- **R23. The stamp names its source file, and drift comes with a report**
+  (S.5). Q12 suggested `rules_from = "sha1:..."`. The stamp is a small
+  dataclass instead, `RecordStamp("spells_dnd2024.json", "<16 hex>")`, of
+  the record as the scraped file has it (no companions, keys sorted): a new
+  2024 record winning over the 2014 one a class came from is drift too, and
+  the hash alone couldn't say which file to look in. A hash says only *that*
+  something changed, so `--drift` also compares the class's rules with the
+  new record by meaning (the converter's own `differences`, companions
+  left out) and prints what to merge; a re-scrape that only reformats
+  still shows up, as "the rules still agree", and `--accept` clears it.
+  A class without a record (homebrew) has no stamp and is never drift; one
+  with a record and no stamp is.
 
 ## Open questions (with suggestions)
 
@@ -483,12 +499,6 @@ Sheet chips ("DEX save · half · 8d6 Fire") from the same data;
   (new combat effects go into classes), then convert level by level with the
   agents' workflow switched over, cantrips first; delete the companion files
   in S.4 once nothing is left in them.
-- **Q12. A converted spell no longer notices a re-scrape.** Its class keeps
-  the text it was converted from, and the scraped record can change under
-  it. *Suggestion:* the converter stores a hash of the record it converted
-  from as a class attribute (`rules_from = "sha1:..."`), and a test lists
-  every class whose record changed since, for a person to merge by hand.
-  (This replaces spell-mechanics-plan Step 14's lock file.)
 - **Q13. Where should the converter live?** It's a command-line tool in
   content code (beside `SpellGenerator.py`), so `review-house-rules` flags
   its `print` calls as debug output. *Suggestion:* keep it there (it

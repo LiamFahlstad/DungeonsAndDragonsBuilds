@@ -3,7 +3,11 @@ which SpellFactory uses instead of their JSON records. Written by
 CharacterContent/Spells/SpellClassConverter.py; edit them by hand from
 then on: each class is its spell's one source."""
 
-from CharacterContent.Spells.SpellFactory.ClassSpell import ClassSpell, SpellRules
+from CharacterContent.Spells.SpellFactory.ClassSpell import (
+    ClassSpell,
+    RecordStamp,
+    SpellRules,
+)
 from CharacterContent.Spells.SpellFactory.Enums import (
     CastingTimeType,
     DurationType,
@@ -17,11 +21,7 @@ from CharacterContent.Spells.SpellFactory.SpellFields import (
     Range,
 )
 from Core.Definitions import Ability, CharacterClass, DamageType
-from Model.Content.CombatEffect import (
-    CombatDamage,
-    CombatEffect,
-    EffectRoll,
-)
+from Model.Content.CombatEffect import CombatDamage, CombatEffect, EffectRoll
 from Model.Content.Feature import FeatureTarget
 from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table
 from Model.View import CharacterView
@@ -46,6 +46,7 @@ class IceStorm(ClassSpell):
         usage_tags=("damage",),
         target=FeatureTarget.AREA,
     )
+    converted_from = RecordStamp("spells_dnd2024.json", "6520a2bfa5cb77f9")
 
     @property
     def improved_description(self) -> list[Block]:

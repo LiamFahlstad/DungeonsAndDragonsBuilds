@@ -91,6 +91,8 @@ Spell data flows through three independent JSON files, merged at read time — t
 
 **Whenever any of the three JSON files change, you must rerun `python -m CharacterContent.Spells.SpellGenerator`** (the bare script path fails with ModuleNotFoundError) to regenerate `CharacterContent/Spells/SpellLists.py` (the per-class/per-school spell-name enums that the rest of the codebase imports). `SpellGenerator.py` reads through `SpellFactory.all_spells()`, not a raw JSON file directly — it's the mechanism that will crash loudly (see normalization section above) if two merged spell names collide.
 
+**A spell with a class in `CharacterContent/Spells/SpellClasses/` doesn't read its record any more**: the class keeps the text it was converted from, and is stamped with a hash of that record (`converted_from`). After a re-scrape, run `python -m CharacterContent.Spells.SpellClassConverter --drift`: it lists every class whose record changed and how its rules now differ (`tests/test_spell_classes.py::test_no_class_has_drifted_from_its_record` fails until then). Don't edit the classes yourself: report the list, so the change is merged by hand and then stamped with `--accept <spell>`.
+
 - Keep the `to_dict()` / `print_info()` / `write_to_file()` trio on every parser class so downstream code can treat all scraper classes uniformly.
 - Non-spell scrapers write to whatever data file downstream code consumes (e.g. `CharacterContent/Invocations/Definitions.py`) — check how the existing scraper for that content type serializes before inventing a new format.
 

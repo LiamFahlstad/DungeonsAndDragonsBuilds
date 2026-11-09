@@ -3,7 +3,11 @@ which SpellFactory uses instead of their JSON records. Written by
 CharacterContent/Spells/SpellClassConverter.py; edit them by hand from
 then on: each class is its spell's one source."""
 
-from CharacterContent.Spells.SpellFactory.ClassSpell import ClassSpell, SpellRules
+from CharacterContent.Spells.SpellFactory.ClassSpell import (
+    ClassSpell,
+    RecordStamp,
+    SpellRules,
+)
 from CharacterContent.Spells.SpellFactory.Enums import (
     CastingTimeType,
     DurationType,
@@ -44,6 +48,7 @@ class Fireball(ClassSpell):
         usage_tags=("damage",),
         target=FeatureTarget.AREA,
     )
+    converted_from = RecordStamp("spells_dnd2024.json", "315e1e81cac3d7f1")
 
     @property
     def improved_description(self) -> list[Block]:
@@ -112,6 +117,7 @@ class LightningBolt(ClassSpell):
         usage_tags=("damage",),
         target=FeatureTarget.AREA,
     )
+    converted_from = RecordStamp("spells_dnd2024.json", "56b7a047f62896ae")
 
     @property
     def improved_description(self) -> list[Block]:

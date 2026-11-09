@@ -3,7 +3,11 @@ which SpellFactory uses instead of their JSON records. Written by
 CharacterContent/Spells/SpellClassConverter.py; edit them by hand from
 then on: each class is its spell's one source."""
 
-from CharacterContent.Spells.SpellFactory.ClassSpell import ClassSpell, SpellRules
+from CharacterContent.Spells.SpellFactory.ClassSpell import (
+    ClassSpell,
+    RecordStamp,
+    SpellRules,
+)
 from CharacterContent.Spells.SpellFactory.Enums import (
     CastingTimeType,
     DurationType,
@@ -56,6 +60,7 @@ class HoldPerson(ClassSpell):
         usage_tags=("control",),
         target=FeatureTarget.ENEMY,
     )
+    converted_from = RecordStamp("spells_dnd2024.json", "2ddd49f1a2af4f63")
 
     @property
     def improved_description(self) -> list[Block]:
@@ -125,6 +130,7 @@ class Invisibility(ClassSpell):
         usage_tags=("damage",),
         target=FeatureTarget.ALLY,
     )
+    converted_from = RecordStamp("spells_dnd2024.json", "f21388fe94bcf6a4")
 
     @property
     def improved_description(self) -> list[Block]:
@@ -182,6 +188,7 @@ class Moonbeam(ClassSpell):
         usage_tags=("damage",),
         target=FeatureTarget.AREA,
     )
+    converted_from = RecordStamp("spells_dnd2024.json", "bf4a8c6b9fcf2844")
 
     @property
     def improved_description(self) -> list[Block]:
@@ -255,6 +262,7 @@ class ScorchingRay(ClassSpell):
         usage_tags=("damage",),
         target=FeatureTarget.ENEMY,
     )
+    converted_from = RecordStamp("spells_dnd2024.json", "40f09486be8aebd8")
 
     @property
     def improved_description(self) -> list[Block]:
@@ -308,6 +316,7 @@ class Shatter(ClassSpell):
         usage_tags=("damage",),
         target=FeatureTarget.AREA,
     )
+    converted_from = RecordStamp("spells_dnd2024.json", "16af3f49d3981c24")
 
     @property
     def improved_description(self) -> list[Block]:
@@ -378,6 +387,7 @@ class SpikeGrowth(ClassSpell):
         usage_tags=("control", "damage"),
         target=FeatureTarget.AREA,
     )
+    converted_from = RecordStamp("spells_dnd2024.json", "9299701c05a229b5")
 
     @property
     def improved_description(self) -> list[Block]:
@@ -438,6 +448,7 @@ class SpiritualWeapon(ClassSpell):
         usage_tags=("damage",),
         target=FeatureTarget.ENEMY,
     )
+    converted_from = RecordStamp("spells_dnd2024.json", "341a82403032b1ec")
 
     @property
     def improved_description(self) -> list[Block]:
@@ -510,6 +521,7 @@ class Suggestion(ClassSpell):
         usage_tags=("control",),
         target=FeatureTarget.ENEMY,
     )
+    converted_from = RecordStamp("spells_dnd2024.json", "dcc44381b017c7b3")
 
     @property
     def improved_description(self) -> list[Block]:

@@ -33,6 +33,8 @@ spell's JSON record and its companion files; from then on the class is the
 spell's one source, edited by hand.
 """
 
+import hashlib
+import json
 from dataclasses import dataclass
 from typing import ClassVar, Optional
 
@@ -70,13 +72,36 @@ class SpellRules:
             raise ValueError(f"{self.name}: level {self.level} isn't 0-9")
 
 
+@dataclass(frozen=True)
+class RecordStamp:
+    """Which scraped record a class was written from: the source file's name
+    (spells_dnd2024.json) and a hash of the record as that file has it. A
+    re-scrape that changes the record changes the hash, and
+    tests/test_spell_classes.py lists the class for a person to merge (the
+    class keeps the text it was converted from; see SpellClassConverter
+    --drift and --accept)."""
+
+    source: str
+    sha1: str
+
+    @classmethod
+    def of(cls, source: str, record: dict) -> "RecordStamp":
+        text = json.dumps(record, sort_keys=True, ensure_ascii=False)
+        digest = hashlib.sha1(text.encode("utf-8")).hexdigest()[:16]
+        return cls(source, digest)
+
+
 class ClassSpell(Spell):
     """A spell defined by a class (see the module docstring). Subclasses set
     `rules`, and override combat_effects(), improved_description and
     summons() as the spell needs; what they don't override is the Spell
-    default (nothing described, the source text, no summons)."""
+    default (nothing described, the source text, no summons).
+
+    `converted_from` is the scraped record the class was written from, or
+    None for a spell that has no record (homebrew)."""
 
     rules: ClassVar[SpellRules]
+    converted_from: ClassVar[Optional[RecordStamp]] = None
 
     @property
     def name(self) -> str:

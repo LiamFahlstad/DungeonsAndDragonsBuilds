@@ -19,6 +19,7 @@ from CharacterContent.Spells.SpellClasses import MODULES, SPELL_CLASSES
 from CharacterContent.Spells.SpellFactory import (
     ClassSpell,
     DataSpell,
+    RecordStamp,
     SpellFactory,
     SpellRules,
 )
@@ -563,3 +564,72 @@ def test_written_classes_that_pass_their_check_are_kept(classes_package):
     )
     assert problems == [] and seen == [{}]
     assert level1.read_text(encoding="utf-8") == "X = 2\n"  # Black ran
+
+
+# ---------------------------------------------------------------------------
+# Drift: a re-scrape that changes a converted spell's record
+
+
+def test_no_class_has_drifted_from_its_record():
+    """A class keeps the record it was converted from. When a re-scrape
+    changes that record, merge what changed into the class by hand, then
+    `python -m CharacterContent.Spells.SpellClassConverter --accept <spell>`
+    (`--drift` shows what changed)."""
+    assert converter.drifted() == []
+
+
+def test_a_record_stamp_is_the_records_content_not_its_key_order():
+    record = {"name": "X", "level": 1}
+    assert RecordStamp.of("a.json", record) == RecordStamp.of(
+        "a.json", {"level": 1, "name": "X"}
+    )
+    assert RecordStamp.of("a.json", record) != RecordStamp.of(
+        "a.json", {"name": "X", "level": 2}
+    )
+    assert RecordStamp.of("a.json", record) != RecordStamp.of("b.json", record)
+
+
+def test_a_converted_class_is_stamped_with_its_record():
+    made = _class_from_source(converter.class_source(_record()))
+    assert made.converted_from == converter.stamp_for("Fireball")
+    assert made.converted_from.source == "spells_dnd2024.json"
+
+
+@pytest.fixture
+def rescraped_fireball(monkeypatch):
+    """Fireball's 2024 record as a re-scrape that changed its range would
+    leave it."""
+    found = converter.scraped_record("Fireball")
+    assert found is not None
+    path, record = found
+    changed = dict(converter._RAW_SOURCES[path])
+    changed["Fireball"] = dict(record, range="120 feet")
+    monkeypatch.setitem(converter._RAW_SOURCES, path, changed)
+
+
+def test_a_changed_record_is_found_with_what_to_merge(rescraped_fireball):
+    assert converter.drifted() == [
+        ("Fireball", "its record in spells_dnd2024.json changed since it was converted")
+    ]
+    report = converter.drift_report("Fireball")
+    assert len(report) == 2  # the range, and the range in feet it gives
+    assert report[0].startswith("range_spec")
+    assert any(d.startswith("range_feet") for d in report)
+
+
+def test_a_stamp_is_replaced_or_added_after_the_rules():
+    text = (
+        "class A(ClassSpell):\n"
+        "    rules = SpellRules(\n        name='A',\n    )\n"
+        "    converted_from = RecordStamp('old.json', 'abc')\n"
+        "\n    def summons(self):\n        return []\n"
+        "\n\nclass B(ClassSpell):\n    rules = 1\n\n    x = 2\n"
+    )
+    stamp = RecordStamp("new.json", "def")
+    text = converter.with_stamp(text, "A", stamp)
+    text = converter.with_stamp(text, "B", stamp)
+    assert "old.json" not in text
+    assert text.count("converted_from = RecordStamp('new.json', 'def')") == 2
+    # B's goes right after its rules, before the rest of the class.
+    assert "    rules = 1\n    converted_from = RecordStamp(" in text
+    assert "def summons(self):" in text

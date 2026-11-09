@@ -17,6 +17,14 @@ Usage (from the repo root):
     python -m CharacterContent.Spells.SpellClassConverter --all
     ... --dry-run     # print the classes, write nothing
     ... --keep-json   # write the classes, leave the companion files as they are
+    python -m CharacterContent.Spells.SpellClassConverter --drift   # after a re-scrape
+    python -m CharacterContent.Spells.SpellClassConverter --accept Fireball   # once merged
+
+Each class is stamped with the scraped record it was written from
+(`converted_from`, a hash of the record). A re-scrape that changes the
+record doesn't reach the class; --drift lists those classes and how their
+rules now differ from the record, for a person to merge by hand, and
+--accept stamps a class with its record as it is now.
 
 A spell that already has a class is skipped: the class may have been edited
 by hand since. Each class is checked before anything is written to the
@@ -50,7 +58,10 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from CharacterContent.Spells.SpellFactory import DataSpell, SpellFactory  # noqa: E402
-from CharacterContent.Spells.SpellFactory.ClassSpell import SpellRules  # noqa: E402
+from CharacterContent.Spells.SpellFactory.ClassSpell import (  # noqa: E402
+    RecordStamp,
+    SpellRules,
+)
 from CharacterContent.Spells.SpellFactory.Enums import School  # noqa: E402
 from CharacterContent.Spells.SpellFactory.SpellFields import (  # noqa: E402
     CastingTime,
@@ -99,6 +110,7 @@ _IMPORTS = {
     "CharacterView": "Model.View",
     "ClassSpell": "CharacterContent.Spells.SpellFactory.ClassSpell",
     "SpellRules": "CharacterContent.Spells.SpellFactory.ClassSpell",
+    "RecordStamp": "CharacterContent.Spells.SpellFactory.ClassSpell",
 }
 # Fields written positionally even though they have a default, as the
 # hand-written code does: Option("Name", (blocks)), CombatDamage(dice, type,
@@ -246,6 +258,9 @@ def class_source(spell: DataSpell, effects: Optional[list[CombatEffect]] = None)
         f"class {class_name(spell.name)}(ClassSpell):",
         f"    rules = {source_of(rules)}",
     ]
+    stamp = stamp_for(spell.name)
+    if stamp is not None:
+        lines.append(f"    converted_from = {source_of(stamp)}")
     blocks = spell.improved_description
     if blocks is not None:
         lines += [
@@ -275,6 +290,30 @@ def with_effects_method(text: str, class_name: str, effects: list[CombatEffect])
     """`text`, a SpellClasses module, with the class `class_name`'s
     combat_effects() giving `effects`: the method it has is replaced (with
     any decorators), or a new one is added at the end of the class."""
+    return with_class_member(
+        text, class_name, "combat_effects", [""] + effects_method(effects)
+    )
+
+
+def with_stamp(text: str, class_name: str, stamp: RecordStamp) -> str:
+    """`text` with the class `class_name`'s converted_from set to `stamp`:
+    in place of the one it has, or right after its rules."""
+    line = f"    converted_from = {source_of(stamp)}"
+    return with_class_member(text, class_name, "converted_from", [line], "rules")
+
+
+def with_class_member(
+    text: str,
+    class_name: str,
+    member: str,
+    lines_to_add: list[str],
+    after: Optional[str] = None,
+) -> str:
+    """`text`, a SpellClasses module, with the class `class_name`'s method
+    or attribute `member` replaced by `lines_to_add` (its decorators too).
+    One it doesn't have is added after the member `after`, or at the end of
+    the class. A leading "" in `lines_to_add` is the blank line before a new
+    member; replacing one keeps the spacing it had."""
     tree = ast.parse(text)
     node = next(
         (n for n in tree.body if isinstance(n, ast.ClassDef) and n.name == class_name),
@@ -283,23 +322,33 @@ def with_effects_method(text: str, class_name: str, effects: list[CombatEffect])
     if node is None:
         raise ValueError(f"The module has no class {class_name!r}")
     lines = text.splitlines()
-    method = effects_method(effects)
-    old = next(
-        (
-            n
-            for n in node.body
-            if isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef))
-            and n.name == "combat_effects"
-        ),
-        None,
-    )
+    old = _member(node, member)
     if old is not None:
-        first = min([old.lineno] + [d.lineno for d in old.decorator_list])
-        lines[first - 1 : old.end_lineno] = method
+        decorators = getattr(old, "decorator_list", [])
+        first = min([old.lineno] + [d.lineno for d in decorators])
+        new = lines_to_add[1:] if lines_to_add[:1] == [""] else lines_to_add
+        lines[first - 1 : old.end_lineno] = new
     else:
-        end = node.end_lineno or node.lineno
-        lines[end:end] = [""] + method
+        anchor = _member(node, after) if after else None
+        end = (anchor or node).end_lineno or node.lineno
+        lines[end:end] = lines_to_add
     return "\n".join(lines) + "\n"
+
+
+def _member(node: ast.ClassDef, name: Optional[str]) -> Optional[ast.stmt]:
+    """The statement in the class body that defines `name`: a method, or an
+    assignment to it."""
+    for statement in node.body:
+        if isinstance(statement, (ast.FunctionDef, ast.AsyncFunctionDef)):
+            if statement.name == name:
+                return statement
+        elif isinstance(statement, ast.Assign):
+            if any(isinstance(t, ast.Name) and t.id == name for t in statement.targets):
+                return statement
+        elif isinstance(statement, ast.AnnAssign):
+            if isinstance(statement.target, ast.Name) and statement.target.id == name:
+                return statement
+    return None
 
 
 def _enum(spell, what: str, enum_type, value):
@@ -509,11 +558,117 @@ def differences(
 
 
 def winning_source(name: str) -> str:
+    found = scraped_record(name)
+    if found is None:
+        raise ValueError(f"No source has the spell {name!r}")
+    return found[0]
+
+
+_RAW_SOURCES: dict[str, dict] = {}
+
+
+def scraped_record(name: str) -> Optional[tuple[str, dict]]:
+    """The source path whose record SpellFactory uses for the spell, and
+    that record as the scraped file has it (no companions merged in), or
+    None for a spell no source has. The files are read once."""
     for path in SpellFactory.json_paths:
-        with open(ROOT / path, encoding="utf-8") as f:
-            if name in json.load(f):
-                return path
-    raise ValueError(f"No source has the spell {name!r}")
+        if path not in _RAW_SOURCES:
+            with open(ROOT / path, encoding="utf-8") as f:
+                _RAW_SOURCES[path] = json.load(f)
+        if name in _RAW_SOURCES[path]:
+            return path, _RAW_SOURCES[path][name]
+    return None
+
+
+def stamp_for(name: str) -> Optional[RecordStamp]:
+    """The stamp of the spell's scraped record as it is now."""
+    found = scraped_record(name)
+    if found is None:
+        return None
+    path, record = found
+    return RecordStamp.of(Path(path).name, record)
+
+
+# ---------------------------------------------------------------------------
+# Drift: a re-scrape that changed a converted spell's record
+
+
+_NOT_RULES = ("usage_tags", "target", "improved_description", "combat_effects")
+
+
+def drifted() -> list[tuple[str, str]]:
+    """Each class whose stamp isn't its scraped record's as it is now, and
+    why: the record changed (or another source wins now), it's gone, or the
+    class has no stamp. A class with neither (homebrew) is fine."""
+    from CharacterContent.Spells.SpellClasses import SPELL_CLASSES
+
+    found = []
+    for name, spell_class in sorted(SPELL_CLASSES.items()):
+        stamp, now = spell_class.converted_from, stamp_for(name)
+        if stamp == now:
+            continue
+        if now is None:
+            reason = f"its record in {stamp.source if stamp else '?'} is gone"
+        elif stamp is None:
+            reason = f"no converted_from stamp; its record is in {now.source}"
+        elif stamp.source != now.source:
+            reason = f"converted from {stamp.source}, but {now.source} wins now"
+        else:
+            reason = f"its record in {now.source} changed since it was converted"
+        found.append((name, reason))
+    return found
+
+
+def drift_report(name: str) -> list[str]:
+    """Where the spell's class and its scraped record now disagree on the
+    rules (casting time, range and so on by meaning): what to merge by hand.
+    Companion data (tags, improved description, effects) isn't compared."""
+    from CharacterContent.Spells.SpellClasses import SPELL_CLASSES
+
+    found = scraped_record(name)
+    if found is None:
+        return []
+    record = DataSpell(dict(found[1]))
+    return [
+        difference
+        for difference in differences(record, SPELL_CLASSES[name]())
+        if not difference.startswith(_NOT_RULES)
+    ]
+
+
+def accept_records(names: list[str]) -> "Result":
+    """Stamp each named class with its scraped record as it is now: after a
+    person has merged what the record changed into the class (or decided
+    the class is right as it is)."""
+    from CharacterContent.Spells.SpellClasses import SPELL_CLASSES
+
+    unknown = sorted(set(names) - set(SPELL_CLASSES))
+    if unknown:
+        raise ValueError(f"No class for the spell(s) {unknown}")
+    stamps = {name: stamp_for(name) for name in names}
+    missing = sorted(name for name, stamp in stamps.items() if stamp is None)
+    if missing:
+        raise ValueError(f"No scraped record to stamp for {missing}")
+    texts: dict[Path, str] = {}
+    for name, stamp in stamps.items():
+        spell_class = SPELL_CLASSES[name]
+        path = CLASSES_DIR / f"{spell_class.__module__.rsplit('.', 1)[-1]}.py"
+        text = texts.get(path) or path.read_text(encoding="utf-8")
+        texts[path] = with_stamp(text, spell_class.__name__, stamp)  # type: ignore[arg-type]
+    texts = {path: module_with(text, {}) for path, text in texts.items()}
+
+    def check(spell_classes: dict) -> list[str]:
+        return [
+            f"{name}: stamp not written"
+            for name, stamp in stamps.items()
+            if spell_classes[name].converted_from != stamp
+        ]
+
+    result = Result()
+    result.problems, result.written = _write_checked(texts, check)
+    if not result.problems:
+        result.done = list(names)
+    return result
 
 
 def chosen(args) -> list[DataSpell]:
@@ -677,6 +832,25 @@ def _forget_classes() -> None:
         del sys.modules[name]
 
 
+def _print_drift() -> int:
+    found = drifted()
+    for name, reason in found:
+        print(f"{name}: {reason}")
+        report = drift_report(name)
+        for difference in report:
+            print(f"    {difference}")
+        if not report:
+            print("    the rules still agree (by meaning); only the stamp is old")
+    if found:
+        print(
+            f"{len(found)} class(es) to check: merge what changed into each"
+            " class by hand, then --accept it"
+        )
+    else:
+        print("Every class matches the record it was converted from.")
+    return 1 if found else 0
+
+
 def main() -> int:
     sys.stdout.reconfigure(encoding="utf-8")  # type: ignore[union-attr]
     parser = argparse.ArgumentParser(description=(__doc__ or "").split("\n\n")[0])
@@ -686,7 +860,27 @@ def main() -> int:
     parser.add_argument("--all", action="store_true")
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--keep-json", action="store_true")
+    parser.add_argument(
+        "--drift",
+        action="store_true",
+        help="list classes whose scraped record changed, and what to merge",
+    )
+    parser.add_argument(
+        "--accept",
+        action="append",
+        metavar="SPELL",
+        help="stamp the class with its record as it is now (repeatable)",
+    )
     args = parser.parse_args()
+    if args.drift:
+        return _print_drift()
+    if args.accept:
+        result = accept_records(args.accept)
+        for problem in result.problems:
+            print("PROBLEM", problem)
+        for name in result.done:
+            print(f"{name}: stamped with its record as it is now")
+        return 1 if result.problems else 0
     if not (args.name or args.described or args.level is not None or args.all):
         parser.error("say which spells: --name, --described, --level or --all")
 
