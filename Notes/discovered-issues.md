@@ -414,19 +414,6 @@ check_monster.py 'Mira, Princess of the Loop': score 0.55 OK, implied CR 5.15 OK
 **History**
 - 2026-11-08 main-session: found
 
-### DI-062 · Five spell records have malformed components text, so SpellClassConverter leaves them as JSON
-- **Status:** open
-- **Area:** content-scraper
-- **Where:** `CharacterContent/Spells/spells_dnd2024.json`, `CharacterContent/Spells/spells_dnd5e.json`
-
-SpellRules stores components as Component flags plus a material (Notes/combat-effects-plan.md, Spells as classes), so a record's components must read 'V, S, M (...)'. These don't: Ashardalon's Stride 'V,S'; Gate 'V, S, M(a diamond worth 5,000+ GP)'; Imprisonment 'V, S, M(a statuette of the target worth 5,000+ GP)'; Yolande's Regal Presence 'Component: V, S, M (a miniature tiara)'; Gate Seal None. They're scrape errors: fix them in the scraper (never by hand in the source JSON), re-scrape, and the converter takes them.
-
-**History**
-- 2026-11-08 main-session: found
-- 2026-11-08 main-session: SpellFields (R20) reads 'V,S', 'M(...)' and a stray 'Component: ', so the converter now converts all but Gate Seal (no components). The records themselves still want the scraper fix.
-- 2026-11-09 main-session: 2026-11-09: Gate Seal (no components) is now the only spell left as JSON, so it alone keeps DataSpell's companion handling and spells_dnd5e_extended/_improved.json alive (combat-effects plan S.4).
-- 2026-11-09 main-session: Gate Seal fixed at the source: dnd5e.wikidot.com writes its label as '<strong>Components</strong>:' (colon outside the tag), which DnD5eSpellScraper's exact 'Components:' match missed. The scraper now matches a label with or without the colon (all four stat lines); Gate Seal's record was re-scraped alone (only components changed: 'V, S, M (a broken portal key, which the spell consumes)') and converted, so every spell is a class. Still open: the other four records' slips (2024 and 2014 sources), which SpellFields already reads; they want a scraper fix and re-scrape.
-
 ### DI-064 · Shield's casting time is cut off in the scraped spell JSON ('...or targeted by the')
 - **Status:** open
 - **Area:** content-scraper
@@ -695,6 +682,20 @@ damage_mixin only notes what players learn from an attack roll (known AC etc.) w
 - 2026-11-05 combat-simulator: found
 - 2026-11-05 combat-simulator: marked in-progress
 - 2026-11-05 combat-simulator: marked fixed; _resolve_attack_roll uses player_view._seen(source, _player_names(...)); test test_an_invisible_players_summons_attack_roll_shows_the_targets_ac; uncommitted
+
+### DI-062 · Five spell records have malformed components text, so SpellClassConverter leaves them as JSON
+- **Status:** fixed · 2026-11-09 · cfc58eaa
+- **Area:** content-scraper
+- **Where:** `CharacterContent/Spells/spells_dnd2024.json`, `CharacterContent/Spells/spells_dnd5e.json`
+
+SpellRules stores components as Component flags plus a material (Notes/combat-effects-plan.md, Spells as classes), so a record's components must read 'V, S, M (...)'. These don't: Ashardalon's Stride 'V,S'; Gate 'V, S, M(a diamond worth 5,000+ GP)'; Imprisonment 'V, S, M(a statuette of the target worth 5,000+ GP)'; Yolande's Regal Presence 'Component: V, S, M (a miniature tiara)'; Gate Seal None. They're scrape errors: fix them in the scraper (never by hand in the source JSON), re-scrape, and the converter takes them.
+
+**History**
+- 2026-11-08 main-session: found
+- 2026-11-08 main-session: SpellFields (R20) reads 'V,S', 'M(...)' and a stray 'Component: ', so the converter now converts all but Gate Seal (no components). The records themselves still want the scraper fix.
+- 2026-11-09 main-session: 2026-11-09: Gate Seal (no components) is now the only spell left as JSON, so it alone keeps DataSpell's companion handling and spells_dnd5e_extended/_improved.json alive (combat-effects plan S.4).
+- 2026-11-09 main-session: Gate Seal fixed at the source: dnd5e.wikidot.com writes its label as '<strong>Components</strong>:' (colon outside the tag), which DnD5eSpellScraper's exact 'Components:' match missed. The scraper now matches a label with or without the colon (all four stat lines); Gate Seal's record was re-scraped alone (only components changed: 'V, S, M (a broken portal key, which the spell consumes)') and converted, so every spell is a class. Still open: the other four records' slips (2024 and 2014 sources), which SpellFields already reads; they want a scraper fix and re-scrape.
+- 2026-11-09 main-session: marked fixed in cfc58eaa; Closed. Gate Seal was the only scraper bug (fixed in cfc58eaa). The other four are typos on the wiki pages themselves, checked 2026-11-09: dnd2024.wikidot.com has 'V, S, M(a diamond ...)' (Gate), 'V, S, M(a statuette ...)' (Imprisonment) and 'Component: V, S, M (a miniature tiara)' (Yolande's Regal Presence) inside the Components line; dnd5e.wikidot.com has 'V,S' (Ashardalon's Stride). The records copy the source faithfully, SpellFields reads all four (R20), and each spell is a class with the right Components, so no card is wrong. Normalizing them in the scraper would only change the records' stamps (drift) for no gain.
 
 ### DI-063 · Wildemount Dunamancy spells have a school or class with a note, which SpellRules' enums can't hold
 - **Status:** fixed · 2026-11-09 · uncommitted
