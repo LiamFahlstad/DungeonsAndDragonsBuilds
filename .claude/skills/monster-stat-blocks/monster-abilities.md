@@ -66,7 +66,7 @@ MonsterAbility(
     description="The paladin challenges one creature ... must succeed on a DC 11 Wisdom saving throw or ...",
     combat_effects=(
         CombatEffect(
-            roll="save", save_ability=Ability.WISDOM, dc=11,
+            roll=EffectRoll.SAVE, save_ability=Ability.WISDOM, dc=11,
             conditions=(CombatCondition("Compelled Duel", duration_seconds=60),),
             concentration=True,
             notes=("It has Disadvantage on attack rolls against creatures other than the paladin ...",),

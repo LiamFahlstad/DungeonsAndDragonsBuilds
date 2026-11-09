@@ -18,6 +18,7 @@ from Model.Content.CombatEffect import (
     CombatDamage,
     CombatEffect,
     CombatHitPoints,
+    EffectRoll,
 )
 from Core.Definitions import Ability
 
@@ -745,7 +746,7 @@ class HumanPaladinOfDevotion(ExtendedCombatantData):
                     description="The paladin challenges one creature it can see within 30 feet. The target must succeed on a DC 11 Wisdom saving throw or, for 1 minute (Concentration), have Disadvantage on attack rolls against creatures other than the paladin, and must succeed on a DC 11 Wisdom saving throw to willingly move more than 30 feet away from it. The effect ends early if the paladin attacks or casts a spell at another creature.",
                     combat_effects=(
                         CombatEffect(
-                            roll="save",
+                            roll=EffectRoll.SAVE,
                             save_ability=Ability.WISDOM,
                             dc=11,
                             conditions=(

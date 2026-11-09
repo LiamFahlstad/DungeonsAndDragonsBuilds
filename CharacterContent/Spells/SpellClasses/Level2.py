@@ -22,6 +22,7 @@ from Model.Content.CombatEffect import (
     CombatDamage,
     CombatEffect,
     CombatInstances,
+    EffectRoll,
 )
 from Model.Content.Feature import FeatureTarget
 from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table
@@ -89,7 +90,7 @@ class HoldPerson(ClassSpell):
     ) -> list[CombatEffect]:
         return [
             CombatEffect(
-                roll="save",
+                roll=EffectRoll.SAVE,
                 save_ability=Ability.WISDOM,
                 repeat_save=True,
                 conditions=(CombatCondition(Condition.PARALYZED),),
@@ -225,7 +226,7 @@ class Moonbeam(ClassSpell):
     ) -> list[CombatEffect]:
         return [
             CombatEffect(
-                roll="save",
+                roll=EffectRoll.SAVE,
                 save_ability=Ability.CONSTITUTION,
                 half_on_success=True,
                 damage=(CombatDamage("2d10", DamageType.RADIANT, upcast="1d10"),),
@@ -278,7 +279,7 @@ class ScorchingRay(ClassSpell):
     ) -> list[CombatEffect]:
         return [
             CombatEffect(
-                roll="attack",
+                roll=EffectRoll.ATTACK,
                 damage=(CombatDamage("2d6", DamageType.FIRE),),
                 instances=CombatInstances(3, upcast=1, noun="ray"),
                 notes=(
@@ -350,7 +351,7 @@ class Shatter(ClassSpell):
     ) -> list[CombatEffect]:
         return [
             CombatEffect(
-                roll="save",
+                roll=EffectRoll.SAVE,
                 save_ability=Ability.CONSTITUTION,
                 half_on_success=True,
                 damage=(CombatDamage("3d8", DamageType.THUNDER, upcast="1d8"),),
@@ -473,7 +474,7 @@ class SpiritualWeapon(ClassSpell):
     ) -> list[CombatEffect]:
         return [
             CombatEffect(
-                roll="attack",
+                roll=EffectRoll.ATTACK,
                 damage=(
                     CombatDamage(
                         "1d8", DamageType.FORCE, upcast="1d8", add_modifier=True
@@ -548,7 +549,7 @@ class Suggestion(ClassSpell):
     ) -> list[CombatEffect]:
         return [
             CombatEffect(
-                roll="save",
+                roll=EffectRoll.SAVE,
                 save_ability=Ability.WISDOM,
                 conditions=(CombatCondition(Condition.CHARMED),),
                 notes=(

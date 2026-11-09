@@ -15,7 +15,11 @@ from Model.Creatures.MonsterAbilities import (
     SavingThrowEffect,
 )
 from Core.Definitions import Ability
-from Model.Content.CombatEffect import CombatDamage, CombatEffect
+from Model.Content.CombatEffect import (
+    CombatDamage,
+    CombatEffect,
+    EffectRoll,
+)
 
 
 class CantorOfTheBlackChoir(ExtendedCombatantData):
@@ -506,7 +510,7 @@ class MirelleTheGildedKnight(ExtendedCombatantData):
                     # with Advantage, so it's the GM's to add.
                     combat_effects=(
                         CombatEffect(
-                            roll="attack",
+                            roll=EffectRoll.ATTACK,
                             attack_bonus=5,
                             damage=(CombatDamage("2d6 + 3", DamageType.SLASHING),),
                             notes=(

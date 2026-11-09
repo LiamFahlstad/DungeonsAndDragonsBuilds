@@ -18,6 +18,7 @@ from Model.Content.CombatEffect import (
     CombatDamage,
     CombatEffect,
     CombatHitPoints,
+    EffectRoll,
     with_bonus,
 )
 from CharacterContent.Items.Weapons import WeaponProficiency
@@ -294,7 +295,7 @@ class ChannelDivinity(Feature):
             ),
             CombatEffect(
                 name="Divine Spark: harm",
-                roll="save",
+                roll=EffectRoll.SAVE,
                 save_ability=Ability.CONSTITUTION,
                 half_on_success=True,
                 damage=(
@@ -306,7 +307,7 @@ class ChannelDivinity(Feature):
             ),
             CombatEffect(
                 name="Turn Undead",
-                roll="save",
+                roll=EffectRoll.SAVE,
                 save_ability=Ability.WISDOM,
                 conditions=(
                     CombatCondition("Frightened"),

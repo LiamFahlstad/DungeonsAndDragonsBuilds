@@ -41,6 +41,9 @@ from Model.Content.CombatEffect import (
     CombatEffect,
     CombatHitPoints,
     CombatInstances,
+    EffectRoll,
+    TurnEdge,
+    TurnOf,
 )
 from Model.Content.Feature import FeatureTarget
 from Model.Content.FeatureText import Facts, Option, Paragraph, Table
@@ -197,7 +200,7 @@ def test_a_rules_condition_is_kept_as_its_name():
     [
         CombatEffect(
             name="Test: one",
-            roll="save",
+            roll=EffectRoll.SAVE,
             save_ability=Ability.DEXTERITY,
             half_on_success=True,
             repeat_save=True,
@@ -213,7 +216,7 @@ def test_a_rules_condition_is_kept_as_its_name():
             ),
             conditions=(
                 CombatCondition("Prone"),
-                CombatCondition("Test", until=("end", "source")),
+                CombatCondition("Test", until=(TurnEdge.END, TurnOf.SOURCE)),
             ),
             instances=CombatInstances(3, upcast=1, noun="ray"),
             spends_use=False,
@@ -252,6 +255,9 @@ def test_written_source_reads_back_as_the_same_value(value):
         "CombatEffect": CombatEffect,
         "CombatHitPoints": CombatHitPoints,
         "CombatInstances": CombatInstances,
+        "EffectRoll": EffectRoll,
+        "TurnEdge": TurnEdge,
+        "TurnOf": TurnOf,
         "FeatureTarget": FeatureTarget,
         "Facts": Facts,
         "Option": Option,
@@ -266,6 +272,17 @@ def test_written_source_uses_enums_where_there_are_some():
         "CombatCondition(Condition.PRONE)"
     )
     assert converter.source_of(CombatCondition("Bless")) == "CombatCondition('Bless')"
+    # A spell's JSON has its roll and turn as text; the class names them.
+    effect = converter.source_of(
+        CombatEffect.from_dict(
+            {
+                "roll": "attack",
+                "conditions": [{"name": "Prone", "until": ["end", "target"]}],
+            }
+        )
+    )
+    assert "roll=EffectRoll.ATTACK" in effect
+    assert "until=(TurnEdge.END, TurnOf.TARGET)" in effect
     rules = converter.source_of(_Test.rules)
     assert "school=School.EVOCATION" in rules
     assert "classes=(CharacterClass.CLERIC, CharacterClass.WIZARD)" in rules

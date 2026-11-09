@@ -32,6 +32,9 @@ from Model.Content.CombatEffect import (
     CombatEffect,
     CombatHitPoints,
     CombatInstances,
+    EffectRoll,
+    TurnEdge,
+    TurnOf,
 )
 
 SOURCE = "CharacterContent/Spells/spells_dnd2024.json"
@@ -188,7 +191,7 @@ def test_a_full_entry():
         add_modifier=True,
     )
     assert effect.conditions == (
-        CombatCondition("Poisoned", until=("end", "source")),
+        CombatCondition("Poisoned", until=(TurnEdge.END, TurnOf.SOURCE)),
         CombatCondition("Prone"),
     )
     assert effect.instances == CombatInstances(3, upcast=1, noun="ray")
@@ -211,7 +214,7 @@ def test_instances_grow_by_slot_and_character_level():
 def test_to_dict_leaves_out_the_defaults():
     steps = ((5, "2d8"), (11, "3d8"), (17, "4d8"))
     effect = CombatEffect(
-        roll="save",
+        roll=EffectRoll.SAVE,
         save_ability=Ability.WISDOM,
         damage=(CombatDamage("1d8", DamageType.NECROTIC, cantrip=steps),),
     )
@@ -243,7 +246,7 @@ def test_an_empty_effect_just_happens():
         ({"roll": "save"}, "effect"),  # a save with no ability
         ({"roll": "attack", "save_ability": "Dexterity"}, "effect"),
         ({"roll": "save", "save_ability": "DEX"}, "save_ability"),
-        ({"roll": "check"}, "effect"),
+        ({"roll": "check"}, "roll"),
         (
             {"damage": [{"dice": "8d6", "damage_type": "Flame"}]},
             "damage[0].damage_type",

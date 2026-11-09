@@ -42,16 +42,19 @@ from Model.Content.CombatEffect import (
     CombatDamage,
     CombatEffect,
     CombatHitPoints,
+    EffectRoll,
+    TurnEdge,
+    TurnOf,
 )
 from Model.Creatures.MonsterAbilities import MeleeAttack, MonsterAbility
 
 STUTTER = CombatEffect(
-    roll="save",
+    roll=EffectRoll.SAVE,
     save_ability=Ability.WISDOM,
     dc=15,
     repeat_save=True,
     damage=(CombatDamage("2d8", DamageType.PSYCHIC),),
-    conditions=(CombatCondition("Stutter Time", until=("end", "target")),),
+    conditions=(CombatCondition("Stutter Time", until=(TurnEdge.END, TurnOf.TARGET)),),
     notes=("Slowed.",),
 )
 
@@ -110,7 +113,9 @@ def test_written_effects_come_back_from_the_log():
         CombatEffect(name="Cure Wounds", healing=CombatHitPoints("2d8 + 4")),
         CombatEffect(healing=CombatHitPoints()),
         CombatEffect(temp_hp=CombatHitPoints("10"), action_type=ActionType.REACTION),
-        CombatEffect(roll="attack", attack_bonus=5, concentration=True, spell="Bless"),
+        CombatEffect(
+            roll=EffectRoll.ATTACK, attack_bonus=5, concentration=True, spell="Bless"
+        ),
         CombatEffect(
             damage=(CombatDamage("2d6", None, (DamageType.FIRE, DamageType.COLD)),),
             conditions=(CombatCondition("Prone", duration_seconds=60),),

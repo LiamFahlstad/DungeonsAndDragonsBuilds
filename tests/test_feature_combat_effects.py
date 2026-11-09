@@ -46,6 +46,9 @@ from Model.Content.CombatEffect import (
     CombatDamage,
     CombatEffect,
     CombatHitPoints,
+    EffectRoll,
+    TurnEdge,
+    TurnOf,
 )
 from Model.Content.Feature import ActionType, Feature, FeatureActivation
 
@@ -101,6 +104,29 @@ def test_a_plain_effect_is_valid():
 def test_an_effect_that_contradicts_itself_is_refused(kwargs):
     with pytest.raises(ValueError):
         CombatEffect(**kwargs)
+
+
+def test_a_roll_and_a_turn_given_as_text_are_kept_as_enums():
+    # JSON and logs have them as text.
+    effect = CombatEffect.from_dict(
+        {
+            "roll": "save",
+            "save_ability": "Dexterity",
+            "conditions": [{"name": "Prone", "until": ["start", "source"]}],
+        }
+    )
+    assert effect.roll is EffectRoll.SAVE
+    assert effect.conditions[0].until == (TurnEdge.START, TurnOf.SOURCE)
+    assert type(effect.conditions[0].until[0]) is TurnEdge
+    assert effect == CombatEffect.from_dict(effect.to_dict())
+    assert effect.to_dict()["roll"] == "save"
+    assert effect.to_dict()["conditions"][0]["until"] == ["start", "source"]
+
+
+@pytest.mark.parametrize("until", [("middle", "source"), ("end", "ally")])
+def test_an_unknown_turn_is_refused(until):
+    with pytest.raises(ValueError):
+        CombatCondition("Prone", until=until)  # type: ignore[arg-type]
 
 
 @pytest.mark.parametrize("dice", ["2d4", "1d8 + 3", "4d6 - 1", "5"])
@@ -323,7 +349,8 @@ def test_an_attack_takes_the_users_spell_attack_bonus():
         _Described(
             [
                 CombatEffect(
-                    roll="attack", damage=(CombatDamage("1d10", DamageType.FIRE),)
+                    roll=EffectRoll.ATTACK,
+                    damage=(CombatDamage("1d10", DamageType.FIRE),),
                 )
             ]
         )
@@ -334,11 +361,13 @@ def test_an_attack_takes_the_users_spell_attack_bonus():
 
 def test_its_own_dc_and_a_condition_until_a_turn():
     effect = CombatEffect(
-        roll="save",
+        roll=EffectRoll.SAVE,
         save_ability=Ability.WISDOM,
         dc=15,
         repeat_save=True,
-        conditions=(CombatCondition("Frightened", until=("end", "source")),),
+        conditions=(
+            CombatCondition("Frightened", until=(TurnEdge.END, TurnOf.SOURCE)),
+        ),
     )
     (row,) = _options(_Described([effect]))
     assert (row.ability, row.dc, row.repeat_save) == ("WIS", 15, True)
@@ -396,7 +425,9 @@ def test_what_the_use_says_wins_over_the_spell():
             [
                 CombatEffect(
                     spell="Hunter's Mark",
-                    conditions=(CombatCondition("Marked", until=("end", "source")),),
+                    conditions=(
+                        CombatCondition("Marked", until=(TurnEdge.END, TurnOf.SOURCE)),
+                    ),
                     action_type=ActionType.REACTION,
                 )
             ]

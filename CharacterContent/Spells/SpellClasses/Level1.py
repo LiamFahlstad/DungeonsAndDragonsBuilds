@@ -23,6 +23,9 @@ from Model.Content.CombatEffect import (
     CombatEffect,
     CombatHitPoints,
     CombatInstances,
+    EffectRoll,
+    TurnEdge,
+    TurnOf,
 )
 from Model.Content.Feature import FeatureTarget
 from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table
@@ -276,7 +279,7 @@ class BurningHands(ClassSpell):
     ) -> list[CombatEffect]:
         return [
             CombatEffect(
-                roll="save",
+                roll=EffectRoll.SAVE,
                 save_ability=Ability.DEXTERITY,
                 half_on_success=True,
                 damage=(CombatDamage("3d6", DamageType.FIRE, upcast="1d6"),),
@@ -349,7 +352,7 @@ class CharmPerson(ClassSpell):
     ) -> list[CombatEffect]:
         return [
             CombatEffect(
-                roll="save",
+                roll=EffectRoll.SAVE,
                 save_ability=Ability.WISDOM,
                 conditions=(CombatCondition(Condition.CHARMED),),
                 notes=(
@@ -439,7 +442,7 @@ class ChromaticOrb(ClassSpell):
     ) -> list[CombatEffect]:
         return [
             CombatEffect(
-                roll="attack",
+                roll=EffectRoll.ATTACK,
                 damage=(
                     CombatDamage(
                         "3d8",
@@ -531,9 +534,11 @@ class Command(ClassSpell):
         return [
             CombatEffect(
                 name="Command: Approach",
-                roll="save",
+                roll=EffectRoll.SAVE,
                 save_ability=Ability.WISDOM,
-                conditions=(CombatCondition("Command", until=("end", "target")),),
+                conditions=(
+                    CombatCondition("Command", until=(TurnEdge.END, TurnOf.TARGET)),
+                ),
                 notes=(
                     "On its next turn, the target moves toward you by the shortest and most direct route, ending its turn if it moves within 5 feet of you.",
                     "One more target per slot level above 1.",
@@ -541,9 +546,11 @@ class Command(ClassSpell):
             ),
             CombatEffect(
                 name="Command: Drop",
-                roll="save",
+                roll=EffectRoll.SAVE,
                 save_ability=Ability.WISDOM,
-                conditions=(CombatCondition("Command", until=("end", "target")),),
+                conditions=(
+                    CombatCondition("Command", until=(TurnEdge.END, TurnOf.TARGET)),
+                ),
                 notes=(
                     "On its next turn, the target drops whatever it is holding and then ends its turn.",
                     "One more target per slot level above 1.",
@@ -551,9 +558,11 @@ class Command(ClassSpell):
             ),
             CombatEffect(
                 name="Command: Flee",
-                roll="save",
+                roll=EffectRoll.SAVE,
                 save_ability=Ability.WISDOM,
-                conditions=(CombatCondition("Command", until=("end", "target")),),
+                conditions=(
+                    CombatCondition("Command", until=(TurnEdge.END, TurnOf.TARGET)),
+                ),
                 notes=(
                     "On its next turn, the target spends its turn moving away from you by the fastest available means.",
                     "One more target per slot level above 1.",
@@ -561,7 +570,7 @@ class Command(ClassSpell):
             ),
             CombatEffect(
                 name="Command: Grovel",
-                roll="save",
+                roll=EffectRoll.SAVE,
                 save_ability=Ability.WISDOM,
                 conditions=(CombatCondition(Condition.PRONE),),
                 notes=(
@@ -571,9 +580,11 @@ class Command(ClassSpell):
             ),
             CombatEffect(
                 name="Command: Halt",
-                roll="save",
+                roll=EffectRoll.SAVE,
                 save_ability=Ability.WISDOM,
-                conditions=(CombatCondition("Command", until=("end", "target")),),
+                conditions=(
+                    CombatCondition("Command", until=(TurnEdge.END, TurnOf.TARGET)),
+                ),
                 notes=(
                     "On its next turn, the target doesn't move and takes no action or Bonus Action.",
                     "One more target per slot level above 1.",
@@ -748,7 +759,7 @@ class DissonantWhispers(ClassSpell):
     ) -> list[CombatEffect]:
         return [
             CombatEffect(
-                roll="save",
+                roll=EffectRoll.SAVE,
                 save_ability=Ability.WISDOM,
                 half_on_success=True,
                 damage=(CombatDamage("3d6", DamageType.PSYCHIC, upcast="1d6"),),
@@ -887,7 +898,7 @@ class EnsnaringStrike(ClassSpell):
     ) -> list[CombatEffect]:
         return [
             CombatEffect(
-                roll="save",
+                roll=EffectRoll.SAVE,
                 save_ability=Ability.STRENGTH,
                 conditions=(CombatCondition(Condition.RESTRAINED),),
                 notes=(
@@ -949,7 +960,7 @@ class Entangle(ClassSpell):
     ) -> list[CombatEffect]:
         return [
             CombatEffect(
-                roll="save",
+                roll=EffectRoll.SAVE,
                 save_ability=Ability.STRENGTH,
                 conditions=(CombatCondition(Condition.RESTRAINED),),
                 notes=(
@@ -1011,7 +1022,7 @@ class FaerieFire(ClassSpell):
     ) -> list[CombatEffect]:
         return [
             CombatEffect(
-                roll="save",
+                roll=EffectRoll.SAVE,
                 save_ability=Ability.DEXTERITY,
                 conditions=(CombatCondition("Faerie Fire"),),
                 notes=(
@@ -1232,7 +1243,7 @@ class Grease(ClassSpell):
     ) -> list[CombatEffect]:
         return [
             CombatEffect(
-                roll="save",
+                roll=EffectRoll.SAVE,
                 save_ability=Ability.DEXTERITY,
                 conditions=(CombatCondition(Condition.PRONE),),
                 notes=(
@@ -1289,7 +1300,7 @@ class GuidingBolt(ClassSpell):
     ) -> list[CombatEffect]:
         return [
             CombatEffect(
-                roll="attack",
+                roll=EffectRoll.ATTACK,
                 damage=(CombatDamage("4d6", DamageType.RADIANT, upcast="1d6"),),
                 notes=(
                     "On a hit, the next attack roll against the target before the end of your next turn has Advantage.",
@@ -1473,7 +1484,7 @@ class IceKnife(ClassSpell):
         return [
             CombatEffect(
                 name="Ice Knife: shard",
-                roll="attack",
+                roll=EffectRoll.ATTACK,
                 damage=(CombatDamage("1d10", DamageType.PIERCING),),
                 notes=(
                     "Hit or miss, the shard then explodes: pick Ice Knife: explosion next.",
@@ -1481,7 +1492,7 @@ class IceKnife(ClassSpell):
             ),
             CombatEffect(
                 name="Ice Knife: explosion",
-                roll="save",
+                roll=EffectRoll.SAVE,
                 save_ability=Ability.DEXTERITY,
                 damage=(CombatDamage("2d6", DamageType.COLD, upcast="1d6"),),
                 spends_use=False,
@@ -1650,10 +1661,12 @@ class RayOfSickness(ClassSpell):
     ) -> list[CombatEffect]:
         return [
             CombatEffect(
-                roll="attack",
+                roll=EffectRoll.ATTACK,
                 damage=(CombatDamage("2d8", DamageType.POISON, upcast="1d8"),),
                 conditions=(
-                    CombatCondition(Condition.POISONED, until=("end", "source")),
+                    CombatCondition(
+                        Condition.POISONED, until=(TurnEdge.END, TurnOf.SOURCE)
+                    ),
                 ),
             )
         ]
@@ -1820,10 +1833,12 @@ class Sleep(ClassSpell):
     ) -> list[CombatEffect]:
         return [
             CombatEffect(
-                roll="save",
+                roll=EffectRoll.SAVE,
                 save_ability=Ability.WISDOM,
                 conditions=(
-                    CombatCondition(Condition.INCAPACITATED, until=("end", "target")),
+                    CombatCondition(
+                        Condition.INCAPACITATED, until=(TurnEdge.END, TurnOf.TARGET)
+                    ),
                 ),
                 notes=(
                     "At the end of its next turn the target repeats the save: on a failure it has the Unconscious condition for the duration. It wakes if it takes damage or someone within 5 feet takes an action to shake it. Creatures that don't sleep, or are immune to Exhaustion, succeed automatically.",
@@ -1942,7 +1957,7 @@ class TashasHideousLaughter(ClassSpell):
     ) -> list[CombatEffect]:
         return [
             CombatEffect(
-                roll="save",
+                roll=EffectRoll.SAVE,
                 save_ability=Ability.WISDOM,
                 repeat_save=True,
                 conditions=(
@@ -2021,7 +2036,7 @@ class Thunderwave(ClassSpell):
     ) -> list[CombatEffect]:
         return [
             CombatEffect(
-                roll="save",
+                roll=EffectRoll.SAVE,
                 save_ability=Ability.CONSTITUTION,
                 half_on_success=True,
                 damage=(CombatDamage("2d8", DamageType.THUNDER, upcast="1d8"),),
@@ -2096,7 +2111,7 @@ class WitchBolt(ClassSpell):
     ) -> list[CombatEffect]:
         return [
             CombatEffect(
-                roll="attack",
+                roll=EffectRoll.ATTACK,
                 damage=(CombatDamage("2d12", DamageType.LIGHTNING, upcast="1d12"),),
                 notes=(
                     "On each of your later turns, a Bonus Action deals 1d12 Lightning damage to the target automatically, even if the first attack missed. It ends if the target is out of range or has Total Cover from you.",

@@ -17,7 +17,11 @@ from CharacterContent.Spells.SpellFactory.SpellFields import (
     Range,
 )
 from Core.Definitions import Ability, CharacterClass, DamageType
-from Model.Content.CombatEffect import CombatDamage, CombatEffect
+from Model.Content.CombatEffect import (
+    CombatDamage,
+    CombatEffect,
+    EffectRoll,
+)
 from Model.Content.Feature import FeatureTarget
 from Model.Content.FeatureText import Block, Facts, Option, Table
 from Model.View import CharacterView
@@ -84,7 +88,7 @@ class Fireball(ClassSpell):
     ) -> list[CombatEffect]:
         return [
             CombatEffect(
-                roll="save",
+                roll=EffectRoll.SAVE,
                 save_ability=Ability.DEXTERITY,
                 half_on_success=True,
                 damage=(CombatDamage("8d6", DamageType.FIRE, upcast="1d6"),),

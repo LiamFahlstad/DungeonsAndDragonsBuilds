@@ -22,6 +22,9 @@ from Model.Content.CombatEffect import (
     CombatDamage,
     CombatEffect,
     CombatInstances,
+    EffectRoll,
+    TurnEdge,
+    TurnOf,
 )
 from Model.Content.Feature import FeatureTarget
 from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table
@@ -84,7 +87,7 @@ class ChillTouch(ClassSpell):
     ) -> list[CombatEffect]:
         return [
             CombatEffect(
-                roll="attack",
+                roll=EffectRoll.ATTACK,
                 damage=(
                     CombatDamage(
                         "1d10",
@@ -92,7 +95,9 @@ class ChillTouch(ClassSpell):
                         cantrip=((5, "2d10"), (11, "3d10"), (17, "4d10")),
                     ),
                 ),
-                conditions=(CombatCondition("Chill Touch", until=("end", "source")),),
+                conditions=(
+                    CombatCondition("Chill Touch", until=(TurnEdge.END, TurnOf.SOURCE)),
+                ),
                 notes=(
                     "A melee spell attack. On a hit, the target can't regain Hit Points until the end of your next turn.",
                 ),
@@ -154,7 +159,7 @@ class EldritchBlast(ClassSpell):
     ) -> list[CombatEffect]:
         return [
             CombatEffect(
-                roll="attack",
+                roll=EffectRoll.ATTACK,
                 damage=(CombatDamage("1d10", DamageType.FORCE),),
                 instances=CombatInstances(
                     1, cantrip=((5, 2), (11, 3), (17, 4)), noun="beam"
@@ -223,7 +228,7 @@ class Friends(ClassSpell):
     ) -> list[CombatEffect]:
         return [
             CombatEffect(
-                roll="save",
+                roll=EffectRoll.SAVE,
                 save_ability=Ability.WISDOM,
                 conditions=(CombatCondition(Condition.CHARMED),),
                 notes=(
@@ -488,7 +493,7 @@ class ProduceFlame(ClassSpell):
     ) -> list[CombatEffect]:
         return [
             CombatEffect(
-                roll="attack",
+                roll=EffectRoll.ATTACK,
                 damage=(
                     CombatDamage(
                         "1d8",
@@ -611,7 +616,7 @@ class SacredFlame(ClassSpell):
     ) -> list[CombatEffect]:
         return [
             CombatEffect(
-                roll="save",
+                roll=EffectRoll.SAVE,
                 save_ability=Ability.DEXTERITY,
                 damage=(
                     CombatDamage(
@@ -739,7 +744,7 @@ class StarryWisp(ClassSpell):
     ) -> list[CombatEffect]:
         return [
             CombatEffect(
-                roll="attack",
+                roll=EffectRoll.ATTACK,
                 damage=(
                     CombatDamage(
                         "1d8",
@@ -887,7 +892,7 @@ class TollTheDead(ClassSpell):
     ) -> list[CombatEffect]:
         return [
             CombatEffect(
-                roll="save",
+                roll=EffectRoll.SAVE,
                 save_ability=Ability.WISDOM,
                 damage=(
                     CombatDamage(
@@ -902,7 +907,7 @@ class TollTheDead(ClassSpell):
             ),
             CombatEffect(
                 name="Toll the Dead (hurt target)",
-                roll="save",
+                roll=EffectRoll.SAVE,
                 save_ability=Ability.WISDOM,
                 damage=(
                     CombatDamage(
@@ -991,7 +996,7 @@ class TrueStrike(ClassSpell):
     ) -> list[CombatEffect]:
         return [
             CombatEffect(
-                roll="attack",
+                roll=EffectRoll.ATTACK,
                 notes=(
                     "One attack with the weapon used in the casting, using your spellcasting ability for its attack and damage rolls: give the weapon's damage. It can deal Radiant damage instead of its own type.",
                     "Extra Radiant damage: 1d6 from character level 5, 2d6 from 11, 3d6 from 17.",
@@ -1053,7 +1058,7 @@ class ViciousMockery(ClassSpell):
     ) -> list[CombatEffect]:
         return [
             CombatEffect(
-                roll="save",
+                roll=EffectRoll.SAVE,
                 save_ability=Ability.WISDOM,
                 damage=(
                     CombatDamage(

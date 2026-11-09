@@ -22,7 +22,7 @@ the JSON (DataSpell). See Notes/combat-effects-plan.md, "Spells as classes".
         )
 
         def combat_effects(self, character=None) -> list[CombatEffect]:
-            return [CombatEffect(roll="save", save_ability=Ability.DEXTERITY, ...)]
+            return [CombatEffect(roll=EffectRoll.SAVE, save_ability=Ability.DEXTERITY, ...)]
 
 What has a fixed set of values is an enum (the school, the classes), and
 the casting time, range, components and duration are the dataclasses of

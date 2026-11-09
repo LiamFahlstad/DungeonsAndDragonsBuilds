@@ -20,7 +20,11 @@ from Model.Content.Feature import (
     ActionType,
     RegainedOn,
 )
-from Model.Content.CombatEffect import CombatDamage, CombatEffect
+from Model.Content.CombatEffect import (
+    CombatDamage,
+    CombatEffect,
+    EffectRoll,
+)
 from Core.Rules import MAX_ABILITY_MODIFIER
 from Model.Content.Summons import (
     OnZeroHp,
@@ -112,7 +116,7 @@ class ReanimatorSkillSet(Feature):
         return [
             CombatEffect(
                 name="Jolt to Life",
-                roll="save",
+                roll=EffectRoll.SAVE,
                 save_ability=Ability.DEXTERITY,
                 half_on_success=True,
                 damage=(CombatDamage(dice, DamageType.LIGHTNING),),

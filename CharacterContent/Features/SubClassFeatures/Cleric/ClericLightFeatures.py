@@ -1,5 +1,9 @@
 from Core.Definitions import Ability, CharacterClass, DamageType
-from Model.Content.CombatEffect import CombatDamage, CombatEffect
+from Model.Content.CombatEffect import (
+    CombatDamage,
+    CombatEffect,
+    EffectRoll,
+)
 from Model.Content.Feature import (
     Feature,
     FeatureUses,
@@ -86,7 +90,7 @@ class RadianceOfTheDawn(Feature):
         level = character.get_class_level(CharacterClass.CLERIC)
         return [
             CombatEffect(
-                roll="save",
+                roll=EffectRoll.SAVE,
                 save_ability=Ability.CONSTITUTION,
                 half_on_success=True,
                 damage=(CombatDamage(f"2d10 + {level}", DamageType.RADIANT),),

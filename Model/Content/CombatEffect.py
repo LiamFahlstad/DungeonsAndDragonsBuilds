@@ -23,7 +23,7 @@ effects only say what they roll and do:
 
     CombatEffect(
         name="Jolt to Life",
-        roll="save",
+        roll=EffectRoll.SAVE,
         save_ability=Ability.DEXTERITY,
         half_on_success=True,
         damage=(CombatDamage("2d4", DamageType.LIGHTNING),),
@@ -44,7 +44,8 @@ Smite's extra 1d8 against a Fiend or an Undead) has a `when`.
 
 import re
 from dataclasses import dataclass, fields
-from typing import Any, Literal
+from enum import StrEnum
+from typing import Any
 
 from Core.Definitions import Ability, Condition, DamageType
 from Model.Content.ActionType import ActionType
@@ -57,11 +58,30 @@ _UPCAST_DICE = re.compile(r"\d+d\d+")
 _UPCAST_DICE_OR_NUMBER = re.compile(r"\d+d\d+|\d+")
 # The character levels a cantrip's dice grow at.
 CANTRIP_LEVELS = (5, 11, 17)
-ROLLS = ("save", "attack", "none")
-# ("start" or "end", "source" or "target"): "until the end of its next turn"
-# is ("end", "target"), as the combat UI has it.
-_UNTIL_EDGES = ("start", "end")
-_UNTIL_WHOSE = ("source", "target")
+
+
+class EffectRoll(StrEnum):
+    """What one use rolls. A StrEnum, so it's its text ("save") in JSON, in
+    logs and wherever it's compared with text."""
+
+    SAVE = "save"  # each target saves
+    ATTACK = "attack"  # the user rolls against each target's AC
+    NONE = "none"  # it just happens, to every target
+
+
+class TurnEdge(StrEnum):
+    """Which edge of a turn a condition lasts until."""
+
+    START = "start"
+    END = "end"
+
+
+class TurnOf(StrEnum):
+    """Whose next turn a condition lasts until: the one who used it, or the
+    target it landed on."""
+
+    SOURCE = "source"
+    TARGET = "target"
 
 
 def with_bonus(dice: str, bonus: int) -> str:
@@ -125,10 +145,11 @@ class CombatHitPoints:
 @dataclass(frozen=True)
 class CombatCondition:
     """What lands on a target, and for how long: `until` a turn's start or
-    end, or `duration_seconds` (None: the source's own duration)."""
+    end, or `duration_seconds` (None: the source's own duration). "Until the
+    end of its next turn" is until=(TurnEdge.END, TurnOf.TARGET)."""
 
     name: str
-    until: tuple[str, str] | None = None
+    until: tuple[TurnEdge, TurnOf] | None = None
     duration_seconds: int | None = None
 
     def __post_init__(self):
@@ -139,12 +160,14 @@ class CombatCondition:
         if not self.name.strip():
             raise ValueError("A condition needs a name")
         if self.until is not None:
+            # Text ("end", "target") is taken too, as JSON and logs have it.
             edge, whose = self.until
-            if edge not in _UNTIL_EDGES or whose not in _UNTIL_WHOSE:
+            if edge not in set(TurnEdge) or whose not in set(TurnOf):
                 raise ValueError(
-                    f"until must be ({'|'.join(_UNTIL_EDGES)},"
-                    f" {'|'.join(_UNTIL_WHOSE)}), got {self.until!r}"
+                    f"until must be ({'|'.join(TurnEdge)}, {'|'.join(TurnOf)}),"
+                    f" got {self.until!r}"
                 )
+            object.__setattr__(self, "until", (TurnEdge(edge), TurnOf(whose)))
 
 
 @dataclass(frozen=True)
@@ -189,9 +212,9 @@ class CombatEffect:
     # A source with several uses (Reanimator's Skill Set's Jolt to Life,
     # Command's options) names each.
     name: str = ""
-    # "save": each target saves; "attack": the user rolls against each
-    # target's AC; "none": it just happens, to every target.
-    roll: Literal["save", "attack", "none"] = "none"
+    # SAVE: each target saves; ATTACK: the user rolls against each target's
+    # AC; NONE: it just happens, to every target.
+    roll: EffectRoll = EffectRoll.NONE
     save_ability: Ability | None = None
     dc: int | None = None  # None: the source's (a feature's calculate_dc())
     half_on_success: bool = False
@@ -226,15 +249,19 @@ class CombatEffect:
     notes: tuple[str, ...] = ()
 
     def __post_init__(self):
-        if self.roll not in ROLLS:
-            raise ValueError(f"roll {self.roll!r} is not one of {list(ROLLS)}")
-        if (self.roll == "save") != (self.save_ability is not None):
+        # Text ("save") is taken too, as JSON and logs have it.
+        if self.roll not in set(EffectRoll):
+            raise ValueError(f"roll {self.roll!r} is not one of {list(EffectRoll)}")
+        object.__setattr__(self, "roll", EffectRoll(self.roll))
+        if (self.roll is EffectRoll.SAVE) != (self.save_ability is not None):
             raise ValueError("A save_ability goes with a roll of 'save', and only then")
-        if self.roll != "save" and (self.half_on_success or self.repeat_save):
+        if self.roll is not EffectRoll.SAVE and (
+            self.half_on_success or self.repeat_save
+        ):
             raise ValueError("half_on_success and repeat_save are for a 'save' only")
-        if self.roll != "save" and self.dc is not None:
+        if self.roll is not EffectRoll.SAVE and self.dc is not None:
             raise ValueError("A dc is for a 'save' only")
-        if self.roll != "attack" and self.attack_bonus is not None:
+        if self.roll is not EffectRoll.ATTACK and self.attack_bonus is not None:
             raise ValueError("An attack_bonus is for an 'attack' only")
         if any(not note.strip() for note in self.notes):
             raise ValueError("A note can't be empty")
@@ -284,7 +311,7 @@ def _check_cantrip(steps: tuple[tuple[int, str], ...]) -> None:
 def _compact(value: Any) -> Any:
     """`value` as JSON-ready data: a dataclass as a dict without its default
     fields, enums as their values, a cantrip's steps as {"5": "2d8", ...}."""
-    if isinstance(value, (Ability, DamageType, ActionType)):
+    if isinstance(value, (Ability, DamageType, ActionType, StrEnum)):
         return value.value
     if isinstance(
         value,
@@ -478,7 +505,7 @@ class _Reader:
             "effect",
             CombatEffect,
             name=self.kind(data.get("name"), "name", (str,), ""),
-            roll=self.kind(data.get("roll"), "roll", (str,), "none"),
+            roll=self.enum(data.get("roll"), "roll", EffectRoll) or EffectRoll.NONE,
             save_ability=self.enum(data.get("save_ability"), "save_ability", Ability),
             dc=self.kind(data.get("dc"), "dc", (int,)),
             half_on_success=self.kind(

@@ -54,7 +54,7 @@ reviewed field by field against the previous golden.
 Accepted as recommended when the user said "go ahead with plan" (2026-11-08):
 
 1. **Spells stay JSON, features stay Python**, in one shared format.
-2. **`CombatEffect` stays flat** (`roll="save", save_ability=...`).
+2. **`CombatEffect` stays flat** (`roll=EffectRoll.SAVE, save_ability=...`).
 3. **Several attacks from one use get a repeat count in the dialog** (built:
    the Times box).
 4. **Modifiers are added automatically to rolls the simulator makes**, and
@@ -120,9 +120,10 @@ should be filled in **by one model, through one code path**, so that:
 CombatDamage(dice, damage_type, choices=(), upcast="", cantrip=(), add_modifier=False, when="")
 CombatHitPoints(dice="", upcast="", add_modifier=False)   # dice "": the user types it
 CombatCondition(name, until=None, duration_seconds=None)  # a rules condition or a badge
+                                    # until=(TurnEdge.END, TurnOf.TARGET): "until the end of its next turn"
 CombatInstances(count, upcast=0, cantrip=(), noun="")     # Scorching Ray: 3, +1 per slot, "ray"
 CombatEffect(
-    name="", roll="none", save_ability=None, dc=None, half_on_success=False,
+    name="", roll=EffectRoll.NONE, save_ability=None, dc=None, half_on_success=False,
     repeat_save=False, attack_bonus=None,
     damage=(), healing=None, temp_hp=None, conditions=(), instances=None,
     action_type=None, concentration=False, spends_use=True, spell=None, notes=(),
@@ -216,7 +217,7 @@ class Fireball(ClassSpell):
         return [Facts(...), Table(...), Option("Using a Higher-Level Spell Slot", (...))]
 
     def combat_effects(self, character=None) -> list[CombatEffect]:
-        return [CombatEffect(roll="save", save_ability=Ability.DEXTERITY, ...)]
+        return [CombatEffect(roll=EffectRoll.SAVE, save_ability=Ability.DEXTERITY, ...)]
 ```
 
 - `SpellRules` is the record's fields plus `usage_tags` and `target`; what the
@@ -226,7 +227,7 @@ class Fireball(ClassSpell):
   `classes` `CharacterClass`es, `usage_tags` the shared `UsageTag` literal
   (as on Feature), `target` a `FeatureTarget`, and in combat effects a rules
   condition is `CombatCondition(Condition.PRONE)` (a badge keeps its text
-  name). `ClassSpell` turns them back into the card's text, so the `Spell`
+  name), `roll` an `EffectRoll` and `until` a `(TurnEdge, TurnOf)` pair (R21). `ClassSpell` turns them back into the card's text, so the `Spell`
   interface is unchanged. `source` stays the source's words (Q14).
 - **The card's four top lines are dataclasses** (R20,
   `SpellFactory/SpellFields.py`): `CastingTime`, `Range`, `Components`,
@@ -268,6 +269,7 @@ module's own imports and classes when adding to it.
 | S.2 | Convert the spells with combat effects (57: the ones where the JSON hit its limits) | **Done**: picker goldens and sheet snapshots unchanged; the converter's check passed for all 57 |
 | S.2b | The converter writes enums where the values are a fixed set (R19), and leaves a spell it can't express as JSON with the reason (`CannotConvert`) | **Done**: the 57 regenerated with enums; 574 of the 594 spells can be converted, the 20 others are DI-062 and DI-063 |
 | S.2c | Casting time, range, components and duration as `SpellFields` dataclasses (R20); the converter compares them by meaning; the 57 regenerated | **Done**: every record of the three sources reads and writes back (`tests/test_spell_fields.py`); old and new derived values agree on all 1,391 records but one fix (Yolande's Regal Presence now has V); one card changed (Absorb Elements "1 reaction, ..." -> "Reaction, ...") |
+| S.2d | Combat effects' `roll` and `until` as enums (`EffectRoll`, `TurnEdge`, `TurnOf`; R21), written by the converter and used by every Python effect (spell classes, features, homebrew monsters, tests) | **Done**: picker goldens and sheet snapshots unchanged |
 | S.3 | Write new combat effects in classes, not JSON: convert a spell, then edit its `combat_effects()`. Teach `spell_mechanics.py draft` to print a class's method instead of a JSON entry, and give the `spell-mechanics` agent classes in scope | Not started |
 | S.4 | Convert the rest (Q11) and retire the companion files: once every spell of a source has a class, its `_extended`/`_improved`/`_combat_effects` files and `DataSpell`'s companion handling go | Not started |
 | S.5 | Drift check: a re-scrape that changes a converted spell's record must be noticed (Q12) | Not started |
@@ -419,6 +421,15 @@ Sheet chips ("DEX save · half · 8d6 Fire") from the same data;
   converts the components slips of DI-062 (only a record with no components
   stays JSON). Material cost and consumption are not fields yet: nothing
   reads them; `Components.material` is the place to parse them from.
+- **R21. A combat effect's `roll` and `until` are enums too** (2026-11-09):
+  `EffectRoll` (SAVE, ATTACK, NONE) and `until=(TurnEdge, TurnOf)`, in
+  `Model/Content/CombatEffect.py`. They are `StrEnum`s, so the JSON, old logs
+  and every `== "save"` / `("end", "target")` comparison are unchanged; text
+  is still accepted and kept as the member. Left as they were, on purpose:
+  dice stay text ("2d8", "1d4 + 1": not a closed set, and already checked by
+  a pattern when built), as do `when`, `noun`, `notes` and `spell`.
+  `damage_type`, `save_ability`, `action_type` and condition names already
+  were enums.
 
 ## Open questions (with suggestions)
 

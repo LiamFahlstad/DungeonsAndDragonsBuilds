@@ -19,6 +19,9 @@ from Model.Content.CombatEffect import (
     CombatDamage,
     CombatEffect,
     CombatHitPoints,
+    EffectRoll,
+    TurnEdge,
+    TurnOf,
 )
 
 
@@ -191,7 +194,7 @@ class MiraPrincessOfTheLoop(ExtendedCombatantData):
                     extra_ruling="A slowed target repeats the save at the end of each of its turns, ending the effect on a success, and another creature can end it early by touching it as an action.",
                     combat_effects=(
                         CombatEffect(
-                            roll="save",
+                            roll=EffectRoll.SAVE,
                             save_ability=Ability.WISDOM,
                             dc=15,
                             repeat_save=True,
@@ -216,7 +219,8 @@ class MiraPrincessOfTheLoop(ExtendedCombatantData):
                         CombatEffect(
                             conditions=(
                                 CombatCondition(
-                                    "Temporal Shift", until=("start", "source")
+                                    "Temporal Shift",
+                                    until=(TurnEdge.START, TurnOf.SOURCE),
                                 ),
                             ),
                             notes=(
