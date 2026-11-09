@@ -425,6 +425,7 @@ SpellRules stores components as Component flags plus a material (Notes/combat-ef
 - 2026-11-08 main-session: found
 - 2026-11-08 main-session: SpellFields (R20) reads 'V,S', 'M(...)' and a stray 'Component: ', so the converter now converts all but Gate Seal (no components). The records themselves still want the scraper fix.
 - 2026-11-09 main-session: 2026-11-09: Gate Seal (no components) is now the only spell left as JSON, so it alone keeps DataSpell's companion handling and spells_dnd5e_extended/_improved.json alive (combat-effects plan S.4).
+- 2026-11-09 main-session: Gate Seal fixed at the source: dnd5e.wikidot.com writes its label as '<strong>Components</strong>:' (colon outside the tag), which DnD5eSpellScraper's exact 'Components:' match missed. The scraper now matches a label with or without the colon (all four stat lines); Gate Seal's record was re-scraped alone (only components changed: 'V, S, M (a broken portal key, which the spell consumes)') and converted, so every spell is a class. Still open: the other four records' slips (2024 and 2014 sources), which SpellFields already reads; they want a scraper fix and re-scrape.
 
 ### DI-064 · Shield's casting time is cut off in the scraped spell JSON ('...or targeted by the')
 - **Status:** open

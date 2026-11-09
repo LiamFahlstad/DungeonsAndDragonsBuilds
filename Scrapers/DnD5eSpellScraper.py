@@ -190,37 +190,34 @@ class DnD5eSpellParser:
             "ritual": ritual,
         }
 
-    def get_casting_time(self):
-        label = self.col1.find("strong", string="Casting Time:")
-        if not label:
-            return None
+    def _labelled_value(self, *labels: str) -> str | None:
+        """The text after a bold `<strong>Label:</strong>` in the stat lines.
 
-        return label.next_sibling.strip()
-
-    def get_range(self):
-        label = self.col1.find("strong", string="Range:")
-        if not label:
-            return None
-
-        return label.next_sibling.strip()
-
-    def get_components(self):
-        label = self.col1.find("strong", string="Components:")
-        if label:
-            return label.next_sibling.strip()
-
-        label = self.col1.find("strong", string="Component:")
-        if label:
-            return label.next_sibling.strip()
-
+        Some pages put the colon after the tag (Gate Seal:
+        `<strong>Components</strong>: V, S, M (...)`), so the label matches
+        with or without it and a leading colon is taken off the value.
+        """
+        wanted = {label.rstrip(":") for label in labels}
+        for strong in self.col1.find_all("strong"):
+            if strong.get_text(strip=True).rstrip(":") not in wanted:
+                continue
+            value = strong.next_sibling
+            if not isinstance(value, str):
+                continue
+            return value.strip().removeprefix(":").strip()
         return None
 
-    def get_duration(self):
-        label = self.col1.find("strong", string="Duration:")
-        if not label:
-            return None
+    def get_casting_time(self):
+        return self._labelled_value("Casting Time:")
 
-        return label.next_sibling.strip()
+    def get_range(self):
+        return self._labelled_value("Range:")
+
+    def get_components(self):
+        return self._labelled_value("Components:", "Component:")
+
+    def get_duration(self):
+        return self._labelled_value("Duration:")
 
     def get_classes(self):
         label = self.col1.find("strong", string="Spell Lists.")

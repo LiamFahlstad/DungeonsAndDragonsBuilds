@@ -4025,6 +4025,61 @@ class GravitySinkhole(ClassSpell):
         ]
 
 
+class GateSeal(ClassSpell):
+    rules = SpellRules(
+        name="Gate Seal",
+        level=4,
+        school=School.ABJURATION,
+        classes=(
+            CharacterClass.SORCERER,
+            CharacterClass.WARLOCK,
+            CharacterClass.WIZARD,
+        ),
+        casting_time=CastingTime(CastingTimeType.MINUTE, 1),
+        range=Range(RangeType.FOOT, 60),
+        components=Components(
+            verbal=True,
+            somatic=True,
+            material="a broken portal key, which the spell consumes",
+        ),
+        duration=Duration(DurationType.HOUR, 24),
+        source="Planescape - Adventures in the Multiverse",
+        description="You fortify the fabric of the planes within a 30-foot cube you can see within range. Within that area, portals close and can't be opened for the duration. Spells and other effects that allow planar travel or open portals such as gate or plane shift, fail if used to enter or leave the area. The cube is stationary. At Higher Levels . When you cast this spell using a spell slot of 6th level or higher, the spell lasts until dispelled.",
+        usage_tags=("control", "utility"),
+        target=FeatureTarget.AREA,
+    )
+    converted_from = RecordStamp("spells_dnd5e.json", "a16f09f3e1252fb4")
+
+    @property
+    def improved_description(self) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Flavor",
+                        "You fortify the fabric of the planes within a 30-foot cube you can see within range.",
+                    ),
+                    (
+                        "Area",
+                        "A 30-foot cube you can see within range; the cube is stationary",
+                    ),
+                    (
+                        "Portals",
+                        "Within that area, portals close and can't be opened for the duration",
+                    ),
+                    (
+                        "Planar travel",
+                        "Spells and other effects that allow planar travel or open portals, such as gate or plane shift, fail if used to enter or leave the area",
+                    ),
+                )
+            ),
+            Option(
+                "At Higher Levels",
+                (Facts((("6th level or higher", "The spell lasts until dispelled"),)),),
+            ),
+        ]
+
+
 SPELLS = [
     ArcaneEye,
     AuraOfLife,
@@ -4053,6 +4108,7 @@ SPELLS = [
     FountOfMoonlight,
     FreedomOfMovement,
     GaldersSpeedyCourier,
+    GateSeal,
     GiantInsect,
     GraspingVine,
     GravitySinkhole,
