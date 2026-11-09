@@ -175,10 +175,10 @@ class TurnsMixin(CombatWindowState):
             if self._char_death_state(new_active) != "dead":
                 self._start_monster_turn(new_active)
             self._rebuild_card(new_active)
-        self._tick_timed_conditions(ended, self._current_turn_group(), new_round)
+        self._tick_effect_durations(ended, self._current_turn_group(), new_round)
         self._tick_active_spells(self._current_turn_group(), new_round)
         for char in ended:
-            self._repeat_saves(char)
+            self._end_of_turn_saves(char)
 
     def _is_first_turn(self) -> bool:
         """Whether it's round 1's first turn, so there is no turn before it."""

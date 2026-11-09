@@ -7,6 +7,7 @@ from PyQt6.QtWidgets import QDialog, QMessageBox, QPushButton, QTextEdit, QVBoxL
 import Combat.PartyAllies as PartyAllies
 import Combat.PlayerLog as PlayerLog
 from Combat.Definitions import Action
+from Combat.Effects.active_effects import upgrade_old_keys
 from Combat.EncounterLogs import (
     ORDER_KEY,
     PLAYER_FIGHT_KEYS,
@@ -286,10 +287,14 @@ class LoggingMixin(CombatWindowState):
                 char["pact_slots"] = _slots_by_level(char.get("pact_slots"))
                 for key in PLAYER_FIGHT_KEYS:
                     char.pop(key, None)
-                char.update(player_state.get(char["name"], {}))
+                # An older log's timers, notes and repeat saves, as effects.
+                saved = upgrade_old_keys(dict(player_state.get(char["name"], {})))
+                char.update(saved)
             else:
-                # An older log's companion_of / companion_choice.
+                # An older log's companion_of / companion_choice, and its
+                # timers, badge tooltips and repeat saves.
                 upgrade_keys(char)
+                upgrade_old_keys(char)
             stats = char.setdefault("stats", {})
             for key in STAT_KEYS:
                 stats.setdefault(key, 0)

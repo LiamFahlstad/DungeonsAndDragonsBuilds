@@ -25,6 +25,23 @@ from PyQt6.QtWidgets import (
 )
 
 from Combat.Definitions import Action, CombatStatus
+from Combat.Effects.active_effects import (
+    CUSTOM,
+    FEATURE,
+    SPELL,
+    ActiveEffect,
+    active_effects,
+    describe,
+    drop_repeat_save,
+    duration_entry,
+    link_concentration,
+    note_origin,
+    remove_effect,
+    repeat_saves,
+    set_duration,
+    set_repeat_save,
+    tick,
+)
 from Combat.Effects.modifiers import attack_plan, rules_condition
 from Combat.WildShape import current_form, form_badge
 from Core.Definitions import Condition, DamageType
@@ -350,15 +367,8 @@ class ConditionsMixin(CombatWindowState):
     def _remove_condition_from(self, char: dict, cond: str, source: dict | None = None):
         if cond in char["conditions"]:
             char["conditions"].remove(cond)
-            char.get("spell_condition_descriptions", {}).pop(cond, None)
-            char.get("spell_condition_colors", {}).pop(cond, None)
-            char.get("feature_condition_descriptions", {}).pop(cond, None)
-            char.get("feature_condition_colors", {}).pop(cond, None)
-            char.get("custom_condition_descriptions", {}).pop(cond, None)
-            if "timed_conditions" in char:
-                char["timed_conditions"] = [
-                    e for e in char["timed_conditions"] if e["name"] != cond
-                ]
+            # Its tooltip, colour, timer and repeat save go with it.
+            remove_effect(char, cond)
             source_name = source["name"] if source is not None else None
             cond_value = {
                 "condition": cond,
@@ -377,7 +387,6 @@ class ConditionsMixin(CombatWindowState):
                 value=cond_value,
             )
             self._forget_effect_on(char, cond)
-            self._drop_repeat_save(char, cond)
             if cond == CombatStatus.CONCENTRATING.value:
                 char.pop("concentration_checks", None)
                 self._end_concentration_spells(char)
@@ -430,60 +439,45 @@ class ConditionsMixin(CombatWindowState):
         if not cond or not targets:
             return
         source = self.selected_character or self._current_turn_character()
-        turn = self._current_turn_group()
+        source_name = source["name"] if source is not None else None
+        turn = [c["name"] for c in self._current_turn_group()]
         for target in list(targets):
             if notes.strip():
-                target.setdefault("custom_condition_descriptions", {})[
-                    cond
-                ] = notes.strip()
+                describe(target, cond, notes.strip(), None, CUSTOM)
             self._add_condition_to(target, cond, source=source)
-            timers = [
-                e for e in target.get("timed_conditions", []) if e["name"] != cond
-            ]
-            entry = _timed_condition_entry(cond, duration, source, target, turn)
-            if entry is not None:
-                timers.append(entry)
-            target["timed_conditions"] = timers
+            set_duration(
+                target,
+                cond,
+                duration_entry(duration, source_name, target["name"], turn),
+            )
+            note_origin(target, cond, caster=source_name)
             self._rebuild_card(target)
         self._save_fight_state()
 
-    def _tick_timed_conditions(
+    def _tick_effect_durations(
         self, ended: list[dict], started: list[dict], new_round: bool
     ):
-        """Count timed conditions down as the turn passes from `ended` to
-        `started` (`new_round` when that begins a round), ending each one
+        """Count the effects' durations down as the turn passes from `ended`
+        to `started` (`new_round` when that begins a round), ending each one
         whose time or turns run out."""
         ended_names = {c["name"] for c in ended}
         started_names = {c["name"] for c in started}
         in_order = {c["name"] for c in self.initiative_order}
         for char in self.characters:
-            entries = char.get("timed_conditions")
-            if not entries:
+            effects = active_effects(char)
+            if not any(e["duration"] is not None for e in effects):
                 continue
-            for entry in list(entries):
-                if "time_left" in entry:
-                    # A round passes on the turn it was given in, or at the
-                    # round's start if that combatant has no turn (any more).
-                    ticks_on = entry.get("ticks_on")
-                    if ticks_on in started_names or (
-                        new_round and ticks_on not in in_order
-                    ):
-                        entry["time_left"] = max(
-                            entry["time_left"] - SECONDS_PER_ROUND, 0
-                        )
-                    expired = entry["time_left"] == 0
-                else:
-                    boundary = ended_names if entry["until"] == "end" else started_names
-                    if entry["of"] in boundary:
-                        entry["turns_left"] -= 1
-                    expired = entry["turns_left"] <= 0
-                if expired:
+            for effect in list(effects):
+                duration = effect["duration"]
+                if duration is None:
+                    continue
+                if tick(duration, ended_names, started_names, new_round, in_order):
                     self._log_event(
-                        f"{char['name']}'s {entry['name']} expires",
+                        f"{char['name']}'s {effect['name']} expires",
                         note_turn=False,
                         character=char["name"],
                     )
-                    self._remove_condition_from(char, entry["name"])
+                    self._remove_condition_from(char, effect["name"])
             self._rebuild_card(char)
 
     def _custom_condition_suggestions(self) -> list[str]:
@@ -747,7 +741,16 @@ class ConditionsMixin(CombatWindowState):
             self._end_spell_effects(entry)
             return
         caster.setdefault("active_spells", []).append(entry)
+        self._link_concentration(caster, applied)
         self._rebuild_card(caster)
+
+    def _link_concentration(self, caster: dict, applied: list[dict]):
+        """Record on each effect in `applied` ({"target", "condition"} rows,
+        as an active spell holds them) that caster concentrates on it."""
+        for row in applied:
+            target = self._find_character_by_name(row["target"])
+            if target is not None:
+                link_concentration(target, row["condition"], caster["name"])
 
     def _give_effect_condition(
         self, target: dict, effect: CustomEffect, condition: str
@@ -767,6 +770,7 @@ class ConditionsMixin(CombatWindowState):
             return False
         self._describe_effect_condition(target, effect, condition)
         self._add_custom_condition(condition, effect.duration, effect.notes, [target])
+        note_origin(target, condition, source=effect.name)
         return True
 
     def _track_repeat_save(self, target: dict, effect: CustomEffect):
@@ -774,20 +778,19 @@ class ConditionsMixin(CombatWindowState):
         every condition the effect gave it: one save for them all (Turn
         Undead's Frightened and Incapacitated)."""
         given = [c for c in effect.conditions if c in target["conditions"]]
-        if not given:
+        if not given or effect.ability is None:
             return
         first, *also = given
-        self._drop_repeat_save(target, first)
-        entry = {
-            "condition": first,
-            "ability": effect.ability,
-            "dc": effect.dc,
-            "mode": effect.mode,
-            "use_legendary_resistance": effect.use_legendary_resistance,
-        }
-        if also:
-            entry["also"] = also
-        target.setdefault("repeat_saves", []).append(entry)
+        set_repeat_save(
+            target,
+            first,
+            effect.ability,
+            effect.dc,
+            effect.mode,
+            effect.use_legendary_resistance,
+            also,
+        )
+        note_origin(target, first, source=effect.name)
 
     def _describe_effect_condition(self, target: dict, effect: CustomEffect, cond: str):
         """What target's badge for the effect's condition shows when clicked
@@ -805,11 +808,12 @@ class ConditionsMixin(CombatWindowState):
         if spell_name:
             spell = self._spell_named(spell_name)
             if spell is not None:
-                target.setdefault("spell_condition_descriptions", {})[cond] = (
-                    notes + spell_badge_description(spell)
-                )
-                target.setdefault("spell_condition_colors", {})[cond] = (
-                    spell_badge_color(spell)
+                describe(
+                    target,
+                    cond,
+                    notes + spell_badge_description(spell),
+                    spell_badge_color(spell),
+                    SPELL,
                 )
                 return
         owner = self.selected_character or self._current_turn_character()
@@ -823,31 +827,26 @@ class ConditionsMixin(CombatWindowState):
                 None,
             )
             if feature is not None:
-                target.setdefault("feature_condition_descriptions", {})[cond] = (
-                    notes + self._feature_condition_tooltip(owner, feature)
+                describe(
+                    target,
+                    cond,
+                    notes + self._feature_condition_tooltip(owner, feature),
+                    FEATURE_BADGE_COLOR,
+                    FEATURE,
                 )
-                target.setdefault("feature_condition_colors", {})[
-                    cond
-                ] = FEATURE_BADGE_COLOR
                 return
         if option.tooltip:
             # A weapon's or a monster's action: its name and rules text.
             name = escape(option.row_name or option.name, quote=False)
             text = escape(option.tooltip, quote=False).replace("\n", "<br>")
-            target.setdefault("feature_condition_descriptions", {})[cond] = (
+            describe(
+                target,
+                cond,
                 f"{notes}<b style='color:#c9a84c; font-size:14px;'>{name}</b>"
-                f"<br><br>{text}"
+                f"<br><br>{text}",
+                None,
+                FEATURE,
             )
-
-    def _drop_repeat_save(self, char: dict, condition: str):
-        """Char has no more repeat save to end condition."""
-        entries = [
-            e for e in char.get("repeat_saves", []) if e["condition"] != condition
-        ]
-        if entries:
-            char["repeat_saves"] = entries
-        else:
-            char.pop("repeat_saves", None)
 
     def _roll_effect_save(self, target: dict, effect: CustomEffect) -> bool:
         """Target's save against the effect, logged. Legendary Resistance turns
@@ -878,28 +877,34 @@ class ConditionsMixin(CombatWindowState):
             return True
         return False
 
-    def _repeat_saves(self, char: dict):
+    def _end_of_turn_saves(self, char: dict):
         """As char's turn ends, the saves that could end a condition on it. A
         monster rolls, keeping the roll if the turn is undone and passed again;
         a player rolls at the table, so they get a reminder."""
         if self._char_death_state(char) == "dead":
             return
-        for entry in list(char.get("repeat_saves", [])):
-            condition = entry["condition"]
+        for effect in list(repeat_saves(char)):
+            condition = effect["name"]
             if condition not in char["conditions"]:
-                self._drop_repeat_save(char, condition)
+                drop_repeat_save(char, condition)
                 continue
+            entry = effect["repeat_save"]
+            if entry is None:
+                continue  # dropped by an earlier save this turn
             ability = next(f for f, short in ABILITIES if short == entry["ability"])
             if char.get("_is_player"):
                 self._turn_start_notes.append(
                     f"{char['name']}: DC {entry['dc']} {ability} save to end {condition}"
                 )
                 continue
-            self._roll_repeat_save(char, entry, ability)
+            self._roll_repeat_save(char, effect, ability)
 
-    def _roll_repeat_save(self, char: dict, entry: dict, ability: str):
-        """A monster's save to end a condition, and what comes of it."""
-        condition = entry["condition"]
+    def _roll_repeat_save(self, char: dict, effect: ActiveEffect, ability: str):
+        """A monster's save to end a condition (effect's repeat save), and
+        what comes of it."""
+        condition = effect["name"]
+        entry = effect["repeat_save"]
+        assert entry is not None  # the caller checks
         rolls = char.setdefault("_repeat_rolls", {})
         turn = (self.round_number, self.current_turn_idx, condition, entry["ability"])
         result = roll_save(
@@ -2042,38 +2047,3 @@ class ConditionsMixin(CombatWindowState):
             text = f"{char['name']} is hidden from the players"
         self._log_event(text, character=char["name"])
         self._rebuild_card(char)
-
-
-def _timed_condition_entry(
-    cond: str,
-    duration: dict | None,
-    source: dict | None,
-    target: dict,
-    turn: list[dict],
-) -> dict | None:
-    """The char["timed_conditions"] entry that ends `cond` on `target` after
-    `duration` (see CUSTOM_CONDITION_DURATIONS), given during `turn` (whose
-    turn it is: [] outside combat). None when it lasts until removed."""
-    if duration is None:
-        return None
-    if "seconds" in duration:
-        return {
-            "name": cond,
-            "time_left": duration["seconds"],
-            "duration": duration["seconds"],
-            "ticks_on": turn[0]["name"] if turn else None,
-        }
-    whose = source if duration["of"] == "source" else target
-    if whose is None:
-        return None
-    until = duration["until"]
-    # The end of `whose` next turn is the end of the one after this, if this
-    # is their turn; the start of their next turn is always the first to come.
-    taking_turn = any(c is whose for c in turn)
-    return {
-        "name": cond,
-        "until": until,
-        "of": whose["name"],
-        "turns_left": 2 if until == "end" and taking_turn else 1,
-        "text": f"Until the {until} of {whose['name']}'s next turn",
-    }

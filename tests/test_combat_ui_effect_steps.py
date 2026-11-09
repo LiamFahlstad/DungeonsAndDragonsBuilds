@@ -25,6 +25,7 @@ from Builds.Characters.Y2024_Paladin_Devotion_Edmund import (
 )
 from Combat.Combatants import Tiger
 from Combat.CombatUIQt.saves import CustomEffect
+from Combat.Effects.active_effects import repeat_saves
 from tests._combat_ui import make_ui, open_dialog
 
 
@@ -117,10 +118,12 @@ def test_one_repeat_save_ends_every_condition_the_effect_gave(edmund, monkeypatc
         )
     )
     assert {"Incapacitated", "Prone"} <= set(tiger["conditions"])
-    (entry,) = tiger["repeat_saves"]
-    assert (entry["condition"], entry["also"]) == ("Incapacitated", ["Prone"])
+    (entry,) = repeat_saves(tiger)
+    save = entry["repeat_save"]
+    assert save is not None
+    assert (entry["name"], save["also"]) == ("Incapacitated", ["Prone"])
     _rolls(monkeypatch, 20)
-    entry["dc"] = 5
+    save["dc"] = 5
     ui._roll_repeat_save(tiger, entry, "Wisdom")
     assert not {"Incapacitated", "Prone"} & set(tiger["conditions"])
     assert any("ends Incapacitated and Prone" in text for text in _log(ui))

@@ -24,6 +24,7 @@ from pathlib import Path
 
 import Combat.PlayerLog as PlayerLog
 from Combat.Definitions import Action
+from Combat.Effects.active_effects import ending_conditions
 from Combat.LogFiles import read_json
 from Core.Definitions import Condition
 
@@ -57,9 +58,7 @@ def _left_fight_as(char: dict) -> dict:
     """What of char, as an encounter log's combatants left it, carries into
     the next fight, with its "max_hp" to cap healing at."""
     state = {key: char[key] for key in CARRIED_KEYS if key in char}
-    ending = {e.get("name") for e in char.get("timed_conditions", [])}
-    for entry in char.get("repeat_saves", []):
-        ending |= {entry.get("condition"), *entry.get("also", ())}
+    ending = ending_conditions(char)
     if "conditions" in state:
         state["conditions"] = [c for c in state["conditions"] if c not in ending]
     state["max_hp"] = char.get("max_hp", char.get("hp", 0))

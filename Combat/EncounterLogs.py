@@ -35,6 +35,7 @@ from datetime import datetime
 from pathlib import Path
 
 import Combat.PartyAllies as PartyAllies
+from Combat.Effects.active_effects import KEY as ACTIVE_EFFECTS_KEY
 from Combat.LogFiles import read_json, write_json
 from Combat.PlayerCombatant import combatant_from_stat_block
 from Combat.PlayerLog import ENCOUNTER, has_round_events, log_ref
@@ -49,14 +50,14 @@ UNDONE_SESSIONS_KEY = "undone_player_log_entries"
 ORDER_KEY = "initiative_order"
 TURN_KEY = "turn"
 # What a fight in progress keeps on each player, by name: players aren't in
-# "combatants", and replaying their log doesn't bring these back.
+# "combatants", and replaying their log doesn't bring these back. Logs from
+# before active_effects kept its parts in keys of their own
+# (Combat/Effects/active_effects.py's OLD_KEYS, read by upgrade_old_keys).
 PLAYER_FIGHT_STATE_KEY = "player_fight_state"
 PLAYER_FIGHT_KEYS = (
     "active_spells",
     "concentration_checks",
-    "custom_condition_descriptions",
-    "repeat_saves",
-    "timed_conditions",
+    ACTIVE_EFFECTS_KEY,
 )
 HEADER_KEYS = ("encounter", "title", "players")
 # Marks an event players may read (player_view.may_read_log_line).

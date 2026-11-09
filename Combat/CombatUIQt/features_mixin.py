@@ -16,6 +16,7 @@ from PyQt6.QtWidgets import (
 from CharacterContent.Features.ClassFeatures.Druid.DruidFeatures import WildShape
 from Model.Content.Feature import FeatureTarget
 from Combat.Definitions import Action
+from Combat.Effects.active_effects import FEATURE, describe, note_origin
 from Presentation.FeatureCards import feature_label
 from .effect_options import feature_action_cost
 from .resources import feature_lack
@@ -389,11 +390,9 @@ class FeaturesMixin(CombatWindowState):
         has_duration = isinstance(duration_value, int) and duration_value > 0
 
         for char in list(recipients):
-            char.setdefault("feature_condition_descriptions", {})[
-                feature.name
-            ] = tooltip_html
-            char.setdefault("feature_condition_colors", {})[feature.name] = badge_color
+            describe(char, feature.name, tooltip_html, badge_color, FEATURE)
             self._add_condition_to(char, feature.name, source=source)
+            note_origin(char, feature.name, source=feature.name, caster=source["name"])
 
             if has_duration:
                 char.setdefault("active_features", []).append(

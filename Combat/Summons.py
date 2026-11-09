@@ -35,6 +35,7 @@ import json
 from dataclasses import dataclass, field
 
 from Combat.Definitions import Action
+from Combat.Effects.active_effects import ending_conditions
 from Combat.EncounterLogs import LogJSONEncoder
 from Combat.PlayerCombatant import combatant_from_stat_block
 from Combat.PlayerLog import is_round_key
@@ -427,9 +428,7 @@ def carried_state(previous: dict, rested: bool = False) -> dict:
     previous = upgrade_keys(dict(previous))
     state = {key: previous[key] for key in CARRIED_KEYS if key in previous}
     state.setdefault("hidden_from_players", False)
-    ending = {e.get("name") for e in previous.get("timed_conditions", [])}
-    for entry in previous.get("repeat_saves", []):
-        ending |= {entry.get("condition"), *entry.get("also", ())}
+    ending = ending_conditions(previous)
     if "conditions" in state:
         state["conditions"] = [c for c in state["conditions"] if c not in ending]
     if state.get("hp", 1) <= 0:

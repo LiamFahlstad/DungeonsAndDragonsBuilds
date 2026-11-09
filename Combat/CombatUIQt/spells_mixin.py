@@ -16,6 +16,12 @@ from PyQt6.QtWidgets import (
 
 from Model.Content.Feature import FeatureTarget
 from Combat.Definitions import Action, CombatStatus
+from Combat.Effects.active_effects import (
+    SPELL,
+    describe,
+    link_concentration,
+    note_origin,
+)
 from Combat.PlayerCombatant import max_pact_slots
 from Core.Definitions import Condition
 from .effect_options import PactSlot, casting_time_cost, has_slots, spell_slot_choices
@@ -576,11 +582,12 @@ class SpellsMixin(CombatWindowState):
                 if spell.name not in char["conditions"] or self._held_by_effect(row):
                     applied.append(row)
         for char in list(recipients):
-            char.setdefault("spell_condition_descriptions", {})[
-                spell.name
-            ] = tooltip_html
-            char.setdefault("spell_condition_colors", {})[spell.name] = badge_color
+            describe(char, spell.name, tooltip_html, badge_color, SPELL)
             self._add_condition_to(char, spell.name, source=source)
+            note_origin(char, spell.name, source=spell.name, caster=source["name"])
+            # The active spell below holds what it put on whom.
+            if has_duration and any(r["target"] == char["name"] for r in applied):
+                link_concentration(char, spell.name, source["name"])
 
         if has_duration:
             turn = self._current_turn_group()

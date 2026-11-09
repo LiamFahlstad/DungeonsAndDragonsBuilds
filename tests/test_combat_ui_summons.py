@@ -28,6 +28,8 @@ from CharacterContent.Features.SubClassFeatures.Artificer.ArtificerReanimatorFea
 from Combat.CombatUIQt import CombatAppQt
 from Combat.CombatUIQt.player_view import _can_be_seen
 from Combat.Definitions import Action
+from Combat.Effects.active_effects import KEY as ACTIVE_EFFECTS
+from Combat.Effects.active_effects import new_effect
 from Combat.EncounterLogs import prepare_log, scenario_log_path
 from Combat.Monsters.CR_0.monsters import Owl
 from Combat.Monsters.CR_1.monsters import Tiger
@@ -714,8 +716,19 @@ def test_conditions_ending_on_a_timer_or_a_save_arent_carried():
     previous = {
         "hp": 7,
         "conditions": ["Poisoned", "Frightened", "Prone"],
-        "timed_conditions": [{"name": "Poisoned", "time_left": 6}],
-        "repeat_saves": [{"condition": "Frightened"}],
+        ACTIVE_EFFECTS: [
+            {**new_effect("Poisoned"), "duration": {"time_left": 6}},
+            {
+                **new_effect("Frightened"),
+                "repeat_save": {
+                    "ability": "WIS",
+                    "dc": 13,
+                    "mode": "Neutral",
+                    "use_legendary_resistance": False,
+                    "also": [],
+                },
+            },
+        ],
     }
     assert carried_state(previous)["conditions"] == ["Prone"]
 

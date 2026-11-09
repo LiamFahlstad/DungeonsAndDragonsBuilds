@@ -17,6 +17,7 @@ from PyQt6.QtWidgets import (
 )
 
 from Combat.Definitions import ConditionRule
+from Combat.Effects.active_effects import find_effect, timers
 from .dialogs_mixin import _damage_entry_text, _speed_text
 from Core.Rules import ability_modifier
 from .monster_actions import (
@@ -238,21 +239,21 @@ class CardsMixin(CombatWindowState):
         _add_timed_entries(
             layout,
             char,
-            "active_spells",
+            char.get("active_spells") or [],
             "Active Spells:",
             lambda c, e: self._remove_active_spell(c, e),
         )
         _add_timed_entries(
             layout,
             char,
-            "active_features",
+            char.get("active_features") or [],
             "Active Features:",
             lambda c, e: self._remove_active_feature(c, e),
         )
         _add_timed_entries(
             layout,
             char,
-            "timed_conditions",
+            timers(char),
             "Timed Conditions:",
             lambda c, e: self._remove_condition_from(c, e["name"]),
         )
@@ -468,14 +469,9 @@ class CardsMixin(CombatWindowState):
     ) -> tuple[str | None, str | None]:
         """The tooltip text and badge color a spell or feature attached to this
         condition, if any."""
-        description = (
-            char.get("spell_condition_descriptions", {}).get(cond)
-            or char.get("feature_condition_descriptions", {}).get(cond)
-            or char.get("custom_condition_descriptions", {}).get(cond)
-        )
-        color = char.get("spell_condition_colors", {}).get(cond) or char.get(
-            "feature_condition_colors", {}
-        ).get(cond)
+        effect = find_effect(char, cond)
+        description = effect["tooltip"] if effect is not None else None
+        color = effect["color"] if effect is not None else None
         if description is not None:
             return description, color
         # Feature-condition tooltips/colors are transient UI state, not
@@ -722,14 +718,13 @@ def _add_spell_slots(layout: QVBoxLayout, char: dict):
 def _add_timed_entries(
     layout: QVBoxLayout,
     char: dict,
-    key: str,
+    entries: list[dict],
     header: str,
     remove: Callable[[dict, dict], None],
 ):
-    """Active spells, features or timed conditions (char[key]): each a name
-    with a dismiss button, over a bar of the time it has left, or the turn it
-    lasts until (entry["text"]) for one that ends on a turn."""
-    entries = char.get(key) or []
+    """char's active spells, features or timed conditions (`entries`): each a
+    name with a dismiss button, over a bar of the time it has left, or the
+    turn it lasts until (entry["text"]) for one that ends on a turn."""
     if not entries:
         return
     layout.addWidget(_separator())

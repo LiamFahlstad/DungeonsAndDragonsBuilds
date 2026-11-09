@@ -7,6 +7,9 @@ from PyQt6.QtWidgets import QComboBox, QDialog, QLabel, QLineEdit
 from PyQt6.QtWidgets import QPushButton, QSpinBox
 
 from Combat.Combatants import Pirate, Tiger
+from Combat.Effects.active_effects import CUSTOM, KEY as ACTIVE_EFFECTS
+from Combat.Effects.active_effects import active_effects, find_effect
+from Combat.Effects.active_effects import timed_effects, timers
 from tests._combat_ui import make_ui, open_dialog
 
 UNTIL_START_OF_SOURCE = {"until": "start", "of": "source"}
@@ -45,7 +48,7 @@ def test_untimed_condition_stays_until_removed(fight):
     _turns(ui, 10)
 
     assert "Hexed" in tiger["conditions"]
-    assert tiger.get("timed_conditions") == []
+    assert timed_effects(tiger) == []
     description, _ = ui._condition_description_and_color(tiger, "Hexed")
     assert description == "Extra 1d6 necrotic from the Pirate"
 
@@ -59,7 +62,7 @@ def test_until_start_of_source_next_turn(fight):
     _turns(ui, 1)  # round 2, the Pirate's turn starts
     assert _whose_turn(ui) == (2, "Pirate")
     assert "Dodging the Pirate" not in tiger["conditions"]
-    assert tiger["timed_conditions"] == []
+    assert timed_effects(tiger) == []
 
 
 def test_until_end_of_source_next_turn_given_on_its_own_turn(fight):
@@ -117,7 +120,7 @@ def test_one_minute_lasts_ten_rounds(fight):
     _turns(ui, 19)  # round 10, the Tiger's turn
     assert _whose_turn(ui) == (10, "Tiger")
     assert "Blessed" in tiger["conditions"]
-    assert tiger["timed_conditions"][0]["time_left"] == 6
+    assert timers(tiger)[0]["time_left"] == 6
     _turns(ui, 1)  # round 11, the Pirate's turn
     assert "Blessed" not in tiger["conditions"]
 
@@ -128,10 +131,10 @@ def test_giving_it_again_replaces_its_duration(fight):
     ui._add_custom_condition("Marked", {"seconds": 60})
 
     assert tiger["conditions"].count("Marked") == 1
-    assert [e["time_left"] for e in tiger["timed_conditions"]] == [60]
+    assert [t["time_left"] for t in timers(tiger)] == [60]
 
     ui._add_custom_condition("Marked", None)
-    assert tiger["timed_conditions"] == []
+    assert timed_effects(tiger) == []
 
 
 def test_removing_the_condition_drops_its_timer(fight):
@@ -140,8 +143,8 @@ def test_removing_the_condition_drops_its_timer(fight):
 
     ui._remove_condition_from(tiger, "Marked")
 
-    assert tiger["timed_conditions"] == []
-    assert "Marked" not in tiger.get("custom_condition_descriptions", {})
+    assert timed_effects(tiger) == []
+    assert find_effect(tiger, "Marked") is None
 
 
 def test_undo_takes_it_back(fight):
@@ -151,7 +154,7 @@ def test_undo_takes_it_back(fight):
     ui._undo_last()
 
     assert "Marked" not in tiger["conditions"]
-    assert "timed_conditions" not in tiger
+    assert ACTIVE_EFFECTS not in tiger
 
 
 def test_card_shows_timed_conditions(fight):
@@ -178,10 +181,12 @@ def test_dialog_applies_a_custom_duration(fight, monkeypatch):
     apply_btn.click()
 
     assert "Restrained by vines" in tiger["conditions"]
-    assert tiger["timed_conditions"][0]["time_left"] == 18
-    assert tiger["custom_condition_descriptions"] == {
-        "Restrained by vines": "DC 13 Str save ends"
-    }
+    assert timers(tiger)[0]["time_left"] == 18
+    assert {
+        e["name"]: e["tooltip"]
+        for e in active_effects(tiger)
+        if e["tooltip_from"] == CUSTOM
+    } == {"Restrained by vines": "DC 13 Str save ends"}
 
 
 def test_dialog_names_the_source_in_its_durations(fight, monkeypatch):

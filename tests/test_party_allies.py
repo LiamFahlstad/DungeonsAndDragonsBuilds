@@ -14,6 +14,7 @@ import Combat.Scenarios as Scenarios
 from Combat.CombatUIQt import CombatAppQt
 from Combat.CombatUIQt.rest import short_rest_dialog
 from Combat.Definitions import Action
+from Combat.Effects.active_effects import new_effect
 from Combat.EncounterConfig import (
     CampaignSpec,
     CombatantSpec,
@@ -163,8 +164,19 @@ def test_conditions_ending_on_a_timer_or_a_save_stay_in_the_fight(tmp_path):
         "one",
         hp=5,
         conditions=["Prone", "Frightened", "Restrained"],
-        timed_conditions=[{"name": "Frightened"}],
-        repeat_saves=[{"condition": "Restrained"}],
+        active_effects=[
+            {**new_effect("Frightened"), "duration": {"time_left": 6}},
+            {
+                **new_effect("Restrained"),
+                "repeat_save": {
+                    "ability": "WIS",
+                    "dc": 13,
+                    "mode": "Neutral",
+                    "use_legendary_resistance": False,
+                    "also": [],
+                },
+            },
+        ],
     )
     assert _left(tmp_path, [played])["conditions"] == ["Prone"]
 

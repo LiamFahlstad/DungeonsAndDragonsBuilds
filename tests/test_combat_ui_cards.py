@@ -13,6 +13,7 @@ import pytest
 from PyQt6.QtCore import QPoint, Qt
 from PyQt6.QtWidgets import QPushButton, QWidget
 
+from Combat.Effects.active_effects import SPELL, describe
 from Combat.EncounterLogs import LogJSONEncoder
 from Combat.Monsters.CR_0.monsters import DraconicSpirit
 from Combat.Monsters.CR_12.monsters import Arcanaloth
@@ -85,8 +86,7 @@ def _conditions(ui, chars):
     char = chars["Shadow Demon"]
     feature_name = chars["player"]["_feature_objects"][0].name
     char["conditions"] = ["Poisoned", "Hexed", "Bless", "Concentrating", feature_name]
-    char["spell_condition_descriptions"] = {"Bless": "Add 1d4 to attacks and saves."}
-    char["spell_condition_colors"] = {"Bless": "#123456"}
+    describe(char, "Bless", "Add 1d4 to attacks and saves.", "#123456", SPELL)
     return char
 
 

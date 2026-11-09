@@ -240,8 +240,8 @@ class CombatWindowState:
     def _end_spell_effects(self, entry: dict):
         raise NotImplementedError("SpellsMixin._end_spell_effects")
 
-    def _repeat_saves(self, char: dict):
-        raise NotImplementedError("ConditionsMixin._repeat_saves")
+    def _end_of_turn_saves(self, char: dict):
+        raise NotImplementedError("ConditionsMixin._end_of_turn_saves")
 
     def _start_concentration(self, source: dict, name: str):
         raise NotImplementedError("SpellsMixin._start_concentration")
@@ -438,6 +438,9 @@ class CombatWindowState:
 
     def _feature_condition_tooltip(self, char: dict, feature) -> str:
         raise NotImplementedError("FeaturesMixin._feature_condition_tooltip")
+
+    def _find_character_by_name(self, name: str) -> dict | None:
+        raise NotImplementedError("LoggingMixin._find_character_by_name")
 
     @staticmethod
     def _hp_not_set(char: dict) -> bool:
@@ -661,10 +664,10 @@ class CombatWindowState:
     def _tick_active_spells(self, started: list[dict], new_round: bool):
         raise NotImplementedError("SpellsMixin._tick_active_spells")
 
-    def _tick_timed_conditions(
+    def _tick_effect_durations(
         self, ended: list[dict], started: list[dict], new_round: bool
     ):
-        raise NotImplementedError("ConditionsMixin._tick_timed_conditions")
+        raise NotImplementedError("ConditionsMixin._tick_effect_durations")
 
     def _undo_last(self):
         raise NotImplementedError("LoggingMixin._undo_last")

@@ -20,6 +20,7 @@ from CharacterContent.Features.ClassFeatures.Druid.WildShapeForms import (
     wild_shape_temp_hp,
 )
 from Combat.Definitions import Action
+from Combat.Effects.active_effects import FEATURE, describe, note_origin
 from Combat.WildShape import (
     assume_form,
     can_cast_in_form,
@@ -129,11 +130,15 @@ class WildShapeMixin(CombatWindowState):
         )
         self._give_temp_hp(char, wild_shape_temp_hp(sheet), source=None)
         badge = form_badge(form)
-        char.setdefault("feature_condition_descriptions", {})[badge] = (
-            format_wild_shape_form(known_forms(sheet)[form], sheet)
+        describe(
+            char,
+            badge,
+            format_wild_shape_form(known_forms(sheet)[form], sheet),
+            WILD_SHAPE_COLOR,
+            FEATURE,
         )
-        char.setdefault("feature_condition_colors", {})[badge] = WILD_SHAPE_COLOR
         self._add_condition_to(char, badge, source=char)
+        note_origin(char, badge, source=feature.name, caster=char["name"])
         self._rebuild_card(char)
         self._refresh_views()
 

@@ -34,6 +34,8 @@ from CharacterContent.Spells.SpellFactory import SpellFactory
 from Combat.Combatants import Pirate, Tiger
 from Combat.CombatUIQt.amounts import AmountError
 from Combat.Definitions import Action
+from Combat.Effects.active_effects import CUSTOM, SPELL, active_effects
+from Combat.Effects.active_effects import repeat_saves, timed_effects, timers
 from Combat.CombatUIQt.attack_rolls import AttackRoll
 from Combat.CombatUIQt.saves import (
     ATTACK_ROLL,
@@ -102,6 +104,15 @@ def _d20s(monkeypatch, *rolls: int):
 
 def _log(ui) -> str:
     return str(ui._read_log())
+
+
+def _custom_notes(char: dict) -> dict[str, str | None]:
+    """The notes typed for char's badges, by badge."""
+    return {
+        e["name"]: e["tooltip"]
+        for e in active_effects(char)
+        if e["tooltip_from"] == CUSTOM
+    }
 
 
 FIREBALL = {"damage": [(20, FIRE)], "ability": "DEX", "dc": 15}
@@ -321,7 +332,7 @@ def test_a_condition_lands_only_on_a_failed_save(fight, monkeypatch):
     )
     assert "Prone" not in tiger["conditions"]
     assert "Prone" in bandit["conditions"]
-    assert bandit["custom_condition_descriptions"] == {"Prone": "Knocked flat"}
+    assert _custom_notes(bandit) == {"Prone": "Knocked flat"}
 
 
 def test_a_condition_has_its_duration(fight, monkeypatch):
@@ -330,7 +341,7 @@ def test_a_condition_has_its_duration(fight, monkeypatch):
     ui._apply_custom_effect(
         CustomEffect(condition="Hexed", ability="DEX", dc=15, duration={"seconds": 60})
     )
-    assert bandit["timed_conditions"][0]["time_left"] == 60
+    assert timers(bandit)[0]["time_left"] == 60
 
 
 def test_without_a_save_everyone_takes_it_all(fight):
@@ -926,7 +937,7 @@ def test_a_monster_repeats_its_save_as_its_turn_ends(fight, monkeypatch):
     assert "Paralyzed" in tiger["conditions"], "only the end of its turn counts"
     ui._advance_turn()  # ...and ends, on a 15
     assert "Paralyzed" not in tiger["conditions"]
-    assert "repeat_saves" not in tiger
+    assert repeat_saves(tiger) == []
     assert "Tiger ends Paralyzed with a DC 15 Wisdom save" in _log(ui)
 
 
@@ -939,7 +950,7 @@ def test_a_failed_repeat_keeps_the_condition(fight, monkeypatch):
     ui._advance_turn()
     ui._advance_turn()
     assert "Paralyzed" in tiger["conditions"]
-    assert tiger["repeat_saves"]
+    assert repeat_saves(tiger)
     ui._refresh_views()
     assert "failed" in ui._turn_reminders_label.text()
 
@@ -965,7 +976,7 @@ def test_a_condition_gone_ends_the_repeat(fight, monkeypatch):
     ui._remove_condition_from(tiger, "Paralyzed")
     ui._advance_turn()
     ui._advance_turn()
-    assert "repeat_saves" not in tiger
+    assert repeat_saves(tiger) == []
 
 
 def test_undoing_a_repeat_save_gets_the_same_roll(fight, monkeypatch):
@@ -1001,7 +1012,7 @@ def test_the_dialog_applies_the_new_options(fight, monkeypatch):
     _d20s(monkeypatch, 1, 1)
     _apply(dlg)
     assert "Paralyzed" in tiger["conditions"]
-    assert tiger["repeat_saves"][0]["dc"] == 15
+    assert repeat_saves(tiger)[0]["repeat_save"]["dc"] == 15
     assert pirate["spell_slots"] == {2: 0}
     assert pirate["action_uses"] == {"Action": 1}
     assert pirate["active_spells"][0]["name"] == "Hold Person"
@@ -1051,8 +1062,8 @@ def test_a_players_part_of_a_fight_survives_a_restart(tmp_path):
     fresh._load_log_from_path(str(ui.log_file))
     loaded = next(c for c in fresh.characters if c.get("_is_player"))
     assert loaded["active_spells"][0]["name"] == "Web"
-    assert loaded["timed_conditions"][0]["name"] == "Slowed"
-    assert loaded["custom_condition_descriptions"] == {"Slowed": "Half speed"}
+    assert timed_effects(loaded)[0]["name"] == "Slowed"
+    assert _custom_notes(loaded) == {"Slowed": "Half speed"}
 
 
 def _second_caster(ui, bandit):
@@ -1200,7 +1211,7 @@ def test_a_repeat_isnt_rolled_for_a_condition_ending_that_turn(fight, monkeypatc
     ui._refresh_views()
     assert "Paralyzed" not in tiger["conditions"]
     assert "Tiger failed" not in ui._turn_reminders_label.text()
-    assert "repeat_saves" not in tiger
+    assert repeat_saves(tiger) == []
 
 
 def test_a_condition_given_twice_repeats_once(fight, monkeypatch):
@@ -1208,7 +1219,7 @@ def test_a_condition_given_twice_repeats_once(fight, monkeypatch):
     _d20s(monkeypatch, 1, 1, 1, 1)
     ui._apply_custom_effect(_hold())
     ui._apply_custom_effect(_hold())
-    assert len(tiger["repeat_saves"]) == 1
+    assert len(repeat_saves(tiger)) == 1
 
 
 def test_a_condition_removed_takes_its_repeat_save_with_it(fight, monkeypatch):
@@ -1216,7 +1227,7 @@ def test_a_condition_removed_takes_its_repeat_save_with_it(fight, monkeypatch):
     _d20s(monkeypatch, 1, 1)
     ui._apply_custom_effect(_hold())
     ui._remove_condition_from(tiger, "Paralyzed")
-    assert "repeat_saves" not in tiger
+    assert repeat_saves(tiger) == []
 
 
 def test_a_repeat_keeps_the_rolls_mode(fight, monkeypatch):
@@ -1224,7 +1235,7 @@ def test_a_repeat_keeps_the_rolls_mode(fight, monkeypatch):
     tiger["Saving Throws"] = {"WIS": 0}
     _d20s(monkeypatch, 1, 1)
     ui._apply_custom_effect(_hold(mode="Advantage"))
-    assert tiger["repeat_saves"][0]["mode"] == "Advantage"
+    assert repeat_saves(tiger)[0]["repeat_save"]["mode"] == "Advantage"
     ui._advance_turn()
     rolls = iter([3, 16])
     monkeypatch.setattr(random, "randint", lambda low, high: next(rolls))
@@ -1238,7 +1249,7 @@ def test_a_repeat_can_spend_legendary_resistance(fight, monkeypatch):
     _d20s(monkeypatch, 1, 1)
     effect = _hold()
     ui._apply_custom_effect(effect)
-    tiger["repeat_saves"][0]["use_legendary_resistance"] = True
+    repeat_saves(tiger)[0]["repeat_save"]["use_legendary_resistance"] = True
     ui._advance_turn()
     _d20s(monkeypatch, 1)
     ui._advance_turn()
@@ -1713,7 +1724,7 @@ def test_a_hidden_tick_doesnt_carry_over_to_an_attack(armored, monkeypatch):
     _d20s(monkeypatch, 10, 10)
     _apply(dlg)
     assert "Prone" in tiger["conditions"]
-    assert "repeat_saves" not in tiger
+    assert repeat_saves(tiger) == []
 
 
 def test_the_dialog_applies_an_attack(armored, monkeypatch):
@@ -2147,7 +2158,11 @@ def test_a_picked_spells_badge_has_the_schools_color(paladin, monkeypatch):
     ui, _, tiger = paladin
     _apply_guidance(ui, monkeypatch)
     school = SpellFactory.create("Guidance").school
-    color = tiger["spell_condition_colors"]["Guidance"]
+    color = next(
+        e["color"]
+        for e in active_effects(tiger)
+        if e["name"] == "Guidance" and e["tooltip_from"] == SPELL
+    )
     from CharacterContent.Spells.SpellFactory import Spell
 
     assert color == Spell.get_school_color(school)
@@ -2893,7 +2908,7 @@ def test_bardic_inspiration_puts_its_badge_on_the_target(tmp_path, monkeypatch):
     ui, thomas, tiger = _party_fight(tmp_path, Thomas)
     _pick_and_apply(ui, monkeypatch, "bardic")
     assert "Bardic Inspiration" in tiger["conditions"]
-    (timer,) = tiger["timed_conditions"]
+    (timer,) = timers(tiger)
     assert timer["time_left"] == 60 * 60  # once within the next hour
     assert thomas["feature_uses_used"] == {"Bardic Inspiration": 1}
     assert thomas["action_uses"]["Bonus Action"] == 1
