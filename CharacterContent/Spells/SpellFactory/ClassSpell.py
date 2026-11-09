@@ -64,12 +64,22 @@ class SpellRules:
     description: str
     usage_tags: tuple[UsageTag, ...] = ()
     target: Optional[FeatureTarget] = None
+    # What the card shows in brackets after the school: Wildemount's
+    # "Dunamancy" or "Dunamancy:Graviturgy" (Evocation (Dunamancy:Graviturgy)).
+    school_note: str = ""
 
     def __post_init__(self):
         if not self.name.strip():
             raise ValueError("A spell needs a name")
         if not 0 <= self.level <= 9:
             raise ValueError(f"{self.name}: level {self.level} isn't 0-9")
+        if self.school_note != self.school_note.strip() or any(
+            bracket in self.school_note for bracket in "()"
+        ):
+            raise ValueError(
+                f"{self.name}: school_note {self.school_note!r} is the text "
+                "inside the brackets"
+            )
 
 
 @dataclass(frozen=True)
@@ -113,6 +123,8 @@ class ClassSpell(Spell):
 
     @property
     def school(self) -> str:
+        if self.rules.school_note:
+            return f"{self.rules.school.value} ({self.rules.school_note})"
         return self.rules.school.value
 
     @property

@@ -40,7 +40,7 @@ for name in sorted(F.spell_names()):
 EOF
 ```
 
-JSON entries land in `spells_dnd2024_improved.json` (2024 wording) and `spells_dnd5e_improved.json` (2014 wording). Skip spells that already have an entry unless asked to redo them.
+Nearly every spell is a class now; a JSON entry is only for a spell the work list shows without one (2026-11: Gate Seal and Wristpocket), in `spells_<source>_improved.json` of the source it names. Skip spells that already have an entry unless asked to redo them.
 
 ## 2. Read the source text — and check it's whole
 

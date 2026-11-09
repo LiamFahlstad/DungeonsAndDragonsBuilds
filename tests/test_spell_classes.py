@@ -10,6 +10,7 @@ the class wins, it's the spell's one source, and the converter writes
 Python that means what the JSON meant.
 """
 
+import dataclasses
 import json
 
 import pytest
@@ -305,8 +306,9 @@ def _record(**changes) -> DataSpell:
 @pytest.mark.parametrize(
     "changes",
     [
-        {"school": "Evocation (Dunamancy)"},
-        {"classes": ["Wizard (Dunamancy)"]},
+        {"school": "Evocation (Dunamancy) (Chronurgy)"},
+        {"school": "Evocation (Dunamancy)", "classes": ["Wizard (Chronurgy)"]},
+        {"classes": ["Wizard (Chronurgy)", "Sorcerer (Graviturgy)"]},
         {"components": None},
         {"casting_time": "Two actions"},
         {"range": "Within earshot"},
@@ -316,6 +318,81 @@ def _record(**changes) -> DataSpell:
 def test_a_spell_the_enums_cant_say_is_left_as_json(changes):
     with pytest.raises(converter.CannotConvert):
         converter.class_source(_record(**changes))
+
+
+@pytest.mark.parametrize(
+    "changes, school, note, card",
+    [
+        (
+            {"school": "Evocation (Dunamancy:Graviturgy)", "classes": ["Wizard"]},
+            School.EVOCATION,
+            "Dunamancy:Graviturgy",
+            "Evocation (Dunamancy:Graviturgy)",
+        ),
+        (
+            {
+                "school": "Transmutation (Dunamancy:Graviturgy)",
+                "classes": ["Wizard (Graviturgy)"],
+            },
+            School.TRANSMUTATION,
+            "Dunamancy:Graviturgy",
+            "Transmutation (Dunamancy:Graviturgy)",
+        ),
+        # The note only on the class (Sapping Sting): the school takes it.
+        (
+            {"school": "Necromancy", "classes": ["Wizard (Dunamancy)"]},
+            School.NECROMANCY,
+            "Dunamancy",
+            "Necromancy (Dunamancy)",
+        ),
+    ],
+)
+def test_a_school_or_class_note_is_the_school_note(changes, school, note, card):
+    """Q15 of the combat-effects plan: Wildemount's Dunamancy is a note on
+    the school, and "Wizard (Dunamancy)" is the Wizard class."""
+    json_spell = _record(**changes)
+    source = converter.class_source(json_spell)
+    assert f"school_note={note!r}" in source
+    class_spell = _class_from_source(source)()
+    assert class_spell.rules.school is school
+    assert class_spell.rules.classes == (CharacterClass.WIZARD,)
+    assert class_spell.school == card
+    assert class_spell.school_enum is school
+    assert converter.differences(json_spell, class_spell) == []
+
+
+def test_a_school_note_is_the_text_inside_the_brackets():
+    rules = SPELL_CLASSES["Fireball"].rules
+    with pytest.raises(ValueError, match="school_note"):
+        dataclasses.replace(rules, school_note="(Dunamancy)")
+
+
+@pytest.mark.parametrize(
+    "changes, school",
+    [
+        # The 2014 source's key, with a casting time that doesn't say so (DI-065).
+        ({"ritual": True}, "Evocation"),
+        # Wristpocket's "(Ritual)" in the school.
+        (
+            {"school": "Conjuration (Ritual) (Dunamancy)", "level": 2},
+            "Conjuration (Dunamancy)",
+        ),
+    ],
+)
+def test_a_ritual_only_the_record_says_is_a_ritual(changes, school):
+    json_spell = _record(casting_time="1 action", **changes)
+    assert json_spell.is_ritual
+    class_spell = _class_from_source(converter.class_source(json_spell))()
+    assert class_spell.rules.casting_time == CastingTime(
+        CastingTimeType.ACTION, ritual=True
+    )
+    assert class_spell.casting_time == "Action or Ritual"
+    assert class_spell.school == school
+    assert converter.differences(json_spell, class_spell) == []
+
+
+def test_a_record_without_the_ritual_key_is_no_ritual():
+    assert not _record(casting_time="1 action", ritual=False).is_ritual
 
 
 def test_a_class_writes_the_card_lines_in_the_2024_wording():

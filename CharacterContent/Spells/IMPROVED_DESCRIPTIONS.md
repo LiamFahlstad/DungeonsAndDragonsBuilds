@@ -8,11 +8,13 @@ cards read alike.
 
 ## Where they live
 
-`spells_<source>_improved.json`, beside each source file
-(`spells_dnd2024.json` → `spells_dnd2024_improved.json`), keyed by spell
-name. An entry rides on that source's record only: the factory merges
-sources whole-record, so a description written for the 2024 wording never
-lands on the 2014 one. A spell with no entry keeps its source text.
+In the spell's class (below): every spell is one but the few whose record
+the converter can't read (2026-11: Gate Seal and Wristpocket). Those keep
+theirs in `spells_<source>_improved.json`, beside the source file that wins
+for them (`spells_dnd5e.json` -> `spells_dnd5e_improved.json`), keyed by
+spell name. Such an entry rides on that source's record only: the factory
+merges sources whole-record, so a description written for one wording never
+lands on another. A spell with no description keeps its source text.
 
 `RunCharacterCreator.py --source-text` prints the source text instead, for
 checking an improved description against it.

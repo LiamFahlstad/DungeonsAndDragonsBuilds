@@ -2986,6 +2986,54 @@ class WordOfRadiance(ClassSpell):
         ]
 
 
+class SappingSting(ClassSpell):
+    rules = SpellRules(
+        name="Sapping Sting",
+        level=0,
+        school=School.NECROMANCY,
+        classes=(CharacterClass.WIZARD,),
+        casting_time=CastingTime(CastingTimeType.ACTION),
+        range=Range(RangeType.FOOT, 30),
+        components=Components(verbal=True, somatic=True),
+        duration=Duration(DurationType.INSTANTANEOUS),
+        source="Explorer's Guide to Wildemount",
+        description=(
+            "You sap the vitality of one creature you can see in range. The target must succeed on a Constitution saving throw or take 1d4 necrotic damage and fall prone.\n"
+            "At Higher Levels. This spell's damage increases by 1d4 when you reach 5th level (2d4), 11th level (3d4), and 17th level (4d4)."
+        ),
+        usage_tags=("control", "damage", "utility"),
+        target=FeatureTarget.ENEMY,
+        school_note="Dunamancy",
+    )
+    converted_from = RecordStamp("spells_dnd5e.json", "2d79425c2e180943")
+
+    @property
+    def improved_description(self) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Flavor",
+                        "You sap the vitality of one creature you can see in range.",
+                    ),
+                    ("Target", "One creature you can see within range"),
+                    ("Save", "Constitution"),
+                    ("Failed save", "1d4 Necrotic damage, and the target falls Prone"),
+                    ("Successful save", "No effect"),
+                )
+            ),
+            Option(
+                "At Higher Levels",
+                (
+                    Table(
+                        ("Character level", "Damage"),
+                        (("1", "1d4"), ("5", "2d4"), ("11", "3d4"), ("17", "4d4")),
+                    ),
+                ),
+            ),
+        ]
+
+
 SPELLS = [
     AcidSplash,
     BladeWard,
@@ -3021,6 +3069,7 @@ SPELLS = [
     RayOfFrost,
     Resistance,
     SacredFlame,
+    SappingSting,
     ShapeWater,
     Shillelagh,
     ShockingGrasp,

@@ -132,13 +132,13 @@ _AS_ENUM = {("CombatCondition", "name"): Condition}
 
 class CannotConvert(ValueError):
     """A spell whose JSON says something the class's enums and dataclasses
-    can't: a class or school with a note ("Wizard (Dunamancy)"), a casting
-    time SpellFields can't read, no components at all. It stays JSON until
+    can't: two notes on its school, a class note the school's doesn't cover, a casting time SpellFields can't read,
+    no components at all. It stays JSON until
     it's converted by hand."""
 
 
-# Record keys the rules don't need: the 2014 source's "ritual" is in its
-# casting time too.
+# Record keys with no field of their own: the 2014 source's "ritual" is
+# read into the casting time (DataSpell.casting_time_spec).
 _IGNORED_KEYS = {"ritual"}
 _RULE_KEYS = {
     "name",
@@ -238,14 +238,14 @@ def class_source(spell: DataSpell, effects: Optional[list[CombatEffect]] = None)
         )
     if not spell._data.get("components"):
         raise CannotConvert(f"{spell.name}: the record has no components")
+    school, classes, school_note = _school_and_classes(spell)
     rules = SpellRules(
         name=spell.name,
         level=spell.level,
-        school=_enum(spell, "school", School, spell.school),
-        classes=tuple(
-            _enum(spell, "class", CharacterClass, name) for name in spell.classes
-        ),
-        casting_time=_field(spell, "casting time", CastingTime, spell.casting_time),
+        school=school,
+        classes=classes,
+        school_note=school_note,
+        casting_time=_casting_time(spell),
         range=_field(spell, "range", Range, spell.range),
         components=_field(spell, "components", Components, spell.components),
         duration=_field(spell, "duration", Duration, spell.duration),
@@ -358,6 +358,87 @@ def _enum(spell, what: str, enum_type, value):
         raise CannotConvert(
             f"{spell.name}: {what} {value!r} isn't a {enum_type.__name__}"
         ) from None
+
+
+_NOTED = re.compile(r"^(?P<base>[^()]*?)\s*\((?P<note>[^()]*)\)$")
+
+
+def _split_note(text: str) -> tuple[str, str]:
+    """ "Evocation (Dunamancy:Graviturgy)" -> ("Evocation", "Dunamancy:Graviturgy");
+    text without one bracketed note at its end comes back whole, note ""."""
+    found = _NOTED.match(text.strip())
+    if found is None:
+        return text.strip(), ""
+    return found["base"], found["note"].strip()
+
+
+def _note_parts(note: str) -> set[str]:
+    """ "Dunamancy:Graviturgy" -> {"Dunamancy", "Graviturgy"}."""
+    return {part.strip() for part in note.split(":") if part.strip()}
+
+
+def _school_and_classes(spell) -> tuple[School, tuple[CharacterClass, ...], str]:
+    """The school, the classes and the school note (Q15 of the combat-effects
+    plan) of a record. Wildemount writes its Dunamancy on the school,
+    "Evocation (Dunamancy:Graviturgy)", on a class, "Wizard (Dunamancy)", or
+    both: the class is read as Wizard, and its note is the school note when
+    the school has none (Sapping Sting). A note the school's doesn't cover,
+    or a bracket that isn't a note ("(Ritual)"), can't be converted."""
+    school_text, school_note = _split_note(_without_ritual(spell.school))
+    if "(" in school_text:
+        raise CannotConvert(
+            f"{spell.name}: school {spell.school!r} has more than one note"
+        )
+    school = _enum(spell, "school", School, school_text)
+    classes = []
+    class_notes = set()
+    for text in spell.classes:
+        name, note = _split_note(text)
+        classes.append(_enum(spell, "class", CharacterClass, name))
+        if note:
+            class_notes.add(note)
+    if not school_note and len(class_notes) == 1:
+        school_note = next(iter(class_notes))
+    covered = _note_parts(school_note)
+    for note in class_notes:
+        if not _note_parts(note) <= covered:
+            raise CannotConvert(
+                f"{spell.name}: class note {note!r} isn't in the school's "
+                f"{school_note!r}"
+            )
+    return school, tuple(dict.fromkeys(classes)), school_note
+
+
+def _noted_meaning(spell) -> tuple[str, list[str], set[str]]:
+    """A spell's school, its classes without their notes, and every note part
+    the school and classes carry: what the parity check compares, since a
+    class reads "Wizard (Dunamancy)" as Wizard and keeps the note on the
+    school."""
+    school, note = _split_note(_without_ritual(spell.school))
+    parts = _note_parts(note)
+    classes = []
+    for text in spell.classes:
+        name, class_note = _split_note(text)
+        parts |= _note_parts(class_note)
+        if name not in classes:
+            classes.append(name)
+    return school, classes, parts
+
+
+def _casting_time(spell) -> CastingTime:
+    """The record's casting time, a ritual also when only its "ritual" key or
+    its school says so (DataSpell.casting_time_spec)."""
+    _field(spell, "casting time", CastingTime, spell.casting_time)
+    return spell.casting_time_spec
+
+
+_RITUAL_BRACKET = re.compile(r"\s*\(\s*ritual\s*\)", re.IGNORECASE)
+
+
+def _without_ritual(school: str) -> str:
+    """ "Conjuration (Ritual) (Dunamancy)" -> "Conjuration (Dunamancy)": the
+    ritual is the casting time's."""
+    return _RITUAL_BRACKET.sub("", school).strip()
 
 
 def _field(spell, what: str, field_type, text: str):
@@ -522,8 +603,6 @@ def differences(
     checks = (
         "name",
         "level",
-        "school",
-        "classes",
         "casting_time_spec",
         "range_spec",
         "components_spec",
@@ -548,6 +627,11 @@ def differences(
         for field in checks
         if getattr(json_spell, field) != getattr(class_spell, field)
     ]
+    if _noted_meaning(json_spell) != _noted_meaning(class_spell):
+        found.append(
+            f"school and classes: JSON {json_spell.school!r} {json_spell.classes!r}, "
+            f"class {class_spell.school!r} {class_spell.classes!r}"
+        )
     wanted = json_spell.combat_effects() if effects is None else effects
     if wanted != class_spell.combat_effects():
         found.append("combat_effects differ")

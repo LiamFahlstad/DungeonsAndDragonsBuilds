@@ -92,10 +92,6 @@ def _effects(spell) -> list[CombatEffect]:
     return effects
 
 
-def test_there_are_combat_effects_files():
-    assert SOURCE in _effects_files()
-
-
 def test_there_are_described_spells():
     assert len(_all_described()) >= 50
 
@@ -314,22 +310,20 @@ def test_a_spell_without_an_entry_is_not_described():
     assert _unchecked_spell().combat_effects() is None
 
 
-def _in_both_sources_without_a_class() -> str:
-    """A spell the 2024 and the 2014 sources both have, with no class."""
-    classes = set(SpellFactory._spell_classes())
+def _in_both_sources() -> str:
+    """A spell the 2024 and the 2014 sources both have."""
     with open("CharacterContent/Spells/spells_dnd5e.json", encoding="utf-8") as f:
         in_2014 = set(json.load(f))
-    return next(
-        name
-        for name in sorted(_load(SOURCE))
-        if name in in_2014 and name not in classes
-    )
+    return next(name for name in sorted(_load(SOURCE)) if name in in_2014)
 
 
 def test_an_entry_rides_only_on_its_own_sources_record(monkeypatch):
     """An entry is for its source's wording: a 2014 file's entry isn't for
-    the 2024 spell of the same name, which wins the merge."""
-    name = _in_both_sources_without_a_class()
+    the 2024 spell of the same name, which wins the merge. Every spell in
+    both sources is a class now, so the classes are hidden to test the
+    JSON merge that the spells left as JSON still go through."""
+    name = _in_both_sources()
+    monkeypatch.setattr(SpellFactory, "_spell_classes", staticmethod(lambda: {}))
     source_2014 = "CharacterContent/Spells/spells_dnd5e.json"
     entry_2014 = [{"roll": "save", "save_ability": "Constitution"}]
     real_load = SpellFactory._load_combat_effects.__func__

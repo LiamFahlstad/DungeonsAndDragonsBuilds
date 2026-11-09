@@ -8,6 +8,11 @@ from . import Level1
 from . import Level2
 from . import Level3
 from . import Level4
+from . import Level5
+from . import Level6
+from . import Level7
+from . import Level8
+from . import Level9
 from CharacterContent.Spells.SpellFactory.ClassSpell import ClassSpell
 
 MODULES: tuple = (
@@ -16,6 +21,11 @@ MODULES: tuple = (
     Level2,
     Level3,
     Level4,
+    Level5,
+    Level6,
+    Level7,
+    Level8,
+    Level9,
 )
 
 SPELL_CLASSES: dict[str, type[ClassSpell]] = {}

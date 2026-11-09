@@ -1,3 +1,5 @@
+import dataclasses
+import re
 from typing import Any, Optional
 
 import Core.Definitions as Definitions
@@ -6,7 +8,9 @@ from Model.Content.CombatEffect import CombatEffect
 from Model.Content.Feature import FeatureTarget
 from Model.Content.FeatureText import Block, blocks_from_json
 from .Spell import Spell
-from .SpellFields import Components
+from .SpellFields import CastingTime, Components
+
+_RITUAL_NOTE = re.compile(r"\(\s*ritual\s*\)", re.IGNORECASE)
 
 
 class DataSpell(Spell):
@@ -69,6 +73,18 @@ class DataSpell(Spell):
     @property
     def casting_time(self) -> str:
         return str(self._data["casting_time"])
+
+    @property
+    def casting_time_spec(self) -> CastingTime:
+        """The casting time, a ritual also when the record says so where the
+        casting time doesn't: the 2014 source's "ritual": true key, or a
+        "(Ritual)" written into the school (Wristpocket)."""
+        spec = super().casting_time_spec
+        if spec.ritual or spec.trigger:
+            return spec
+        if self._data.get("ritual") is True or _RITUAL_NOTE.search(self.school):
+            return dataclasses.replace(spec, ritual=True)
+        return spec
 
     @property
     def range(self) -> str:
