@@ -105,23 +105,6 @@
       ]}
     ]}}
   ],
-  "Booming Blade": [
-    {"paragraph": "You brandish the weapon used in the spell's casting and make a melee attack with it."},
-    {"facts": [
-      ["Target", "One creature within 5 feet of you"],
-      ["Attack", "A melee attack with the weapon"],
-      ["On a hit", "The target suffers the weapon attack's normal effects and becomes sheathed in booming energy until the start of your next turn"],
-      ["If it moves", "If the target willingly moves 5 feet or more before then, it takes 1d8 Thunder damage, and the spell ends"]
-    ]},
-    {"option": {"name": "At Higher Levels", "blocks": [
-      {"table": {"columns": ["Character level", "Extra Thunder damage on a hit", "Damage for moving"], "rows": [
-        ["1", "None", "1d8"],
-        ["5", "1d8", "2d8"],
-        ["11", "2d8", "3d8"],
-        ["17", "3d8", "4d8"]
-      ]}}
-    ]}}
-  ],
   "Borrowed Knowledge": [
     {"facts": [
       ["Flavor", "You draw on knowledge from spirits of the past."],
@@ -218,19 +201,6 @@
       ]}
     ]}}
   ],
-  "Control Flames": [
-    {"paragraph": "You choose nonmagical flame that you can see within range and that fits within a 5-foot Cube, and affect it in one of these ways."},
-    {"table": {"columns": ["Effect", "Lasts"], "rows": [
-      ["Expand the flame 5 feet in one direction, provided that wood or other fuel is present in the new location", "Instantaneous"],
-      ["Extinguish the flames within the Cube", "Instantaneous"],
-      ["Double or halve the area of Bright Light and Dim Light cast by the flame, change its color, or both", "1 hour"],
-      ["Simple shapes, such as the vague form of a creature, an inanimate object, or a location, appear within the flames and animate as you like", "1 hour"]
-    ]}},
-    {"facts": [
-      ["Active effects", "Up to three of its non-instantaneous effects at a time, from multiple castings"],
-      ["Dismiss", "As an action, you can dismiss such an effect"]
-    ]}
-  ],
   "Control Winds": [
     {"facts": [
       ["Area", "A 100-foot cube of air that you can see within range"],
@@ -261,23 +231,6 @@
         ["Falling", "Creatures that end a fall within the cube take only half damage from the fall"],
         ["Jumping", "When a creature in the cube makes a vertical jump, the creature can jump up to 10 feet higher than normal"]
       ]}
-    ]}}
-  ],
-  "Create Bonfire": [
-    {"paragraph": "You create a bonfire on ground that you can see within range."},
-    {"facts": [
-      ["Area", "5-foot Cube, until the spell ends"],
-      ["Save", "Dexterity, made by any creature in the bonfire's space when you cast the spell, and by a creature when it enters the space for the first time on a turn or ends its turn there"],
-      ["Failed save", "1d8 Fire damage"],
-      ["Successful save", "No damage"]
-    ]},
-    {"option": {"name": "At Higher Levels", "blocks": [
-      {"table": {"columns": ["Character level", "Damage"], "rows": [
-        ["1", "1d8"],
-        ["5", "2d8"],
-        ["11", "3d8"],
-        ["17", "4d8"]
-      ]}}
     ]}}
   ],
   "Create Homunculus": [
@@ -546,16 +499,6 @@
       ]}
     ]}}
   ],
-  "Encode Thoughts": [
-    {"facts": [
-      ["Flavor", "You pull a memory, an idea, or a message from your mind and transform it into a tangible string of glowing energy called a thought strand, which persists for the duration or until you cast this spell again."],
-      ["Thought strand", "A Tiny, weightless, semisolid object that can be held and carried like a ribbon; it is otherwise stationary"],
-      ["Appears", "In an unoccupied space within 5 feet of you"],
-      ["Lasts", "For the duration, or until you cast this spell again"],
-      ["Others' thoughts", "If you cast it while concentrating on a spell or an ability that lets you read or manipulate the thoughts of others (such as Detect Thoughts or Modify Memory), you can make a strand from the thoughts or memories you read instead of your own"],
-      ["Reading one", "Casting this spell while holding a thought strand lets you instantly receive the memory, idea, or message it contains; casting Detect Thoughts on the strand has the same effect"]
-    ]}
-  ],
   "Enemies Abound": [
     {"facts": [
       ["Flavor", "You reach into the mind of one creature you can see."],
@@ -702,23 +645,6 @@
       ]}
     ]}}
   ],
-  "Frostbite": [
-    {"facts": [
-      ["Flavor", "You cause numbing frost to form on one creature that you can see within range."],
-      ["Target", "One creature you can see within range"],
-      ["Save", "Constitution"],
-      ["Failed save", "1d6 Cold damage, and Disadvantage on the next weapon attack roll it makes before the end of its next turn"],
-      ["Successful save", "No effect"]
-    ]},
-    {"option": {"name": "At Higher Levels", "blocks": [
-      {"table": {"columns": ["Character level", "Damage"], "rows": [
-        ["1", "1d6"],
-        ["5", "2d6"],
-        ["11", "3d6"],
-        ["17", "4d6"]
-      ]}}
-    ]}}
-  ],
   "Galder's Speedy Courier": [
     {"paragraph": "You summon a Small air elemental carrying a chest, which delivers its contents to a creature you name."},
     {"facts": [
@@ -836,24 +762,6 @@
       ]}
     ]}}
   ],
-  "Green-Flame Blade": [
-    {"paragraph": "You brandish the weapon used in the spell's casting and make a melee attack with it, and green fire can leap to a second creature."},
-    {"facts": [
-      ["Target", "One creature within 5 feet of you"],
-      ["Attack", "A melee attack with the weapon"],
-      ["On a hit", "The target suffers the weapon attack's normal effects"],
-      ["Leap", "On a hit, green fire can leap from the target to a different creature of your choice that you can see within 5 feet of it"],
-      ["Second creature", "Fire damage equal to your spellcasting ability modifier"]
-    ]},
-    {"option": {"name": "At Higher Levels", "blocks": [
-      {"table": {"columns": ["Character level", "Extra Fire damage to the target on a hit", "Fire damage to the second creature"], "rows": [
-        ["1", "None", "Spellcasting ability modifier"],
-        ["5", "1d8", "1d8 + spellcasting ability modifier"],
-        ["11", "2d8", "2d8 + spellcasting ability modifier"],
-        ["17", "3d8", "3d8 + spellcasting ability modifier"]
-      ]}}
-    ]}}
-  ],
   "Guardian of Nature": [
     {"facts": [
       ["Flavor", "A nature spirit answers your call and transforms you into a powerful guardian."]
@@ -875,30 +783,6 @@
         ["Constitution saves", "You make Constitution saving throws with Advantage"],
         ["Dex and Wis attacks", "You make Dexterity and Wisdom-based attack rolls with Advantage"],
         ["Terrain", "While you are on the ground, the ground within 15 feet of you is Difficult Terrain for your enemies"]
-      ]}
-    ]}}
-  ],
-  "Gust": [
-    {"facts": [
-      ["Flavor", "You seize the air and compel it to create one of the following effects at a point you can see within range."],
-      ["Point", "A point you can see within range"]
-    ]},
-    {"option": {"name": "Push a Creature", "blocks": [
-      {"facts": [
-        ["Target", "One Medium or smaller creature that you choose"],
-        ["Save", "Strength"],
-        ["Failed save", "Pushed up to 5 feet away from you"]
-      ]}
-    ]}},
-    {"option": {"name": "Push an Object", "blocks": [
-      {"facts": [
-        ["Target", "One object that is neither held nor carried and that weighs no more than 5 pounds"],
-        ["Effect", "A small blast of air pushes it up to 10 feet away from you, without enough force to cause damage"]
-      ]}
-    ]}},
-    {"option": {"name": "Sensory Effect", "blocks": [
-      {"facts": [
-        ["Effect", "A harmless sensory effect using air, such as causing leaves to rustle, wind to slam shutters shut, or your clothing to ripple in a breeze"]
       ]}
     ]}}
   ],
@@ -1023,32 +907,6 @@
       {"facts": [
         ["Challenge rating", "+1 for each slot level above 5th"]
       ]}
-    ]}}
-  ],
-  "Infestation": [
-    {"facts": [
-      ["Flavor", "You cause a cloud of mites, fleas, and other parasites to appear momentarily on one creature you can see within range."],
-      ["Target", "One creature you can see within range"],
-      ["Save", "Constitution"],
-      ["Failed save", "1d6 Poison damage, and the target moves 5 feet in a random direction if it can move and its speed is at least 5 feet"],
-      ["Successful save", "No effect"]
-    ]},
-    {"table": {"columns": ["d4", "Direction"], "rows": [
-      ["1", "North"],
-      ["2", "South"],
-      ["3", "East"],
-      ["4", "West"]
-    ]}},
-    {"facts": [
-      ["Movement", "Doesn't provoke opportunity attacks; if the direction rolled is blocked, the target doesn't move"]
-    ]},
-    {"option": {"name": "At Higher Levels", "blocks": [
-      {"table": {"columns": ["Character level", "Damage"], "rows": [
-        ["1", "1d6"],
-        ["5", "2d6"],
-        ["11", "3d6"],
-        ["17", "4d6"]
-      ]}}
     ]}}
   ],
   "Intellect Fortress": [
@@ -1185,23 +1043,6 @@
       ]}
     ]}}
   ],
-  "Lightning Lure": [
-    {"facts": [
-      ["Flavor", "You create a lash of lightning energy that strikes at one creature of your choice that you can see within 15 feet of you."],
-      ["Target", "One creature of your choice that you can see within 15 feet of you"],
-      ["Save", "Strength"],
-      ["Failed save", "Pulled up to 10 feet in a straight line toward you, then takes 1d8 Lightning damage if it is within 5 feet of you"],
-      ["Successful save", "No effect"]
-    ]},
-    {"option": {"name": "At Higher Levels", "blocks": [
-      {"table": {"columns": ["Character level", "Damage"], "rows": [
-        ["1", "1d8"],
-        ["5", "2d8"],
-        ["11", "3d8"],
-        ["17", "4d8"]
-      ]}}
-    ]}}
-  ],
   "Maelstrom": [
     {"facts": [
       ["Area", "A mass of 5-foot-deep water appears and swirls in a 30-foot radius centered on a point you can see within range; the point must be on ground or in a body of water"],
@@ -1211,17 +1052,6 @@
     {"table": {"columns": ["Failed save", "Successful save"], "rows": [
       ["6d6 Bludgeoning damage, and the creature is pulled 10 feet toward the center", "No effect"]
     ]}}
-  ],
-  "Magic Stone": [
-    {"paragraph": "You touch one to three pebbles and imbue them with magic."},
-    {"facts": [
-      ["Who attacks", "You or someone else can make a ranged spell attack with one of the pebbles, by throwing it or hurling it with a sling"],
-      ["Range", "60 feet if thrown"],
-      ["Attack roll", "The attacker adds your spellcasting ability modifier, not the attacker's"],
-      ["On a hit", "Bludgeoning damage equal to 1d6 + your spellcasting ability modifier"],
-      ["After", "Hit or miss, the spell then ends on the stone"],
-      ["Ends early", "If you cast this spell again, it ends on any pebbles still affected by it"]
-    ]}
   ],
   "Magnify Gravity": [
     {"facts": [
@@ -1306,18 +1136,6 @@
       ]}
     ]}}
   ],
-  "Mold Earth": [
-    {"paragraph": "You choose a portion of dirt or stone that you can see within range and that fits within a 5-foot Cube, and manipulate it in one of these ways."},
-    {"table": {"columns": ["Effect", "Lasts"], "rows": [
-      ["Excavate an area of loose earth, move it along the ground, and deposit it up to 5 feet away; this movement doesn't have enough force to cause damage", "Instantaneous"],
-      ["Shapes, colors, or both appear on the dirt or stone, spelling out words, creating images, or shaping patterns", "1 hour"],
-      ["Dirt or stone on the ground becomes Difficult Terrain, or ground that is already Difficult Terrain becomes normal terrain", "1 hour"]
-    ]}},
-    {"facts": [
-      ["Active effects", "No more than two of its non-instantaneous effects at a time, from multiple castings"],
-      ["Dismiss", "As an action, you can dismiss such an effect"]
-    ]}
-  ],
   "Motivational Speech": [
     {"facts": [
       ["Targets", "Up to five creatures within range that can hear you"],
@@ -1340,23 +1158,6 @@
       ["Moving", "You can move the cube up to 10 feet before you roll"],
       ["Table", "The Mischievous Surge table isn't included in this spell's data"]
     ]}
-  ],
-  "Primal Savagery": [
-    {"facts": [
-      ["Flavor", "You channel primal magic to cause your teeth or fingernails to sharpen, ready to deliver a corrosive attack."],
-      ["Target", "One creature within 5 feet of you"],
-      ["Attack", "Melee spell attack"],
-      ["On a hit", "1d10 Acid damage"],
-      ["After", "Your teeth or fingernails return to normal after you make the attack"]
-    ]},
-    {"option": {"name": "At Higher Levels", "blocks": [
-      {"table": {"columns": ["Character level", "Damage"], "rows": [
-        ["1", "1d10"],
-        ["5", "2d10"],
-        ["11", "3d10"],
-        ["17", "4d10"]
-      ]}}
-    ]}}
   ],
   "Primordial Ward": [
     {"facts": [
@@ -1492,19 +1293,6 @@
       ["Light", "The shadows turn dim light within 10 feet of you into darkness, and bright light in the same area to dim light"],
       ["Resistance", "Until the spell ends, you have resistance to Radiant damage"],
       ["Lashing", "Whenever a creature within 10 feet of you hits you with an attack, the shadows lash out at that creature, dealing it 2d8 Necrotic damage"]
-    ]}
-  ],
-  "Shape Water": [
-    {"paragraph": "You choose an area of water that you can see within range and that fits within a 5-foot Cube, and manipulate it in one of these ways."},
-    {"table": {"columns": ["Effect", "Lasts"], "rows": [
-      ["Move or otherwise change the flow of the water as you direct, up to 5 feet in any direction; this movement doesn't have enough force to cause damage", "Instantaneous"],
-      ["The water forms into simple shapes and animates at your direction", "1 hour"],
-      ["Change the water's color or opacity; it must be changed in the same way throughout", "1 hour"],
-      ["Freeze the water, provided that there are no creatures in it", "Unfreezes in 1 hour"]
-    ]}},
-    {"facts": [
-      ["Active effects", "No more than two of its non-instantaneous effects at a time, from multiple castings"],
-      ["Dismiss", "As an action, you can dismiss such an effect"]
     ]}
   ],
   "Sickening Radiance": [
@@ -1787,23 +1575,6 @@
       {"facts": [
         ["Stat block", "Use the higher level wherever the spell's level appears on the stat block"]
       ]}
-    ]}}
-  ],
-  "Sword Burst": [
-    {"facts": [
-      ["Flavor", "You create a momentary circle of spectral blades that sweep around you."],
-      ["Targets", "All other creatures within 5 feet of you"],
-      ["Save", "Dexterity"],
-      ["Failed save", "1d6 Force damage"],
-      ["Successful save", "No damage"]
-    ]},
-    {"option": {"name": "At Higher Levels", "blocks": [
-      {"table": {"columns": ["Character level", "Damage"], "rows": [
-        ["1", "1d6"],
-        ["5", "2d6"],
-        ["11", "3d6"],
-        ["17", "4d6"]
-      ]}}
     ]}}
   ],
   "Tasha's Caustic Brew": [

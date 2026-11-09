@@ -1,21 +1,4 @@
 {
-  "Acid Splash": [
-    {"facts": [
-      ["Flavor", "You create an acidic bubble at a point within range, where it explodes in a 5-foot-radius Sphere."],
-      ["Area", "5-foot-radius Sphere centered on a point within range"],
-      ["Save", "Dexterity, made by each creature in the Sphere"],
-      ["Failed save", "1d6 Acid damage"],
-      ["Successful save", "No damage"]
-    ]},
-    {"option": {"name": "Cantrip Upgrade", "blocks": [
-      {"table": {"columns": ["Character level", "Damage"], "rows": [
-        ["1", "1d6"],
-        ["5", "2d6"],
-        ["11", "3d6"],
-        ["17", "4d6"]
-      ]}}
-    ]}}
-  ],
   "Aid": [
     {"facts": [
       ["Targets", "Up to three creatures within range"],
@@ -463,12 +446,6 @@
     {"facts": [
       ["Also saves", "A creature also makes that save if it enters the wall's space or ends its turn there"],
       ["Once per turn", "A creature makes that save only once per turn"]
-    ]}
-  ],
-  "Blade Ward": [
-    {"paragraph": "You ward yourself against attacks."},
-    {"facts": [
-      ["Effect", "Whenever a creature makes an attack roll against you before the spell ends, the attacker subtracts 1d4 from the attack roll"]
     ]}
   ],
   "Blight": [
@@ -1241,17 +1218,6 @@
       ["Effect", "While in the aura, you and your allies each deal an extra 1d4 Radiant damage when hitting with a weapon or an Unarmed Strike"]
     ]}
   ],
-  "Dancing Lights": [
-    {"paragraph": "You create hovering lights that you can move around."},
-    {"facts": [
-      ["Lights", "Up to four torch-size lights within range, appearing as torches, lanterns, or glowing orbs that hover for the duration"],
-      ["Or", "The four lights combined into one glowing Medium form that is vaguely humanlike"],
-      ["Light", "Each light sheds Dim Light in a 10-foot radius, whichever form you choose"],
-      ["Move", "Bonus Action: move the lights up to 60 feet to a space within range"],
-      ["Spacing", "A light must be within 20 feet of another light created by this spell"],
-      ["Range limit", "A light vanishes if it exceeds the spell's range"]
-    ]}
-  ],
   "Darkness": [
     {"paragraph": "For the duration, magical Darkness spreads from a point or an object."},
     {"facts": [
@@ -1641,17 +1607,6 @@
       ]}
     ]}}
   ],
-  "Druidcraft": [
-    {"facts": [
-      ["Flavor", "Whispering to the spirits of nature, you create one of the following effects within range."]
-    ]},
-    {"table": {"columns": ["Effect", "What it does"], "rows": [
-      ["Weather Sensor", "A Tiny, harmless sensory effect predicts the weather at your location for the next 24 hours (a golden orb for clear skies, a cloud for rain, falling snowflakes for snow, and so on); it persists for 1 round"],
-      ["Bloom", "A flower blossoms, a seed pod opens, or a leaf bud blooms, instantly"],
-      ["Sensory Effect", "A harmless sensory effect that fits in a 5-foot Cube, such as falling leaves, spectral dancing fairies, a gentle breeze, the sound of an animal, or the faint odor of skunk"],
-      ["Fire Play", "Light or snuff out a candle, a torch, or a campfire"]
-    ]}}
-  ],
   "Elemental Weapon": [
     {"paragraph": "A nonmagical weapon you touch becomes a magic weapon."},
     {"facts": [
@@ -1664,16 +1619,6 @@
         ["5-6", "+2", "2d4"],
         ["7+", "+3", "3d4"]
       ]}}
-    ]}}
-  ],
-  "Elementalism": [
-    {"paragraph": "You exert control over the elements, creating one of these effects within range."},
-    {"table": {"columns": ["Effect", "What it does"], "rows": [
-      ["Beckon Air", "A breeze in a 5-foot Cube ripples cloth, stirs dust, rustles leaves, and closes open doors and shutters (not ones held open by someone or something)"],
-      ["Beckon Earth", "A thin shroud of dust or sand covers surfaces in a 5-foot-square area, or a single word appears in your handwriting in a patch of dirt or sand"],
-      ["Beckon Fire", "A thin cloud of harmless embers and colored, scented smoke (you choose the color and scent) fills a 5-foot Cube; the embers can light candles, torches, or lamps there, and the scent lingers for 1 minute"],
-      ["Beckon Water", "A spray of cool mist lightly dampens creatures and objects in a 5-foot Cube, or 1 cup of clean water appears in an open container or on a surface and evaporates in 1 minute"],
-      ["Sculpt Element", "Dirt, sand, fire, smoke, mist, or water that fits in a 1-foot Cube takes a crude shape (such as a creature) for 1 hour"]
     ]}}
   ],
   "Elminster's Effulgent Spheres": [
@@ -1962,23 +1907,6 @@
     {"facts": [
       ["Zombie", "A Humanoid killed by this spell rises at the start of your next turn as a Zombie (see appendix B) that follows your verbal orders"]
     ]}
-  ],
-  "Fire Bolt": [
-    {"facts": [
-      ["Flavor", "You hurl a mote of fire at a creature or an object within range."],
-      ["Target", "A creature or an object within range"],
-      ["Attack", "Ranged spell attack"],
-      ["On a hit", "1d10 Fire damage"],
-      ["Objects", "A flammable object hit by this spell starts burning if it isn't being worn or carried"]
-    ]},
-    {"option": {"name": "Cantrip Upgrade", "blocks": [
-      {"table": {"columns": ["Character level", "Damage"], "rows": [
-        ["1", "1d10"],
-        ["5", "2d10"],
-        ["11", "3d10"],
-        ["17", "4d10"]
-      ]}}
-    ]}}
   ],
   "Fire Shield": [
     {"facts": [
@@ -2830,15 +2758,6 @@
       ["Spell ends", "The target floats gently to the ground if still aloft"]
     ]}
   ],
-  "Light": [
-    {"paragraph": "You make an object you touch shed light."},
-    {"facts": [
-      ["Target", "One Large or smaller object that isn't being worn or carried by someone else"],
-      ["Light", "Bright Light in a 20-foot radius and Dim Light for an additional 20 feet, colored as you like"],
-      ["Covering", "Covering the object with something opaque blocks the light"],
-      ["Ends early", "If you cast this spell again"]
-    ]}
-  ],
   "Lightning Arrow": [
     {"facts": [
       ["Flavor", "As your attack hits or misses the target, the weapon or ammunition you're using transforms into a lightning bolt."],
@@ -2890,17 +2809,6 @@
       ["Target", "A willing creature who isn't wearing armor"],
       ["Base AC", "13 + its Dexterity modifier, until the spell ends"],
       ["Ends early", "If the target dons armor"]
-    ]}
-  ],
-  "Mage Hand": [
-    {"facts": [
-      ["Flavor", "A spectral, floating hand appears at a point you choose within range."],
-      ["Appears", "At a point you choose within range"],
-      ["Uses", "Manipulate an object, open an unlocked door or container, stow or retrieve an item from an open container, or pour the contents out of a vial"],
-      ["When", "As you cast the spell, then as a Magic action on your later turns"],
-      ["Movement", "Up to 30 feet, as part of each Magic action"],
-      ["Can't", "Attack, activate magic items, or carry more than 10 pounds"],
-      ["Vanishes", "If the hand is ever more than 30 feet away from you, or if you cast this spell again"]
     ]}
   ],
   "Magic Circle": [
@@ -3076,31 +2984,6 @@
       {"facts": [
         ["Damage", "Both the initial and the later damage increase by 1d4 for each spell slot level above 2"]
       ]}
-    ]}}
-  ],
-  "Mending": [
-    {"paragraph": "You repair a single break or tear in an object you touch, leaving no trace of the former damage."},
-    {"facts": [
-      ["Size", "The break or tear must be no larger than 1 foot in any dimension"],
-      ["Examples", "A broken chain link, two halves of a broken key, a torn cloak, or a leaking wineskin"],
-      ["Magic items", "It can physically repair a magic item, but it can't restore magic to such an object"]
-    ]}
-  ],
-  "Mind Sliver": [
-    {"paragraph": "You try to temporarily sliver the mind of one creature."},
-    {"facts": [
-      ["Target", "One creature you can see within range"],
-      ["Save", "Intelligence"],
-      ["Failed save", "1d6 Psychic damage, and the target subtracts 1d4 from the next saving throw it makes before the end of your next turn"],
-      ["Successful save", "No effect"]
-    ]},
-    {"option": {"name": "Cantrip Upgrade", "blocks": [
-      {"table": {"columns": ["Character level", "Damage"], "rows": [
-        ["1", "1d6"],
-        ["5", "2d6"],
-        ["11", "3d6"],
-        ["17", "4d6"]
-      ]}}
     ]}}
   ],
   "Mind Spike": [
@@ -3554,22 +3437,6 @@
       ]}
     ]}}
   ],
-  "Poison Spray": [
-    {"facts": [
-      ["Flavor", "You spray toxic mist at a creature within range."],
-      ["Target", "A creature within range"],
-      ["Attack", "Ranged spell attack"],
-      ["On a hit", "1d12 Poison damage"]
-    ]},
-    {"option": {"name": "Cantrip Upgrade", "blocks": [
-      {"table": {"columns": ["Character level", "Damage"], "rows": [
-        ["1", "1d12"],
-        ["5", "2d12"],
-        ["11", "3d12"],
-        ["17", "4d12"]
-      ]}}
-    ]}}
-  ],
   "Polymorph": [
     {"paragraph": "You attempt to transform a creature that you can see within range into a Beast."},
     {"facts": [
@@ -3617,20 +3484,6 @@
       {"facts": [
         ["Healing", "+1d8 for each spell slot level above 2"]
       ]}
-    ]}}
-  ],
-  "Prestidigitation": [
-    {"paragraph": "You create a magical effect within range, choosing one of the options below."},
-    {"facts": [
-      ["Active effects", "Up to three of its non-instantaneous effects at a time, from repeated castings"]
-    ]},
-    {"table": {"columns": ["Effect", "What it does", "Lasts"], "rows": [
-      ["Sensory Effect", "A harmless sensory effect, such as a shower of sparks, a puff of wind, faint musical notes, or an odd odor", "Instantaneous"],
-      ["Fire Play", "Light or snuff out a candle, a torch, or a small campfire", "Instantaneous"],
-      ["Clean or Soil", "Clean or soil an object no larger than 1 cubic foot", "Instantaneous"],
-      ["Minor Sensation", "Chill, warm, or flavor up to 1 cubic foot of nonliving material", "1 hour"],
-      ["Magic Mark", "A color, a small mark, or a symbol appears on an object or a surface", "1 hour"],
-      ["Minor Creation", "A nonmagical trinket or an illusory image that fits in your hand; a trinket deals no damage and has no monetary worth", "Until the end of your next turn"]
     ]}}
   ],
   "Prismatic Spray": [
@@ -3763,22 +3616,6 @@
     {"facts": [
       ["Repeat save", "On a failed save, the target repeats the save at the end of each of its turns, ending the spell on a success"]
     ]}
-  ],
-  "Ray of Frost": [
-    {"facts": [
-      ["Flavor", "A frigid beam of blue-white light streaks toward a creature within range."],
-      ["Target", "A creature within range"],
-      ["Attack", "Ranged spell attack"],
-      ["On a hit", "1d8 Cold damage, and its Speed is reduced by 10 feet until the start of your next turn"]
-    ]},
-    {"option": {"name": "Cantrip Upgrade", "blocks": [
-      {"table": {"columns": ["Character level", "Damage"], "rows": [
-        ["1", "1d8"],
-        ["5", "2d8"],
-        ["11", "3d8"],
-        ["17", "4d8"]
-      ]}}
-    ]}}
   ],
   "Regenerate": [
     {"facts": [
@@ -3980,24 +3817,6 @@
       ["Ends early", "This spell also ends if the target takes any damage"]
     ]}
   ],
-  "Shillelagh": [
-    {"facts": [
-      ["Flavor", "A Club or Quarterstaff you are holding is imbued with nature's power."],
-      ["Weapon", "A Club or Quarterstaff you are holding"],
-      ["Attack and damage", "Use your spellcasting ability instead of Strength for the attack and damage rolls of melee attacks using that weapon"],
-      ["Damage die", "The weapon's damage die becomes a d8 (see Cantrip Upgrade)"],
-      ["Damage type", "If the attack deals damage, it can be Force damage or the weapon's normal damage type (your choice)"],
-      ["Ends early", "If you cast this spell again or let go of the weapon"]
-    ]},
-    {"option": {"name": "Cantrip Upgrade", "blocks": [
-      {"table": {"columns": ["Character level", "Damage die"], "rows": [
-        ["1", "d8"],
-        ["5", "d10"],
-        ["11", "d12"],
-        ["17", "2d6"]
-      ]}}
-    ]}}
-  ],
   "Shining Smite": [
     {"facts": [
       ["Trigger", "Immediately after you hit a creature with a Melee weapon or an Unarmed Strike"],
@@ -4008,22 +3827,6 @@
       {"facts": [
         ["Damage", "+1d6 for each spell slot level above 2"]
       ]}
-    ]}}
-  ],
-  "Shocking Grasp": [
-    {"facts": [
-      ["Flavor", "Lightning springs from you to a creature that you try to touch."],
-      ["Target", "A creature you try to touch"],
-      ["Attack", "Melee spell attack"],
-      ["On a hit", "1d8 Lightning damage, and the target can't make Opportunity Attacks until the start of its next turn"]
-    ]},
-    {"option": {"name": "Cantrip Upgrade", "blocks": [
-      {"table": {"columns": ["Character level", "Damage"], "rows": [
-        ["1", "1d8"],
-        ["5", "2d8"],
-        ["11", "3d8"],
-        ["17", "4d8"]
-      ]}}
     ]}}
   ],
   "Silence": [
@@ -4136,24 +3939,6 @@
         ["Extra creatures", "For each secondary caster who participates in the casting, you can choose one additional creature, to a maximum of nine additional creatures; the chosen creatures also gain the benefits of the spell for its duration"],
         ["Spell slots", "When the spell is cast, each secondary caster must expend a level 2+ spell slot; otherwise, the spell fails"]
       ]}
-    ]}}
-  ],
-  "Sorcerous Burst": [
-    {"paragraph": "You cast sorcerous energy at one creature or object, and its damage can keep exploding."},
-    {"facts": [
-      ["Target", "One creature or object within range"],
-      ["Attack", "Ranged spell attack"],
-      ["On a hit", "1d8 damage of a type you choose: Acid, Cold, Fire, Lightning, Poison, Psychic, or Thunder"],
-      ["Exploding 8s", "If you roll an 8 on a d8 for this spell, you can roll another d8 and add it to the damage"],
-      ["Extra d8s", "The maximum number of these d8s you can add to the spell's damage equals your spellcasting ability modifier"]
-    ]},
-    {"option": {"name": "Cantrip Upgrade", "blocks": [
-      {"table": {"columns": ["Character level", "Damage"], "rows": [
-        ["1", "1d8"],
-        ["5", "2d8"],
-        ["11", "3d8"],
-        ["17", "4d8"]
-      ]}}
     ]}}
   ],
   "Speak with Dead": [
@@ -4911,40 +4696,6 @@
       ]}
     ]}}
   ],
-  "Thorn Whip": [
-    {"facts": [
-      ["Flavor", "You create a vine-like whip covered in thorns that lashes out at your command toward a creature in range."],
-      ["Target", "A creature within range"],
-      ["Attack", "Melee spell attack"],
-      ["On a hit", "1d6 Piercing damage"],
-      ["Pull", "If the target is Large or smaller, you can pull it up to 10 feet closer to you"]
-    ]},
-    {"option": {"name": "Cantrip Upgrade", "blocks": [
-      {"table": {"columns": ["Character level", "Damage"], "rows": [
-        ["1", "1d6"],
-        ["5", "2d6"],
-        ["11", "3d6"],
-        ["17", "4d6"]
-      ]}}
-    ]}}
-  ],
-  "Thunderclap": [
-    {"facts": [
-      ["Area", "5-foot Emanation originating from you"],
-      ["Save", "Constitution, made by each creature in the area"],
-      ["Failed save", "1d6 Thunder damage"],
-      ["Successful save", "No damage"],
-      ["Sound", "Can be heard up to 100 feet away"]
-    ]},
-    {"option": {"name": "Cantrip Upgrade", "blocks": [
-      {"table": {"columns": ["Character level", "Damage"], "rows": [
-        ["1", "1d6"],
-        ["5", "2d6"],
-        ["11", "3d6"],
-        ["17", "4d6"]
-      ]}}
-    ]}}
-  ],
   "Thunderous Smite": [
     {"facts": [
       ["Flavor", "Your strike rings with thunder that is audible within 300 feet of you."],
@@ -5314,24 +5065,6 @@
         ["Hit Point Dice", "+1 die that can be rolled and expended for each spell slot level above 2"],
         ["Modifier", "You add your spellcasting modifier to the Hit Points regained only once, regardless of the number of Hit Point Dice rolled and expended"]
       ]}
-    ]}}
-  ],
-  "Word of Radiance": [
-    {"facts": [
-      ["Flavor", "Burning radiance erupts from you in a 5-foot Emanation."],
-      ["Area", "5-foot Emanation originating from you"],
-      ["Targets", "Each creature of your choice that you can see in the area"],
-      ["Save", "Constitution"],
-      ["Failed save", "1d6 Radiant damage"],
-      ["Successful save", "No damage"]
-    ]},
-    {"option": {"name": "Cantrip Upgrade", "blocks": [
-      {"table": {"columns": ["Character level", "Damage"], "rows": [
-        ["1", "1d6"],
-        ["5", "2d6"],
-        ["11", "3d6"],
-        ["17", "4d6"]
-      ]}}
     ]}}
   ],
   "Word of Recall": [

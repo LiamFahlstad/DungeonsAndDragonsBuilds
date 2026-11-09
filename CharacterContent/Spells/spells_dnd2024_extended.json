@@ -1,10 +1,4 @@
 {
-  "Acid Splash": {
-    "usage_tags": [
-      "damage"
-    ],
-    "target": "area"
-  },
   "Aid": {
     "usage_tags": [
       "heal"
@@ -243,13 +237,6 @@
       "damage"
     ],
     "target": "enemy"
-  },
-  "Blade Ward": {
-    "usage_tags": [
-      "buff",
-      "control"
-    ],
-    "target": "self"
   },
   "Blight": {
     "usage_tags": [
@@ -566,12 +553,6 @@
     ],
     "target": "ally"
   },
-  "Dancing Lights": {
-    "usage_tags": [
-      "utility"
-    ],
-    "target": "object"
-  },
   "Darkness": {
     "usage_tags": [
       "buff",
@@ -775,12 +756,6 @@
     ],
     "target": "creature"
   },
-  "Druidcraft": {
-    "usage_tags": [
-      "utility"
-    ],
-    "target": "object"
-  },
   "Dueling Ground": {
     "usage_tags": [
       "buff",
@@ -799,12 +774,6 @@
     "usage_tags": [
       "buff",
       "damage"
-    ],
-    "target": "object"
-  },
-  "Elementalism": {
-    "usage_tags": [
-      "control"
     ],
     "target": "object"
   },
@@ -936,12 +905,6 @@
     "target": "self"
   },
   "Finger of Death": {
-    "usage_tags": [
-      "damage"
-    ],
-    "target": "enemy"
-  },
-  "Fire Bolt": {
     "usage_tags": [
       "damage"
     ],
@@ -1383,12 +1346,6 @@
     ],
     "target": "creature"
   },
-  "Light": {
-    "usage_tags": [
-      "utility"
-    ],
-    "target": "object"
-  },
   "Lightning Arrow": {
     "usage_tags": [
       "damage"
@@ -1425,12 +1382,6 @@
       "buff"
     ],
     "target": "ally"
-  },
-  "Mage Hand": {
-    "usage_tags": [
-      "utility"
-    ],
-    "target": "object"
   },
   "Magic Circle": {
     "usage_tags": [
@@ -1506,12 +1457,6 @@
     ],
     "target": "enemy"
   },
-  "Mending": {
-    "usage_tags": [
-      "utility"
-    ],
-    "target": "object"
-  },
   "Meteor Swarm": {
     "usage_tags": [
       "damage"
@@ -1523,13 +1468,6 @@
       "heal"
     ],
     "target": "ally"
-  },
-  "Mind Sliver": {
-    "usage_tags": [
-      "control",
-      "damage"
-    ],
-    "target": "enemy"
   },
   "Mind Spike": {
     "usage_tags": [
@@ -1724,12 +1662,6 @@
     ],
     "target": "area"
   },
-  "Poison Spray": {
-    "usage_tags": [
-      "damage"
-    ],
-    "target": "enemy"
-  },
   "Polymorph": {
     "usage_tags": [
       "heal"
@@ -1773,12 +1705,6 @@
       "heal"
     ],
     "target": "ally"
-  },
-  "Prestidigitation": {
-    "usage_tags": [
-      "utility"
-    ],
-    "target": "object"
   },
   "Prismatic Spray": {
     "usage_tags": [
@@ -1853,12 +1779,6 @@
   "Ray of Enfeeblement": {
     "usage_tags": [
       "buff"
-    ],
-    "target": "enemy"
-  },
-  "Ray of Frost": {
-    "usage_tags": [
-      "damage"
     ],
     "target": "enemy"
   },
@@ -1968,22 +1888,10 @@
     ],
     "target": "self"
   },
-  "Shillelagh": {
-    "usage_tags": [
-      "buff"
-    ],
-    "target": "object"
-  },
   "Shining Smite": {
     "usage_tags": [
       "damage",
       "heal"
-    ],
-    "target": "enemy"
-  },
-  "Shocking Grasp": {
-    "usage_tags": [
-      "damage"
     ],
     "target": "enemy"
   },
@@ -2031,12 +1939,6 @@
       "damage"
     ],
     "target": "self"
-  },
-  "Sorcerous Burst": {
-    "usage_tags": [
-      "damage"
-    ],
-    "target": "enemy"
   },
   "Speak with Dead": {
     "usage_tags": [
@@ -2274,18 +2176,6 @@
     ],
     "target": "object"
   },
-  "Thorn Whip": {
-    "usage_tags": [
-      "damage"
-    ],
-    "target": "enemy"
-  },
-  "Thunderclap": {
-    "usage_tags": [
-      "damage"
-    ],
-    "target": "area"
-  },
   "Thunderous Smite": {
     "usage_tags": [
       "control",
@@ -2504,12 +2394,6 @@
     "usage_tags": [
       "damage",
       "heal"
-    ],
-    "target": "enemy"
-  },
-  "Word of Radiance": {
-    "usage_tags": [
-      "damage"
     ],
     "target": "enemy"
   },

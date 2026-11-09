@@ -167,12 +167,6 @@
     ],
     "target": "enemy"
   },
-  "Booming Blade": {
-    "usage_tags": [
-      "damage"
-    ],
-    "target": "enemy"
-  },
   "Borrowed Knowledge": {
     "usage_tags": [
       "buff"
@@ -321,12 +315,6 @@
   "Continual Flame": {
     "target": "object"
   },
-  "Control Flames": {
-    "usage_tags": [
-      "utility"
-    ],
-    "target": "object"
-  },
   "Control Water": {
     "target": "area"
   },
@@ -346,13 +334,6 @@
   },
   "Counterspell": {
     "target": "enemy"
-  },
-  "Create Bonfire": {
-    "usage_tags": [
-      "damage",
-      "utility"
-    ],
-    "target": "area"
   },
   "Create Food and Water": {
     "target": "object"
@@ -577,12 +558,6 @@
   "Elemental Weapon": {
     "target": "object"
   },
-  "Encode Thoughts": {
-    "usage_tags": [
-      "utility"
-    ],
-    "target": "self"
-  },
   "Enemies Abound": {
     "usage_tags": [
       "control",
@@ -779,14 +754,6 @@
     ],
     "target": "area"
   },
-  "Frostbite": {
-    "usage_tags": [
-      "control",
-      "damage",
-      "utility"
-    ],
-    "target": "enemy"
-  },
   "Galder's Speedy Courier": {
     "usage_tags": [
       "control",
@@ -873,13 +840,6 @@
   "Greater Restoration": {
     "target": "ally"
   },
-  "Green-Flame Blade": {
-    "usage_tags": [
-      "damage",
-      "utility"
-    ],
-    "target": "enemy"
-  },
   "Guardian of Faith": {
     "target": "enemy"
   },
@@ -900,12 +860,6 @@
   },
   "Guiding Bolt": {
     "target": "enemy"
-  },
-  "Gust": {
-    "usage_tags": [
-      "utility"
-    ],
-    "target": "creature"
   },
   "Gust of Wind": {
     "target": "area"
@@ -1036,14 +990,6 @@
     ],
     "target": "ally"
   },
-  "Infestation": {
-    "usage_tags": [
-      "control",
-      "damage",
-      "utility"
-    ],
-    "target": "enemy"
-  },
   "Inflict Wounds": {
     "target": "enemy"
   },
@@ -1160,13 +1106,6 @@
   "Lightning Bolt": {
     "target": "area"
   },
-  "Lightning Lure": {
-    "usage_tags": [
-      "damage",
-      "utility"
-    ],
-    "target": "enemy"
-  },
   "Locate Animals or Plants": {
     "target": "self"
   },
@@ -1210,12 +1149,6 @@
     "target": "enemy"
   },
   "Magic Mouth": {
-    "target": "object"
-  },
-  "Magic Stone": {
-    "usage_tags": [
-      "damage"
-    ],
     "target": "object"
   },
   "Magic Weapon": {
@@ -1326,13 +1259,6 @@
   "Modify Memory": {
     "target": "enemy"
   },
-  "Mold Earth": {
-    "usage_tags": [
-      "control",
-      "utility"
-    ],
-    "target": "object"
-  },
   "Moonbeam": {
     "target": "area"
   },
@@ -1442,12 +1368,6 @@
   },
   "Prestidigitation": {
     "target": "object"
-  },
-  "Primal Savagery": {
-    "usage_tags": [
-      "damage"
-    ],
-    "target": "enemy"
   },
   "Primordial Ward": {
     "usage_tags": [
@@ -1624,12 +1544,6 @@
       "damage"
     ],
     "target": "self"
-  },
-  "Shape Water": {
-    "usage_tags": [
-      "utility"
-    ],
-    "target": "object"
   },
   "Shapechange": {
     "target": "self"
@@ -1849,13 +1763,6 @@
   },
   "Swift Quiver": {
     "target": "self"
-  },
-  "Sword Burst": {
-    "usage_tags": [
-      "damage",
-      "utility"
-    ],
-    "target": "area"
   },
   "Symbol": {
     "target": "area"
