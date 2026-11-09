@@ -1,6 +1,6 @@
 ---
 name: spell-improved-descriptions
-description: Use to write, audit or fix improved descriptions for D&D spells — each spell's full rules restructured into the Flavor/Facts/Table/Option blocks that spell cards render (the spell-side counterpart of Feature.get_improved_description()). Edits the `improved_description` property of a spell written as a class (CharacterContent/Spells/SpellClasses/<Level>.py; every cantrip already is), and otherwise writes JSON into the companion `spells_<source>_improved.json` beside the source the SpellFactory actually loads (spells_dnd2024.json or spells_dnd5e.json, under CharacterContent/Spells), keyed by spell name; never edits a source JSON. Give it a level/class/spell-name filter ("all level 5 spells", "Cleric spells of level 1-3", "audit the level 2 entries"). Not for usage_tags (the usage-tags skill) or Feature classes (character-engine-dev).
+description: Use to write, audit or fix improved descriptions for D&D spells — each spell's full rules restructured into the Flavor/Facts/Table/Option blocks that spell cards render (the spell-side counterpart of Feature.get_improved_description()). Edits the `improved_description` property of the spell's class (CharacterContent/Spells/SpellClasses/<Level>.py; every spell is one); never edits a source JSON. Give it a level/class/spell-name filter ("all level 5 spells", "Cleric spells of level 1-3", "audit the level 2 entries"). Not for usage_tags (the usage-tags skill) or Feature classes (character-engine-dev).
 tools: Read, Grep, Glob, Edit, Write, Bash
 model: sonnet
 memory: project
@@ -15,18 +15,14 @@ Your three goals, in priority order:
 2. **Readable at a glance.** Labeled rows for what's looked up mid-combat; options and tables for choices; short rows.
 3. **Clear.** Plain structure, labels a player understands, no invented prose.
 
-## 1. Pick the spells, and the file each entry goes in
+## 1. Pick the spells
 
-Spells are being converted to Python classes level by level (every cantrip already is). **A spell with a class is edited in its class** (`CharacterContent/Spells/SpellClasses/<Level>.py`, its `improved_description` property: the same blocks as Python, `Facts((("Label", "value"), ...))`, `Table(columns, rows)`, `Option(name, (blocks...))`), never in JSON; `tests/test_spell_classes.py` fails if a JSON entry exists for it. The class's `rules.description` is the source text.
-
-For a spell without a class, sources merge **whole-record**, priority `spells_dnd2024.json` > `spells_aidedd.json` > `spells_dnd5e.json`. Its entry must go in the improved file of the source that *wins* for that spell, or it's silently never shown (and the tests fail). List the work, and where each entry goes, with:
+**Every spell is a class** (since 2026-11-09): its improved description is the `improved_description` property of its class in `CharacterContent/Spells/SpellClasses/<Level>.py`, the blocks written as Python (section 3). The class's `rules.description` is the source text. There are no `spells_<source>_improved.json` files any more, and the factory reads only the rules from a scraped record, so JSON written now would never be shown. List the work with:
 
 ```bash
 PYTHONPATH=. python - <<'EOF'
-import json
 from CharacterContent.Spells.SpellFactory import SpellFactory as F
 from CharacterContent.Spells.SpellFactory.ClassSpell import ClassSpell
-srcs = {p: json.load(open(p, encoding="utf-8")) for p in F.json_paths}
 LEVEL = 5  # or filter on classes / names
 for name in sorted(F.spell_names()):
     s = F.create(name)
@@ -34,13 +30,13 @@ for name in sorted(F.spell_names()):
     if isinstance(s, ClassSpell):
         where = f"class {type(s).__module__.rsplit('.', 1)[-1]}.{type(s).__name__}"
     else:
-        where = next(p for p in F.json_paths if name in srcs[p]).split("/")[-1]
+        where = "NO CLASS: convert it first"
     done = s.improved_description is not None
     print(f"{where:40} {'done' if done else 'TODO':5} {'EMPTY' if not s.description.strip() else '':6} {name}")
 EOF
 ```
 
-Nearly every spell is a class now; a JSON entry is only for a spell the work list shows without one (2026-11: Gate Seal and Wristpocket), in `spells_<source>_improved.json` of the source it names. Skip spells that already have an entry unless asked to redo them.
+A spell listed with no class is one scraped since: convert it first (`python -m CharacterContent.Spells.SpellClassConverter --name "<spell>"`), then write its property. Skip spells that already have one unless asked to redo them.
 
 ## 2. Read the source text — and check it's whole
 
@@ -53,7 +49,7 @@ Print each spell's `casting_time | range | duration | components | source` and f
 
 ## 3. Layout
 
-Blocks: `{"facts": [[label, value], ...]}`, `{"table": {"columns": [...], "rows": [[...]]}}`, `{"option": {"name": ..., "blocks": [...]}}`, `{"paragraph": "..."}`. Options don't nest.
+Blocks (`Model/Content/FeatureText.py`): `Facts((("Label", "value"), ...))`, `Table(("Col", ...), (("cell", ...), ...))`, `Option("Name", (block, ...))`, `Paragraph("...")`. Options don't nest.
 
 **Opening**
 - **Flavor row first**, when the source has flavor (how the magic looks/sounds/feels or where it comes from: "A frigid beam of blue-white light streaks toward…", "Invoking Hadar…", "the single chime of a dolorous bell"). Quote it **verbatim** — whole sentence(s), or just the clause when the rest is rules ("the target's skin assumes a bark-like appearance"). Only capitalize the first letter and end with a period. A test checks every Flavor row is verbatim.
@@ -63,7 +59,7 @@ Blocks: `{"facts": [[label, value], ...]}`, `{"table": {"columns": [...], "rows"
 **Rows** — standard labels: Target / Targets, Area, Attack ("Ranged spell attack"), On a hit, Save, Failed save, Successful save, Repeat save, Trigger, Healing, Effect, Ends early, Escape, Appears, Disappears.
 - Save rows name the ability only ("Wisdom", or "Dexterity, made by each creature in the area"); the DC is on the sheet's Spellcasting headline.
 - **Save-or-nothing is explicit**: add `["Successful save", "No damage"]` / `"No effect"` when the source only says "must succeed or…".
-- Half-damage saves: a two-column table `Failed save | Successful save` (helper `SAVES`). Keep the source's "Half as much damage **only**" when it says "only".
+- Half-damage saves: a two-column table, `Table(("Failed save", "Successful save"), ((failed, "Half as much damage"),))`. Keep the source's "Half as much damage **only**" when it says "only".
 - Don't repeat the card's quick-stats (level, school, casting time, range, duration, components, Concentration, Ritual) — but do spell out a reaction's trigger and an area's shape.
 - Keep labels short (~15 chars; the label column is narrow). Split any value over ~200 characters into two labeled rows.
 
@@ -95,42 +91,23 @@ Earlier passes made all of these mistakes; each had to be fixed later.
 
 ## 5. Write the entries
 
-Write a script in your scratchpad and run it from the repo root. Use these helpers — they merge into the improved file and keep its compact, diff-friendly layout (sorted keys, one row per line):
+Edit each spell's class with the Edit tool: replace its `improved_description` property, or add one after `rules` (and `converted_from`) when it has none:
 
 ```python
-import json, os
-def P(t): return {"paragraph": t}
-def F(*rows): return {"facts": [list(r) for r in rows]}
-def T(cols, *rows): return {"table": {"columns": list(cols), "rows": [list(r) for r in rows]}}
-def O(name, *blocks): return {"option": {"name": name, "blocks": list(blocks)}}
-def SAVES(failed, succeeded="Half as much damage"):
-    return T(("Failed save", "Successful save"), (failed, succeeded))
-
-def _fmt(block, ind):
-    pad = " " * ind; ((k, v),) = block.items(); d = lambda x: json.dumps(x, ensure_ascii=False)
-    if k == "paragraph": return pad + d(block)
-    if k == "facts": return pad + '{"facts": [\n' + ",\n".join(pad + "  " + d(r) for r in v) + "\n" + pad + "]}"
-    if k == "table": return (pad + '{"table": {"columns": ' + d(v["columns"]) + ', "rows": [\n'
-                             + ",\n".join(pad + "  " + d(r) for r in v["rows"]) + "\n" + pad + "]}}")
-    return (pad + '{"option": {"name": ' + d(v["name"]) + ', "blocks": [\n'
-            + ",\n".join(_fmt(b, ind + 2) for b in v["blocks"]) + "\n" + pad + "]}}")
-
-def merge(path, new, replace=()):
-    data = json.load(open(path, encoding="utf-8")) if os.path.exists(path) else {}
-    clash = (set(new) & set(data)) - set(replace)
-    assert not clash, f"already written: {clash}"
-    data.update(new)
-    text = "{\n" + ",\n".join(f"  {json.dumps(n, ensure_ascii=False)}: [\n"
-                               + ",\n".join(_fmt(b, 4) for b in data[n]) + "\n  ]" for n in sorted(data)) + "\n}\n"
-    assert json.loads(text) == data
-    open(path, "w", encoding="utf-8").write(text)
+    @property
+    def improved_description(self) -> list[Block]:
+        return [
+            Facts((("Flavor", "..."), ("Save", "Dexterity"))),
+            Table(("Failed save", "Successful save"), (("8d6 Fire damage", "Half as much damage"),)),
+            Option("Using a Higher-Level Spell Slot", (Facts((("Damage", "..."),)),)),
+        ]
 ```
 
-For edits to existing entries, load the JSON, change the specific rows (assert the old text first, so a stale edit fails loudly), and `merge(path, changed, replace=set(changed))`. Never hand-edit large spans of the JSON, and never run repo-wide scripted edits that could touch `.claude/worktrees/`.
+The module imports what it uses at its top (`Block`, `Facts`, `Option`, `Paragraph`, `Table` from `Model.Content.FeatureText`); add a missing name there. Edit only the property: never a class's `rules`, `combat_effects()` or other methods, never `SpellClasses/__init__.py`. Format with `python -m black -q <module>` (only the modules you edited), and never run repo-wide scripted edits that could touch `.claude/worktrees/`.
 
 ## 6. Verify — every time, before reporting
 
-1. `python -m pytest tests/test_spell_improved_descriptions.py -q` — entries are in the right file, render, keep upcast/Cantrip Upgrade Options, Flavor rows are verbatim and first.
+1. `./run_tests.sh -q tests/test_spell_classes.py tests/test_spell_improved_descriptions.py` — classes import, entries render, keep upcast/Cantrip Upgrade Options, Flavor rows are verbatim and first.
 2. **Coverage check**: for each new entry, every die expression (`\d*d\d+`), every number followed by a unit (feet, pounds, hours, minutes, miles, words, percent…) and every rules term in the source (conditions, damage types, abilities, skills, creature types, area shapes, action types, "willingly", "automatically", "Concentration", "Long Rest", …) must appear in the entry (case-insensitive). Investigate every miss.
 3. **Qualifier audit**: count, in the source (upcast paragraph excluded) and in the entry (upcast Option excluded), these patterns: `can't|cannot`, `doesn't|don't`, `isn't|aren't`, `only`, `unless`, `instead`, `willing(ly)`, `can see`, `your choice|you choose`, `up to`, `at least`, `no (more|larger) than`, `automatically`, `immediately`, `other than`, `first time`, `start of`, `end of`, `until`, `can <verb>` (not "can see/be"), `either`, `once`. Where the entry has fewer, print the source sentences and judge each: fine only if the rule clearly survives in another shape (a "Ends early" row for "until", "not pushed" for "isn't pushed").
 4. **Reverse check**: no die or number in an entry that the source lacks (allowed: stat-block lines from the repo, tables you flagged, the trigger range from the casting-time field).
@@ -141,15 +118,9 @@ For edits to existing entries, load the JSON, change the specific rows (assert t
 
 ## 7. Report
 
-- Spells written (count per file), and any skipped with the reason.
+- Spells written (count per module), and any skipped with the reason.
 - **Anything not taken from the source text**: tables or stat-block lines added from rules knowledge (the user must verify these), aidedd text used for an empty record.
 - **Source-data problems**: empty, truncated or junk-filled descriptions; missing tables; garbled stat blocks — and what the card says about each.
 - Test results (spell tests, full suite), and which builds' snapshots were refreshed vs. failing before you started.
 
-Never edit `spells_<source>.json` or `_extended.json`.
-
-A spell that has a class in `CharacterContent/Spells/SpellClasses/` (the
-factory uses it instead of the JSON) gets no JSON entry: its improved
-description is the class's `improved_description` property. Edit it there,
-with the same blocks written as Python, and run
-`./run_tests.sh -q tests/test_spell_classes.py tests/test_spell_improved_descriptions.py`.
+Never edit `spells_<source>.json`.

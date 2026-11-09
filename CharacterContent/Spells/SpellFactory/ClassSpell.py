@@ -29,8 +29,8 @@ the casting time, range, components and duration are the dataclasses of
 SpellFields.py, which write the card's text back in the 2024 wording.
 
 CharacterContent/Spells/SpellClassConverter.py writes such a class from a
-spell's JSON record and its companion files; from then on the class is the
-spell's one source, edited by hand.
+spell's scraped JSON record; from then on the class is the spell's one
+source, edited by hand.
 """
 
 import hashlib
@@ -50,7 +50,7 @@ from .SpellFields import CastingTime, Components, Duration, Range
 class SpellRules:
     """What a spell's card and the rules say about it, as the spell sources
     record it (spells_<source>.json): the fields every spell has, plus the
-    sheet's usage_tags and target (spells_<source>_extended.json)."""
+    sheet's usage_tags and target, written in the class."""
 
     name: str
     level: int

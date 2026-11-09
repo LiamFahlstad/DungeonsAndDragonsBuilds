@@ -1,8 +1,7 @@
 """
 Improved spell descriptions (CharacterContent/Spells/IMPROVED_DESCRIPTIONS.md):
 the same rules as a spell's source text, as FeatureText blocks, in a spell's
-class (CharacterContent/Spells/SpellClasses) or in a
-spells_<source>_improved.json. Shown on the card instead of the source;
+class (CharacterContent/Spells/SpellClasses). Shown on the card instead of the source;
 RunCharacterCreator.py --source-text prints the source instead.
 """
 
@@ -14,33 +13,11 @@ import pytest
 from CharacterContent.Spells.SpellFactory import SpellFactory
 from CharacterContent.Spells.SpellFactory.DataSpell import DataSpell
 from CharacterContent.Spells.SpellFactory.Spell import UPCAST_OPTION_NAMES
-from Model.Content.FeatureText import (
-    Facts,
-    Option,
-    Paragraph,
-    Table,
-    blocks_from_json,
-)
+from Model.Content.FeatureText import Facts, Option
 from Presentation.FeatureCards import improved_description_to_html
 from Presentation.SpellCards import write_spell_to_file
 
-
-def _improved_entries():
-    """(source path, spell name, blocks JSON) for every improved file."""
-    entries = []
-    for path in SpellFactory.json_paths:
-        try:
-            with open(SpellFactory.improved_path(path), encoding="utf-8") as f:
-                improved = json.load(f)
-        except FileNotFoundError:
-            continue
-        entries += [(path, name, blocks) for name, blocks in improved.items()]
-    return entries
-
-
-ENTRIES = _improved_entries()
-ENTRY_IDS = [f"{path.rsplit('/', 1)[-1]}:{name}" for path, name, _ in ENTRIES]
-# Every spell with an improved description, in a JSON file or in its class.
+# Every spell with an improved description (in its class).
 IMPROVED = sorted(
     (s for s in SpellFactory.all_spells() if s.improved_description is not None),
     key=lambda spell: spell.name,
@@ -56,20 +33,6 @@ def _card(spell, source_text=False) -> str:
     out = io.StringIO()
     write_spell_to_file(spell, out, source_text=source_text)
     return out.getvalue()
-
-
-@pytest.mark.parametrize("path,name,blocks", ENTRIES, ids=ENTRY_IDS)
-class TestEveryImprovedDescriptionEntry:
-    def test_it_names_a_spell_in_its_own_source(self, path, name, blocks):
-        # An entry keyed by a misspelled name, or written for a spell another
-        # source holds, would be silently dropped by the factory.
-        assert name in _source(path)
-
-    def test_it_is_the_one_the_factory_loads(self, path, name, blocks):
-        # A higher-priority source holding the same spell wins outright, so
-        # this entry would never be shown; so does the spell's class.
-        spell = SpellFactory.create(name)
-        assert spell.improved_description == blocks_from_json(blocks)
 
 
 @pytest.mark.parametrize("spell", IMPROVED, ids=[s.name for s in IMPROVED])
@@ -140,11 +103,9 @@ class TestSpellCard:
         assert "feature-box" not in html
 
     def test_spells_without_one_keep_their_source_text(self):
-        # Fireball's JSON record without an improved description, so the
-        # test doesn't depend on which spells have one yet.
-        data = dict(SpellFactory._load_json()["Fireball"])
-        data.pop("improved_description", None)
-        html = _card(DataSpell(data))
+        # Fireball's scraped record, which (like every record) has no
+        # improved description: that is written in the class.
+        html = _card(DataSpell(SpellFactory._load_json()["Fireball"]))
         assert "low roar" in html
         assert "feature-box" not in html
 
@@ -155,53 +116,3 @@ def test_a_scroll_leaves_out_the_upcasting_option():
     names = [block.name for block in blocks if isinstance(block, Option)]
     assert "Using a Higher-Level Spell Slot" not in names
     assert any(isinstance(block, Facts) for block in blocks)
-
-
-def test_a_bad_block_names_the_spell():
-    data = {
-        "name": "Broken",
-        "level": 1,
-        "school": "Evocation",
-        "classes": [],
-        "casting_time": "Action",
-        "range": "Self",
-        "components": "V",
-        "duration": "Instantaneous",
-        "description": "x",
-        "source": "x",
-        "improved_description": [{"prose": "x"}],
-    }
-    with pytest.raises(ValueError, match="Broken"):
-        DataSpell(data).improved_description
-
-
-class TestBlocksFromJson:
-    def test_every_block_type(self):
-        blocks = blocks_from_json(
-            [
-                {"paragraph": "Lead."},
-                {"facts": [["Save", "Wisdom"]]},
-                {"table": {"columns": ["A", "B"], "rows": [["1", "2"]]}},
-                {"option": {"name": "Name", "blocks": [{"paragraph": "Inner."}]}},
-            ]
-        )
-        assert blocks == [
-            Paragraph("Lead."),
-            Facts((("Save", "Wisdom"),)),
-            Table(("A", "B"), (("1", "2"),)),
-            Option("Name", (Paragraph("Inner."),)),
-        ]
-
-    @pytest.mark.parametrize(
-        "bad",
-        [
-            {"paragraph": "x"},  # not a list
-            [{"paragraph": "x", "facts": []}],  # two keys
-            [{"statblock": "<div/>"}],  # no JSON form
-            [{"facts": [["only a label"]]}],
-            [{"table": {"columns": ["A", "B"], "rows": [["1"]]}}],
-        ],
-    )
-    def test_malformed_blocks_are_rejected(self, bad):
-        with pytest.raises(ValueError):
-            blocks_from_json(bad)

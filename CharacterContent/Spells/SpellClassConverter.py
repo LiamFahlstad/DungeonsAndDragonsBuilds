@@ -1,14 +1,16 @@
 """Turn spells' JSON into classes (CharacterContent/Spells/SpellFactory/
 ClassSpell.py): one class per spell, written into the module of its level in
 CharacterContent/Spells/SpellClasses/ (Cantrips.py, Level1.py, ...), from
-everything the JSON says about it - the winning source's record (the
-rules), and its companions: usage_tags and target (_extended), the improved
-description (_improved) and the combat effects (_combat_effects).
+the winning source's scraped record (the rules). Every spell the sources had
+is a class since S.4 (Notes/combat-effects-plan.md), so this is for a spell
+scraped since: its class starts with the record's rules only, and its
+usage_tags, target, improved description and combat effects are then written
+in the class (the spell-mechanics script's `add` writes the effects through
+convert()).
 
 The class then is the spell's one source: SpellFactory uses it instead of
-the JSON, and the converter takes the spell's entries out of the companion
-files so the two can't drift apart. The scraped source record stays, as the
-fallback the class replaces and what a re-scrape is compared against.
+the JSON. The scraped source record stays, as the fallback the class
+replaces and what a re-scrape is compared against.
 
 Usage (from the repo root):
     python -m CharacterContent.Spells.SpellClassConverter --name Fireball --name "Magic Missile"
@@ -16,7 +18,6 @@ Usage (from the repo root):
     python -m CharacterContent.Spells.SpellClassConverter --level 3     # every level 3 spell
     python -m CharacterContent.Spells.SpellClassConverter --all
     ... --dry-run     # print the classes, write nothing
-    ... --keep-json   # write the classes, leave the companion files as they are
     python -m CharacterContent.Spells.SpellClassConverter --drift   # after a re-scrape
     python -m CharacterContent.Spells.SpellClassConverter --accept Fireball   # once merged
 
@@ -27,9 +28,9 @@ rules now differ from the record, for a person to merge by hand, and
 --accept stamps a class with its record as it is now.
 
 A spell that already has a class is skipped: the class may have been edited
-by hand since. Each class is checked before anything is written to the
-companion files: built by the factory, it must give the same rules, tags,
-target, improved description and combat effects as the JSON did. The casting
+by hand since. Each class is checked once written: built by the factory, it
+must give the same rules as the record did (and the combat effects it was
+given), or every file is put back. The casting
 time, range, components and duration are compared as what they mean
 (SpellFields), not as text: the class writes them in the 2024 wording.
 
@@ -152,7 +153,6 @@ _RULE_KEYS = {
     "description",
     "source",
 }
-_COMPANION_KEYS = {"usage_tags", "target", "improved_description", "combat_effects"}
 
 
 # ---------------------------------------------------------------------------
@@ -227,11 +227,10 @@ def module_name(level: int) -> str:
 
 
 def class_source(spell: DataSpell, effects: Optional[list[CombatEffect]] = None) -> str:
-    """The class for `spell`, a JSON spell with its companions merged;
-    given `effects`, its combat_effects() gives those instead of what the
-    record says."""
+    """The class for `spell`, a JSON spell; given `effects`, its
+    combat_effects() gives those."""
     data = spell._data
-    unknown = set(data) - _RULE_KEYS - _COMPANION_KEYS - _IGNORED_KEYS
+    unknown = set(data) - _RULE_KEYS - _IGNORED_KEYS
     if unknown:
         raise ValueError(
             f"{spell.name}: record keys the converter can't keep: {unknown}"
@@ -559,38 +558,6 @@ def package_init() -> str:
 # Companion files
 
 
-def remove_entry(text: str, name: str) -> str:
-    """`text`, a companion JSON file, without the top-level entry `name`,
-    keeping the file's own layout: every top-level key starts a line, two
-    spaces in."""
-    key = f"  {json.dumps(name, ensure_ascii=False)}:"
-    lines = text.split("\n")
-    starts = [i for i, line in enumerate(lines) if line.startswith('  "')]
-    start = next((i for i in starts if lines[i].startswith(key)), None)
-    if start is None:
-        return text
-    later = [i for i in starts if i > start]
-    end = later[0] if later else len(lines) - 1 - lines[::-1].index("}")
-    removed = lines[:start] + lines[end:]
-    if not later:  # it was the last: the one before it ends the object now
-        before = start - 1
-        removed[before] = removed[before].rstrip(",")
-    result = "\n".join(removed)
-    expected = json.loads(text)
-    expected.pop(name)
-    if json.loads(result) != expected:
-        raise ValueError(f"Removing {name!r} changed more than its entry")
-    return result
-
-
-def companion_paths(source_path: str) -> list[Path]:
-    return [
-        ROOT / (source_path[:-5] + "_extended.json"),
-        ROOT / SpellFactory.improved_path(source_path),
-        ROOT / SpellFactory.combat_effects_path(source_path),
-    ]
-
-
 # ---------------------------------------------------------------------------
 # Checking
 
@@ -641,19 +608,12 @@ def differences(
 # ---------------------------------------------------------------------------
 
 
-def winning_source(name: str) -> str:
-    found = scraped_record(name)
-    if found is None:
-        raise ValueError(f"No source has the spell {name!r}")
-    return found[0]
-
-
 _RAW_SOURCES: dict[str, dict] = {}
 
 
 def scraped_record(name: str) -> Optional[tuple[str, dict]]:
     """The source path whose record SpellFactory uses for the spell, and
-    that record as the scraped file has it (no companions merged in), or
+    that record as the scraped file has it, or
     None for a spell no source has. The files are read once."""
     for path in SpellFactory.json_paths:
         if path not in _RAW_SOURCES:
@@ -706,7 +666,8 @@ def drifted() -> list[tuple[str, str]]:
 def drift_report(name: str) -> list[str]:
     """Where the spell's class and its scraped record now disagree on the
     rules (casting time, range and so on by meaning): what to merge by hand.
-    Companion data (tags, improved description, effects) isn't compared."""
+    What only the class says (tags, target, improved description,
+    effects) isn't compared."""
     from CharacterContent.Spells.SpellClasses import SPELL_CLASSES
 
     found = scraped_record(name)
@@ -784,11 +745,9 @@ class Result:
 def convert(
     spells: list[DataSpell],
     effects: Optional[dict[str, list[CombatEffect]]] = None,
-    keep_json: bool = False,
 ) -> Result:
-    """Write a class for each of `spells` (JSON spells without one), check
-    each gives what its JSON gave, then take the spells out of the companion
-    files (unless `keep_json`). A spell named in `effects` gets those combat
+    """Write a class for each of `spells` (JSON spells without one) and
+    check each gives what its JSON gave. A spell named in `effects` gets those combat
     effects instead of its record's, and is checked against them. A spell
     the classes can't say (CannotConvert) is left as JSON, in `left`."""
     effects = effects or {}
@@ -826,15 +785,6 @@ def convert(
     if result.problems:
         return result
     result.done = [spell.name for spell in todo]
-    if not keep_json:
-        for spell in todo:
-            for path in companion_paths(winning_source(spell.name)):
-                if not path.exists():
-                    continue
-                text = path.read_text(encoding="utf-8")
-                new = remove_entry(text, spell.name)
-                if new != text:
-                    path.write_text(new, encoding="utf-8", newline="")
     return result
 
 
@@ -943,7 +893,6 @@ def main() -> int:
     parser.add_argument("--described", action="store_true")
     parser.add_argument("--all", action="store_true")
     parser.add_argument("--dry-run", action="store_true")
-    parser.add_argument("--keep-json", action="store_true")
     parser.add_argument(
         "--drift",
         action="store_true",
@@ -988,7 +937,7 @@ def main() -> int:
         print(f"{count} class(es), nothing written")
         return 0
 
-    result = convert(todo, keep_json=args.keep_json)
+    result = convert(todo)
     for reason in result.left:
         print("LEFT AS JSON", reason)
     if result.problems:

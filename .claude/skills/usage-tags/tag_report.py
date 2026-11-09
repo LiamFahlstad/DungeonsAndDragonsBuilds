@@ -6,13 +6,14 @@ Usage (from the repo root):
     python .claude/skills/usage-tags/tag_report.py with buff control      # features/spells tagged with all of these
     python .claude/skills/usage-tags/tag_report.py spells --untagged [--level N] [--class Wizard]
                                                                          # spells that render untagged, and the file to tag them in
-    python .claude/skills/usage-tags/tag_report.py set-spell "Fireball" damage   # write a spell's tags (--clear removes them)
+    python .claude/skills/usage-tags/tag_report.py set-spell "Fireball" damage   # says where to write a spell's tags
 
 Features carry usage_tags=[...] in their __init__ call (found here by parsing the code, not
-importing it). A spell written as a class (CharacterContent/Spells/SpellClasses) carries them in
-its SpellRules(usage_tags=...); any other spell in CharacterContent/Spells/spells_<source>_extended.json,
-which SpellFactory merges over the source record. This tool resolves the same choice, so "untagged"
-means "renders with no chips".
+importing it). Every spell is a class (CharacterContent/Spells/SpellClasses) and carries them in
+its SpellRules(usage_tags=...). A spell scraped since, a record with no class yet, has none: convert
+it first (python -m CharacterContent.Spells.SpellClassConverter --name "<spell>"), then tag its
+class. This tool resolves the same choice as SpellFactory, so "untagged" means "renders with no
+chips".
 """
 
 import argparse
@@ -79,20 +80,20 @@ def class_spell_tags() -> list[dict]:
 
 def spell_tags() -> list[dict]:
     """The spell SpellFactory renders for each name (its class, else the winning JSON record),
-    with its tags and where they live."""
+    with its tags and where they live. A record has no tags: SpellFactory reads only the
+    rules from it, so a spell without a class is listed untagged, to convert first."""
     spells = class_spell_tags()
     seen = {spell["name"] for spell in spells}
     for source in SPELL_SOURCES:
-        data = json.loads((SPELL_DIR / f"{source}.json").read_text(encoding="utf-8"))
-        ext_path = SPELL_DIR / f"{source}_extended.json"
-        extended = json.loads(ext_path.read_text(encoding="utf-8")) if ext_path.exists() else {}
+        path = SPELL_DIR / f"{source}.json"
+        data = json.loads(path.read_text(encoding="utf-8"))
         for name, record in data.items():
             if name in seen:
                 continue  # a higher-priority source already supplies this spell
             seen.add(name)
-            tags = extended.get(name, {}).get("usage_tags", record.get("usage_tags"))
             spells.append({
-                "name": name, "where": rel(ext_path), "tags": tags,
+                "name": name, "where": f"{rel(path)} (no class yet: convert it first)",
+                "tags": record.get("usage_tags"),
                 "level": record.get("level"), "classes": record.get("classes") or [],
                 "shadowed_source_tags": "usage_tags" in record,
             })
@@ -114,7 +115,8 @@ def problems_in(items: list[dict], kind: str) -> list[str]:
         if len(set(tags)) != len(tags):
             problems.append(f"{label}: duplicate tag in {tags}")
         if item.get("shadowed_source_tags"):
-            problems.append(f"{label}: usage_tags in the source JSON are overridden by {item['where']}; move them there")
+            problems.append(f"{label}: usage_tags in a scraped record are never read; convert the spell"
+                            " and tag its class")
     return problems
 
 
@@ -153,43 +155,22 @@ def cmd_with(args) -> int:
     return 0
 
 
-def write_extended(path: Path, data: dict) -> None:
-    """Write an extended spell file exactly as the repo stores it: 2-space JSON, no trailing
-    newline, platform line endings (git normalizes them), so a one-spell change is a one-spell diff."""
-    with open(path, "w", encoding="utf-8") as f:
-        f.write(json.dumps(data, indent=2, ensure_ascii=False))
-
-
 def cmd_set_spell(args) -> int:
-    tags = [] if args.clear else list(dict.fromkeys(args.tags))
-    if not args.clear and not tags:
-        print("give tags, or --clear")
-        return 1
-    bad = [tag for tag in tags if tag not in TAGS]
+    """Every spell's tags are in its class now, written by hand: this says where."""
+    bad = [tag for tag in args.tags if tag not in TAGS]
     if bad:
         print(f"unknown tag(s) {bad}; allowed: {', '.join(TAGS)}")
         return 1
     spell = next((s for s in spell_tags() if s["name"] == args.name), None)
     if spell is None:
-        print(f"no spell named {args.name!r} in {', '.join(SPELL_SOURCES)} (names are case-sensitive)")
+        print(f"no spell named {args.name!r} in {', '.join(SPELL_SOURCES)} or a class (names are case-sensitive)")
         return 1
     if spell.get("is_class"):
-        print(f"{args.name} is a class spell: edit usage_tags in its SpellRules at {spell['where']}"
-              " (a JSON entry for it fails tests/test_spell_classes.py)")
-        return 1
-    path = ROOT / spell["where"]
-    original = json.loads(path.read_text(encoding="utf-8")) if path.exists() else {}
-    record = {k: v for k, v in original.get(args.name, {}).items() if k != "usage_tags"}
-    data = dict(original)
-    # usage_tags is the first key of every existing record; keep it that way.
-    data[args.name] = ({"usage_tags": tags} if tags else {}) | record
-    if not data[args.name]:
-        del data[args.name]
-    if args.name not in original and list(original) == sorted(original):
-        data = dict(sorted(data.items()))  # a sorted file stays sorted; an unsorted one gets it appended
-    write_extended(path, data)
-    print(f"{args.name}: {tags or 'no tags'} -> {spell['where']}")
-    return 0
+        print(f"{args.name} is a class spell: edit usage_tags in its SpellRules at {spell['where']}")
+    else:
+        print(f"{args.name} has no class yet: python -m CharacterContent.Spells.SpellClassConverter"
+              f' --name "{args.name}", then edit usage_tags in its SpellRules')
+    return 1
 
 
 def cmd_spells(args) -> int:
@@ -220,10 +201,10 @@ def main() -> int:
     spells_parser.add_argument("--level", type=int)
     spells_parser.add_argument("--class", dest="cls")
     spells_parser.set_defaults(run=cmd_spells)
-    set_parser = sub.add_parser("set-spell", help="write a spell's usage_tags into the extended file that renders it")
+    set_parser = sub.add_parser("set-spell", help="say where to write a spell's usage_tags (its class)")
     set_parser.add_argument("name")
     set_parser.add_argument("tags", nargs="*")
-    set_parser.add_argument("--clear", action="store_true", help="remove the spell's usage_tags")
+    set_parser.add_argument("--clear", action="store_true", help="(where to remove them: the same place)")
     set_parser.set_defaults(run=cmd_set_spell)
     args = parser.parse_args()
     return args.run(args)

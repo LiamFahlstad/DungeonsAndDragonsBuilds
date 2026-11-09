@@ -13,7 +13,7 @@ change:
 - log bugs found along the way with the `discovered-issues` skill and list
   their ids in **Discovered issues**.
 
-## Status (2026-11-09, S.4 all but one spell)
+## Status (2026-11-09, S.4 done: every spell is a class)
 
 | Phase | Step | State |
 |---|---|---|
@@ -32,13 +32,13 @@ change:
 | 2 | 2.6 `Feature.adjust_combat_effect` hook | **Done** |
 | 2 | 2.7 Conditional extra damage (`when`) | **Done**, as a generated note (R14) |
 | 2 | Extensions list their own uses under their parent | **Done** (R10, new) |
-| S | **Spells as classes** (new direction, 2026-11-09; see its section) | S.1 base class, factory and converter **done**; S.2 the 57 spells with combat effects converted **done**; S.2c card lines as dataclasses **done** (R20); S.3 new effects go into classes **done** (R22); S.5 drift check **done** (R23); S.4 **all but Gate Seal**: 593 of 594 spells are classes, the agents' tools switched over (R24), Q15 and DI-065 done (R25), the 2024 and aidedd companion files deleted |
+| S | **Spells as classes** (new direction, 2026-11-09; see its section) | S.1 base class, factory and converter **done**; S.2 the 57 spells with combat effects converted **done**; S.2c card lines as dataclasses **done** (R20); S.3 new effects go into classes **done** (R22); S.5 drift check **done** (R23); S.4 **done** (R26): all 594 spells are classes, the agents' tools switched over (R24), Q15 and DI-065 done (R25), every companion file deleted and nothing reads them |
 | 3 | Lasting effects (3.1-3.6) | Not started |
 | 4 | One `combat-effects` skill; feature agent; content rollout | Partly: the skill's rubric and script cover every new field; first content batch below |
 | 5 | Sheet chips, monster score | Not started |
 
 **Content described so far.** Spells: 57 (2024) + 1 (2014), all as classes
-(every spell but Gate Seal is a class since S.4; 58 have combat effects);
+(every spell is a class since S.4; 58 have combat effects);
 Lightning Bolt (2026-11-09) was the first written through S.3's `add`. Added
 2026-11-09: Burning Hands, Charm Person, Chill Touch, Command (5 options),
 Divine Smite, Sacred Flame, Scorching Ray, Shield of Faith; upgraded from notes
@@ -59,6 +59,12 @@ in the 2024 wording (R20: "1 action" -> "Action", "1 Hour" -> "1 hour",
 minutes", the badge still shown), Gate's and Yolande's Regal Presence's
 components slips (DI-062), and Ceremony's Ritual tag on three builds
 (DI-065); Armor of Agathys' "1 hour" in six More Info goldens.
+
+**Verified 2026-11-09 (S.4 done, R26):** full suite passes (10,011; six fewer than before
+R26's last step, the removed `blocks_from_json` tests); no snapshot changed;
+spell-mechanics `check` and usage-tags `check` OK (594 of 594 spells
+tagged, 58 with combat effects); the converter's parity check passed for
+Gate Seal.
 
 ## Decisions
 
@@ -89,6 +95,13 @@ suggested.
 8. **Q15 as suggested** ("continue with plan", 2026-11-09):
    `SpellRules.school_note`, and "Wizard (Dunamancy)" read as Wizard plus
    that note. Built in S.4 (R25).
+9. **No hand-fixing every spell yet** (the user, 2026-11-09: no okay "to fix
+   all spells by hand until the proper engine/framework/support is in
+   place"). Writing or correcting the combat effects of all spells one by one
+   waits until the engine, framework and tooling they need exist (Phase 3's
+   lasting effects and Phase 4's tooling). Until then, hand edits stay limited
+   to the spells a step or a campaign needs; a sweep over all spells needs the
+   user's go-ahead first.
 
 ## Goal
 
@@ -290,7 +303,7 @@ module's own imports and classes when adding to it.
 | S.2c | Casting time, range, components and duration as `SpellFields` dataclasses (R20); the converter compares them by meaning; the 57 regenerated | **Done**: every record of the three sources reads and writes back (`tests/test_spell_fields.py`); old and new derived values agree on all 1,391 records but one fix (Yolande's Regal Presence now has V); one card changed (Absorb Elements "1 reaction, ..." -> "Reaction, ...") |
 | S.2d | Combat effects' `roll` and `until` as enums (`EffectRoll`, `TurnEdge`, `TurnOf`; R21), written by the converter and used by every Python effect (spell classes, features, homebrew monsters, tests) | **Done**: picker goldens and sheet snapshots unchanged |
 | S.3 | Write new combat effects in classes, not JSON: convert a spell, then edit its `combat_effects()`. Teach `spell_mechanics.py draft` to print a class's method instead of a JSON entry, and give the `spell-mechanics` agent classes in scope | **Done** (R22): `draft --out` writes a Python `EFFECTS` module; `add` converts the spell with those effects (`SpellClassConverter.convert(..., effects)`) or sets the method on its class (`set_combat_effects`), both checked and rolled back on a problem; JSON only for the spells that can't be classes; `check` covers class spells; skill, agent and tests updated. Lightning Bolt added through it (one new picker row, read) |
-| S.4 | Convert the rest (Q11) and retire the companion files: once every spell of a source has a class, its `_extended`/`_improved`/`_combat_effects` files and `DataSpell`'s companion handling go | **All but one spell** (Q11 as suggested: level by level). Cantrips (2026-11-09): 33 more classes. Levels 1-9 (2026-11-09): 487 classes, each checked against its JSON by the converter; then Q15 and DI-065 (R25) converted the 15 Dunamancy spells. 593 of 594 spells are classes; drift check clean; picker goldens unchanged; sheet changes all R20 wording, DI-062 slips or Ceremony's Ritual tag (see Verified). The companion entries nobody read (a spell with a class, or a record another source wins over: 797, 411 in `spells_aidedd_extended.json` and 386 in `spells_dnd5e_extended.json`) were removed, and the five files left empty deleted: every 2024 and aidedd companion file, and `spells_dnd5e_combat_effects.json`. The tools that wrote JSON handle classes (R24). **Left:** Gate Seal, whose record has no components (DI-062, a scraper fix). Once it's a class, delete `spells_dnd5e_extended.json` / `_improved.json`, the companion merging in `SpellFactory._load_json` and `DataSpell`'s companion fields, and the JSON paths in `spell_mechanics.py add`, `tag_report.py set-spell` and the `spell-improved-descriptions` agent |
+| S.4 | Convert the rest (Q11) and retire the companion files: once every spell of a source has a class, its `_extended`/`_improved`/`_combat_effects` files and `DataSpell`'s companion handling go | **Done** (R26). Before that, **all but one spell** (Q11 as suggested: level by level). Cantrips (2026-11-09): 33 more classes. Levels 1-9 (2026-11-09): 487 classes, each checked against its JSON by the converter; then Q15 and DI-065 (R25) converted the 15 Dunamancy spells. 593 of 594 spells are classes; drift check clean; picker goldens unchanged; sheet changes all R20 wording, DI-062 slips or Ceremony's Ritual tag (see Verified). The companion entries nobody read (a spell with a class, or a record another source wins over: 797, 411 in `spells_aidedd_extended.json` and 386 in `spells_dnd5e_extended.json`) were removed, and the five files left empty deleted: every 2024 and aidedd companion file, and `spells_dnd5e_combat_effects.json`. The tools that wrote JSON handle classes (R24). Gate Seal, whose record had no components, was fixed in the scraper (DI-062) and converted last; then the last two companion files and every reader and writer of them went (R26) |
 | S.5 | Drift check: a re-scrape that changes a converted spell's record must be noticed (Q12) | **Done** (R23): every class carries `converted_from = RecordStamp(file, sha1)`, written by the converter and backfilled on the 58 classes (all 58 agreed with their records by meaning first); `test_no_class_has_drifted_from_its_record` fails on a changed record; `SpellClassConverter --drift` shows what to merge, `--accept <spell>` re-stamps; HOWTO and the `content-scraper` agent say to run it after a re-scrape |
 
 ## Lasting effects (Phase 3, design unchanged)
@@ -342,7 +355,9 @@ Mark, Heroism. The modifier types go in a sibling module,
    named class, subclass or party.
 3. Content: the rest of the Curse of the Lich party (Kivi's Monk features,
    Obmar's, Edmund's Channel Divinity; their 2014-only spells), then Time Loop
-   PR, then spells level by level and features class by class.
+   PR, then spells level by level and features class by class. The
+   level-by-level spell pass waits for Decision 9: not before the engine
+   support is in place and the user says go.
 4. A coverage line per campaign.
 
 ### Phase 5: beyond the dialog (optional)
@@ -504,6 +519,33 @@ Sheet chips ("DEX save · half · 8d6 Fire") from the same data;
   the school (Wristpocket) as `ritual=True`, the converter writes that spec, and
   Ceremony and Skywrite, converted just before, got it by hand.
 
+- **R26. A scraped record is only the rules; everything else is the
+  class's** (S.4's end, 2026-11-09). Gate Seal's components were missing
+  because dnd5e.wikidot.com writes that label as
+  `<strong>Components</strong>:`, colon outside the tag, and
+  `DnD5eSpellScraper` matched only `Components:`. It now matches all four
+  stat-line labels with or without the colon. Only Gate Seal's record was
+  re-scraped (a full re-scrape would have been drift for hundreds of
+  classes to merge); only its components changed. With it converted, the
+  plan's leftovers went: `spells_dnd5e_extended.json` / `_improved.json`;
+  `SpellFactory`'s companion merging (`_load_json` reads the three sources
+  only; `improved_path`, `combat_effects_path` and their loaders are gone);
+  `DataSpell`'s `usage_tags`, `target`, `improved_description` and
+  `combat_effects`, so a record falls back to `Spell`'s defaults; the
+  converter's companion removal (`remove_entry`, `companion_paths`,
+  `--keep-json`); `spell_mechanics.py`'s JSON half (`format`, JSON entries in
+  `check`, JSON writes in `add`, which now refuses a spell that can't be a
+  class); `tag_report.py set-spell`'s JSON writes (it says where to edit);
+  and `FeatureText.blocks_from_json`, which only `DataSpell` used. Better
+  than the plan: instead of a JSON path for "a spell that can't be a class",
+  there is none. A spell scraped later is converted first, and the tools
+  say so. Tests: `test_every_spell_the_sources_have_is_a_class` and
+  `test_no_companion_file_is_left` (a companion file written now would be
+  silently ignored) replace the companion-entry tests; the converter's
+  parity test checks a record against its class's rules only. The agents,
+  the skills, HOWTO and IMPROVED_DESCRIPTIONS.md say "every spell is a
+  class".
+
 ## Open questions (with suggestions)
 
 - **Q2. When to rename `spell-mechanics` → `combat-effects` (skill, agent,
@@ -558,10 +600,11 @@ Sheet chips ("DEX save · half · 8d6 Fire") from the same data;
   (Optional Qt accessors, `QTest.keyClick` overloads). All tests pass.
 - **DI-061** (open): homebrew Mira, Princess of the Loop has 6 abilities; the
   house rule is at most 4.
-- **DI-062** (open): five spell records have malformed components ('V,S',
+- **DI-062** (open): five spell records had malformed components ('V,S',
   'M(a diamond ...)', a stray 'Component: ', none at all). Since R20 the
-  converter reads all but the one with none, Gate Seal, now the last JSON
-  spell (S.4); the records still want a scraper fix.
+  converter reads the first four. Gate Seal's (none) was a scraper bug,
+  fixed and re-scraped (R26). The other four records still want a scraper
+  fix.
 - **DI-063** (fixed, R25): 15 Dunamancy spells had a school or class with a
   note; they are classes with a `school_note`.
 - **DI-064** (open): Shield's casting time is cut off in the 2024 and 2014

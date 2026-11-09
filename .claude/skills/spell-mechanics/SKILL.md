@@ -47,16 +47,13 @@ The list holds:
 A spell whose `combat_effects()` returns `None` (no method, or a JSON spell)
 is "not described yet" and is read from its text.
 
-**Most spells are still JSON** (no class yet). You don't convert them by
-hand: `add` turns the spell into a class (with
-`CharacterContent/Spells/SpellClassConverter.py`, which moves its improved
-description and usage tags into the class too, checks the class says what
-the JSON said, and takes the spell out of the companion files) and gives it
-your effects. **About 20 spells can't be classes** (a Dunamancy school or
-class, DI-063; no components, DI-062): `todo` says so, and for those `add`
-writes the effects as JSON, as `to_dict()` writes them, into
-`CharacterContent/Spells/spells_<source>_combat_effects.json`. Never edit
-those files or the source spell JSON by hand.
+**Every spell is a class** (since 2026-11-09). A spell scraped since, a
+record with no class yet, isn't converted by hand: `add` turns it into a
+class (with `CharacterContent/Spells/SpellClassConverter.py`, which checks
+the class says what the record said) and gives it your effects. One the
+converter can't write (a malformed record) is refused, and `todo` says why;
+its record wants a scraper fix. There is no JSON for combat effects any
+more: never edit the source spell JSON by hand.
 
 Leave out every number that belongs to the caster (`dc`, `attack_bonus`): the
 picker works those out. Leave out every field at its default.

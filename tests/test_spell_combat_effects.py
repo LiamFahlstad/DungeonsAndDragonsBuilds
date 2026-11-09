@@ -1,6 +1,5 @@
 """Spells' combat effects - Model/Content/CombatEffect.py's CombatEffect, in a
-spell's class (CharacterContent/Spells/SpellClasses) or as to_dict() writes
-them in CharacterContent/Spells/spells_<source>_combat_effects.json - and how
+spell's class (CharacterContent/Spells/SpellClasses; every spell is one) - and how
 the combat UI's Custom Effect picker fills its form from them instead of
 reading the spell's text.
 
@@ -9,8 +8,6 @@ is a Dexterity save for 8d6 Fire, half on a success, 1d6 more per slot level
 above 3; Toll the Dead is 1d8 Necrotic, 3d8 from character level 11; and so on.
 """
 
-import json
-import os
 import re
 
 import pytest
@@ -37,8 +34,6 @@ from Model.Content.CombatEffect import (
     TurnOf,
 )
 
-SOURCE = "CharacterContent/Spells/spells_dnd2024.json"
-
 # A monster whose Spellcasting says its numbers.
 CASTER = {
     "name": "Cultist",
@@ -51,11 +46,6 @@ CASTER = {
 }
 
 
-def _load(path: str) -> dict:
-    with open(path, encoding="utf-8") as f:
-        return json.load(f)
-
-
 def _option(name: str, char: dict | None = None):
     return spell_option(SpellFactory.create(name), CASTER if char is None else char)
 
@@ -64,26 +54,13 @@ def _option(name: str, char: dict | None = None):
 # The data files
 
 
-def _effects_files() -> dict[str, dict]:
-    """Each source that has a combat effects file, with that file's entries."""
-    return {
-        source: _load(SpellFactory.combat_effects_path(source))
-        for source in SpellFactory.json_paths
-        if os.path.exists(SpellFactory.combat_effects_path(source))
-    }
-
-
 def _all_described() -> list[str]:
-    """Every spell with combat effects, in its class or a JSON entry."""
+    """Every spell with combat effects (in its class)."""
     return sorted(
         spell.name
         for spell in SpellFactory.all_spells()
         if spell.combat_effects() is not None
     )
-
-
-def _json_entries() -> list[str]:
-    return sorted(name for entries in _effects_files().values() for name in entries)
 
 
 def _effects(spell) -> list[CombatEffect]:
@@ -94,33 +71,6 @@ def _effects(spell) -> list[CombatEffect]:
 
 def test_there_are_described_spells():
     assert len(_all_described()) >= 50
-
-
-@pytest.mark.parametrize("source", sorted(_effects_files()))
-def test_every_entry_is_used(source):
-    """An entry is for a spell of its own source that the source wins: one
-    for a spell another source wins would never be read."""
-    sources = {path: _load(path) for path in SpellFactory.json_paths}
-    for name in _effects_files()[source]:
-        assert name in sources[source], name
-        winner = next(path for path in SpellFactory.json_paths if name in sources[path])
-        assert winner == source, name
-
-
-@pytest.mark.parametrize("source", sorted(_effects_files()))
-def test_entries_are_sorted_by_name(source):
-    names = list(_effects_files()[source])
-    assert names == sorted(names)
-
-
-@pytest.mark.parametrize("name", _json_entries())
-def test_every_entry_reads_and_is_written_as_to_dict_writes_it(name):
-    """Read back and written again, an entry is unchanged: no default value
-    written out, no key the model doesn't have."""
-    effects = SpellFactory.create(name).combat_effects()
-    assert isinstance(effects, list)
-    entry = next(e[name] for e in _effects_files().values() if name in e)
-    assert [effect.to_dict() for effect in effects] == entry
 
 
 @pytest.mark.parametrize("name", _all_described())
@@ -310,40 +260,13 @@ def test_a_spell_without_an_entry_is_not_described():
     assert _unchecked_spell().combat_effects() is None
 
 
-def _in_both_sources() -> str:
-    """A spell the 2024 and the 2014 sources both have."""
-    with open("CharacterContent/Spells/spells_dnd5e.json", encoding="utf-8") as f:
-        in_2014 = set(json.load(f))
-    return next(name for name in sorted(_load(SOURCE)) if name in in_2014)
-
-
-def test_an_entry_rides_only_on_its_own_sources_record(monkeypatch):
-    """An entry is for its source's wording: a 2014 file's entry isn't for
-    the 2024 spell of the same name, which wins the merge. Every spell in
-    both sources is a class now, so the classes are hidden to test the
-    JSON merge that the spells left as JSON still go through."""
-    name = _in_both_sources()
-    monkeypatch.setattr(SpellFactory, "_spell_classes", staticmethod(lambda: {}))
-    source_2014 = "CharacterContent/Spells/spells_dnd5e.json"
-    entry_2014 = [{"roll": "save", "save_ability": "Constitution"}]
-    real_load = SpellFactory._load_combat_effects.__func__
-
-    def load(cls, path):
-        if path == source_2014:
-            return {name: entry_2014}
-        return {} if path == SOURCE else real_load(cls, path)
-
-    monkeypatch.setattr(SpellFactory, "_load_combat_effects", classmethod(load))
-    monkeypatch.setattr(SpellFactory, "_cache", None)
-    assert "combat_effects" not in SpellFactory._load_json()[name]
-    assert SpellFactory.create(name).combat_effects() is None
-
-
-@pytest.mark.parametrize("entry", [[{"roll": "check"}], {"roll": "save"}])
-def test_a_wrong_entry_fails_when_read(entry):
-    spell = DataSpell(dict(SpellFactory._load_json()["Fireball"], combat_effects=entry))
-    with pytest.raises(ValueError, match="Fireball"):
-        spell.combat_effects()
+def test_a_scraped_record_has_no_combat_effects():
+    """A record is only the scraped rules: a spell's effects are in its
+    class, so a record read on its own (a spell scraped and not converted
+    yet) is read from its text."""
+    record = DataSpell(SpellFactory._load_json()["Fireball"])
+    assert record.combat_effects() is None
+    assert SpellFactory.create("Fireball").combat_effects()
 
 
 # ---------------------------------------------------------------------------
@@ -620,8 +543,8 @@ def test_false_life_gives_temporary_hit_points():
 
 
 def test_an_entry_in_a_2014_file():
-    """Absorb Elements is only in the 2014 data, so its entry is in
-    spells_dnd5e_combat_effects.json."""
+    """Absorb Elements is only in the 2014 data; its class (converted from
+    that record) has the effect."""
     absorb = _option("Absorb Elements")
     assert absorb.is_curated
     assert absorb.damage == ""

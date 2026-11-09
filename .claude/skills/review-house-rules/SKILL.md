@@ -21,7 +21,7 @@ It checks **added lines only**, because old code that breaks a rule is not prece
 | Check | Rule |
 |---|---|
 | `generated-file` | A plain `Combat/Monsters/CR_*/monsters.py` or `__init__.py` is overwritten by `generate_monsters.py`. Fix the generator or put the monster in `monsters_homebrew.py`. Files whose header says "hand-edited" (CR_10) are exempt. |
-| `spell-source` | `spells_{dnd2024,dnd5e,aidedd}.json` are scraper output. Tags go in `_extended.json`, descriptions in `_improved.json`. |
+| `spell-source` | `spells_{dnd2024,dnd5e,aidedd}.json` are scraper output. Tags, improved descriptions and combat effects go in the spell's class (`CharacterContent/Spells/SpellClasses/`). |
 | `origin` | `origin=` is the category the player reads ("Origin Feat", "Bard Level 9", "Path Of The Ancestral Guardian Barbarian Level 3"), never a book, edition or year. |
 | `rules-constant` | `range(1, 21)` and `(score - 10) // 2` come from `Core/Rules.py` (`ALL_LEVELS`, `ability_modifier()`). |
 | `debug` | No `print()` / `breakpoint()` left in `Model/`, `Core/`, `CharacterContent/`. |

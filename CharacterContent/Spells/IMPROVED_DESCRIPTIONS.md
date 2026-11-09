@@ -8,26 +8,22 @@ cards read alike.
 
 ## Where they live
 
-In the spell's class (below): every spell is one but the few whose record
-the converter can't read (2026-11: Gate Seal and Wristpocket). Those keep
-theirs in `spells_<source>_improved.json`, beside the source file that wins
-for them (`spells_dnd5e.json` -> `spells_dnd5e_improved.json`), keyed by
-spell name. Such an entry rides on that source's record only: the factory
-merges sources whole-record, so a description written for one wording never
-lands on another. A spell with no description keeps its source text.
+In the spell's class (below): every spell is one since 2026-11-09. There
+are no `spells_<source>_improved.json` files any more, and the factory reads
+only the rules from a scraped record. A spell scraped since, with no class
+yet, is converted first (below). A spell with no improved description keeps
+its source text.
 
 `RunCharacterCreator.py --source-text` prints the source text instead, for
 checking an improved description against it.
 
 ## Spells written as classes
 
-A spell can also be a Python class in `CharacterContent/Spells/SpellClasses/`
-(`Cantrips.py`, `Level1.py`, ...; base `SpellFactory/ClassSpell.py`), and the
-factory then uses the class instead of the JSON. Such a spell's improved
-description is its class's `improved_description` property, written with the
-same blocks as Python (`Facts(...)`, `Option(...)`), and it has no entry in
-the `_improved.json` file. Edit the class, never add a JSON entry for it
-(`tests/test_spell_classes.py` fails if one is there).
+Every spell is a Python class in `CharacterContent/Spells/SpellClasses/`
+(`Cantrips.py`, `Level1.py`, ...; base `SpellFactory/ClassSpell.py`), which
+the factory uses instead of the JSON. A spell's improved description is its
+class's `improved_description` property, written with the blocks as Python
+(`Facts(...)`, `Option(...)`).
 `python -m CharacterContent.Spells.SpellClassConverter --name <spell>` turns a
 spell's JSON into its class.
 

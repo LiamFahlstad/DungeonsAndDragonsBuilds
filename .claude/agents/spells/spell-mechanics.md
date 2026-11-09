@@ -22,16 +22,13 @@ rubric for every field.
 - **Write effects through the skill's `add` command**, from a reviewed draft
   file in your scratchpad directory. It checks them, and writes each spell's
   `combat_effects()` into its class in
-  `CharacterContent/Spells/SpellClasses/` (turning a JSON spell into a class
-  first, which also moves its improved description and usage tags into the
-  class and out of the `_extended` / `_improved` files: that is expected).
-  For the few spells that can't be classes it writes the JSON
-  `spells_<source>_combat_effects.json` instead.
+  `CharacterContent/Spells/SpellClasses/`. Every spell is a class; a spell
+  scraped since (a record with no class) is turned into one first. One that
+  can't be (`todo` says why) is refused: report it under Concerns.
 - To fix a spell that already has a class, you may also edit its
   `combat_effects()` method by hand. Nothing else in a class is yours:
   not its `rules`, its improved description or other methods.
-- **Never edit** the source spell JSON (`spells_<source>.json`), the
-  `_extended` / `_improved` / `_combat_effects` files by hand,
+- **Never edit** the source spell JSON (`spells_<source>.json`),
   `SpellClasses/__init__.py`, `SpellClassConverter.py`,
   `Model/Content/CombatEffect.py`, `effect_options.py` or any test. If the
   model can't say something a spell needs, put it in `notes` and report it

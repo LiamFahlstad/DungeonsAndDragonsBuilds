@@ -9,7 +9,13 @@ from .Spell import Spell
 class SpellFactory:
     """Factory for every spell: a spell written as a class
     (CharacterContent/Spells/SpellClasses, see SpellFactory/ClassSpell.py)
-    if it has one, otherwise its JSON record.
+    if it has one, otherwise its scraped JSON record.
+
+    Every spell the sources have is a class since S.4 (see
+    Notes/combat-effects-plan.md); a record is only used for a spell scraped
+    since and not converted yet (SpellClassConverter), and by the converter
+    and its drift check. A record is only the scraped rules: usage_tags, an
+    improved description and combat effects are written in the class.
 
     The JSON sources are merged whole-record (never per-field) in priority
     order, highest priority first. For any given spell name, the entire record
@@ -34,58 +40,9 @@ class SpellFactory:
             # priority sources so higher-priority entries win outright.
             for path in reversed(cls.json_paths):
                 with open(path, "r", encoding="utf-8") as f:
-                    source_data = json.load(f)
-                # Try to load extended data for this source
-                extended_path = path[:-5] + "_extended.json"
-                try:
-                    with open(extended_path, "r", encoding="utf-8") as f:
-                        extended_data = json.load(f)
-                except FileNotFoundError:
-                    extended_data = {}
-                # Merge extended fields into matching spells
-                for name, extra_fields in extended_data.items():
-                    if name in source_data:
-                        source_data[name].update(extra_fields)
-                # Improved descriptions (blocks, as JSON) belong to this
-                # source's wording of the spell, so they ride on its record.
-                for name, blocks in cls._load_improved(path).items():
-                    if name in source_data:
-                        source_data[name]["improved_description"] = blocks
-                # So do the combat effects read from that wording.
-                for name, entry in cls._load_combat_effects(path).items():
-                    if name in source_data:
-                        source_data[name]["combat_effects"] = entry
-                merged.update(source_data)
+                    merged.update(json.load(f))
             cls._cache = merged
         return cls._cache
-
-    @staticmethod
-    def improved_path(path: str) -> str:
-        """spells_dnd2024.json -> spells_dnd2024_improved.json"""
-        return path[:-5] + "_improved.json"
-
-    @classmethod
-    def _load_improved(cls, path: str) -> dict[str, Any]:
-        try:
-            with open(cls.improved_path(path), "r", encoding="utf-8") as f:
-                return json.load(f)
-        except FileNotFoundError:
-            return {}
-
-    @staticmethod
-    def combat_effects_path(path: str) -> str:
-        """spells_dnd2024.json -> spells_dnd2024_combat_effects.json"""
-        return path[:-5] + "_combat_effects.json"
-
-    @classmethod
-    def _load_combat_effects(cls, path: str) -> dict[str, Any]:
-        """What casting each spell does in a fight (Spell.combat_effects), for
-        the spells the source's companion file has checked."""
-        try:
-            with open(cls.combat_effects_path(path), "r", encoding="utf-8") as f:
-                return json.load(f)
-        except FileNotFoundError:
-            return {}
 
     @classmethod
     def create(

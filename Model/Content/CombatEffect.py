@@ -3,12 +3,11 @@ so the combat simulator doesn't have to read it from the rules text. One
 model for all three (Notes/combat-effects-plan.md):
 
 - a feature says it in Python (Feature.combat_effects);
-- a spell says it in JSON, in CharacterContent/Spells/
-  spells_<source>_combat_effects.json (Spell.combat_effects);
+- a spell says it in Python, in its class in CharacterContent/Spells/
+  SpellClasses (Spell.combat_effects);
 - a monster's ability has it written on it (MonsterAbility.combat_effects).
 
-The JSON is exactly what to_dict() writes and from_dict() reads, and that's
-also what a fight's log keeps. The combat UI's Custom Effect picker fills its
+to_dict() and from_dict() are what a fight's log keeps. The combat UI's Custom Effect picker fills its
 form from these (Combat/CombatUIQt/effect_options.py).
 
 What depends on who uses it is left blank and worked out then: the DC (a

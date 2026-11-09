@@ -110,7 +110,7 @@ def main() -> int:
         if is_generated_monster_file(path):
             find(path, None, "generated-file", "generate_monsters.py overwrites this file; put homebrew monsters in monsters_homebrew.py")
         if SPELL_SOURCE_JSON.match(path):
-            find(path, None, "spell-source", "scraper output: only a scraper run should change it. usage_tags go in spells_<source>_extended.json, descriptions in _improved.json")
+            find(path, None, "spell-source", "scraper output: only a scraper run should change it. usage_tags, improved descriptions and combat effects go in the spell's class (CharacterContent/Spells/SpellClasses)")
         if path in new_files and path.endswith(".py") and ("/" not in path or SCRATCH_NAME.search(path)) and not path.startswith(("tests/", "Run")):
             find(path, None, "scratch-file", "new file looks like a scratch script; scratch scripts belong in the scratchpad, not the repo")
         if path in new_files and path.startswith("CharacterContent/Classes/SubClasses2014/"):
@@ -147,7 +147,7 @@ def main() -> int:
         todo.append("./run_tests.sh -q   (compile, layering, contracts, order invariance, snapshots)")
     if any(p.startswith(("Model/", "Core/", "CharacterContent/", "Builds/", "Presentation/")) for p in changed) or any(p.startswith("tests/snapshots/") for p in changed):
         todo.append("python .claude/skills/snapshot-diffs/snapshot_diff.py   (read every sheet change; a snapshot is never 'expected' unread)")
-    if any("usage_tags" in text_of(p) for p in changed if not p.startswith(".claude/")) or any(p.endswith("_extended.json") for p in changed):
+    if any("usage_tags" in text_of(p) for p in changed if not p.startswith(".claude/")):
         todo.append("python .claude/skills/usage-tags/tag_report.py check")
     if any(p.endswith("monsters_homebrew.py") for p in changed):
         todo.append('python .claude/skills/balance-monster/check_monster.py "<each changed monster>"   (score 0.4-0.6, at most 4 abilities)')

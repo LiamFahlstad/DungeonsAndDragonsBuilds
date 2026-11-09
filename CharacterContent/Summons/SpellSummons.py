@@ -1,5 +1,5 @@
 """What each summon spell summons: the hand-written part of a spell, kept
-apart from the scraped spell JSON (as `spells_*_extended.json` is for tags).
+apart from the scraped spell JSON, as a spell class's usage_tags are.
 
 `Spell.summons` looks a spell up here by name. Each entry is a factory that
 makes the spell's SummonSpec (Model/Content/Summons.py); Notes/summon-

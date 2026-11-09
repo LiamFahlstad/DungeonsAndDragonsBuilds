@@ -12,6 +12,7 @@ Python that means what the JSON meant.
 
 import dataclasses
 import json
+from pathlib import Path
 
 import pytest
 
@@ -83,9 +84,12 @@ def test_the_factory_makes_its_class(name):
     )
 
 
-def test_a_spell_without_a_class_comes_from_its_record():
-    name = next(n for n in SpellFactory.spell_names() if n not in SPELL_CLASSES)
-    assert type(SpellFactory.create(name)) is DataSpell
+def test_a_spell_without_a_class_comes_from_its_record(monkeypatch):
+    """Every spell is a class now, so Fireball's is hidden: a spell scraped
+    and not converted yet is its record."""
+    others = {n: c for n, c in SPELL_CLASSES.items() if n != "Fireball"}
+    monkeypatch.setattr(SpellFactory, "_spell_classes", staticmethod(lambda: others))
+    assert type(SpellFactory.create("Fireball")) is DataSpell
 
 
 def test_every_spell_is_listed_once():
@@ -96,18 +100,26 @@ def test_every_spell_is_listed_once():
     assert all(type(spells[name]) is SPELL_CLASSES[name] for name in CLASS_NAMES)
 
 
-@pytest.mark.parametrize("name", CLASS_NAMES)
-def test_a_class_is_its_spells_one_source(name):
-    """The converter took the spell out of its source's companion files: an
-    entry left there would never be read, and would drift from the class."""
-    path = next(
-        (p for p in SpellFactory.json_paths if name in _json(p)),
-        None,
-    )
-    if path is None:
-        return  # a spell only a class has
-    for companion in converter.companion_paths(path):
-        assert name not in _json(str(companion)), f"{name} is in {companion.name}"
+def test_every_spell_the_sources_have_is_a_class():
+    """S.4 converted them all: a record without a class is a spell scraped
+    since, to convert (SpellClassConverter --name) before giving it tags,
+    an improved description or combat effects."""
+    assert [
+        name for name in SpellFactory._load_json() if name not in SPELL_CLASSES
+    ] == []
+
+
+def test_no_companion_file_is_left():
+    """A class is its spell's one source. SpellFactory no longer reads the
+    old spells_<source>_extended/_improved/_combat_effects.json files, so one
+    written now would be silently ignored."""
+    spells_dir = Path("CharacterContent/Spells")
+    left = [
+        path.name
+        for suffix in ("_extended", "_improved", "_combat_effects")
+        for path in spells_dir.glob(f"spells_*{suffix}.json")
+    ]
+    assert left == []
 
 
 @pytest.mark.parametrize("name", CLASS_NAMES)
@@ -431,52 +443,18 @@ def test_differences_compare_what_the_card_lines_mean(range_text, differs):
 
 
 def test_a_converted_class_gives_what_its_json_gave():
-    """Fireball as a class against Fireball's JSON with its companions put
-    back: the converter's own check, run on a real spell."""
-    record = dict(SpellFactory._load_json()["Fireball"])
+    """Fireball as a class against Fireball's record: the converter's own
+    check, run on a real spell. The record has only the rules, so the class
+    differs from it only in what was written in the class since."""
+    record = DataSpell(SpellFactory._load_json()["Fireball"])
     made = SPELL_CLASSES["Fireball"]()
-    blocks, effects = made.improved_description, made.combat_effects()
-    assert blocks is not None and effects is not None
-    record.update(
-        usage_tags=made.usage_tags,
-        target=made.target.value if made.target else None,
-        improved_description=[_block_json(b) for b in blocks],
-        combat_effects=[e.to_dict() for e in effects],
-    )
-    assert converter.differences(DataSpell(record), made) == []
-
-
-def _block_json(block) -> dict:
-    if isinstance(block, Facts):
-        return {"facts": [list(row) for row in block.rows]}
-    if isinstance(block, Table):
-        return {
-            "table": {
-                "columns": list(block.columns),
-                "rows": [list(r) for r in block.rows],
-            }
-        }
-    if isinstance(block, Option):
-        return {
-            "option": {
-                "name": block.name,
-                "blocks": [_block_json(b) for b in block.blocks],
-            }
-        }
-    return {"paragraph": block.text}
-
-
-def test_removing_an_entry_keeps_the_rest_of_the_file_as_it_is():
-    text = '{\n  "A": [\n    {"x": 1}\n  ],\n  "B": {"y": [1,\n    2]},\n  "C": []\n}\n'
-    assert (
-        converter.remove_entry(text, "B")
-        == '{\n  "A": [\n    {"x": 1}\n  ],\n  "C": []\n}\n'
-    )
-    assert (
-        converter.remove_entry(text, "C")
-        == '{\n  "A": [\n    {"x": 1}\n  ],\n  "B": {"y": [1,\n    2]}\n}\n'
-    )
-    assert converter.remove_entry(text, "Z") == text
+    found = converter.differences(record, made, made.combat_effects())
+    assert [d for d in found if not d.startswith(converter._NOT_RULES)] == []
+    assert {d.split(":")[0] for d in found} == {
+        "usage_tags",
+        "target",
+        "improved_description",
+    }
 
 
 def test_adding_to_a_module_keeps_what_is_there(tmp_path):
