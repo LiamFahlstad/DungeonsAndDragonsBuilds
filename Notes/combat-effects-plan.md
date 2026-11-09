@@ -13,7 +13,7 @@ change:
 - log bugs found along the way with the `discovered-issues` skill and list
   their ids in **Discovered issues**.
 
-## Status (2026-11-09, late night)
+## Status (2026-11-09, S.4 begun)
 
 | Phase | Step | State |
 |---|---|---|
@@ -32,7 +32,7 @@ change:
 | 2 | 2.6 `Feature.adjust_combat_effect` hook | **Done** |
 | 2 | 2.7 Conditional extra damage (`when`) | **Done**, as a generated note (R14) |
 | 2 | Extensions list their own uses under their parent | **Done** (R10, new) |
-| S | **Spells as classes** (new direction, 2026-11-09; see its section) | S.1 base class, factory and converter **done**; S.2 the 57 spells with combat effects converted **done**; S.2c card lines as dataclasses **done** (R20); S.3 new effects go into classes **done** (R22); S.5 drift check **done** (R23); S.4 not started |
+| S | **Spells as classes** (new direction, 2026-11-09; see its section) | S.1 base class, factory and converter **done**; S.2 the 57 spells with combat effects converted **done**; S.2c card lines as dataclasses **done** (R20); S.3 new effects go into classes **done** (R22); S.5 drift check **done** (R23); S.4 **begun**: cantrips converted, the agents' tools switched over (R24) |
 | 3 | Lasting effects (3.1-3.6) | Not started |
 | 4 | One `combat-effects` skill; feature agent; content rollout | Partly: the skill's rubric and script cover every new field; first content batch below |
 | 5 | Sheet chips, monster score | Not started |
@@ -276,7 +276,7 @@ module's own imports and classes when adding to it.
 | S.2c | Casting time, range, components and duration as `SpellFields` dataclasses (R20); the converter compares them by meaning; the 57 regenerated | **Done**: every record of the three sources reads and writes back (`tests/test_spell_fields.py`); old and new derived values agree on all 1,391 records but one fix (Yolande's Regal Presence now has V); one card changed (Absorb Elements "1 reaction, ..." -> "Reaction, ...") |
 | S.2d | Combat effects' `roll` and `until` as enums (`EffectRoll`, `TurnEdge`, `TurnOf`; R21), written by the converter and used by every Python effect (spell classes, features, homebrew monsters, tests) | **Done**: picker goldens and sheet snapshots unchanged |
 | S.3 | Write new combat effects in classes, not JSON: convert a spell, then edit its `combat_effects()`. Teach `spell_mechanics.py draft` to print a class's method instead of a JSON entry, and give the `spell-mechanics` agent classes in scope | **Done** (R22): `draft --out` writes a Python `EFFECTS` module; `add` converts the spell with those effects (`SpellClassConverter.convert(..., effects)`) or sets the method on its class (`set_combat_effects`), both checked and rolled back on a problem; JSON only for the spells that can't be classes; `check` covers class spells; skill, agent and tests updated. Lightning Bolt added through it (one new picker row, read) |
-| S.4 | Convert the rest (Q11) and retire the companion files: once every spell of a source has a class, its `_extended`/`_improved`/`_combat_effects` files and `DataSpell`'s companion handling go | Not started |
+| S.4 | Convert the rest (Q11) and retire the companion files: once every spell of a source has a class, its `_extended`/`_improved`/`_combat_effects` files and `DataSpell`'s companion handling go | **Begun** (Q11 as suggested: level by level). **Cantrips done** (2026-11-09): 33 more classes (48 of 49; Sapping Sting stays JSON, DI-063), each checked against its JSON by the converter; drift check clean; picker goldens unchanged; 6 builds' sheets changed only in the 2014 cantrips' "Cast 1 action" -> "Cast Action" (R20's 2024 wording), goldens updated. The tools that wrote JSON now handle classes (R24). **Next:** levels 1-9 (dry runs: 52, 91, 77, 58, 71, 52, 34, 28, 24 classes; 19 spells stay JSON, all DI-062/DI-063), then retire the companion files |
 | S.5 | Drift check: a re-scrape that changes a converted spell's record must be noticed (Q12) | **Done** (R23): every class carries `converted_from = RecordStamp(file, sha1)`, written by the converter and backfilled on the 58 classes (all 58 agreed with their records by meaning first); `test_no_class_has_drifted_from_its_record` fails on a changed record; `SpellClassConverter --drift` shows what to merge, `--accept <spell>` re-stamps; HOWTO and the `content-scraper` agent say to run it after a re-scrape |
 
 ## Lasting effects (Phase 3, design unchanged)
@@ -464,6 +464,17 @@ Sheet chips ("DEX save · half · 8d6 Fire") from the same data;
   A class without a record (homebrew) has no stamp and is never drift; one
   with a record and no stamp is.
 
+- **R24. Converting a level also means the tools stop sending that level to
+  JSON** (S.4). `tag_report.py` (the usage-tags skill) read only the JSON
+  files, so it called every class spell untagged and `set-spell` would have
+  written a JSON entry that `test_spell_classes` rejects: wrong since S.2,
+  unnoticed while only 58 spells were classes. It now reads `SPELL_CLASSES`
+  (a class wins over its record, a class-only spell is listed), reports the
+  `SpellRules` line, and `set-spell` refuses a class spell with that line.
+  The `spell-improved-descriptions` agent's work list names the class to
+  edit instead of failing on `_data`. The JSON paths stay for the spells
+  not converted yet.
+
 ## Open questions (with suggestions)
 
 - **Q2. When to rename `spell-mechanics` → `combat-effects` (skill, agent,
@@ -533,7 +544,11 @@ Sheet chips ("DEX save · half · 8d6 Fire") from the same data;
   records ("...or targeted by the"); aidedd has the whole trigger.
 - **DI-065** (open): the 2014 records' `"ritual": true` is ignored, so 2014-only
   ritual spells don't show as rituals (their casting time doesn't say so).
-- Found and fixed: the text-reading tests dropped a spell's data by its old
+- **DI-010** (open, hit again in S.4): `UPDATE_SNAPSHOTS=1` over several
+  builds lost one build's sheet hashes (Orbeck Gravewell); updating it on
+  its own wrote it. Check `git diff tests/snapshots/sheet_hashes.json` after a
+  batch update.
+- Found and fixed: `tag_report.py` ignored class spells (R24); the text-reading tests dropped a spell's data by its old
   key name; the single golden file broke under parallel test runs (R11);
   `draft`'s cross-check with the improved description kept only the last
   "Damage" row (the "+1d6 per slot level" one), so nearly every levelled

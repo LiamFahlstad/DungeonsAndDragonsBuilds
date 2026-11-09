@@ -9,8 +9,9 @@ Usage (from the repo root):
     python .claude/skills/usage-tags/tag_report.py set-spell "Fireball" damage   # write a spell's tags (--clear removes them)
 
 Features carry usage_tags=[...] in their __init__ call (found here by parsing the code, not
-importing it). Spells carry them in CharacterContent/Spells/spells_<source>_extended.json, which
-SpellFactory merges over the source record; this tool resolves the same merge, so "untagged"
+importing it). A spell written as a class (CharacterContent/Spells/SpellClasses) carries them in
+its SpellRules(usage_tags=...); any other spell in CharacterContent/Spells/spells_<source>_extended.json,
+which SpellFactory merges over the source record. This tool resolves the same choice, so "untagged"
 means "renders with no chips".
 """
 
@@ -54,9 +55,33 @@ def feature_tags(paths=None) -> list[dict]:
     return found
 
 
+def class_spell_tags() -> list[dict]:
+    """Spells written as classes (CharacterContent/Spells/SpellClasses), which SpellFactory uses
+    instead of any JSON record of the same name: their tags are SpellRules.usage_tags."""
+    import inspect
+
+    if str(ROOT) not in sys.path:
+        sys.path.insert(0, str(ROOT))
+    from CharacterContent.Spells.SpellClasses import SPELL_CLASSES
+
+    spells = []
+    for name, cls in SPELL_CLASSES.items():
+        lines, start = inspect.getsourcelines(cls)
+        offset = next((i for i, text in enumerate(lines) if "usage_tags" in text), 0)
+        spells.append({
+            "name": name, "where": f"{rel(Path(inspect.getsourcefile(cls)))}:{start + offset}",
+            "tags": list(cls.rules.usage_tags) or None, "level": cls.rules.level,
+            "classes": [getattr(c, "value", c) for c in cls.rules.classes],
+            "shadowed_source_tags": False, "is_class": True,
+        })
+    return spells
+
+
 def spell_tags() -> list[dict]:
-    """The record SpellFactory renders for each spell name, with its tags and the file they live in."""
-    spells, seen = [], set()
+    """The spell SpellFactory renders for each name (its class, else the winning JSON record),
+    with its tags and where they live."""
+    spells = class_spell_tags()
+    seen = {spell["name"] for spell in spells}
     for source in SPELL_SOURCES:
         data = json.loads((SPELL_DIR / f"{source}.json").read_text(encoding="utf-8"))
         ext_path = SPELL_DIR / f"{source}_extended.json"
@@ -147,6 +172,10 @@ def cmd_set_spell(args) -> int:
     spell = next((s for s in spell_tags() if s["name"] == args.name), None)
     if spell is None:
         print(f"no spell named {args.name!r} in {', '.join(SPELL_SOURCES)} (names are case-sensitive)")
+        return 1
+    if spell.get("is_class"):
+        print(f"{args.name} is a class spell: edit usage_tags in its SpellRules at {spell['where']}"
+              " (a JSON entry for it fails tests/test_spell_classes.py)")
         return 1
     path = ROOT / spell["where"]
     original = json.loads(path.read_text(encoding="utf-8")) if path.exists() else {}

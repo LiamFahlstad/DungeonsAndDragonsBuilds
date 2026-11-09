@@ -1,6 +1,6 @@
 ---
 name: usage-tags
-description: The rubric and tooling for usage_tags ("heal", "buff", "control", "damage", "utility", "summon"), the role chips on D&D feature and spell cards - where they are stored (Feature __init__ kwargs; spells_<source>_extended.json, never the source spell JSON), how to decide them, and a script that validates them and shows how similar features were tagged. Use whenever adding, auditing, fixing or reviewing usage_tags, writing a new Feature or spell that should carry them, or when someone asks why a card shows (or lacks) a Damage/Heal/Buff/Control/Utility/Summon chip.
+description: The rubric and tooling for usage_tags ("heal", "buff", "control", "damage", "utility", "summon"), the role chips on D&D feature and spell cards - where they are stored (Feature __init__ kwargs; a class spell's SpellRules; otherwise spells_<source>_extended.json, never the source spell JSON), how to decide them, and a script that validates them and shows how similar features were tagged. Use whenever adding, auditing, fixing or reviewing usage_tags, writing a new Feature or spell that should carry them, or when someone asks why a card shows (or lacks) a Damage/Heal/Buff/Control/Utility/Summon chip.
 ---
 
 # usage_tags
@@ -10,7 +10,8 @@ The same six tags (`"heal"`, `"buff"`, `"control"`, `"damage"`, `"utility"`, `"s
 ## Where tags live
 
 - **Features:** the `usage_tags=[...]` keyword of the feature's `__init__` call (`super().__init__(...)` or `Feature.__init__(self, ...)`). Leave it out when nothing applies.
-- **Spells:** `CharacterContent/Spells/spells_<source>_extended.json`, keyed by spell name (`{"Fireball": {"usage_tags": ["damage"], "target": "area"}}`). `SpellFactory` merges each extended record **over** its source record, so a `usage_tags` key written into `spells_<source>.json` itself is overridden and never renders. Tag the extended file of the source that wins for that spell. Sources win in the order dnd2024, then aidedd, then dnd5e; `tag_report.py spells` names the right file.
+- **Spells written as classes** (`CharacterContent/Spells/SpellClasses/<Level>.py`; every cantrip and more each release): the `usage_tags=(...)` keyword of the class's `SpellRules`, a tuple of the same strings. Never add a JSON entry for one (`tests/test_spell_classes.py` fails); `tag_report.py set-spell` refuses them and prints the line to edit.
+- **Other spells:** `CharacterContent/Spells/spells_<source>_extended.json`, keyed by spell name (`{"Fireball": {"usage_tags": ["damage"], "target": "area"}}`). `SpellFactory` merges each extended record **over** its source record, so a `usage_tags` key written into `spells_<source>.json` itself is overridden and never renders. Tag the extended file of the source that wins for that spell. Sources win in the order dnd2024, then aidedd, then dnd5e; `tag_report.py spells` names the right file.
 
 ## Tools (run them; don't guess)
 

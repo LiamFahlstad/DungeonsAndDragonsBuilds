@@ -1,6 +1,6 @@
 ---
 name: spell-improved-descriptions
-description: Use to write, audit or fix improved descriptions for D&D spells — each spell's full rules restructured into the Flavor/Facts/Table/Option blocks that spell cards render (the spell-side counterpart of Feature.get_improved_description()). Writes JSON into the companion `spells_<source>_improved.json` beside the source the SpellFactory actually loads (spells_dnd2024.json or spells_dnd5e.json, under CharacterContent/Spells), keyed by spell name; never edits a source JSON. Give it a level/class/spell-name filter ("all level 5 spells", "Cleric spells of level 1-3", "audit the level 2 entries"). Not for usage_tags (the usage-tags skill) or Feature classes (character-engine-dev).
+description: Use to write, audit or fix improved descriptions for D&D spells — each spell's full rules restructured into the Flavor/Facts/Table/Option blocks that spell cards render (the spell-side counterpart of Feature.get_improved_description()). Edits the `improved_description` property of a spell written as a class (CharacterContent/Spells/SpellClasses/<Level>.py; every cantrip already is), and otherwise writes JSON into the companion `spells_<source>_improved.json` beside the source the SpellFactory actually loads (spells_dnd2024.json or spells_dnd5e.json, under CharacterContent/Spells), keyed by spell name; never edits a source JSON. Give it a level/class/spell-name filter ("all level 5 spells", "Cleric spells of level 1-3", "audit the level 2 entries"). Not for usage_tags (the usage-tags skill) or Feature classes (character-engine-dev).
 tools: Read, Grep, Glob, Edit, Write, Bash
 model: sonnet
 memory: project
@@ -17,24 +17,30 @@ Your three goals, in priority order:
 
 ## 1. Pick the spells, and the file each entry goes in
 
-Sources merge **whole-record**, priority `spells_dnd2024.json` > `spells_aidedd.json` > `spells_dnd5e.json`. An entry must go in the improved file of the source that *wins* for that spell, or it's silently never shown (and the tests fail). List the work with:
+Spells are being converted to Python classes level by level (every cantrip already is). **A spell with a class is edited in its class** (`CharacterContent/Spells/SpellClasses/<Level>.py`, its `improved_description` property: the same blocks as Python, `Facts((("Label", "value"), ...))`, `Table(columns, rows)`, `Option(name, (blocks...))`), never in JSON; `tests/test_spell_classes.py` fails if a JSON entry exists for it. The class's `rules.description` is the source text.
+
+For a spell without a class, sources merge **whole-record**, priority `spells_dnd2024.json` > `spells_aidedd.json` > `spells_dnd5e.json`. Its entry must go in the improved file of the source that *wins* for that spell, or it's silently never shown (and the tests fail). List the work, and where each entry goes, with:
 
 ```bash
 PYTHONPATH=. python - <<'EOF'
 import json
 from CharacterContent.Spells.SpellFactory import SpellFactory as F
+from CharacterContent.Spells.SpellFactory.ClassSpell import ClassSpell
 srcs = {p: json.load(open(p, encoding="utf-8")) for p in F.json_paths}
 LEVEL = 5  # or filter on classes / names
 for name in sorted(F.spell_names()):
     s = F.create(name)
     if s.level != LEVEL: continue
-    win = next(p for p in F.json_paths if name in srcs[p]).split("/")[-1]
-    done = s._data.get("improved_description") is not None
-    print(f"{win:22} {'done' if done else 'TODO':5} {'EMPTY' if not s.description.strip() else '':6} {name}")
+    if isinstance(s, ClassSpell):
+        where = f"class {type(s).__module__.rsplit('.', 1)[-1]}.{type(s).__name__}"
+    else:
+        where = next(p for p in F.json_paths if name in srcs[p]).split("/")[-1]
+    done = s.improved_description is not None
+    print(f"{where:40} {'done' if done else 'TODO':5} {'EMPTY' if not s.description.strip() else '':6} {name}")
 EOF
 ```
 
-In practice entries land in `spells_dnd2024_improved.json` (2024 wording) and `spells_dnd5e_improved.json` (2014 wording). Skip spells that already have an entry unless asked to redo them.
+JSON entries land in `spells_dnd2024_improved.json` (2024 wording) and `spells_dnd5e_improved.json` (2014 wording). Skip spells that already have an entry unless asked to redo them.
 
 ## 2. Read the source text — and check it's whole
 
