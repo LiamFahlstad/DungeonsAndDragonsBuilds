@@ -7,6 +7,7 @@ is kept in the target's public keys, so undo and a saved fight keep it too."""
 import re
 from dataclasses import dataclass
 
+from Combat.Effects.modifiers import armor_class_bonus
 from Model.Creatures.Combatants import Visibility
 from .amounts import parse_amount
 
@@ -64,14 +65,20 @@ def cover_bonus(char: dict) -> int:
     return max((_COVER_BONUSES.get(state, 0) for state in states), default=0)
 
 
-def note_attack_roll(char: dict, roll: AttackRoll, hit: bool | None, cover: int = 0):
+def armor_bonus(char: dict) -> int:
+    """What char's AC has added to it now: its cover, and what its modifiers
+    give (Combat/Effects)."""
+    return cover_bonus(char) + armor_class_bonus(char)
+
+
+def note_attack_roll(char: dict, roll: AttackRoll, hit: bool | None, bonus: int = 0):
     """Keep what `roll` showed about char's AC: at most the roll on a hit, above
-    it on a miss. `cover` is what the AC had added to it then, which is taken
-    off, so a note stays true when char leaves cover. A natural roll shows
-    nothing, since it ignores the AC."""
+    it on a miss. `bonus` is what the AC had added to it then (armor_bonus),
+    which is taken off, so a note stays true when char leaves cover or the
+    effect ends. A natural roll shows nothing, since it ignores the AC."""
     if roll.total is None or hit is None:
         return
-    total = roll.total - cover
+    total = roll.total - bonus
     if hit:
         char["ac_at_most"] = min(total, char.get("ac_at_most", total))
     else:

@@ -3,11 +3,13 @@
 import random
 
 from Combat.Definitions import Action
+from Combat.Effects.modifiers import hit_notes, resists
 from Combat.Summons import vanishes_at_zero_hp
 from Core.Definitions import Condition
 from .amounts import AmountError, parse_amount, parse_damage
 from .attack_rolls import (
     AttackRoll,
+    armor_bonus,
     cover_bonus,
     note_attack_roll,
     parse_attack_roll,
@@ -73,8 +75,9 @@ class DamageMixin(CombatWindowState):
 
         if has_type(target.get("damage_immunities")):
             return 0, "immune"
-        resisted = has_type(target.get("damage_resistances")) or (
-            "Petrified" in target.get("conditions", [])
+        # A condition can give Resistance too (Petrified, to all damage).
+        resisted = has_type(target.get("damage_resistances")) or resists(
+            target, damage_type
         )
         vulnerable = has_type(target.get("damage_vulnerabilities"))
         if resisted:
@@ -163,31 +166,42 @@ class DamageMixin(CombatWindowState):
         return hit_targets, "; ".join(results)
 
     def _resolve_attack_roll(
-        self, target: dict, roll: AttackRoll, source: dict | None
+        self,
+        target: dict,
+        roll: AttackRoll,
+        source: dict | None,
+        notes: tuple[str, ...] = (),
     ) -> tuple[bool | None, str]:
-        """Check `roll` against target's AC and cover and log how it went.
-        Returns whether it hit, None with no AC to check, and how it went
-        against the AC, for the status line. The log doesn't say the AC, as the
-        Limited view's players read it too. They don't learn from a hidden
-        attacker's roll, which they never saw."""
+        """Check `roll` against target's AC, with its cover and modifiers, and
+        log how it went, with `notes` on how it was rolled (attack_plan's) and
+        what the GM should check about a hit. Returns whether it hit, None
+        with no AC to check, and how it went against the AC, for the status
+        line. The log doesn't say the AC, as the Limited view's players read
+        it too. They don't learn from a hidden attacker's roll, which they
+        never saw."""
         armor = first_number(target.get("ac"))
-        cover = cover_bonus(target)
-        hit = roll.hits(None if armor is None else armor + cover)
+        bonus = armor_bonus(target)
+        hit = roll.hits(None if armor is None else armor + bonus)
         # A player's summon is seen as its owner is, even while Invisible.
         if source is None or _seen(source, _player_names(self.characters)):
-            note_attack_roll(target, roll, hit, cover)
+            note_attack_roll(target, roll, hit, bonus)
+        if hit is not False:
+            notes = (*notes, *hit_notes(target))
         name = target["name"]
         attacker = f"{source['name']}'s attack roll" if source else "Attack roll"
         critical = " (critical hit)" if roll.is_critical else ""
+        noted = f", {', '.join(notes)}" if notes else ""
         self._log_event(
-            f"{attacker} of {roll.text} {_VERDICTS[hit]} {name}{critical}",
+            f"{attacker} of {roll.text} {_VERDICTS[hit]} {name}{critical}{noted}",
             character=name,
         )
+        why = f" ({'; '.join(notes)})" if notes else ""
         if armor is None:
-            return hit, f"{name} has no AC to check"
-        faced = f"AC {armor + cover} with cover" if cover else f"AC {armor}"
+            return hit, f"{name} has no AC to check{why}"
+        cover = " with cover" if cover_bonus(target) else ""
+        faced = f"AC {armor + bonus}{cover}"
         word = "hit" if hit else "miss"
-        return hit, f"{name}: {roll.text} vs {faced}, {word}"
+        return hit, f"{name}: {roll.text} vs {faced}, {word}{why}"
 
     @undoable
     def _apply_attack_roll(self):

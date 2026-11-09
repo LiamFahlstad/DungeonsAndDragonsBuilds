@@ -9,9 +9,11 @@ from Combat.Definitions import Action, CombatStatus
 from Combat.EncounterLogs import PUBLIC_KEY, TURN_PREFIX
 from Combat.PlayerLog import is_round_key
 
+# After it, what the GM should know about how it was rolled ("Tiger is
+# Restrained: Advantage"), which a player doesn't read here.
 _ATTACK = re.compile(
     r"(?:(.+)'s attack roll|Attack roll) of (.+?) (hits|misses) (.+?)"
-    r"( \(critical hit\))?"
+    r"( \(critical hit\))?(?:, .+)?"
 )
 # What the page colors a line by, for the ones it isn't worked out for below.
 _KINDS: dict[str, str] = {

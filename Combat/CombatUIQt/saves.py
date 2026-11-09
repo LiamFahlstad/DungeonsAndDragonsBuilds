@@ -7,6 +7,11 @@ import re
 from collections.abc import Iterable
 from dataclasses import dataclass, field
 
+from Combat.Effects.modifiers import (
+    RollPlan,
+    immune_to_condition,
+    save_plan,
+)
 from Core.Rules import SPELL_SAVE_DC_BASE, ability_modifier
 
 from .amounts import AmountError, parse_damage
@@ -35,10 +40,6 @@ DEFAULT_ATTACK_BONUS = 0
 # How the Custom dialog decides who an effect lands on.
 SAVING_THROW = "Saving throw"
 ATTACK_ROLL = "Attack roll"
-
-# "You automatically fail Strength and Dexterity saving throws."
-_AUTO_FAIL_CONDITIONS = ("Paralyzed", "Petrified", "Stunned", "Unconscious")
-_AUTO_FAIL_ABILITIES = ("STR", "DEX")
 
 _DICE = re.compile(r"\d+d[1-9]\d*")
 _SPELL_SAVE_DC = re.compile(r"spell save DC\s+(\d+)")
@@ -248,15 +249,6 @@ def save_modifier(char: dict, ability: str) -> int:
     return ability_modifier(scores[ability]) if ability in scores else 0
 
 
-def _has_condition(char: dict, condition: str) -> bool:
-    """Whether char has `condition`, also under a longer custom name, like
-    "Restrained by vines"."""
-    return any(
-        name == condition or name.startswith(f"{condition} ")
-        for name in char.get("conditions", [])
-    )
-
-
 def _roll_d20(mode: str) -> int:
     first, second = random.randint(1, 20), random.randint(1, 20)
     if mode == "Advantage":
@@ -264,34 +256,27 @@ def _roll_d20(mode: str) -> int:
     return min(first, second) if mode == "Disadvantage" else first
 
 
-def _with_conditions(char: dict, ability: str, mode: str) -> tuple[str, str]:
-    """The roll mode once char's conditions count, and a note if they changed
-    it. Restrained gives Disadvantage on Dexterity saves, and Advantage and
-    Disadvantage cancel out however many of each there are."""
-    if ability != "DEX" or not _has_condition(char, "Restrained"):
-        return mode, ""
-    if mode == "Advantage":
-        return "Neutral", "Restrained cancels Advantage"
-    return "Disadvantage", "Restrained: Disadvantage"
-
-
 def roll_save(
     char: dict, ability: str, dc: int, mode: str, typed: int | None = None
 ) -> SaveResult:
     """Char's save against `dc`: `typed` is a total rolled at the table. A
-    natural 1 or 20 is nothing special on a saving throw."""
-    if ability in _AUTO_FAIL_ABILITIES:
-        for condition in _AUTO_FAIL_CONDITIONS:
-            if _has_condition(char, condition):
-                return SaveResult(False, None, f"{condition}: automatic failure")
+    natural 1 or 20 is nothing special on a saving throw. Its conditions
+    count (Combat/Effects): an automatic failure beats any total, and a
+    rolled one takes the mode they give."""
+    plan = save_plan(char, ability, mode, typed=typed is not None)
+    if plan.auto_fail:
+        return SaveResult(False, None, plan.auto_fail)
+    note = ", ".join(plan.notes)
     if typed is not None:
-        return SaveResult(typed >= dc, typed)
-    mode, note = _with_conditions(char, ability, mode)
-    if _has_condition(char, "Exhaustion"):
-        # Its levels aren't tracked, so the GM has to take these off.
-        note = ", ".join(filter(None, [note, "Exhaustion not counted: -2 a level"]))
-    total = _roll_d20(mode) + save_modifier(char, ability)
+        return SaveResult(typed >= dc, typed, note)
+    total = _roll_d20(plan.mode) + save_modifier(char, ability)
     return SaveResult(total >= dc, total, note)
+
+
+def save_reminder(char: dict, ability: str) -> RollPlan:
+    """What char's conditions do to its save of `ability`, for the GM to roll
+    it that way at the table."""
+    return save_plan(char, ability, "Neutral")
 
 
 def roll_attack(bonus: int, mode: str) -> AttackRoll:
@@ -301,8 +286,8 @@ def roll_attack(bonus: int, mode: str) -> AttackRoll:
 
 def is_immune_to(char: dict, condition: str) -> bool:
     """A monster's stat block lists its immunities, and a player's character
-    knows theirs. Petrified also gives Immunity to the Poisoned condition."""
-    if condition == "Poisoned" and _has_condition(char, "Petrified"):
+    knows theirs. A condition can give one too: Petrified, to Poisoned."""
+    if immune_to_condition(char, condition):
         return True
     immunities = list(char.get("condition_immunities") or [])
     sheet = char.get("_stat_block")

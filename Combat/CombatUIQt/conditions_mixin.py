@@ -25,11 +25,13 @@ from PyQt6.QtWidgets import (
 )
 
 from Combat.Definitions import Action, CombatStatus
+from Combat.Effects.modifiers import attack_plan, rules_condition
 from Combat.WildShape import current_form, form_badge
-from Core.Definitions import DamageType
+from Core.Definitions import Condition, DamageType
 from Core.Rules import SECONDS_PER_ROUND
+from Model.Content.RulesConditions import conditions_with
 from .amounts import AmountError, parse_amount
-from .attack_rolls import AttackRoll, cover_bonus, parse_attack_roll
+from .attack_rolls import AttackRoll, armor_bonus, cover_bonus, parse_attack_roll
 from .effect_dialog_widgets import (
     SearchKeys,
     chip,
@@ -73,6 +75,7 @@ from .saves import (
     roll_save,
     rolled_damage,
     save_modifier,
+    save_reminder,
 )
 from .spells_mixin import spell_badge_color, spell_badge_description
 from .stats import _default_stats, increment_named_stat
@@ -81,14 +84,16 @@ from .styles import QSS
 from .tree_filter import filter_category_tree, first_visible_item
 from .undo import undoable
 
-# Conditions that incapacitate a creature and break concentration per 2024 D&D rules
-INCAPACITATING_CONDITIONS = {
-    "Incapacitated",
-    "Paralyzed",
-    "Petrified",
-    "Stunned",
-    "Unconscious",
-}
+# The conditions that give Incapacitated, which breaks Concentration (and
+# ends a Wild Shape form): Paralyzed, Petrified, Stunned, Unconscious too.
+_INCAPACITATING = conditions_with(Condition.INCAPACITATED)
+
+
+def incapacitates(name: str) -> bool:
+    """Whether a condition named `name` gives Incapacitated, also under a
+    longer custom name ("Stunned by Stunning Strike")."""
+    return rules_condition(name) in _INCAPACITATING
+
 
 # The durations the Custom Condition dialog offers, as (label, duration). A
 # duration is None (until removed), {"seconds": n} (counted down a round at a
@@ -231,8 +236,39 @@ def _armor_text(target: dict) -> str:
     armor = first_number(target.get("ac"))
     if armor is None:
         return "AC ?"
-    cover = cover_bonus(target)
-    return f"AC {armor + cover} (cover)" if cover else f"AC {armor}"
+    armor += armor_bonus(target)
+    return f"AC {armor} (cover)" if cover_bonus(target) else f"AC {armor}"
+
+
+def _attack_text(source: dict | None, target: dict) -> str:
+    """A target's row for an attack roll: what it has to meet, and the mode
+    the conditions give it, to roll it that way at the table ("AC 15,
+    Advantage")."""
+    mode = attack_plan(source, target, "Neutral").mode
+    armor = _armor_text(target)
+    return armor if mode == "Neutral" else f"{armor}, {mode}"
+
+
+def _attack_tooltip(source: dict | None, target: dict) -> str:
+    notes = attack_plan(source, target, "Neutral").notes
+    return "\n".join(["What the attack roll has to meet, cover included", *notes])
+
+
+def _save_text(target: dict, ability: str) -> str:
+    """A target's row for a saving throw: its bonus, and what its conditions
+    do to the roll, to roll it that way at the table ("DEX +3,
+    Disadvantage", "DEX fails")."""
+    plan = save_reminder(target, ability)
+    if plan.auto_fail:
+        return f"{ability} fails"
+    text = f"{ability} {save_modifier(target, ability):+d}"
+    return text if plan.mode == "Neutral" else f"{text}, {plan.mode}"
+
+
+def _save_tooltip(target: dict, ability: str) -> str:
+    plan = save_reminder(target, ability)
+    why = [plan.auto_fail] if plan.auto_fail else list(plan.notes)
+    return "\n".join([f"{target['name']}'s {ability} saving throw bonus", *why])
 
 
 def _damage_preview(text: str, chosen_type: str | None) -> str:
@@ -301,13 +337,13 @@ class ConditionsMixin(CombatWindowState):
             self._rebuild_card(char)
             # Break concentration if an incapacitating condition is applied to a concentrating character
             if (
-                cond in INCAPACITATING_CONDITIONS
+                incapacitates(cond)
                 and cond != "Concentrating"
                 and "Concentrating" in char.get("conditions", [])
             ):
                 self._remove_condition_from(char, "Concentrating", source=char)
             # So does a Wild Shape form (which a knock-out's Unconscious ends too).
-            if cond in INCAPACITATING_CONDITIONS and current_form(char):
+            if incapacitates(cond) and current_form(char):
                 self._leave_wild_shape(char, reason=cond)
 
     @undoable
@@ -528,10 +564,14 @@ class ConditionsMixin(CombatWindowState):
             saved = any(target is s for s in self._saved_targets)
             damage = effect.damage
             if effect.attack_bonus is not None:
-                roll = effect.typed_attacks.get(id(target)) or roll_attack(
-                    effect.attack_bonus, effect.mode
+                # The attacker's and the target's conditions count in a roll
+                # made here; one typed in gets what it couldn't count.
+                typed = effect.typed_attacks.get(id(target))
+                plan = attack_plan(source, target, effect.mode, typed is not None)
+                roll = typed or roll_attack(effect.attack_bonus, plan.mode)
+                hit, attack = self._resolve_attack_roll(
+                    target, roll, source, plan.notes
                 )
-                hit, attack = self._resolve_attack_roll(target, roll, source)
                 results.append(hit is not False)
                 attacks.append(attack)
                 if hit is False:
@@ -1135,8 +1175,8 @@ class ConditionsMixin(CombatWindowState):
         roll_box.addWidget(attack_rows)
         for target in targets:
             info = attack_infos[id(target)]
-            info.setText(_armor_text(target))
-            info.setToolTip("What the attack roll has to meet, cover included")
+            info.setText(_attack_text(source, target))
+            info.setToolTip(_attack_tooltip(source, target))
         roll_col.addStretch()
 
         # ── Damage, or Hit Points regained, or Temporary Hit Points
@@ -1365,8 +1405,8 @@ class ConditionsMixin(CombatWindowState):
                 if ability is None:
                     info.setText("")
                     continue
-                info.setText(f"{ability} {save_modifier(target, ability):+d}")
-                info.setToolTip(f"{target['name']}'s {ability} saving throw bonus")
+                info.setText(_save_text(target, ability))
+                info.setToolTip(_save_tooltip(target, ability))
 
         def show_roll_controls():
             kind = roll_kind()

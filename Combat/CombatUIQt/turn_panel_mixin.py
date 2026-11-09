@@ -22,7 +22,9 @@ from PyQt6.QtWidgets import (
 )
 
 import Combat.PlayerLog as PlayerLog
+from Combat.Effects.modifiers import attack_plan, hit_notes
 
+from .attack_rolls import armor_bonus
 from .log_feed import LogFeed
 from .monster_actions import (
     LEGENDARY_ACTIONS_PER_ROUND,
@@ -272,7 +274,7 @@ class TurnPanelMixin(CombatWindowState):
         """Count the action's use, if it's one that's counted, and roll it."""
         if self._spend_monster_action(char, action) is None:
             return
-        self._roll_action(action)
+        self._roll_action(action, char)
         self._refresh_views()
 
     def _spend_monster_action(
@@ -299,30 +301,44 @@ class TurnPanelMixin(CombatWindowState):
         self._rebuild_card(char)
         return True
 
-    def _roll_action(self, action: MonsterAction):
-        """Roll the attack against the target, then its damage into the Damage
-        field, where Enter applies it (and a miss leaves nothing to apply)."""
+    def _roll_action(self, action: MonsterAction, char: dict | None = None):
+        """Roll char's attack against the target, then its damage into the
+        Damage field, where Enter applies it (and a miss leaves nothing to
+        apply). Char's conditions count in the roll (Combat/Effects), and with
+        one target its conditions too, and its cover and modifiers in its AC."""
         result = [action.name]
         critical = False
         hit: bool | None = None
+        notes: tuple[str, ...] = ()
         if action.to_hit is not None:
-            d20 = self._roll_d20_for_attack()
+            mode = self.roll_mode_combo.currentText()
+            target = (
+                self.target_characters[0] if len(self.target_characters) == 1 else None
+            )
+            # With no target or several, the attacker's own still count.
+            plan = attack_plan(char, target, mode)
+            mode, notes = plan.mode, plan.notes
+            d20 = self._roll_d20_for_attack(mode)
             total = d20 + action.to_hit
             critical = d20 == 20
             result.append(f"rolled {total} ({d20}{action.to_hit:+d})")
             hit = self._attack_hits(d20, total)
-            if len(self.target_characters) == 1:
-                armor = self.target_characters[0]["ac"]
-                result.append(f"vs AC {first_number(armor)}")
+            armor = self._target_armor()
+            if armor is not None:
+                result.append(f"vs AC {armor}")
             if critical:
                 result.append("CRITICAL HIT")
             elif hit is not None:
                 result.append("HIT" if hit else "MISS")
+            if target is not None and hit is not False:
+                notes = (*notes, *hit_notes(target))
         if action.save_ability is not None:
             result.append(f"DC {action.save_dc or '?'} {action.save_ability} save")
             if action.half_on_save:
                 result.append("half on success")
         text = ": ".join(result[:1] + [" ".join(result[1:])]) if result[1:] else ""
+        if notes:
+            text = f"{text}\n{'; '.join(notes)}"
         if hit is not False and action.rider:
             rider = shorten(action.rider, _RIDER_LENGTH, placeholder="...")
             text = f"{text}\nAlso: {rider}" if text else f"{action.name}: {rider}"
@@ -345,10 +361,9 @@ class TurnPanelMixin(CombatWindowState):
         if word >= 0:
             self.damage_input.setSelection(word, len(_CHOOSE_A_TYPE))
 
-    def _roll_d20_for_attack(self) -> int:
-        """A d20 under the d20 Roll section's Advantage or Disadvantage."""
+    def _roll_d20_for_attack(self, mode: str) -> int:
+        """A d20 with Advantage or Disadvantage, or neither ("Neutral")."""
         first, second = random.randint(1, 20), random.randint(1, 20)
-        mode = self.roll_mode_combo.currentText()
         if mode == "Advantage":
             return max(first, second)
         return min(first, second) if mode == "Disadvantage" else first
@@ -360,10 +375,17 @@ class TurnPanelMixin(CombatWindowState):
             return True
         if d20 == 1:
             return False
+        armor = self._target_armor()
+        return None if armor is None else total >= armor
+
+    def _target_armor(self) -> int | None:
+        """The one target's AC with its cover and modifiers in it; None with
+        no target, several, or one with no AC."""
         if len(self.target_characters) != 1:
             return None
-        armor = first_number(self.target_characters[0]["ac"])
-        return None if armor is None else total >= armor
+        target = self.target_characters[0]
+        armor = first_number(target["ac"])
+        return None if armor is None else armor + armor_bonus(target)
 
     @undoable
     def _use_legendary_resistance(self, char: dict, *, ask: bool = False):

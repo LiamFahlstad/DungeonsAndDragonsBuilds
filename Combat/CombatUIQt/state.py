@@ -257,7 +257,11 @@ class CombatWindowState:
         raise NotImplementedError("DamageMixin._deal_damage")
 
     def _resolve_attack_roll(
-        self, target: dict, roll: AttackRoll, source: dict | None
+        self,
+        target: dict,
+        roll: AttackRoll,
+        source: dict | None,
+        notes: tuple[str, ...] = (),
     ) -> tuple[bool | None, str]:
         raise NotImplementedError("DamageMixin._resolve_attack_roll")
 

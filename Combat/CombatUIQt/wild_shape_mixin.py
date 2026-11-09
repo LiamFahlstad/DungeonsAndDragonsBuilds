@@ -31,7 +31,7 @@ from Combat.WildShape import (
 )
 from Model.Character import Character
 
-from .conditions_mixin import INCAPACITATING_CONDITIONS
+from .conditions_mixin import incapacitates
 from .effect_options import feature_action_cost
 from .state import CombatWindowState
 from .styles import QSS
@@ -96,7 +96,7 @@ class WildShapeMixin(CombatWindowState):
         if feature is None or not isinstance(sheet, Character):
             return
         # Incapacitated: "You can't take any action, Bonus Action, or Reaction."
-        incapacitated = INCAPACITATING_CONDITIONS.intersection(char["conditions"])
+        incapacitated = [c for c in char["conditions"] if incapacitates(c)]
         if incapacitated:
             self._show_status(
                 f"No Wild Shape: {char['name']} is {min(incapacitated)}"

@@ -35,6 +35,7 @@ from PyQt6.QtWidgets import (
 )
 
 from Combat.Definitions import CombatStatus
+from Combat.Effects.modifiers import immune_to_condition, resists_all_damage
 from Combat.Summons import is_out, owner_name
 from Core.Definitions import Condition
 from Core.Rules import ability_modifier
@@ -289,24 +290,21 @@ def _note_defense(char: dict, key: str, name: str):
         char.setdefault(key, []).append(name)
 
 
-def _is_petrified(char: dict) -> bool:
-    return Condition.PETRIFIED.value in char.get("conditions", [])
-
-
 def note_damage_defense(char: dict, damage_type: str, outcome: str | None):
     """Keep what a damage line players read showed of char's defenses, `outcome`
-    being what _damage_type_modifier said. Petrified gives Resistance to all
-    damage, so "resisted" says nothing about char while it's Petrified."""
+    being what _damage_type_modifier said. A condition can give Resistance to
+    all damage (Petrified), and then "resisted" says nothing about char."""
     if outcome == "immune":
         _note_defense(char, "known_immunities", damage_type)
-    elif outcome and "resisted" in outcome and not _is_petrified(char):
+    elif outcome and "resisted" in outcome and not resists_all_damage(char):
         _note_defense(char, "known_resistances", damage_type)
 
 
 def note_condition_immunity(char: dict, condition: str):
     """Keep what a line players read showed of char's immunity to `condition`.
-    Petrified gives Immunity to Poisoned, so it says nothing about char then."""
-    if condition != Condition.POISONED.value or not _is_petrified(char):
+    A condition can give the immunity (Petrified, to Poisoned), and then it
+    says nothing about char."""
+    if not immune_to_condition(char, condition):
         _note_defense(char, "known_immunities", condition)
 
 
