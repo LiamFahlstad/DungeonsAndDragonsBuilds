@@ -70,6 +70,13 @@ def untracked(paths: list[str]) -> list[str]:
     return [p for p in git("ls-files", "--others", "--exclude-standard", "--", *paths).splitlines() if p]
 
 
+def is_command_line_tool(path: str) -> bool:
+    """Whether the file, as it is now, runs as a script (an `if __name__ == "__main__":`
+    block): its print() calls are its output, not debug output left behind."""
+    file = ROOT / path
+    return file.exists() and re.search(r"^if __name__ == [\"']__main__[\"']:", file.read_text(encoding="utf-8"), re.M) is not None
+
+
 def is_generated_monster_file(path: str) -> bool:
     file = ROOT / path
     if not GENERATED_MONSTERS.match(path) or not file.exists():
@@ -131,6 +138,10 @@ def main() -> int:
                     if pattern.search(text):
                         find(path, line_no, "rules-constant", message)
             if path.startswith(ENGINE_DIRS) and DEBUG.match(text):
+                # A command-line tool in content code (SpellClassConverter.py,
+                # SpellGenerator.py) prints its report: print() is its output there.
+                if text.lstrip().startswith("print(") and is_command_line_tool(path):
+                    continue
                 find(path, line_no, "debug", "debug output left in engine/content code")
 
     print(f"Checked {len(changed)} changed file(s) against {'the index' if args.staged else args.base or 'HEAD'}.")
