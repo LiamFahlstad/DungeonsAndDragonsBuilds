@@ -6,6 +6,7 @@ from Model.Content.CombatEffect import CombatEffect
 from Model.Content.Feature import FeatureTarget
 from Model.Content.FeatureText import Block, blocks_from_json
 from .Spell import Spell
+from .SpellFields import Components
 
 
 class DataSpell(Spell):
@@ -76,6 +77,11 @@ class DataSpell(Spell):
     @property
     def components(self) -> str:
         return str(self._data["components"])
+
+    @property
+    def components_spec(self) -> Components:
+        # A record without components (null) has none, not the text "None".
+        return Components.from_text(self._data["components"] or "")
 
     @property
     def duration(self) -> str:

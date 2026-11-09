@@ -1,4 +1,3 @@
-import re
 from abc import ABC, abstractmethod
 from typing import Optional
 
@@ -10,6 +9,7 @@ from Model.Content.FeatureText import Block, Option
 from Model.Content.Summons import SummonSpec
 from Model.View import CharacterView
 from .Enums import CastingTimeType, School
+from .SpellFields import CastingTime, Components, Duration, Range
 
 # The Option an improved description puts a spell's upcasting rules in,
 # named as the source text's own paragraph is (2024, then 2014 wording).
@@ -30,26 +30,6 @@ class Spell(ABC):
         "Necromancy": "#4a8b4a",
         "Transmutation": "#c87941",
     }
-
-    # Matches ranges like "150 feet", "1,000 feet", "60ft", "90 ft", "120 feet."
-    _RANGE_FEET_PATTERN = re.compile(r"^([\d,]+)\s*(?:feet|foot|ft)\.?$", re.IGNORECASE)
-    # Matches ranges like "1 mile", "500 miles"
-    _RANGE_MILE_PATTERN = re.compile(r"^([\d,]+)\s*miles?$", re.IGNORECASE)
-
-    _SECONDS_PER_DURATION_UNIT = {
-        "round": 6,
-        "minute": 60,
-        "hour": 3600,
-        "day": 86400,
-    }
-    _DURATION_INSTANTANEOUS_PATTERN = re.compile(
-        r"^instant(?:aneous|anous)\b", re.IGNORECASE
-    )
-    _DURATION_CONCENTRATION_PREFIX = re.compile(r"^concentration,?\s*", re.IGNORECASE)
-    _DURATION_UP_TO_PREFIX = re.compile(r"^up to\s*", re.IGNORECASE)
-    _DURATION_VALUE_PATTERN = re.compile(
-        r"^(\d+)\s*(round|minute|hour|day)s?$", re.IGNORECASE
-    )
 
     def __init__(
         self,
@@ -186,17 +166,30 @@ class Spell(ABC):
 
     # ---------- Interpreted properties (derived from the raw strings above) ---------- #
 
+    # The card's four top lines as SpellFields dataclasses. A JSON spell
+    # parses its record's text (which raises ValueError on a wording
+    # SpellFields can't read); a ClassSpell holds them.
+
+    @property
+    def casting_time_spec(self) -> CastingTime:
+        return CastingTime.from_text(self.casting_time)
+
+    @property
+    def range_spec(self) -> Range:
+        return Range.from_text(self.range)
+
+    @property
+    def components_spec(self) -> Components:
+        return Components.from_text(self.components)
+
+    @property
+    def duration_spec(self) -> Duration:
+        return Duration.from_text(self.duration)
+
     @property
     def range_feet(self) -> Optional[int]:
         """The range in feet, or None if it isn't a plain distance (e.g. Self, Touch, Sight, Special, Unlimited)."""
-        text = self.range.strip()
-        match = self._RANGE_MILE_PATTERN.match(text)
-        if match:
-            return int(match.group(1).replace(",", "")) * 5280
-        match = self._RANGE_FEET_PATTERN.match(text)
-        if match:
-            return int(match.group(1).replace(",", ""))
-        return None
+        return self.range_spec.feet
 
     @property
     def school_enum(self) -> School:
@@ -209,80 +202,43 @@ class Spell(ABC):
                 f"Unknown school of magic for spell {self.name!r}: {self.school!r}"
             ) from None
 
-    def _has_component_letter(self, letter: str) -> bool:
-        prefix = self.components.split("(", 1)[0]
-        tokens = {token.strip() for token in prefix.split(",")}
-        return letter in tokens
-
     @property
     def has_verbal(self) -> bool:
-        return self._has_component_letter("V")
+        return self.components_spec.verbal
 
     @property
     def has_somatic(self) -> bool:
-        return self._has_component_letter("S")
+        return self.components_spec.somatic
 
     @property
     def has_material(self) -> bool:
-        return self._has_component_letter("M")
+        return self.components_spec.has_material
 
     @property
     def material_description(self) -> Optional[str]:
         """The text inside the M(...) component, or None if there is no material component."""
-        if not self.has_material:
-            return None
-        start = self.components.find("(")
-        end = self.components.rfind(")")
-        if start == -1 or end == -1 or end <= start:
-            return None
-        return self.components[start + 1 : end].strip()
+        return self.components_spec.material or None
 
     @property
     def is_ritual(self) -> bool:
-        return "ritual" in self.casting_time.lower()
+        return self.casting_time_spec.ritual
 
     @property
     def casting_time_type(self) -> CastingTimeType:
         """The broad category of the casting time (see CastingTimeType). When multiple
         options are given (e.g. "1 action or 8 hours"), the first one is used."""
-        text = self.casting_time.split(" or ", 1)[0].strip().lower()
-        if "reaction" in text:
-            return CastingTimeType.REACTION
-        if "bonus action" in text:
-            return CastingTimeType.BONUS_ACTION
-        if "action" in text:
-            return CastingTimeType.ACTION
-        if "minute" in text:
-            return CastingTimeType.MINUTE
-        if "hour" in text:
-            return CastingTimeType.HOUR
-        raise ValueError(
-            f"Unrecognized casting time for spell {self.name!r}: {self.casting_time!r}"
-        )
+        return self.casting_time_spec.kind
 
     @property
     def is_concentration(self) -> bool:
-        return self.duration.lower().startswith("concentration")
+        return self.duration_spec.concentration
 
     @property
     def duration_seconds(self) -> Optional[int]:
         """The duration in seconds (Instantaneous is 0), or None if it isn't a fixed length
         (e.g. Special, Until dispelled). Rounds are 6 seconds. When multiple durations are
         given (e.g. "Instantaneous or 1 hour"), the first one is used."""
-        text = self.duration.strip()
-        if self._DURATION_INSTANTANEOUS_PATTERN.match(text):
-            return 0
-        lowered = text.lower()
-        if lowered == "special" or lowered.startswith("until dispelled"):
-            return None
-        text = self._DURATION_CONCENTRATION_PREFIX.sub("", text)
-        text = self._DURATION_UP_TO_PREFIX.sub("", text)
-        text = text.split(" or ", 1)[0].strip()
-        match = self._DURATION_VALUE_PATTERN.match(text)
-        if not match:
-            return None
-        value, unit = match.groups()
-        return int(value) * self._SECONDS_PER_DURATION_UNIT[unit.lower()]
+        return self.duration_spec.seconds
 
     # ---------- Shared behavior ---------- #
 

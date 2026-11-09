@@ -4,7 +4,18 @@ CharacterContent/Spells/SpellClassConverter.py; edit them by hand from
 then on: each class is its spell's one source."""
 
 from CharacterContent.Spells.SpellFactory.ClassSpell import ClassSpell, SpellRules
-from CharacterContent.Spells.SpellFactory.Enums import Component, School
+from CharacterContent.Spells.SpellFactory.Enums import (
+    CastingTimeType,
+    DurationType,
+    RangeType,
+    School,
+)
+from CharacterContent.Spells.SpellFactory.SpellFields import (
+    CastingTime,
+    Components,
+    Duration,
+    Range,
+)
 from Core.Definitions import Ability, CharacterClass, DamageType
 from Model.Content.CombatEffect import CombatDamage, CombatEffect
 from Model.Content.Feature import FeatureTarget
@@ -18,11 +29,12 @@ class Fireball(ClassSpell):
         level=3,
         school=School.EVOCATION,
         classes=(CharacterClass.SORCERER, CharacterClass.WIZARD),
-        casting_time="Action",
-        range="150 feet",
-        components=(Component.VERBAL, Component.SOMATIC, Component.MATERIAL),
-        material="a ball of bat guano and sulfur",
-        duration="Instantaneous",
+        casting_time=CastingTime(CastingTimeType.ACTION),
+        range=Range(RangeType.FOOT, 150),
+        components=Components(
+            verbal=True, somatic=True, material="a ball of bat guano and sulfur"
+        ),
+        duration=Duration(DurationType.INSTANTANEOUS),
         source="Player's Handbook",
         description=(
             "A bright streak flashes from you to a point you choose within range and then blossoms with a low roar into a fiery explosion. Each creature in a 20-foot-radius Sphere centered on that point makes a Dexterity saving throw, taking 8d6 Fire damage on a failed save or half as much damage on a successful one.\n"

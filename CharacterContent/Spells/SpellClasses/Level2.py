@@ -4,7 +4,18 @@ CharacterContent/Spells/SpellClassConverter.py; edit them by hand from
 then on: each class is its spell's one source."""
 
 from CharacterContent.Spells.SpellFactory.ClassSpell import ClassSpell, SpellRules
-from CharacterContent.Spells.SpellFactory.Enums import Component, School
+from CharacterContent.Spells.SpellFactory.Enums import (
+    CastingTimeType,
+    DurationType,
+    RangeType,
+    School,
+)
+from CharacterContent.Spells.SpellFactory.SpellFields import (
+    CastingTime,
+    Components,
+    Duration,
+    Range,
+)
 from Core.Definitions import Ability, CharacterClass, Condition, DamageType
 from Model.Content.CombatEffect import (
     CombatCondition,
@@ -30,11 +41,12 @@ class HoldPerson(ClassSpell):
             CharacterClass.WARLOCK,
             CharacterClass.WIZARD,
         ),
-        casting_time="Action",
-        range="60 feet",
-        components=(Component.VERBAL, Component.SOMATIC, Component.MATERIAL),
-        material="a straight piece of iron",
-        duration="Concentration, up to 1 minute",
+        casting_time=CastingTime(CastingTimeType.ACTION),
+        range=Range(RangeType.FOOT, 60),
+        components=Components(
+            verbal=True, somatic=True, material="a straight piece of iron"
+        ),
+        duration=Duration(DurationType.MINUTE, 1, concentration=True),
         source="Player's Handbook",
         description=(
             "Choose a Humanoid that you can see within range. The target must succeed on a Wisdom saving throw or have the Paralyzed condition for the duration. At the end of each of its turns, the target repeats the save, ending the spell on itself on a success.\n"
@@ -98,11 +110,12 @@ class Invisibility(ClassSpell):
             CharacterClass.WARLOCK,
             CharacterClass.WIZARD,
         ),
-        casting_time="Action",
-        range="Touch",
-        components=(Component.VERBAL, Component.SOMATIC, Component.MATERIAL),
-        material="an eyelash in gum arabic",
-        duration="Concentration, up to 1 hour",
+        casting_time=CastingTime(CastingTimeType.ACTION),
+        range=Range(RangeType.TOUCH),
+        components=Components(
+            verbal=True, somatic=True, material="an eyelash in gum arabic"
+        ),
+        duration=Duration(DurationType.HOUR, 1, concentration=True),
         source="Player's Handbook",
         description=(
             "A creature you touch has the Invisible condition until the spell ends. The spell ends early immediately after the target makes an attack roll, deals damage, or casts a spell.\n"
@@ -155,11 +168,10 @@ class Moonbeam(ClassSpell):
         level=2,
         school=School.EVOCATION,
         classes=(CharacterClass.DRUID,),
-        casting_time="Action",
-        range="120 feet",
-        components=(Component.VERBAL, Component.SOMATIC, Component.MATERIAL),
-        material="a moonseed leaf",
-        duration="Concentration, up to 1 minute",
+        casting_time=CastingTime(CastingTimeType.ACTION),
+        range=Range(RangeType.FOOT, 120),
+        components=Components(verbal=True, somatic=True, material="a moonseed leaf"),
+        duration=Duration(DurationType.MINUTE, 1, concentration=True),
         source="Player's Handbook",
         description=(
             "A silvery beam of pale light shines down in a 5-foot-radius, 40-foot-high Cylinder centered on a point within range. Until the spell ends, Dim Light fills the Cylinder, and you can take a Magic action on later turns to move the Cylinder up to 60 feet.\n"
@@ -230,10 +242,10 @@ class ScorchingRay(ClassSpell):
         level=2,
         school=School.EVOCATION,
         classes=(CharacterClass.SORCERER, CharacterClass.WIZARD),
-        casting_time="Action",
-        range="120 feet",
-        components=(Component.VERBAL, Component.SOMATIC),
-        duration="Instantaneous",
+        casting_time=CastingTime(CastingTimeType.ACTION),
+        range=Range(RangeType.FOOT, 120),
+        components=Components(verbal=True, somatic=True),
+        duration=Duration(DurationType.INSTANTANEOUS),
         source="Player's Handbook",
         description=(
             "You hurl three fiery rays. You can hurl them at one target within range or at several. Make a ranged spell attack for each ray. On a hit, the target takes 2d6 Fire damage.\n"
@@ -282,11 +294,10 @@ class Shatter(ClassSpell):
         level=2,
         school=School.EVOCATION,
         classes=(CharacterClass.BARD, CharacterClass.SORCERER, CharacterClass.WIZARD),
-        casting_time="Action",
-        range="60 feet",
-        components=(Component.VERBAL, Component.SOMATIC, Component.MATERIAL),
-        material="a chip of mica",
-        duration="Instantaneous",
+        casting_time=CastingTime(CastingTimeType.ACTION),
+        range=Range(RangeType.FOOT, 60),
+        components=Components(verbal=True, somatic=True, material="a chip of mica"),
+        duration=Duration(DurationType.INSTANTANEOUS),
         source="Player's Handbook",
         description=(
             "A loud noise erupts from a point of your choice within range. Each creature in a 10-foot-radius Sphere centered there makes a Constitution saving throw, taking 3d8 Thunder damage on a failed save or half as much damage on a successful one. A Construct has Disadvantage on the save.\n"
@@ -354,11 +365,10 @@ class SpikeGrowth(ClassSpell):
         level=2,
         school=School.TRANSMUTATION,
         classes=(CharacterClass.DRUID, CharacterClass.RANGER),
-        casting_time="Action",
-        range="150 feet",
-        components=(Component.VERBAL, Component.SOMATIC, Component.MATERIAL),
-        material="seven thorns",
-        duration="Concentration, up to 10 minutes",
+        casting_time=CastingTime(CastingTimeType.ACTION),
+        range=Range(RangeType.FOOT, 150),
+        components=Components(verbal=True, somatic=True, material="seven thorns"),
+        duration=Duration(DurationType.MINUTE, 10, concentration=True),
         source="Player's Handbook",
         description=(
             "The ground in a 20-foot-radius Sphere centered on a point within range sprouts hard spikes and thorns. The area becomes Difficult Terrain for the duration. When a creature moves into or within the area, it takes 2d4 Piercing damage for every 5 feet it travels.\n"
@@ -414,10 +424,10 @@ class SpiritualWeapon(ClassSpell):
         level=2,
         school=School.EVOCATION,
         classes=(CharacterClass.CLERIC,),
-        casting_time="Bonus Action",
-        range="60 feet",
-        components=(Component.VERBAL, Component.SOMATIC),
-        duration="Concentration, up to 1 minute",
+        casting_time=CastingTime(CastingTimeType.BONUS_ACTION),
+        range=Range(RangeType.FOOT, 60),
+        components=Components(verbal=True, somatic=True),
+        duration=Duration(DurationType.MINUTE, 1, concentration=True),
         source="Player's Handbook",
         description=(
             "You create a floating, spectral force that resembles a weapon of your choice and lasts for the duration. The force appears within range in a space of your choice, and you can immediately make one melee spell attack against one creature within 5 feet of the force. On a hit, the target takes Force damage equal to 1d8 plus your spellcasting ability modifier.\n"
@@ -487,11 +497,10 @@ class Suggestion(ClassSpell):
             CharacterClass.WARLOCK,
             CharacterClass.WIZARD,
         ),
-        casting_time="Action",
-        range="30 feet",
-        components=(Component.VERBAL, Component.MATERIAL),
-        material="a drop of honey",
-        duration="Concentration, up to 8 hours",
+        casting_time=CastingTime(CastingTimeType.ACTION),
+        range=Range(RangeType.FOOT, 30),
+        components=Components(verbal=True, material="a drop of honey"),
+        duration=Duration(DurationType.HOUR, 8, concentration=True),
         source="Player's Handbook",
         description=(
             "You suggest a course of activity—described in no more than 25 words—to one creature you can see within range that can hear and understand you. The suggestion must sound achievable and not involve anything that would obviously deal damage to the target or its allies. For example, you could say, “Fetch the key to the cult’s treasure vault, and give the key to me.” Or you could say, “Stop fighting, leave this library peacefully, and don’t return.”\n"

@@ -21,7 +21,9 @@ Usage (from the repo root):
 A spell that already has a class is skipped: the class may have been edited
 by hand since. Each class is checked before anything is written to the
 companion files: built by the factory, it must give the same rules, tags,
-target, improved description and combat effects as the JSON did.
+target, improved description and combat effects as the JSON did. The casting
+time, range, components and duration are compared as what they mean
+(SpellFields), not as text: the class writes them in the 2024 wording.
 """
 
 import argparse
@@ -41,7 +43,13 @@ if str(ROOT) not in sys.path:
 
 from CharacterContent.Spells.SpellFactory import DataSpell, SpellFactory  # noqa: E402
 from CharacterContent.Spells.SpellFactory.ClassSpell import SpellRules  # noqa: E402
-from CharacterContent.Spells.SpellFactory.Enums import Component, School  # noqa: E402
+from CharacterContent.Spells.SpellFactory.Enums import School  # noqa: E402
+from CharacterContent.Spells.SpellFactory.SpellFields import (  # noqa: E402
+    CastingTime,
+    Components,
+    Duration,
+    Range,
+)
 from Core.Definitions import CharacterClass, Condition  # noqa: E402
 
 CLASSES_DIR = ROOT / "CharacterContent" / "Spells" / "SpellClasses"
@@ -53,8 +61,16 @@ _IMPORTS = {
     "CharacterClass": "Core.Definitions",
     "Condition": "Core.Definitions",
     "DamageType": "Core.Definitions",
-    "Component": "CharacterContent.Spells.SpellFactory.Enums",
+    "AreaShape": "CharacterContent.Spells.SpellFactory.Enums",
+    "CastingTimeType": "CharacterContent.Spells.SpellFactory.Enums",
+    "DurationType": "CharacterContent.Spells.SpellFactory.Enums",
+    "RangeType": "CharacterContent.Spells.SpellFactory.Enums",
     "School": "CharacterContent.Spells.SpellFactory.Enums",
+    "Area": "CharacterContent.Spells.SpellFactory.SpellFields",
+    "CastingTime": "CharacterContent.Spells.SpellFactory.SpellFields",
+    "Components": "CharacterContent.Spells.SpellFactory.SpellFields",
+    "Duration": "CharacterContent.Spells.SpellFactory.SpellFields",
+    "Range": "CharacterContent.Spells.SpellFactory.SpellFields",
     "ActionType": "Model.Content.ActionType",
     "CombatCondition": "Model.Content.CombatEffect",
     "CombatDamage": "Model.Content.CombatEffect",
@@ -73,25 +89,28 @@ _IMPORTS = {
     "SpellRules": "CharacterContent.Spells.SpellFactory.ClassSpell",
 }
 # Fields written positionally even though they have a default, as the
-# hand-written code does: Option("Name", (blocks)), CombatDamage(dice, type, choices).
-_POSITIONAL = {("Option", "blocks"), ("CombatDamage", "choices")}
+# hand-written code does: Option("Name", (blocks)), CombatDamage(dice, type,
+# choices), Range(RangeType.FOOT, 60), Duration(DurationType.MINUTE, 1).
+_POSITIONAL = {
+    ("Option", "blocks"),
+    ("CombatDamage", "choices"),
+    ("CastingTime", "amount"),
+    ("Range", "amount"),
+    ("Duration", "amount"),
+}
 # Written all by keyword: ten strings in a row say nothing by position.
 _BY_KEYWORD = {"SpellRules"}
-# The order a reader wants them in, where it isn't the fields' own order
-# (a field with a default has to come after those without).
-_READING_ORDER = {"SpellRules": {"material": "components"}}
 # Text a model keeps as text but that names an enum member, written as the
 # member: CombatCondition("Prone") is CombatCondition(Condition.PRONE). A
 # badge's name ("Bless") stays text.
 _AS_ENUM = {("CombatCondition", "name"): Condition}
-# "V, S, M (a ball of bat guano and sulfur)", every part optional, in order.
-_COMPONENTS = re.compile(r"(?P<v>V)?(?:, )?(?P<s>S)?(?:, )?(?:M \((?P<m>.+)\))?")
 
 
 class CannotConvert(ValueError):
-    """A spell whose JSON says something the class's enums can't: a class
-    or school with a note ("Wizard (Dunamancy)"), components written
-    another way. It stays JSON until it's converted by hand."""
+    """A spell whose JSON says something the class's enums and dataclasses
+    can't: a class or school with a note ("Wizard (Dunamancy)"), a casting
+    time SpellFields can't read, no components at all. It stays JSON until
+    it's converted by hand."""
 
 
 # Record keys the rules don't need: the 2014 source's "ritual" is in its
@@ -156,12 +175,6 @@ def source_of(value) -> str:
                 args.append(source_of(item))
             elif item != default:
                 args.append(f"{field.name}={source_of(item)}")
-        for field_name, after in _READING_ORDER.get(name, {}).items():
-            moved = next((a for a in args if a.startswith(f"{field_name}=")), None)
-            anchor = next((a for a in args if a.startswith(f"{after}=")), None)
-            if moved is not None and anchor is not None:
-                args.remove(moved)
-                args.insert(args.index(anchor) + 1, moved)
         return f"{name}({', '.join(args)})"
     if isinstance(value, tuple):
         if len(value) == 1:
@@ -197,7 +210,8 @@ def class_source(spell: DataSpell) -> str:
         raise ValueError(
             f"{spell.name}: record keys the converter can't keep: {unknown}"
         )
-    components, material = _components(spell)
+    if not spell._data.get("components"):
+        raise CannotConvert(f"{spell.name}: the record has no components")
     rules = SpellRules(
         name=spell.name,
         level=spell.level,
@@ -205,11 +219,10 @@ def class_source(spell: DataSpell) -> str:
         classes=tuple(
             _enum(spell, "class", CharacterClass, name) for name in spell.classes
         ),
-        casting_time=spell.casting_time,
-        range=spell.range,
-        components=components,
-        material=material,
-        duration=spell.duration,
+        casting_time=_field(spell, "casting time", CastingTime, spell.casting_time),
+        range=_field(spell, "range", Range, spell.range),
+        components=_field(spell, "components", Components, spell.components),
+        duration=_field(spell, "duration", Duration, spell.duration),
         source=spell.source,
         description=spell.description,
         usage_tags=tuple(spell.usage_tags),  # type: ignore[arg-type]
@@ -248,28 +261,12 @@ def _enum(spell, what: str, enum_type, value):
         ) from None
 
 
-def _components(spell) -> tuple[tuple[Component, ...], str]:
-    """(components, material) for the record's "V, S, M (...)", which must
-    read back exactly as it's written."""
-    text = spell.components or ""
-    match = _COMPONENTS.fullmatch(text)
-    if match is not None:
-        components = tuple(
-            component
-            for component, there in (
-                (Component.VERBAL, match["v"]),
-                (Component.SOMATIC, match["s"]),
-                (Component.MATERIAL, match["m"] is not None),
-            )
-            if there
-        )
-        material = match["m"] or ""
-        parts = [c.value for c in components if c is not Component.MATERIAL]
-        if material:
-            parts.append(f"M ({material})")
-        if ", ".join(parts) == text and components:
-            return components, material
-    raise CannotConvert(f"{spell.name}: components {text!r} aren't 'V, S, M (...)'")
+def _field(spell, what: str, field_type, text: str):
+    """`text` read as a SpellFields dataclass."""
+    try:
+        return field_type.from_text(text)
+    except ValueError:
+        raise CannotConvert(f"{spell.name}: can't read the {what} {text!r}") from None
 
 
 # ---------------------------------------------------------------------------
@@ -287,7 +284,10 @@ def _module_docstring(level: int) -> str:
 
 
 def _names_used(text: str) -> set[str]:
-    return {name for name in _IMPORTS if re.search(rf"\b{name}\b", text)}
+    """The importable names the code in `text` uses: names, not words in its
+    strings (a description that says "Range" needs no import)."""
+    used = {node.id for node in ast.walk(ast.parse(text)) if isinstance(node, ast.Name)}
+    return used & set(_IMPORTS)
 
 
 def add_to_module(path: Path, level: int, classes: dict[str, str]) -> str:
@@ -415,10 +415,10 @@ def differences(json_spell, class_spell) -> list[str]:
         "level",
         "school",
         "classes",
-        "casting_time",
-        "range",
-        "components",
-        "duration",
+        "casting_time_spec",
+        "range_spec",
+        "components_spec",
+        "duration_spec",
         "description",
         "source",
         "usage_tags",

@@ -4,7 +4,18 @@ CharacterContent/Spells/SpellClassConverter.py; edit them by hand from
 then on: each class is its spell's one source."""
 
 from CharacterContent.Spells.SpellFactory.ClassSpell import ClassSpell, SpellRules
-from CharacterContent.Spells.SpellFactory.Enums import Component, School
+from CharacterContent.Spells.SpellFactory.Enums import (
+    CastingTimeType,
+    DurationType,
+    RangeType,
+    School,
+)
+from CharacterContent.Spells.SpellFactory.SpellFields import (
+    CastingTime,
+    Components,
+    Duration,
+    Range,
+)
 from Core.Definitions import Ability, CharacterClass, Condition, DamageType
 from Model.Content.CombatEffect import (
     CombatCondition,
@@ -27,10 +38,10 @@ class ChillTouch(ClassSpell):
             CharacterClass.WARLOCK,
             CharacterClass.WIZARD,
         ),
-        casting_time="Action",
-        range="Touch",
-        components=(Component.VERBAL, Component.SOMATIC),
-        duration="Instantaneous",
+        casting_time=CastingTime(CastingTimeType.ACTION),
+        range=Range(RangeType.TOUCH),
+        components=Components(verbal=True, somatic=True),
+        duration=Duration(DurationType.INSTANTANEOUS),
         source="Player's Handbook",
         description=(
             "Channeling the chill of the grave, make a melee spell attack against a target within reach. On a hit, the target takes 1d10 Necrotic damage, and it can’t regain Hit Points until the end of your next turn.\n"
@@ -95,10 +106,10 @@ class EldritchBlast(ClassSpell):
         level=0,
         school=School.EVOCATION,
         classes=(CharacterClass.WARLOCK,),
-        casting_time="Action",
-        range="120 feet",
-        components=(Component.VERBAL, Component.SOMATIC),
-        duration="Instantaneous",
+        casting_time=CastingTime(CastingTimeType.ACTION),
+        range=Range(RangeType.FOOT, 120),
+        components=Components(verbal=True, somatic=True),
+        duration=Duration(DurationType.INSTANTANEOUS),
         source="Player's Handbook",
         description=(
             "You hurl a beam of crackling energy. Make a ranged spell attack against one creature or object in range. On a hit, the target takes 1d10 Force damage.\n"
@@ -166,11 +177,10 @@ class Friends(ClassSpell):
             CharacterClass.WARLOCK,
             CharacterClass.WIZARD,
         ),
-        casting_time="Action",
-        range="10 feet",
-        components=(Component.SOMATIC, Component.MATERIAL),
-        material="some makeup",
-        duration="Concentration, up to 1 minute",
+        casting_time=CastingTime(CastingTimeType.ACTION),
+        range=Range(RangeType.FOOT, 10),
+        components=Components(somatic=True, material="some makeup"),
+        duration=Duration(DurationType.MINUTE, 1, concentration=True),
         source="Player's Handbook",
         description=(
             "You magically emanate a sense of friendship toward one creature you can see within range. The target must succeed on a Wisdom saving throw or have the Charmed condition for the duration. The target succeeds automatically if it isn’t a Humanoid, if you’re fighting it, or if you have cast this spell on it within the past 24 hours.\n"
@@ -230,10 +240,10 @@ class Guidance(ClassSpell):
         level=0,
         school=School.DIVINATION,
         classes=(CharacterClass.ARTIFICER, CharacterClass.CLERIC, CharacterClass.DRUID),
-        casting_time="Action",
-        range="Touch",
-        components=(Component.VERBAL, Component.SOMATIC),
-        duration="Concentration, up to 1 minute",
+        casting_time=CastingTime(CastingTimeType.ACTION),
+        range=Range(RangeType.TOUCH),
+        components=Components(verbal=True, somatic=True),
+        duration=Duration(DurationType.MINUTE, 1, concentration=True),
         source="Player's Handbook",
         description="You touch a willing creature and choose a skill. Until the spell ends, the creature adds 1d4 to any ability check using the chosen skill.",
         usage_tags=("buff",),
@@ -280,11 +290,10 @@ class Message(ClassSpell):
             CharacterClass.SORCERER,
             CharacterClass.WIZARD,
         ),
-        casting_time="Action",
-        range="120 feet",
-        components=(Component.SOMATIC, Component.MATERIAL),
-        material="a copper wire",
-        duration="1 round",
+        casting_time=CastingTime(CastingTimeType.ACTION),
+        range=Range(RangeType.FOOT, 120),
+        components=Components(somatic=True, material="a copper wire"),
+        duration=Duration(DurationType.ROUND, 1),
         source="Player's Handbook",
         description=(
             "You point toward a creature within range and whisper a message. The target (and only the target) hears the message and can reply in a whisper that only you can hear.\n"
@@ -336,11 +345,10 @@ class MinorIllusion(ClassSpell):
             CharacterClass.WARLOCK,
             CharacterClass.WIZARD,
         ),
-        casting_time="Action",
-        range="30 feet",
-        components=(Component.SOMATIC, Component.MATERIAL),
-        material="a bit of fleece",
-        duration="1 minute",
+        casting_time=CastingTime(CastingTimeType.ACTION),
+        range=Range(RangeType.FOOT, 30),
+        components=Components(somatic=True, material="a bit of fleece"),
+        duration=Duration(DurationType.MINUTE, 1),
         source="Player's Handbook",
         description=(
             "You create a sound or an image of an object within range that lasts for the duration. See the descriptions below for the effects of each. The illusion ends if you cast this spell again.\n"
@@ -419,10 +427,10 @@ class ProduceFlame(ClassSpell):
         level=0,
         school=School.CONJURATION,
         classes=(CharacterClass.DRUID,),
-        casting_time="Bonus Action",
-        range="Self",
-        components=(Component.VERBAL, Component.SOMATIC),
-        duration="10 minutes",
+        casting_time=CastingTime(CastingTimeType.BONUS_ACTION),
+        range=Range(RangeType.SELF),
+        components=Components(verbal=True, somatic=True),
+        duration=Duration(DurationType.MINUTE, 10),
         source="Player's Handbook",
         description=(
             "A flickering flame appears in your hand and remains there for the duration. While there, the flame emits no heat and ignites nothing, and it sheds Bright Light in a 20-foot radius and Dim Light for an additional 20 feet. The spell ends if you cast it again.\n"
@@ -501,10 +509,10 @@ class Resistance(ClassSpell):
         level=0,
         school=School.ABJURATION,
         classes=(CharacterClass.ARTIFICER, CharacterClass.CLERIC, CharacterClass.DRUID),
-        casting_time="Action",
-        range="Touch",
-        components=(Component.VERBAL, Component.SOMATIC),
-        duration="Concentration, up to 1 minute",
+        casting_time=CastingTime(CastingTimeType.ACTION),
+        range=Range(RangeType.TOUCH),
+        components=Components(verbal=True, somatic=True),
+        duration=Duration(DurationType.MINUTE, 1, concentration=True),
         source="Player's Handbook",
         description="You touch a willing creature and choose a damage type: Acid, Bludgeoning, Cold, Fire, Lightning, Necrotic, Piercing, Poison, Radiant, Slashing, or Thunder. When the creature takes damage of the chosen type before the spell ends, the creature reduces the total damage taken by 1d4. A creature can benefit from this spell only once per turn.",
         usage_tags=("buff",),
@@ -555,10 +563,10 @@ class SacredFlame(ClassSpell):
         level=0,
         school=School.EVOCATION,
         classes=(CharacterClass.CLERIC,),
-        casting_time="Action",
-        range="60 feet",
-        components=(Component.VERBAL, Component.SOMATIC),
-        duration="Instantaneous",
+        casting_time=CastingTime(CastingTimeType.ACTION),
+        range=Range(RangeType.FOOT, 60),
+        components=Components(verbal=True, somatic=True),
+        duration=Duration(DurationType.INSTANTANEOUS),
         source="Player's Handbook",
         description=(
             "Flame-like radiance descends on a creature that you can see within range. The target must succeed on a Dexterity saving throw or take 1d8 Radiant damage. The target gains no benefit from Half Cover or Three-Quarters Cover for this save.\n"
@@ -625,10 +633,10 @@ class SpareTheDying(ClassSpell):
         level=0,
         school=School.NECROMANCY,
         classes=(CharacterClass.ARTIFICER, CharacterClass.CLERIC, CharacterClass.DRUID),
-        casting_time="Action",
-        range="15 feet",
-        components=(Component.VERBAL, Component.SOMATIC),
-        duration="Instantaneous",
+        casting_time=CastingTime(CastingTimeType.ACTION),
+        range=Range(RangeType.FOOT, 15),
+        components=Components(verbal=True, somatic=True),
+        duration=Duration(DurationType.INSTANTANEOUS),
         source="Player's Handbook",
         description=(
             "Choose a creature within range that has 0 Hit Points and isn’t dead. The creature becomes Stable.\n"
@@ -685,10 +693,10 @@ class StarryWisp(ClassSpell):
         level=0,
         school=School.EVOCATION,
         classes=(CharacterClass.BARD, CharacterClass.DRUID),
-        casting_time="Action",
-        range="60 feet",
-        components=(Component.VERBAL, Component.SOMATIC),
-        duration="Instantaneous",
+        casting_time=CastingTime(CastingTimeType.ACTION),
+        range=Range(RangeType.FOOT, 60),
+        components=Components(verbal=True, somatic=True),
+        duration=Duration(DurationType.INSTANTANEOUS),
         source="Player's Handbook",
         description=(
             "You launch a mote of light at one creature or object within range. Make a ranged spell attack against the target. On a hit, the target takes 1d8 Radiant damage, and until the end of your next turn, it emits Dim Light in a 10-foot radius and can’t benefit from the Invisible condition.\n"
@@ -752,10 +760,10 @@ class Thaumaturgy(ClassSpell):
         level=0,
         school=School.TRANSMUTATION,
         classes=(CharacterClass.CLERIC,),
-        casting_time="Action",
-        range="30 feet",
-        components=(Component.VERBAL,),
-        duration="Up to 1 minute",
+        casting_time=CastingTime(CastingTimeType.ACTION),
+        range=Range(RangeType.FOOT, 30),
+        components=Components(verbal=True),
+        duration=Duration(DurationType.MINUTE, 1, up_to=True),
         source="Player's Handbook",
         description=(
             "You manifest a minor wonder within range. You create one of the effects below within range. If you cast this spell multiple times, you can have up to three of its 1-minute effects active at a time.\n"
@@ -824,10 +832,10 @@ class TollTheDead(ClassSpell):
         level=0,
         school=School.NECROMANCY,
         classes=(CharacterClass.CLERIC, CharacterClass.WARLOCK, CharacterClass.WIZARD),
-        casting_time="Action",
-        range="60 feet",
-        components=(Component.VERBAL, Component.SOMATIC),
-        duration="Instantaneous",
+        casting_time=CastingTime(CastingTimeType.ACTION),
+        range=Range(RangeType.FOOT, 60),
+        components=Components(verbal=True, somatic=True),
+        duration=Duration(DurationType.INSTANTANEOUS),
         source="Player's Handbook",
         description=(
             "You point at one creature you can see within range, and the single chime of a dolorous bell is audible within 10 feet of the target. The target must succeed on a Wisdom saving throw or take 1d8 Necrotic damage. If the target is missing any of its Hit Points, it instead takes 1d12 Necrotic damage.\n"
@@ -920,11 +928,13 @@ class TrueStrike(ClassSpell):
             CharacterClass.WARLOCK,
             CharacterClass.WIZARD,
         ),
-        casting_time="Action",
-        range="Self",
-        components=(Component.SOMATIC, Component.MATERIAL),
-        material="a weapon with which you have proficiency and that is worth 1+ CP",
-        duration="Instantaneous",
+        casting_time=CastingTime(CastingTimeType.ACTION),
+        range=Range(RangeType.SELF),
+        components=Components(
+            somatic=True,
+            material="a weapon with which you have proficiency and that is worth 1+ CP",
+        ),
+        duration=Duration(DurationType.INSTANTANEOUS),
         source="Player's Handbook",
         description=(
             "Guided by a flash of magical insight, you make one attack with the weapon used in the spell’s casting. The attack uses your spellcasting ability for the attack and damage rolls instead of using Strength or Dexterity. If the attack deals damage, it can be Radiant damage or the weapon’s normal damage type (your choice).\n"
@@ -996,10 +1006,10 @@ class ViciousMockery(ClassSpell):
         level=0,
         school=School.ENCHANTMENT,
         classes=(CharacterClass.BARD,),
-        casting_time="Action",
-        range="60 feet",
-        components=(Component.VERBAL,),
-        duration="Instantaneous",
+        casting_time=CastingTime(CastingTimeType.ACTION),
+        range=Range(RangeType.FOOT, 60),
+        components=Components(verbal=True),
+        duration=Duration(DurationType.INSTANTANEOUS),
         source="Player's Handbook",
         description=(
             "You unleash a string of insults laced with subtle enchantments at one creature you can see or hear within range. The target must succeed on a Wisdom saving throw or take 1d6 Psychic damage and have Disadvantage on the next attack roll it makes before the end of its next turn.\n"

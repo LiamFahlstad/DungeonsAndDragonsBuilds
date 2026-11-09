@@ -32,7 +32,7 @@ change:
 | 2 | 2.6 `Feature.adjust_combat_effect` hook | **Done** |
 | 2 | 2.7 Conditional extra damage (`when`) | **Done**, as a generated note (R14) |
 | 2 | Extensions list their own uses under their parent | **Done** (R10, new) |
-| S | **Spells as classes** (new direction, 2026-11-09; see its section) | S.1 base class, factory and converter **done**; S.2 the 57 spells with combat effects converted **done**; S.3-S.5 not started |
+| S | **Spells as classes** (new direction, 2026-11-09; see its section) | S.1 base class, factory and converter **done**; S.2 the 57 spells with combat effects converted **done**; S.2c card lines as dataclasses **done** (R20); S.3-S.5 not started |
 | 3 | Lasting effects (3.1-3.6) | Not started |
 | 4 | One `combat-effects` skill; feature agent; content rollout | Partly: the skill's rubric and script cover every new field; first content batch below |
 | 5 | Sheet chips, monster score | Not started |
@@ -202,10 +202,11 @@ class Fireball(ClassSpell):
     rules = SpellRules(
         name="Fireball", level=3, school=School.EVOCATION,
         classes=(CharacterClass.SORCERER, CharacterClass.WIZARD),
-        casting_time="Action", range="150 feet",
-        components=(Component.VERBAL, Component.SOMATIC, Component.MATERIAL),
-        material="a ball of bat guano and sulfur",
-        duration="Instantaneous", source="Player's Handbook",
+        casting_time=CastingTime(CastingTimeType.ACTION),
+        range=Range(RangeType.FOOT, 150),
+        components=Components(verbal=True, somatic=True,
+                              material="a ball of bat guano and sulfur"),
+        duration=Duration(DurationType.INSTANTANEOUS), source="Player's Handbook",
         description=("...\n" "Using a Higher-Level Spell Slot. ..."),
         usage_tags=("damage",), target=FeatureTarget.AREA,
     )
@@ -222,13 +223,19 @@ class Fireball(ClassSpell):
   spell does is methods, as on a Feature. Per-grant data (casting ability,
   ruling, grant source) stays the constructor's, as for every Spell.
 - **What has a fixed set of values is an enum** (R19): `school` a `School`,
-  `classes` `CharacterClass`es, `components` `Component` flags in card order
-  plus a `material` text, `usage_tags` the shared `UsageTag` literal (as on
-  Feature), `target` a `FeatureTarget`, and in combat effects a rules
+  `classes` `CharacterClass`es, `usage_tags` the shared `UsageTag` literal
+  (as on Feature), `target` a `FeatureTarget`, and in combat effects a rules
   condition is `CombatCondition(Condition.PRONE)` (a badge keeps its text
   name). `ClassSpell` turns them back into the card's text, so the `Spell`
-  interface is unchanged. `casting_time`, `range`, `duration` and `source`
-  stay the source's words.
+  interface is unchanged. `source` stays the source's words (Q14).
+- **The card's four top lines are dataclasses** (R20,
+  `SpellFactory/SpellFields.py`): `CastingTime`, `Range`, `Components`,
+  `Duration`. Each has `from_text()`, which reads every wording in the
+  sources, and `text`, which writes the 2024 card's. A `DataSpell` parses its
+  record's text into them (`casting_time_spec`, `range_spec`, ...), so
+  `casting_time_type`, `range_feet`, `duration_seconds`, `is_concentration`,
+  `is_ritual` and `has_verbal`... come from one parser for both kinds of
+  spell. A JSON spell's card keeps the record's wording.
 - One module per level in `CharacterContent/Spells/SpellClasses/`
   (`Cantrips.py`, `Level1.py`, ...), each ending in `SPELLS = [...]`;
   `SpellClasses/__init__.py` builds `SPELL_CLASSES` by name and refuses two
@@ -260,6 +267,7 @@ module's own imports and classes when adding to it.
 | S.1 | `ClassSpell` + `SpellRules`, the factory preferring classes, the converter, `tests/test_spell_classes.py`; the skills, agents, HOWTO and IMPROVED_DESCRIPTIONS.md say where a class spell is edited | **Done** |
 | S.2 | Convert the spells with combat effects (57: the ones where the JSON hit its limits) | **Done**: picker goldens and sheet snapshots unchanged; the converter's check passed for all 57 |
 | S.2b | The converter writes enums where the values are a fixed set (R19), and leaves a spell it can't express as JSON with the reason (`CannotConvert`) | **Done**: the 57 regenerated with enums; 574 of the 594 spells can be converted, the 20 others are DI-062 and DI-063 |
+| S.2c | Casting time, range, components and duration as `SpellFields` dataclasses (R20); the converter compares them by meaning; the 57 regenerated | **Done**: every record of the three sources reads and writes back (`tests/test_spell_fields.py`); old and new derived values agree on all 1,391 records but one fix (Yolande's Regal Presence now has V); one card changed (Absorb Elements "1 reaction, ..." -> "Reaction, ...") |
 | S.3 | Write new combat effects in classes, not JSON: convert a spell, then edit its `combat_effects()`. Teach `spell_mechanics.py draft` to print a class's method instead of a JSON entry, and give the `spell-mechanics` agent classes in scope | Not started |
 | S.4 | Convert the rest (Q11) and retire the companion files: once every spell of a source has a class, its `_extended`/`_improved`/`_combat_effects` files and `DataSpell`'s companion handling go | Not started |
 | S.5 | Drift check: a re-scrape that changes a converted spell's record must be noticed (Q12) | Not started |
@@ -394,7 +402,23 @@ Sheet chips ("DEX save · half · 8d6 Fire") from the same data;
   principle but the data has duplicate spellings (Q14). The converter
   refuses a record that doesn't fit rather than normalizing it: changing a
   card's text is a decision for a person, and the parity check would have to
-  allow it.
+  allow it. *Casting time, range, components and duration: superseded by
+  R20.*
+- **R20. The card's top lines are dataclasses after all, written in the 2024
+  wording.** R19 overrated the variety: a ~30-line grammar per line reads
+  every record of all three sources (two exceptions in a first try, both
+  covered now: Plant Growth's labelled alternatives become `note`s, and
+  Shield's cut-off trigger, DI-064, is still a trigger). One parser replaces
+  `Spell`'s regexes and the converter's components regex, a class can't hold
+  a malformed line, and code gets what the text only implied (a trigger, an
+  area, alternatives, "until dispelled"). The card text is built from the
+  fields, not stored beside them, so a class can't say two things; the
+  price is that a class writes the 2024 wording ("1 action" -> "Action",
+  "60ft" -> "60 feet"), which suits the 2024 engine. A JSON spell keeps its
+  record's wording. The converter now compares these lines by meaning, and
+  converts the components slips of DI-062 (only a record with no components
+  stays JSON). Material cost and consumption are not fields yet: nothing
+  reads them; `Components.material` is the place to parse them from.
 
 ## Open questions (with suggestions)
 
@@ -462,10 +486,15 @@ Sheet chips ("DEX save · half · 8d6 Fire") from the same data;
 - **DI-061** (open): homebrew Mira, Princess of the Loop has 6 abilities; the
   house rule is at most 4.
 - **DI-062** (open): five spell records have malformed components ('V,S',
-  'M(a diamond ...)', a stray 'Component: ', none at all), so the converter
-  leaves them as JSON. A scraper fix.
+  'M(a diamond ...)', a stray 'Component: ', none at all). Since R20 the
+  converter reads all but the one with none; the records still want a
+  scraper fix.
 - **DI-063** (open): 15 Dunamancy spells have a school or class with a note
   (Q15), so the converter leaves them as JSON.
+- **DI-064** (open): Shield's casting time is cut off in the 2024 and 2014
+  records ("...or targeted by the"); aidedd has the whole trigger.
+- **DI-065** (open): the 2014 records' `"ritual": true` is ignored, so 2014-only
+  ritual spells don't show as rituals (their casting time doesn't say so).
 - Found and fixed: the text-reading tests dropped a spell's data by its old
   key name; the single golden file broke under parallel test runs (R11).
 

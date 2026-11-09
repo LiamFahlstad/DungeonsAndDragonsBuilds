@@ -4,7 +4,18 @@ CharacterContent/Spells/SpellClassConverter.py; edit them by hand from
 then on: each class is its spell's one source."""
 
 from CharacterContent.Spells.SpellFactory.ClassSpell import ClassSpell, SpellRules
-from CharacterContent.Spells.SpellFactory.Enums import Component, School
+from CharacterContent.Spells.SpellFactory.Enums import (
+    CastingTimeType,
+    DurationType,
+    RangeType,
+    School,
+)
+from CharacterContent.Spells.SpellFactory.SpellFields import (
+    CastingTime,
+    Components,
+    Duration,
+    Range,
+)
 from Core.Definitions import Ability, CharacterClass, Condition, DamageType
 from Model.Content.CombatEffect import (
     CombatCondition,
@@ -30,10 +41,13 @@ class AbsorbElements(ClassSpell):
             CharacterClass.SORCERER,
             CharacterClass.WIZARD,
         ),
-        casting_time="1 reaction, which you take when you take acid, cold, fire, lightning, or thunder damage",
-        range="Self",
-        components=(Component.SOMATIC,),
-        duration="1 round",
+        casting_time=CastingTime(
+            CastingTimeType.REACTION,
+            trigger="which you take when you take acid, cold, fire, lightning, or thunder damage",
+        ),
+        range=Range(RangeType.SELF),
+        components=Components(somatic=True),
+        duration=Duration(DurationType.ROUND, 1),
         source="Xanathar's Guide to Everything",
         description=(
             "The spell captures some of the incoming energy, lessening its effect on you and storing it for your next melee attack. You have resistance to the triggering damage type until the start of your next turn. Also, the first time you hit with a melee attack on your next turn, the target takes an extra 1d6 damage of the triggering type, and the spell ends.\n"
@@ -96,11 +110,12 @@ class Alarm(ClassSpell):
             CharacterClass.RANGER,
             CharacterClass.WIZARD,
         ),
-        casting_time="1 minute or Ritual",
-        range="30 feet",
-        components=(Component.VERBAL, Component.SOMATIC, Component.MATERIAL),
-        material="a bell and silver wire",
-        duration="8 hours",
+        casting_time=CastingTime(CastingTimeType.MINUTE, 1, ritual=True),
+        range=Range(RangeType.FOOT, 30),
+        components=Components(
+            verbal=True, somatic=True, material="a bell and silver wire"
+        ),
+        duration=Duration(DurationType.HOUR, 8),
         source="Player's Handbook",
         description=(
             "You set an alarm against intrusion. Choose a door, a window, or an area within range that is no larger than a 20-foot Cube. Until the spell ends, an alarm alerts you whenever a creature touches or enters the warded area. When you cast the spell, you can designate creatures that won’t set off the alarm. You also choose whether the alarm is audible or mental:\n"
@@ -158,11 +173,12 @@ class Bless(ClassSpell):
         level=1,
         school=School.ENCHANTMENT,
         classes=(CharacterClass.CLERIC, CharacterClass.PALADIN),
-        casting_time="Action",
-        range="30 feet",
-        components=(Component.VERBAL, Component.SOMATIC, Component.MATERIAL),
-        material="a Holy Symbol worth 5+ GP",
-        duration="Concentration, up to 1 minute",
+        casting_time=CastingTime(CastingTimeType.ACTION),
+        range=Range(RangeType.FOOT, 30),
+        components=Components(
+            verbal=True, somatic=True, material="a Holy Symbol worth 5+ GP"
+        ),
+        duration=Duration(DurationType.MINUTE, 1, concentration=True),
         source="Player's Handbook",
         description=(
             "You bless up to three creatures within range. Whenever a target makes an attack roll or a saving throw before the spell ends, the target adds 1d4 to the attack roll or save.\n"
@@ -213,10 +229,10 @@ class BurningHands(ClassSpell):
         level=1,
         school=School.EVOCATION,
         classes=(CharacterClass.SORCERER, CharacterClass.WIZARD),
-        casting_time="Action",
-        range="Self",
-        components=(Component.VERBAL, Component.SOMATIC),
-        duration="Instantaneous",
+        casting_time=CastingTime(CastingTimeType.ACTION),
+        range=Range(RangeType.SELF),
+        components=Components(verbal=True, somatic=True),
+        duration=Duration(DurationType.INSTANTANEOUS),
         source="Player's Handbook",
         description=(
             "A thin sheet of flames shoots forth from you. Each creature in a 15-foot Cone makes a Dexterity saving throw, taking 3d6 Fire damage on a failed save or half as much damage on a successful one.\n"
@@ -283,10 +299,10 @@ class CharmPerson(ClassSpell):
             CharacterClass.WARLOCK,
             CharacterClass.WIZARD,
         ),
-        casting_time="Action",
-        range="30 feet",
-        components=(Component.VERBAL, Component.SOMATIC),
-        duration="1 hour",
+        casting_time=CastingTime(CastingTimeType.ACTION),
+        range=Range(RangeType.FOOT, 30),
+        components=Components(verbal=True, somatic=True),
+        duration=Duration(DurationType.HOUR, 1),
         source="Player's Handbook",
         description=(
             "One Humanoid you can see within range makes a Wisdom saving throw. It does so with Advantage if you or your allies are fighting it. On a failed save, the target has the Charmed condition until the spell ends or until you or your allies damage it. The Charmed creature is Friendly to you. When the spell ends, the target knows it was Charmed by you.\n"
@@ -350,11 +366,12 @@ class ChromaticOrb(ClassSpell):
         level=1,
         school=School.EVOCATION,
         classes=(CharacterClass.SORCERER, CharacterClass.WIZARD),
-        casting_time="Action",
-        range="90 feet",
-        components=(Component.VERBAL, Component.SOMATIC, Component.MATERIAL),
-        material="a diamond worth 50+ GP",
-        duration="Instantaneous",
+        casting_time=CastingTime(CastingTimeType.ACTION),
+        range=Range(RangeType.FOOT, 90),
+        components=Components(
+            verbal=True, somatic=True, material="a diamond worth 50+ GP"
+        ),
+        duration=Duration(DurationType.INSTANTANEOUS),
         source="Player's Handbook",
         description=(
             "You hurl an orb of energy at a target within range. Choose Acid, Cold, Fire, Lightning, Poison, or Thunder for the type of orb you create, and then make a ranged spell attack against the target. On a hit, the target takes 3d8 damage of the chosen type.\n"
@@ -451,10 +468,10 @@ class Command(ClassSpell):
         level=1,
         school=School.ENCHANTMENT,
         classes=(CharacterClass.BARD, CharacterClass.CLERIC, CharacterClass.PALADIN),
-        casting_time="Action",
-        range="60 feet",
-        components=(Component.VERBAL,),
-        duration="Instantaneous",
+        casting_time=CastingTime(CastingTimeType.ACTION),
+        range=Range(RangeType.FOOT, 60),
+        components=Components(verbal=True),
+        duration=Duration(DurationType.INSTANTANEOUS),
         source="Player's Handbook",
         description=(
             "You speak a one-word command to a creature you can see within range. The target must succeed on a Wisdom saving throw or follow the command on its next turn. Choose the command from these options:\n"
@@ -578,10 +595,10 @@ class CureWounds(ClassSpell):
             CharacterClass.PALADIN,
             CharacterClass.RANGER,
         ),
-        casting_time="Action",
-        range="Touch",
-        components=(Component.VERBAL, Component.SOMATIC),
-        duration="Instantaneous",
+        casting_time=CastingTime(CastingTimeType.ACTION),
+        range=Range(RangeType.TOUCH),
+        components=Components(verbal=True, somatic=True),
+        duration=Duration(DurationType.INSTANTANEOUS),
         source="Player's Handbook",
         description=(
             "A creature you touch regains a number of Hit Points equal to 2d8 plus your spellcasting ability modifier.\n"
@@ -628,10 +645,10 @@ class DisguiseSelf(ClassSpell):
             CharacterClass.SORCERER,
             CharacterClass.WIZARD,
         ),
-        casting_time="Action",
-        range="Self",
-        components=(Component.VERBAL, Component.SOMATIC),
-        duration="1 hour",
+        casting_time=CastingTime(CastingTimeType.ACTION),
+        range=Range(RangeType.SELF),
+        components=Components(verbal=True, somatic=True),
+        duration=Duration(DurationType.HOUR, 1),
         source="Player's Handbook",
         description=(
             "You make yourself - including your clothing, armor, weapons, and other belongings on your person - look different until the spell ends. You can seem 1 foot shorter or taller and can appear heavier or lighter. You must adopt a form that has the same basic arrangement of limbs as you have. Otherwise, the extent of the illusion is up to you.\n"
@@ -682,10 +699,10 @@ class DissonantWhispers(ClassSpell):
         level=1,
         school=School.ENCHANTMENT,
         classes=(CharacterClass.BARD,),
-        casting_time="Action",
-        range="60 feet",
-        components=(Component.VERBAL,),
-        duration="Instantaneous",
+        casting_time=CastingTime(CastingTimeType.ACTION),
+        range=Range(RangeType.FOOT, 60),
+        components=Components(verbal=True),
+        duration=Duration(DurationType.INSTANTANEOUS),
         source="Player's Handbook",
         description=(
             "One creature of your choice that you can see within range hears a discordant melody in its mind. The target makes a Wisdom saving throw. On a failed save, it takes 3d6 Psychic damage and must immediately use its Reaction, if available, to move as far away from you as it can, using the safest route. On a successful save, the target takes half as much damage only.\n"
@@ -748,10 +765,13 @@ class DivineSmite(ClassSpell):
         level=1,
         school=School.EVOCATION,
         classes=(CharacterClass.PALADIN,),
-        casting_time="Bonus Action, which you take immediately after hitting a target with a Melee weapon or an Unarmed Strike",
-        range="Self",
-        components=(Component.VERBAL,),
-        duration="Instantaneous",
+        casting_time=CastingTime(
+            CastingTimeType.BONUS_ACTION,
+            trigger="which you take immediately after hitting a target with a Melee weapon or an Unarmed Strike",
+        ),
+        range=Range(RangeType.SELF),
+        components=Components(verbal=True),
+        duration=Duration(DurationType.INSTANTANEOUS),
         source="Player's Handbook",
         description=(
             "The target takes an extra 2d8 Radiant damage from the attack. The damage increases by 1d8 if the target is a Fiend or an Undead.\n"
@@ -812,10 +832,13 @@ class EnsnaringStrike(ClassSpell):
         level=1,
         school=School.CONJURATION,
         classes=(CharacterClass.RANGER,),
-        casting_time="Bonus Action, which you take immediately after hitting a creature with a weapon",
-        range="Self",
-        components=(Component.VERBAL,),
-        duration="Concentration, up to 1 minute",
+        casting_time=CastingTime(
+            CastingTimeType.BONUS_ACTION,
+            trigger="which you take immediately after hitting a creature with a weapon",
+        ),
+        range=Range(RangeType.SELF),
+        components=Components(verbal=True),
+        duration=Duration(DurationType.MINUTE, 1, concentration=True),
         source="Player's Handbook",
         description=(
             "As you hit the target, grasping vines appear on it, and it makes a Strength saving throw. A Large or larger creature has Advantage on this save. On a failed save, the target has the Restrained condition until the spell ends. On a successful save, the vines shrivel away, and the spell ends.\n"
@@ -881,10 +904,10 @@ class Entangle(ClassSpell):
         level=1,
         school=School.CONJURATION,
         classes=(CharacterClass.DRUID, CharacterClass.RANGER),
-        casting_time="Action",
-        range="90 feet",
-        components=(Component.VERBAL, Component.SOMATIC),
-        duration="Concentration, up to 1 minute",
+        casting_time=CastingTime(CastingTimeType.ACTION),
+        range=Range(RangeType.FOOT, 90),
+        components=Components(verbal=True, somatic=True),
+        duration=Duration(DurationType.MINUTE, 1, concentration=True),
         source="Player's Handbook",
         description=(
             "Grasping plants sprout from the ground in a 20-foot square within range. For the duration, these plants turn the ground in the area into Difficult Terrain. They disappear when the spell ends.\n"
@@ -943,10 +966,10 @@ class FaerieFire(ClassSpell):
         level=1,
         school=School.EVOCATION,
         classes=(CharacterClass.ARTIFICER, CharacterClass.BARD, CharacterClass.DRUID),
-        casting_time="Action",
-        range="60 feet",
-        components=(Component.VERBAL,),
-        duration="Concentration, up to 1 minute",
+        casting_time=CastingTime(CastingTimeType.ACTION),
+        range=Range(RangeType.FOOT, 60),
+        components=Components(verbal=True),
+        duration=Duration(DurationType.MINUTE, 1, concentration=True),
         source="Player's Handbook",
         description=(
             "Objects in a 20-foot Cube within range are outlined in blue, green, or violet light (your choice). Each creature in the Cube is also outlined if it fails a Dexterity saving throw. For the duration, objects and affected creatures shed Dim Light in a 10-foot radius and can’t benefit from the Invisible condition.\n"
@@ -1008,11 +1031,10 @@ class FalseLife(ClassSpell):
             CharacterClass.SORCERER,
             CharacterClass.WIZARD,
         ),
-        casting_time="Action",
-        range="Self",
-        components=(Component.VERBAL, Component.SOMATIC, Component.MATERIAL),
-        material="a drop of alcohol",
-        duration="Instantaneous",
+        casting_time=CastingTime(CastingTimeType.ACTION),
+        range=Range(RangeType.SELF),
+        components=Components(verbal=True, somatic=True, material="a drop of alcohol"),
+        duration=Duration(DurationType.INSTANTANEOUS),
         source="Player's Handbook",
         description=(
             "You gain 2d4 + 4 Temporary Hit Points.\n"
@@ -1063,11 +1085,13 @@ class FeatherFall(ClassSpell):
             CharacterClass.SORCERER,
             CharacterClass.WIZARD,
         ),
-        casting_time="Reaction, which you take when you or a creature you can see within 60 feet of you falls",
-        range="60 feet",
-        components=(Component.VERBAL, Component.MATERIAL),
-        material="a small feather or piece of down",
-        duration="1 minute",
+        casting_time=CastingTime(
+            CastingTimeType.REACTION,
+            trigger="which you take when you or a creature you can see within 60 feet of you falls",
+        ),
+        range=Range(RangeType.FOOT, 60),
+        components=Components(verbal=True, material="a small feather or piece of down"),
+        duration=Duration(DurationType.MINUTE, 1),
         source="Player's Handbook",
         description="Choose up to five falling creatures within range. A falling creature’s rate of descent slows to 60 feet per round until the spell ends. If a creature lands before the spell ends, the creature takes no damage from the fall, and the spell ends for that creature.",
         usage_tags=("buff",),
@@ -1121,10 +1145,10 @@ class FogCloud(ClassSpell):
             CharacterClass.SORCERER,
             CharacterClass.WIZARD,
         ),
-        casting_time="Action",
-        range="120 feet",
-        components=(Component.VERBAL, Component.SOMATIC),
-        duration="Concentration, up to 1 hour",
+        casting_time=CastingTime(CastingTimeType.ACTION),
+        range=Range(RangeType.FOOT, 120),
+        components=Components(verbal=True, somatic=True),
+        duration=Duration(DurationType.HOUR, 1, concentration=True),
         source="Player's Handbook",
         description=(
             "You create a 20-foot-radius Sphere of fog centered on a point within range. The Sphere is Heavily Obscured. It lasts for the duration or until a strong wind (such as one created by Gust of Wind) disperses it.\n"
@@ -1170,11 +1194,12 @@ class Grease(ClassSpell):
             CharacterClass.SORCERER,
             CharacterClass.WIZARD,
         ),
-        casting_time="Action",
-        range="60 feet",
-        components=(Component.VERBAL, Component.SOMATIC, Component.MATERIAL),
-        material="a bit of pork rind or butter",
-        duration="1 minute",
+        casting_time=CastingTime(CastingTimeType.ACTION),
+        range=Range(RangeType.FOOT, 60),
+        components=Components(
+            verbal=True, somatic=True, material="a bit of pork rind or butter"
+        ),
+        duration=Duration(DurationType.MINUTE, 1),
         source="Player's Handbook",
         description=(
             "Nonflammable grease covers the ground in a 10-foot square centered on a point within range and turns it into Difficult Terrain for the duration.\n"
@@ -1223,10 +1248,10 @@ class GuidingBolt(ClassSpell):
         level=1,
         school=School.EVOCATION,
         classes=(CharacterClass.CLERIC,),
-        casting_time="Action",
-        range="120 feet",
-        components=(Component.VERBAL, Component.SOMATIC),
-        duration="1 round",
+        casting_time=CastingTime(CastingTimeType.ACTION),
+        range=Range(RangeType.FOOT, 120),
+        components=Components(verbal=True, somatic=True),
+        duration=Duration(DurationType.ROUND, 1),
         source="Player's Handbook",
         description=(
             "You hurl a bolt of light toward a creature within range. Make a ranged spell attack against the target. On a hit, it takes 4d6 Radiant damage, and the next attack roll made against it before the end of your next turn has Advantage.\n"
@@ -1279,10 +1304,10 @@ class HealingWord(ClassSpell):
         level=1,
         school=School.ABJURATION,
         classes=(CharacterClass.BARD, CharacterClass.CLERIC, CharacterClass.DRUID),
-        casting_time="Bonus Action",
-        range="60 feet",
-        components=(Component.VERBAL,),
-        duration="Instantaneous",
+        casting_time=CastingTime(CastingTimeType.BONUS_ACTION),
+        range=Range(RangeType.FOOT, 60),
+        components=Components(verbal=True),
+        duration=Duration(DurationType.INSTANTANEOUS),
         source="Player's Handbook",
         description=(
             "A creature of your choice that you can see within range regains Hit Points equal to 2d4 plus your spellcasting ability modifier.\n"
@@ -1327,10 +1352,10 @@ class HuntersMark(ClassSpell):
         level=1,
         school=School.DIVINATION,
         classes=(CharacterClass.RANGER,),
-        casting_time="Bonus Action",
-        range="90 feet",
-        components=(Component.VERBAL,),
-        duration="Concentration, up to 1 hour",
+        casting_time=CastingTime(CastingTimeType.BONUS_ACTION),
+        range=Range(RangeType.FOOT, 90),
+        components=Components(verbal=True),
+        duration=Duration(DurationType.HOUR, 1, concentration=True),
         source="Player's Handbook",
         description=(
             "You magically mark one creature you can see within range as your quarry. Until the spell ends, you deal an extra 1d6 Force damage to the target whenever you hit it with an attack roll. You also have Advantage on any Wisdom (Perception or Survival) check you make to find it.\n"
@@ -1393,11 +1418,12 @@ class IceKnife(ClassSpell):
         level=1,
         school=School.CONJURATION,
         classes=(CharacterClass.DRUID, CharacterClass.SORCERER, CharacterClass.WIZARD),
-        casting_time="Action",
-        range="60 feet",
-        components=(Component.SOMATIC, Component.MATERIAL),
-        material="a drop of water or a piece of ice",
-        duration="Instantaneous",
+        casting_time=CastingTime(CastingTimeType.ACTION),
+        range=Range(RangeType.FOOT, 60),
+        components=Components(
+            somatic=True, material="a drop of water or a piece of ice"
+        ),
+        duration=Duration(DurationType.INSTANTANEOUS),
         source="Player's Handbook",
         description=(
             "You create a shard of ice and fling it at one creature within range. Make a ranged spell attack against the target. On a hit, the target takes 1d10 Piercing damage. Hit or miss, the shard then explodes. The target and each creature within 5 feet of it must succeed on a Dexterity saving throw or take 2d6 Cold damage.\n"
@@ -1478,11 +1504,10 @@ class Longstrider(ClassSpell):
             CharacterClass.RANGER,
             CharacterClass.WIZARD,
         ),
-        casting_time="Action",
-        range="Touch",
-        components=(Component.VERBAL, Component.SOMATIC, Component.MATERIAL),
-        material="a pinch of dirt",
-        duration="1 hour",
+        casting_time=CastingTime(CastingTimeType.ACTION),
+        range=Range(RangeType.TOUCH),
+        components=Components(verbal=True, somatic=True, material="a pinch of dirt"),
+        duration=Duration(DurationType.HOUR, 1),
         source="Player's Handbook",
         description=(
             "You touch a creature. The target’s Speed increases by 10 feet until the spell ends.\n"
@@ -1530,10 +1555,10 @@ class MagicMissile(ClassSpell):
         level=1,
         school=School.EVOCATION,
         classes=(CharacterClass.SORCERER, CharacterClass.WIZARD),
-        casting_time="Action",
-        range="120 feet",
-        components=(Component.VERBAL, Component.SOMATIC),
-        duration="Instantaneous",
+        casting_time=CastingTime(CastingTimeType.ACTION),
+        range=Range(RangeType.FOOT, 120),
+        components=Components(verbal=True, somatic=True),
+        duration=Duration(DurationType.INSTANTANEOUS),
         source="Player's Handbook",
         description=(
             "You create three glowing darts of magical force. Each dart strikes a creature of your choice that you can see within range. A dart deals 1d4 + 1 Force damage to its target. The darts all strike simultaneously, and you can direct them to hit one creature or several.\n"
@@ -1587,10 +1612,10 @@ class RayOfSickness(ClassSpell):
         level=1,
         school=School.NECROMANCY,
         classes=(CharacterClass.SORCERER, CharacterClass.WIZARD),
-        casting_time="Action",
-        range="60 feet",
-        components=(Component.VERBAL, Component.SOMATIC),
-        duration="Instantaneous",
+        casting_time=CastingTime(CastingTimeType.ACTION),
+        range=Range(RangeType.FOOT, 60),
+        components=Components(verbal=True, somatic=True),
+        duration=Duration(DurationType.INSTANTANEOUS),
         source="Player's Handbook",
         description=(
             "You shoot a greenish ray at a creature within range. Make a ranged spell attack against the target. On a hit, the target takes 2d8 Poison damage and has the Poisoned condition until the end of your next turn.\n"
@@ -1640,10 +1665,13 @@ class Shield(ClassSpell):
         level=1,
         school=School.ABJURATION,
         classes=(CharacterClass.SORCERER, CharacterClass.WIZARD),
-        casting_time="Reaction, which you take when you are hit by an attack roll or targeted by the",
-        range="Self",
-        components=(Component.VERBAL, Component.SOMATIC),
-        duration="1 round",
+        casting_time=CastingTime(
+            CastingTimeType.REACTION,
+            trigger="which you take when you are hit by an attack roll or targeted by the",
+        ),
+        range=Range(RangeType.SELF),
+        components=Components(verbal=True, somatic=True),
+        duration=Duration(DurationType.ROUND, 1),
         source="Player's Handbook",
         description="An imperceptible barrier of magical force protects you. Until the start of your next turn, you have a +5 bonus to AC, including against the triggering attack, and you take no damage from Magic Missile .",
         usage_tags=("buff", "control"),
@@ -1694,11 +1722,10 @@ class ShieldOfFaith(ClassSpell):
         level=1,
         school=School.ABJURATION,
         classes=(CharacterClass.CLERIC, CharacterClass.PALADIN),
-        casting_time="Bonus Action",
-        range="60 feet",
-        components=(Component.VERBAL, Component.SOMATIC, Component.MATERIAL),
-        material="a prayer scroll",
-        duration="Concentration, up to 10 minutes",
+        casting_time=CastingTime(CastingTimeType.BONUS_ACTION),
+        range=Range(RangeType.FOOT, 60),
+        components=Components(verbal=True, somatic=True, material="a prayer scroll"),
+        duration=Duration(DurationType.MINUTE, 10, concentration=True),
         source="Player's Handbook",
         description="A shimmering field surrounds a creature of your choice within range, granting it a +2 bonus to AC for the duration.",
         usage_tags=("buff",),
@@ -1739,11 +1766,12 @@ class Sleep(ClassSpell):
         level=1,
         school=School.ENCHANTMENT,
         classes=(CharacterClass.BARD, CharacterClass.SORCERER, CharacterClass.WIZARD),
-        casting_time="Action",
-        range="60 feet",
-        components=(Component.VERBAL, Component.SOMATIC, Component.MATERIAL),
-        material="a pinch of sand or rose petals",
-        duration="Concentration, up to 1 minute",
+        casting_time=CastingTime(CastingTimeType.ACTION),
+        range=Range(RangeType.FOOT, 60),
+        components=Components(
+            verbal=True, somatic=True, material="a pinch of sand or rose petals"
+        ),
+        duration=Duration(DurationType.MINUTE, 1, concentration=True),
         source="Player's Handbook",
         description=(
             "Each creature of your choice in a 5-foot-radius Sphere centered on a point within range must succeed on a Wisdom saving throw or have the Incapacitated condition until the end of its next turn, at which point it must repeat the save. If the target fails the second save, the target has the Unconscious condition for the duration. The spell ends on a target if it takes damage or someone within 5 feet of it takes an action to shake it out of the spell’s effect.\n"
@@ -1815,10 +1843,10 @@ class SpeakWithAnimals(ClassSpell):
             CharacterClass.RANGER,
             CharacterClass.WARLOCK,
         ),
-        casting_time="Action or Ritual",
-        range="Self",
-        components=(Component.VERBAL, Component.SOMATIC),
-        duration="10 minutes",
+        casting_time=CastingTime(CastingTimeType.ACTION, ritual=True),
+        range=Range(RangeType.SELF),
+        components=Components(verbal=True, somatic=True),
+        duration=Duration(DurationType.MINUTE, 10),
         source="Player's Handbook",
         description=(
             "For the duration, you can comprehend and verbally communicate with Beasts, and you can use any of the Influence action’s skill options with them.\n"
@@ -1866,11 +1894,12 @@ class TashasHideousLaughter(ClassSpell):
         level=1,
         school=School.ENCHANTMENT,
         classes=(CharacterClass.BARD, CharacterClass.WARLOCK, CharacterClass.WIZARD),
-        casting_time="Action",
-        range="30 feet",
-        components=(Component.VERBAL, Component.SOMATIC, Component.MATERIAL),
-        material="a tart and a feather",
-        duration="Concentration, up to 1 minute",
+        casting_time=CastingTime(CastingTimeType.ACTION),
+        range=Range(RangeType.FOOT, 30),
+        components=Components(
+            verbal=True, somatic=True, material="a tart and a feather"
+        ),
+        duration=Duration(DurationType.MINUTE, 1, concentration=True),
         source="Player's Handbook",
         description=(
             "One creature of your choice that you can see within range makes a Wisdom saving throw. On a failed save, it has the Prone and Incapacitated conditions for the duration. During that time, it laughs uncontrollably if it’s capable of laughter, and it can’t end the Prone condition on itself.\n"
@@ -1939,10 +1968,10 @@ class Thunderwave(ClassSpell):
             CharacterClass.SORCERER,
             CharacterClass.WIZARD,
         ),
-        casting_time="Action",
-        range="Self",
-        components=(Component.VERBAL, Component.SOMATIC),
-        duration="Instantaneous",
+        casting_time=CastingTime(CastingTimeType.ACTION),
+        range=Range(RangeType.SELF),
+        components=Components(verbal=True, somatic=True),
+        duration=Duration(DurationType.INSTANTANEOUS),
         source="Player's Handbook",
         description=(
             "You unleash a wave of thunderous energy. Each creature in a 15-foot Cube originating from you makes a Constitution saving throw. On a failed save, a creature takes 2d8 Thunder damage and is pushed 10 feet away from you. On a successful save, a creature takes half as much damage only.\n"
@@ -2013,11 +2042,12 @@ class WitchBolt(ClassSpell):
             CharacterClass.WARLOCK,
             CharacterClass.WIZARD,
         ),
-        casting_time="Action",
-        range="60 feet",
-        components=(Component.VERBAL, Component.SOMATIC, Component.MATERIAL),
-        material="a twig struck by lightning",
-        duration="Concentration, up to 1 minute",
+        casting_time=CastingTime(CastingTimeType.ACTION),
+        range=Range(RangeType.FOOT, 60),
+        components=Components(
+            verbal=True, somatic=True, material="a twig struck by lightning"
+        ),
+        duration=Duration(DurationType.MINUTE, 1, concentration=True),
         source="Player's Handbook",
         description=(
             "A beam of crackling energy lances toward a creature within range, forming a sustained arc of lightning between you and the target. Make a ranged spell attack against it. On a hit, the target takes 2d12 Lightning damage.\n"

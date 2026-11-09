@@ -26,9 +26,39 @@ class CastingTimeType(Enum):
     HOUR = "Hour"
 
 
-class Component(Enum):
-    """A spell's components, as its card writes them: "V, S, M (...)"."""
+class RangeType(Enum):
+    """What a spell's range is measured in, or the word that stands for it.
+    FOOT and MILE take an amount (SpellFields.Range)."""
 
-    VERBAL = "V"
-    SOMATIC = "S"
-    MATERIAL = "M"
+    SELF = "Self"
+    TOUCH = "Touch"
+    SIGHT = "Sight"
+    UNLIMITED = "Unlimited"
+    SPECIAL = "Special"
+    FOOT = "Foot"
+    MILE = "Mile"
+
+
+class DurationType(Enum):
+    """What a spell's duration is measured in, or the word that stands for
+    it. ROUND to DAY take an amount (SpellFields.Duration)."""
+
+    INSTANTANEOUS = "Instantaneous"
+    ROUND = "Round"
+    MINUTE = "Minute"
+    HOUR = "Hour"
+    DAY = "Day"
+    UNTIL_DISPELLED = "Until dispelled"
+    UNTIL_DISPELLED_OR_TRIGGERED = "Until dispelled or triggered"
+    SPECIAL = "Special"
+
+
+class AreaShape(Enum):
+    """The shape in a 2014 range such as "Self (15-foot cone)"."""
+
+    CONE = "Cone"
+    CUBE = "Cube"
+    LINE = "Line"
+    RADIUS = "Radius"
+    SPHERE = "Sphere"
+    HEMISPHERE = "Hemisphere"

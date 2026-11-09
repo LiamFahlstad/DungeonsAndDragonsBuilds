@@ -22,7 +22,18 @@ from CharacterContent.Spells.SpellFactory import (
     SpellFactory,
     SpellRules,
 )
-from CharacterContent.Spells.SpellFactory.Enums import Component, School
+from CharacterContent.Spells.SpellFactory.Enums import (
+    CastingTimeType,
+    DurationType,
+    RangeType,
+    School,
+)
+from CharacterContent.Spells.SpellFactory.SpellFields import (
+    CastingTime,
+    Components,
+    Duration,
+    Range,
+)
 from Core.Definitions import Ability, CharacterClass, Condition, DamageType
 from Model.Content.CombatEffect import (
     CombatCondition,
@@ -128,10 +139,10 @@ def _rules(**changes) -> SpellRules:
         level=1,
         school=School.EVOCATION,
         classes=(CharacterClass.WIZARD,),
-        casting_time="Action",
-        range="Self",
-        components=(Component.VERBAL,),
-        duration="Instantaneous",
+        casting_time=CastingTime(CastingTimeType.ACTION),
+        range=Range(RangeType.SELF),
+        components=Components(verbal=True),
+        duration=Duration(DurationType.INSTANTANEOUS),
         source="Homebrew",
         description="",
     )
@@ -141,15 +152,23 @@ def _rules(**changes) -> SpellRules:
 
 class _Test(ClassSpell):
     rules = _rules(
-        components=(Component.VERBAL, Component.SOMATIC, Component.MATERIAL),
-        material="a pinch of salt",
+        casting_time=CastingTime(CastingTimeType.MINUTE, 1, ritual=True),
+        range=Range(RangeType.FOOT, 60),
+        components=Components(verbal=True, somatic=True, material="a pinch of salt"),
+        duration=Duration(DurationType.HOUR, 1, concentration=True),
         classes=(CharacterClass.CLERIC, CharacterClass.WIZARD),
     )
 
 
-def test_the_enums_read_as_the_cards_text():
+def test_the_enums_and_fields_read_as_the_cards_text():
     spell = _Test()
+    assert spell.casting_time == "1 minute or Ritual"
+    assert spell.range == "60 feet"
     assert spell.components == "V, S, M (a pinch of salt)"
+    assert spell.duration == "Concentration, up to 1 hour"
+    assert (spell.casting_time_type, spell.is_ritual) == (CastingTimeType.MINUTE, True)
+    assert (spell.range_feet, spell.duration_seconds) == (60, 3600)
+    assert spell.is_concentration
     assert (spell.has_verbal, spell.has_somatic, spell.has_material) == (
         True,
         True,
@@ -159,19 +178,6 @@ def test_the_enums_read_as_the_cards_text():
     assert (spell.school, spell.school_enum) == ("Evocation", School.EVOCATION)
     assert spell.classes == ["Cleric", "Wizard"]
     assert all(type(name) is str for name in spell.classes)
-
-
-@pytest.mark.parametrize(
-    "components, material",
-    [
-        ((Component.SOMATIC, Component.VERBAL), ""),  # not in card order
-        ((Component.VERBAL, Component.VERBAL), ""),
-        ((Component.VERBAL,), "a pinch of salt"),  # a material without an M
-    ],
-)
-def test_components_are_v_s_m_once_each(components, material):
-    with pytest.raises(ValueError):
-        _rules(components=components, material=material)
 
 
 def test_a_rules_condition_is_kept_as_its_name():
@@ -230,7 +236,13 @@ def test_written_source_reads_back_as_the_same_value(value):
     names = {
         "Ability": Ability,
         "CharacterClass": CharacterClass,
-        "Component": Component,
+        "CastingTime": CastingTime,
+        "CastingTimeType": CastingTimeType,
+        "Components": Components,
+        "Duration": Duration,
+        "DurationType": DurationType,
+        "Range": Range,
+        "RangeType": RangeType,
         "Condition": Condition,
         "School": School,
         "SpellRules": SpellRules,
@@ -257,10 +269,13 @@ def test_written_source_uses_enums_where_there_are_some():
     rules = converter.source_of(_Test.rules)
     assert "school=School.EVOCATION" in rules
     assert "classes=(CharacterClass.CLERIC, CharacterClass.WIZARD)" in rules
-    # The material is written beside its component, not after the text.
-    assert rules.index("material=") == rules.index("components=") + len(
-        "components=(Component.VERBAL, Component.SOMATIC, Component.MATERIAL), "
+    assert "casting_time=CastingTime(CastingTimeType.MINUTE, 1, ritual=True)" in rules
+    assert "range=Range(RangeType.FOOT, 60)" in rules
+    assert (
+        "components=Components(verbal=True, somatic=True, material='a pinch of salt')"
+        in rules
     )
+    assert "duration=Duration(DurationType.HOUR, 1, concentration=True)" in rules
 
 
 def _record(**changes) -> DataSpell:
@@ -274,14 +289,26 @@ def _record(**changes) -> DataSpell:
     [
         {"school": "Evocation (Dunamancy)"},
         {"classes": ["Wizard (Dunamancy)"]},
-        {"components": "V,S"},
-        {"components": "V, S, M(a diamond)"},
         {"components": None},
+        {"casting_time": "Two actions"},
+        {"range": "Within earshot"},
+        {"duration": "Until the stars are right"},
     ],
 )
 def test_a_spell_the_enums_cant_say_is_left_as_json(changes):
     with pytest.raises(converter.CannotConvert):
         converter.class_source(_record(**changes))
+
+
+def test_a_class_writes_the_card_lines_in_the_2024_wording():
+    """The converter reads the record's wording and the class writes the
+    2024 card's; a scraped slip ("V,S") is no reason to stay JSON."""
+    source = converter.class_source(
+        _record(casting_time="1 action", components="V,S", range="150 ft")
+    )
+    assert "casting_time=CastingTime(CastingTimeType.ACTION)" in source
+    assert "range=Range(RangeType.FOOT, 150)" in source
+    assert "components=Components(verbal=True, somatic=True)" in source
 
 
 @pytest.mark.parametrize(
@@ -295,6 +322,17 @@ def test_a_spell_the_enums_cant_say_is_left_as_json(changes):
 )
 def test_class_names(spell, name):
     assert converter.class_name(spell) == name
+
+
+@pytest.mark.parametrize(
+    "range_text, differs", [("150 Feet", False), ("150ft", False), ("120 feet", True)]
+)
+def test_differences_compare_what_the_card_lines_mean(range_text, differs):
+    """Another wording of the same range is no difference; another range is."""
+    made = SPELL_CLASSES["Fireball"]()
+    record = dict(SpellFactory._load_json()["Fireball"], range=range_text)
+    found = converter.differences(DataSpell(record), made)
+    assert any(d.startswith("range_spec") for d in found) is differs
 
 
 def test_a_converted_class_gives_what_its_json_gave():
@@ -355,8 +393,15 @@ def test_adding_to_a_module_keeps_what_is_there(tmp_path):
         encoding="utf-8",
     )
     text = converter.add_to_module(
-        path, 1, {"New": "class New(ClassSpell):\n    rules = SpellRules()\n"}
+        path,
+        1,
+        {
+            "New": "class New(ClassSpell):\n"
+            "    rules = SpellRules(description='Range: Self. Duration: Special.')\n"
+        },
     )
+    # A word in a string is no name: a description saying "Range" imports nothing.
+    assert "SpellFields" not in text
     assert "pass  # edited by hand" in text
     assert "from Model.Content.Summons import SummonSpec" in text
     assert "SpellRules" in text.split("class Old")[0]  # imported now

@@ -4,7 +4,18 @@ CharacterContent/Spells/SpellClassConverter.py; edit them by hand from
 then on: each class is its spell's one source."""
 
 from CharacterContent.Spells.SpellFactory.ClassSpell import ClassSpell, SpellRules
-from CharacterContent.Spells.SpellFactory.Enums import Component, School
+from CharacterContent.Spells.SpellFactory.Enums import (
+    CastingTimeType,
+    DurationType,
+    RangeType,
+    School,
+)
+from CharacterContent.Spells.SpellFactory.SpellFields import (
+    CastingTime,
+    Components,
+    Duration,
+    Range,
+)
 from Core.Definitions import Ability, CharacterClass, DamageType
 from Model.Content.CombatEffect import CombatDamage, CombatEffect
 from Model.Content.Feature import FeatureTarget
@@ -18,11 +29,10 @@ class IceStorm(ClassSpell):
         level=4,
         school=School.EVOCATION,
         classes=(CharacterClass.DRUID, CharacterClass.SORCERER, CharacterClass.WIZARD),
-        casting_time="Action",
-        range="300 feet",
-        components=(Component.VERBAL, Component.SOMATIC, Component.MATERIAL),
-        material="a mitten",
-        duration="Instantaneous",
+        casting_time=CastingTime(CastingTimeType.ACTION),
+        range=Range(RangeType.FOOT, 300),
+        components=Components(verbal=True, somatic=True, material="a mitten"),
+        duration=Duration(DurationType.INSTANTANEOUS),
         source="Player's Handbook",
         description=(
             "Hail falls in a 20-foot-radius, 40-foot-high Cylinder centered on a point within range. Each creature in the Cylinder makes a Dexterity saving throw. A creature takes 2d10 Bludgeoning damage and 4d6 Cold damage on a failed save or half as much damage on a successful one.\n"

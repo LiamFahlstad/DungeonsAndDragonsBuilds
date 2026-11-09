@@ -422,6 +422,7 @@ SpellRules stores components as Component flags plus a material (Notes/combat-ef
 
 **History**
 - 2026-11-08 main-session: found
+- 2026-11-08 main-session: SpellFields (R20) reads 'V,S', 'M(...)' and a stray 'Component: ', so the converter now converts all but Gate Seal (no components). The records themselves still want the scraper fix.
 
 ### DI-063 · Wildemount Dunamancy spells have a school or class with a note, which SpellRules' enums can't hold
 - **Status:** open
@@ -429,6 +430,26 @@ SpellRules stores components as Component flags plus a material (Notes/combat-ef
 - **Where:** `CharacterContent/Spells/SpellFactory/ClassSpell.py`
 
 15 spells (Dark Star, Fortune's Favor, Gift of Alacrity, Gravity Fissure, Gravity Sinkhole, Immovable Object, Magnify Gravity, Pulse Wave, Ravenous Void, Reality Break, Sapping Sting, Temporal Shunt, Tether Essence, Time Ravage, Wristpocket) have a school like 'Evocation (Dunamancy:Graviturgy)' or a class 'Wizard (Dunamancy)'. SpellRules.school is a School and classes are CharacterClass, so SpellClassConverter leaves them as JSON. Fix: a SpellRules note field (e.g. school_note='Dunamancy: Graviturgy', and the Dunamancy classes as a note too), shown on the card as the JSON shows it now.
+
+**History**
+- 2026-11-08 main-session: found
+
+### DI-064 · Shield's casting time is cut off in the scraped spell JSON ('...or targeted by the')
+- **Status:** open
+- **Area:** content-scraper
+- **Where:** `CharacterContent/Spells/spells_dnd2024.json`, `CharacterContent/Spells/spells_dnd5e.json`
+
+Both dnd2024 and dnd5e records for Shield end their casting_time at 'targeted by the'; spells_aidedd.json has the full text '...targeted by the Magic Missile spell'. The wikidot scraper likely stops at a link inside the trigger. Fix in the scraper (not by hand-editing the scraped JSON), then re-scrape.
+
+**History**
+- 2026-11-08 main-session: found
+
+### DI-065 · 2014 spell records' "ritual": true is ignored, so 2014-only ritual spells don't show as rituals
+- **Status:** open
+- **Area:** character-engine-dev
+- **Where:** `CharacterContent/Spells/SpellFactory/DataSpell.py`, `CharacterContent/Spells/SpellClassConverter.py`
+
+33 records in spells_dnd5e.json have "ritual": true but a casting time without 'or Ritual' (the 2014 card puts it after the name). Spell.is_ritual reads only the casting time (CastingTime.ritual), so a 2014-only ritual spell (one no 2024/aidedd record overrides) loses the Ritual tag on cards and in the combat UI; the converter's _IGNORED_KEYS drops the key with the comment that the casting time says it too, which is wrong for these. Fix: DataSpell.casting_time_spec sets ritual=True when the record's key does, and the converter keeps it (CastingTime(..., ritual=True)); expect snapshot changes for builds with such spells.
 
 **History**
 - 2026-11-08 main-session: found
