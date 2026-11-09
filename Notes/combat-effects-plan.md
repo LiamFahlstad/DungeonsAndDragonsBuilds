@@ -13,7 +13,7 @@ change:
 - log bugs found along the way with the `discovered-issues` skill and list
   their ids in **Discovered issues**.
 
-## Status (2026-11-09, 3.2 done: the rules conditions are data)
+## Status (2026-11-09, 3.1 and 3.2 done: lasting effects are one list, and the rules conditions are data)
 
 | Phase | Step | State |
 |---|---|---|
@@ -33,7 +33,7 @@ change:
 | 2 | 2.7 Conditional extra damage (`when`) | **Done**, as a generated note (R14) |
 | 2 | Extensions list their own uses under their parent | **Done** (R10, new) |
 | S | **Spells as classes** (new direction, 2026-11-09; see its section) | S.1 base class, factory and converter **done**; S.2 the 57 spells with combat effects converted **done**; S.2c card lines as dataclasses **done** (R20); S.3 new effects go into classes **done** (R22); S.5 drift check **done** (R23); S.4 **done** (R26): all 594 spells are classes, the agents' tools switched over (R24), Q15 and DI-065 done (R25), every companion file deleted and nothing reads them |
-| 3 | Lasting effects (3.1-3.6) | 3.2 **done** (R27), ahead of 3.1: the rules conditions are data, and saves, attack rolls (all three paths), AC, damage Resistance and condition immunity read them. 3.1, 3.3-3.6 not started |
+| 3 | Lasting effects (3.1-3.6) | 3.1 **done** (R28-R34): `char["active_effects"]`, one plain dict per badge, in the new Qt-free `Combat/Effects/active_effects.py`; the seven old keys are read only by its `upgrade_old_keys`, where a log is read; an old fight log replays the same (`tests/test_active_effects.py`). 3.2 **done** (R27), ahead of 3.1: the rules conditions are data, and saves, attack rolls (all three paths), AC, damage Resistance and condition immunity read them. 3.3-3.6 not started |
 | 4 | One `combat-effects` skill; feature agent; content rollout | Partly: the skill's rubric and script cover every new field; first content batch below |
 | 5 | Sheet chips, monster score | Not started |
 
@@ -72,6 +72,24 @@ R26's last step, the removed `blocks_from_json` tests); no snapshot changed;
 spell-mechanics `check` and usage-tags `check` OK (594 of 594 spells
 tagged, 58 with combat effects); the converter's parity check passed for
 Gate Seal.
+
+**Verified 2026-11-09 (3.1, R28-R34):** full suite passes but for the
+three `test_format_changed.py` tests of DI-020 (10,028 passed); no snapshot
+or golden changed; `./typecheck.sh Combat` 0 errors before and after. Parity
+with the code before 3.1: one scripted fight (custom conditions with timers
+and notes, a repeat save ending two conditions, Bless cast, a timer and a
+note given again, five turns, an undo, a removal, then the log continued in
+a fresh window for three turns) played by HEAD's code (a `git archive` copy)
+and by the new code gave identical conditions, badge tooltips and colours,
+card texts, log lines and turn reminders. **Re-verified on top of 3.2**
+(rebased onto 8b7b78ff): full suite passes (10,206 passed, 4 skipped, 20
+xfailed; the DI-020 tests pass once `format_changed.sh` is checked out with
+LF, as in the main checkout); no snapshot or golden changed; `./typecheck.sh
+Combat` 0 errors, as on main; 3.2's `test_combat_modifiers.py` and
+`test_combat_ui_condition_rolls.py` pass. The same scripted fight played by
+8b7b78ff's code and by the rebased code matched step for step, and the
+rebased code continuing the old-key log 8b7b78ff wrote matched 8b7b78ff
+continuing it.
 
 ## Decisions
 
@@ -344,7 +362,7 @@ Mark, Heroism. The modifier types go in a sibling module,
 
 | # | Step | Done when |
 |---|---|---|
-| 3.1 | `ActiveEffect` and `char["active_effects"]`; old keys read through it. Undo, log replay, the player view keep working. | Combat UI tests pass; an old fight log still replays |
+| 3.1 | `ActiveEffect` and `char["active_effects"]`; old keys read through it. Undo, log replay, the player view keep working. | **Done** (R28-R34): one record per badge in `Combat/Effects/active_effects.py`; the old keys are converted where a log is read; combat UI tests pass and an old fight log replays the same (`tests/test_active_effects.py`) |
 | 3.2 | Rules conditions as data; `roll_save`, attack resolution and AC read modifiers. | **Done** (R27): saves behave as before, from data; attack rolls now count conditions too (DI-034), the monster action buttons cover as well (DI-033); rules-checker run on the table |
 | 3.3 | `D20Bonus`, `D20Mode`, `AttacksAgainst`, `ArmorClass`, `Resistance`. | Bless adds 1d4 to a rolled save; Shield of Faith raises AC |
 | 3.4 | `ExtraDamageFrom` / `ExtraDamageOnHit`. | Hunter's Mark adds 1d6 Force on its caster's hits |
@@ -559,7 +577,8 @@ Sheet chips ("DEX save · half · 8d6 Fire") from the same data;
   (`Combat/Effects/modifiers.py`, `modifiers_on(char)`) reads them there,
   a longer custom name counting as before. 3.1 adds `active_effects` as a
   second source of the same `(source, modifier)` pairs, and nothing that
-  reads them changes. What the plan didn't foresee:
+  reads them changes. (In the end 3.1 gave the records no `modifiers` key;
+  3.3 adds it, see R28.) What the plan didn't foresee:
   - **The table is its own module**, `Model/Content/RulesConditions.py`
     (`CONDITION_RULES`, one entry per glossary sentence), beside the
     vocabulary in `Model/Content/CombatModifiers.py` (R1).
@@ -608,6 +627,73 @@ Sheet chips ("DEX save · half · 8d6 Fire") from the same data;
     you in any way"); a longer name ("Stunned by Stunning Strike") breaks
     Concentration and blocks Wild Shape (`incapacitates`); Invisible's
     Concealed note has the equipment sentence.
+- **R28. The record is a `TypedDict` of plain values, with every key
+  always there** (3.1, 2026-11-09). `ActiveEffect` in
+  `Combat/Effects/active_effects.py`: `name` (the badge), `source` (the
+  spell, feature or action), `caster`, `concentration` (who concentrates on
+  it), `duration` (a timer, `time_left`/`duration`/`ticks_on`, or a turn
+  edge, `until`/`of`/`turns_left`/`text`: the old entries' keys, so nothing
+  that read them changed meaning), `repeat_save` (`ability`, `dc`, `mode`,
+  `use_legendary_resistance`, `also`), `tooltip`, `tooltip_from`, `color`.
+  A `TypedDict` keeps Decision 5's plain dict (undo's copy, the log's JSON)
+  while pyright checks the keys. **No `modifiers` or `triggers` key yet:**
+  nothing would read them, every log, undo point and expected record in the
+  tests would carry an empty list, and adding one later is two lines
+  (`new_effect` and the converter), with readers taking `.get(..., ())` for
+  records written before. 3.2 landed first and reads modifiers only from
+  `char["conditions"]`, through `modifiers_on(char)` in
+  `Combat/Effects/modifiers.py`; 3.3 adds `modifiers` to the record (Bless,
+  Shield of Faith), and `modifiers_on` then reads it as a second source
+  beside the conditions. Today's repeat save is the one trigger; 3.5 can
+  turn it into `AtTurnEnd(save)` in the same converter (Q19).
+- **R29. One record per badge, not per application.** A repeat save that
+  ends several conditions (R13) lives on its first condition's record with
+  `also`, as before. Each badge comes off on its own (right-click, a timer,
+  a save), and every old key was per badge name; a record per application
+  would need a badge-to-record lookup on every removal. 3.6 still gets "every
+  effect a concentration holds" from the `concentration` link on each
+  record. A record lasts while it holds a tooltip, colour, duration, repeat
+  save or link (`says_something`), and goes with its badge
+  (`_remove_condition_from`); a badge with none of them has no record (Q17).
+- **R30. One tooltip, with what wrote it.** The three tooltip maps were read
+  spell, then feature, then custom note, and two colour maps spell then
+  feature. One `tooltip` keeps `tooltip_from` (`TOOLTIP_FROM`), and
+  `describe` never lets a lower kind replace a higher one (the notes
+  `_add_custom_condition` writes after a picked spell's card no longer win by
+  being written last); the same kind without a colour keeps the colour (a
+  monster action's text over a feature badge). That gives exactly what the
+  maps showed, as no map was ever emptied on its own.
+- **R31. A duration given again puts its record last; a repeat save doesn't
+  move it.** The card's Timed Conditions list keeps its order (the old list
+  put a re-given timer last). The order of turn-end saves now follows the
+  records too; it differs from before only on one combatant with two repeat
+  saves when one's condition gets a new timer from the Custom Condition
+  dialog (the two save lines are then logged in the other order).
+- **R32. A player's whole effects are kept with a fight in progress.**
+  `PLAYER_FIGHT_KEYS` was `custom_condition_descriptions`, `repeat_saves`,
+  `timed_conditions` (DI-028's fix) and is now `active_effects`. So a
+  player's spell and feature badges keep their tooltip and colour when the
+  fight is continued; before, the card rebuilt them from the badge's name
+  (the same text, without notes typed in the dialog, and a feature's Uses
+  Left as they are now, not as when it was used). Loading a log replaces a
+  player's effects as a whole, as it did their timers.
+- **R33. The converter runs where logs are read, not on every access.**
+  `upgrade_old_keys` turns the seven old keys (`OLD_KEYS`) into records in
+  `_take_combatants_from` (each combatant, and each player's saved fight
+  state) and in `ending_conditions` (Summons and PartyAllies read earlier
+  logs' combatants directly, on a copy). It reads as leniently as the old
+  readers (`test_party_allies` gave entries with only a name). Nothing else
+  knows the old keys.
+- **R34. What moved and was renamed.** `_timed_condition_entry` is
+  `duration_entry` (names instead of dicts), the timer arithmetic is
+  `tick`, `_drop_repeat_save` is `drop_repeat_save`; `_tick_timed_conditions`
+  is `_tick_effect_durations` and `_repeat_saves` `_end_of_turn_saves`;
+  `_roll_repeat_save` takes the record. `source`, `caster` and
+  `concentration` are filled in by the Custom Effect dialog, Cast Spell,
+  Enable Feature and Wild Shape, but nothing reads them yet (3.6 will read
+  `concentration`). `active_spells` stays: it is the caster's list of what it
+  holds (the duration bar, `applied`), not an effect on a target, and 3.6
+  joins the two through the link.
 
 ## Open questions (with suggestions)
 
@@ -625,7 +711,10 @@ Sheet chips ("DEX save · half · 8d6 Fire") from the same data;
   Poisoned, and spells like Lesser Restoration, Remove Curse, Calm Emotions).
   *Suggestion:* an `ends_conditions: tuple[str, ...]` field, applied by the
   dialog as "take these off each target". Do it with Phase 3.1, since
-  `ActiveEffect` is what it removes.
+  `ActiveEffect` is what it removes. *Not done in 3.1:* it is a field on
+  `Model/Content/CombatEffect.py`, outside 3.1's scope. With 3.1 the dialog's
+  half is one call per target (`_remove_condition_from`, which drops the
+  record); suggest it as its own small step before 3.3.
 - **Q8. Paladin's Smite is once per Long Rest but has no `FeatureUses`,** so
   the picker can't count its free casting. *Suggestion:* give it
   `FeatureUses(1, regain_all_on="long rest")`; that adds a use box to its sheet
@@ -661,6 +750,18 @@ Sheet chips ("DEX save · half · 8d6 Fire") from the same data;
   (principle 8). *Suggestion:* count them, with "unless it can see it" as
   the note the GM can override with the mode buttons; decide together with
   DI-068, which makes the simulator see Invisible at all.
+- **Q17. Should every condition an effect gives have a record, not only
+  those with a tooltip, timer, save or concentration link?** *Suggestion:*
+  yes, in 3.3, when records get `modifiers` (R28). 3.2 reads a rules
+  condition's modifiers from its name in `char["conditions"]`, so a plain
+  Prone doesn't need a record yet; once effects carry their own modifiers,
+  every badge having one is simpler: `says_something` then goes, and the card
+  reads every badge through `find_effect`.
+- **Q18. Show `source` and `caster` on the badge** ("from Edmund's Bless")?
+  *Suggestion:* not until the GM asks; the log says it already.
+- **Q19. Repeat saves as triggers.** *Suggestion:* in 3.5, `repeat_save`
+  becomes an `AtTurnEnd` trigger in a `triggers` list, the converter reading
+  `repeat_save` as it reads the old keys now.
 
 ## Discovered issues
 
@@ -696,6 +797,9 @@ Sheet chips ("DEX save · half · 8d6 Fire") from the same data;
   `pytest.ini` runs `-n auto` without `--dist loadgroup`, so conftest's
   `xdist_group` does nothing. Until that's fixed, update with
   `UPDATE_SNAPSHOTS=1 ./run_tests.sh -q -n 0 ...`.
+- **DI-020** (open, hit again in 3.1): `tests/test_format_changed.py`'s three
+  tests fail in a checkout with CRLF shell scripts (`core.autocrlf=true`);
+  unrelated to the combat code.
 - Found and fixed: `test_an_entry_rides_only_on_its_own_sources_record` found
   no subject once every spell in both sources was a class; it hides the
   classes now (S.4). `tag_report.py` ignored class spells (R24); the text-reading tests dropped a spell's data by its old
@@ -720,7 +824,10 @@ Sheet chips ("DEX save · half · 8d6 Fire") from the same data;
 - **Golden picker rows:** `test_picker_rows.py`. Read the diff before
   `UPDATE_SNAPSHOTS=1`.
 - **Phase 3:** rules tests take expected values from the Rules Glossary, and
-  the `rules-checker` agent reviews the condition table.
+  the `rules-checker` agent reviews the condition table. 3.1:
+  `tests/test_active_effects.py` (the helpers; the old keys converted; an
+  old-format log and the same log in the new format continued and played
+  two turns, compared with each other and with what the old code showed).
 
 ## Checklist: adding a field to the model
 
