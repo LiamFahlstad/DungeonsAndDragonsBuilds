@@ -28,7 +28,7 @@ change and move on; the full suite can run later.
 - No parity runs against main, `verify-agent-work`, `code-reviewer` or
   `rules-checker` passes per step unless asked.
 
-## Status (2026-11-10, Phase 3 done: lasting effects are one list, the rules conditions are data, effects carry modifiers the simulator counts, hits deal the extra damage effects give, badges act as turns start and end, and a concentration ends everything linked to it)
+## Status (2026-11-10, Phase 3 done and Phase 4's tooling (4.1, 4.2, 4.4): lasting effects are one list, the rules conditions are data, effects carry modifiers the simulator counts, hits deal the extra damage effects give, badges act as turns start and end, and a concentration ends everything linked to it)
 
 | Phase | Step | State |
 |---|---|---|
@@ -49,7 +49,7 @@ change and move on; the full suite can run later.
 | 2 | Extensions list their own uses under their parent | **Done** (R10, new) |
 | S | **Spells as classes** (new direction, 2026-11-09; see its section) | S.1 base class, factory and converter **done**; S.2 the 57 spells with combat effects converted **done**; S.2c card lines as dataclasses **done** (R20); S.3 new effects go into classes **done** (R22); S.5 drift check **done** (R23); S.4 **done** (R26): all 594 spells are classes, the agents' tools switched over (R24), Q15 and DI-065 done (R25), every companion file deleted and nothing reads them |
 | 3 | Lasting effects (3.1-3.6) | 3.1 **done** (R28-R34): `char["active_effects"]`, one plain dict per badge, in the new Qt-free `Combat/Effects/active_effects.py`; the seven old keys are read only by its `upgrade_old_keys`, where a log is read; an old fight log replays the same (`tests/test_active_effects.py`). 3.2 **done** (R27), ahead of 3.1: the rules conditions are data, and saves, attack rolls (all three paths), AC, damage Resistance and condition immunity read them. 3.3 **done** (R35-R40): a badge's `CombatCondition` says its `modifiers`, the record keeps them as JSON, and `modifiers_on` reads them beside the conditions and cover; Bless's 1d4 is rolled into the saves (a monster's Concentration save too, R40) and attack rolls the simulator makes, Shield of Faith's +2 counts in AC, cover's +2/+5 in Dexterity saves (DI-066); a typed total stays as typed, with the bonus as a reminder in the dialog. 3.4 **done** (R41-R47): `ExtraDamageFrom` (on the target, from its effect's caster) and `ExtraDamageOnHit` (on the attacker); Hunter's Mark's 1d6 Force on its caster's hits and Divine Favor's 1d4 Radiant on its caster's weapon hits are rolled into the hits the dialog and a monster's action buttons deal, doubled on a Critical Hit, each type resisted on its own; a typed damage total stays as typed, with the extra as a reminder in the dialog. 3.5 **done** (R48-R53): `AtTurnStart` / `AtTurnEnd` are modifiers on a badge that name a row of their spell; Heroism's Temporary Hit Points are given as its target's turn starts, and Spirit Guardians asks, as each enemy of its caster ends its turn, with a button that opens the Custom Effect dialog with its damage row picked. 3.6 **done** (R54-R56): ending a concentration also ends every record linked to it (`held_by_concentration`), a creature leaving the fight ends its concentration first, and a badge another running effect still holds is relinked to that effect's caster |
-| 4 | One `combat-effects` skill; feature agent; content rollout | Partly: the skill's rubric and script cover every new field; first content batch below |
+| 4 | One `combat-effects` skill; feature agent; content rollout | 4.1 **done** (R57-R60): the `combat-effects` skill and `combat_effects.py` (renamed from spell-mechanics), with the principles, a Features section, `features`, `coverage` and `notes`, and features in `check`; `is_curated` is `is_described`. 4.2 **done**: the `feature-combat-effects` agent (opus); the spell agent is `spell-combat-effects`. 4.4 **done**: `coverage`. 4.3 (content) next: Curse of the Lich has 40 features read from text and 6 extensions without effects |
 | 5 | Sheet chips, monster score | Not started |
 
 **Content described so far.** Spells: 57 (2024) + 1 (2014), all as classes
@@ -164,6 +164,17 @@ damage from Pirate", "Edmund's Divine Favor: +4 Radiant (1d4)" on each
 weapon hit (none on the typed total), filled the Bite button's Damage field
 with "6 Piercing + 5 Force", and the player link's hit lines read "5
 Slashing + 1 Force" and "6 Slashing + 4 Radiant".
+
+**Verified 2026-11-10 (4.1/4.2, R57-R60), low overhead:** the spell,
+feature and monster combat-effects tests, the picker goldens, the Custom
+Effect dialog's tests and `test_claude_config.py` (the agent index) pass
+(1,987); the picker goldens changed only by `is_curated` -> `is_described`;
+`combat_effects.py check` OK (61 of 594 spells, party features of every
+campaign); `./typecheck.sh` adds no errors (the three in
+`test_feature_combat_effects.py` and `test_monster_combat_effects.py` are
+on HEAD too, DI-060). `coverage`: Curse of the Lich spells 30/44, features
+8 described, 6 nothing to apply, 40 read from text, 6 extensions without
+effects; Time Loop PR spells 33/33, features none left.
 
 **Verified 2026-11-10 (3.6, R54-R56), low overhead:** every combat test
 file passes (`tests/test_combat*.py`, summons, party allies, picker rows,
@@ -471,19 +482,19 @@ Mark, Heroism. The modifier types go in a sibling module,
 
 ### Phase 4: content and tooling
 
-1. Rename the `spell-mechanics` skill and agent to `combat-effects` (Q2), add
-   the principles above and a feature rubric (what the first batch of features
-   showed: an extension's row, `with_bonus`, a feature casting a spell), and
-   give the script a features mode (`todo --campaign` for features too) and a
-   `notes` report (principle 7).
-2. A `feature-combat-effects` agent (opus) that writes `combat_effects()` for a
-   named class, subclass or party.
+1. **Done** (R57-R60). Rename the `spell-mechanics` skill and agent to
+   `combat-effects` (Q2), add the principles above and a feature rubric (what
+   the first batch of features showed: an extension's row, `with_bonus`, a
+   feature casting a spell), and give the script a features mode (`todo
+   --campaign` for features too) and a `notes` report (principle 7).
+2. **Done.** A `feature-combat-effects` agent (opus) that writes
+   `combat_effects()` for a named class, subclass or party.
 3. Content: the rest of the Curse of the Lich party (Kivi's Monk features,
    Obmar's, Edmund's Channel Divinity; their 2014-only spells), then Time Loop
    PR, then spells level by level and features class by class. The
    level-by-level spell pass waits for Decision 9: not before the engine
    support is in place and the user says go.
-4. A coverage line per campaign.
+4. **Done** (`combat_effects.py coverage`). A coverage line per campaign.
 
 ### Phase 5: beyond the dialog (optional)
 
@@ -1031,12 +1042,37 @@ Sheet chips ("DEX save · half · 8d6 Fire") from the same data;
   `_end_spell_effects` and `_end_linked_effects` now relink such a badge to
   the holder's caster (`_holder_of`, `_relink`), or unlink it when the
   holder needs no Concentration (`unlink_concentration`).
+- **R57. One skill, two agents** (4.1/4.2, 2026-11-10). The skill is
+  `combat-effects` (`.claude/skills/combat-effects/`, script
+  `combat_effects.py`), as Q2 said. The agents are `spell-combat-effects`
+  (the old spell-mechanics agent, sonnet: a draft and `compare` check each
+  spell) and `feature-combat-effects` (opus: a feature has no draft or text
+  reading to compare with, and deciding rows, `[]` or a hook is judgment),
+  rather than an agent called `combat-effects` beside a
+  `feature-combat-effects`, which would read as if the first covered both.
+- **R58. Features are listed party by party, not drafted.** `features
+  --campaign X [--member Y]` walks each member's features and their
+  extensions (`sheet.extensions_of`, as the picker does) and says what the
+  picker makes of each: described, nothing to apply, read from its text, a
+  passive one with no row, or an extension without effects (no row), with
+  the class's file and line. There's no `draft`/`add` for features: a
+  feature's effects are worked out from `character` in Python, which a
+  regex reading can't draft. `check` now also builds every party feature's
+  effects and hooks, and refuses a `spell=` that isn't a spell.
+- **R59. `notes` groups by a note's first words.** Notes are written in
+  each source's words, so exact matches would miss most repeats; the first
+  four words, lowercased, numbers and dice as `#`, catch "One more target
+  per slot level above 1" (Command's five rows, Heroism, Tasha's Hideous
+  Laughter: Q34) and nothing else at three sources; `--words` and `--min`
+  widen it. It reads every spell class and every party feature (each class
+  once), not monster abilities yet.
+- **R60. `is_described` everywhere.** `EffectOption.is_curated` and every
+  reader, test and picker golden key; the goldens changed by that key
+  alone (checked line by line).
 
 ## Open questions (with suggestions)
 
-- **Q2. When to rename `spell-mechanics` → `combat-effects` (skill, agent,
-  script) and `EffectOption.is_curated` → `is_described`?** *Suggestion:* in
-  Phase 4, together with the feature agent.
+- **Q2** done in 4.1 (R57, R60).
 - **Q4. Should a cast spell's notes all come along?** (Jolt to Life shows
   Spare the Dying's range.) *Suggestion:* keep it; revisit if a row gets noisy.
 - **Q5. Hook notes follow the sheet's feature order.** *Suggestion:* add a
@@ -1171,6 +1207,12 @@ Sheet chips ("DEX save · half · 8d6 Fire") from the same data;
   *Suggestion:* end those through `_end_linked_effects` where the monsters
   are dropped (`encounters_mixin`), once a monster gives a party member a
   concentration badge in play.
+- **Q34. Extra targets per slot level** is the one note `notes` finds on
+  three spells ("One more target per slot level above 1": Command, Heroism,
+  Tasha's Hideous Laughter; Bless and Charm Person say it inside a longer note, which grouping by first words misses).
+  *Suggestion:* a `targets: CombatTargets(count, upcast=1)` field, which
+  the dialog shows next to the slot box ("Targets: 2 at level 2") and
+  warns when more targets are picked; until then it stays a note.
 
 ## Discovered issues
 

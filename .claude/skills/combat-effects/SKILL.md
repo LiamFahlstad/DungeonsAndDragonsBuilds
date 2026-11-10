@@ -1,9 +1,9 @@
 ---
-name: spell-mechanics
-description: Spells' combat effects - what casting a spell rolls and does (saving throw or attack roll, which ability, damage dice and types, half on a save, a condition or badge and how long it lasts, upcasting, cantrip scaling, healing, Temporary Hit Points, or nothing to apply at all), written as CombatEffect objects in the spell's class (CharacterContent/Spells/SpellClasses, its combat_effects() method) and used by the combat UI's Custom Effect picker instead of reading the spell's text. The same CombatEffect model features and monster abilities use. Holds the format, the rubric for each field, and a script that checks every spell's effects, lists spells without them (by level, class or campaign), drafts them from the text as Python for review, writes reviewed drafts into each spell's class (turning a JSON spell into a class first) and compares them with the text reading. Use when adding, reviewing or fixing a spell's combat effects, when a spell fills the Custom Effect form wrongly, when a campaign's spells should be checked, or when someone asks why a spell's picker row says "Read from its rules text".
+name: combat-effects
+description: Combat effects - what a spell or feature does in a fight (saving throw or attack roll, which ability, damage dice and types, half on a save, a condition or badge and how long it lasts, what the badge does while it's on, upcasting, cantrip scaling, healing, Temporary Hit Points, a use that casts a spell, or nothing to apply at all), written as CombatEffect objects in the spell's class (CharacterContent/Spells/SpellClasses) or the feature's class (its combat_effects() method), and used by the combat UI's Custom Effect picker instead of reading the rules text. The same CombatEffect model monster abilities use. Holds the format, the design principles, the rubric for each field and for features, and a script that checks every spell's and party feature's effects, lists spells without them (by level, class or campaign) and a party's features still read from their text, gives a coverage line per campaign, reports notes repeated often enough to be a missing field, drafts spells' effects from the text as Python for review, writes reviewed drafts into each spell's class and compares them with the text reading. Use when adding, reviewing or fixing a spell's or feature's combat effects, when a spell or feature fills the Custom Effect form wrongly, when a campaign's spells or features should be checked, or when someone asks why a picker row says "Read from its rules text".
 ---
 
-# Spells' combat effects
+# Combat effects (spells and features)
 
 The combat UI's Custom Effect dialog fills its form from a spell
 (`spell_option()` in `Combat/CombatUIQt/effect_options.py`). A spell whose
@@ -14,6 +14,32 @@ effects replace that guess with checked data, so every one must be right.
 Spells, features and monster abilities all describe themselves with the same
 model, `CombatEffect` (`Model/Content/CombatEffect.py`; its docstring has every
 field). The plan behind this is `Notes/combat-effects-plan.md`.
+
+## Principles
+
+From `Notes/combat-effects-plan.md` (Design principles); each is a reason a
+draft gets sent back:
+
+1. **One vocabulary.** Spells, features and monster abilities all return
+   `CombatEffect`s; a spell and a feature that do the same thing are
+   written the same way.
+2. **The model describes the rules, not the form.** Say what happens; the
+   picker decides what fits the dialog and turns the rest into notes.
+3. **Caster numbers are worked out when used.** No DC, attack bonus or
+   modifier written in; a feature may work out its own from `character`.
+4. **`None`, `[]` and a list mean the same everywhere:** not described yet
+   / nothing to apply / one picker row per item.
+5. **Notes are the escape hatch, and a repeated note is a missing field.**
+   `notes` lists the ones written for three or more spells or features;
+   report any you add to.
+6. **The simulator never guesses positions or table decisions.** What
+   depends on where creatures are, or on a choice at the table, is a note
+   or a trigger with a `when` (a prompt), never counted.
+7. **Nothing lands on a target unless the effect says so.**
+8. **An extension's uses are its parent's.** An extension that is another
+   way to use its parent describes its own rows (they spend the parent's
+   uses unless it has its own); one that only changes the parent's effect
+   uses `adjust_combat_effect` and returns `[]`.
 
 ## Where they live
 
@@ -61,12 +87,15 @@ picker works those out. Leave out every field at its default.
 ## Tools
 
 ```bash
-S=.claude/skills/spell-mechanics/spell_mechanics.py
+S=.claude/skills/combat-effects/combat_effects.py
 python $S todo --campaign time_loop_pr          # what's missing, and where each goes (also --level N, --class Wizard, --name X)
 python $S draft --level 2 --out <scratchpad>/draft.py   # drafts as Python + a review sheet with each spell's full text
 python $S add <scratchpad>/draft.py             # check the reviewed EFFECTS, write each into its class
 python $S compare --level 2                     # where the effects and the text reading disagree
 python $S check                                 # run before you report: exit 1 on any problem
+python $S features --campaign curse_of_the_lich [--member Kivi] [--all]   # a party's features still read from text, with file:line
+python $S coverage                              # one line per campaign: spells and features described
+python $S notes [--min 3]                       # notes on 3+ spells/features: a field the model may be missing
 ```
 
 The draft file is a Python module: `EFFECTS = {"Spell name": [CombatEffect(...), ...]}`,
@@ -94,6 +123,48 @@ directly; then run `check` and the tests below.
 4. `check`, and `./run_tests.sh -q tests/test_spell_classes.py tests/test_spell_combat_effects.py tests/test_combat_ui_effect_options.py tests/test_picker_rows.py`.
    A picker-row golden that changes is a spell now described: read the
    diff (the `snapshot-diffs` skill) before `UPDATE_SNAPSHOTS=1`.
+
+## Features
+
+A feature's effects live in its class's `combat_effects(self, character)`
+(`Model/Content/Feature.py` has the contract). There is no draft or `add`
+for features: write the method by hand, then `check` and
+`./run_tests.sh -q tests/test_feature_combat_effects.py tests/test_picker_rows.py`.
+Work party by party: `features --campaign <name>` lists what's left, with
+where each class is.
+
+The rubric above applies; on top of it:
+
+- **`[]` for a feature with nothing to put on a creature in a fight**:
+  senses (Darkvision), proficiencies, languages, a feature that only grants
+  spells (its spells are in the picker as spells: Cartographer Spells),
+  one used from its own control (Wild Shape, a summon), Spellcasting
+  itself, or a rider that only changes another feature (then also
+  `adjust_combat_effect`). A passive feature that only changes the stat
+  block can stay `None` (no row either way); give it `[]` only when it has
+  `passive=False`.
+- **Work numbers out from `character`**: the level's dice
+  (`SNEAK_ATTACK_DICE.at(character)`), a pool (Lay on Hands' `5 x Paladin
+  level`, said in a note), a DC through `calculate_dc`. `with_bonus("1d8",
+  4)` writes "1d8 + 4"; Radiance of the Dawn writes `f"2d10 + {level}"`.
+- **A use that casts a spell** sets `spell="Hunter's Mark"` and only what
+  differs: its `name` ("Divine Smite (Paladin's Smite)"), a note ("Without
+  a spell slot, once per Long Rest."), another action. The spell's own
+  effect, badge and modifiers come along.
+- **Several ways to use one feature** are several effects, each with a
+  `name` (Channel Divinity's "Divine Spark: heal", "Divine Spark: harm", "Turn Undead"); an extension's ways go
+  in the extension's own `combat_effects()`, not the parent's.
+- **A choice at the table** (which damage type, which of two options) is
+  `CombatDamage(dice, None, choices)` or one effect per option, never a
+  guess.
+- **A feature that changes another's effect** (Combat Inspiration on
+  Bardic Inspiration, Agonizing Blast on Eldritch Blast) overrides
+  `adjust_combat_effect(character, source, effect)`: check `source` first,
+  only add (a note, a damage part, `add_modifier`), and return
+  `dataclasses.replace(effect, ...)`.
+- **Badges and their modifiers** work as for spells: a feature that lasts
+  and marks its targets (Sacred Weapon, Rage) gives a `CombatCondition`
+  named after the feature, with its `modifiers` when the model has them.
 
 ## Rubric
 

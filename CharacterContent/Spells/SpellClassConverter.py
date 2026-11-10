@@ -5,7 +5,7 @@ the winning source's scraped record (the rules). Every spell the sources had
 is a class since S.4 (Notes/combat-effects-plan.md), so this is for a spell
 scraped since: its class starts with the record's rules only, and its
 usage_tags, target, improved description and combat effects are then written
-in the class (the spell-mechanics script's `add` writes the effects through
+in the class (the combat-effects script's `add` writes the effects through
 convert()).
 
 The class then is the spell's one source: SpellFactory uses it instead of
@@ -34,7 +34,7 @@ given), or every file is put back. The casting
 time, range, components and duration are compared as what they mean
 (SpellFields), not as text: the class writes them in the 2024 wording.
 
-The spell-mechanics skill's script uses it as a library: convert() with
+The combat-effects skill's script uses it as a library: convert() with
 combat effects of its own writes a spell's class with those instead of its
 record's, and set_combat_effects() gives a class that exists a
 combat_effects() method (a new one, or in place of the one it has). Both

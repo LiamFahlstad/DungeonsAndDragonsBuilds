@@ -61,7 +61,7 @@ _FIELDS = (
     "feature_name",
     "spell_name",
     "is_unavailable",
-    "is_curated",
+    "is_described",
 )
 
 MEMBERS = [

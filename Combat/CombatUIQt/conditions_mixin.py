@@ -215,18 +215,18 @@ def _where_from(option: EffectOption) -> str:
     """Where a spell's or feature's pick got its numbers, or "" for an attack
     or a monster's action, whose numbers are its own."""
     if option.kind == SPELL:
-        if option.is_curated:
+        if option.is_described:
             return "Filled in from checked spell data."
         return "Read from its rules text: check the form."
     if option.kind == FEATURE:
         of = ""
         if option.feature_name and option.feature_name != option.name:
             of = f"{escape(option.feature_name, quote=False)}: "
-        if option.is_curated:
+        if option.is_described:
             return f"{of}filled in from the feature's combat data."
         return f"{of}read from its rules text: check the form."
     action = option.monster_action
-    if option.kind == MONSTER_ACTION and option.is_curated and action is not None:
+    if option.kind == MONSTER_ACTION and option.is_described and action is not None:
         of = ""
         if action.name != option.name:
             of = f"{escape(action.name, quote=False)}: "

@@ -1,6 +1,6 @@
-"""Check, compare, draft and add spells' combat effects: what a spell's
-combat_effects() returns, which the combat UI's Custom Effect picker fills
-its form from. They are written in Python, in the spell's class
+"""Check, compare, draft and add spells' combat effects, and report on
+features': what a spell's or feature's combat_effects() returns, which the
+combat UI's Custom Effect picker fills its form from. They are written in Python, in the spell's class
 (CharacterContent/Spells/SpellClasses): a list of CombatEffect objects
 (Model/Content/CombatEffect.py), one per way to cast the spell, or [] for a
 spell with nothing to apply. Every spell is a class; `add` turns a spell
@@ -8,16 +8,22 @@ scraped since (a JSON record without a class) into one to give it its
 effects (CharacterContent/Spells/SpellClassConverter.py).
 
 Usage (from the repo root):
-    python .claude/skills/spell-mechanics/spell_mechanics.py check
+    python .claude/skills/combat-effects/combat_effects.py check
         # every class's effects follow the rubric's checks (exit 1 if not)
-    python .claude/skills/spell-mechanics/spell_mechanics.py todo [--level N] [--class Wizard] [--campaign time_loop_pr] [--name X ...]
+    python .claude/skills/combat-effects/combat_effects.py todo [--level N] [--class Wizard] [--campaign time_loop_pr] [--name X ...]
         # spells without combat effects, and where each one's go
-    python .claude/skills/spell-mechanics/spell_mechanics.py draft [filters as todo] --out <scratch>/draft.py
+    python .claude/skills/combat-effects/combat_effects.py draft [filters as todo] --out <scratch>/draft.py
         # a draft per spell without effects, read from its text, as Python, and a review sheet on stdout
-    python .claude/skills/spell-mechanics/spell_mechanics.py add <scratch>/draft.py [--force]
+    python .claude/skills/combat-effects/combat_effects.py add <scratch>/draft.py [--force]
         # check the reviewed EFFECTS and write each into its spell's class (made from its JSON if need be)
-    python .claude/skills/spell-mechanics/spell_mechanics.py compare [filters as todo] [--all]
+    python .claude/skills/combat-effects/combat_effects.py compare [filters as todo] [--all]
         # where each spell's effects and the text reading disagree (only the disagreements unless --all)
+    python .claude/skills/combat-effects/combat_effects.py features --campaign curse_of_the_lich [--member Edmund] [--all]
+        # each party member's features still read from their text, and where each one's class is
+    python .claude/skills/combat-effects/combat_effects.py coverage
+        # one line per campaign: its spells and features described so far
+    python .claude/skills/combat-effects/combat_effects.py notes [--min 3]
+        # notes written for three or more spells or features: a field the model may be missing
 
 A draft is a starting point, never an entry: the text reading it comes from is
 what these effects exist to replace. Review every field against the spell's
@@ -25,7 +31,9 @@ description before `add`.
 """
 
 import argparse
+import inspect
 import re
+from collections import defaultdict
 import runpy
 import subprocess
 import sys
@@ -84,17 +92,37 @@ def effect_problems(name: str, effects: list[CombatEffect], spell) -> list[str]:
 # Picking spells
 
 
-def campaign_spells(campaign_name: str) -> set[str]:
-    """The spells the campaign's party members have."""
+def campaign_names() -> list[str]:
+    """The campaigns that have a party."""
+    from Combat.Scenarios import CAMPAIGNS
+
+    return sorted(n for n, c in CAMPAIGNS.items() if c.config is not None)
+
+
+_PARTIES: dict[str, list[dict]] = {}
+
+
+def campaign_party(campaign_name: str) -> list[dict]:
+    """The campaign's party members, as the combat UI's combatants (built
+    once per run)."""
     from Combat.PlayerCombatant import combatant_from_character
     from Combat.Scenarios import CAMPAIGNS
 
-    campaign = CAMPAIGNS.get(campaign_name)
-    if campaign is None or campaign.config is None:
-        sys.exit(f"No campaign {campaign_name!r}; known: {sorted(CAMPAIGNS)}")
+    if campaign_name not in _PARTIES:
+        campaign = CAMPAIGNS.get(campaign_name)
+        if campaign is None or campaign.config is None:
+            sys.exit(f"No campaign {campaign_name!r}; known: {campaign_names()}")
+        _PARTIES[campaign_name] = [
+            combatant_from_character(builder().build())
+            for builder in campaign.config.party_spec.members
+        ]
+    return _PARTIES[campaign_name]
+
+
+def campaign_spells(campaign_name: str) -> set[str]:
+    """The spells the campaign's party members have."""
     names: set[str] = set()
-    for builder in campaign.config.party.members:
-        combatant = combatant_from_character(builder().build())
+    for combatant in campaign_party(campaign_name):
         names.update(combatant["_spell_objects"])
     return names
 
@@ -274,10 +302,10 @@ def draft_source(entry: list) -> tuple[str, str | None]:
     return converter.source_of(effects), None
 
 
-_DRAFT_HEAD = '''"""Combat effects drafted from each spell's text by spell_mechanics.py
+_DRAFT_HEAD = '''"""Combat effects drafted from each spell's text by combat_effects.py
 draft: a starting point, never an entry. Review every effect against the
 spell's full description (the review sheet) and the skill's rubric, then
-    python .claude/skills/spell-mechanics/spell_mechanics.py add <this file>
+    python .claude/skills/combat-effects/combat_effects.py add <this file>
 which writes each spell's list into its class's combat_effects().
 """
 '''
@@ -317,7 +345,7 @@ def load_effects(path: str) -> dict:
 
 
 def cmd_check(_args) -> int:
-    problems = []
+    problems = feature_problems()
     classes = SpellFactory._spell_classes()
     described = 0
     for name, spell_class in sorted(classes.items()):
@@ -333,6 +361,7 @@ def cmd_check(_args) -> int:
         described += 1
         problems += [f"{where}: {p}" for p in effect_problems(name, effects, spell)]
     print(f"spell classes: {described} of {len(classes)} with combat effects")
+    print(f"party features: checked for {', '.join(campaign_names())}")
     for problem in problems:
         print("PROBLEM", problem)
     print("OK" if not problems else f"{len(problems)} problem(s)")
@@ -470,17 +499,213 @@ def cmd_compare(args) -> int:
         if record is None:
             print(f"{spell.name}: no scraped record, no text reading to compare")
             continue
-        curated = eo.spell_option(spell, CASTER)
+        described = eo.spell_option(spell, CASTER)
         read = eo.spell_option(record, CASTER)
         differences = [
-            f"{label}: checked {get(curated)!r}, text {get(read)!r}"
+            f"{label}: checked {get(described)!r}, text {get(read)!r}"
             for label, get in _COMPARED
-            if get(curated) != get(read)
+            if get(described) != get(read)
         ]
         if differences or args.all:
             print(f"{spell.name}: {'same' if not differences else ''}")
             for difference in differences:
                 print("   ", difference)
+    return 0
+
+
+# ---------------------------------------------------------------------------
+# Features (a campaign's party: features are described party by party)
+
+# What a feature's combat_effects() say, for `features` and `coverage`.
+DESCRIBED = "described"
+NOTHING = "nothing to apply"
+FROM_TEXT = "read from its text"
+PASSIVE = "passive, no row"
+EXTENSION = "extension, no row"
+
+
+def walk_features(combatant: dict):
+    """(feature, parent, effects) for each of the combatant's features and,
+    under it, the features granted as its extensions; effects is what its
+    combat_effects() returns."""
+    sheet = combatant["_stat_block"]
+
+    def walk(feature, parent):
+        yield feature, parent, feature.combat_effects(sheet)
+        for extension in sheet.extensions_of(feature):
+            yield from walk(extension, feature)
+
+    for feature in combatant.get("_feature_objects") or []:
+        yield from walk(feature, None)
+
+
+def feature_state(feature, parent, effects) -> str:
+    """What the picker makes of a feature (effect_options.feature_options):
+    its described rows, none, or a row read from its text. An undescribed
+    passive feature or extension has no row at all; an extension that is a
+    way to use its parent (Radiance of the Dawn) wants combat effects, one
+    that only changes it (a rider) wants adjust_combat_effect or nothing."""
+    if effects is None:
+        if parent is not None:
+            return EXTENSION
+        return PASSIVE if feature.passive else FROM_TEXT
+    return DESCRIBED if effects else NOTHING
+
+
+def where_defined(feature) -> str:
+    """The feature's class, as path:line from the repo root."""
+    cls = type(feature)
+    try:
+        path = Path(inspect.getsourcefile(cls) or "")
+        line = inspect.getsourcelines(cls)[1]
+    except (OSError, TypeError):
+        return cls.__module__
+    try:
+        path = path.resolve().relative_to(ROOT)
+    except ValueError:
+        pass
+    return f"{path.as_posix()}:{line}"
+
+
+def feature_problems() -> list[str]:
+    """Every party feature whose combat effects don't build, or whose use
+    casts a spell there isn't."""
+    problems = []
+    spells = {spell.name for spell in SpellFactory.all_spells()}
+    seen: set[type] = set()
+    for campaign in campaign_names():
+        for combatant in campaign_party(campaign):
+            sheet = combatant["_stat_block"]
+            try:
+                rows = list(walk_features(combatant))
+            except Exception as error:  # a feature whose effects don't build
+                problems.append(f"{combatant['name']}'s features: {error!r}")
+                continue
+            for feature, _, effects in rows:
+                if type(feature) in seen:
+                    continue
+                seen.add(type(feature))
+                for index, effect in enumerate(effects or ()):
+                    if effect.spell and effect.spell not in spells:
+                        problems.append(
+                            f"{where_defined(feature)}: {feature.name!r}[{index}]:"
+                            f" casts {effect.spell!r}, which isn't a spell"
+                        )
+                try:
+                    feature.adjust_combat_effect(sheet, "", CombatEffect())
+                except Exception as error:
+                    problems.append(
+                        f"{where_defined(feature)}: {feature.name!r}:"
+                        f" adjust_combat_effect fails: {error!r}"
+                    )
+    return problems
+
+
+def cmd_features(args) -> int:
+    shown = {FROM_TEXT, EXTENSION}
+    if args.all:
+        shown |= {DESCRIBED, NOTHING, PASSIVE}
+    left = 0
+    for combatant in campaign_party(args.campaign):
+        if args.member and args.member.lower() not in combatant["name"].lower():
+            continue
+        rows = []
+        for feature, parent, effects in walk_features(combatant):
+            state = feature_state(feature, parent, effects)
+            if state not in shown:
+                continue
+            left += state in (FROM_TEXT, EXTENSION)
+            name = feature.name
+            if parent is not None:
+                name = f"  {name} (of {parent.name})"
+            if state == DESCRIBED and effects:
+                state = f"{state}: {len(effects)} row(s)"
+            rows.append(f"  {name:44} {state:24} {where_defined(feature)}")
+        print(f"{combatant['name']}:")
+        print("\n".join(rows) if rows else "  (nothing left)")
+    print(
+        f"{left} feature(s) read from their text, or extensions without combat"
+        " effects. An extension that only changes its parent (a rider) needs"
+        " none: give it adjust_combat_effect, or leave it."
+    )
+    return 0
+
+
+def campaign_coverage(campaign: str) -> str:
+    """One line: how much of the campaign's party is described."""
+    party = campaign_party(campaign)
+    spells = {
+        s.name: s for combatant in party for s in combatant["_spell_objects"].values()
+    }
+    described_spells = sum(s.combat_effects() is not None for s in spells.values())
+    counts: dict[str, int] = defaultdict(int)
+    for combatant in party:
+        for feature, parent, effects in walk_features(combatant):
+            counts[feature_state(feature, parent, effects)] += 1
+    return (
+        f"{campaign}: spells {described_spells}/{len(spells)} described;"
+        f" features {counts[DESCRIBED]} described, {counts[NOTHING]} nothing to"
+        f" apply, {counts[FROM_TEXT]} read from text,"
+        f" {counts[EXTENSION]} extensions without effects"
+        f" ({counts[PASSIVE]} passive)"
+    )
+
+
+def cmd_coverage(_args) -> int:
+    for campaign in campaign_names():
+        print(campaign_coverage(campaign))
+    return 0
+
+
+# ---------------------------------------------------------------------------
+# Notes (principle 7: a repeated note is a missing field)
+
+_NUMBERS = re.compile(r"\d+d\d+|\d+")
+_WORD = re.compile(r"[a-z#']+")
+
+
+def note_key(note: str, words: int) -> str:
+    """A note's first `words` words, lowercased, numbers and dice as #: notes
+    that start alike usually say the same kind of thing."""
+    return " ".join(_WORD.findall(_NUMBERS.sub("#", note.lower()))[:words])
+
+
+def every_note() -> list[tuple[str, str]]:
+    """(where, note) for every note of every spell class and of every party
+    member's features (each feature class once)."""
+    found = []
+    for name, spell_class in sorted(SpellFactory._spell_classes().items()):
+        for effect in spell_class().combat_effects() or ():
+            found += [(f"spell {name}", note) for note in effect.notes]
+    seen: set[type] = set()
+    for campaign in campaign_names():
+        for combatant in campaign_party(campaign):
+            for feature, _, effects in walk_features(combatant):
+                if type(feature) in seen:
+                    continue
+                seen.add(type(feature))
+                for effect in effects or ():
+                    found += [(f"feature {feature.name}", n) for n in effect.notes]
+    return found
+
+
+def cmd_notes(args) -> int:
+    groups: dict[str, list[tuple[str, str]]] = defaultdict(list)
+    for where, note in every_note():
+        groups[note_key(note, args.words)].append((where, note))
+    repeated = sorted(
+        (g for g in groups.values() if len({w for w, _ in g}) >= args.min),
+        key=lambda g: -len(g),
+    )
+    for group in repeated:
+        print(f'{len(group)} x "{note_key(group[0][1], args.words)} ..."')
+        for where, note in group:
+            print(f"    {where}: {note}")
+    print(
+        f"{len(repeated)} kind(s) of note written for {args.min} or more spells"
+        " or features: each may be a field the model is missing"
+        " (Notes/combat-effects-plan.md, principle 7)."
+    )
     return 0
 
 
@@ -499,6 +724,14 @@ def main() -> int:
             command.add_argument("--out", help="write the drafts here (scratch dir)")
         if name == "compare":
             command.add_argument("--all", action="store_true")
+    features = commands.add_parser("features")
+    features.add_argument("--campaign", required=True)
+    features.add_argument("--member", help="part of a party member's name")
+    features.add_argument("--all", action="store_true", help="every feature")
+    commands.add_parser("coverage")
+    notes = commands.add_parser("notes")
+    notes.add_argument("--min", type=int, default=3, help="sources a note needs")
+    notes.add_argument("--words", type=int, default=4, help="words that group notes")
     add = commands.add_parser("add")
     add.add_argument("file", help="a reviewed draft: a .py file defining EFFECTS")
     add.add_argument("--force", action="store_true")
@@ -509,6 +742,9 @@ def main() -> int:
         "draft": cmd_draft,
         "add": cmd_add,
         "compare": cmd_compare,
+        "features": cmd_features,
+        "coverage": cmd_coverage,
+        "notes": cmd_notes,
     }[args.command]
     return handler(args)
 

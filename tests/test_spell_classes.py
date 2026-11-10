@@ -484,7 +484,7 @@ def test_adding_to_a_module_keeps_what_is_there(tmp_path):
 
 
 # ---------------------------------------------------------------------------
-# Writing combat effects into a class (the spell-mechanics skill's `add`)
+# Writing combat effects into a class (the combat-effects skill's `add`)
 
 _EFFECTS = [
     CombatEffect(

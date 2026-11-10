@@ -178,7 +178,7 @@ class EffectOption:
     spell_level: int = 0
     # A spell, feature or monster ability filled in from its combat effects,
     # not read from its text.
-    is_curated: bool = False
+    is_described: bool = False
     # How many times one use rolls and deals its damage (Scorching Ray's
     # rays), and how many more per slot level above spell_level.
     instances: int = 1

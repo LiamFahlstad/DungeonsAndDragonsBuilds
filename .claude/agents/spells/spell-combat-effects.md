@@ -1,12 +1,12 @@
 ---
-name: spell-mechanics
-description: Use to add, review or fix spells' combat effects - what casting a spell rolls and does (save or attack, ability, damage dice and types, half on save, condition or badge and duration, upcasting, cantrip scaling, healing, temporary hit points, or nothing to apply) - as CombatEffect objects in each spell's class (CharacterContent/Spells/SpellClasses, its combat_effects() method; a JSON spell is turned into a class for it), which the combat UI's Custom Effect picker fills its form from instead of reading the spell's text. Give it a filter ("all level 2 spells", "Wizard cantrips", "the spells of campaign time_loop_pr", named spells). Not for improved descriptions (spell-improved-descriptions), usage_tags (the usage-tags skill), or changing the picker's code (combat-simulator).
+name: spell-combat-effects
+description: Use to add, review or fix spells' combat effects - what casting a spell rolls and does (save or attack, ability, damage dice and types, half on save, condition or badge and duration, upcasting, cantrip scaling, healing, temporary hit points, or nothing to apply) - as CombatEffect objects in each spell's class (CharacterContent/Spells/SpellClasses, its combat_effects() method; a JSON spell is turned into a class for it), which the combat UI's Custom Effect picker fills its form from instead of reading the spell's text. Give it a filter ("all level 2 spells", "Wizard cantrips", "the spells of campaign time_loop_pr", named spells). Not for features' combat effects (feature-combat-effects), improved descriptions (spell-improved-descriptions), usage_tags (the usage-tags skill), or changing the picker's code (combat-simulator).
 tools: Read, Grep, Glob, Edit, Write, Bash
 model: sonnet
 memory: project
 skills:
   - subagent-protocol
-  - spell-mechanics
+  - combat-effects
 ---
 
 You write checked combat effects for D&D spells, so the combat UI's Custom
@@ -14,7 +14,7 @@ Effect form is filled in correctly without the GM checking the rules text. A
 wrong effect is worse than none: the picker shows it as checked data, and the
 GM will trust it.
 
-Follow the `spell-mechanics` skill (preloaded) exactly: its procedure and its
+Follow the `combat-effects` skill (preloaded) exactly: its procedure and its
 rubric for every field.
 
 ## Scope

@@ -275,7 +275,7 @@ def test_a_scraped_record_has_no_combat_effects():
 
 def test_fireball():
     fireball = _option("Fireball")
-    assert fireball.is_curated
+    assert fireball.is_described
     assert fireball.roll == SAVING_THROW
     assert fireball.ability == "DEX"
     assert fireball.dc == 15
@@ -465,7 +465,7 @@ def test_chill_touch_marks_its_target_until_the_end_of_the_casters_turn():
 def test_a_spell_without_an_entry_is_read_from_its_text():
     spell = _unchecked_spell()
     option = spell_option(spell, CASTER)
-    assert not option.is_curated
+    assert not option.is_described
     assert option.ability == read_effect_text(spell.description).ability
 
 
@@ -546,6 +546,6 @@ def test_an_entry_in_a_2014_file():
     """Absorb Elements is only in the 2014 data; its class (converted from
     that record) has the effect."""
     absorb = _option("Absorb Elements")
-    assert absorb.is_curated
+    assert absorb.is_described
     assert absorb.damage == ""
     assert "Resistance" in absorb.note

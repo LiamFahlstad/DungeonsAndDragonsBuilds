@@ -605,7 +605,7 @@ def test_only_a_feature_thats_used_can_be_applied_by_itself(
 )
 def test_hit_points_from_the_text(name, kind, amount, at_slot):
     option = spell_option(_spell(name), {})
-    assert not option.is_curated
+    assert not option.is_described
     assert (option.amount_kind, option.damage) == (kind, amount)
     for slot, expected in at_slot.items():
         assert option.damage_at(slot) == expected

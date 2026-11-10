@@ -219,7 +219,7 @@ def test_jolt_to_life_in_the_picker():
     assert row.action_cost == "Action"
     # Its uses are Reanimator's Skill Set's.
     assert row.feature_name == "Reanimator's Skill Set" and row.counts_uses
-    assert row.is_curated
+    assert row.is_described
 
 
 class _ArtificerAt:

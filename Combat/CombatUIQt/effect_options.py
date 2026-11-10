@@ -1393,7 +1393,7 @@ def _described_option(
         spell_name=spell_name or effect.spell or "",
         upcast=upcast,
         amount_kind=amount_kind,
-        is_curated=True,
+        is_described=True,
         instances=count,
         instances_upcast=(
             instances.upcast if instances is not None and level > 0 else 0

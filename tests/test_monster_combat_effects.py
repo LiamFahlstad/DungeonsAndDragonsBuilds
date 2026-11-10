@@ -165,7 +165,7 @@ def test_compelled_duel():
     assert (row.roll, row.ability, row.dc) == (SAVING_THROW, "WIS", 11)
     assert row.condition == "Compelled Duel"
     assert row.duration_seconds == 60 and row.concentration
-    assert row.is_curated and row.monster_action is not None
+    assert row.is_described and row.monster_action is not None
 
 
 def test_lay_on_hands_is_healing_from_a_pool():
@@ -331,7 +331,7 @@ def test_multiattack_says_to_pick_each_attack():
 def test_an_attack_read_from_its_text_is_unchanged():
     row = _row(Tiger(), "Rend")
     assert (row.bonus, row.damage, row.condition) == (5, "2d6 + 3 Slashing", "Prone")
-    assert row.amount_kind == DAMAGE_AMOUNT and not row.is_curated
+    assert row.amount_kind == DAMAGE_AMOUNT and not row.is_described
 
 
 def test_every_monster_still_reads():
