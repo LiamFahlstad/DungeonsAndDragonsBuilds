@@ -36,7 +36,8 @@ from PyQt6.QtGui import QCursor
 from PyQt6.QtWidgets import QMenu
 
 import Combat.PlayerLog as PlayerLog
-from Combat.Definitions import Action
+from Combat.Definitions import Action, CombatStatus
+from Combat.Effects.active_effects import held_by_concentration
 from Combat.LogFiles import read_json
 from Combat.Summons import (
     CHOICE_KEY,
@@ -397,7 +398,14 @@ class SummonsMixin(CombatWindowState):
 
     def _remove_from_fight(self, char: dict):
         """Take char out of the window and the turn order, keeping whoever's
-        turn it is (the next one's, when it was char's)."""
+        turn it is (the next one's, when it was char's). What it concentrates
+        on ends first: nobody holds it once char is gone."""
+        if CombatStatus.CONCENTRATING.value in char.get("conditions", []) or (
+            held_by_concentration(self.characters, char["name"])
+        ):
+            self._end_concentration_spells(
+                char, reason=f"{char['name']} leaves the fight"
+            )
         order = self.initiative_order
         if self.phase == "COMBAT" and any(c is char for c in order):
             current = order[self.current_turn_idx]

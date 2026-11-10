@@ -30,7 +30,9 @@ Combat/Effects/modifiers.py counts them while the badge is on.
 
 A record lasts while it says something (a tooltip, a duration, a repeat save,
 a concentration link or modifiers) and goes with its badge: ConditionsMixin
-removes it with the condition. Fight logs written before the record existed
+removes it with the condition. When a concentration ends, every effect linked
+to it ends too (held_by_concentration), unless another running effect holds
+its badge, which the link then names instead. Fight logs written before the record existed
 kept the same things in seven keys of their own (OLD_KEYS); upgrade_old_keys
 turns them into records, and is the only code that reads them. It also gives
 a record from before `modifiers` existed none. Nothing here imports Qt."""
@@ -201,6 +203,28 @@ def note_origin(
 def link_concentration(char: dict, name: str, concentrator: str):
     """char's effect `name` lasts while `concentrator` concentrates on it."""
     effect_for(char, name)["concentration"] = concentrator
+
+
+def unlink_concentration(char: dict, name: str):
+    """char's effect `name` no longer lasts only while someone concentrates
+    (another effect that doesn't need Concentration holds its badge too)."""
+    effect = find_effect(char, name)
+    if effect is not None and effect["concentration"] is not None:
+        effect["concentration"] = None
+        _prune(char, name)
+
+
+def held_by_concentration(
+    chars: Iterable[dict], concentrator: str
+) -> list[tuple[dict, ActiveEffect]]:
+    """Every effect on `chars` that lasts while `concentrator` (a name)
+    concentrates on it, with the combatant it's on."""
+    return [
+        (char, effect)
+        for char in chars
+        for effect in active_effects(char)
+        if effect["concentration"] == concentrator
+    ]
 
 
 def duration_entry(

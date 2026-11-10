@@ -445,7 +445,7 @@ class CombatWindowState:
     def _current_turn_name(self) -> str | None:
         raise NotImplementedError("LoggingMixin._current_turn_name")
 
-    def _end_concentration_spells(self, char: dict):
+    def _end_concentration_spells(self, char: dict, reason: str = "concentration lost"):
         raise NotImplementedError("SpellsMixin._end_concentration_spells")
 
     def _feature_condition_tooltip(self, char: dict, feature) -> str:

@@ -21,8 +21,10 @@ from Combat.Effects.active_effects import (
     badge_modifiers,
     describe,
     give_modifiers,
+    held_by_concentration,
     link_concentration,
     note_origin,
+    unlink_concentration,
 )
 from Combat.PlayerCombatant import max_pact_slots
 from Core.Definitions import Condition
@@ -110,25 +112,46 @@ class SpellsMixin(CombatWindowState):
         if CombatStatus.CONCENTRATING.value in conditions:
             conditions.remove(CombatStatus.CONCENTRATING.value)
 
-    def _end_concentration_spells(self, char: dict):
-        """End every active spell on char that requires concentration. Call this
+    def _end_concentration_spells(self, char: dict, reason: str = "concentration lost"):
+        """End every active spell on char that requires concentration, and
+        every effect still linked to char's concentration. Call this
         whenever Concentrating is removed by any path other than the spell's own
         duration expiring — a manual shortcut, a failed save, incapacitation,
-        knockout, or death — so the effect doesn't keep ticking on the card after
-        the character has stopped concentrating on it."""
+        knockout, death, or char leaving the fight — so the effect doesn't keep
+        ticking on the card after the character has stopped concentrating on it."""
         active_spells = char.get("active_spells") or []
         ended = [e for e in active_spells if e.get("concentration")]
-        if not ended:
-            return
-        char["active_spells"] = [e for e in active_spells if not e.get("concentration")]
+        if ended:
+            char["active_spells"] = [
+                e for e in active_spells if not e.get("concentration")
+            ]
         for entry in ended:
             self._log_event(
-                f"{char['name']}'s {entry['name']} ends (concentration lost)",
+                f"{char['name']}'s {entry['name']} ends ({reason})",
                 note_turn=False,
                 character=char["name"],
                 value={"condition": entry["name"]},
             )
             self._end_spell_effects(entry)
+        self._end_linked_effects(char)
+
+    def _end_linked_effects(self, char: dict):
+        """char concentrates on nothing now, so every effect whose record
+        still says it lasts while char concentrates ends: its badge comes
+        off (not Unconscious from 0 HP). One another running effect holds
+        stays, linked to that one's caster."""
+        for target, effect in held_by_concentration(self.characters, char["name"]):
+            condition = effect["name"]
+            applied = {"target": target["name"], "condition": condition}
+            holder = self._holder_of(applied)
+            if holder is not None:
+                self._relink(applied, *holder)
+            elif condition in target["conditions"] and (
+                condition != Condition.UNCONSCIOUS.value or target["hp"] > 0
+            ):
+                self._remove_condition_from(target, condition)
+            else:
+                unlink_concentration(target, condition)
 
     def _end_spell_effects(self, entry: dict):
         """Take what a concentration spell put on its targets off them, now
@@ -136,7 +159,9 @@ class SpellsMixin(CombatWindowState):
         another running effect also holds, and not Unconscious from 0 HP."""
         entry["ends_with_conditions"] = False
         for applied in list(entry.get("applied", [])):
-            if self._held_by_effect(applied, excluding=entry):
+            holder = self._holder_of(applied, excluding=entry)
+            if holder is not None:
+                self._relink(applied, *holder)
                 continue
             condition = applied["condition"]
             for char in self.characters:
@@ -151,11 +176,35 @@ class SpellsMixin(CombatWindowState):
     def _held_by_effect(self, applied: dict, excluding: dict | None = None) -> bool:
         """Whether a running spell, other than `excluding`, put this condition
         on this target."""
-        return any(
-            entry is not excluding and applied in entry.get("applied", [])
-            for char in self.characters
-            for entry in char.get("active_spells") or []
+        return self._holder_of(applied, excluding) is not None
+
+    def _holder_of(
+        self, applied: dict, excluding: dict | None = None
+    ) -> tuple[dict, dict] | None:
+        """The caster and active spell, other than `excluding`, that put this
+        condition on this target and still run, if any."""
+        return next(
+            (
+                (char, entry)
+                for char in self.characters
+                for entry in char.get("active_spells") or []
+                if entry is not excluding and applied in entry.get("applied", [])
+            ),
+            None,
         )
+
+    def _relink(self, applied: dict, caster: dict, entry: dict):
+        """The condition in `applied` stays on its target, held by caster's
+        active spell `entry`: its record lasts while caster concentrates on
+        it, if entry needs Concentration, and no longer on anyone's if not."""
+        target = self._find_character_by_name(applied["target"])
+        condition = applied["condition"]
+        if target is None or condition not in target["conditions"]:
+            return
+        if entry.get("concentration"):
+            link_concentration(target, condition, caster["name"])
+        else:
+            unlink_concentration(target, condition)
 
     def _forget_effect_on(self, target: dict, condition: str):
         """Target has lost condition, so no spell holds it any more. A spell
@@ -193,6 +242,7 @@ class SpellsMixin(CombatWindowState):
             else:
                 remaining_spells.append(entry)
         source["active_spells"] = remaining_spells
+        self._end_linked_effects(source)
         # A save still owed was for the spell that just ended.
         source.pop("concentration_checks", None)
         self._add_condition_to(source, CombatStatus.CONCENTRATING.value, source=source)

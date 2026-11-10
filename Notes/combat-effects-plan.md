@@ -28,7 +28,7 @@ change and move on; the full suite can run later.
 - No parity runs against main, `verify-agent-work`, `code-reviewer` or
   `rules-checker` passes per step unless asked.
 
-## Status (2026-11-10, 3.1-3.5 done: lasting effects are one list, the rules conditions are data, effects carry modifiers the simulator counts, hits deal the extra damage effects give, and badges act as turns start and end)
+## Status (2026-11-10, Phase 3 done: lasting effects are one list, the rules conditions are data, effects carry modifiers the simulator counts, hits deal the extra damage effects give, badges act as turns start and end, and a concentration ends everything linked to it)
 
 | Phase | Step | State |
 |---|---|---|
@@ -48,7 +48,7 @@ change and move on; the full suite can run later.
 | 2 | 2.7 Conditional extra damage (`when`) | **Done**, as a generated note (R14) |
 | 2 | Extensions list their own uses under their parent | **Done** (R10, new) |
 | S | **Spells as classes** (new direction, 2026-11-09; see its section) | S.1 base class, factory and converter **done**; S.2 the 57 spells with combat effects converted **done**; S.2c card lines as dataclasses **done** (R20); S.3 new effects go into classes **done** (R22); S.5 drift check **done** (R23); S.4 **done** (R26): all 594 spells are classes, the agents' tools switched over (R24), Q15 and DI-065 done (R25), every companion file deleted and nothing reads them |
-| 3 | Lasting effects (3.1-3.6) | 3.1 **done** (R28-R34): `char["active_effects"]`, one plain dict per badge, in the new Qt-free `Combat/Effects/active_effects.py`; the seven old keys are read only by its `upgrade_old_keys`, where a log is read; an old fight log replays the same (`tests/test_active_effects.py`). 3.2 **done** (R27), ahead of 3.1: the rules conditions are data, and saves, attack rolls (all three paths), AC, damage Resistance and condition immunity read them. 3.3 **done** (R35-R40): a badge's `CombatCondition` says its `modifiers`, the record keeps them as JSON, and `modifiers_on` reads them beside the conditions and cover; Bless's 1d4 is rolled into the saves (a monster's Concentration save too, R40) and attack rolls the simulator makes, Shield of Faith's +2 counts in AC, cover's +2/+5 in Dexterity saves (DI-066); a typed total stays as typed, with the bonus as a reminder in the dialog. 3.4 **done** (R41-R47): `ExtraDamageFrom` (on the target, from its effect's caster) and `ExtraDamageOnHit` (on the attacker); Hunter's Mark's 1d6 Force on its caster's hits and Divine Favor's 1d4 Radiant on its caster's weapon hits are rolled into the hits the dialog and a monster's action buttons deal, doubled on a Critical Hit, each type resisted on its own; a typed damage total stays as typed, with the extra as a reminder in the dialog. 3.5 **done** (R48-R53): `AtTurnStart` / `AtTurnEnd` are modifiers on a badge that name a row of their spell; Heroism's Temporary Hit Points are given as its target's turn starts, and Spirit Guardians asks, as each enemy of its caster ends its turn, with a button that opens the Custom Effect dialog with its damage row picked. 3.6 not started |
+| 3 | Lasting effects (3.1-3.6) | 3.1 **done** (R28-R34): `char["active_effects"]`, one plain dict per badge, in the new Qt-free `Combat/Effects/active_effects.py`; the seven old keys are read only by its `upgrade_old_keys`, where a log is read; an old fight log replays the same (`tests/test_active_effects.py`). 3.2 **done** (R27), ahead of 3.1: the rules conditions are data, and saves, attack rolls (all three paths), AC, damage Resistance and condition immunity read them. 3.3 **done** (R35-R40): a badge's `CombatCondition` says its `modifiers`, the record keeps them as JSON, and `modifiers_on` reads them beside the conditions and cover; Bless's 1d4 is rolled into the saves (a monster's Concentration save too, R40) and attack rolls the simulator makes, Shield of Faith's +2 counts in AC, cover's +2/+5 in Dexterity saves (DI-066); a typed total stays as typed, with the bonus as a reminder in the dialog. 3.4 **done** (R41-R47): `ExtraDamageFrom` (on the target, from its effect's caster) and `ExtraDamageOnHit` (on the attacker); Hunter's Mark's 1d6 Force on its caster's hits and Divine Favor's 1d4 Radiant on its caster's weapon hits are rolled into the hits the dialog and a monster's action buttons deal, doubled on a Critical Hit, each type resisted on its own; a typed damage total stays as typed, with the extra as a reminder in the dialog. 3.5 **done** (R48-R53): `AtTurnStart` / `AtTurnEnd` are modifiers on a badge that name a row of their spell; Heroism's Temporary Hit Points are given as its target's turn starts, and Spirit Guardians asks, as each enemy of its caster ends its turn, with a button that opens the Custom Effect dialog with its damage row picked. 3.6 **done** (R54-R56): ending a concentration also ends every record linked to it (`held_by_concentration`), a creature leaving the fight ends its concentration first, and a badge another running effect still holds is relinked to that effect's caster |
 | 4 | One `combat-effects` skill; feature agent; content rollout | Partly: the skill's rubric and script cover every new field; first content batch below |
 | 5 | Sheet chips, monster score | Not started |
 
@@ -164,6 +164,13 @@ damage from Pirate", "Edmund's Divine Favor: +4 Radiant (1d4)" on each
 weapon hit (none on the typed total), filled the Bite button's Damage field
 with "6 Piercing + 5 Force", and the player link's hit lines read "5
 Slashing + 1 Force" and "6 Slashing + 4 Radiant".
+
+**Verified 2026-11-10 (3.6, R54-R56), low overhead:** every combat test
+file passes (`tests/test_combat*.py`, summons, party allies, picker rows,
+wild shape and the effects files: 1,727 + 985 tests; not the full suite);
+no picker golden changed; `./typecheck.sh` 0 errors on every changed file;
+20 new tests (`tests/test_concentration_effects.py`), expected values from
+the glossary's Concentration and Bless's text.
 
 **Verified 2026-11-10 (3.5, R48-R53), low overhead:** every combat test
 file passes (40 files, 3,407 tests; not the full suite); one picker golden
@@ -460,7 +467,7 @@ Mark, Heroism. The modifier types go in a sibling module,
 | 3.3 | `D20Bonus`, `D20Mode`, `AttacksAgainst`, `ArmorClass`, `Resistance`. | **Done** (R35-R40): Bless adds 1d4 to a rolled save (a monster's Concentration save included) and attack roll, and the log says so; Shield of Faith raises the AC an attack is compared with; cover adds to Dexterity saves (DI-066); ending the badge ends its modifiers; an old log replays as before (`tests/test_effect_modifiers.py`, `tests/test_active_effects.py`) |
 | 3.4 | `ExtraDamageFrom` / `ExtraDamageOnHit`. | **Done** (R41-R47): Hunter's Mark adds 1d6 Force on its caster's hits (not another's, not a miss or a save effect), Divine Favor 1d4 Radiant on its caster's weapon hits, doubled on a Critical Hit, resisted per type, on each hit of Times; the log says so; a typed damage total gets a reminder instead; ending the badge ends it; an old log replays as before (`tests/test_extra_damage.py`, `tests/test_active_effects.py`) |
 | 3.5 | Triggers and prompts. | **Done** (R48-R53): Heroism gives its caster's spellcasting modifier in temp HP as each of its target's turns starts (not on others', not after the badge or Concentration ends, taken back by undoing Next); Spirit Guardians asks about each enemy of its caster as its turn ends, once, never about an ally, the caster or a dead creature, and rolls nothing itself; the prompt opens the dialog on its caster and that creature with the damage row picked, spending no slot (`tests/test_turn_triggers.py`) |
-| 3.6 | Concentration ends every `ActiveEffect` it holds. | Dropping Bless removes it from every target |
+| 3.6 | Concentration ends every `ActiveEffect` it holds. | **Done** (R54-R56): dropping Bless removes its badge, record and 1d4 from every target by every path (Ctrl+C, a failed save, Incapacitated, death, a new concentration, ending it early, its minute running out, its caster leaving the fight); a badge two casters hold stays with the one still concentrating (`tests/test_concentration_effects.py`) |
 
 ### Phase 4: content and tooling
 
@@ -1000,6 +1007,31 @@ Sheet chips ("DEX save · half · 8d6 Fire") from the same data;
   step can only upcast by spending a slot in the dialog (DI-078, Q29), so
   Spirit Guardians' damage row says to type the higher dice in.
 
+- **R54. The link is read, not only written** (3.6, 2026-11-10). The
+  caster's active spell's `applied` already ended what it put on whom, so
+  dropping Bless already took it off every target by every path; 3.6 makes
+  the record's `concentration` link a second, sufficient source:
+  `_end_concentration_spells` and `_start_concentration` end, after the
+  active spells' `applied` rows, every record still linked to the caster
+  (`held_by_concentration`, `_end_linked_effects`), not Unconscious at 0
+  HP. `applied` stays: it also says which badges a cast put on (so a badge
+  already there isn't taken off, `_held_by_effect`), and a non-concentration
+  effect's `ends_with_conditions` reads it.
+- **R55. A creature leaving the fight ends its concentration first.**
+  `_remove_from_fight` (a summon dismissed, vanishing at 0 HP or replaced)
+  took the caster and its active spells away but left what they held on
+  their targets, linked to a creature no longer there (and a replacing
+  summon can take the same name). It now calls `_end_concentration_spells`
+  with the reason "X leaves the fight" when the creature is Concentrating
+  or anything is linked to it, inside its callers' undo points.
+- **R56. A badge two effects hold names the one still running.** Two
+  casters' Bless on one target: the link named whichever cast last, so when
+  that one dropped the badge rightly stayed (the other's `applied` holds
+  it) but the link still named the caster who had stopped.
+  `_end_spell_effects` and `_end_linked_effects` now relink such a badge to
+  the holder's caster (`_holder_of`, `_relink`), or unlink it when the
+  holder needs no Concentration (`unlink_concentration`).
+
 ## Open questions (with suggestions)
 
 - **Q2. When to rename `spell-mechanics` → `combat-effects` (skill, agent,
@@ -1127,6 +1159,19 @@ Sheet chips ("DEX save · half · 8d6 Fire") from the same data;
   right-click "Not in Spirit Guardians" on a card that silences it for
   that creature until it's given again.
 
+- **Q32. A hand-given badge a cast also gives** (DI-079): Cast Spell's
+  Bless on a target that already has a "Bless" badge typed by hand gives
+  that badge Bless's 1d4 and tooltip, but doesn't link it (the cast didn't
+  put it on), so it outlives the concentration. *Suggestion:* treat it as
+  the cast's (an `applied` row and a link) whenever the cast gives the
+  badge modifiers; the hand badge almost always meant this spell.
+- **Q33. A monster caster's concentration across encounters.** Loading the
+  next encounter drops the monsters without ending what they concentrated
+  on, so a player keeps a monster's badge linked to a caster that's gone.
+  *Suggestion:* end those through `_end_linked_effects` where the monsters
+  are dropped (`encounters_mixin`), once a monster gives a party member a
+  concentration badge in play.
+
 ## Discovered issues
 
 - **DI-060** (open): pre-existing pyright errors in the combat-effects tests;
@@ -1176,6 +1221,9 @@ Sheet chips ("DEX save · half · 8d6 Fire") from the same data;
   upcast level, so a later step of a casting (`spends_use=False`) can only
   upcast by spending a slot; nothing remembers the slot a spell was cast
   with (Q29).
+- **DI-079** (open, found in 3.6): a badge typed by hand and then given by
+  Cast Spell gets the spell's modifiers without a concentration link, so
+  Bless's 1d4 outlives the concentration on it (Q32).
 - **DI-070** (open, found in 3.3): `SpellClassConverter`'s `_IMPORTS` has no
   modifier names, so `spell_mechanics.py add` can't write a badge with
   modifiers into a module that doesn't import them; Bless and Shield of

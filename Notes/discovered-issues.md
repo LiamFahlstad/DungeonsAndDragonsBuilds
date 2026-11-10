@@ -504,6 +504,16 @@ The Custom Effect dialog's slot box is both the cost and the upcast level. A row
 **History**
 - 2026-11-10 main session (combat effects 3.5): found
 
+### DI-079 · Cast Spell gives a hand-given badge its spell's modifiers, which then outlive the concentration
+- **Status:** open
+- **Area:** combat-simulator
+- **Where:** `Combat/CombatUIQt/spells_mixin.py`
+
+A target with a Bless badge typed by hand (Custom Condition) that is then Blessed with Cast Spell isn't in the active spell's applied (the cast didn't put the badge on), so it isn't linked to the caster's concentration; but give_modifiers still gives it Bless's 1d4 and describe the spell's tooltip. When the caster's concentration ends the badge stays and keeps adding 1d4 forever. Fix: either count the badge as the spell's (applied + link) when the cast gives it modifiers, or give modifiers only to badges the cast put on. Plan Q32.
+
+**History**
+- 2026-11-10 claude (combat effects 3.6): found
+
 ## Fixed
 
 ### DI-001 · Temporary Hit Points stack instead of keeping one amount
