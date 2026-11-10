@@ -34,6 +34,7 @@ from Combat.Effects.active_effects import (
     describe,
     drop_repeat_save,
     duration_entry,
+    give_modifiers,
     link_concentration,
     note_origin,
     remove_effect,
@@ -42,7 +43,15 @@ from Combat.Effects.active_effects import (
     set_repeat_save,
     tick,
 )
-from Combat.Effects.modifiers import attack_plan, rules_condition
+from Combat.Effects.modifiers import (
+    RollPlan,
+    armor_class_notes,
+    attack_plan,
+    bonus_reminder,
+    cover,
+    rules_condition,
+    signed,
+)
 from Combat.WildShape import current_form, form_badge
 from Core.Definitions import Condition, DamageType
 from Core.Rules import SECONDS_PER_ROUND
@@ -88,7 +97,7 @@ from .saves import (
     known_save_dc,
     read_damage,
     read_hit_points,
-    roll_attack,
+    roll_planned_attack,
     roll_save,
     rolled_damage,
     save_modifier,
@@ -257,34 +266,57 @@ def _armor_text(target: dict) -> str:
     return f"AC {armor} (cover)" if cover_bonus(target) else f"AC {armor}"
 
 
+def _bonus_notes(plan: RollPlan) -> list[str]:
+    """What adds to a roll, for a tooltip: "Bless: +1d4"."""
+    return [f"{label}: {signed(amount)}" for label, amount in plan.bonuses]
+
+
 def _attack_text(source: dict | None, target: dict) -> str:
-    """A target's row for an attack roll: what it has to meet, and the mode
-    the conditions give it, to roll it that way at the table ("AC 15,
-    Advantage")."""
-    mode = attack_plan(source, target, "Neutral").mode
-    armor = _armor_text(target)
-    return armor if mode == "Neutral" else f"{armor}, {mode}"
+    """A target's row for an attack roll: what it has to meet, the mode the
+    modifiers give it and what they add to it, to roll it that way at the
+    table ("AC 15, Advantage", "AC 15, +1d4 to hit")."""
+    plan = attack_plan(source, target, "Neutral")
+    parts = [_armor_text(target)]
+    if plan.mode != "Neutral":
+        parts.append(plan.mode)
+    flat, dice = bonus_reminder(plan)
+    added = " ".join(p for p in (f"{flat:+d}" if flat else "", dice) if p)
+    if added:
+        parts.append(f"{added} to hit")
+    return ", ".join(parts)
 
 
 def _attack_tooltip(source: dict | None, target: dict) -> str:
-    notes = attack_plan(source, target, "Neutral").notes
-    return "\n".join(["What the attack roll has to meet, cover included", *notes])
+    plan = attack_plan(source, target, "Neutral")
+    return "\n".join(
+        [
+            "What the attack roll has to meet, cover included",
+            *armor_class_notes(target),
+            *plan.notes,
+            *_bonus_notes(plan),
+        ]
+    )
 
 
 def _save_text(target: dict, ability: str) -> str:
-    """A target's row for a saving throw: its bonus, and what its conditions
-    do to the roll, to roll it that way at the table ("DEX +3,
-    Disadvantage", "DEX fails")."""
+    """A target's row for a saving throw: its bonus with what its modifiers
+    add, and what they do to the roll, to roll it that way at the table
+    ("DEX +3, Disadvantage", "DEX +5 (cover)", "WIS +1 +1d4", "DEX fails")."""
     plan = save_reminder(target, ability)
     if plan.auto_fail:
         return f"{ability} fails"
-    text = f"{ability} {save_modifier(target, ability):+d}"
+    flat, dice = bonus_reminder(plan)
+    text = f"{ability} {save_modifier(target, ability) + flat:+d}"
+    if dice:
+        text = f"{text} {dice}"
+    if any(label == cover(target) for label, _ in plan.bonuses):
+        text = f"{text} (cover)"
     return text if plan.mode == "Neutral" else f"{text}, {plan.mode}"
 
 
 def _save_tooltip(target: dict, ability: str) -> str:
     plan = save_reminder(target, ability)
-    why = [plan.auto_fail] if plan.auto_fail else list(plan.notes)
+    why = [plan.auto_fail] if plan.auto_fail else [*plan.notes, *_bonus_notes(plan)]
     return "\n".join([f"{target['name']}'s {ability} saving throw bonus", *why])
 
 
@@ -562,10 +594,11 @@ class ConditionsMixin(CombatWindowState):
                 # made here; one typed in gets what it couldn't count.
                 typed = effect.typed_attacks.get(id(target))
                 plan = attack_plan(source, target, effect.mode, typed is not None)
-                roll = typed or roll_attack(effect.attack_bonus, plan.mode)
-                hit, attack = self._resolve_attack_roll(
-                    target, roll, source, plan.notes
-                )
+                if typed is not None:
+                    roll, notes = typed, plan.notes
+                else:
+                    roll, notes = roll_planned_attack(effect.attack_bonus, plan)
+                hit, attack = self._resolve_attack_roll(target, roll, source, notes)
                 results.append(hit is not False)
                 attacks.append(attack)
                 if hit is False:
@@ -771,6 +804,8 @@ class ConditionsMixin(CombatWindowState):
         self._describe_effect_condition(target, effect, condition)
         self._add_custom_condition(condition, effect.duration, effect.notes, [target])
         note_origin(target, condition, source=effect.name)
+        if effect.pick is not None:
+            give_modifiers(target, condition, effect.pick.modifiers_for(condition))
         return True
 
     def _track_repeat_save(self, target: dict, effect: CustomEffect):

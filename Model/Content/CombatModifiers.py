@@ -10,12 +10,24 @@ decide by itself, because it depends on where creatures are or what they can
 see, has a `when`, said as what follows "if" ("the attacker is within 5
 feet"): it is never counted, only shown to the GM next to the roll. Anything
 that changes no roll, AC or damage is a Note.
+
+modifier_to_dict() and modifier_from_dict() are a modifier as plain data, the
+way a fight's log keeps the ones a lasting effect gives (Bless's D20Bonus):
+its type's name and the fields not at their default, enums as their values,
+
+    {"type": "D20Bonus", "tests": ["attack roll", "saving throw"], "amount": "1d4"}
 """
 
-from dataclasses import dataclass
-from enum import StrEnum
+import re
+from dataclasses import dataclass, fields
+from enum import Enum, StrEnum
+from typing import Any, NoReturn
 
 from Core.Definitions import Ability, Condition, DamageType
+
+# A D20Bonus's amount: dice or a number, with a sign or without ("1d4",
+# "-1d4", "-2", "+5").
+BONUS_AMOUNT = re.compile(r"[+-]?(?:\d+d\d+|\d+)")
 
 
 class D20Test(StrEnum):
@@ -97,8 +109,11 @@ class D20Bonus:
 
     def __post_init__(self):
         _check_tests(self.tests, self.abilities)
-        if not self.amount.lstrip("+-"):
-            raise ValueError("A D20Bonus needs an amount, like '1d4' or '-2'")
+        if not BONUS_AMOUNT.fullmatch(self.amount):
+            raise ValueError(
+                f"A D20Bonus needs an amount like '1d4', '-1d4' or '-2',"
+                f" got {self.amount!r}"
+            )
 
 
 @dataclass(frozen=True)
@@ -156,3 +171,97 @@ Modifier = (
     | HasConditions
     | Note
 )
+MODIFIER_TYPES: dict[str, type] = {
+    cls.__name__: cls
+    for cls in (
+        D20Mode,
+        AttacksAgainst,
+        AutoFail,
+        D20Bonus,
+        CriticalHitsAgainst,
+        ArmorClass,
+        Resistance,
+        ConditionImmunity,
+        HasConditions,
+        Note,
+    )
+}
+MODIFIER_CLASSES = tuple(MODIFIER_TYPES.values())
+
+# How each field is read back: a list of an enum's values, one value, or
+# plain text, a number or a flag. A bool isn't a number here.
+_ENUM_LISTS: dict[str, type[Enum]] = {
+    "tests": D20Test,
+    "abilities": Ability,
+    "damage_types": DamageType,
+    "conditions": Condition,
+}
+_ENUMS: dict[str, type[Enum]] = {"mode": RollMode}
+_PLAIN: dict[str, type] = {
+    "when": str,
+    "amount": str,
+    "text": str,
+    "per_level": bool,
+    "bonus": int,
+}
+
+
+def modifier_to_dict(modifier: Modifier) -> dict:
+    """`modifier` as plain data (see the module docstring)."""
+    data: dict[str, Any] = {"type": type(modifier).__name__}
+    for field in fields(modifier):
+        value = getattr(modifier, field.name)
+        if value == field.default:
+            continue
+        if isinstance(value, tuple):
+            data[field.name] = [item.value for item in value]
+        elif isinstance(value, Enum):
+            data[field.name] = value.value
+        else:
+            data[field.name] = value
+    return data
+
+
+def modifier_from_dict(data: Any, where: str = "a modifier") -> Modifier:
+    """The modifier `data` says, as modifier_to_dict writes it. ValueError
+    naming `where` and the field when anything is unknown, missing or of the
+    wrong kind."""
+
+    def fail(problem: str) -> NoReturn:
+        raise ValueError(f"Invalid modifier of {where}: {problem}")
+
+    def enum(kind: type[Enum], value: Any, name: str):
+        try:
+            return kind(value)
+        except ValueError:
+            fail(f"{name}: {value!r} is not one of {[m.value for m in kind]}")
+
+    if not isinstance(data, dict):
+        fail(f"expected an object, got {data!r}")
+    cls = MODIFIER_TYPES.get(str(data.get("type")))
+    if cls is None:
+        fail(f"type {data.get('type')!r} is not one of {list(MODIFIER_TYPES)}")
+    known = [field.name for field in fields(cls)]
+    unknown = sorted(set(data) - {"type", *known})
+    if unknown:
+        fail(f"unknown key(s) {unknown} for a {cls.__name__}, known: {known}")
+    values: dict[str, Any] = {}
+    for name in known:
+        if name not in data:
+            continue
+        value = data[name]
+        if name in _ENUM_LISTS:
+            if not isinstance(value, list):
+                fail(f"{name}: expected a list, got {value!r}")
+            values[name] = tuple(enum(_ENUM_LISTS[name], v, name) for v in value)
+        elif name in _ENUMS:
+            values[name] = enum(_ENUMS[name], value, name)
+        else:
+            kind = _PLAIN[name]
+            if type(value) is not kind:
+                fail(f"{name}: expected {kind.__name__}, got {value!r}")
+            values[name] = value
+    try:
+        return cls(**values)
+    except (TypeError, ValueError) as error:
+        fail(str(error))

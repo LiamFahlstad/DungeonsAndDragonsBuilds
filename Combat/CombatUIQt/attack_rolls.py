@@ -7,18 +7,12 @@ is kept in the target's public keys, so undo and a saved fight keep it too."""
 import re
 from dataclasses import dataclass
 
-from Combat.Effects.modifiers import armor_class_bonus
-from Model.Creatures.Combatants import Visibility
+from Combat.Effects.modifiers import armor_class_bonus, cover_armor_bonus
 from .amounts import parse_amount
 
 _NATURAL = re.compile(r"\s*nat(?:ural)?\s*(1|20)\s*", re.IGNORECASE)
 _ALWAYS_HITS = 20
 _ALWAYS_MISSES = 1
-# What cover adds to a target's AC. Total Cover can't be targeted at all.
-_COVER_BONUSES = {
-    Visibility.HALF_COVER.value: 2,
-    Visibility.THREE_QUARTERS_COVER.value: 5,
-}
 
 
 @dataclass(frozen=True)
@@ -60,15 +54,15 @@ def rolled_attack(d20: int, bonus: int) -> AttackRoll:
 
 
 def cover_bonus(char: dict) -> int:
-    """What char's cover adds to its AC: only the most protective one counts."""
-    states = char.get("visibility_states", [])
-    return max((_COVER_BONUSES.get(state, 0) for state in states), default=0)
+    """What char's cover adds to its AC: only the most protective one counts.
+    Total Cover can't be targeted at all."""
+    return cover_armor_bonus(char)
 
 
 def armor_bonus(char: dict) -> int:
-    """What char's AC has added to it now: its cover, and what its modifiers
-    give (Combat/Effects)."""
-    return cover_bonus(char) + armor_class_bonus(char)
+    """What char's AC has added to it now: its cover, and what its lasting
+    effects give (Shield of Faith's +2; Combat/Effects)."""
+    return armor_class_bonus(char)
 
 
 def note_attack_roll(char: dict, roll: AttackRoll, hit: bool | None, bonus: int = 0):

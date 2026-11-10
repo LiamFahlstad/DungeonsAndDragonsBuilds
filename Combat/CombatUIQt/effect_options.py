@@ -1395,6 +1395,7 @@ def _described_option(
         instances_upcast=(
             instances.upcast if instances is not None and level > 0 else 0
         ),
+        badge_modifiers=tuple((c.name, c.modifiers) for c in conditions if c.modifiers),
         **fields,
     )
 

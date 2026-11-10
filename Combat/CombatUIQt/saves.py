@@ -13,6 +13,7 @@ from Combat.Effects.modifiers import (
     save_plan,
 )
 from Core.Rules import SPELL_SAVE_DC_BASE, ability_modifier
+from Model.Content.CombatModifiers import Modifier
 
 from .amounts import AmountError, parse_damage
 from .attack_rolls import AttackRoll, rolled_attack
@@ -176,6 +177,14 @@ class EffectOption:
     # rays), and how many more per slot level above spell_level.
     instances: int = 1
     instances_upcast: int = 0
+    # What the badges it gives do while they're on, by badge: (("Bless",
+    # (D20Bonus(...),)),), as its CombatCondition says.
+    badge_modifiers: tuple[tuple[str, tuple[Modifier, ...]], ...] = ()
+
+    def modifiers_for(self, badge: str) -> tuple[Modifier, ...]:
+        """What the badge `badge` it gives does while it's on: none for a
+        badge named otherwise (one typed over in the dialog)."""
+        return next((m for name, m in self.badge_modifiers if name == badge), ())
 
     def instances_at(self, slot_level: int | None) -> int:
         """The count with a spell cast using a slot of slot_level (None: at its
@@ -256,25 +265,54 @@ def _roll_d20(mode: str) -> int:
     return min(first, second) if mode == "Disadvantage" else first
 
 
+def roll_bonuses(plan: RollPlan) -> tuple[int, tuple[str, ...]]:
+    """What `plan`'s bonuses add to a roll made here, their dice rolled, and
+    the notes saying so: "Bless: +3 (1d4)", "Half Cover: +2"."""
+    total = 0
+    notes = []
+    for label, amount in plan.bonuses:
+        sign = -1 if amount.startswith("-") else 1
+        dice = amount.lstrip("+-")
+        rolled = sign * roll_dice(dice)
+        total += rolled
+        shown = f"{rolled:+d} ({amount})" if "d" in dice else f"{rolled:+d}"
+        notes.append(f"{label}: {shown}")
+    return total, tuple(notes)
+
+
 def roll_save(
-    char: dict, ability: str, dc: int, mode: str, typed: int | None = None
+    char: dict,
+    ability: str,
+    dc: int,
+    mode: str,
+    typed: int | None = None,
+    *,
+    one_die_if_straight: bool = False,
 ) -> SaveResult:
     """Char's save against `dc`: `typed` is a total rolled at the table. A
-    natural 1 or 20 is nothing special on a saving throw. Its conditions
+    natural 1 or 20 is nothing special on a saving throw. Its modifiers
     count (Combat/Effects): an automatic failure beats any total, and a
-    rolled one takes the mode they give."""
+    rolled one takes the mode they give and adds their bonuses (Bless's
+    1d4, rolled after the d20; cover's +2 to a Dexterity save).
+    `one_die_if_straight`: a straight roll throws one d20, not two, as a
+    monster's Concentration save always has, so its dice stay as they were."""
     plan = save_plan(char, ability, mode, typed=typed is not None)
     if plan.auto_fail:
         return SaveResult(False, None, plan.auto_fail)
-    note = ", ".join(plan.notes)
     if typed is not None:
-        return SaveResult(typed >= dc, typed, note)
-    total = _roll_d20(plan.mode) + save_modifier(char, ability)
-    return SaveResult(total >= dc, total, note)
+        return SaveResult(typed >= dc, typed, ", ".join(plan.notes))
+    if one_die_if_straight and plan.mode == "Neutral":
+        d20 = random.randint(1, 20)
+    else:
+        d20 = _roll_d20(plan.mode)
+    total = d20 + save_modifier(char, ability)
+    added, bonus_notes = roll_bonuses(plan)
+    total += added
+    return SaveResult(total >= dc, total, ", ".join((*plan.notes, *bonus_notes)))
 
 
 def save_reminder(char: dict, ability: str) -> RollPlan:
-    """What char's conditions do to its save of `ability`, for the GM to roll
+    """What char's modifiers do to its save of `ability`, for the GM to roll
     it that way at the table."""
     return save_plan(char, ability, "Neutral")
 
@@ -282,6 +320,17 @@ def save_reminder(char: dict, ability: str) -> RollPlan:
 def roll_attack(bonus: int, mode: str) -> AttackRoll:
     """An attack roll for a source that adds `bonus`."""
     return rolled_attack(_roll_d20(mode), bonus)
+
+
+def roll_planned_attack(
+    bonus: int, plan: RollPlan
+) -> tuple[AttackRoll, tuple[str, ...]]:
+    """An attack roll for a source that adds `bonus`, made as `plan` says:
+    its mode, and its bonuses rolled and added (Bless's 1d4). Also the
+    notes on how it was rolled."""
+    d20 = _roll_d20(plan.mode)
+    added, bonus_notes = roll_bonuses(plan)
+    return rolled_attack(d20, bonus + added), (*plan.notes, *bonus_notes)
 
 
 def is_immune_to(char: dict, condition: str) -> bool:

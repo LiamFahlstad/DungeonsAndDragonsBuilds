@@ -160,6 +160,18 @@
    "ability": null,
    "action_cost": "Action",
    "amount_kind": "Damage",
+   "badge_modifiers": {
+    "Bless": [
+     {
+      "amount": "1d4",
+      "tests": [
+       "attack roll",
+       "saving throw"
+      ],
+      "type": "D20Bonus"
+     }
+    ]
+   },
    "bonus": null,
    "concentration": true,
    "condition": "Bless",
@@ -519,6 +531,14 @@
    "ability": null,
    "action_cost": "Bonus Action",
    "amount_kind": "Damage",
+   "badge_modifiers": {
+    "Shield of Faith": [
+     {
+      "bonus": 2,
+      "type": "ArmorClass"
+     }
+    ]
+   },
    "bonus": null,
    "concentration": true,
    "condition": "Shield of Faith",

@@ -48,6 +48,13 @@ from typing import Any
 
 from Core.Definitions import Ability, Condition, DamageType
 from Model.Content.ActionType import ActionType
+from Model.Content.CombatModifiers import (
+    MODIFIER_CLASSES,
+    HasConditions,
+    Modifier,
+    modifier_from_dict,
+    modifier_to_dict,
+)
 
 # "2d4", "1d8 + 3", or a flat "5".
 DICE = re.compile(r"\d+d\d+(?: [+-] \d+)?|\d+")
@@ -81,6 +88,15 @@ class TurnOf(StrEnum):
 
     SOURCE = "source"
     TARGET = "target"
+
+
+def _is_rules_condition(name: str) -> bool:
+    """Whether `name` is a rules condition, or one under a longer name
+    ("Restrained by vines"), as the combat simulator reads it."""
+    return any(
+        name == condition.value or name.startswith(f"{condition.value} ")
+        for condition in Condition
+    )
 
 
 def with_bonus(dice: str, bonus: int) -> str:
@@ -145,11 +161,18 @@ class CombatHitPoints:
 class CombatCondition:
     """What lands on a target, and for how long: `until` a turn's start or
     end, or `duration_seconds` (None: the source's own duration). "Until the
-    end of its next turn" is until=(TurnEdge.END, TurnOf.TARGET)."""
+    end of its next turn" is until=(TurnEdge.END, TurnOf.TARGET).
+
+    A badge (Bless, Shield of Faith) can say what it does to the target's
+    rolls, AC and damage while it has it, in `modifiers`
+    (Model/Content/CombatModifiers.py): Bless's D20Bonus, Shield of Faith's
+    ArmorClass. A rules condition has its rules already
+    (Model/Content/RulesConditions.py), so it takes none."""
 
     name: str
     until: tuple[TurnEdge, TurnOf] | None = None
     duration_seconds: int | None = None
+    modifiers: tuple[Modifier, ...] = ()
 
     def __post_init__(self):
         # A rules condition can be given as itself (Condition.PRONE); it's
@@ -158,6 +181,21 @@ class CombatCondition:
             object.__setattr__(self, "name", self.name.value)
         if not self.name.strip():
             raise ValueError("A condition needs a name")
+        if not isinstance(self.modifiers, tuple) or not all(
+            isinstance(m, MODIFIER_CLASSES) for m in self.modifiers
+        ):
+            raise ValueError(
+                f"modifiers is a tuple of modifiers, like (ArmorClass(2),),"
+                f" not {self.modifiers!r}"
+            )
+        if self.modifiers and _is_rules_condition(self.name):
+            raise ValueError(
+                f"{self.name} is a rules condition: its modifiers are the rules'"
+            )
+        if any(isinstance(m, HasConditions) for m in self.modifiers):
+            raise ValueError(
+                "A badge gives a condition through `conditions`, not HasConditions"
+            )
         if self.until is not None:
             # Text ("end", "target") is taken too, as JSON and logs have it.
             edge, whose = self.until
@@ -309,9 +347,12 @@ def _check_cantrip(steps: tuple[tuple[int, str], ...]) -> None:
 
 def _compact(value: Any) -> Any:
     """`value` as JSON-ready data: a dataclass as a dict without its default
-    fields, enums as their values, a cantrip's steps as {"5": "2d8", ...}."""
+    fields, enums as their values, a cantrip's steps as {"5": "2d8", ...},
+    a modifier as modifier_to_dict writes it."""
     if isinstance(value, (Ability, DamageType, ActionType, StrEnum)):
         return value.value
+    if isinstance(value, MODIFIER_CLASSES):
+        return modifier_to_dict(value)
     if isinstance(
         value,
         (CombatEffect, CombatDamage, CombatHitPoints, CombatCondition, CombatInstances),
@@ -466,6 +507,18 @@ class _Reader:
             duration_seconds=self.kind(
                 data.get("duration_seconds"), f"{field}.duration_seconds", (int,)
             ),
+            modifiers=self.modifiers(data.get("modifiers"), f"{field}.modifiers"),
+        )
+
+    def modifiers(self, value: Any, field: str) -> tuple[Modifier, ...]:
+        """A condition's modifiers; none in data from before they existed."""
+        if value is None:
+            return ()
+        if not isinstance(value, (list, tuple)):
+            self.fail(field, f"expected a list, got {value!r}")
+        return tuple(
+            modifier_from_dict(item, f"{self.where}, {field}[{index}]")
+            for index, item in enumerate(value)
         )
 
     def conditions(self, data: dict) -> tuple[CombatCondition, ...]:

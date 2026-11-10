@@ -39,6 +39,7 @@ from .monster_actions import (
 )
 from .player_server import PLAYER_PORT
 from .resources import legendary_resistance_lack, monster_action_lack
+from .saves import roll_bonuses
 from .player_view import (
     PlayerViewRow,
     PlayerViewWindow,
@@ -317,11 +318,14 @@ class TurnPanelMixin(CombatWindowState):
             )
             # With no target or several, the attacker's own still count.
             plan = attack_plan(char, target, mode)
-            mode, notes = plan.mode, plan.notes
-            d20 = self._roll_d20_for_attack(mode)
-            total = d20 + action.to_hit
+            d20 = self._roll_d20_for_attack(plan.mode)
+            # What its modifiers add (Bless's 1d4), rolled after the d20.
+            added, bonus_notes = roll_bonuses(plan)
+            notes = (*plan.notes, *bonus_notes)
+            total = d20 + action.to_hit + added
             critical = d20 == 20
-            result.append(f"rolled {total} ({d20}{action.to_hit:+d})")
+            extra = f"{added:+d}" if plan.bonuses else ""
+            result.append(f"rolled {total} ({d20}{action.to_hit:+d}{extra})")
             hit = self._attack_hits(d20, total)
             armor = self._target_armor()
             if armor is not None:

@@ -1667,7 +1667,9 @@ def test_each_target_shows_its_save_bonus_and_ac(fight, monkeypatch):
         return [label.text() for label in rows if label.isVisibleTo(dlg)]
 
     _chips(dlg, "saveAbilityButtons")["DEX"].click()
-    assert infos() == ["DEX +3", "DEX +3"]  # both have +3 to Dexterity saves
+    # Both have +3 to Dexterity saves; Half Cover gives the Bandit "+2 bonus
+    # to AC and Dexterity saving throws" (Rules Glossary, Cover; DI-066).
+    assert infos() == ["DEX +3", "DEX +5 (cover)"]
     _chips(dlg, "saveAbilityButtons")["STR"].click()
     assert infos() == ["STR +3", "STR +0"]  # their Strength modifiers: 17, 10
     _choose_roll(dlg, ATTACK_ROLL)

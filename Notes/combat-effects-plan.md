@@ -13,7 +13,7 @@ change:
 - log bugs found along the way with the `discovered-issues` skill and list
   their ids in **Discovered issues**.
 
-## Status (2026-11-09, 3.1 and 3.2 done: lasting effects are one list, and the rules conditions are data)
+## Status (2026-11-09, 3.1-3.3 done: lasting effects are one list, the rules conditions are data, and effects carry modifiers the simulator counts)
 
 | Phase | Step | State |
 |---|---|---|
@@ -33,7 +33,7 @@ change:
 | 2 | 2.7 Conditional extra damage (`when`) | **Done**, as a generated note (R14) |
 | 2 | Extensions list their own uses under their parent | **Done** (R10, new) |
 | S | **Spells as classes** (new direction, 2026-11-09; see its section) | S.1 base class, factory and converter **done**; S.2 the 57 spells with combat effects converted **done**; S.2c card lines as dataclasses **done** (R20); S.3 new effects go into classes **done** (R22); S.5 drift check **done** (R23); S.4 **done** (R26): all 594 spells are classes, the agents' tools switched over (R24), Q15 and DI-065 done (R25), every companion file deleted and nothing reads them |
-| 3 | Lasting effects (3.1-3.6) | 3.1 **done** (R28-R34): `char["active_effects"]`, one plain dict per badge, in the new Qt-free `Combat/Effects/active_effects.py`; the seven old keys are read only by its `upgrade_old_keys`, where a log is read; an old fight log replays the same (`tests/test_active_effects.py`). 3.2 **done** (R27), ahead of 3.1: the rules conditions are data, and saves, attack rolls (all three paths), AC, damage Resistance and condition immunity read them. 3.3-3.6 not started |
+| 3 | Lasting effects (3.1-3.6) | 3.1 **done** (R28-R34): `char["active_effects"]`, one plain dict per badge, in the new Qt-free `Combat/Effects/active_effects.py`; the seven old keys are read only by its `upgrade_old_keys`, where a log is read; an old fight log replays the same (`tests/test_active_effects.py`). 3.2 **done** (R27), ahead of 3.1: the rules conditions are data, and saves, attack rolls (all three paths), AC, damage Resistance and condition immunity read them. 3.3 **done** (R35-R40): a badge's `CombatCondition` says its `modifiers`, the record keeps them as JSON, and `modifiers_on` reads them beside the conditions and cover; Bless's 1d4 is rolled into the saves (a monster's Concentration save too, R40) and attack rolls the simulator makes, Shield of Faith's +2 counts in AC, cover's +2/+5 in Dexterity saves (DI-066); a typed total stays as typed, with the bonus as a reminder in the dialog. 3.4-3.6 not started |
 | 4 | One `combat-effects` skill; feature agent; content rollout | Partly: the skill's rubric and script cover every new field; first content batch below |
 | 5 | Sheet chips, monster score | Not started |
 
@@ -46,7 +46,9 @@ to fields: Eldritch Blast and Magic Missile (`instances`), Ice Knife (two
 steps), Tasha's Hideous Laughter (two conditions), Toll the Dead (a row for a
 hurt target). Features of the Curse of the Lich party: Channel Divinity (Divine
 Spark heal and harm, Turn Undead), Radiance of the Dawn, Warding Flare, Lay on
-Hands, Paladin's Smite, Sneak Attack.
+Hands, Paladin's Smite, Sneak Attack. With modifiers on their badge (3.3):
+Bless (`D20Bonus` 1d4 on attack rolls and saving throws) and Shield of Faith
+(`ArmorClass(2)`); everything else waits for Phase 4.
 
 **Verified 2026-11-09 (after S.3):** full suite passes (9,917); every
 picker-row change reviewed field by field against the previous golden.
@@ -91,6 +93,26 @@ Combat` 0 errors, as on main; 3.2's `test_combat_modifiers.py` and
 rebased code continuing the old-key log 8b7b78ff wrote matched 8b7b78ff
 continuing it.
 
+**Verified 2026-11-10 (3.3, R35-R40, after review):** full suite passes
+(10,279 passed, 4 skipped, 20 xfailed, with the worktree's shell scripts
+checked out with LF, DI-020); no sheet snapshot changed; three picker
+goldens changed, each only by a `badge_modifiers` entry on the Bless and
+Shield of Faith rows (`caster_described_spells`, Gabriel's and Edmund's);
+`./typecheck.sh Combat` 0 errors, as on main; spell-mechanics `check` OK;
+71 new tests. One expected value changed on purpose: a Half Cover target's
+Dexterity save row reads "DEX +5 (cover)" (DI-066). Review found a monster's
+Concentration save rolled outside `roll_save` (DI-071, fixed: R40) and two
+tests that didn't prove the record went; both fixed. Parity with main
+(3ed1d427, a `git archive` copy): one scripted fight with neither Bless,
+Shield of Faith nor cover (custom conditions with a timer, a turn edge and
+notes, a save effect with damage and a repeat save ending two conditions,
+rolled, typed and monster attack rolls with condition modes, Hold Person
+cast, two Concentration saves the monster rolls itself, five turns, an undo,
+a removal, direct saves with Exhaustion, then a copy of the log continued
+in a fresh window for three turns) gave identical cards, badge tooltips and
+colours, dialog target rows and tooltips, log lines, status and reminder
+texts, and combatant state (the records' new empty `modifiers` left out).
+
 ## Decisions
 
 Accepted as recommended when the user said "go ahead with plan" (2026-11-08):
@@ -127,6 +149,10 @@ suggested.
    lasting effects and Phase 4's tooling). Until then, hand edits stay limited
    to the spells a step or a campaign needs; a sweep over all spells needs the
    user's go-ahead first.
+10. **Q17: not every badge gets a record** (decided while building 3.3,
+    2026-11-09, against the suggestion, for the user to overrule; R39). A
+    record lasts while it says something: a tooltip, colour, duration,
+    repeat save, concentration link or modifiers.
 
 ## Goal
 
@@ -364,7 +390,7 @@ Mark, Heroism. The modifier types go in a sibling module,
 |---|---|---|
 | 3.1 | `ActiveEffect` and `char["active_effects"]`; old keys read through it. Undo, log replay, the player view keep working. | **Done** (R28-R34): one record per badge in `Combat/Effects/active_effects.py`; the old keys are converted where a log is read; combat UI tests pass and an old fight log replays the same (`tests/test_active_effects.py`) |
 | 3.2 | Rules conditions as data; `roll_save`, attack resolution and AC read modifiers. | **Done** (R27): saves behave as before, from data; attack rolls now count conditions too (DI-034), the monster action buttons cover as well (DI-033); rules-checker run on the table |
-| 3.3 | `D20Bonus`, `D20Mode`, `AttacksAgainst`, `ArmorClass`, `Resistance`. | Bless adds 1d4 to a rolled save; Shield of Faith raises AC |
+| 3.3 | `D20Bonus`, `D20Mode`, `AttacksAgainst`, `ArmorClass`, `Resistance`. | **Done** (R35-R40): Bless adds 1d4 to a rolled save (a monster's Concentration save included) and attack roll, and the log says so; Shield of Faith raises the AC an attack is compared with; cover adds to Dexterity saves (DI-066); ending the badge ends its modifiers; an old log replays as before (`tests/test_effect_modifiers.py`, `tests/test_active_effects.py`) |
 | 3.4 | `ExtraDamageFrom` / `ExtraDamageOnHit`. | Hunter's Mark adds 1d6 Force on its caster's hits |
 | 3.5 | Triggers and prompts. | Heroism gives temp HP at turn start; Spirit Guardians prompts |
 | 3.6 | Concentration ends every `ActiveEffect` it holds. | Dropping Bless removes it from every target |
@@ -618,7 +644,7 @@ Sheet chips ("DEX save · half · 8d6 Fire") from the same data;
     that give Incapacitated) come from the table.
   - **`D20Bonus` is in the vocabulary but not counted yet:** Exhaustion's
     is per level, which isn't tracked, so it is noted as before. Counting
-    it is 3.3.
+    it is 3.3 (done: R37; Exhaustion's stays a note).
   - **The rules-checker's fixes:** an uncounted mode that would cancel the
     counted one says so (an Unconscious target from farther than 5 feet:
     "..., a straight roll then"); a monster's action counts its own
@@ -644,7 +670,8 @@ Sheet chips ("DEX save · half · 8d6 Fire") from the same data;
   `char["conditions"]`, through `modifiers_on(char)` in
   `Combat/Effects/modifiers.py`; 3.3 adds `modifiers` to the record (Bless,
   Shield of Faith), and `modifiers_on` then reads it as a second source
-  beside the conditions. Today's repeat save is the one trigger; 3.5 can
+  beside the conditions (done in 3.3, with the key always there: R35).
+  Today's repeat save is the one trigger; 3.5 can
   turn it into `AtTurnEnd(save)` in the same converter (Q19).
 - **R29. One record per badge, not per application.** A repeat save that
   ends several conditions (R13) lives on its first condition's record with
@@ -654,7 +681,8 @@ Sheet chips ("DEX save · half · 8d6 Fire") from the same data;
   effect a concentration holds" from the `concentration` link on each
   record. A record lasts while it holds a tooltip, colour, duration, repeat
   save or link (`says_something`), and goes with its badge
-  (`_remove_condition_from`); a badge with none of them has no record (Q17).
+  (`_remove_condition_from`); a badge with none of them has no record (Q17,
+  kept so in 3.3: Decision 10, R39; modifiers are one more thing it holds).
 - **R30. One tooltip, with what wrote it.** The three tooltip maps were read
   spell, then feature, then custom note, and two colour maps spell then
   feature. One `tooltip` keeps `tooltip_from` (`TOOLTIP_FROM`), and
@@ -694,6 +722,80 @@ Sheet chips ("DEX save · half · 8d6 Fire") from the same data;
   `concentration`). `active_spells` stays: it is the caster's list of what it
   holds (the duration bar, `applied`), not an effect on a target, and 3.6
   joins the two through the link.
+- **R35. The record's `modifiers` is always there, like its other keys**
+  (3.3, 2026-11-09). R28 suggested readers take `.get("modifiers", ())`
+  for records written before. Instead `new_effect` gives `[]` and
+  `upgrade_old_keys` gives a 3.1 record without the key `[]` (on a copy, so
+  `ending_conditions` still leaves a log alone), keeping R28's "every key
+  always there"; the readers use `.get` anyway, for a dict built elsewhere.
+  A record with only modifiers says something (`says_something`), so a
+  badge whose spell gives modifiers always has one. An effect's modifiers
+  count only while its badge is in `char["conditions"]`, so a record left
+  behind by a path that takes the badge off directly can't keep counting.
+  Records come from the three places that give a badge: the Custom Effect
+  dialog copies its pick's (`EffectOption.badge_modifiers`, by badge name,
+  so a badge typed over in the dialog gets none), Cast Spell and Enable
+  Feature read the spell's or feature's own `combat_effects()`
+  (`badge_modifiers`). Giving none keeps what a record has: a badge given
+  again by hand keeps its spell's. A Bless from a 3.1 log has no modifiers
+  and adds nothing, as it didn't then.
+- **R36. A modifier as JSON is its type's name and its non-default fields**
+  (`{"type": "D20Bonus", "tests": ["attack roll", "saving throw"],
+  "amount": "1d4"}`), enums as their values: `modifier_to_dict` /
+  `modifier_from_dict` in `Model/Content/CombatModifiers.py`, strict as
+  step 1.2 (an unknown type or key, a bool for a number, a missing field:
+  `ValueError` naming where). `CombatCondition.modifiers` uses it in
+  `to_dict` / `from_dict`, and older data without it reads as `()`. A
+  condition refuses modifiers on a rules condition (also under a longer
+  name: its modifiers are the table's) and `HasConditions` (a badge gives a
+  condition through `conditions`, and `held_conditions` reads only those).
+  `D20Bonus`'s amount is now checked as dice or a number (`BONUS_AMOUNT`).
+  The picker goldens show `badge_modifiers` only on the rows that have
+  them, so no other row changed.
+- **R37. `modifiers_on`'s source is a `Condition` or a name**
+  (`Source = Condition | str`): a rules condition, a cover ("Half Cover") or
+  an effect's badge ("Bless"). Saves label it by its text ("Bless: +3
+  (1d4)"), attacks by whose it is ("Pirate's Bless: +3 (1d4)", as
+  "Pirate's Exhaustion"). The plan stays free of dice: `RollPlan.bonuses`
+  lists (label, amount), and the code that makes the roll rolls them
+  (`saves.roll_bonuses`, used by `roll_save`, `roll_planned_attack` and a
+  monster's action buttons, "rolled 15 (8+5+2)"), always after the d20, so
+  a fight without bonuses throws exactly the dice it did. A typed total
+  gets none (Decision 4). Exhaustion's `per_level` bonus and a bonus with a
+  `when` stay notes.
+- **R38. Cover is a source of modifiers too** (DI-066). The glossary gives
+  both halves in one sentence ("+2 bonus to AC and Dexterity saving
+  throws"), so `COVER_RULES` in `Combat/Effects/modifiers.py` holds an
+  `ArmorClass` and a `D20Bonus` per degree, the most protective counting.
+  So `attack_rolls.armor_bonus` is `armor_class_bonus` (cover included)
+  and `cover_bonus` reads cover's part, for the "(cover)" texts.
+  The dialog's reminders: a number folded into the bonus, dice after it
+  ("DEX +5 (cover)", "WIS +1 +1d4", "AC 17 (cover), +1d4 to hit"), each
+  source in the tooltip ("Bless: +1d4", "Half Cover: +2", "Shield of
+  Faith: +2 AC").
+- **R39. Q17 decided: no record for every badge** (Decision 10). The
+  suggestion was yes once effects carry modifiers. But a rules condition's
+  modifiers come from its name, so a record adds nothing to a plain Prone;
+  `char["conditions"]` is written directly in about ten places (Bloodied,
+  log replay, Summons, PartyAllies, Concentrating) that would all have to
+  make and drop records; and every log and undo point would grow, which a
+  parity check against the code before would see. A record still lasts
+  while it says something, and modifiers are one more thing it can say;
+  the card already reads every badge through `find_effect`, taking None as
+  nothing to show.
+- **R40. A monster's Concentration save is a save like any other** (3.3,
+  after review; DI-071). With "monsters roll concentration" on,
+  `_roll_concentration` threw `randint(1, 20)` plus the CON save itself, so
+  a Blessed monster got no 1d4 and an Exhausted one no note. It now calls
+  `roll_save(char, "CON", dc, "Neutral", one_die_if_straight=True)` and the
+  keeps/loses line carries its note ("Tiger keeps concentration (DC 10,
+  rolled 11, Bless: +3 (1d4))"). `one_die_if_straight` keeps the one d20 a
+  straight Concentration roll always threw (`roll_save` otherwise throws
+  two, keeping the first), so a fight without bonuses rolls the same dice.
+  The other d20s the window rolls are not saves or attacks: initiative (the
+  turn order's Roll buttons, a summon's `_roll_into_turn_order`) and the
+  d20 Roll button with no roller; initiative modifiers (Incapacitated,
+  Invisible) aren't in 3.3's scope.
 
 ## Open questions (with suggestions)
 
@@ -750,18 +852,35 @@ Sheet chips ("DEX save · half · 8d6 Fire") from the same data;
   (principle 8). *Suggestion:* count them, with "unless it can see it" as
   the note the GM can override with the mode buttons; decide together with
   DI-068, which makes the simulator see Invisible at all.
-- **Q17. Should every condition an effect gives have a record, not only
-  those with a tooltip, timer, save or concentration link?** *Suggestion:*
-  yes, in 3.3, when records get `modifiers` (R28). 3.2 reads a rules
-  condition's modifiers from its name in `char["conditions"]`, so a plain
-  Prone doesn't need a record yet; once effects carry their own modifiers,
-  every badge having one is simpler: `says_something` then goes, and the card
-  reads every badge through `find_effect`.
+- **Q17** moved to Decisions (10, R39): no.
 - **Q18. Show `source` and `caster` on the badge** ("from Edmund's Bless")?
   *Suggestion:* not until the GM asks; the log says it already.
 - **Q19. Repeat saves as triggers.** *Suggestion:* in 3.5, `repeat_save`
   becomes an `AtTurnEnd` trigger in a `triggers` list, the converter reading
   `repeat_save` as it reads the old keys now.
+- **Q20. Should the card show an AC with what adds to it** (Shield of
+  Faith's 17, not the stat block's 15)? 3.3 counts it in every attack roll
+  and shows it in the dialog's target rows, but the card still shows the
+  stat block's AC, as it does under cover. *Suggestion:* yes, "AC 17 (15
+  +2)", with cover too, in Phase 5 with the sheet chips; the player view's
+  known-AC notes already take the bonus off (R27).
+- **Q21. Bless's note now says what the badge counts.** "Each target adds
+  1d4 to its attack rolls and saving throws" was the GM's reminder; now the
+  simulator adds it, and the spell-mechanics rubric says not to restate what
+  the form shows. *Suggestion:* in Phase 4, have the picker say a badge's
+  modifiers itself (a generated note, as R14's `when`), give the rubric a
+  `modifiers` line, then drop the hand-written sentence. Both notes were
+  kept as they are in 3.3, so no row's text changed.
+- **Q22. A badge typed by hand gets no modifiers.** Only the dialog's pick,
+  Cast Spell and Enable Feature know a badge's source; typing "Bless" in the
+  Custom Condition dialog gives a badge that adds nothing. *Suggestion:*
+  leave it: the picker row is how a spell's badge is given, and a hand-typed
+  name may mean something else. Revisit if the GM asks.
+- **Q23. Monster abilities' badges and the encounter log** (DI-069): the
+  log `asdict`s a monster ability, which drops a modifier's type. No monster
+  ability gives a badge with modifiers yet. *Suggestion:* fix the encoder
+  (`to_dict()` for `combat_effects`) before the first monster gets one, in
+  Phase 4.
 
 ## Discovered issues
 
@@ -790,8 +909,23 @@ Sheet chips ("DEX save · half · 8d6 Fire") from the same data;
   given through `HasConditions`, it goes with it.
 - **DI-068** (open, rules-checker, 3.2): Invisible as a visibility state or
   spell badge isn't read by `held_conditions`, so its notes never show.
-- **DI-066** (open, found in 3.2): saving throws ignore cover's +2/+5 to
-  Dexterity saves. Fits 3.3 (a `D20Bonus` from cover).
+- **DI-066** (fixed, 3.3, R38): saving throws ignored cover's +2/+5 to
+  Dexterity saves; cover is a source of a `D20Bonus` (and its `ArmorClass`).
+- **DI-069** (open, found in 3.3): the encounter log writes a monster
+  ability's combat effects with `dataclasses.asdict`, which drops a badge
+  modifier's `type`, so `CombatEffect.from_dict` would refuse one. No
+  monster ability has one yet (Q23). `Combat/EncounterLogs.py` was outside
+  3.3's scope.
+- **DI-071** (fixed, 3.3 review, R40): a monster's own Concentration save
+  was rolled outside `roll_save`, so Bless's 1d4 and Exhaustion's note
+  were missing from it.
+- **DI-072** (open, 3.3 review): `CombatEffect.py`'s `_is_rules_condition`
+  repeats `modifiers.rules_condition`'s name rule, as Model can't import
+  Combat; the fix moves it into `RulesConditions.py`, off-limits for 3.3.
+- **DI-070** (open, found in 3.3): `SpellClassConverter`'s `_IMPORTS` has no
+  modifier names, so `spell_mechanics.py add` can't write a badge with
+  modifiers into a module that doesn't import them; Bless and Shield of
+  Faith were written by hand (Level1.py imports them). Phase 4 tooling.
 - **DI-010** (open, hit again twice in S.4): `UPDATE_SNAPSHOTS=1` over many
   builds loses writes (JSONDecodeErrors, 27 builds unwritten), because
   `pytest.ini` runs `-n auto` without `--dist loadgroup`, so conftest's
@@ -828,6 +962,11 @@ Sheet chips ("DEX save · half · 8d6 Fire") from the same data;
   `tests/test_active_effects.py` (the helpers; the old keys converted; an
   old-format log and the same log in the new format continued and played
   two turns, compared with each other and with what the old code showed).
+  3.3: `tests/test_effect_modifiers.py` (the JSON form; a condition's
+  modifiers; Bless, Shield of Faith and cover from their rules text, in the
+  plans, the rolls, the log, the dialog's reminders; the badge ending by
+  hand, timer and Concentration) and a 3.1 log replaying as a new one in
+  `tests/test_active_effects.py`.
 
 ## Checklist: adding a field to the model
 

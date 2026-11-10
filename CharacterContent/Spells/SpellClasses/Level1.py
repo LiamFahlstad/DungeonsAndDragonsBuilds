@@ -33,6 +33,7 @@ from Model.Content.CombatEffect import (
     TurnEdge,
     TurnOf,
 )
+from Model.Content.CombatModifiers import ArmorClass, D20Bonus, D20Test
 from Model.Content.Feature import FeatureTarget
 from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table
 from Model.View import CharacterView
@@ -227,7 +228,16 @@ class Bless(ClassSpell):
     ) -> list[CombatEffect]:
         return [
             CombatEffect(
-                conditions=(CombatCondition("Bless"),),
+                conditions=(
+                    CombatCondition(
+                        "Bless",
+                        modifiers=(
+                            D20Bonus(
+                                (D20Test.ATTACK_ROLL, D20Test.SAVING_THROW), "1d4"
+                            ),
+                        ),
+                    ),
+                ),
                 notes=(
                     "Each target adds 1d4 to its attack rolls and saving throws for the duration. Up to three creatures, one more per slot level above 1.",
                 ),
@@ -1798,7 +1808,9 @@ class ShieldOfFaith(ClassSpell):
     ) -> list[CombatEffect]:
         return [
             CombatEffect(
-                conditions=(CombatCondition("Shield of Faith"),),
+                conditions=(
+                    CombatCondition("Shield of Faith", modifiers=(ArmorClass(2),)),
+                ),
                 notes=(
                     "A creature of your choice gets a +2 bonus to AC for the duration.",
                 ),

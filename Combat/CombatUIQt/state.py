@@ -387,7 +387,12 @@ class CombatWindowState:
         raise NotImplementedError("WindowMixin._set_targets")
 
     def _settle_concentration(
-        self, char: dict, dc: int, kept: bool, roll: int | None = None
+        self,
+        char: dict,
+        dc: int,
+        kept: bool,
+        roll: int | None = None,
+        note: str = "",
     ):
         raise NotImplementedError("DamageMixin._settle_concentration")
 

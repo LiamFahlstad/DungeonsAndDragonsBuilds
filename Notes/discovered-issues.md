@@ -131,16 +131,6 @@ Fey Sentinel ('When you reach character level 5, you also always have the Plant 
 - 2026-10-28 main-session: code-reviewer: wider than Fey Sentinel/Tormentor. _DragonmarkFeat.free_cast_spells (OriginFeats.py:1734) gates the level-3 Spells of the Mark spell the same way (Detection, Finding, Healing, Hospitality, Scribing, Storm, Warding); passing a higher character_level stamps the grant at that level's page instead. Fix in Model/Grants.py (level-aware grant), then drop character_level from these feats.
 - 2026-10-28 main-session: Feats now declare spells via granted_spells() (FeatureSpell). A level-aware grant could be a FeatureSpell field (e.g. from_character_level) resolved in Character._feature_spell_grants, once the character level at read time is available there.
 
-### DI-020 · tests/test_format_changed.py fails where format_changed.sh is checked out with CRLF (core.autocrlf=true)
-- **Status:** open
-- **Area:** character-engine-dev
-- **Where:** `format_changed.sh:13`, `tests/test_format_changed.py:38`
-
-In worktree agent-af14d0d23a4dd92e0 (core.autocrlf=true) format_changed.sh is LF in the index but CRLF on disk, and 3 tests fail: test_formats_a_given_file, test_skips_format_sh_exclusions, test_staged_refuses_partly_staged_file, with bash errors "line 13: $'\r': command not found" and "set: pipefail: invalid option name". Suggested fix: a .gitattributes entry '*.sh text eol=lf' so shell scripts always check out with LF.
-
-**History**
-- 2026-10-28 character-engine-dev: found
-
 ### DI-021 · Character Creator offers private _Base feat classes (e.g. _DragonmarkFeat, _GreaterPlanarPact) as pickable feats
 - **Status:** open
 - **Area:** character-creator-gui
@@ -404,16 +394,6 @@ Both dnd2024 and dnd5e records for Shield end their casting_time at 'targeted by
 **History**
 - 2026-11-08 main-session: found
 
-### DI-066 · Saving throws ignore cover's +2/+5 to Dexterity saves
-- **Status:** open
-- **Area:** combat-simulator
-- **Where:** `Combat/CombatUIQt/saves.py:roll_save`
-
-Cover.md: Half Cover gives +2 to AC and Dexterity saving throws, Three-Quarters Cover +5. attack_rolls.cover_bonus counts it in AC only; roll_save adds save_modifier alone, so a Fireball against a monster behind Half Cover rolls its DEX save 2 low, and the dialog's 'DEX +3' row doesn't show it. Fix: add cover_bonus to rolled DEX saves (and show it in _save_text); natural fit for plan step 3.3's D20Bonus, with cover as a modifier source.
-
-**History**
-- 2026-11-09 main-session: found
-
 ### DI-067 · Combat UI: a creature whose Unconscious ends isn't left Prone
 - **Status:** open
 - **Area:** combat-simulator
@@ -433,6 +413,36 @@ The GM marks a creature Invisible through the visibility combo (char['visibility
 
 **History**
 - 2026-11-09 rules-checker: found
+
+### DI-069 · A monster ability's combat effects are written to the encounter log with dataclasses.asdict, which drops a badge modifier's type, so one with modifiers can't be read back
+- **Status:** open
+- **Area:** combat-simulator
+- **Where:** `Combat/EncounterLogs.py:73 LogJSONEncoder.default`, `Combat/CombatUIQt/monster_actions.py:124`
+
+Plan step 3.3 gave CombatCondition a modifiers tuple (Model/Content/CombatModifiers.py types). CombatEffect.to_dict writes each as {'type': 'D20Bonus', ...}; LogJSONEncoder asdict()s a MonsterAbility, so its combat_effects' modifiers lose 'type', and CombatEffect.from_dict (monster_actions.py:124) refuses them ('type None is not one of ...'). No monster ability gives a badge with modifiers yet, so nothing fails today. Fix: in LogJSONEncoder, write a MonsterAbility's combat_effects as [e.to_dict() for e in o.combat_effects] (from_dict reads both forms). Reproduce: CombatEffect.from_dict(dataclasses.asdict(Bless().combat_effects()[0])).
+
+**History**
+- 2026-11-09 combat-simulator: found
+
+### DI-070 · SpellClassConverter's _IMPORTS has no modifier names (D20Bonus, D20Test, ArmorClass, ...), so spell_mechanics.py add can't write a badge with modifiers into a module that doesn't import them yet
+- **Status:** open
+- **Area:** spell-mechanics
+- **Where:** `CharacterContent/Spells/SpellClassConverter.py:80 _IMPORTS`
+
+Plan step 3.3: CombatCondition.modifiers holds Model.Content.CombatModifiers types. source_of() writes them (CombatCondition('Bless', modifiers=(D20Bonus(...),))), but module_with() only adds imports for names in _IMPORTS, so a module without 'from Model.Content.CombatModifiers import ...' gets no import and add's fresh-import check fails. Level1.py has the import by hand (Bless, Shield of Faith). Fix: add the CombatModifiers names (ArmorClass, AttacksAgainst, AutoFail, D20Bonus, D20Mode, D20Test, Resistance, RollMode, ...) to _IMPORTS, and a rubric line for modifiers in the spell-mechanics skill.
+
+**History**
+- 2026-11-09 combat-simulator: found
+
+### DI-072 · Model/Content/CombatEffect.py's _is_rules_condition duplicates Combat/Effects/modifiers.py's rules_condition (a rules condition's name, or one under a longer name)
+- **Status:** open
+- **Area:** combat-simulator
+- **Where:** `Model/Content/CombatEffect.py:93 _is_rules_condition`, `Combat/Effects/modifiers.py:62 rules_condition`
+
+Found in review of plan step 3.3. CombatCondition refuses modifiers on a rules condition and needs the same name rule the simulator uses, but Model can't import Combat, so the rule is written twice. If one changes (e.g. how a longer name is matched), the two disagree. Fix: move rules_condition into Model/Content/RulesConditions.py (beside CONDITION_RULES) and have both import it; that touches RulesConditions.py, which was off-limits for 3.3.
+
+**History**
+- 2026-11-10 combat-simulator: found
 
 ## Fixed
 
@@ -521,6 +531,20 @@ Every class base adds the level-19 boon with data.add_feature(self.epic_boon) (A
 - 2026-10-28 main-session: marked in-progress; Starting: unified feature spell-grant hook in the engine
 - 2026-10-28 main-session: marked fixed; Feature.granted_spells() (Model/Spells.py FeatureSpell) is now the one way a feature grants spells; Character.spell_grants grants them with the feature, stamped like it. Boon of Revelry, Siberys and Magic School Mastery declare their spells (listed as '<boon> (<class> Level 19)'); feats, class and subclass features moved off their own grant paths. Tests in tests/test_spell_grants.py.
 - 2026-10-28 main-session: Committed in 5b7d6912
+
+### DI-020 · tests/test_format_changed.py fails where format_changed.sh is checked out with CRLF (core.autocrlf=true)
+- **Status:** fixed · 2026-11-10 · uncommitted
+- **Area:** character-engine-dev
+- **Where:** `format_changed.sh:13`, `tests/test_format_changed.py:38`
+
+In worktree agent-af14d0d23a4dd92e0 (core.autocrlf=true) format_changed.sh is LF in the index but CRLF on disk, and 3 tests fail: test_formats_a_given_file, test_skips_format_sh_exclusions, test_staged_refuses_partly_staged_file, with bash errors "line 13: $'\r': command not found" and "set: pipefail: invalid option name". Suggested fix: a .gitattributes entry '*.sh text eol=lf' so shell scripts always check out with LF.
+
+**History**
+- 2026-10-28 character-engine-dev: found
+- 2026-11-09 combat-simulator: Hit again 2026-11-09 in a worktree (combat effects 3.1): the same 3 tests fail, everything else passes.
+- 2026-11-09 main-session: 2026-11-09: reproduces per checkout, not per branch. In .claude/worktrees/agent-a4cd6d9a2cf96ff85 git ls-files --eol showed format_changed.sh as i/lf w/crlf (autocrlf checkout) and the 3 tests failed; the main checkout has w/lf and they pass. Git Bash grep/od hide the CRs, so check with git ls-files --eol or Python read_bytes. rm + git -c core.autocrlf=false checkout -- format_changed.sh fixes a checkout without a content change.
+- 2026-11-09 main-session: marked in-progress; Adding .gitattributes '*.sh text eol=lf' in the main checkout.
+- 2026-11-10 main-session: marked fixed; .gitattributes '*.sh text eol=lf' committed with the combat effects 3.3 merge; git ls-files --eol shows attr/text eol=lf on all four .sh files
 
 ### DI-025 · Warlock pact magic slots aren't tracked in the combat UI
 - **Status:** fixed · 2026-11-03 · cbf7e0ae
@@ -751,6 +775,30 @@ SpellRules stores components as Component flags plus a material (Notes/combat-ef
 **History**
 - 2026-11-08 main-session: found
 - 2026-11-09 main-session: marked fixed; DataSpell.casting_time_spec is a ritual when the record's ritual key or a '(Ritual)' in its school says so, and the converter writes that. Ceremony and Skywrite (2014-only, converted before the fix) got ritual=True by hand; Wristpocket's school '(Ritual)' became its casting time. Three builds' sheets gained Ceremony's Ritual tag.
+
+### DI-066 · Saving throws ignore cover's +2/+5 to Dexterity saves
+- **Status:** fixed · 2026-11-09 · uncommitted
+- **Area:** combat-simulator
+- **Where:** `Combat/CombatUIQt/saves.py:roll_save`
+
+Cover.md: Half Cover gives +2 to AC and Dexterity saving throws, Three-Quarters Cover +5. attack_rolls.cover_bonus counts it in AC only; roll_save adds save_modifier alone, so a Fireball against a monster behind Half Cover rolls its DEX save 2 low, and the dialog's 'DEX +3' row doesn't show it. Fix: add cover_bonus to rolled DEX saves (and show it in _save_text); natural fit for plan step 3.3's D20Bonus, with cover as a modifier source.
+
+**History**
+- 2026-11-09 main-session: found
+- 2026-11-09 combat-simulator: marked in-progress; Plan step 3.3: cover as a source of modifiers (ArmorClass and a D20Bonus on Dexterity saves)
+- 2026-11-09 combat-simulator: marked fixed; Plan step 3.3 (R38), uncommitted in worktree agent-a30cb9221e9d3c056: COVER_RULES in Combat/Effects/modifiers.py gives each cover an ArmorClass and a D20Bonus on Dexterity saves (most protective only); roll_save adds it ('Half Cover: +2'), the dialog's row reads 'DEX +5 (cover)'.
+
+### DI-071 · A monster's Concentration save rolled by the simulator ignores its modifiers (Bless's 1d4, Exhaustion's note)
+- **Status:** fixed · 2026-11-10 · uncommitted
+- **Area:** combat-simulator
+- **Where:** `Combat/CombatUIQt/damage_mixin.py:431`
+
+_roll_concentration (monsters_roll_concentration on) rolls random.randint(1, 20) + _con_save_mod(char) directly, bypassing save_plan/roll_save. Concentration is a Constitution saving throw, so Bless ("the target adds 1d4 to the attack roll or save") applies, and Exhaustion's -2/level note should show. Probe on the 3.3 worktree: a blessed Pirate concentrating on Bless, d20 10, CON +1, logged 'keeps concentration (DC 10, rolled 11)' with no 1d4. Fix: roll it with roll_save(char, 'CON', dc, 'Neutral') and log its note (Bless: +n (1d4)); the card's concentration check for a player could show the save_reminder too.
+
+**History**
+- 2026-11-10 code-reviewer: found
+- 2026-11-10 combat-simulator: marked in-progress; Concentration roll through roll_save
+- 2026-11-10 combat-simulator: marked fixed; Plan step 3.3, R40 (uncommitted, worktree agent-a30cb9221e9d3c056): _roll_concentration calls roll_save(char, 'CON', dc, 'Neutral', one_die_if_straight=True), so its modifiers count (Bless's 1d4 rolled after the d20, a mode, notes) and _settle_concentration adds the note to the keeps/loses line; a straight roll still throws one d20, so fights without bonuses roll the same dice.
 
 ## Won't fix
 

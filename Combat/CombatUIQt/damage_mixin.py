@@ -1,7 +1,5 @@
 """Damage/healing mixin for CombatAppQt."""
 
-import random
-
 from Combat.Definitions import Action
 from Combat.Effects.modifiers import hit_notes, resists
 from Combat.Summons import vanishes_at_zero_hp
@@ -16,7 +14,7 @@ from .attack_rolls import (
 )
 from .monster_actions import first_number
 from .player_view import _player_names, _seen, note_damage_defense, note_health
-from .saves import save_modifier
+from .saves import roll_save, save_modifier
 from .stats import _default_stats, damage_dealt_key, damage_taken_key
 from .state import CombatWindowState
 from .undo import undoable
@@ -428,14 +426,23 @@ class DamageMixin(CombatWindowState):
 
     @undoable
     def _roll_concentration(self, char: dict, dc: int):
-        roll = random.randint(1, 20) + self._con_save_mod(char)
-        self._settle_concentration(char, dc, roll >= dc, roll)
+        """A monster's Concentration save, a Constitution saving throw: its
+        modifiers count as in any save rolled here (Bless's 1d4, a mode),
+        and the log says how."""
+        result = roll_save(char, "CON", dc, "Neutral", one_die_if_straight=True)
+        self._settle_concentration(char, dc, result.success, result.total, result.note)
 
     @undoable
     def _settle_concentration(
-        self, char: dict, dc: int, kept: bool, roll: int | None = None
+        self,
+        char: dict,
+        dc: int,
+        kept: bool,
+        roll: int | None = None,
+        note: str = "",
     ):
-        """The result of a Concentration save asked for on char's card."""
+        """The result of a Concentration save asked for on char's card, with
+        `note` on how it was rolled, if it was rolled here."""
         checks = char.get("concentration_checks", [])
         if dc in checks:
             checks.remove(dc)
@@ -443,6 +450,8 @@ class DamageMixin(CombatWindowState):
             char.pop("concentration_checks", None)
         name = char["name"]
         result = f"DC {dc}, rolled {roll}" if roll is not None else f"DC {dc}"
+        if note:
+            result = f"{result}, {note}"
         if kept:
             self._log_event(
                 f"{name} keeps concentration ({result})",

@@ -462,6 +462,27 @@ def test_an_old_fight_log_replays_as_a_new_one(old_and_new):
     assert old == new
 
 
+def _before_modifiers(effects: list[dict]) -> list[dict]:
+    """Records as a log from before step 3.3 has them: no `modifiers`."""
+    return [{k: v for k, v in e.items() if k != "modifiers"} for e in effects]
+
+
+def test_a_log_from_before_modifiers_replays_as_a_new_one(
+    old_and_new, tmp_path, monkeypatch
+):
+    """A 3.1 log's records have no `modifiers`: they read as having none,
+    so its Bless badge adds nothing, as before."""
+    _, new = old_and_new
+    before = _play(
+        tmp_path / "before",
+        monkeypatch,
+        {KEY: _before_modifiers(NEW_TIGER_EFFECTS)},
+        {KEY: _before_modifiers(NEW_EDMUND_STATE[KEY])},
+    )
+    assert before == new
+    assert all(e["modifiers"] == [] for effects in before["effects"] for e in effects)
+
+
 def test_an_old_fight_log_reads_as_the_old_code_showed_it(old_and_new):
     """What the old keys meant, as the old card and turn code used them."""
     old, _ = old_and_new

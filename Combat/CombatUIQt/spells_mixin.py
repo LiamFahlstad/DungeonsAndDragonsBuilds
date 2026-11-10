@@ -18,7 +18,9 @@ from Model.Content.Feature import FeatureTarget
 from Combat.Definitions import Action, CombatStatus
 from Combat.Effects.active_effects import (
     SPELL,
+    badge_modifiers,
     describe,
+    give_modifiers,
     link_concentration,
     note_origin,
 )
@@ -581,10 +583,13 @@ class SpellsMixin(CombatWindowState):
                 row = {"target": char["name"], "condition": spell.name}
                 if spell.name not in char["conditions"] or self._held_by_effect(row):
                     applied.append(row)
+        # What the badge does while it's on (Bless's 1d4), as the spell says.
+        modifiers = badge_modifiers(spell.combat_effects(), spell.name)
         for char in list(recipients):
             describe(char, spell.name, tooltip_html, badge_color, SPELL)
             self._add_condition_to(char, spell.name, source=source)
             note_origin(char, spell.name, source=spell.name, caster=source["name"])
+            give_modifiers(char, spell.name, modifiers)
             # The active spell below holds what it put on whom.
             if has_duration and any(r["target"] == char["name"] for r in applied):
                 link_concentration(char, spell.name, source["name"])

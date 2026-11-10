@@ -16,6 +16,7 @@ ends and what its badge shows when hovered:
         "tooltip": None,                # the badge's tooltip ...
         "tooltip_from": None,           # ... and what wrote it (TOOLTIP_FROM)
         "color": None,                  # the badge's colour
+        "modifiers": [],                # what it does to rolls, AC and damage
     }
 
 `duration` is a timer, {"time_left": seconds, "duration": seconds,
@@ -23,17 +24,23 @@ ends and what its badge shows when hovered:
 "end", "of": whose turn, "turns_left": n, "text": what the card says}.
 `repeat_save` is {"ability": "Wis", "dc": 13, "mode": "Normal",
 "use_legendary_resistance": False, "also": [the other conditions it ends]}.
+`modifiers` are the badge's, as its CombatCondition says them (Bless's
+D20Bonus), each as Model/Content/CombatModifiers.modifier_to_dict writes it;
+Combat/Effects/modifiers.py counts them while the badge is on.
 
-A record lasts while it says something (a tooltip, a duration, a repeat save
-or a concentration link) and goes with its badge: ConditionsMixin removes it
-with the condition. Fight logs written before the record existed kept the
-same things in seven keys of their own (OLD_KEYS); upgrade_old_keys turns
-them into records, and is the only code that reads them. Nothing here
-imports Qt."""
+A record lasts while it says something (a tooltip, a duration, a repeat save,
+a concentration link or modifiers) and goes with its badge: ConditionsMixin
+removes it with the condition. Fight logs written before the record existed
+kept the same things in seven keys of their own (OLD_KEYS); upgrade_old_keys
+turns them into records, and is the only code that reads them. It also gives
+a record from before `modifiers` existed none. Nothing here imports Qt."""
 
+from collections.abc import Iterable
 from typing import TypedDict
 
 from Core.Rules import SECONDS_PER_ROUND
+from Model.Content.CombatEffect import CombatEffect
+from Model.Content.CombatModifiers import Modifier, modifier_to_dict
 
 KEY = "active_effects"
 
@@ -74,6 +81,7 @@ class ActiveEffect(TypedDict):
     tooltip: str | None
     tooltip_from: str | None
     color: str | None
+    modifiers: list[dict]
 
 
 def new_effect(name: str) -> ActiveEffect:
@@ -88,6 +96,7 @@ def new_effect(name: str) -> ActiveEffect:
         tooltip=None,
         tooltip_from=None,
         color=None,
+        modifiers=[],
     )
 
 
@@ -113,11 +122,32 @@ def effect_for(char: dict, name: str) -> ActiveEffect:
 
 def says_something(effect: ActiveEffect) -> bool:
     """Whether an effect still holds anything: a badge tooltip or colour, a
-    duration, a repeat save or a concentration link."""
-    return any(
+    duration, a repeat save, a concentration link or modifiers."""
+    return bool(effect.get("modifiers")) or any(
         effect[key] is not None
         for key in ("tooltip", "color", "duration", "repeat_save", "concentration")
     )
+
+
+def badge_modifiers(
+    effects: Iterable[CombatEffect] | None, badge: str
+) -> tuple[Modifier, ...]:
+    """What the badge `badge` does while it's on, as the first of `effects`
+    (a spell's or feature's combat_effects(), None if it has none) that gives
+    it says: Bless's D20Bonus."""
+    for effect in effects or ():
+        for condition in effect.conditions:
+            if condition.name == badge:
+                return condition.modifiers
+    return ()
+
+
+def give_modifiers(char: dict, name: str, modifiers: Iterable[Modifier]):
+    """char's badge `name` gives `modifiers` while it's on. Giving none
+    leaves those it has: a badge given again by hand keeps its spell's."""
+    data = [modifier_to_dict(m) for m in modifiers]
+    if data:
+        effect_for(char, name)["modifiers"] = data
 
 
 def remove_effect(char: dict, name: str):
@@ -307,7 +337,10 @@ def upgrade_old_keys(char: dict) -> dict:
     in place. The effects read as the old keys did: the card's timers in the
     old timers' order, and each badge's tooltip and colour as the card
     picked them from the old maps (a spell's over a feature's over a custom
-    note)."""
+    note). A record from before `modifiers` existed (3.1's) gets none, on a
+    copy of it."""
+    if any("modifiers" not in e for e in char.get(KEY) or []):
+        char[KEY] = [{**e, "modifiers": e.get("modifiers", [])} for e in char[KEY]]
     if not any(key in char for key in OLD_KEYS):
         return char
     if KEY in char:

@@ -21,6 +21,7 @@ from Combat.Monsters.CR_1.monsters_homebrew import HumanPaladinOfDevotion
 from Combat.Monsters.CR_3.monsters_homebrew import MirelleTheGildedKnight
 from Combat.Monsters.CR_5.monsters_homebrew import MiraPrincessOfTheLoop
 from Combat.PlayerCombatant import combatant_from_character, combatant_from_stat_block
+from Model.Content.CombatModifiers import modifier_to_dict
 from Combat.Scenarios import CAMPAIGNS
 from tests._combat_ui import check_golden
 from tests._snapshot_helpers import SNAPSHOT_DIR
@@ -89,6 +90,13 @@ CASTER = {
 def _row(option) -> dict:
     row = {field: getattr(option, field) for field in _FIELDS}
     row["slot_level"] = repr(option.slot_level)  # a PactSlot isn't a plain level
+    # Only the rows whose badges give modifiers (Bless, Shield of Faith) say
+    # so, so the rows of all the others read as they did.
+    if option.badge_modifiers:
+        row["badge_modifiers"] = {
+            badge: [modifier_to_dict(m) for m in modifiers]
+            for badge, modifiers in option.badge_modifiers
+        }
     return row
 
 

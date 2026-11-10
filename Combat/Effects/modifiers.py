@@ -1,19 +1,25 @@
 """The modifiers on a combatant, and what they make of a roll against it or by
-it. A combatant is the combat UI's dict; its "conditions" are names, each a
-rules condition ("Restrained"), the same under a longer custom name
-("Restrained by vines"), or a badge, which has no rules.
+it. A combatant is the combat UI's dict. Its modifiers come from three places:
 
-What a modifier says counts in a roll the simulator makes. One with a `when`
-(where the attacker is, what it can see) is never counted, only noted, since
-the simulator doesn't know positions (plan principle 8). A total rolled at the
-table counts as it is, so only the notes it can't have known about come with
-it. The roll modes are the UI's text: "Neutral", "Advantage", "Disadvantage".
+- its "conditions", names, each a rules condition ("Restrained"), the same
+  under a longer custom name ("Restrained by vines"), or a badge, which has no
+  rules of its own (Model/Content/RulesConditions.py);
+- its cover (its "visibility_states"), the most protective one;
+- its lasting effects (active_effects.py): what a badge it has says it gives
+  (Bless's 1d4, Shield of Faith's +2 AC), while it has the badge.
+
+What a modifier says counts in a roll the simulator makes, a D20Bonus's dice
+rolled and added. One with a `when` (where the attacker is, what it can see)
+is never counted, only noted, since the simulator doesn't know positions
+(plan principle 8). A total rolled at the table counts as it is, so only the
+notes it can't have known about come with it. The roll modes are the UI's
+text: "Neutral", "Advantage", "Disadvantage".
 """
 
 from collections.abc import Iterable
 from dataclasses import dataclass
 
-from Core.Definitions import Condition
+from Core.Definitions import Ability, Condition
 from Model.Content.CombatModifiers import (
     ArmorClass,
     AttacksAgainst,
@@ -26,10 +32,32 @@ from Model.Content.CombatModifiers import (
     Modifier,
     Resistance,
     RollMode,
+    modifier_from_dict,
 )
 from Model.Content.RulesConditions import CONDITION_RULES, conditions_given_by
+from Model.Creatures.Combatants import Visibility
+
+from .active_effects import active_effects
 
 NEUTRAL = "Neutral"
+
+# What a modifier comes from: a rules condition, or the name of a cover or of
+# a lasting effect's badge ("Half Cover", "Bless").
+Source = Condition | str
+
+# Cover (Rules Glossary): "Half Cover (+2 bonus to AC and Dexterity saving
+# throws), Three-Quarters Cover (+5 bonus to AC and Dexterity saving
+# throws)". Total Cover can't be targeted, which is the GM's to say.
+COVER_RULES: dict[str, tuple[Modifier, ...]] = {
+    Visibility.HALF_COVER.value: (
+        ArmorClass(2),
+        D20Bonus((D20Test.SAVING_THROW,), "2", (Ability.DEXTERITY,)),
+    ),
+    Visibility.THREE_QUARTERS_COVER.value: (
+        ArmorClass(5),
+        D20Bonus((D20Test.SAVING_THROW,), "5", (Ability.DEXTERITY,)),
+    ),
+}
 
 
 def rules_condition(name: str) -> Condition | None:
@@ -65,23 +93,70 @@ def has_condition(char: dict, condition: Condition) -> bool:
     return condition in held_conditions(char)
 
 
-def modifiers_on(char: dict) -> list[tuple[Condition, Modifier]]:
-    """Each modifier on char, with the condition it comes from."""
+def cover(char: dict) -> str | None:
+    """Char's most protective cover ("Half Cover"), if it has any. COVER_RULES
+    lists them from the least protective."""
+    states = [s for s in char.get("visibility_states", []) if s in COVER_RULES]
+    return max(states, key=list(COVER_RULES).index, default=None)
+
+
+def effect_modifiers(char: dict) -> list[tuple[str, Modifier]]:
+    """Each modifier char's lasting effects give, with the effect's name: an
+    effect's count while char has its badge."""
+    badges = set(char.get("conditions", []))
     return [
+        (
+            effect["name"],
+            modifier_from_dict(data, f"{effect['name']} on {char.get('name')}"),
+        )
+        for effect in active_effects(char)
+        if effect["name"] in badges
+        for data in effect.get("modifiers") or ()
+    ]
+
+
+def modifiers_on(char: dict) -> list[tuple[Source, Modifier]]:
+    """Each modifier on char, with what it comes from: its rules conditions'
+    (the Condition), its cover's and its lasting effects' (their names)."""
+    pairs: list[tuple[Source, Modifier]] = [
         (condition, modifier)
         for condition in held_conditions(char)
         for modifier in CONDITION_RULES[condition]
     ]
+    where = cover(char)
+    if where is not None:
+        pairs += [(where, modifier) for modifier in COVER_RULES[where]]
+    return pairs + effect_modifiers(char)
+
+
+def _label(source: Source) -> str:
+    return source.value if isinstance(source, Condition) else source
 
 
 @dataclass(frozen=True)
 class RollPlan:
     """How a d20 roll is made once the modifiers count: its mode, why it
-    fails without a roll (if it does), and what the GM should know."""
+    fails without a roll (if it does), what the GM should know, and what is
+    added to it, by what gives it: (label, amount), ("Bless", "1d4"),
+    ("Half Cover", "2"), rolled where the roll is made."""
 
     mode: str
     auto_fail: str = ""
     notes: tuple[str, ...] = ()
+    bonuses: tuple[tuple[str, str], ...] = ()
+
+
+def signed(amount: str) -> str:
+    """A D20Bonus's amount with its sign: "+1d4", "-1d4", "+2"."""
+    return amount if amount[:1] in ("+", "-") else f"+{amount}"
+
+
+def bonus_reminder(plan: RollPlan) -> tuple[int, str]:
+    """What a roll made at the table adds for `plan`'s bonuses, to show
+    before it: the numbers' total and the dice, (2, "+1d4 -1d4")."""
+    flat = sum(int(amount) for _, amount in plan.bonuses if "d" not in amount)
+    dice = " ".join(signed(a) for _, a in plan.bonuses if "d" in a)
+    return flat, dice
 
 
 def _applies(modifier, test: D20Test, ability: str | None) -> bool:
@@ -142,6 +217,7 @@ def _plan(
     """The roll of `test` once `sources` count: (label, modifier) pairs, each
     a modifier on the roller (or, for AttacksAgainst, on its target)."""
     given: list[tuple[str, RollMode]] = []
+    bonuses: list[tuple[str, str]] = []
     # What isn't counted, by what gives it: "Exhaustion (not counted): -2 a
     # level", "Tiger is Prone (not counted): Advantage if ..., Disadvantage
     # if ...".
@@ -161,8 +237,15 @@ def _plan(
             continue  # rolled at the table, the way the GM saw fit
         if isinstance(modifier, (D20Mode, AttacksAgainst)) and not modifier.when:
             given.append((label, modifier.mode))
+        elif (
+            isinstance(modifier, D20Bonus)
+            and not modifier.when
+            and not modifier.per_level
+        ):
+            bonuses.append((label, modifier.amount))
         else:
-            # A `when` the GM judges; a D20Bonus isn't counted yet (step 3.3).
+            # A `when` the GM judges; Exhaustion's bonus a level, which
+            # isn't tracked.
             judged = getattr(modifier, "mode", None)
             uncounted.setdefault(label, []).append((_uncounted(modifier), judged))
     mode, notes = combine_modes(mode, given)
@@ -178,24 +261,24 @@ def _plan(
             for text, judged in what
         ]
         notes.append(f"{label} (not counted): {'; '.join(texts)}")
-    return RollPlan(mode, "", tuple(notes))
+    return RollPlan(mode, "", tuple(notes), tuple(bonuses))
 
 
 def save_plan(char: dict, ability: str, mode: str, typed: bool = False) -> RollPlan:
     """Char's saving throw of `ability` ("DEX"), asked for with `mode`.
     `typed`: a total rolled at the table, which only an automatic failure
     changes; its mode and bonuses are the GM's."""
-    sources = ((c.value, m) for c, m in modifiers_on(char))
+    sources = ((_label(c), m) for c, m in modifiers_on(char))
     return _plan(mode, sources, D20Test.SAVING_THROW, ability, typed)
 
 
-def _whose(char: dict | None, condition: Condition) -> str:
-    """A condition in a note about an attack, which has two sides: "Tiger is
-    Restrained", "Pirate's Exhaustion"."""
+def _whose(char: dict | None, source: Source) -> str:
+    """What a modifier comes from, in a note about an attack, which has two
+    sides: "Tiger is Restrained", "Pirate's Exhaustion", "Pirate's Bless"."""
     name = char["name"] if char is not None else "The attacker"
-    if condition == Condition.EXHAUSTION:
-        return f"{name}'s {condition.value}"
-    return f"{name} is {condition.value}"
+    if isinstance(source, Condition) and source != Condition.EXHAUSTION:
+        return f"{name} is {source.value}"
+    return f"{name}'s {_label(source)}"
 
 
 def attack_plan(
@@ -224,9 +307,9 @@ def hit_notes(target: dict) -> list[str]:
     """What the GM should check about a hit on target: a Critical Hit the
     simulator can't tell (Paralyzed: "if the attacker is within 5 feet")."""
     notes = []
-    for condition, modifier in modifiers_on(target):
+    for source, modifier in modifiers_on(target):
         if isinstance(modifier, CriticalHitsAgainst):
-            label = _whose(target, condition)
+            label = _whose(target, source)
             if modifier.when:
                 notes.append(
                     f"{label}: a Critical Hit if {modifier.when} (not counted)"
@@ -237,8 +320,25 @@ def hit_notes(target: dict) -> list[str]:
 
 
 def armor_class_bonus(char: dict) -> int:
-    """What char's modifiers add to its AC."""
+    """What char's modifiers add to its AC: its cover's and its effects'."""
     return sum(m.bonus for _, m in modifiers_on(char) if isinstance(m, ArmorClass))
+
+
+def cover_armor_bonus(char: dict) -> int:
+    """What char's cover alone adds to its AC."""
+    where = cover(char)
+    if where is None:
+        return 0
+    return sum(m.bonus for m in COVER_RULES[where] if isinstance(m, ArmorClass))
+
+
+def armor_class_notes(char: dict) -> list[str]:
+    """What adds to char's AC, but cover: "Shield of Faith: +2 AC"."""
+    return [
+        f"{_label(source)}: {m.bonus:+d} AC"
+        for source, m in modifiers_on(char)
+        if isinstance(m, ArmorClass) and source != cover(char)
+    ]
 
 
 def resists(char: dict, damage_type: str) -> bool:
