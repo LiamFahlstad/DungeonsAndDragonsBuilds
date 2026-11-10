@@ -1124,6 +1124,9 @@ def _weapon_option(char: dict, weapon, sheet) -> EffectOption:
         bonus=bonus,
         rolls=rolls,
         action_cost=None if acted else "Action",
+        # "A weapon attack is an attack roll made with a weapon" (Rules
+        # Glossary); an Unarmed Strike isn't one.
+        weapon_attack=not getattr(weapon, "is_unarmed_strike", False),
     )
 
 

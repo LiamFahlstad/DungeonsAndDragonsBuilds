@@ -49,6 +49,9 @@ from Combat.Effects.modifiers import (
     attack_plan,
     bonus_reminder,
     cover,
+    extra_text,
+    hit_extras,
+    hit_plan,
     rules_condition,
     signed,
 )
@@ -97,11 +100,13 @@ from .saves import (
     known_save_dc,
     read_damage,
     read_hit_points,
+    roll_extra_damage,
     roll_planned_attack,
     roll_save,
     rolled_damage,
     save_modifier,
     save_reminder,
+    with_extra_damage,
 )
 from .spells_mixin import spell_badge_color, spell_badge_description
 from .stats import _default_stats, increment_named_stat
@@ -283,17 +288,22 @@ def _attack_text(source: dict | None, target: dict) -> str:
     added = " ".join(p for p in (f"{flat:+d}" if flat else "", dice) if p)
     if added:
         parts.append(f"{added} to hit")
+    parts += [extra_text(extra) for _, extra in hit_extras(source, target)]
     return ", ".join(parts)
 
 
 def _attack_tooltip(source: dict | None, target: dict) -> str:
     plan = attack_plan(source, target, "Neutral")
+    extras = [f"{label}: {extra_text(m)}" for label, m in hit_extras(source, target)]
+    if extras:
+        extras.append("Rolled and added to a hit's damage, not to a total typed in")
     return "\n".join(
         [
             "What the attack roll has to meet, cover included",
             *armor_class_notes(target),
             *plan.notes,
             *_bonus_notes(plan),
+            *extras,
         ]
     )
 
@@ -606,6 +616,10 @@ class ConditionsMixin(CombatWindowState):
                 saved = False
                 if roll.is_critical:
                     damage = effect.critical_damage or damage
+                if damage and not effect.typed_damage:
+                    damage = self._with_hit_extras(
+                        source, target, damage, effect, roll.is_critical
+                    )
             if effect.ability is not None:
                 saved = self._roll_effect_save(target, effect)
                 results.append(saved)
@@ -642,6 +656,26 @@ class ConditionsMixin(CombatWindowState):
             self._refresh_views()  # the turn column's button shows it spent
         if attacks:  # last, as logging clears the status line
             self._show_status("; ".join(attacks))
+
+    def _with_hit_extras(
+        self,
+        source: dict | None,
+        target: dict,
+        damage: list[tuple[int, str]],
+        effect: CustomEffect,
+        critical: bool,
+    ) -> list[tuple[int, str]]:
+        """A hit's damage with the extra damage that comes with it (Hunter's
+        Mark's on its caster's hits, Divine Favor's on its caster's weapon
+        hits), rolled after the attack's own dice, doubled for a Critical
+        Hit. The log says what each adds, and what wasn't counted."""
+        plan = hit_plan(source, target, effect.weapon_attack)
+        extra, lines = roll_extra_damage(plan, critical)
+        for line in (*lines, *plan.notes):
+            # After the hit's line, for the GM only: the player link joins a
+            # hit's damage to its line, which a line between would stop.
+            self._log_event(line, character=target["name"], public=False)
+        return with_extra_damage(damage, extra)
 
     @undoable
     def _apply_custom_effects(self, effects: list[CustomEffect]):
@@ -806,6 +840,13 @@ class ConditionsMixin(CombatWindowState):
         note_origin(target, condition, source=effect.name)
         if effect.pick is not None:
             give_modifiers(target, condition, effect.pick.modifiers_for(condition))
+            # Who gave it, also on a record only its modifiers made: extra
+            # damage from its caster's hits (Hunter's Mark) goes by it.
+            source = self.selected_character or self._current_turn_character()
+            if source is not None:
+                note_origin(
+                    target, condition, source=effect.name, caster=source["name"]
+                )
         return True
 
     def _track_repeat_save(self, target: dict, effect: CustomEffect):
@@ -1705,6 +1746,12 @@ class ConditionsMixin(CombatWindowState):
                 repeat_save=repeat_box.isChecked(),
                 typed_totals=totals,
                 pick=pick,
+                weapon_attack=pick.weapon_attack if pick is not None else None,
+                # A total with no dice, not the pick's own damage, was rolled
+                # at the table: a hit's extra damage isn't added to it.
+                typed_damage=bool(damage)
+                and not _DICELESS.search(damage_input.text())
+                and damage_input.text() != picked["damage"],
             )
             times = times_input.value()
             if times == 1:

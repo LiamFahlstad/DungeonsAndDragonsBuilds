@@ -33,7 +33,14 @@ from Model.Content.CombatEffect import (
     TurnEdge,
     TurnOf,
 )
-from Model.Content.CombatModifiers import ArmorClass, D20Bonus, D20Test
+from Model.Content.CombatModifiers import (
+    ArmorClass,
+    AttackKind,
+    D20Bonus,
+    D20Test,
+    ExtraDamageFrom,
+    ExtraDamageOnHit,
+)
 from Model.Content.Feature import FeatureTarget
 from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table
 from Model.View import CharacterView
@@ -1451,7 +1458,12 @@ class HuntersMark(ClassSpell):
     ) -> list[CombatEffect]:
         return [
             CombatEffect(
-                conditions=(CombatCondition("Hunter's Mark"),),
+                conditions=(
+                    CombatCondition(
+                        "Hunter's Mark",
+                        modifiers=(ExtraDamageFrom("1d6", DamageType.FORCE),),
+                    ),
+                ),
                 notes=(
                     "You deal an extra 1d6 Force damage to the target whenever you hit it with an attack roll, and have Advantage on Wisdom (Perception or Survival) checks to find it.",
                     "If it drops to 0 Hit Points, a Bonus Action moves the mark to a new creature.",
@@ -3198,6 +3210,27 @@ class DivineFavor(ClassSpell):
                         "Until the spell ends, your attacks with weapons deal an extra 1d4 Radiant damage on a hit",
                     ),
                 )
+            )
+        ]
+
+    def combat_effects(
+        self, character: CharacterView | None = None
+    ) -> list[CombatEffect]:
+        return [
+            CombatEffect(
+                conditions=(
+                    CombatCondition(
+                        "Divine Favor",
+                        modifiers=(
+                            ExtraDamageOnHit(
+                                "1d4", DamageType.RADIANT, AttackKind.WEAPON
+                            ),
+                        ),
+                    ),
+                ),
+                notes=(
+                    "The caster's attacks with weapons deal an extra 1d4 Radiant damage on a hit: the badge goes on the caster.",
+                ),
             )
         ]
 

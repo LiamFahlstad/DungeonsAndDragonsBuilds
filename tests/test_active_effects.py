@@ -38,6 +38,7 @@ from Combat.Effects.active_effects import (
     timers,
     upgrade_old_keys,
 )
+from Combat.CombatUIQt.saves import CustomEffect
 from Combat.EncounterLogs import PLAYER_FIGHT_STATE_KEY
 from Combat.PlayerLog import is_round_key
 from tests._combat_ui import make_ui
@@ -508,3 +509,37 @@ def test_an_old_fight_log_reads_as_the_old_code_showed_it(old_and_new):
     assert "Edmund: DC 13 Wisdom save to end Frightened" in old["reminders"]
     # Undo puts back what was read.
     assert old["undone"] == old["effects"]
+
+
+@pytest.mark.parametrize("modifiers", [{}, {"modifiers": []}], ids=["3.1", "3.3"])
+def test_a_mark_from_before_extra_damage_adds_nothing(tmp_path, monkeypatch, modifiers):
+    """A Hunter's Mark badge from a 3.1 log (no `modifiers`) or a 3.3 one
+    (none yet): its caster's hit deals its own damage only, as it did then,
+    and nothing is rolled for the mark."""
+    mark = {
+        **new_effect("Hunter's Mark"),
+        "source": "Hunter's Mark",
+        "caster": "Edmund",
+        "concentration": "Edmund",
+        "tooltip": "<b>Hunter's Mark</b> card",
+        "tooltip_from": SPELL,
+    }
+    mark.pop("modifiers")
+    tiger_keys = {"conditions": ["Hunter's Mark"], KEY: [{**mark, **modifiers}]}
+    path = _log_with(tmp_path, tiger_keys, {})
+    ui = make_ui(tmp_path / "read", [], [Edmund().build()])
+    ui._load_log_from_path(path)
+    edmund = ui.characters[0]
+    tiger = next(c for c in ui.characters if c["name"] == "Tiger")
+    hp = tiger["hp"]
+    rolled = []
+    monkeypatch.setattr(random, "randint", lambda low, high: rolled.append(high) or 15)
+    ui._select_character(edmund)
+    ui._set_targets([tiger])
+    ui._apply_custom_effect(
+        CustomEffect(name="Longsword", damage=[(6, "Slashing")], attack_bonus=6)
+    )
+    assert rolled == [20, 20]
+    assert tiger["hp"] == hp - 6
+    record = find_effect(tiger, "Hunter's Mark")
+    assert record is not None and record["modifiers"] == []

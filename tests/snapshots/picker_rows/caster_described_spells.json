@@ -373,6 +373,42 @@
     "1d6"
    ]
   },
+  "All spells | Divine Favor": {
+   "ability": null,
+   "action_cost": "Bonus Action",
+   "amount_kind": "Damage",
+   "badge_modifiers": {
+    "Divine Favor": [
+     {
+      "amount": "1d4",
+      "attacks": "weapon attack",
+      "damage_type": "Radiant",
+      "type": "ExtraDamageOnHit"
+     }
+    ]
+   },
+   "bonus": null,
+   "concentration": false,
+   "condition": "Divine Favor",
+   "counts_uses": true,
+   "damage": "",
+   "dc": null,
+   "duration_seconds": 60,
+   "feature_name": "",
+   "half_on_save": false,
+   "is_curated": true,
+   "is_unavailable": false,
+   "note": "The caster's attacks with weapons deal an extra 1d4 Radiant damage on a hit: the badge goes on the caster.",
+   "repeat_save": false,
+   "roll": "Saving throw",
+   "row_name": "",
+   "slot_level": "None",
+   "spell_level": 1,
+   "spell_name": "Divine Favor",
+   "summary": "",
+   "until": null,
+   "upcast": []
+  },
   "All spells | Divine Smite": {
    "ability": null,
    "action_cost": "Bonus Action",
@@ -751,6 +787,15 @@
    "ability": null,
    "action_cost": "Bonus Action",
    "amount_kind": "Damage",
+   "badge_modifiers": {
+    "Hunter's Mark": [
+     {
+      "amount": "1d6",
+      "damage_type": "Force",
+      "type": "ExtraDamageFrom"
+     }
+    ]
+   },
    "bonus": null,
    "concentration": true,
    "condition": "Hunter's Mark",

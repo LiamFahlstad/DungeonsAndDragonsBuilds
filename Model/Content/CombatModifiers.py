@@ -28,6 +28,8 @@ from Core.Definitions import Ability, Condition, DamageType
 # A D20Bonus's amount: dice or a number, with a sign or without ("1d4",
 # "-1d4", "-2", "+5").
 BONUS_AMOUNT = re.compile(r"[+-]?(?:\d+d\d+|\d+)")
+# Extra damage a hit deals: dice or a number, never less ("1d6", "2").
+EXTRA_DAMAGE_AMOUNT = re.compile(r"[1-9]\d*d[1-9]\d*|[1-9]\d*")
 
 
 class D20Test(StrEnum):
@@ -137,6 +139,65 @@ class Resistance:
     damage_types: tuple[DamageType, ...] = ()
 
 
+class AttackKind(StrEnum):
+    """The hits extra damage comes with: any attack roll's (Hunter's Mark,
+    Hex), or only a weapon attack's, "an attack roll made with a weapon"
+    (Divine Favor), which an Unarmed Strike or a spell attack isn't."""
+
+    ANY = "attack roll"
+    WEAPON = "weapon attack"
+
+
+def _check_extra_damage(modifier):
+    name = type(modifier).__name__
+    if not isinstance(modifier.amount, str) or not EXTRA_DAMAGE_AMOUNT.fullmatch(
+        modifier.amount
+    ):
+        raise ValueError(
+            f"A {name} needs an amount like '1d6' or '2', got {modifier.amount!r}"
+        )
+    if not isinstance(modifier.damage_type, DamageType):
+        raise ValueError(
+            f"A {name} needs a DamageType, like DamageType.FORCE,"
+            f" got {modifier.damage_type!r}"
+        )
+    if not isinstance(modifier.attacks, AttackKind):
+        raise ValueError(
+            f"A {name}'s attacks is an AttackKind, got {modifier.attacks!r}"
+        )
+
+
+@dataclass(frozen=True)
+class ExtraDamageFrom:
+    """On the target: hits on it by whoever gave it the effect this is on
+    (its caster) deal `amount` more `damage_type` damage, with `attacks` of
+    that kind: Hunter's Mark's 1d6 Force, Hex's 1d6 Necrotic. Its dice are
+    doubled on a Critical Hit, as the attack's own are."""
+
+    amount: str
+    damage_type: DamageType
+    attacks: AttackKind = AttackKind.ANY
+    when: str = ""
+
+    def __post_init__(self):
+        _check_extra_damage(self)
+
+
+@dataclass(frozen=True)
+class ExtraDamageOnHit:
+    """On the attacker: its hits deal `amount` more `damage_type` damage,
+    with `attacks` of that kind: Divine Favor's 1d4 Radiant with weapons.
+    Its dice are doubled on a Critical Hit, as the attack's own are."""
+
+    amount: str
+    damage_type: DamageType
+    attacks: AttackKind = AttackKind.ANY
+    when: str = ""
+
+    def __post_init__(self):
+        _check_extra_damage(self)
+
+
 @dataclass(frozen=True)
 class ConditionImmunity:
     """It can't be given these conditions while it has this."""
@@ -167,6 +228,8 @@ Modifier = (
     | CriticalHitsAgainst
     | ArmorClass
     | Resistance
+    | ExtraDamageFrom
+    | ExtraDamageOnHit
     | ConditionImmunity
     | HasConditions
     | Note
@@ -181,6 +244,8 @@ MODIFIER_TYPES: dict[str, type] = {
         CriticalHitsAgainst,
         ArmorClass,
         Resistance,
+        ExtraDamageFrom,
+        ExtraDamageOnHit,
         ConditionImmunity,
         HasConditions,
         Note,
@@ -196,7 +261,11 @@ _ENUM_LISTS: dict[str, type[Enum]] = {
     "damage_types": DamageType,
     "conditions": Condition,
 }
-_ENUMS: dict[str, type[Enum]] = {"mode": RollMode}
+_ENUMS: dict[str, type[Enum]] = {
+    "mode": RollMode,
+    "damage_type": DamageType,
+    "attacks": AttackKind,
+}
 _PLAIN: dict[str, type] = {
     "when": str,
     "amount": str,

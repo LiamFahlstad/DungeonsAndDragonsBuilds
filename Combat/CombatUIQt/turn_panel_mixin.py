@@ -22,7 +22,7 @@ from PyQt6.QtWidgets import (
 )
 
 import Combat.PlayerLog as PlayerLog
-from Combat.Effects.modifiers import attack_plan, hit_notes
+from Combat.Effects.modifiers import attack_plan, hit_notes, hit_plan
 
 from .attack_rolls import armor_bonus
 from .log_feed import LogFeed
@@ -39,7 +39,7 @@ from .monster_actions import (
 )
 from .player_server import PLAYER_PORT
 from .resources import legendary_resistance_lack, monster_action_lack
-from .saves import roll_bonuses
+from .saves import roll_bonuses, roll_extra_damage
 from .player_view import (
     PlayerViewRow,
     PlayerViewWindow,
@@ -358,6 +358,19 @@ class TurnPanelMixin(CombatWindowState):
             f"{roll_dice(roll.dice, critical)} {roll.damage_type or _CHOOSE_A_TYPE}"
             for roll in action.damage
         )
+        if action.to_hit is not None:
+            # What comes with its hit (Hunter's Mark on its caster's), rolled
+            # after its own dice; from a target's effect only with one target.
+            target = (
+                self.target_characters[0] if len(self.target_characters) == 1 else None
+            )
+            plan = hit_plan(char, target, None)
+            extra, lines = roll_extra_damage(plan, critical)
+            rolled += "".join(f" + {amount} {kind}" for amount, kind in extra)
+            if lines or plan.notes:
+                self._action_result_label.setText(
+                    f"{text}\n{'; '.join((*lines, *plan.notes))}"
+                )
         self.damage_input.setText(rolled)
         self._rolled_damage_text = rolled
         self._focus_damage_input()

@@ -444,6 +444,16 @@ Found in review of plan step 3.3. CombatCondition refuses modifiers on a rules c
 **History**
 - 2026-11-10 combat-simulator: found
 
+### DI-073 · Combat UI: a non-concentration spell cast with Cast Spell keeps its badge after its duration runs out (Divine Favor, Mage Armor)
+- **Status:** open
+- **Area:** combat-simulator
+- **Where:** `Combat/CombatUIQt/spells_mixin.py:580 (_apply_cast_spell: applied is filled only for concentration spells)`
+
+Cast Spell starts a timer on the caster's active_spells for any spell with a duration, but its applied rows (what _end_spell_effects takes off) are only filled for concentration spells. So when a 1-minute Divine Favor expires the log says it expires, yet the Divine Favor badge (and since step 3.4 its ExtraDamageOnHit) stays on the caster until taken off by hand. Reproduced 2026-11-10: Pirate casts Divine Favor, 12 rounds pass, active_spells is empty and conditions still holds Divine Favor. The Custom Effect dialog's pick of the same spell gives the badge its own timer, which does end it. Fix idea: record applied rows for non-concentration spells too (without linking concentration), or give their badges a duration_entry as the dialog does.
+
+**History**
+- 2026-11-10 combat-simulator: found
+
 ## Fixed
 
 ### DI-001 · Temporary Hit Points stack instead of keeping one amount

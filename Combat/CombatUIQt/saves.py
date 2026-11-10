@@ -8,6 +8,7 @@ from collections.abc import Iterable
 from dataclasses import dataclass, field
 
 from Combat.Effects.modifiers import (
+    HitPlan,
     RollPlan,
     immune_to_condition,
     save_plan,
@@ -117,6 +118,11 @@ class CustomEffect:
     # source uses it up (a spell cast, a feature's use, a monster's recharge)
     # along with the rest. Defined below, as effect_options needs this module.
     pick: "EffectOption | None" = None
+    # Whether the attack is made with a weapon (EffectOption.weapon_attack),
+    # None when that isn't known; and whether its damage is a total rolled at
+    # the table, to which a hit's extra damage isn't added (Decision 4).
+    weapon_attack: bool | None = None
+    typed_damage: bool = False
 
     @property
     def conditions(self) -> list[str]:
@@ -180,6 +186,11 @@ class EffectOption:
     # What the badges it gives do while they're on, by badge: (("Bless",
     # (D20Bonus(...),)),), as its CombatCondition says.
     badge_modifiers: tuple[tuple[str, tuple[Modifier, ...]], ...] = ()
+    # Whether its attack roll is made with a weapon, for extra damage that
+    # only a weapon attack deals (Divine Favor): a weapon's is, an Unarmed
+    # Strike's isn't, and None when it can't be told (a spell can grant a
+    # weapon attack, a monster's attack doesn't say).
+    weapon_attack: bool | None = None
 
     def modifiers_for(self, badge: str) -> tuple[Modifier, ...]:
         """What the badge `badge` it gives does while it's on: none for a
@@ -331,6 +342,44 @@ def roll_planned_attack(
     d20 = _roll_d20(plan.mode)
     added, bonus_notes = roll_bonuses(plan)
     return rolled_attack(d20, bonus + added), (*plan.notes, *bonus_notes)
+
+
+def roll_extra_damage(
+    plan: HitPlan, critical: bool = False
+) -> tuple[list[tuple[int, str]], tuple[str, ...]]:
+    """What `plan`'s extra damage adds to a hit, its dice rolled (twice over
+    for a Critical Hit, as the rules roll all of an attack's damage dice),
+    as (amount, damage type) parts, and the lines saying so: "Gabriel's
+    Hunter's Mark: +4 Force (1d6)". Nothing is rolled for a plan without
+    any, so a fight without them throws the dice it always did."""
+    parts = []
+    lines = []
+    for label, amount, damage_type in plan.extras:
+        rolled = roll_dice(amount, critical)
+        parts.append((rolled, damage_type))
+        die = DIE.fullmatch(amount)
+        if die is None:
+            how = ""
+        elif critical:
+            how = f" ({int(die[1]) * 2}d{die[2]}, critical hit)"
+        else:
+            how = f" ({amount})"
+        lines.append(f"{label}: +{rolled} {damage_type}{how}")
+    return parts, tuple(lines)
+
+
+def with_extra_damage(
+    damage: list[tuple[int, str]], extra: list[tuple[int, str]]
+) -> list[tuple[int, str]]:
+    """A hit's damage with `extra` added: to its part of the same type, so
+    Resistance halves that type's damage once, as one instance (Rules
+    Glossary, Resistance), or as a part of its own type, last."""
+    if not extra:
+        return damage
+    totals: dict[str, int] = {}
+    for amount, damage_type in [*damage, *extra]:
+        totals[damage_type] = totals.get(damage_type, 0) + amount
+    return [(amount, damage_type) for damage_type, amount in totals.items()]
 
 
 def is_immune_to(char: dict, condition: str) -> bool:

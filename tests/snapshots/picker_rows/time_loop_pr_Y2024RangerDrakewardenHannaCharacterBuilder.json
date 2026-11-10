@@ -108,6 +108,15 @@
    "ability": null,
    "action_cost": "Bonus Action",
    "amount_kind": "Damage",
+   "badge_modifiers": {
+    "Hunter's Mark": [
+     {
+      "amount": "1d6",
+      "damage_type": "Force",
+      "type": "ExtraDamageFrom"
+     }
+    ]
+   },
    "bonus": null,
    "concentration": true,
    "condition": "Hunter's Mark",
@@ -238,6 +247,15 @@
    "ability": null,
    "action_cost": "Bonus Action",
    "amount_kind": "Damage",
+   "badge_modifiers": {
+    "Hunter's Mark": [
+     {
+      "amount": "1d6",
+      "damage_type": "Force",
+      "type": "ExtraDamageFrom"
+     }
+    ]
+   },
    "bonus": null,
    "concentration": true,
    "condition": "Hunter's Mark",

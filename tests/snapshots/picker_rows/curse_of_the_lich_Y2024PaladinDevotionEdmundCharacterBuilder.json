@@ -423,18 +423,28 @@
    "ability": null,
    "action_cost": "Bonus Action",
    "amount_kind": "Damage",
+   "badge_modifiers": {
+    "Divine Favor": [
+     {
+      "amount": "1d4",
+      "attacks": "weapon attack",
+      "damage_type": "Radiant",
+      "type": "ExtraDamageOnHit"
+     }
+    ]
+   },
    "bonus": null,
    "concentration": false,
-   "condition": "",
+   "condition": "Divine Favor",
    "counts_uses": true,
    "damage": "",
    "dc": null,
    "duration_seconds": 60,
    "feature_name": "",
    "half_on_save": false,
-   "is_curated": false,
+   "is_curated": true,
    "is_unavailable": false,
-   "note": "Its text states damage that isn't filled in: check it.",
+   "note": "The caster's attacks with weapons deal an extra 1d4 Radiant damage on a hit: the badge goes on the caster.",
    "repeat_save": false,
    "roll": "Saving throw",
    "row_name": "",

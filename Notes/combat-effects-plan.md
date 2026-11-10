@@ -13,7 +13,7 @@ change:
 - log bugs found along the way with the `discovered-issues` skill and list
   their ids in **Discovered issues**.
 
-## Status (2026-11-09, 3.1-3.3 done: lasting effects are one list, the rules conditions are data, and effects carry modifiers the simulator counts)
+## Status (2026-11-10, 3.1-3.4 done: lasting effects are one list, the rules conditions are data, effects carry modifiers the simulator counts, and hits deal the extra damage effects give)
 
 | Phase | Step | State |
 |---|---|---|
@@ -33,7 +33,7 @@ change:
 | 2 | 2.7 Conditional extra damage (`when`) | **Done**, as a generated note (R14) |
 | 2 | Extensions list their own uses under their parent | **Done** (R10, new) |
 | S | **Spells as classes** (new direction, 2026-11-09; see its section) | S.1 base class, factory and converter **done**; S.2 the 57 spells with combat effects converted **done**; S.2c card lines as dataclasses **done** (R20); S.3 new effects go into classes **done** (R22); S.5 drift check **done** (R23); S.4 **done** (R26): all 594 spells are classes, the agents' tools switched over (R24), Q15 and DI-065 done (R25), every companion file deleted and nothing reads them |
-| 3 | Lasting effects (3.1-3.6) | 3.1 **done** (R28-R34): `char["active_effects"]`, one plain dict per badge, in the new Qt-free `Combat/Effects/active_effects.py`; the seven old keys are read only by its `upgrade_old_keys`, where a log is read; an old fight log replays the same (`tests/test_active_effects.py`). 3.2 **done** (R27), ahead of 3.1: the rules conditions are data, and saves, attack rolls (all three paths), AC, damage Resistance and condition immunity read them. 3.3 **done** (R35-R40): a badge's `CombatCondition` says its `modifiers`, the record keeps them as JSON, and `modifiers_on` reads them beside the conditions and cover; Bless's 1d4 is rolled into the saves (a monster's Concentration save too, R40) and attack rolls the simulator makes, Shield of Faith's +2 counts in AC, cover's +2/+5 in Dexterity saves (DI-066); a typed total stays as typed, with the bonus as a reminder in the dialog. 3.4-3.6 not started |
+| 3 | Lasting effects (3.1-3.6) | 3.1 **done** (R28-R34): `char["active_effects"]`, one plain dict per badge, in the new Qt-free `Combat/Effects/active_effects.py`; the seven old keys are read only by its `upgrade_old_keys`, where a log is read; an old fight log replays the same (`tests/test_active_effects.py`). 3.2 **done** (R27), ahead of 3.1: the rules conditions are data, and saves, attack rolls (all three paths), AC, damage Resistance and condition immunity read them. 3.3 **done** (R35-R40): a badge's `CombatCondition` says its `modifiers`, the record keeps them as JSON, and `modifiers_on` reads them beside the conditions and cover; Bless's 1d4 is rolled into the saves (a monster's Concentration save too, R40) and attack rolls the simulator makes, Shield of Faith's +2 counts in AC, cover's +2/+5 in Dexterity saves (DI-066); a typed total stays as typed, with the bonus as a reminder in the dialog. 3.4 **done** (R41-R47): `ExtraDamageFrom` (on the target, from its effect's caster) and `ExtraDamageOnHit` (on the attacker); Hunter's Mark's 1d6 Force on its caster's hits and Divine Favor's 1d4 Radiant on its caster's weapon hits are rolled into the hits the dialog and a monster's action buttons deal, doubled on a Critical Hit, each type resisted on its own; a typed damage total stays as typed, with the extra as a reminder in the dialog. 3.5-3.6 not started |
 | 4 | One `combat-effects` skill; feature agent; content rollout | Partly: the skill's rubric and script cover every new field; first content batch below |
 | 5 | Sheet chips, monster score | Not started |
 
@@ -48,7 +48,10 @@ hurt target). Features of the Curse of the Lich party: Channel Divinity (Divine
 Spark heal and harm, Turn Undead), Radiance of the Dawn, Warding Flare, Lay on
 Hands, Paladin's Smite, Sneak Attack. With modifiers on their badge (3.3):
 Bless (`D20Bonus` 1d4 on attack rolls and saving throws) and Shield of Faith
-(`ArmorClass(2)`); everything else waits for Phase 4.
+(`ArmorClass(2)`); with extra damage on their badge (3.4): Hunter's Mark
+(`ExtraDamageFrom` 1d6 Force) and Divine Favor (`ExtraDamageOnHit` 1d4
+Radiant on weapon attacks; newly described, R47), so 59 spells have combat
+effects; everything else waits for Phase 4.
 
 **Verified 2026-11-09 (after S.3):** full suite passes (9,917); every
 picker-row change reviewed field by field against the previous golden.
@@ -112,6 +115,36 @@ a removal, direct saves with Exhaustion, then a copy of the log continued
 in a fresh window for three turns) gave identical cards, badge tooltips and
 colours, dialog target rows and tooltips, log lines, status and reminder
 texts, and combatant state (the records' new empty `modifiers` left out).
+
+**Verified 2026-11-10 (3.4, R41-R47):** full suite passes (10,340 passed, 4
+skipped, 20 xfailed); no sheet snapshot changed; three picker goldens
+changed, each line read: a `badge_modifiers` entry (`ExtraDamageFrom` 1d6
+Force) on the Hunter's Mark rows (`caster_described_spells`, Hanna's spell
+and her Favored Enemy use, which casts it), and Divine Favor now described
+(Edmund's row: `condition` "Divine Favor", `is_curated` true, its
+`badge_modifiers` and its note in place of "Its text states damage that
+isn't filled in: check it."; a new row in `caster_described_spells`).
+`./typecheck.sh Combat` 0 errors, as on main; spell-mechanics `check` OK
+(59 of 594 spells with combat effects); 59 new tests
+(`tests/test_extra_damage.py`, 57, and two in `tests/test_active_effects.py`),
+expected values from Hunter's Mark's and Divine Favor's text and the
+glossary's Critical Hit, Resistance, Weapon Attack and Unarmed Strike.
+Parity with main (d0b8085d, a `git archive` copy), seeded dice: one
+scripted fight with neither spell (Bless cast on two; rolled attacks, a
+Times 3 with misses, a save effect, three monster Bite buttons with a
+Critical Hit and a miss applied with Enter, a typed attack roll and damage
+in the main window, Edmund's Longsword and Handaxe picked in the dialog, one
+with Times 2 and one with a typed total, an undo, four turns, then a copy of
+the log continued in a fresh window with an attack and three turns) gave
+identical cards and tooltips, dialog target rows and tooltips, result
+label and Damage field texts, log lines (and which are public), the player
+link, and combatant state, byte for byte. The same fight with Hunter's Mark
+on the Tiger and Divine Favor on Edmund logged "Pirate's Hunter's Mark: +1
+Force (1d6)" before "Tiger takes 5 Slashing ..." and "Tiger takes 1 Force
+damage from Pirate", "Edmund's Divine Favor: +4 Radiant (1d4)" on each
+weapon hit (none on the typed total), filled the Bite button's Damage field
+with "6 Piercing + 5 Force", and the player link's hit lines read "5
+Slashing + 1 Force" and "6 Slashing + 4 Radiant".
 
 ## Decisions
 
@@ -372,8 +405,8 @@ with one list, `char["active_effects"]`, of plain dicts (Decision 5).
 | `AttacksAgainst(mode)` | Faerie Fire, Restrained, Blinded, Dodge |
 | `ArmorClass(bonus)` | Shield (+5), Shield of Faith (+2), Haste (+2) |
 | `Resistance(types)` / `Immunity` / `Vulnerability` | Rage, Absorb Elements, Protection from Energy |
-| `ExtraDamageFrom(source, amount, type)` | Hunter's Mark, Hex: on the target, "hits from the caster deal 1d6 more" |
-| `ExtraDamageOnHit(amount, type)` | Rage damage, Divine Favor: on the attacker |
+| `ExtraDamageFrom(amount, damage_type, attacks, when)` | Hunter's Mark, Hex: on the target, "hits from the caster deal 1d6 more" (the record's `caster`, R42) |
+| `ExtraDamageOnHit(amount, damage_type, attacks, when)` | Rage damage, Divine Favor: on the attacker |
 | `NoHealing` | Chill Touch (now a badge with a note) |
 | `Note(text)` | anything not modelled, shown on the card |
 
@@ -391,7 +424,7 @@ Mark, Heroism. The modifier types go in a sibling module,
 | 3.1 | `ActiveEffect` and `char["active_effects"]`; old keys read through it. Undo, log replay, the player view keep working. | **Done** (R28-R34): one record per badge in `Combat/Effects/active_effects.py`; the old keys are converted where a log is read; combat UI tests pass and an old fight log replays the same (`tests/test_active_effects.py`) |
 | 3.2 | Rules conditions as data; `roll_save`, attack resolution and AC read modifiers. | **Done** (R27): saves behave as before, from data; attack rolls now count conditions too (DI-034), the monster action buttons cover as well (DI-033); rules-checker run on the table |
 | 3.3 | `D20Bonus`, `D20Mode`, `AttacksAgainst`, `ArmorClass`, `Resistance`. | **Done** (R35-R40): Bless adds 1d4 to a rolled save (a monster's Concentration save included) and attack roll, and the log says so; Shield of Faith raises the AC an attack is compared with; cover adds to Dexterity saves (DI-066); ending the badge ends its modifiers; an old log replays as before (`tests/test_effect_modifiers.py`, `tests/test_active_effects.py`) |
-| 3.4 | `ExtraDamageFrom` / `ExtraDamageOnHit`. | Hunter's Mark adds 1d6 Force on its caster's hits |
+| 3.4 | `ExtraDamageFrom` / `ExtraDamageOnHit`. | **Done** (R41-R47): Hunter's Mark adds 1d6 Force on its caster's hits (not another's, not a miss or a save effect), Divine Favor 1d4 Radiant on its caster's weapon hits, doubled on a Critical Hit, resisted per type, on each hit of Times; the log says so; a typed damage total gets a reminder instead; ending the badge ends it; an old log replays as before (`tests/test_extra_damage.py`, `tests/test_active_effects.py`) |
 | 3.5 | Triggers and prompts. | Heroism gives temp HP at turn start; Spirit Guardians prompts |
 | 3.6 | Concentration ends every `ActiveEffect` it holds. | Dropping Bless removes it from every target |
 
@@ -796,6 +829,87 @@ Sheet chips ("DEX save · half · 8d6 Fire") from the same data;
   turn order's Roll buttons, a summon's `_roll_into_turn_order`) and the
   d20 Roll button with no roller; initiative modifiers (Incapacitated,
   Invisible) aren't in 3.3's scope.
+- **R41. The two extra-damage modifiers have the same fields** (3.4,
+  2026-11-10): `amount` (dice or a number, never signed or 0:
+  `EXTRA_DAMAGE_AMOUNT`), `damage_type` (a `DamageType`), `attacks` (an
+  `AttackKind`: `ANY`, "attack roll", the default, or `WEAPON`, "weapon
+  attack") and `when`. The plan's `ExtraDamageFrom(source, ...)` has no
+  `source`: whose hits count is the record's `caster` (R42), so the
+  modifier stays what the spell says and the record says who cast it. As
+  JSON (R36) `damage_type` and `attacks` are enum values
+  (`{"type": "ExtraDamageOnHit", "amount": "1d4", "damage_type": "Radiant",
+  "attacks": "weapon attack"}`). The names stay apart from a weapon's
+  `Model/Content/ExtraDamage.ExtraDamage`, which is untouched. Rage's
+  damage needs more than these fields (Q26), so it isn't in the vocabulary
+  yet.
+- **R42. A mark's caster is matched by name.** `caster` is a combatant's
+  name, as `concentration` is: Cast Spell and Enable Feature write their
+  source's, the dialog its source's (the card selected, or the one whose
+  turn it is), Wild Shape the druid's. Names are what the window already
+  finds combatants by (`_find_character_by_name`, the concentration links),
+  and a fight's are unique (a second summon of a name is numbered). The
+  dialog noted the caster only on a record that existed before the pick's
+  modifiers made one (`_add_custom_condition` runs first); it now notes
+  source and caster again after `give_modifiers`, with the same values, so
+  a badge with only modifiers knows its caster too. `hit_extras` takes the
+  attacker's `ExtraDamageOnHit` and the target's `ExtraDamageFrom` whose
+  record's caster is the attacker, only while each badge is on (R35).
+- **R43. Where the extra dice are rolled.** The dialog rolls an effect's
+  damage when Apply is pressed, before any d20; that stays. A hit's extra
+  is rolled per target and per Times copy in `_apply_custom_effect`, right
+  after its attack roll and Bless's d4 (`hit_plan`, `roll_extra_damage`),
+  so a fight without extras throws the same dice (the parity run, and
+  `test_a_fight_without_extra_damage_rolls_the_same_dice`). A Critical Hit
+  rolls the extra's dice twice ("Roll all of the attack's damage dice
+  twice"), a number once. The extra joins the hit's part of its type, or is
+  a part of its own (`with_extra_damage`), and `_deal_damage` takes each
+  type in turn, so Resistance, Immunity and Vulnerability apply per type
+  and once to an instance, and the Concentration DC is the hit's whole
+  damage. A monster's action button rolls the extra after its own dice into
+  the Damage field ("3 Piercing + 4 Force"), with the line in the result
+  label, as Bless's notes there (that path logs the damage when Enter
+  applies it); a target's `ExtraDamageFrom` only with one target. The main
+  window's Attack roll and Damage fields take totals typed at the table,
+  so they add nothing (Decision 4; Q27). Every other `roll_dice` /
+  `randint` in the window was checked: initiative, a recharge's d6 and the
+  d20 Roll button roll no damage.
+- **R44. A typed damage total.** A Damage box with no dice that isn't the
+  pick's own text was rolled at the table (`CustomEffect.typed_damage`):
+  the extra isn't added to it, as a typed attack roll gets no Bless. A
+  pick's own flat damage (an Unarmed Strike's "5 Bludgeoning") is the
+  simulator's and gets it. The reminder is in the dialog's attack target
+  rows, whatever was typed: "AC 15, +1d6 Force on a hit", "+1d4 Radiant on
+  a weapon hit", each source in the tooltip ("Pirate's Hunter's Mark: +1d6
+  Force on a hit") with "Rolled and added to a hit's damage, not to a
+  total typed in".
+- **R45. A weapon attack is known only from a weapon pick.**
+  `EffectOption.weapon_attack` is True on a weapon's row and False on an
+  Unarmed Strike's ("instead of using a weapon"; `is_unarmed_strike`), and
+  None elsewhere: a spell can grant a weapon attack (True Strike), a 2024
+  monster's "Melee Attack Roll" doesn't say, and a typed effect has no
+  pick. `CustomEffect.weapon_attack` carries it, kept on the Times box's
+  copies (which drop the pick). `WEAPON` extra damage adds nothing to an
+  attack that isn't one, and is noted, not counted, when that isn't known
+  ("Pirate's Divine Favor (not counted): +1d4 Radiant on a weapon hit");
+  one with a `when` too.
+- **R46. The extra's log line is the GM's.** "Pirate's Hunter's Mark: +4
+  Force (1d6)" ("(2d6, critical hit)" on a crit) comes after the hit's line
+  and before its damage lines, with `public=False`: the player link joins
+  a hit's damage lines to its line, and any other public line between them
+  would stop that. The players read "Hits Tiger (20) 5 Slashing + 4
+  Force". The damage lines themselves are unchanged ("Tiger takes 4 Force
+  damage from Pirate"), so replay and stats need nothing new.
+- **R47. Divine Favor gained its combat effects** (Decision 9: one of the
+  two spells 3.4 names). It had none, so its row was read from the text
+  ("Its text states damage that isn't filled in: check it."). Its badge
+  goes on the caster (Cast Spell already puts a Self spell's there; in the
+  dialog the GM targets the caster's card), with one note saying so, as the
+  rubric asks when the caster gets what the dialog gives its targets.
+  Hunter's Mark's two notes stay as they were (Q21). Hanna's Favored Enemy
+  row, a use that casts Hunter's Mark (2.5), carries the badge's modifier
+  too. Divine Favor lasts a minute without Concentration: from the dialog
+  its badge has a timer that ends it, but from Cast Spell it outlives its
+  duration (DI-073).
 
 ## Open questions (with suggestions)
 
@@ -881,6 +995,33 @@ Sheet chips ("DEX save · half · 8d6 Fire") from the same data;
   ability gives a badge with modifiers yet. *Suggestion:* fix the encoder
   (`to_dict()` for `combat_effects`) before the first monster gets one, in
   Phase 4.
+- **Q24. Moving the mark when its target drops to 0 HP** (Hunter's Mark,
+  Hex: "you can take a Bonus Action to move the mark to a new creature").
+  *Suggestion:* in 3.5 (prompts): when a target with a living caster's
+  mark drops to 0, the turn reminder says "Hanna can move Hunter's Mark (a
+  Bonus Action)", and a card's right-click "Move Hunter's Mark here" moves
+  the record (caster, modifiers, concentration link and the caster's
+  active spell's `applied` row) and spends the Bonus Action.
+- **Q25. Hex's chosen ability** ("Disadvantage on ability checks made with
+  the chosen ability"). *Suggestion:* Hex as a variant row per ability
+  (R15), each badge "Hex" with `ExtraDamageFrom("1d6", NECROTIC)` and a
+  `D20Mode((ABILITY_CHECK,), DISADVANTAGE, (ability,))`; the simulator
+  rolls no ability checks, so that part is a reminder until it does. A
+  Hex given again on a new target keeps the ability (the same variant).
+- **Q26. Rage's damage** is a bonus to the weapon's own damage (no type of
+  its own), and only "when you make an attack using Strength". *Suggestion:*
+  with the Barbarian's features in Phase 4: `damage_type=None` meaning the
+  hit's first part's type, and `AttackKind.STRENGTH`, which a weapon pick
+  can tell (its ability, Finesse aside: then the GM's choice, a `when`).
+- **Q27. The main window's Attack roll and Damage fields** take totals rolled
+  at the table, so a mark adds nothing there and nothing says it should.
+  *Suggestion:* after a typed attack roll hits, the status line adds "+1d6
+  Force (Pirate's Hunter's Mark)", as the dialog's target rows do.
+- **Q28. Should the extra's log line be public?** It's GM-only so the player
+  link keeps joining a hit's damage to its line (R46), and the hit line
+  already shows the Force. *Suggestion:* leave it; if players ask where the
+  Force came from, let `public_log.py` read the line as part of the hit
+  (kind "hit-extra") instead.
 
 ## Discovered issues
 
@@ -922,6 +1063,11 @@ Sheet chips ("DEX save · half · 8d6 Fire") from the same data;
 - **DI-072** (open, 3.3 review): `CombatEffect.py`'s `_is_rules_condition`
   repeats `modifiers.rules_condition`'s name rule, as Model can't import
   Combat; the fix moves it into `RulesConditions.py`, off-limits for 3.3.
+- **DI-073** (open, found in 3.4): a spell without Concentration cast with
+  Cast Spell keeps its badge after its duration runs out (its active spell's
+  `applied` is filled only for concentration spells), so Divine Favor's
+  extra damage outlasts its minute unless the badge is taken off by hand.
+  The dialog's pick gives the badge a timer, which ends it.
 - **DI-070** (open, found in 3.3): `SpellClassConverter`'s `_IMPORTS` has no
   modifier names, so `spell_mechanics.py add` can't write a badge with
   modifiers into a module that doesn't import them; Bless and Shield of
@@ -966,6 +1112,14 @@ Sheet chips ("DEX save · half · 8d6 Fire") from the same data;
   modifiers; Bless, Shield of Faith and cover from their rules text, in the
   plans, the rolls, the log, the dialog's reminders; the badge ending by
   hand, timer and Concentration) and a 3.1 log replaying as a new one in
+  `tests/test_active_effects.py`. 3.4: `tests/test_extra_damage.py` (the
+  JSON form and its strict errors; `hit_plan` for the caster, another
+  attacker, a weapon attack, one that isn't and one not known, a `when`;
+  in the window a hit, a miss, a save effect, a Critical Hit, Resistance to
+  Force, Times, a typed total, the monster buttons, the log lines and the
+  player link, the dialog's reminders and its weapon picks; the badge
+  ending by hand, timer and Concentration; the same dice without extras)
+  and a 3.1 and a 3.3 log's Hunter's Mark adding nothing in
   `tests/test_active_effects.py`.
 
 ## Checklist: adding a field to the model

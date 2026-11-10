@@ -9,7 +9,9 @@ it. A combatant is the combat UI's dict. Its modifiers come from three places:
   (Bless's 1d4, Shield of Faith's +2 AC), while it has the badge.
 
 What a modifier says counts in a roll the simulator makes, a D20Bonus's dice
-rolled and added. One with a `when` (where the attacker is, what it can see)
+rolled and added, and a hit's extra damage (hit_plan) rolled with its damage:
+the attacker's ExtraDamageOnHit, and the target's ExtraDamageFrom when the
+attacker is the caster of the effect it's on. One with a `when` (where the attacker is, what it can see)
 is never counted, only noted, since the simulator doesn't know positions
 (plan principle 8). A total rolled at the table counts as it is, so only the
 notes it can't have known about come with it. The roll modes are the UI's
@@ -22,6 +24,7 @@ from dataclasses import dataclass
 from Core.Definitions import Ability, Condition
 from Model.Content.CombatModifiers import (
     ArmorClass,
+    AttackKind,
     AttacksAgainst,
     AutoFail,
     ConditionImmunity,
@@ -29,6 +32,8 @@ from Model.Content.CombatModifiers import (
     D20Bonus,
     D20Mode,
     D20Test,
+    ExtraDamageFrom,
+    ExtraDamageOnHit,
     Modifier,
     Resistance,
     RollMode,
@@ -37,7 +42,7 @@ from Model.Content.CombatModifiers import (
 from Model.Content.RulesConditions import CONDITION_RULES, conditions_given_by
 from Model.Creatures.Combatants import Visibility
 
-from .active_effects import active_effects
+from .active_effects import ActiveEffect, active_effects
 
 NEUTRAL = "Neutral"
 
@@ -100,19 +105,25 @@ def cover(char: dict) -> str | None:
     return max(states, key=list(COVER_RULES).index, default=None)
 
 
-def effect_modifiers(char: dict) -> list[tuple[str, Modifier]]:
-    """Each modifier char's lasting effects give, with the effect's name: an
+def _effects_with_modifiers(char: dict) -> list[tuple[ActiveEffect, Modifier]]:
+    """Each modifier char's lasting effects give, with the effect: an
     effect's count while char has its badge."""
     badges = set(char.get("conditions", []))
     return [
         (
-            effect["name"],
+            effect,
             modifier_from_dict(data, f"{effect['name']} on {char.get('name')}"),
         )
         for effect in active_effects(char)
         if effect["name"] in badges
         for data in effect.get("modifiers") or ()
     ]
+
+
+def effect_modifiers(char: dict) -> list[tuple[str, Modifier]]:
+    """Each modifier char's lasting effects give, with the effect's name: an
+    effect's count while char has its badge."""
+    return [(effect["name"], m) for effect, m in _effects_with_modifiers(char)]
 
 
 def modifiers_on(char: dict) -> list[tuple[Source, Modifier]]:
@@ -317,6 +328,76 @@ def hit_notes(target: dict) -> list[str]:
             else:
                 notes.append(f"{label}: a Critical Hit")
     return notes
+
+
+HitExtra = ExtraDamageFrom | ExtraDamageOnHit
+
+
+def hit_extras(
+    attacker: dict | None, target: dict | None
+) -> list[tuple[str, HitExtra]]:
+    """The extra damage that can come with a hit by attacker on target, by
+    what gives it ("Gabriel's Hunter's Mark"): the attacker's own
+    ExtraDamageOnHit, and the target's ExtraDamageFrom of an effect the
+    attacker gave it (the record's `caster`, a combatant's name, as every
+    path that gives a badge fills it in). None without an attacker; only
+    the attacker's own without a target (unknown, or several)."""
+    if attacker is None:
+        return []
+    name = attacker["name"]
+    pairs: list[tuple[str, HitExtra]] = [
+        (f"{name}'s {effect['name']}", m)
+        for effect, m in _effects_with_modifiers(attacker)
+        if isinstance(m, ExtraDamageOnHit)
+    ]
+    if target is not None:
+        pairs += [
+            (f"{name}'s {effect['name']}", m)
+            for effect, m in _effects_with_modifiers(target)
+            if isinstance(m, ExtraDamageFrom) and effect.get("caster") == name
+        ]
+    return pairs
+
+
+def extra_text(modifier: HitExtra) -> str:
+    """What a hit's extra damage is, to show: "+1d6 Force on a hit",
+    "+1d4 Radiant on a weapon hit"."""
+    hit = "a weapon hit" if modifier.attacks == AttackKind.WEAPON else "a hit"
+    when = f" if {modifier.when}" if modifier.when else ""
+    return f"+{modifier.amount} {modifier.damage_type.value} on {hit}{when}"
+
+
+@dataclass(frozen=True)
+class HitPlan:
+    """What a hit deals on top of its own damage: `extras`, (label, amount,
+    damage type) each, ("Gabriel's Hunter's Mark", "1d6", "Force"), rolled
+    where the damage is, and doubled on a Critical Hit; and what could come
+    with it but isn't counted, for the GM."""
+
+    extras: tuple[tuple[str, str, str], ...] = ()
+    notes: tuple[str, ...] = ()
+
+
+def hit_plan(
+    attacker: dict | None, target: dict | None, weapon_attack: bool | None
+) -> HitPlan:
+    """The extra damage a hit by attacker on target deals (hit_extras).
+    `weapon_attack`: whether the attack was made with a weapon, None when
+    that isn't known (a monster's attack, a spell, an effect typed in).
+    What only comes with a weapon attack adds nothing to one that isn't,
+    and is noted, not counted, when that isn't known; one with a `when` is
+    noted too (plan principle 8)."""
+    extras: list[tuple[str, str, str]] = []
+    notes: list[str] = []
+    for label, modifier in hit_extras(attacker, target):
+        weapons_only = modifier.attacks == AttackKind.WEAPON
+        if weapons_only and weapon_attack is False:
+            continue
+        if modifier.when or (weapons_only and weapon_attack is None):
+            notes.append(f"{label} (not counted): {extra_text(modifier)}")
+        else:
+            extras.append((label, modifier.amount, modifier.damage_type.value))
+    return HitPlan(tuple(extras), tuple(notes))
 
 
 def armor_class_bonus(char: dict) -> int:
