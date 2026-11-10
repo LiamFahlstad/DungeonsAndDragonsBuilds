@@ -1,4 +1,4 @@
-# Plan: one way to say what Features and Spells do in a fight
+ # Plan: one way to say what Features and Spells do in a fight
 
 ## How to use this document
 
@@ -12,6 +12,21 @@ change:
   to **Decisions** once answered;
 - log bugs found along the way with the `discovered-issues` skill and list
   their ids in **Discovered issues**.
+
+**Keep the overhead low (the user, 2026-11-10).** Only the user works in this
+codebase, so a step doesn't need the full multi-agent ceremony. Make the
+change and move on; the full suite can run later.
+
+- Don't run the whole suite after every step. Run only the few test files the
+  step touches (e.g. `./run_tests.sh -q tests/test_extra_damage.py
+  tests/test_active_effects.py`).
+- Skip the character-creation tests: sheet snapshots
+  (`test_build_snapshots`, `test_order_invariance`, `test_all_builds`), the
+  builder, class, subclass, feat, species and spell-slot tests. A combat
+  effects step doesn't change a character sheet; run them only if the step
+  edits builder or sheet code.
+- No parity runs against main, `verify-agent-work`, `code-reviewer` or
+  `rules-checker` passes per step unless asked.
 
 ## Status (2026-11-10, 3.1-3.4 done: lasting effects are one list, the rules conditions are data, effects carry modifiers the simulator counts, and hits deal the extra damage effects give)
 
@@ -186,6 +201,12 @@ suggested.
     2026-11-09, against the suggestion, for the user to overrule; R39). A
     record lasts while it says something: a tooltip, colour, duration,
     repeat save, concentration link or modifiers.
+11. **Work in the main checkout and push to main** (the user, 2026-11-10,
+    after 3.4: "stop this worktree and non main push stuff. I want edits
+    here and to push towards main"). No `isolation: "worktree"` for any
+    step, no agent branches, no parity runs that rely on a worktree; every
+    step is edited in the main checkout, committed there and pushed to
+    origin main. (CLAUDE.md says the same for all work.)
 
 ## Goal
 
@@ -1089,6 +1110,10 @@ Sheet chips ("DEX save · half · 8d6 Fire") from the same data;
   spell's draft said "Improved description DIFFERS" (S.3).
 
 ## Testing strategy
+
+Per step, run only the files listed here for that step, not the whole suite
+and not the character-creation tests (see **Keep the overhead low** at the
+top). The full suite runs later, when the user asks.
 
 - **Model:** invalid combinations raise; `to_dict`/`from_dict` round-trips; old
   logs still read (`test_monster_combat_effects.py`,

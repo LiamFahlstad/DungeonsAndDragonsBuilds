@@ -454,6 +454,46 @@ Cast Spell starts a timer on the caster's active_spells for any spell with a dur
 **History**
 - 2026-11-10 combat-simulator: found
 
+### DI-074 · Re-adding a badge by hand overwrites its record's caster, so Hunter's Mark's extra damage follows whoever re-adds it
+- **Status:** open
+- **Area:** combat-simulator
+- **Where:** `Combat/CombatUIQt/conditions_mixin.py:495`
+
+_add_custom_condition calls note_origin(target, cond, caster=source_name), overwriting caster on an existing record; give_modifiers keeps the modifiers. Hanna marks the Tiger, then with the Pirate selected 'Hunter's Mark' is re-added from the combo: caster='Pirate', and the Pirate's hits get the 1d6. Same when a second caster marks the same target (one record per badge name). Fix: only set caster when the record has none.
+
+**History**
+- 2026-11-10 code-reviewer: found
+
+### DI-075 · Monster action button's extra damage makes the extra's type the monster's remembered damage type
+- **Status:** open
+- **Area:** combat-simulator
+- **Where:** `Combat/CombatUIQt/turn_panel_mixin.py:369`, `Combat/CombatUIQt/damage_mixin.py:244`
+
+The button appends the extra last ('3 Piercing + 4 Force'); _do_apply_damage stores parts[-1][1] as source['_last_damage_type'], so the monster's next hit defaults to Force in both damage-type dropdowns. Only when the monster is itself the caster of an extra. Fix: remember parts[0][1], or have the button store the weapon's own type.
+
+**History**
+- 2026-11-10 code-reviewer: found
+
+### DI-076 · A Divine Favor (Self) pick in the Custom Effect dialog puts its badge on the selected target, not the caster
+- **Status:** open
+- **Area:** combat-simulator
+- **Where:** `Combat/CombatUIQt/conditions_mixin.py:839`
+
+The dialog never redirects a Self spell's badge to the caster (R47 documents it). If the enemy is still selected, the enemy gets ExtraDamageOnHit. Fix: send a pick whose spell target is Self to the source, as Cast Spell does.
+
+**History**
+- 2026-11-10 code-reviewer: found
+
+### DI-077 · Extra-damage test gaps: monster button on a Critical Hit; a weapon pick's damage edited to other dice
+- **Status:** open
+- **Area:** test-bughunter
+- **Where:** `tests/test_extra_damage.py`
+
+No test covers roll_extra_damage(plan, critical) from turn_panel_mixin.py:368 (passing False survives), nor the not _DICELESS.search(...) half of typed_damage at conditions_mixin.py:1753 (probe: Longsword edited to '1d8 + 6 Slashing' correctly still got +2 Radiant). Add one test each.
+
+**History**
+- 2026-11-10 code-reviewer: found
+
 ## Fixed
 
 ### DI-001 · Temporary Hit Points stack instead of keeping one amount
