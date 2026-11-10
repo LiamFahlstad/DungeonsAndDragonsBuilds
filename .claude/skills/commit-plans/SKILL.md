@@ -5,7 +5,7 @@ description: Commit plans - commits written down instead of made, so committing 
 
 # Commit plans
 
-Many agents work in this one tree at once. Committing directly means staging in a shared index while others stage too, and pushing `HEAD` while others commit on top. So a commit happens in two steps, usually by two different runs of the `git-commit` agent:
+Many agents work in this one tree at once. Committing directly means staging in a shared index while others stage too, and pushing `HEAD` while others commit on top. So a commit happens in two steps, normally one right after the other in a single `git-commit` run (the plan freezes the file contents, so applying at once is safe; a "plan only" run stops after step 1):
 
 1. **Plan** - decide what belongs together, write the message, record the plan. Nothing is staged, committed or pushed.
 2. **Apply** - later, commit the pending plans that still hold, then push if the plan or the caller named a target.
