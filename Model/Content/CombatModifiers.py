@@ -3,7 +3,8 @@ Armor Class and the damage it takes, while it has it: the vocabulary of lasting
 effects (Notes/combat-effects-plan.md, Phase 3). The rules conditions are
 written in it (Model/Content/RulesConditions.py); spells and features will be
 too. The combat simulator reads it (Combat/Effects/), so content never imports
-Combat.
+Combat. A badge's triggers (AtTurnStart, AtTurnEnd: what it does as a turn
+starts or ends) are in the same list, as they are what it does too.
 
 Each modifier is what one sentence of the rules says. One the simulator can't
 decide by itself, because it depends on where creatures are or what they can
@@ -220,6 +221,57 @@ class Note:
     text: str
 
 
+class WhoseTurn(StrEnum):
+    """The turns a trigger comes with: those of whoever has the badge
+    (Heroism's target), or those of each creature not on its side (Spirit
+    Guardians, on its caster, for the creatures around it)."""
+
+    BEARER = "bearer"
+    ENEMY = "enemy"
+
+
+def _check_trigger(trigger):
+    name = type(trigger).__name__
+    if not isinstance(trigger.effect, str) or not trigger.effect.strip():
+        raise ValueError(f"An {name} needs the name of the effect it uses")
+    if not isinstance(trigger.whose, WhoseTurn):
+        raise ValueError(f"An {name}'s whose is a WhoseTurn, got {trigger.whose!r}")
+
+
+@dataclass(frozen=True)
+class AtTurnStart:
+    """As each turn of `whose` starts, the badge's caster uses `effect` (the
+    name of another of its source's combat effects, one that spends no use)
+    on whoever's turn it is: Heroism's Temporary Hit Points. The simulator
+    gives Hit Points itself; an effect that rolls or deals damage, or one with
+    a `when` (said as what follows "if": "it starts its turn in the
+    Emanation"), is a prompt in the turn column, which opens the Custom
+    Effect dialog with it picked."""
+
+    effect: str
+    whose: WhoseTurn = WhoseTurn.BEARER
+    when: str = ""
+
+    def __post_init__(self):
+        _check_trigger(self)
+
+
+@dataclass(frozen=True)
+class AtTurnEnd:
+    """The same as a turn of `whose` ends: Spirit Guardians' save for a
+    creature that "ends its turn there"."""
+
+    effect: str
+    whose: WhoseTurn = WhoseTurn.BEARER
+    when: str = ""
+
+    def __post_init__(self):
+        _check_trigger(self)
+
+
+Trigger = AtTurnStart | AtTurnEnd
+TRIGGER_CLASSES = (AtTurnStart, AtTurnEnd)
+
 Modifier = (
     D20Mode
     | AttacksAgainst
@@ -233,6 +285,8 @@ Modifier = (
     | ConditionImmunity
     | HasConditions
     | Note
+    | AtTurnStart
+    | AtTurnEnd
 )
 MODIFIER_TYPES: dict[str, type] = {
     cls.__name__: cls
@@ -249,6 +303,8 @@ MODIFIER_TYPES: dict[str, type] = {
         ConditionImmunity,
         HasConditions,
         Note,
+        AtTurnStart,
+        AtTurnEnd,
     )
 }
 MODIFIER_CLASSES = tuple(MODIFIER_TYPES.values())
@@ -265,11 +321,13 @@ _ENUMS: dict[str, type[Enum]] = {
     "mode": RollMode,
     "damage_type": DamageType,
     "attacks": AttackKind,
+    "whose": WhoseTurn,
 }
 _PLAIN: dict[str, type] = {
     "when": str,
     "amount": str,
     "text": str,
+    "effect": str,
     "per_level": bool,
     "bonus": int,
 }

@@ -23,6 +23,7 @@ from PyQt6.QtWidgets import (
 
 import Combat.PlayerLog as PlayerLog
 from Combat.Effects.modifiers import attack_plan, hit_notes, hit_plan
+from Combat.Effects.triggers import Firing, firings
 
 from .attack_rolls import armor_bonus
 from .log_feed import LogFeed
@@ -39,7 +40,8 @@ from .monster_actions import (
 )
 from .player_server import PLAYER_PORT
 from .resources import legendary_resistance_lack, monster_action_lack
-from .saves import roll_bonuses, roll_extra_damage
+from .effect_options import trigger_option
+from .saves import ATTACK_ROLL, HEALING, TEMP_HP, roll_bonuses, roll_extra_damage
 from .player_view import (
     PlayerViewRow,
     PlayerViewWindow,
@@ -66,6 +68,9 @@ class TurnPanelMixin(CombatWindowState):
     _player_view: PlayerViewWindow | None
     # The heading above the log at the bottom of the column.
     _log_box_header: QLabel
+    # The buttons for the turn's prompts (_refresh_turn_prompts).
+    _turn_prompts_box: QWidget
+    _turn_prompts_layout: QVBoxLayout
 
     # ── Building and refreshing ─────────────────────────────────────────────
 
@@ -89,6 +94,12 @@ class TurnPanelMixin(CombatWindowState):
         self._turn_reminders_label.setObjectName("statusLabel")
         self._turn_reminders_label.setWordWrap(True)
         layout.addWidget(self._turn_reminders_label)
+
+        self._turn_prompts_box = QWidget()
+        self._turn_prompts_layout = QVBoxLayout(self._turn_prompts_box)
+        self._turn_prompts_layout.setContentsMargins(0, 0, 0, 0)
+        self._turn_prompts_layout.setSpacing(4)
+        layout.addWidget(self._turn_prompts_box)
 
         self._legendary_ready_label = QLabel("")
         self._legendary_ready_label.setObjectName("secondary")
@@ -169,6 +180,8 @@ class TurnPanelMixin(CombatWindowState):
             "this stretch."
         )
         self._turn_reminders_label.setText("")
+        self._turn_prompts = []
+        self._refresh_turn_prompts()
         self._legendary_ready_label.setText("")
 
     def _hidden_turn_note(self) -> str:
@@ -196,6 +209,7 @@ class TurnPanelMixin(CombatWindowState):
             "Next: " + ", then ".join(upcoming) if upcoming else ""
         )
         self._turn_reminders_label.setText("\n".join(self._turn_reminders))
+        self._refresh_turn_prompts()
         ready = [
             f"{c['name']} ({legendary_actions_left(c)})"
             for c in self.characters
@@ -493,6 +507,88 @@ class TurnPanelMixin(CombatWindowState):
                     seen.add(name)
                     reminders.append(f"{name}: {sentence}")
         self._turn_reminders = reminders
+        self._turn_prompts = list(self._turn_start_prompts)
+        self._turn_start_prompts = []
+
+    # ── Triggers ────────────────────────────────────────────────────────────
+
+    def _turn_triggers(self, turn: list[dict], kind: type):
+        """What the badges in the fight do as the turn of `turn` starts or
+        ends (`kind`: AtTurnStart or AtTurnEnd; Combat/Effects/triggers.py).
+        Hit Points one gives with nothing to decide are given here (Heroism's
+        Temporary Hit Points), and noted for the turn; anything else is a
+        prompt in the turn column for the GM."""
+        for firing in firings(
+            self.characters, turn, kind, self._find_character_by_name
+        ):
+            if self._char_death_state(firing.target) == "dead":
+                continue
+            if firing.is_prompt or not self._give_trigger_hit_points(firing):
+                self._turn_start_prompts.append(firing)
+
+    def _give_trigger_hit_points(self, firing: Firing) -> bool:
+        """Give the Hit Points firing's effect gives, if that's all it does
+        (no roll, no damage, an amount known). Returns whether it did."""
+        caster = self._find_character_by_name(firing.caster) if firing.caster else None
+        option = trigger_option(caster, firing.source, firing.trigger.effect)
+        if (
+            option is None
+            or option.ability is not None
+            or option.roll == ATTACK_ROLL
+            or option.amount_kind not in (HEALING, TEMP_HP)
+            or not option.rolls
+        ):
+            return False
+        amount = roll_dice(option.damage_at(None))
+        target = firing.target
+        if option.amount_kind == TEMP_HP:
+            if amount > 0:
+                self._give_temp_hp(target, amount, caster)
+            text = f"{amount} temp HP"
+        else:
+            self._heal_target(target, amount, caster)
+            text = f"{amount} HP regained"
+        self._turn_start_notes.append(f"{firing.badge}: {text} for {target['name']}")
+        self._rebuild_card(target)
+        return True
+
+    def _refresh_turn_prompts(self):
+        """A button per prompt the turn's triggers left, under the reminders:
+        it opens the Custom Effect dialog with the trigger's caster as the
+        source, the creature it's about as the target and its effect picked."""
+        while self._turn_prompts_layout.count():
+            item = self._turn_prompts_layout.takeAt(0)
+            widget = item.widget() if item is not None else None
+            if widget is not None:
+                widget.hide()
+                widget.deleteLater()
+        for firing in self._turn_prompts:
+            button = QPushButton(firing.prompt)
+            button.setObjectName("turnPromptBtn")
+            button.setToolTip(
+                "Opens the Custom Effect dialog with this picked, for the GM to"
+                " apply or cancel."
+            )
+            button.clicked.connect(
+                lambda checked=False, f=firing: self._use_turn_prompt(f)
+            )
+            self._turn_prompts_layout.addWidget(button)
+
+    def _use_turn_prompt(self, firing: Firing):
+        """Open the Custom Effect dialog for a prompt: its caster (if still
+        in the fight) as the source, its creature as the target, its effect
+        picked. The prompt goes once it's used."""
+        target = self._find_character_by_name(firing.target["name"])
+        if target is None:
+            self._show_status(f"{firing.target['name']} is no longer in the fight.")
+            return
+        self._turn_prompts = [p for p in self._turn_prompts if p is not firing]
+        caster = self._find_character_by_name(firing.caster) if firing.caster else None
+        if caster is not None:
+            self._select_character(caster)
+        self._set_targets([target])
+        self._refresh_views()
+        self._show_custom_condition_dialog(pick=firing.trigger.effect)
 
     # ── The players' screen ─────────────────────────────────────────────────
 

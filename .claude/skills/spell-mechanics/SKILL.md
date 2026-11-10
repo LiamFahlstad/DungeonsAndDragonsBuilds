@@ -116,7 +116,9 @@ Names are the Python ones; `Ability`, `Condition` and `DamageType` come from
 - **`damage`.** A tuple of `CombatDamage(dice, damage_type)`, only the damage
   the hit or failed save deals *now*. Damage on later turns, on moving
   through an area, or on a later hit goes in `notes` (Witch Bolt's 1d12,
-  Spike Growth, Hunter's Mark, Ensnaring Strike). One part per damage type.
+  Spike Growth, Ensnaring Strike), or in the badge's modifiers when the
+  model has it (Hunter's Mark's `ExtraDamageFrom`, a turn's damage as a
+  trigger row: see Triggers). One part per damage type.
   `upcast="1d6"` goes only on the part the higher-level paragraph names.
   `cantrip=((5, "2d8"), (11, "3d8"), (17, "4d8"))` only when the dice
   themselves grow (Eldritch Blast's extra beams are `instances`). `add_modifier=True`
@@ -158,6 +160,23 @@ Names are the Python ones; `Ability`, `Condition` and `DamageType` come from
   dialog applies them all, for the same time, and one repeat save ends them
   all. A spell whose option only lasts the target's next turn (Command: Halt)
   marks it with its own name until `(TurnEdge.END, TurnOf.TARGET)`.
+- **A badge's `modifiers`** (`Model.Content.CombatModifiers`): what it does
+  while it's on, which the simulator counts: `D20Bonus` (Bless),
+  `ArmorClass` (Shield of Faith), `ExtraDamageFrom` (Hunter's Mark, on the
+  target), `ExtraDamageOnHit` (Divine Favor, on the caster),
+  `ConditionImmunity` (Heroism's Frightened). Never on a rules condition.
+- **Triggers** are modifiers too: `AtTurnStart(effect, whose, when)` and
+  `AtTurnEnd(...)` for what the badge does as a turn starts or ends. `effect`
+  names a second effect of the same spell with `spends_use=False`, which is
+  what happens: Heroism's `AtTurnStart("Heroism: Temporary Hit Points")`
+  with that row's `temp_hp=CombatHitPoints(add_modifier=True)` (no dice: the
+  modifier alone). `whose=WhoseTurn.ENEMY` is each turn of a creature not on
+  the caster's side (Spirit Guardians' `AtTurnEnd("Spirit Guardians:
+  damage", WhoseTurn.ENEMY, when="it ends its turn in the Emanation")`).
+  The simulator gives Hit Points itself; a row that rolls or deals damage,
+  or a trigger with a `when` (where creatures are), is a prompt the GM
+  answers. Damage on later turns that isn't tied to a turn (moving through
+  Spike Growth) stays a note.
 - **`[]`.** Use it only when the spell has nothing the form could put on a
   creature in a fight (Alarm, Message, Minor Illusion, Thaumaturgy, Disguise
   Self, Speak with Animals, Fog Cloud). The spell is hidden from "All spells"

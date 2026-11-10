@@ -757,6 +757,72 @@
     "2d4"
    ]
   },
+  "All spells | Heroism": {
+   "ability": null,
+   "action_cost": "Action",
+   "amount_kind": "Damage",
+   "badge_modifiers": {
+    "Heroism": [
+     {
+      "conditions": [
+       "Frightened"
+      ],
+      "type": "ConditionImmunity"
+     },
+     {
+      "effect": "Heroism: Temporary Hit Points",
+      "type": "AtTurnStart"
+     }
+    ]
+   },
+   "bonus": null,
+   "concentration": true,
+   "condition": "Heroism",
+   "counts_uses": true,
+   "damage": "",
+   "dc": null,
+   "duration_seconds": 60,
+   "feature_name": "",
+   "half_on_save": false,
+   "is_curated": true,
+   "is_unavailable": false,
+   "note": "One more target per slot level above 1.",
+   "repeat_save": false,
+   "roll": "Saving throw",
+   "row_name": "",
+   "slot_level": "None",
+   "spell_level": 1,
+   "spell_name": "Heroism",
+   "summary": "",
+   "until": null,
+   "upcast": []
+  },
+  "All spells | Heroism: Temporary Hit Points": {
+   "ability": null,
+   "action_cost": null,
+   "amount_kind": "Temp HP",
+   "bonus": null,
+   "concentration": false,
+   "condition": "",
+   "counts_uses": false,
+   "damage": "",
+   "dc": null,
+   "duration_seconds": 60,
+   "feature_name": "",
+   "half_on_save": false,
+   "is_curated": true,
+   "is_unavailable": false,
+   "note": "Each target gains them at the start of each of its turns while it has Heroism; the simulator gives them then. Type in the spellcasting ability modifier: it's the whole temp hp.",
+   "repeat_save": false,
+   "roll": "Saving throw",
+   "row_name": "",
+   "slot_level": "None",
+   "spell_level": 1,
+   "spell_name": "Heroism",
+   "summary": "",
+   "until": null,
+   "upcast": []
+  },
   "All spells | Hold Person": {
    "ability": "WIS",
    "action_cost": "Action",
@@ -1338,6 +1404,70 @@
    "summary": "",
    "until": null,
    "upcast": []
+  },
+  "All spells | Spirit Guardians": {
+   "ability": null,
+   "action_cost": "Action",
+   "amount_kind": "Damage",
+   "badge_modifiers": {
+    "Spirit Guardians": [
+     {
+      "effect": "Spirit Guardians: damage",
+      "type": "AtTurnEnd",
+      "when": "it ends its turn in the Emanation",
+      "whose": "enemy"
+     }
+    ]
+   },
+   "bonus": null,
+   "concentration": true,
+   "condition": "Spirit Guardians",
+   "counts_uses": true,
+   "damage": "",
+   "dc": null,
+   "duration_seconds": 600,
+   "feature_name": "",
+   "half_on_save": false,
+   "is_curated": true,
+   "is_unavailable": false,
+   "note": "The badge goes on the caster, or on the enemies it's aimed at: either way the turn column asks, as each enemy of the caster ends its turn, whether it's in the 15-foot Emanation, for the damage row. Any other creature's Speed is halved in it.",
+   "repeat_save": false,
+   "roll": "Saving throw",
+   "row_name": "",
+   "slot_level": "None",
+   "spell_level": 3,
+   "spell_name": "Spirit Guardians",
+   "summary": "",
+   "until": null,
+   "upcast": []
+  },
+  "All spells | Spirit Guardians: damage": {
+   "ability": "WIS",
+   "action_cost": null,
+   "amount_kind": "Damage",
+   "bonus": null,
+   "concentration": false,
+   "condition": "",
+   "counts_uses": false,
+   "damage": "3d8 Radiant",
+   "dc": 15,
+   "duration_seconds": 600,
+   "feature_name": "",
+   "half_on_save": true,
+   "is_curated": true,
+   "is_unavailable": false,
+   "note": "When the Emanation enters a creature's space, or a creature enters it or ends its turn there; once per turn for each creature. Necrotic instead if the caster is evil. Cast with a higher slot: 1d8 more per level above 3 (type it in; picking a slot here spends one).",
+   "repeat_save": false,
+   "roll": "Saving throw",
+   "row_name": "",
+   "slot_level": "None",
+   "spell_level": 3,
+   "spell_name": "Spirit Guardians",
+   "summary": "DC 15 WIS  3d8 Radiant  half on save",
+   "until": null,
+   "upcast": [
+    "1d8"
+   ]
   },
   "All spells | Spiritual Weapon": {
    "ability": null,

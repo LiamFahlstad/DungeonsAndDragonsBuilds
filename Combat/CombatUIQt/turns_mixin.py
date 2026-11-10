@@ -17,6 +17,7 @@ from PyQt6.QtWidgets import (
 )
 
 from Combat.PlayerLog import has_round_events
+from Model.Content.CombatModifiers import AtTurnEnd, AtTurnStart
 
 from Combat.Summons import follows_owner, numbered, place_after_owners
 
@@ -94,6 +95,7 @@ class TurnsMixin(CombatWindowState):
         dead" setting on, it passes over turns where everyone is dead (at most
         once round the order, in case the whole fight is)."""
         self._turn_start_notes = []
+        self._turn_start_prompts = []
         for _ in initiative_units(self.initiative_order):
             self._pass_turn()
             if not (self.settings.skip_dead_turns and self._turn_is_dead()):
@@ -179,6 +181,8 @@ class TurnsMixin(CombatWindowState):
         self._tick_active_spells(self._current_turn_group(), new_round)
         for char in ended:
             self._end_of_turn_saves(char)
+        self._turn_triggers(ended, AtTurnEnd)
+        self._turn_triggers(self._current_turn_group(), AtTurnStart)
 
     def _is_first_turn(self) -> bool:
         """Whether it's round 1's first turn, so there is no turn before it."""

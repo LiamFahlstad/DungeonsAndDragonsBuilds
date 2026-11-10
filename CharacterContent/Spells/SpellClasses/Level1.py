@@ -35,7 +35,9 @@ from Model.Content.CombatEffect import (
 )
 from Model.Content.CombatModifiers import (
     ArmorClass,
+    AtTurnStart,
     AttackKind,
+    ConditionImmunity,
     D20Bonus,
     D20Test,
     ExtraDamageFrom,
@@ -3701,6 +3703,32 @@ class Heroism(ClassSpell):
                     Facts(
                         (("Targets", "+1 creature for each spell slot level above 1"),)
                     ),
+                ),
+            ),
+        ]
+
+    def combat_effects(
+        self, character: CharacterView | None = None
+    ) -> list[CombatEffect]:
+        return [
+            CombatEffect(
+                conditions=(
+                    CombatCondition(
+                        "Heroism",
+                        modifiers=(
+                            ConditionImmunity((Condition.FRIGHTENED,)),
+                            AtTurnStart("Heroism: Temporary Hit Points"),
+                        ),
+                    ),
+                ),
+                notes=("One more target per slot level above 1.",),
+            ),
+            CombatEffect(
+                name="Heroism: Temporary Hit Points",
+                temp_hp=CombatHitPoints(add_modifier=True),
+                spends_use=False,
+                notes=(
+                    "Each target gains them at the start of each of its turns while it has Heroism; the simulator gives them then.",
                 ),
             ),
         ]

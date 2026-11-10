@@ -1452,8 +1452,17 @@ def _effect_amounts(
     for points, kind in ((effect.healing, HEALING), (effect.temp_hp, TEMP_HP)):
         if points is None:
             continue
-        if not points.dice:
+        if not points.dice and not (points.add_modifier and modifier is not None):
+            if points.add_modifier:
+                notes.append(
+                    f"Type in the spellcasting ability modifier: it's the whole"
+                    f" {kind.lower()}."
+                )
             return (), (), kind, notes
+        if not points.dice:
+            # The modifier alone (Heroism).
+            upcast = (points.upcast,) if level > 0 and points.upcast else ()
+            return (DamageRoll(str(max(modifier or 0, 0)), None),), upcast, kind, notes
         roll = DamageRoll(points.dice, None)
         if points.add_modifier:
             roll = _with_modifier(roll, modifier or 0)
@@ -1555,3 +1564,32 @@ def effect_options(
         ),
     ]
     return [(title, options) for title, options in categories if options]
+
+
+def trigger_option(
+    char: dict | None, source: str | None, name: str
+) -> EffectOption | None:
+    """The picker row called `name` for char, among the rows of `source` (a
+    spell, or one of char's features): the effect a badge's trigger uses
+    (Heroism's "Heroism: Temporary Hit Points"). With no source known, or
+    none of that name, every row char has is looked through."""
+    who = char if char is not None else {}
+    options: list[EffectOption] = []
+    if source:
+        own = {s.name: s for s in (who.get("_spell_objects") or {}).values()}
+        spell = own.get(source) or _spell_named(source)
+        if spell is not None:
+            options = spell_options(spell, who)
+        else:
+            options = [
+                option
+                for feature in who.get("_feature_objects") or []
+                if feature.name == source
+                for option in feature_options(who, feature)
+            ]
+    found = next((o for o in options if o.name == name), None)
+    if found is not None:
+        return found
+    return next(
+        (o for _, rows in effect_options(who) for o in rows if o.name == name), None
+    )

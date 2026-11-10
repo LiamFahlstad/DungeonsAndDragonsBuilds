@@ -1038,11 +1038,13 @@ class ConditionsMixin(CombatWindowState):
         self._action_result_label.setText(" · ".join(words))
         self._action_result_label.setToolTip("")
 
-    def _show_custom_condition_dialog(self):
+    def _show_custom_condition_dialog(self, pick: str = ""):
         """Set up an effect on every target (see _apply_custom_effect): what
         it costs the source, a saving throw or an attack roll, damage, and a
         condition with its duration and a note. What the source can use is
-        listed on the left, and a pick fills in the form."""
+        listed on the left, and a pick fills in the form. `pick` names a row
+        to start with picked (a trigger's prompt: "Spirit Guardians:
+        damage")."""
         if not self.target_characters:
             self._show_status("Nothing applied: right-click a card to pick a target.")
             return
@@ -2003,6 +2005,19 @@ class ConditionsMixin(CombatWindowState):
 
         show_details(None)
         search_box.setFocus()
+        start = next(
+            (
+                category.child(i)
+                for category in category_items.values()
+                for i in range(category.childCount())
+                if (option := option_of(category.child(i))) is not None
+                and option.name == pick
+            ),
+            None,
+        )
+        if pick and start is not None:
+            tree.setCurrentItem(start)
+            tree.scrollToItem(start)
         dlg.exec()
 
     @undoable

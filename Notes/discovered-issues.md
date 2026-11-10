@@ -494,6 +494,16 @@ No test covers roll_extra_damage(plan, critical) from turn_panel_mixin.py:368 (p
 **History**
 - 2026-11-10 code-reviewer: found
 
+### DI-078 · Combat UI: a later step of a casting (spends_use=False) can upcast only by spending a slot
+- **Status:** open
+- **Area:** combat-simulator
+- **Where:** `Combat/CombatUIQt/conditions_mixin.py (slot_combo, _apply_custom_effect)`
+
+The Custom Effect dialog's slot box is both the cost and the upcast level. A row that is a later step of one casting (Ice Knife's explosion, Spirit Guardians: damage, Heroism's temp HP) spends no slot, so it starts at 'No spell slot' with the spell's own dice; choosing a higher slot to get the upcast dice also spends that slot. Nothing remembers the slot the spell was cast with. Suggestion: keep the cast's slot level on the caster's active spell (or the badge's record) and fill a later step's damage at that level without spending; Notes/combat-effects-plan.md Q29.
+
+**History**
+- 2026-11-10 main session (combat effects 3.5): found
+
 ## Fixed
 
 ### DI-001 · Temporary Hit Points stack instead of keeping one amount

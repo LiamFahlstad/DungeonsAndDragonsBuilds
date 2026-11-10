@@ -29,6 +29,7 @@ from PyQt6.QtWidgets import (
     QWidget,
 )
 
+from Combat.Effects.triggers import Firing
 from Combat.Rules import Rule
 from Combat.Scenario import CombatScenario
 from Combat.Summons import SummonOption
@@ -72,6 +73,9 @@ class CombatWindowState:
     # What to remember this turn, and what starting it did (TurnPanelMixin).
     _turn_reminders: list[str]
     _turn_start_notes: list[str]
+    # What the turn's triggers ask the GM, and those found as it started.
+    _turn_prompts: list[Firing]
+    _turn_start_prompts: list[Firing]
     # The player link. It listens only once the GM starts it (TurnPanelMixin
     # publishes to it, DialogsMixin._show_player_link_dialog controls it).
     _player_server: PlayerServer
@@ -411,6 +415,9 @@ class CombatWindowState:
     def _take_turn_reminders(self):
         raise NotImplementedError("TurnPanelMixin._take_turn_reminders")
 
+    def _turn_triggers(self, turn: list[dict], kind: type):
+        raise NotImplementedError("TurnPanelMixin._turn_triggers")
+
     def _toggle_hidden_from_players(self, char: dict):
         raise NotImplementedError("ConditionsMixin._toggle_hidden_from_players")
 
@@ -573,7 +580,7 @@ class CombatWindowState:
     def _show_condition_info(self, condition_name: str):
         raise NotImplementedError("DialogsMixin._show_condition_info")
 
-    def _show_custom_condition_dialog(self):
+    def _show_custom_condition_dialog(self, pick: str = ""):
         raise NotImplementedError("ConditionsMixin._show_custom_condition_dialog")
 
     def _show_current_log(self):

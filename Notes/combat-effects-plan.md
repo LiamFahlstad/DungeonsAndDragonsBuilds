@@ -28,7 +28,7 @@ change and move on; the full suite can run later.
 - No parity runs against main, `verify-agent-work`, `code-reviewer` or
   `rules-checker` passes per step unless asked.
 
-## Status (2026-11-10, 3.1-3.4 done: lasting effects are one list, the rules conditions are data, effects carry modifiers the simulator counts, and hits deal the extra damage effects give)
+## Status (2026-11-10, 3.1-3.5 done: lasting effects are one list, the rules conditions are data, effects carry modifiers the simulator counts, hits deal the extra damage effects give, and badges act as turns start and end)
 
 | Phase | Step | State |
 |---|---|---|
@@ -48,7 +48,7 @@ change and move on; the full suite can run later.
 | 2 | 2.7 Conditional extra damage (`when`) | **Done**, as a generated note (R14) |
 | 2 | Extensions list their own uses under their parent | **Done** (R10, new) |
 | S | **Spells as classes** (new direction, 2026-11-09; see its section) | S.1 base class, factory and converter **done**; S.2 the 57 spells with combat effects converted **done**; S.2c card lines as dataclasses **done** (R20); S.3 new effects go into classes **done** (R22); S.5 drift check **done** (R23); S.4 **done** (R26): all 594 spells are classes, the agents' tools switched over (R24), Q15 and DI-065 done (R25), every companion file deleted and nothing reads them |
-| 3 | Lasting effects (3.1-3.6) | 3.1 **done** (R28-R34): `char["active_effects"]`, one plain dict per badge, in the new Qt-free `Combat/Effects/active_effects.py`; the seven old keys are read only by its `upgrade_old_keys`, where a log is read; an old fight log replays the same (`tests/test_active_effects.py`). 3.2 **done** (R27), ahead of 3.1: the rules conditions are data, and saves, attack rolls (all three paths), AC, damage Resistance and condition immunity read them. 3.3 **done** (R35-R40): a badge's `CombatCondition` says its `modifiers`, the record keeps them as JSON, and `modifiers_on` reads them beside the conditions and cover; Bless's 1d4 is rolled into the saves (a monster's Concentration save too, R40) and attack rolls the simulator makes, Shield of Faith's +2 counts in AC, cover's +2/+5 in Dexterity saves (DI-066); a typed total stays as typed, with the bonus as a reminder in the dialog. 3.4 **done** (R41-R47): `ExtraDamageFrom` (on the target, from its effect's caster) and `ExtraDamageOnHit` (on the attacker); Hunter's Mark's 1d6 Force on its caster's hits and Divine Favor's 1d4 Radiant on its caster's weapon hits are rolled into the hits the dialog and a monster's action buttons deal, doubled on a Critical Hit, each type resisted on its own; a typed damage total stays as typed, with the extra as a reminder in the dialog. 3.5-3.6 not started |
+| 3 | Lasting effects (3.1-3.6) | 3.1 **done** (R28-R34): `char["active_effects"]`, one plain dict per badge, in the new Qt-free `Combat/Effects/active_effects.py`; the seven old keys are read only by its `upgrade_old_keys`, where a log is read; an old fight log replays the same (`tests/test_active_effects.py`). 3.2 **done** (R27), ahead of 3.1: the rules conditions are data, and saves, attack rolls (all three paths), AC, damage Resistance and condition immunity read them. 3.3 **done** (R35-R40): a badge's `CombatCondition` says its `modifiers`, the record keeps them as JSON, and `modifiers_on` reads them beside the conditions and cover; Bless's 1d4 is rolled into the saves (a monster's Concentration save too, R40) and attack rolls the simulator makes, Shield of Faith's +2 counts in AC, cover's +2/+5 in Dexterity saves (DI-066); a typed total stays as typed, with the bonus as a reminder in the dialog. 3.4 **done** (R41-R47): `ExtraDamageFrom` (on the target, from its effect's caster) and `ExtraDamageOnHit` (on the attacker); Hunter's Mark's 1d6 Force on its caster's hits and Divine Favor's 1d4 Radiant on its caster's weapon hits are rolled into the hits the dialog and a monster's action buttons deal, doubled on a Critical Hit, each type resisted on its own; a typed damage total stays as typed, with the extra as a reminder in the dialog. 3.5 **done** (R48-R53): `AtTurnStart` / `AtTurnEnd` are modifiers on a badge that name a row of their spell; Heroism's Temporary Hit Points are given as its target's turn starts, and Spirit Guardians asks, as each enemy of its caster ends its turn, with a button that opens the Custom Effect dialog with its damage row picked. 3.6 not started |
 | 4 | One `combat-effects` skill; feature agent; content rollout | Partly: the skill's rubric and script cover every new field; first content batch below |
 | 5 | Sheet chips, monster score | Not started |
 
@@ -65,8 +65,12 @@ Hands, Paladin's Smite, Sneak Attack. With modifiers on their badge (3.3):
 Bless (`D20Bonus` 1d4 on attack rolls and saving throws) and Shield of Faith
 (`ArmorClass(2)`); with extra damage on their badge (3.4): Hunter's Mark
 (`ExtraDamageFrom` 1d6 Force) and Divine Favor (`ExtraDamageOnHit` 1d4
-Radiant on weapon attacks; newly described, R47), so 59 spells have combat
-effects; everything else waits for Phase 4.
+Radiant on weapon attacks; newly described, R47); with triggers on their
+badge (3.5, both newly described): Heroism (`ConditionImmunity` to
+Frightened and `AtTurnStart` of its "Heroism: Temporary Hit Points" row)
+and Spirit Guardians (`AtTurnEnd` of its "Spirit Guardians: damage" row,
+for its caster's enemies, with a `when`), so 61 spells have combat effects;
+everything else waits for Phase 4.
 
 **Verified 2026-11-09 (after S.3):** full suite passes (9,917); every
 picker-row change reviewed field by field against the previous golden.
@@ -160,6 +164,15 @@ damage from Pirate", "Edmund's Divine Favor: +4 Radiant (1d4)" on each
 weapon hit (none on the typed total), filled the Bite button's Damage field
 with "6 Piercing + 5 Force", and the player link's hit lines read "5
 Slashing + 1 Force" and "6 Slashing + 4 Radiant".
+
+**Verified 2026-11-10 (3.5, R48-R53), low overhead:** every combat test
+file passes (40 files, 3,407 tests; not the full suite); one picker golden
+changed (`caster_described_spells`), by four new rows, each read: Heroism
+and its Temp HP row, Spirit Guardians and its damage row (DC 15 WIS, 3d8
+Radiant, half, upcast 1d8, `counts_uses` false); no party member's golden
+changed (none has either spell). `./typecheck.sh` 0 errors on every changed
+file; spell-mechanics `check` OK (61 of 594 spells with combat effects); 36
+new tests (`tests/test_turn_triggers.py`).
 
 ## Decisions
 
@@ -446,7 +459,7 @@ Mark, Heroism. The modifier types go in a sibling module,
 | 3.2 | Rules conditions as data; `roll_save`, attack resolution and AC read modifiers. | **Done** (R27): saves behave as before, from data; attack rolls now count conditions too (DI-034), the monster action buttons cover as well (DI-033); rules-checker run on the table |
 | 3.3 | `D20Bonus`, `D20Mode`, `AttacksAgainst`, `ArmorClass`, `Resistance`. | **Done** (R35-R40): Bless adds 1d4 to a rolled save (a monster's Concentration save included) and attack roll, and the log says so; Shield of Faith raises the AC an attack is compared with; cover adds to Dexterity saves (DI-066); ending the badge ends its modifiers; an old log replays as before (`tests/test_effect_modifiers.py`, `tests/test_active_effects.py`) |
 | 3.4 | `ExtraDamageFrom` / `ExtraDamageOnHit`. | **Done** (R41-R47): Hunter's Mark adds 1d6 Force on its caster's hits (not another's, not a miss or a save effect), Divine Favor 1d4 Radiant on its caster's weapon hits, doubled on a Critical Hit, resisted per type, on each hit of Times; the log says so; a typed damage total gets a reminder instead; ending the badge ends it; an old log replays as before (`tests/test_extra_damage.py`, `tests/test_active_effects.py`) |
-| 3.5 | Triggers and prompts. | Heroism gives temp HP at turn start; Spirit Guardians prompts |
+| 3.5 | Triggers and prompts. | **Done** (R48-R53): Heroism gives its caster's spellcasting modifier in temp HP as each of its target's turns starts (not on others', not after the badge or Concentration ends, taken back by undoing Next); Spirit Guardians asks about each enemy of its caster as its turn ends, once, never about an ally, the caster or a dead creature, and rolls nothing itself; the prompt opens the dialog on its caster and that creature with the damage row picked, spending no slot (`tests/test_turn_triggers.py`) |
 | 3.6 | Concentration ends every `ActiveEffect` it holds. | Dropping Bless removes it from every target |
 
 ### Phase 4: content and tooling
@@ -932,6 +945,61 @@ Sheet chips ("DEX save · half · 8d6 Fire") from the same data;
   its badge has a timer that ends it, but from Cast Spell it outlives its
   duration (DI-073).
 
+- **R48. Triggers are modifiers** (3.5, 2026-11-10): `AtTurnStart` and
+  `AtTurnEnd` are in `Model/Content/CombatModifiers.py`, in a badge's
+  `CombatCondition.modifiers`, not a `triggers` key of their own. R28 kept
+  room for a key; but the modifiers list already goes everywhere a trigger
+  must (`to_dict`/`from_dict`, `give_modifiers`, `badge_modifiers`, Cast
+  Spell, Enable Feature, the dialog's pick, the record's JSON), and ends
+  with its badge (R35), so no log, undo point or expected record changed.
+  Every reader of modifiers picks its own types by `isinstance`, so nothing
+  that counts a roll sees a trigger. `WhoseTurn` says whose turns: the
+  badge's bearer's (`BEARER`) or each creature not on the caster's side
+  (`ENEMY`). As JSON: `{"type": "AtTurnEnd", "effect": "Spirit Guardians:
+  damage", "whose": "enemy", "when": "it ends its turn in the Emanation"}`.
+- **R49. A trigger names a row, not an effect inside it.** `effect` is the
+  name of another of its source's combat effects, one with
+  `spends_use=False` (Heroism's "Heroism: Temporary Hit Points", Spirit
+  Guardians' "Spirit Guardians: damage"). A `CombatEffect` inside a
+  condition inside a `CombatEffect` would need its own JSON and checks; a
+  row is also what the GM uses by hand (a creature entering the
+  Emanation), and it is worked out when used (principle 5):
+  `effect_options.trigger_option(caster, source, name)` builds that row for
+  the record's caster, from the record's `source` spell or feature. A test
+  checks each trigger names a row of its spell that spends nothing.
+- **R50. What the simulator does itself, and what it asks.** A trigger's
+  row that only gives Hit Points (no save, no attack, no damage, an amount
+  known) is given at once, logged as any other ("Edmund gains 2 temp HP
+  from Edmund") and noted for the turn ("Heroism: 2 temp HP for Edmund").
+  Anything else, and any trigger with a `when`, is a prompt (principle 8):
+  a button under the turn's reminders ("Tiger: if it ends its turn in the
+  Emanation, Edmund's Spirit Guardians: damage"). Clicking it makes the
+  caster the source and the creature the target, and opens the Custom
+  Effect dialog with the row picked (`_show_custom_condition_dialog(pick=)`);
+  the prompt then goes, and the GM applies or cancels. End triggers come
+  after the end-of-turn saves, start triggers after durations tick (an
+  effect that ran out gives nothing), both inside `_advance_turn`'s undo
+  point. Prompts last the turn, like its notes: an undo clears them.
+- **R51. An enemy-turn trigger counts from its caster, once.** Spirit
+  Guardians' spell `target` is ENEMY (sheet data, left as it is), so Cast
+  Spell puts its badge on the enemies it's aimed at, while the dialog puts
+  it on whoever is targeted (the caster, say). `WhoseTurn.ENEMY` asks about
+  every creature not on the caster's side, wherever the badge is, and once
+  per creature however many have it. Sides: the party is the players,
+  party allies and players' summons (`triggers.on_party_side`); a caster
+  not in the fight asks nothing.
+- **R52. Q19 decided: repeat saves stay `repeat_save`.** They hold what one
+  casting set (DC, mode, `also`, Legendary Resistance), PartyAllies,
+  Summons and `ending_conditions` read them, and a monster rolls them
+  itself; as an `AtTurnEnd` they would need all that in a trigger row and
+  change every log for no new behaviour. Revisit if a second kind of
+  turn-end save needs it.
+- **R53. Hit Points of the modifier alone.** `CombatHitPoints(add_modifier=
+  True)` with no dice is the spellcasting modifier alone (Heroism), filled
+  in when the caster's is known, else a note to type it in. A spell's later
+  step can only upcast by spending a slot in the dialog (DI-078, Q29), so
+  Spirit Guardians' damage row says to type the higher dice in.
+
 ## Open questions (with suggestions)
 
 - **Q2. When to rename `spell-mechanics` → `combat-effects` (skill, agent,
@@ -990,9 +1058,7 @@ Sheet chips ("DEX save · half · 8d6 Fire") from the same data;
 - **Q17** moved to Decisions (10, R39): no.
 - **Q18. Show `source` and `caster` on the badge** ("from Edmund's Bless")?
   *Suggestion:* not until the GM asks; the log says it already.
-- **Q19. Repeat saves as triggers.** *Suggestion:* in 3.5, `repeat_save`
-  becomes an `AtTurnEnd` trigger in a `triggers` list, the converter reading
-  `repeat_save` as it reads the old keys now.
+- **Q19** decided in 3.5 (R52): repeat saves stay as they are.
 - **Q20. Should the card show an AC with what adds to it** (Shield of
   Faith's 17, not the stat block's 15)? 3.3 counts it in every attack roll
   and shows it in the dialog's target rows, but the card still shows the
@@ -1022,7 +1088,9 @@ Sheet chips ("DEX save · half · 8d6 Fire") from the same data;
   mark drops to 0, the turn reminder says "Hanna can move Hunter's Mark (a
   Bonus Action)", and a card's right-click "Move Hunter's Mark here" moves
   the record (caster, modifiers, concentration link and the caster's
-  active spell's `applied` row) and spends the Bonus Action.
+  active spell's `applied` row) and spends the Bonus Action. *Not done in
+  3.5:* its prompts come with turns, and this one comes with a creature
+  dropping to 0; left for its own small step.
 - **Q25. Hex's chosen ability** ("Disadvantage on ability checks made with
   the chosen ability"). *Suggestion:* Hex as a variant row per ability
   (R15), each badge "Hex" with `ExtraDamageFrom("1d6", NECROTIC)` and a
@@ -1043,6 +1111,21 @@ Sheet chips ("DEX save · half · 8d6 Fire") from the same data;
   already shows the Force. *Suggestion:* leave it; if players ask where the
   Force came from, let `public_log.py` read the line as part of the hit
   (kind "hit-extra") instead.
+- **Q29. Remember the slot a spell was cast with** (DI-078). A later step
+  (Spirit Guardians' damage, Ice Knife's explosion) starts at the spell's
+  own dice, and picking a higher slot in the dialog spends one.
+  *Suggestion:* keep the slot on the caster's active spell, and fill a
+  `spends_use=False` row's dice at that level, with the slot box left at
+  "No spell slot".
+- **Q30. `WhenHit` triggers** (Armor of Agathys, Fire Shield: damage to an
+  attacker that hits). Not built in 3.5: no described spell needs it yet.
+  *Suggestion:* the same shape as `AtTurnEnd`, fired by `_deal_damage` from
+  an attack, a prompt when it depends on reach ("within 5 feet").
+- **Q31. Many enemies, many prompts.** Spirit Guardians asks about every
+  enemy of its caster as its turn ends, as the simulator can't tell who is
+  near. *Suggestion:* keep it until the GM finds it noisy; then a
+  right-click "Not in Spirit Guardians" on a card that silences it for
+  that creature until it's given again.
 
 ## Discovered issues
 
@@ -1089,6 +1172,10 @@ Sheet chips ("DEX save · half · 8d6 Fire") from the same data;
   `applied` is filled only for concentration spells), so Divine Favor's
   extra damage outlasts its minute unless the badge is taken off by hand.
   The dialog's pick gives the badge a timer, which ends it.
+- **DI-078** (open, found in 3.5): the dialog's slot box is both cost and
+  upcast level, so a later step of a casting (`spends_use=False`) can only
+  upcast by spending a slot; nothing remembers the slot a spell was cast
+  with (Q29).
 - **DI-070** (open, found in 3.3): `SpellClassConverter`'s `_IMPORTS` has no
   modifier names, so `spell_mechanics.py add` can't write a badge with
   modifiers into a module that doesn't import them; Bless and Shield of
@@ -1145,7 +1232,15 @@ top). The full suite runs later, when the user asks.
   player link, the dialog's reminders and its weapon picks; the badge
   ending by hand, timer and Concentration; the same dice without extras)
   and a 3.1 and a 3.3 log's Hunter's Mark adding nothing in
-  `tests/test_active_effects.py`.
+  `tests/test_active_effects.py`. 3.5: `tests/test_turn_triggers.py` (the
+  JSON form and its strict errors; Heroism's and Spirit Guardians' badges
+  and the rows they name; `firings` for a bearer's turn, an enemy's, an
+  ally's, the caster's, a summon's, a badge on two enemies, a badge off, a
+  caster gone; in the window Heroism's temp HP on its target's turns only,
+  not stacking, from another's caster, undone, ended by hand and by
+  Concentration; Spirit Guardians' prompts and buttons, nothing rolled by
+  itself, a prompt opening the dialog picked and spending no slot, its
+  Wisdom save, a creature gone or dead).
 
 ## Checklist: adding a field to the model
 

@@ -144,7 +144,9 @@ class CombatHitPoints:
     """Hit Points each target regains, or Temporary Hit Points it gains:
     dice ("1d10 + 3", "5"), or "" for an amount the user types (Lay on Hands
     spends what it likes from a pool). `upcast` and `add_modifier` as for
-    CombatDamage; Temporary Hit Points can upcast by a number."""
+    CombatDamage; Temporary Hit Points can upcast by a number. No dice with
+    `add_modifier` is the modifier alone (Heroism's "Temporary Hit Points
+    equal to your spellcasting ability modifier")."""
 
     dice: str = ""
     upcast: str = ""

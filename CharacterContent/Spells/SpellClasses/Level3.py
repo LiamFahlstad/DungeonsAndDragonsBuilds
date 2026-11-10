@@ -23,7 +23,13 @@ from CharacterContent.Spells.SpellFactory.SpellFields import (
     Range,
 )
 from Core.Definitions import Ability, CharacterClass, DamageType
-from Model.Content.CombatEffect import CombatDamage, CombatEffect, EffectRoll
+from Model.Content.CombatEffect import (
+    CombatCondition,
+    CombatDamage,
+    CombatEffect,
+    EffectRoll,
+)
+from Model.Content.CombatModifiers import AtTurnEnd, WhoseTurn
 from Model.Content.Feature import FeatureTarget
 from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table
 from Model.View import CharacterView
@@ -3817,6 +3823,40 @@ class SpiritGuardians(ClassSpell):
             Option(
                 "Using a Higher-Level Spell Slot",
                 (Facts((("Damage", "+1d8 for each spell slot level above 3"),)),),
+            ),
+        ]
+
+    def combat_effects(
+        self, character: CharacterView | None = None
+    ) -> list[CombatEffect]:
+        return [
+            CombatEffect(
+                conditions=(
+                    CombatCondition(
+                        "Spirit Guardians",
+                        modifiers=(
+                            AtTurnEnd(
+                                "Spirit Guardians: damage",
+                                WhoseTurn.ENEMY,
+                                when="it ends its turn in the Emanation",
+                            ),
+                        ),
+                    ),
+                ),
+                notes=(
+                    "The badge goes on the caster, or on the enemies it's aimed at: either way the turn column asks, as each enemy of the caster ends its turn, whether it's in the 15-foot Emanation, for the damage row. Any other creature's Speed is halved in it.",
+                ),
+            ),
+            CombatEffect(
+                name="Spirit Guardians: damage",
+                roll=EffectRoll.SAVE,
+                save_ability=Ability.WISDOM,
+                half_on_success=True,
+                damage=(CombatDamage("3d8", DamageType.RADIANT, upcast="1d8"),),
+                spends_use=False,
+                notes=(
+                    "When the Emanation enters a creature's space, or a creature enters it or ends its turn there; once per turn for each creature. Necrotic instead if the caster is evil. Cast with a higher slot: 1d8 more per level above 3 (type it in; picking a slot here spends one).",
+                ),
             ),
         ]
 
