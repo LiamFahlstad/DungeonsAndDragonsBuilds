@@ -48,7 +48,7 @@ change and move on; the full suite can run later.
 | 2 | 2.7 Conditional extra damage (`when`) | **Done**, as a generated note (R14) |
 | 2 | Extensions list their own uses under their parent | **Done** (R10, new) |
 | S | **Spells as classes** (new direction, 2026-11-09; see its section) | S.1 base class, factory and converter **done**; S.2 the 57 spells with combat effects converted **done**; S.2c card lines as dataclasses **done** (R20); S.3 new effects go into classes **done** (R22); S.5 drift check **done** (R23); S.4 **done** (R26): all 594 spells are classes, the agents' tools switched over (R24), Q15 and DI-065 done (R25), every companion file deleted and nothing reads them |
-| 3 | Lasting effects (3.1-3.6) | 3.1 **done** (R28-R34): `char["active_effects"]`, one plain dict per badge, in the new Qt-free `Combat/Effects/active_effects.py`; the seven old keys are read only by its `upgrade_old_keys`, where a log is read; an old fight log replays the same (`tests/test_active_effects.py`). 3.2 **done** (R27), ahead of 3.1: the rules conditions are data, and saves, attack rolls (all three paths), AC, damage Resistance and condition immunity read them. 3.3 **done** (R35-R40): a badge's `CombatCondition` says its `modifiers`, the record keeps them as JSON, and `modifiers_on` reads them beside the conditions and cover; Bless's 1d4 is rolled into the saves (a monster's Concentration save too, R40) and attack rolls the simulator makes, Shield of Faith's +2 counts in AC, cover's +2/+5 in Dexterity saves (DI-066); a typed total stays as typed, with the bonus as a reminder in the dialog. 3.4 **done** (R41-R47): `ExtraDamageFrom` (on the target, from its effect's caster) and `ExtraDamageOnHit` (on the attacker); Hunter's Mark's 1d6 Force on its caster's hits and Divine Favor's 1d4 Radiant on its caster's weapon hits are rolled into the hits the dialog and a monster's action buttons deal, doubled on a Critical Hit, each type resisted on its own; a typed damage total stays as typed, with the extra as a reminder in the dialog. 3.5 **done** (R48-R53): `AtTurnStart` / `AtTurnEnd` are modifiers on a badge that name a row of their spell; Heroism's Temporary Hit Points are given as its target's turn starts, and Spirit Guardians asks, as each enemy of its caster ends its turn, with a button that opens the Custom Effect dialog with its damage row picked. 3.6 **done** (R54-R56): ending a concentration also ends every record linked to it (`held_by_concentration`), a creature leaving the fight ends its concentration first, and a badge another running effect still holds is relinked to that effect's caster |
+| 3 | Lasting effects (3.1-3.6) | 3.1 **done** (R28-R34): `char["active_effects"]`, one plain dict per badge, in the new Qt-free `Combat/Effects/active_effects.py`; the seven old keys are read only by its `upgrade_old_keys`, where a log is read; an old fight log replays the same (`tests/test_active_effects.py`). 3.2 **done** (R27), ahead of 3.1: the rules conditions are data, and saves, attack rolls (all three paths), AC, damage Resistance and condition immunity read them. 3.3 **done** (R35-R40): a badge's `CombatCondition` says its `modifiers`, the record keeps them as JSON, and `modifiers_on` reads them beside the conditions and cover; Bless's 1d4 is rolled into the saves (a monster's Concentration save too, R40) and attack rolls the simulator makes, Shield of Faith's +2 counts in AC, cover's +2/+5 in Dexterity saves (DI-066); a typed total stays as typed, with the bonus as a reminder in the dialog. 3.4 **done** (R41-R47): `ExtraDamageFrom` (on the target, from its effect's caster) and `ExtraDamageOnHit` (on the attacker); Hunter's Mark's 1d6 Force on its caster's hits and Divine Favor's 1d4 Radiant on its caster's weapon hits are rolled into the hits the dialog and a monster's action buttons deal, doubled on a Critical Hit, each type resisted on its own; a typed damage total stays as typed, with the extra as a reminder in the dialog. 3.5 **done** (R48-R53): `AtTurnStart` / `AtTurnEnd` are modifiers on a badge that name a row of their spell; Heroism's Temporary Hit Points are given as its target's turn starts, and Spirit Guardians asks, as each enemy of its caster ends its turn, with a button that opens the Custom Effect dialog with its damage row picked. 3.6 **done** (R54-R56): ending a concentration also ends every record linked to it (`held_by_concentration`), a creature leaving the fight ends its concentration first, and a badge another running effect still holds is relinked to that effect's caster. Added after (Decision 17, R125, 2026-11-11): a picked spell that gives a rules condition gives a badge of its own name beside it ("Charmed" and "Friends"), with its card, and taking either off takes the other off; a picked feature too (R126: "Turn Undead" beside Frightened and Incapacitated, "Hill's Tumble" beside Prone), not a weapon or a monster's action |
 | 4 | One `combat-effects` skill; feature agent; content rollout | 4.1 **done** (R57-R60): the `combat-effects` skill and `combat_effects.py` (renamed from spell-mechanics), with the principles, a Features section, `features`, `coverage` and `notes`, and features in `check`; `is_curated` is `is_described`. 4.2 **done**: the `feature-combat-effects` agent (opus); the spell agent is `spell-combat-effects`. 4.4 **done**: `coverage`. 4.3 (content): **Curse of the Lich done** (R61-R65, 2026-11-11): spells 44/44, features 23 described, 37 nothing to apply, none read from text; Time Loop PR was already done. Next: spells level by level and features class by class, which wait for the user's go (Decision 9) |
 | 5 | Sheet chips, monster score | Not started |
 | 6 | **Triggers** (new concept, 2026-11-11; see its section): a row or badge says *when* it's used (a hit, damage taken, dropping to 0, ...), and the simulator applies it itself (AUTO) or asks with a pop-up as it happens (ASK) | 6.1-6.3 **done** (R66-R73, 2026-11-11): `CombatTrigger` on a row (`CombatEffect.trigger`, `Model/Content/CombatTriggers.py`), `outcome_firings` with its gates and modes, and the hit hooks in all three hit paths: when Kivi hits a Large or smaller creature and deals it damage, one pop-up per Apply asks about Hill's Tumble; Apply gives Prone, spends a Giant Ancestry use and logs it, inside the hit's undo step. Only `HIT` and `MISS` fire; the other events are data. 6.4 **done** (R74-R77, 2026-11-11): a monster's hit that gives a condition in a sentence of its own ("If the target is a Large or smaller creature, it has the Prone condition", "..., and the target has the Poisoned condition until the end of its next turn", "the Grappled condition (escape DC 13)") is read as a rider row of its own ("Tree Club: Prone") with an AUTO `after=` trigger: the Hill Giant's Tree Club knocks a Large target Prone from its button and Enter and from the dialog, asks when the size isn't known, and does nothing to a Huge target or on a miss. 101 riders in the catalog. 6.5 **done** (R108-R114, 2026-11-11): as an attack roll hits, the creature hit is asked about its `HIT_BY` rows before the damage (Shield's +5 turns Clover's 20 against AC 18 into a miss and spends her Reaction and a slot; Kivi's Deflect Attacks takes its 1d10 + 8 off, `CombatEffect.damage_reduction`), and damage from a creature asks the one damaged about its `TAKES_DAMAGE` rows (Hellish Rebuke, newly described; Storm's Thunder); a Reaction used this round or an Incapacitated owner asks no more. Not built: a badge's `OnTrigger` (Armor of Agathys, Fire Shield; Q57). Next: 6.6 (Hit Point thresholds) |
@@ -519,6 +519,16 @@ suggested.
     copy in each box; a box for a rolled Hit Point maximum and a button for
     a player's dice Hit Points at a turn's start; a guard test for new
     roll sites.
+17. **A spell's badge beside the conditions it gives** (the user,
+    2026-11-11: "Sometimes, for example like the 'Friends' spell, it applies
+    charmed. However, I still want to read about 'Friends' as conditions.
+    ... Of course, if one is deleted so is the other. ... It's more a visual
+    aid than anything else."). A picked spell that gives a rules condition
+    also gives a badge named after the spell, with its card; the two are
+    linked, so taking either off takes the other off. *Built (R125).*
+    Features too, as Q62 suggested (the user, 2026-11-11: "do as you see
+    most fit"): a class, subclass, species or feat feature picked in the
+    dialog, not a weapon or a monster's action. *Built (R126).*
 
 ## Goal
 
@@ -649,6 +659,12 @@ with_bonus("1d8", 4) == "1d8 + 4"
   (2 of 3)" in the log. Only the first costs anything; it's one undo step
   (`_apply_custom_effects`).
 - **Spending a spell row** uses `spell_name`, not the row's name.
+- **A spell's or feature's own badge** (Decision 17, R125-R126): a picked
+  spell or feature that gives a rules condition also gives a badge of its
+  name ("Charmed" and "Friends", "Prone" and "Hill's Tumble"), with its
+  card, which stands for those conditions (the record's `linked`). Taking
+  it off takes them off; taking the last of them off takes it off. A
+  weapon's or a monster's action gives none.
 
 ## Spells as classes (new direction, 2026-11-09)
 
@@ -2277,12 +2293,49 @@ roll, and stays as it is.
   (or "helper", or "not a rules roll" for the free d20). A new place that
   rolls fails until it's listed, and an entry whose roll is gone fails
   until it's taken out, so the plan's table and the code can't drift.
+- **R125. A spell's badge stands for the conditions it gave** (Decision 17).
+  `_give_spell_badge` runs after a target's conditions are given in
+  `_apply_effect_to_targets`: for a pick with a `spell_name` (a feature's
+  use that casts a spell too) whose conditions include a rules condition
+  and not the spell's own name (Bless's badge already is the spell), it
+  gives the spell's badge with its card (`describe(..., SPELL)`), not
+  counted in the fight's condition stats (`_add_condition_to(counted=
+  False)`), and `link_badge` writes the conditions on its record as
+  `linked` (`NotRequired`, so older records and logs read as linking
+  nothing). `_remove_condition_from` does the rest both ways: a badge taken
+  off takes off what it stood for, unless another badge stands for it too
+  (Friends and Charm Person both on a Charmed target) or it's Unconscious
+  at 0 HP; a condition taken off is struck from every badge's `linked`
+  (`linked_badges_left_without`), and a badge left standing for nothing
+  goes. So a failed repeat save, a timer, a concentration ending and a
+  right-click all take both, in one undo step, each logged as it goes. Only
+  conditions the spell newly gave are linked, as `applied` does for
+  concentration: a Charmed given by hand before stays when the spell's
+  badge goes, so it gets no badge. The condition's own badge keeps the
+  spell's card as its tooltip, and its click still shows the rule.
+  A log replayed into a new window restores both badges but not the link
+  (the replay restores conditions, as with other records); the saved fight
+  state keeps it. `tests/test_linked_badges.py`.
+- **R126. A feature's badge too** (Decision 17, Q62). `_give_spell_badge`
+  is `_give_pick_badge`: a pick of kind FEATURE that isn't casting a spell
+  gives a badge of the row's name (`option.name`: "Turn Undead", "Hill's
+  Tumble", an extension's own name rather than the parent whose uses it
+  spends) with the feature's card (`_feature_condition_tooltip`,
+  `FEATURE_BADGE_COLOR`), linked the same way. `_picked_feature` finds the
+  feature object by the row's name, then by `feature_name`; the badge
+  card lookup in `_describe_effect_condition` uses it too, so an
+  extension's condition badge now shows the extension's card, not its
+  parent's. A trigger's Apply goes through the same path, so Hill's
+  Tumble's Prone from a hit logs one more line ("Ogre gains Hill's Tumble
+  from Kivi Jätti"; `tests/test_hit_triggers.py` updated). A weapon's or a
+  monster's action (Tree Club's Prone rider) gets none: its rider is plain
+  in the log.
 
 ## Open questions (with suggestions)
 
 Q4-Q10, Q13, Q18, Q21-Q29, Q31-Q35, Q37, Q46, Q48-Q50, Q53 and Q55 are
 **decided as suggested** (Decision 13, 2026-11-11), and Q14, Q16, Q30,
-Q36, Q38 and Q39 too (Decision 14), and Q58-Q61 (Decision 16); all
+Q36, Q38 and Q39 too (Decision 14), Q58-Q61 (Decision 16) and Q62 (Decision 17); all
 moved there. Q11 was done as suggested in S.4 (R24-R26): every spell is
 a class.
 
