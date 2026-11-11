@@ -28,7 +28,7 @@ change and move on; the full suite can run later.
 - No parity runs against main, `verify-agent-work`, `code-reviewer` or
   `rules-checker` passes per step unless asked.
 
-## Status (2026-11-11, Phase 3 done, Phase 4's tooling (4.1, 4.2, 4.4) done, and 4.3's first party done: lasting effects are one list, the rules conditions are data, effects carry modifiers the simulator counts, hits deal the extra damage effects give, badges act as turns start and end, a concentration ends everything linked to it, and every spell and feature of the Curse of the Lich party is described)
+## Status (2026-11-11, Phase 3 done, Phase 4's tooling (4.1, 4.2, 4.4) done, and 4.3's first party done: lasting effects are one list, the rules conditions are data, effects carry modifiers the simulator counts, hits deal the extra damage effects give, badges act as turns start and end, a concentration ends everything linked to it, and every spell and feature of the Curse of the Lich party is described; Phase 8 started: every roll can be made at the table)
 
 | Phase | Step | State |
 |---|---|---|
@@ -53,6 +53,7 @@ change and move on; the full suite can run later.
 | 5 | Sheet chips, monster score | Not started |
 | 6 | **Triggers** (new concept, 2026-11-11; see its section): a row or badge says *when* it's used (a hit, damage taken, dropping to 0, ...), and the simulator applies it itself (AUTO) or asks with a pop-up as it happens (ASK) | 6.1-6.3 **done** (R66-R73, 2026-11-11): `CombatTrigger` on a row (`CombatEffect.trigger`, `Model/Content/CombatTriggers.py`), `outcome_firings` with its gates and modes, and the hit hooks in all three hit paths: when Kivi hits a Large or smaller creature and deals it damage, one pop-up per Apply asks about Hill's Tumble; Apply gives Prone, spends a Giant Ancestry use and logs it, inside the hit's undo step. Only `HIT` and `MISS` fire; the other events are data. 6.4 **done** (R74-R77, 2026-11-11): a monster's hit that gives a condition in a sentence of its own ("If the target is a Large or smaller creature, it has the Prone condition", "..., and the target has the Poisoned condition until the end of its next turn", "the Grappled condition (escape DC 13)") is read as a rider row of its own ("Tree Club: Prone") with an AUTO `after=` trigger: the Hill Giant's Tree Club knocks a Large target Prone from its button and Enter and from the dialog, asks when the size isn't known, and does nothing to a Huge target or on a miss. 101 riders in the catalog. 6.5 **done** (R108-R114, 2026-11-11): as an attack roll hits, the creature hit is asked about its `HIT_BY` rows before the damage (Shield's +5 turns Clover's 20 against AC 18 into a miss and spends her Reaction and a slot; Kivi's Deflect Attacks takes its 1d10 + 8 off, `CombatEffect.damage_reduction`), and damage from a creature asks the one damaged about its `TAKES_DAMAGE` rows (Hellish Rebuke, newly described; Storm's Thunder); a Reaction used this round or an Incapacitated owner asks no more. Not built: a badge's `OnTrigger` (Armor of Agathys, Fire Shield; Q57). Next: 6.6 (Hit Point thresholds) |
 | 7 | **Stat changes while an effect is on** (new, 2026-11-11; see its section): AC formulas and floors, Immunity and Vulnerability beside the built Resistance, Speed, size, Hit Point maximum, worked out from the stored stat plus the badges, and shown on the card with their sources | 7.1-7.2 **done** (R78-R83, 2026-11-11): `ArmorClassBase` (Mage Armor) and `ArmorClassMinimum` (Barkskin) beside `ArmorClass`, worked out by `armor_class(char, stored)`, which every attack path reads through `armor_bonus`; the same effect twice adds once; `DamageImmunity` and `Vulnerability` beside `Resistance` in `_damage_type_modifier`; Mage Armor, Barkskin, Stoneskin, Protection from Energy (a row per type) and Rage described (`tests/test_stat_changes.py`). 7.4 **done** (R84-R89, 2026-11-11): `HitPointMaximum(amount, upcast)`, rolled as the badge is given; `hit_point_maximum(char)` is the stored `max_hp` plus the badges, read by every cap, bar and Bloodied check; giving it raises current HP as Hit Points regained, ending it caps current HP (`Action.LOSE_HIT_POINTS`, replayed); Aid and Heroes' Feast described. 7.5 **done** (R90-R93, 2026-11-11): the card's and More Info's AC is the AC in use with what changes it ("AC: 17 (15; Shield of Faith +2)", cover too), a "Max HP 35 (30; Aid +5)" line, and the defenses the conditions and badges give with where from ("Resist: ...; Bludgeoning, Piercing, Slashing (Rage)", "Cond. Immune: Frightened (Heroism)"); the player view's full rows show the AC in use. 7.3 **done** (R94-R98, 2026-11-11): `Speed(bonus, multiplier, set_to)` and `Size(steps, becomes)`, worked out by `speed_in_use` and `size_in_use`; the trigger size gates read the size in use (an Enlarged Large Ogre is Huge to Hill's Tumble); the card shows "Speed: 80 ft. (40 ft.; Haste ×2)" and, when changed, "Size Huge (Large; Enlarge/Reduce +1)"; Haste (and its lethargy row), Longstrider, Enlarge/Reduce and Large Form described. 7.6 **done** (R106, R107, 2026-11-11): the rubric's Stat changes table, `combat_effects.py stats` (each note naming AC, a defense, Speed, the Hit Point maximum or size, marked counted or NOTE ONLY), and both parties' rows: Shield's `ArmorClass(5)`, Absorb Elements' `Resistance` (a row per type), Silence's Thunder `DamageImmunity`, Shield of Faith's restating note gone. **Phase 7 done** |
+| 8 | **Rolled at the table** (new, 2026-11-11, Decision 15; see its section): whatever the simulator rolls, the GM can give it a number rolled at the table instead | 8.1-8.3 **done** (R115-R119, 2026-11-11): a hit's extra damage (Hunter's Mark, Divine Favor) has a box per target in the Custom Effect dialog, added as typed, even to a typed damage total, Critical Hit or not; Deflect Attacks' and Stone's Endurance's reduction has a box in the trigger pop-up; the setting "Roll monsters' recharges and repeat saves" (`monsters_roll_turn_dice`) off turns those into turn reminders (`tests/test_table_rolls.py`). Not built: a summon's initiative mid-fight, Times copies after the first, dice Hit Points given with no form open (Q58-Q60), and a guard test for new roll sites (Q61) |
 
 **Content described so far.** Spells: 57 (2024) + 1 (2014), all as classes
 (every spell is a class since S.4; 58 have combat effects);
@@ -503,6 +504,16 @@ suggested.
       (`HIT_BY`) as a hit lands on their owner. It rolls the reduction, takes
       it off the damage and spends the Reaction. Step 6.5. *Built (R110).*
 
+15. **Every roll can be made at the table** (the user, 2026-11-11: "I want
+    extra damage, just like Hunter's Mark to be 'rollable in real life' as
+    well. In fact, Everything that requires some kind of roll cannot be
+    purely left to the engine, but should always have the options to roll
+    in real life."). Design principle 13 and Phase 8. Decision 4 still
+    holds for what's left blank: a total typed at the table gets nothing
+    rolled on top of it. A roll with a box of its own (a hit's extra damage)
+    is a roll of its own, though, so a number typed in that box is added,
+    even to a typed damage total (R117).
+
 ## Goal
 
 The Custom Effect dialog is what the GM uses for almost everything in a fight.
@@ -547,6 +558,15 @@ should be filled in **by one model, through one code path**, so that:
     applies a triggered row itself only when the rules say it happens and
     it can check every gate. Otherwise it asks; it never decides for the
     GM.
+13. **Every roll can be made at the table** (Decision 15, Phase 8). The
+    simulator rolling is a shortcut, never the only way. Wherever it rolls,
+    the GM can give it the number rolled at the table instead: a box by
+    the roll in the form or pop-up it happens in (blank rolls it here), or,
+    for a roll made with no form open (as a turn starts or ends), a setting
+    that turns it into a turn reminder. A number typed in counts as typed:
+    it isn't doubled on a Critical Hit, and no gate overrules it. A new
+    place that rolls comes with its way to type the roll in, in the same
+    change.
 
 ## The design as built
 
@@ -1060,6 +1080,50 @@ damage the simulator works out. 7.3 and 7.5 only change what is shown,
 apart from the size gate. Wild Shape and Polymorph, which swap the whole
 stat block, stay as they are (a form change, after which `rows_of` is
 rebuilt), not a pile of modifiers.
+
+## Rolled at the table (Phase 8, new, 2026-11-11)
+
+The user (Decision 15): extra damage like Hunter's Mark should be "rollable
+in real life", and so should everything else that's rolled. Players roll
+their own dice; the simulator rolling for them is a convenience. Design
+principle 13 is the rule; this is where each roll stands.
+
+### Every roll, and how it's made at the table
+
+| Roll | Rolled by | At the table | State |
+|---|---|---|---|
+| Initiative as the fight starts | the setup rows' Roll buttons | each row's box | already |
+| A summon's initiative mid-fight | `_roll_into_turn_order` | nothing | **gap** (Q58) |
+| A monster's attack and damage, main window | its action button (`_roll_action`) | the Attack roll and Damage fields; the rolled damage lands in the Damage field, which can be changed before Enter | already |
+| A hit's extra damage, main window | the action button adds it to the Damage field; a typed hit says "+1d6 Force (Pirate's Hunter's Mark)" (Q27) | change the Damage field, or type it with the damage ("7 sl + 4 fo") | already |
+| Attack rolls, saves and damage in the Custom Effect dialog | `_apply_custom_effect` | a box per target, and the Damage field | already |
+| A hit's extra damage in the dialog | `_with_hit_extras` | a box under its target's row, per thing that gives it | **built** (8.1) |
+| What modifiers add to a roll (Bless's 1d4, cover's +2) | `roll_bonuses` | in the total typed; the target's row says what to add (Decision 4) | already |
+| Times copies after the first (Scorching Ray's second and third rays) | `repeated()` | nothing: only the first takes the boxes | **gap** (Q59) |
+| A fired row's damage, save and conditions (Hellish Rebuke) | `_use_trigger` → `_apply_row` | the pop-up's Edit... opens the dialog with it picked | already |
+| A fired row's damage reduction (Deflect Attacks, Stone's Endurance) | `_before_hit` | a box beside its checkbox in the pop-up | **built** (8.2) |
+| Hit Points a badge gives as a turn starts (Heroism) | `_give_trigger_hit_points` | nothing when they have dice (none do yet) | **gap** (Q60) |
+| A badge's Hit Point maximum with dice (Heroes' Feast's 2d10) | rolled as the badge is given (R85) | nothing | **gap** (Q60) |
+| A monster's recharge | `_start_monster_turn` | `monsters_roll_turn_dice` off: a reminder, and ↺ makes the action ready | **built** (8.3) |
+| A monster's repeat save | `_end_of_turn_saves` | `monsters_roll_turn_dice` off: a reminder, as a player's | **built** (8.3) |
+| A monster's Concentration save | `_ask_concentration_saves` | `monsters_roll_concentration` off (the default): on its card | already |
+| A player's repeat, Concentration and death saves | nothing | reminders and card buttons | already |
+| A badge's turn-end damage (Spirit Guardians) | its turn-column button opens the dialog | the dialog's boxes | already |
+
+The free d20 roller under the turn panel is a convenience, not a rules
+roll, and stays as it is.
+
+### Steps
+
+| # | Step | Done when |
+|---|---|---|
+| 8.1 | **Done** (R115-R117). `CustomEffect.typed_extras` (by target, then by what gives it); `hit_plan(..., rolled)` and `HitPlan.at_table`; a box under each target's attack row for each extra a hit on it deals. | Hunter's Mark typed as 3 deals 5 + 3 with no d6 rolled and logs "+3 Force (rolled at the table)"; a typed 4 joins a typed damage total of 7; 0 leaves it out; on a Critical Hit it isn't doubled; a blank under a typed total is logged as not rolled; the box goes with an attack roll's hit only; with Times, the first copy takes it; the dialog fits 600 high with eight targets under Divine Favor |
+| 8.2 | **Done** (R118). A box for a fired row's own roll in the trigger pop-up (`TriggerChoice.rolled`). | Deflect Attacks typed as 11 takes 11 off a 13 hit without rolling, logged "(1d10 + 8, rolled at the table)"; "7 + 8" reads as 15; blank rolls |
+| 8.3 | **Done** (R119). The setting `monsters_roll_turn_dice` (on by default, the old behaviour). | Off: a spent recharge action stays spent with a reminder and no d6 rolled; a monster's repeat save is a reminder and its condition stays; the Settings dialog still fits 600 high |
+| 8.4 | A summon's initiative mid-fight (Q58). | |
+| 8.5 | Times copies after the first (Q59). | |
+| 8.6 | Dice Hit Points given with no form open (Q60). | |
+| 8.7 | A guard test, so a new roll site comes with its way to the table (Q61). | |
 
 ## Revisions (better solutions found while building)
 
@@ -2125,6 +2189,50 @@ rebuilt), not a pile of modifiers.
   answers), and a turn-column button "Clover: Shield (hit by Ogre)". The
   pop-up's apply/edit/skip handling is one `_answer_firings`, shared by
   the hit's prompt and `_before_hit`.
+- **R115. The extra damage's box is under its target's row, not a block of
+  its own** (8.1). A block under the Damage field (a hint, then a row per
+  target and extra) was built first, and made the dialog 729 high with
+  eight targets under Divine Favor, which is on its caster, so every target
+  has one. A row under the target's own, inside the attack rows' scroll
+  area, costs no height. The target's line no longer repeats "+1d6 Force on
+  a hit", since the row under it says it ("Hunter's Mark: +1d6 Force on a
+  hit"); `test_the_dialog_reminds_of_the_marks_extra_damage` changed with
+  it. The row's label wraps and its box is at least 110 wide, so two extras
+  on one target don't squeeze the attack box.
+- **R116. A typed extra counts whatever the gates say** (8.1). In
+  `hit_plan(attacker, target, weapon_attack, rolled)`, a label typed in is
+  added even where the simulator would only note it (a `when`, a
+  weapon-only extra on an attack it can't tell) or leave it out (Divine
+  Favor on a spell attack): typing it is the GM deciding (principle 8). It
+  isn't doubled on a Critical Hit, since the box asks for the total, its
+  dice already twice over. `HitPlan.at_table` names those labels, so
+  `roll_extra_damage` adds them as typed and logs "+4 Force (rolled at the
+  table)".
+- **R117. A blank box under a typed damage total still adds nothing**
+  (Decision 4), as before 8.1. The log now says so for the GM ("Pirate's
+  Hunter's Mark: not rolled, as the damage total typed has it"), where
+  before it said nothing. `typed_damage` no longer stops
+  `_with_hit_extras` from running; it only drops the extras that weren't
+  typed in. So a weapon's 7 and a mark's 4, both rolled at the table, make
+  11.
+- **R118. The pop-up's box is a `TriggerChoice` field** (8.2).
+  `TriggerChoice.rolled` holds (firing, total) pairs and `rolled_for(firing)`
+  reads one. `_answer_firings` returns each applied firing with what was
+  typed for it, and `_before_hit` takes that off instead of rolling. Only a
+  row with `damage_reduction` gets a box: the other rolls a fired row makes
+  go through `_apply_row`, whose way to the table is Edit.... The box
+  takes a total or a sum ("7 + 8"), through a validator, so it has nothing
+  wrong to report.
+- **R119. One setting for monsters' turn dice** (8.3):
+  `monsters_roll_turn_dice`, on by default (the old behaviour), in the
+  Damage section beside "Roll monsters' Concentration saves". The
+  Initiative column had no room, and the dialog's 600-high limit took
+  three hints made shorter (Concentration saves, the remembered damage
+  type, Jump to Damage). Off, a recharge is a reminder ("Fire Breath
+  (Recharge 5–6): roll its recharge (a d6 of 5 or more), ↺ if it comes
+  back"), and ↺ (`_restore_ability`), which already existed, is how the
+  roll made at the table is entered. A repeat save is the reminder a
+  player gets, and the GM takes the condition off on a success.
 
 ## Open questions (with suggestions)
 
@@ -2132,6 +2240,34 @@ Q4-Q10, Q13, Q18, Q21-Q29, Q31-Q35, Q37, Q46, Q48-Q50, Q53 and Q55 are
 **decided as suggested** (Decision 13, 2026-11-11), and Q14, Q16, Q30,
 Q36, Q38 and Q39 too (Decision 14); all moved there. Q11 was done as
 suggested in S.4 (R24-R26): every spell is a class.
+
+- **Q58. A summon's initiative mid-fight** (8.4). `_roll_into_turn_order`
+  rolls it and puts the summon in the order, with no way to give it the
+  player's roll. *Suggestion:* keep the roll, say it in the turn column
+  ("Drake Companion: initiative 14"), and add a card right-click "Set
+  initiative..." that takes a number and moves the summon in the order
+  (the same placing `_roll_into_turn_order` does, given the value). It
+  works for anyone, a summon or not, and needs no setting.
+- **Q59. Times copies after the first** (8.5). With Times 3, only the first
+  ray takes the boxes; the second and third are rolled. *Suggestion:* a
+  box takes several totals separated by commas ("17, 9, nat 20"), one per
+  time, in order; a short list rolls the rest. The same for save totals
+  and extra damage boxes, and the Damage field keeps taking one amount
+  for each.
+- **Q60. Dice Hit Points given with no form open** (8.6): a badge's
+  turn-start Hit Points with dice (none yet; Heroism's are a number) and a
+  `HitPointMaximum` with dice (Heroes' Feast's 2d10, rolled as the badge
+  is given). *Suggestion:* turn-start Hit Points with dice become a
+  turn-column button that opens the dialog with them picked, where the
+  Damage field takes a total, as Spirit Guardians' damage does; a number
+  is still given by itself. A `HitPointMaximum` with dice gets a box in
+  the dialog when the pick gives one ("Hit Point maximum rolled"), blank
+  rolling it.
+- **Q61. A guard test for new roll sites** (8.7). *Suggestion:* a test
+  lists every call of `random.randint`, `roll_dice`, `_roll_d20`,
+  `roll_bonuses` and `rolled_damage` under `Combat/CombatUIQt/` against a
+  list in the test, each with its way to the table (a row of the table
+  above), so a new place that rolls fails until it's added with one.
 
 - **Q57. A badge that answers a hit (`OnTrigger`, 6.5's rest).** Armor of
   Agathys ("a creature hits you with a melee attack roll ... takes 5 Cold
@@ -2366,6 +2502,13 @@ top). The full suite runs later, when the user asks.
   ending by hand, timer and Concentration; one undo; an old log replaying
   the same. Plus `test_effect_modifiers.py` and `test_extra_damage.py`,
   to show what Phase 3 built didn't change.
+- **Phase 8:** `tests/test_table_rolls.py`. Each roll typed in is used as
+  typed and nothing else is rolled (a stand-in `randint` fails on any die
+  but the d20s expected); blank still rolls; the boxes show only where
+  their roll happens; the Custom Effect and Settings dialogs still fit
+  600 high (eight targets under Divine Favor; two extras on one target).
+  Plus `test_extra_damage.py`, `test_hit_by_triggers.py`,
+  `test_combat_ui_settings.py` and `test_combat_ui_fast_play.py`.
 
 ## Checklist: adding a field to the model
 
