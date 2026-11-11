@@ -72,13 +72,34 @@ class LogJSONEncoder(json.JSONEncoder):
 
     def default(self, o):
         if dataclasses.is_dataclass(o) and not isinstance(o, type):
-            data = dataclasses.asdict(o)
-            # Most abilities have no combat effects written on them: leave the
-            # key out, so their logs read as they always have.
-            if isinstance(o, MonsterAbility) and not o.combat_effects:
-                data.pop("combat_effects", None)
-            return data
+            return _encode(o)
         return super().default(o)
+
+
+def _encode(value):
+    """`dataclasses.asdict`, but a MonsterAbility's combat effects are written
+    by `CombatEffect.to_dict`, at any depth. asdict drops the `type` a badge's
+    modifiers need to be read back (DI-069)."""
+    if isinstance(value, MonsterAbility):
+        data = {
+            f.name: _encode(getattr(value, f.name))
+            for f in dataclasses.fields(value)
+            if f.name != "combat_effects"
+        }
+        # Most abilities have no combat effects written on them: leave the
+        # key out, so their logs read as they always have.
+        if value.combat_effects:
+            data["combat_effects"] = [e.to_dict() for e in value.combat_effects]
+        return data
+    if dataclasses.is_dataclass(value) and not isinstance(value, type):
+        return {
+            f.name: _encode(getattr(value, f.name)) for f in dataclasses.fields(value)
+        }
+    if isinstance(value, (list, tuple)):
+        return [_encode(v) for v in value]
+    if isinstance(value, dict):
+        return {k: _encode(v) for k, v in value.items()}
+    return value
 
 
 def scenario_log_path(combat_log_dir: str | Path, scenario_name: str) -> Path:

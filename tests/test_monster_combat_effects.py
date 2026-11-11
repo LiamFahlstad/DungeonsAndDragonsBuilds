@@ -106,6 +106,20 @@ def test_written_effects_come_back_from_the_log():
     assert ability_effects(ability) == (STUTTER,)
 
 
+def test_a_badge_with_modifiers_comes_back_from_the_log():
+    """DI-069: asdict dropped each modifier's type, so from_dict refused it.
+    Bless's badge carries D20Bonus 1d4; the log must keep it readable, also
+    when the ability sits inside another dataclass."""
+    bless = SpellFactory.create("Bless").combat_effects()[0]
+    assert bless.conditions[0].modifiers, "Bless's badge has its 1d4"
+    ability = MonsterAbility("Bless", "x", combat_effects=(bless,))
+    logged = json.loads(json.dumps(ability, cls=LogJSONEncoder))
+    assert ability_effects(logged) == (bless,)
+    nested = _plain({"actions": [ability], "pair": (ability,)})
+    assert ability_effects(nested["actions"][0]) == (bless,)
+    assert ability_effects(nested["pair"][0]) == (bless,)
+
+
 @pytest.mark.parametrize(
     "effect",
     [
