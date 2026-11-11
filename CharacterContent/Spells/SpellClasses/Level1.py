@@ -45,6 +45,7 @@ from Model.Content.CombatModifiers import (
     D20Test,
     ExtraDamageFrom,
     ExtraDamageOnHit,
+    Resistance,
     RollMode,
     Speed,
 )
@@ -116,11 +117,26 @@ class AbsorbElements(ClassSpell):
     ) -> list[CombatEffect]:
         return [
             CombatEffect(
-                conditions=(CombatCondition("Absorb Elements"),),
+                name=f"Absorb Elements: {damage_type.value}",
+                conditions=(
+                    CombatCondition(
+                        "Absorb Elements",
+                        until=(TurnEdge.START, TurnOf.SOURCE),
+                        modifiers=(Resistance((damage_type,)),),
+                    ),
+                ),
+                targets_self=True,
                 notes=(
-                    "You have Resistance to the triggering damage type (Acid, Cold, Fire, Lightning or Thunder) until the start of your next turn.",
+                    "Pick the triggering damage type's row. The Resistance counts against the triggering damage too: give back what it would have halved.",
                     "The first time you hit with a melee attack on your next turn, the target takes an extra 1d6 damage of that type (1d6 more per slot level above 1), and the spell ends.",
                 ),
+            )
+            for damage_type in (
+                DamageType.ACID,
+                DamageType.COLD,
+                DamageType.FIRE,
+                DamageType.LIGHTNING,
+                DamageType.THUNDER,
             )
         ]
 
@@ -1784,9 +1800,17 @@ class Shield(ClassSpell):
     ) -> list[CombatEffect]:
         return [
             CombatEffect(
-                conditions=(CombatCondition("Shield"),),
+                conditions=(
+                    CombatCondition(
+                        "Shield",
+                        until=(TurnEdge.START, TurnOf.SOURCE),
+                        modifiers=(ArmorClass(5),),
+                    ),
+                ),
+                targets_self=True,
                 notes=(
-                    "+5 to your AC until the start of your next turn, including against the triggering attack, and no damage from Magic Missile.",
+                    "The +5 counts against the triggering attack too: if it now misses, take that hit back.",
+                    "You take no damage from Magic Missile until the start of your next turn.",
                 ),
             )
         ]
@@ -1831,9 +1855,6 @@ class ShieldOfFaith(ClassSpell):
             CombatEffect(
                 conditions=(
                     CombatCondition("Shield of Faith", modifiers=(ArmorClass(2),)),
-                ),
-                notes=(
-                    "A creature of your choice gets a +2 bonus to AC for the duration.",
                 ),
             )
         ]

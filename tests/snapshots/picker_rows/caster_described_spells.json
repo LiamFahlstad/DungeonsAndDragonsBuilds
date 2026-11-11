@@ -1,9 +1,19 @@
 {
  "caster/described spells": {
-  "All spells | Absorb Elements": {
+  "All spells | Absorb Elements: Acid": {
    "ability": null,
    "action_cost": "Reaction",
    "amount_kind": "Damage",
+   "badge_modifiers": {
+    "Absorb Elements": [
+     {
+      "damage_types": [
+       "Acid"
+      ],
+      "type": "Resistance"
+     }
+    ]
+   },
    "bonus": null,
    "concentration": false,
    "condition": "Absorb Elements",
@@ -15,7 +25,7 @@
    "half_on_save": false,
    "is_described": true,
    "is_unavailable": false,
-   "note": "You have Resistance to the triggering damage type (Acid, Cold, Fire, Lightning or Thunder) until the start of your next turn. The first time you hit with a melee attack on your next turn, the target takes an extra 1d6 damage of that type (1d6 more per slot level above 1), and the spell ends.",
+   "note": "It goes on its user, whoever is targeted. Pick the triggering damage type's row. The Resistance counts against the triggering damage too: give back what it would have halved. The first time you hit with a melee attack on your next turn, the target takes an extra 1d6 damage of that type (1d6 more per slot level above 1), and the spell ends.",
    "repeat_save": false,
    "roll": "Saving throw",
    "row_name": "",
@@ -23,7 +33,171 @@
    "spell_level": 1,
    "spell_name": "Absorb Elements",
    "summary": "",
-   "until": null,
+   "targets_self": true,
+   "until": [
+    "start",
+    "source"
+   ],
+   "upcast": []
+  },
+  "All spells | Absorb Elements: Cold": {
+   "ability": null,
+   "action_cost": "Reaction",
+   "amount_kind": "Damage",
+   "badge_modifiers": {
+    "Absorb Elements": [
+     {
+      "damage_types": [
+       "Cold"
+      ],
+      "type": "Resistance"
+     }
+    ]
+   },
+   "bonus": null,
+   "concentration": false,
+   "condition": "Absorb Elements",
+   "counts_uses": true,
+   "damage": "",
+   "dc": null,
+   "duration_seconds": 6,
+   "feature_name": "",
+   "half_on_save": false,
+   "is_described": true,
+   "is_unavailable": false,
+   "note": "It goes on its user, whoever is targeted. Pick the triggering damage type's row. The Resistance counts against the triggering damage too: give back what it would have halved. The first time you hit with a melee attack on your next turn, the target takes an extra 1d6 damage of that type (1d6 more per slot level above 1), and the spell ends.",
+   "repeat_save": false,
+   "roll": "Saving throw",
+   "row_name": "",
+   "slot_level": "None",
+   "spell_level": 1,
+   "spell_name": "Absorb Elements",
+   "summary": "",
+   "targets_self": true,
+   "until": [
+    "start",
+    "source"
+   ],
+   "upcast": []
+  },
+  "All spells | Absorb Elements: Fire": {
+   "ability": null,
+   "action_cost": "Reaction",
+   "amount_kind": "Damage",
+   "badge_modifiers": {
+    "Absorb Elements": [
+     {
+      "damage_types": [
+       "Fire"
+      ],
+      "type": "Resistance"
+     }
+    ]
+   },
+   "bonus": null,
+   "concentration": false,
+   "condition": "Absorb Elements",
+   "counts_uses": true,
+   "damage": "",
+   "dc": null,
+   "duration_seconds": 6,
+   "feature_name": "",
+   "half_on_save": false,
+   "is_described": true,
+   "is_unavailable": false,
+   "note": "It goes on its user, whoever is targeted. Pick the triggering damage type's row. The Resistance counts against the triggering damage too: give back what it would have halved. The first time you hit with a melee attack on your next turn, the target takes an extra 1d6 damage of that type (1d6 more per slot level above 1), and the spell ends.",
+   "repeat_save": false,
+   "roll": "Saving throw",
+   "row_name": "",
+   "slot_level": "None",
+   "spell_level": 1,
+   "spell_name": "Absorb Elements",
+   "summary": "",
+   "targets_self": true,
+   "until": [
+    "start",
+    "source"
+   ],
+   "upcast": []
+  },
+  "All spells | Absorb Elements: Lightning": {
+   "ability": null,
+   "action_cost": "Reaction",
+   "amount_kind": "Damage",
+   "badge_modifiers": {
+    "Absorb Elements": [
+     {
+      "damage_types": [
+       "Lightning"
+      ],
+      "type": "Resistance"
+     }
+    ]
+   },
+   "bonus": null,
+   "concentration": false,
+   "condition": "Absorb Elements",
+   "counts_uses": true,
+   "damage": "",
+   "dc": null,
+   "duration_seconds": 6,
+   "feature_name": "",
+   "half_on_save": false,
+   "is_described": true,
+   "is_unavailable": false,
+   "note": "It goes on its user, whoever is targeted. Pick the triggering damage type's row. The Resistance counts against the triggering damage too: give back what it would have halved. The first time you hit with a melee attack on your next turn, the target takes an extra 1d6 damage of that type (1d6 more per slot level above 1), and the spell ends.",
+   "repeat_save": false,
+   "roll": "Saving throw",
+   "row_name": "",
+   "slot_level": "None",
+   "spell_level": 1,
+   "spell_name": "Absorb Elements",
+   "summary": "",
+   "targets_self": true,
+   "until": [
+    "start",
+    "source"
+   ],
+   "upcast": []
+  },
+  "All spells | Absorb Elements: Thunder": {
+   "ability": null,
+   "action_cost": "Reaction",
+   "amount_kind": "Damage",
+   "badge_modifiers": {
+    "Absorb Elements": [
+     {
+      "damage_types": [
+       "Thunder"
+      ],
+      "type": "Resistance"
+     }
+    ]
+   },
+   "bonus": null,
+   "concentration": false,
+   "condition": "Absorb Elements",
+   "counts_uses": true,
+   "damage": "",
+   "dc": null,
+   "duration_seconds": 6,
+   "feature_name": "",
+   "half_on_save": false,
+   "is_described": true,
+   "is_unavailable": false,
+   "note": "It goes on its user, whoever is targeted. Pick the triggering damage type's row. The Resistance counts against the triggering damage too: give back what it would have halved. The first time you hit with a melee attack on your next turn, the target takes an extra 1d6 damage of that type (1d6 more per slot level above 1), and the spell ends.",
+   "repeat_save": false,
+   "roll": "Saving throw",
+   "row_name": "",
+   "slot_level": "None",
+   "spell_level": 1,
+   "spell_name": "Absorb Elements",
+   "summary": "",
+   "targets_self": true,
+   "until": [
+    "start",
+    "source"
+   ],
    "upcast": []
   },
   "All spells | Aid": {
@@ -2130,6 +2304,14 @@
    "ability": null,
    "action_cost": "Reaction",
    "amount_kind": "Damage",
+   "badge_modifiers": {
+    "Shield": [
+     {
+      "bonus": 5,
+      "type": "ArmorClass"
+     }
+    ]
+   },
    "bonus": null,
    "concentration": false,
    "condition": "Shield",
@@ -2141,7 +2323,7 @@
    "half_on_save": false,
    "is_described": true,
    "is_unavailable": false,
-   "note": "+5 to your AC until the start of your next turn, including against the triggering attack, and no damage from Magic Missile.",
+   "note": "It goes on its user, whoever is targeted. The +5 counts against the triggering attack too: if it now misses, take that hit back. You take no damage from Magic Missile until the start of your next turn.",
    "repeat_save": false,
    "roll": "Saving throw",
    "row_name": "",
@@ -2149,7 +2331,11 @@
    "spell_level": 1,
    "spell_name": "Shield",
    "summary": "",
-   "until": null,
+   "targets_self": true,
+   "until": [
+    "start",
+    "source"
+   ],
    "upcast": []
   },
   "All spells | Shield of Faith": {
@@ -2175,7 +2361,7 @@
    "half_on_save": false,
    "is_described": true,
    "is_unavailable": false,
-   "note": "A creature of your choice gets a +2 bonus to AC for the duration.",
+   "note": "",
    "repeat_save": false,
    "roll": "Saving throw",
    "row_name": "",
@@ -2190,9 +2376,19 @@
    "ability": null,
    "action_cost": "Action",
    "amount_kind": "Damage",
+   "badge_modifiers": {
+    "Silence": [
+     {
+      "damage_types": [
+       "Thunder"
+      ],
+      "type": "DamageImmunity"
+     }
+    ]
+   },
    "bonus": null,
    "concentration": true,
-   "condition": "Deafened",
+   "condition": "Deafened + Silence",
    "counts_uses": true,
    "damage": "",
    "dc": null,
@@ -2201,7 +2397,7 @@
    "half_on_save": false,
    "is_described": true,
    "is_unavailable": false,
-   "note": "Each creature entirely inside the 20-foot-radius Sphere: take Deafened off when it leaves. Inside, creatures and objects have Immunity to Thunder damage, and no spell with a Verbal component can be cast.",
+   "note": "Each creature entirely inside the 20-foot-radius Sphere: take Deafened and the Silence badge (Immunity to Thunder damage) off when it leaves. Inside, objects have Immunity to Thunder damage too, and no spell with a Verbal component can be cast.",
    "repeat_save": false,
    "roll": "Saving throw",
    "row_name": "",

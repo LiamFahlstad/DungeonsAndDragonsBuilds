@@ -165,10 +165,20 @@
    "until": null,
    "upcast": []
   },
-  "Hanna's Spells | Absorb Elements": {
+  "Hanna's Spells | Absorb Elements: Acid": {
    "ability": null,
    "action_cost": "Reaction",
    "amount_kind": "Damage",
+   "badge_modifiers": {
+    "Absorb Elements": [
+     {
+      "damage_types": [
+       "Acid"
+      ],
+      "type": "Resistance"
+     }
+    ]
+   },
    "bonus": null,
    "concentration": false,
    "condition": "Absorb Elements",
@@ -180,7 +190,7 @@
    "half_on_save": false,
    "is_described": true,
    "is_unavailable": false,
-   "note": "You have Resistance to the triggering damage type (Acid, Cold, Fire, Lightning or Thunder) until the start of your next turn. The first time you hit with a melee attack on your next turn, the target takes an extra 1d6 damage of that type (1d6 more per slot level above 1), and the spell ends.",
+   "note": "It goes on its user, whoever is targeted. Pick the triggering damage type's row. The Resistance counts against the triggering damage too: give back what it would have halved. The first time you hit with a melee attack on your next turn, the target takes an extra 1d6 damage of that type (1d6 more per slot level above 1), and the spell ends.",
    "repeat_save": false,
    "roll": "Saving throw",
    "row_name": "",
@@ -188,7 +198,171 @@
    "spell_level": 1,
    "spell_name": "Absorb Elements",
    "summary": "",
-   "until": null,
+   "targets_self": true,
+   "until": [
+    "start",
+    "source"
+   ],
+   "upcast": []
+  },
+  "Hanna's Spells | Absorb Elements: Cold": {
+   "ability": null,
+   "action_cost": "Reaction",
+   "amount_kind": "Damage",
+   "badge_modifiers": {
+    "Absorb Elements": [
+     {
+      "damage_types": [
+       "Cold"
+      ],
+      "type": "Resistance"
+     }
+    ]
+   },
+   "bonus": null,
+   "concentration": false,
+   "condition": "Absorb Elements",
+   "counts_uses": true,
+   "damage": "",
+   "dc": null,
+   "duration_seconds": 6,
+   "feature_name": "",
+   "half_on_save": false,
+   "is_described": true,
+   "is_unavailable": false,
+   "note": "It goes on its user, whoever is targeted. Pick the triggering damage type's row. The Resistance counts against the triggering damage too: give back what it would have halved. The first time you hit with a melee attack on your next turn, the target takes an extra 1d6 damage of that type (1d6 more per slot level above 1), and the spell ends.",
+   "repeat_save": false,
+   "roll": "Saving throw",
+   "row_name": "",
+   "slot_level": "1",
+   "spell_level": 1,
+   "spell_name": "Absorb Elements",
+   "summary": "",
+   "targets_self": true,
+   "until": [
+    "start",
+    "source"
+   ],
+   "upcast": []
+  },
+  "Hanna's Spells | Absorb Elements: Fire": {
+   "ability": null,
+   "action_cost": "Reaction",
+   "amount_kind": "Damage",
+   "badge_modifiers": {
+    "Absorb Elements": [
+     {
+      "damage_types": [
+       "Fire"
+      ],
+      "type": "Resistance"
+     }
+    ]
+   },
+   "bonus": null,
+   "concentration": false,
+   "condition": "Absorb Elements",
+   "counts_uses": true,
+   "damage": "",
+   "dc": null,
+   "duration_seconds": 6,
+   "feature_name": "",
+   "half_on_save": false,
+   "is_described": true,
+   "is_unavailable": false,
+   "note": "It goes on its user, whoever is targeted. Pick the triggering damage type's row. The Resistance counts against the triggering damage too: give back what it would have halved. The first time you hit with a melee attack on your next turn, the target takes an extra 1d6 damage of that type (1d6 more per slot level above 1), and the spell ends.",
+   "repeat_save": false,
+   "roll": "Saving throw",
+   "row_name": "",
+   "slot_level": "1",
+   "spell_level": 1,
+   "spell_name": "Absorb Elements",
+   "summary": "",
+   "targets_self": true,
+   "until": [
+    "start",
+    "source"
+   ],
+   "upcast": []
+  },
+  "Hanna's Spells | Absorb Elements: Lightning": {
+   "ability": null,
+   "action_cost": "Reaction",
+   "amount_kind": "Damage",
+   "badge_modifiers": {
+    "Absorb Elements": [
+     {
+      "damage_types": [
+       "Lightning"
+      ],
+      "type": "Resistance"
+     }
+    ]
+   },
+   "bonus": null,
+   "concentration": false,
+   "condition": "Absorb Elements",
+   "counts_uses": true,
+   "damage": "",
+   "dc": null,
+   "duration_seconds": 6,
+   "feature_name": "",
+   "half_on_save": false,
+   "is_described": true,
+   "is_unavailable": false,
+   "note": "It goes on its user, whoever is targeted. Pick the triggering damage type's row. The Resistance counts against the triggering damage too: give back what it would have halved. The first time you hit with a melee attack on your next turn, the target takes an extra 1d6 damage of that type (1d6 more per slot level above 1), and the spell ends.",
+   "repeat_save": false,
+   "roll": "Saving throw",
+   "row_name": "",
+   "slot_level": "1",
+   "spell_level": 1,
+   "spell_name": "Absorb Elements",
+   "summary": "",
+   "targets_self": true,
+   "until": [
+    "start",
+    "source"
+   ],
+   "upcast": []
+  },
+  "Hanna's Spells | Absorb Elements: Thunder": {
+   "ability": null,
+   "action_cost": "Reaction",
+   "amount_kind": "Damage",
+   "badge_modifiers": {
+    "Absorb Elements": [
+     {
+      "damage_types": [
+       "Thunder"
+      ],
+      "type": "Resistance"
+     }
+    ]
+   },
+   "bonus": null,
+   "concentration": false,
+   "condition": "Absorb Elements",
+   "counts_uses": true,
+   "damage": "",
+   "dc": null,
+   "duration_seconds": 6,
+   "feature_name": "",
+   "half_on_save": false,
+   "is_described": true,
+   "is_unavailable": false,
+   "note": "It goes on its user, whoever is targeted. Pick the triggering damage type's row. The Resistance counts against the triggering damage too: give back what it would have halved. The first time you hit with a melee attack on your next turn, the target takes an extra 1d6 damage of that type (1d6 more per slot level above 1), and the spell ends.",
+   "repeat_save": false,
+   "roll": "Saving throw",
+   "row_name": "",
+   "slot_level": "1",
+   "spell_level": 1,
+   "spell_name": "Absorb Elements",
+   "summary": "",
+   "targets_self": true,
+   "until": [
+    "start",
+    "source"
+   ],
    "upcast": []
   },
   "Hanna's Spells | Ensnaring Strike": {

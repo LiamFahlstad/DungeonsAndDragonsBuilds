@@ -1,6 +1,6 @@
 ---
 name: combat-effects
-description: Combat effects - what a spell or feature does in a fight (saving throw or attack roll, which ability, damage dice and types, half on a save, a condition or badge and how long it lasts, what the badge does while it's on, upcasting, cantrip scaling, healing, Temporary Hit Points, a use that casts a spell, or nothing to apply at all), written as CombatEffect objects in the spell's class (CharacterContent/Spells/SpellClasses) or the feature's class (its combat_effects() method), and used by the combat UI's Custom Effect picker instead of reading the rules text. The same CombatEffect model monster abilities use. Holds the format, the design principles, the rubric for each field and for features, and a script that checks every spell's and party feature's effects, lists spells without them (by level, class or campaign) and a party's features still read from their text, gives a coverage line per campaign, reports notes repeated often enough to be a missing field, drafts spells' effects from the text as Python for review, writes reviewed drafts into each spell's class and compares them with the text reading. Use when adding, reviewing or fixing a spell's or feature's combat effects, when a spell or feature fills the Custom Effect form wrongly, when a campaign's spells or features should be checked, or when someone asks why a picker row says "Read from its rules text".
+description: Combat effects - what a spell or feature does in a fight (saving throw or attack roll, which ability, damage dice and types, half on a save, a condition or badge and how long it lasts, what the badge does while it's on, upcasting, cantrip scaling, healing, Temporary Hit Points, a use that casts a spell, or nothing to apply at all), written as CombatEffect objects in the spell's class (CharacterContent/Spells/SpellClasses) or the feature's class (its combat_effects() method), and used by the combat UI's Custom Effect picker instead of reading the rules text. The same CombatEffect model monster abilities use. Holds the format, the design principles, the rubric for each field and for features, and a script that checks every spell's and party feature's effects, lists spells without them (by level, class or campaign) and a party's features still read from their text, gives a coverage line per campaign, reports notes repeated often enough to be a missing field, lists notes about a stat (AC, a defense, Speed, Hit Point maximum, size) and whether a badge's modifier counts it, drafts spells' effects from the text as Python for review, writes reviewed drafts into each spell's class and compares them with the text reading. Use when adding, reviewing or fixing a spell's or feature's combat effects, when a spell or feature fills the Custom Effect form wrongly, when a campaign's spells or features should be checked, or when someone asks why a picker row says "Read from its rules text".
 ---
 
 # Combat effects (spells and features)
@@ -96,6 +96,7 @@ python $S check                                 # run before you report: exit 1 
 python $S features --campaign curse_of_the_lich [--member Kivi] [--all]   # a party's features still read from text, with file:line
 python $S coverage                              # one line per campaign: spells and features described
 python $S notes [--min 3]                       # notes on 3+ spells/features: a field the model may be missing
+python $S stats [--campaign curse_of_the_lich]  # notes naming AC, a defense, Speed, HP maximum or size; NOTE ONLY = no modifier counts it
 ```
 
 The draft file is a Python module: `EFFECTS = {"Spell name": [CombatEffect(...), ...]}`,
@@ -271,6 +272,37 @@ Names are the Python ones; `Ability`, `Condition` and `DamageType` come from
   the trigger size gates read the size in use). Never on a rules condition.
   A spell's badge keeps the spell's name even when its rows differ
   (Enlarge/Reduce's two rows both give "Enlarge/Reduce").
+- **Stat changes** (plan Phase 7). What a lasting spell or feature changes
+  on its bearer is a modifier on its badge, never a note: the simulator
+  works the stat out from the stored one plus the badges, so it goes back
+  by itself when the badge ends. Which modifier:
+
+  | The text says | Modifier | Example |
+  |---|---|---|
+  | "+N bonus to AC" | `ArmorClass(N)` | Shield of Faith 2, Shield 5, Haste 2 |
+  | "your base AC becomes 13 + your Dexterity modifier" | `ArmorClassBase(13, (Ability.DEXTERITY,))` | Mage Armor (counts only when better than the AC it has) |
+  | "AC can't be less than N" | `ArmorClassMinimum(N)` | Barkskin 17 |
+  | "Resistance to X damage" | `Resistance((DamageType.X, ...))` | Stoneskin, Rage, Protection from Energy and Absorb Elements (a row per type to choose) |
+  | "Immunity to X damage" / "Vulnerability" | `DamageImmunity(...)` / `Vulnerability(...)` | Silence's Thunder |
+  | "immune to the X condition" | `ConditionImmunity((Condition.X,))` | Heroism's Frightened |
+  | "Speed increases by 10 feet" / "doubled" / "is 0" | `Speed(bonus=10)` / `Speed(multiplier=2)` / `Speed(set_to=0)` | Longstrider, Haste, Steady Aim |
+  | "size increases by one category" / "becomes Large" | `Size(steps=1)` / `Size(becomes=CreatureSize.LARGE)` | Enlarge/Reduce, Large Form |
+  | "Hit Point maximum increases by 5" | `HitPointMaximum("5", upcast="5")` | Aid, Heroes' Feast's `"2d10"` |
+
+  A badge that lasts "until the start of your next turn" says so with
+  `until=(TurnEdge.START, TurnOf.SOURCE)` (Shield, Absorb Elements). Write
+  a note about a stat only for what no modifier can say, and then say
+  what the GM does: a change the simulator can't gate (Shield's "including
+  against the triggering attack": take the hit back if it now misses;
+  "no damage from Magic Missile"), an area it doesn't track (Spirit
+  Guardians' halved Speed), or a stat read as a gate rather than changed
+  (Patient Defense's "ends if your Speed is 0", Sleep's "immune to
+  Exhaustion"). Don't repeat in a note what the modifier already counts
+  (Shield of Faith has no note). The owner's own always-on traits (a
+  species' Resistance, Unarmored Defense) stay on the sheet, not here.
+  `combat_effects.py stats [--campaign X]` lists every note naming AC, a
+  defense, Speed, the Hit Point maximum or size, and whether the row's
+  badge already has a modifier for it.
 - **Triggers** are modifiers too: `AtTurnStart(effect, whose, when)` and
   `AtTurnEnd(...)` for what the badge does as a turn starts or ends. `effect`
   names a second effect of the same spell with `spends_use=False`, which is

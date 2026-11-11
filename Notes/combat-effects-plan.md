@@ -52,7 +52,7 @@ change and move on; the full suite can run later.
 | 4 | One `combat-effects` skill; feature agent; content rollout | 4.1 **done** (R57-R60): the `combat-effects` skill and `combat_effects.py` (renamed from spell-mechanics), with the principles, a Features section, `features`, `coverage` and `notes`, and features in `check`; `is_curated` is `is_described`. 4.2 **done**: the `feature-combat-effects` agent (opus); the spell agent is `spell-combat-effects`. 4.4 **done**: `coverage`. 4.3 (content): **Curse of the Lich done** (R61-R65, 2026-11-11): spells 44/44, features 23 described, 37 nothing to apply, none read from text; Time Loop PR was already done. Next: spells level by level and features class by class, which wait for the user's go (Decision 9) |
 | 5 | Sheet chips, monster score | Not started |
 | 6 | **Triggers** (new concept, 2026-11-11; see its section): a row or badge says *when* it's used (a hit, damage taken, dropping to 0, ...), and the simulator applies it itself (AUTO) or asks with a pop-up as it happens (ASK) | 6.1-6.3 **done** (R66-R73, 2026-11-11): `CombatTrigger` on a row (`CombatEffect.trigger`, `Model/Content/CombatTriggers.py`), `outcome_firings` with its gates and modes, and the hit hooks in all three hit paths: when Kivi hits a Large or smaller creature and deals it damage, one pop-up per Apply asks about Hill's Tumble; Apply gives Prone, spends a Giant Ancestry use and logs it, inside the hit's undo step. Only `HIT` and `MISS` fire; the other events are data. 6.4 **done** (R74-R77, 2026-11-11): a monster's hit that gives a condition in a sentence of its own ("If the target is a Large or smaller creature, it has the Prone condition", "..., and the target has the Poisoned condition until the end of its next turn", "the Grappled condition (escape DC 13)") is read as a rider row of its own ("Tree Club: Prone") with an AUTO `after=` trigger: the Hill Giant's Tree Club knocks a Large target Prone from its button and Enter and from the dialog, asks when the size isn't known, and does nothing to a Huge target or on a miss. 101 riders in the catalog. Next: 6.5 (being hit) |
-| 7 | **Stat changes while an effect is on** (new, 2026-11-11; see its section): AC formulas and floors, Immunity and Vulnerability beside the built Resistance, Speed, size, Hit Point maximum, worked out from the stored stat plus the badges, and shown on the card with their sources | 7.1-7.2 **done** (R78-R83, 2026-11-11): `ArmorClassBase` (Mage Armor) and `ArmorClassMinimum` (Barkskin) beside `ArmorClass`, worked out by `armor_class(char, stored)`, which every attack path reads through `armor_bonus`; the same effect twice adds once; `DamageImmunity` and `Vulnerability` beside `Resistance` in `_damage_type_modifier`; Mage Armor, Barkskin, Stoneskin, Protection from Energy (a row per type) and Rage described (`tests/test_stat_changes.py`). 7.4 **done** (R84-R89, 2026-11-11): `HitPointMaximum(amount, upcast)`, rolled as the badge is given; `hit_point_maximum(char)` is the stored `max_hp` plus the badges, read by every cap, bar and Bloodied check; giving it raises current HP as Hit Points regained, ending it caps current HP (`Action.LOSE_HIT_POINTS`, replayed); Aid and Heroes' Feast described. 7.5 **done** (R90-R93, 2026-11-11): the card's and More Info's AC is the AC in use with what changes it ("AC: 17 (15; Shield of Faith +2)", cover too), a "Max HP 35 (30; Aid +5)" line, and the defenses the conditions and badges give with where from ("Resist: ...; Bludgeoning, Piercing, Slashing (Rage)", "Cond. Immune: Frightened (Heroism)"); the player view's full rows show the AC in use. 7.3 **done** (R94-R98, 2026-11-11): `Speed(bonus, multiplier, set_to)` and `Size(steps, becomes)`, worked out by `speed_in_use` and `size_in_use`; the trigger size gates read the size in use (an Enlarged Large Ogre is Huge to Hill's Tumble); the card shows "Speed: 80 ft. (40 ft.; Haste ×2)" and, when changed, "Size Huge (Large; Enlarge/Reduce +1)"; Haste (and its lethargy row), Longstrider, Enlarge/Reduce and Large Form described. Next: 7.6 (content and tooling) |
+| 7 | **Stat changes while an effect is on** (new, 2026-11-11; see its section): AC formulas and floors, Immunity and Vulnerability beside the built Resistance, Speed, size, Hit Point maximum, worked out from the stored stat plus the badges, and shown on the card with their sources | 7.1-7.2 **done** (R78-R83, 2026-11-11): `ArmorClassBase` (Mage Armor) and `ArmorClassMinimum` (Barkskin) beside `ArmorClass`, worked out by `armor_class(char, stored)`, which every attack path reads through `armor_bonus`; the same effect twice adds once; `DamageImmunity` and `Vulnerability` beside `Resistance` in `_damage_type_modifier`; Mage Armor, Barkskin, Stoneskin, Protection from Energy (a row per type) and Rage described (`tests/test_stat_changes.py`). 7.4 **done** (R84-R89, 2026-11-11): `HitPointMaximum(amount, upcast)`, rolled as the badge is given; `hit_point_maximum(char)` is the stored `max_hp` plus the badges, read by every cap, bar and Bloodied check; giving it raises current HP as Hit Points regained, ending it caps current HP (`Action.LOSE_HIT_POINTS`, replayed); Aid and Heroes' Feast described. 7.5 **done** (R90-R93, 2026-11-11): the card's and More Info's AC is the AC in use with what changes it ("AC: 17 (15; Shield of Faith +2)", cover too), a "Max HP 35 (30; Aid +5)" line, and the defenses the conditions and badges give with where from ("Resist: ...; Bludgeoning, Piercing, Slashing (Rage)", "Cond. Immune: Frightened (Heroism)"); the player view's full rows show the AC in use. 7.3 **done** (R94-R98, 2026-11-11): `Speed(bonus, multiplier, set_to)` and `Size(steps, becomes)`, worked out by `speed_in_use` and `size_in_use`; the trigger size gates read the size in use (an Enlarged Large Ogre is Huge to Hill's Tumble); the card shows "Speed: 80 ft. (40 ft.; Haste ×2)" and, when changed, "Size Huge (Large; Enlarge/Reduce +1)"; Haste (and its lethargy row), Longstrider, Enlarge/Reduce and Large Form described. 7.6 **done** (R106, R107, 2026-11-11): the rubric's Stat changes table, `combat_effects.py stats` (each note naming AC, a defense, Speed, the Hit Point maximum or size, marked counted or NOTE ONLY), and both parties' rows: Shield's `ArmorClass(5)`, Absorb Elements' `Resistance` (a row per type), Silence's Thunder `DamageImmunity`, Shield of Faith's restating note gone. **Phase 7 done** |
 
 **Content described so far.** Spells: 57 (2024) + 1 (2014), all as classes
 (every spell is a class since S.4; 58 have combat effects);
@@ -109,6 +109,16 @@ Strength Advantage, Reduce `Size(steps=-1)` with a Constitution save and
 Strength Disadvantage; the 1d4 as a note), Longstrider (`Speed(bonus=10)`,
 its Speed note gone) and Large Form (`Size(becomes=LARGE)`,
 `Speed(bonus=10)`): 83 spells have combat effects.
+
+**7.6 (2026-11-11).** The parties' rows with a stat in a note: Shield
+(`ArmorClass(5)` on its caster until the start of its next turn; the
+triggering attack and Magic Missile stay notes), Absorb Elements (a row per
+type, `Resistance` on its caster until the start of its next turn; the
+melee hit's 1d6 stays a note), Silence (a "Silence" badge with
+`DamageImmunity` to Thunder beside Deafened) and Shield of Faith (its note
+only said the +2 again, gone). Sleep's "immune to Exhaustion" and Patient
+Defense's "Speed is 0" read a stat as a gate and stay notes. Spirit
+Guardians' halved Speed (an area, in no party) stays a note.
 
 **Verified 2026-11-09 (after S.3):** full suite passes (9,917); every
 picker-row change reviewed field by field against the previous golden.
@@ -1021,7 +1031,7 @@ what the GM hides today (R27's known-AC notes take the bonus off).
 | 7.3 | **Done** (R94-R98). `Speed` and `Size`: shown on the card; `Size` read by the Phase 6 gates. Haste, Longstrider, Enlarge/Reduce, Large Form described. | An Enlarged Medium creature is Large to Hill's Tumble's gate (asks) and a Reduced Large one Medium; Haste shows "Speed 60 ft. (30 ×2 Haste)"; both go when the badge ends |
 | 7.4 | **Done** (R84-R89). `HitPointMaximum`: giving it raises `max_hp` and current HP by the same amount (Aid: "a creature's Hit Point maximum and current Hit Points increase"); ending it lowers `max_hp` and caps current HP at it; the Bloodied check (`damage_mixin`) uses the new maximum. All inside the giving step's undo. (Built without writing `max_hp`: R84.) | Aid +5 on a creature at 20/30 gives 25/35; taking Aid off at 33/35 leaves 30/30, at 10/35 leaves 10/30; one undo takes back the cast and the HP; a log replays the same |
 | 7.5 | **Done** (R90-R93). The card and player view show the stats in use with their sources (Q20 done). | Shield of Faith's card reads "AC 17 (15 +2 Shield of Faith)"; a Resistances line names Rage; the player view's AC notes unchanged |
-| 7.6 | Content and tooling: the `combat-effects` skill's rubric gets a "stat changes" section (which modifier, a note only when nothing counts it); `combat_effects.py notes` lists rows whose notes say "AC", "Resistance", "Speed", "Hit Point maximum", "size"; then the parties, through `spell-combat-effects` / `feature-combat-effects`. | Curse of the Lich's and Time Loop PR's rows with such a note use a modifier or say why not |
+| 7.6 | **Done** (R106, R107). Content and tooling: the `combat-effects` skill's rubric gets a "stat changes" section (which modifier, a note only when nothing counts it); `combat_effects.py notes` lists rows whose notes say "AC", "Resistance", "Speed", "Hit Point maximum", "size"; then the parties, through `spell-combat-effects` / `feature-combat-effects`. | Curse of the Lich's and Time Loop PR's rows with such a note use a modifier or say why not |
 
 7.1 and 7.2 are the slice to build first: they change the rolls and the
 damage the simulator works out. 7.3 and 7.5 only change what is shown,
@@ -2006,6 +2016,25 @@ rebuilt), not a pile of modifiers.
   until the start of the Rogue's next turn, with the Speed in a note), and
   Sentinel's Halt is described (a "Halt" badge with `Speed(set_to=0)`;
   Edmund's picker gained the row).
+
+- **R106. `stats` is a command of its own, not a filter on `notes`** (7.6).
+  `notes` groups notes that start alike, to find a missing field; this
+  one lists every note (and a badge's `Note`) that names a stat, by stat,
+  and says whether the row's badge already has a modifier for it
+  ("counted") or not ("NOTE ONLY"). It goes by words, so a note that only
+  reads a stat as a gate (Sleep's "immune to Exhaustion", Patient
+  Defense's "Speed is 0") is listed too: NOTE ONLY is a row to read, not
+  a failure. `--campaign` keeps to one party's spells and features.
+- **R107. Silence gets a badge though it's an area** (7.6). Its row already
+  puts Deafened on each creature the GM says is inside, so the "Silence"
+  badge with Thunder `DamageImmunity` goes on the same creatures and
+  comes off with Deafened (its note says so). Absorb Elements is a row
+  per type, as Protection from Energy; its Resistance and Shield's +5 come
+  after the triggering damage or attack, so their notes say what the GM
+  takes back until Phase 6.5's `HIT_BY` / `TAKES_DAMAGE` asks as it lands.
+  The picker goldens: Hanna's, Clover's, Gabriel's and Dessie's Shield and
+  Absorb Elements rows, Edmund's Shield of Faith note, and the Silence
+  rows; read against the spell texts.
 
 ## Open questions (with suggestions)
 

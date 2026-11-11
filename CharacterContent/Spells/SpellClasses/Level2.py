@@ -34,6 +34,7 @@ from Model.Content.CombatEffect import (
 from Model.Content.CombatModifiers import (
     ArmorClassMinimum,
     D20Mode,
+    DamageImmunity,
     D20Test,
     HitPointMaximum,
     Note,
@@ -4796,10 +4797,15 @@ class Silence(ClassSpell):
     ) -> list[CombatEffect]:
         return [
             CombatEffect(
-                conditions=(CombatCondition(Condition.DEAFENED),),
+                conditions=(
+                    CombatCondition(Condition.DEAFENED),
+                    CombatCondition(
+                        "Silence", modifiers=(DamageImmunity((DamageType.THUNDER,)),)
+                    ),
+                ),
                 notes=(
-                    "Each creature entirely inside the 20-foot-radius Sphere: take Deafened off when it leaves.",
-                    "Inside, creatures and objects have Immunity to Thunder damage, and no spell with a Verbal component can be cast.",
+                    "Each creature entirely inside the 20-foot-radius Sphere: take Deafened and the Silence badge (Immunity to Thunder damage) off when it leaves.",
+                    "Inside, objects have Immunity to Thunder damage too, and no spell with a Verbal component can be cast.",
                 ),
             )
         ]

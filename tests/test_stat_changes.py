@@ -48,7 +48,7 @@ from Combat.CombatUIQt.dialogs_mixin import _speed_text
 from Combat.CombatUIQt.player_view import _unit_details
 from Combat.Effects.triggers import AttackOutcome, TriggerRow, outcome_firings
 from Core.Definitions import Ability, Condition, CreatureSize, DamageType
-from Model.Content.CombatEffect import CombatEffect
+from Model.Content.CombatEffect import CombatEffect, TurnEdge, TurnOf
 from Model.Content.CombatTriggers import CombatTrigger, TriggerEvent
 from Model.Content.CombatModifiers import (
     ArmorClass,
@@ -262,6 +262,43 @@ def test_stoneskin_and_protection_from_energy_resist_their_types():
     ]
     fire = _with({"Protection from Energy": _badge_modifiers(rows[2])})
     assert resists(fire, FIRE) and not resists(fire, "Cold")
+
+
+def test_shield_gives_its_caster_5_ac_until_its_next_turn():
+    """Shield: "Until the start of your next turn, you have a +5 bonus to AC"."""
+    (shield,) = _effects("Shield")
+    (condition,) = shield.conditions
+    assert shield.targets_self
+    assert condition.until == (TurnEdge.START, TurnOf.SOURCE)
+    assert armor_class(_with({"Shield": condition.modifiers}), 15) == 20
+
+
+def test_absorb_elements_resists_the_type_picked_until_its_next_turn():
+    """Absorb Elements: "you have resistance to the triggering damage type
+    until the start of your next turn" (Acid, Cold, Fire, Lightning or
+    Thunder), a row per type."""
+    rows = _effects("Absorb Elements")
+    assert [row.name for row in rows] == [
+        f"Absorb Elements: {t}"
+        for t in ("Acid", "Cold", "Fire", "Lightning", "Thunder")
+    ]
+    fire = rows[2]
+    (condition,) = fire.conditions
+    assert fire.targets_self and condition.name == "Absorb Elements"
+    assert condition.until == (TurnEdge.START, TurnOf.SOURCE)
+    char = _with({"Absorb Elements": condition.modifiers})
+    assert resists(char, FIRE) and not resists(char, "Cold")
+
+
+def test_silence_gives_thunder_immunity_with_deafened():
+    """Silence: "Any creature or object entirely inside the Sphere has
+    Immunity to Thunder damage, and creatures have the Deafened condition"."""
+    (row,) = _effects("Silence")
+    deafened, badge = row.conditions
+    assert deafened.name == Condition.DEAFENED.value and badge.name == "Silence"
+    char = _with({"Silence": badge.modifiers})
+    assert immune_to_damage(char, DamageType.THUNDER.value)
+    assert not immune_to_damage(char, FIRE)
 
 
 class _Barbarian:

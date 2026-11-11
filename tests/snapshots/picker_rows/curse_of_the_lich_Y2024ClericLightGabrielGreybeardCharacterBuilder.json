@@ -594,7 +594,7 @@
    "half_on_save": false,
    "is_described": true,
    "is_unavailable": false,
-   "note": "A creature of your choice gets a +2 bonus to AC for the duration.",
+   "note": "",
    "repeat_save": false,
    "roll": "Saving throw",
    "row_name": "",
@@ -609,9 +609,19 @@
    "ability": null,
    "action_cost": "Action",
    "amount_kind": "Damage",
+   "badge_modifiers": {
+    "Silence": [
+     {
+      "damage_types": [
+       "Thunder"
+      ],
+      "type": "DamageImmunity"
+     }
+    ]
+   },
    "bonus": null,
    "concentration": true,
-   "condition": "Deafened",
+   "condition": "Deafened + Silence",
    "counts_uses": true,
    "damage": "",
    "dc": null,
@@ -620,7 +630,7 @@
    "half_on_save": false,
    "is_described": true,
    "is_unavailable": false,
-   "note": "Each creature entirely inside the 20-foot-radius Sphere: take Deafened off when it leaves. Inside, creatures and objects have Immunity to Thunder damage, and no spell with a Verbal component can be cast.",
+   "note": "Each creature entirely inside the 20-foot-radius Sphere: take Deafened and the Silence badge (Immunity to Thunder damage) off when it leaves. Inside, objects have Immunity to Thunder damage too, and no spell with a Verbal component can be cast.",
    "repeat_save": false,
    "roll": "Saving throw",
    "row_name": "",

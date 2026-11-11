@@ -461,6 +461,14 @@
    "ability": null,
    "action_cost": "Reaction",
    "amount_kind": "Damage",
+   "badge_modifiers": {
+    "Shield": [
+     {
+      "bonus": 5,
+      "type": "ArmorClass"
+     }
+    ]
+   },
    "bonus": null,
    "concentration": false,
    "condition": "Shield",
@@ -472,7 +480,7 @@
    "half_on_save": false,
    "is_described": true,
    "is_unavailable": false,
-   "note": "+5 to your AC until the start of your next turn, including against the triggering attack, and no damage from Magic Missile.",
+   "note": "It goes on its user, whoever is targeted. The +5 counts against the triggering attack too: if it now misses, take that hit back. You take no damage from Magic Missile until the start of your next turn.",
    "repeat_save": false,
    "roll": "Saving throw",
    "row_name": "",
@@ -480,7 +488,11 @@
    "spell_level": 1,
    "spell_name": "Shield",
    "summary": "",
-   "until": null,
+   "targets_self": true,
+   "until": [
+    "start",
+    "source"
+   ],
    "upcast": []
   },
   "Clover's Spells | Vicious Mockery": {

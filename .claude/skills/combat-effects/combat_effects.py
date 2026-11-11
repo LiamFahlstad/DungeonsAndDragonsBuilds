@@ -24,6 +24,8 @@ Usage (from the repo root):
         # one line per campaign: its spells and features described so far
     python .claude/skills/combat-effects/combat_effects.py notes [--min 3]
         # notes written for three or more spells or features: a field the model may be missing
+    python .claude/skills/combat-effects/combat_effects.py stats [--campaign curse_of_the_lich]
+        # notes naming AC, a defense, Speed, the Hit Point maximum or size, and whether a modifier counts it
 
 A draft is a starting point, never an entry: the text reading it comes from is
 what these effects exist to replace. Review every field against the spell's
@@ -716,6 +718,87 @@ def cmd_notes(args) -> int:
     return 0
 
 
+# ---------------------------------------------------------------------------
+# Stat notes (plan step 7.6: a stat a badge changes is a modifier, not a note)
+
+# What a note says it changes, and the modifiers that count that stat.
+STAT_WORDS = {
+    "AC": (
+        re.compile(r"\bAC\b|Armor Class"),
+        ("ArmorClass", "ArmorClassBase", "ArmorClassMinimum"),
+    ),
+    "defenses": (
+        re.compile(r"\b(?:Resistan|Immun|Vulnerab)", re.IGNORECASE),
+        ("Resistance", "DamageImmunity", "Vulnerability", "ConditionImmunity"),
+    ),
+    "Speed": (re.compile(r"\bspeed\b", re.IGNORECASE), ("Speed",)),
+    "HP max": (
+        re.compile(r"Hit Point maximum|maximum Hit Points", re.IGNORECASE),
+        ("HitPointMaximum",),
+    ),
+    "size": (re.compile(r"\bsize\b", re.IGNORECASE), ("Size",)),
+}
+
+
+def effect_texts(effect: CombatEffect) -> list[str]:
+    """A row's notes and the `Note` modifiers on its badges."""
+    texts = list(effect.notes)
+    for condition in effect.conditions:
+        texts += [m.text for m in condition.modifiers if type(m).__name__ == "Note"]
+    return texts
+
+
+def badge_modifiers(effect: CombatEffect) -> set[str]:
+    """The kinds of modifier the row's badges carry."""
+    return {
+        type(m).__name__ for condition in effect.conditions for m in condition.modifiers
+    }
+
+
+def stat_rows(campaign: str | None):
+    """(where, row name, stat, counted, text) for every note naming a stat:
+    every spell class's, or the campaign's spells, and the party features'
+    (each feature class once). `counted` says whether a badge of the row
+    already has a modifier for that stat."""
+    sources: list[tuple[str, list[CombatEffect]]] = []
+    spell_names = campaign_spells(campaign) if campaign else None
+    for name, spell_class in sorted(SpellFactory._spell_classes().items()):
+        if spell_names is None or name in spell_names:
+            sources.append((f"spell {name}", spell_class().combat_effects() or []))
+    seen: set[type] = set()
+    for camp in [campaign] if campaign else campaign_names():
+        for combatant in campaign_party(camp):
+            for feature, _, effects in walk_features(combatant):
+                if type(feature) not in seen:
+                    seen.add(type(feature))
+                    sources.append((f"feature {feature.name}", list(effects or ())))
+    for where, effects in sources:
+        for index, effect in enumerate(effects):
+            have = badge_modifiers(effect)
+            for text in effect_texts(effect):
+                for stat, (pattern, kinds) in STAT_WORDS.items():
+                    if pattern.search(text):
+                        counted = bool(have & set(kinds))
+                        row = effect.name or f"row {index}"
+                        yield where, row, stat, counted, text
+
+
+def cmd_stats(args) -> int:
+    rows = list(stat_rows(args.campaign))
+    for where, row, stat, counted, text in rows:
+        mark = "counted" if counted else "NOTE ONLY"
+        print(f"{mark:9} {stat:8} {where} / {row}: {text}")
+    left = sum(not counted for *_, counted, _ in rows)
+    print(
+        f"{len(rows)} note(s) naming a stat, {left} with no modifier for it."
+        " Each either becomes a modifier on the row's badge, or says why the"
+        " simulator can't count it (a gate it can't see, a stat it doesn't"
+        " use, the owner's own trait on the sheet). A 'counted' note should"
+        " add what the modifier can't say, not repeat it."
+    )
+    return 0
+
+
 def main() -> int:
     sys.stdout.reconfigure(encoding="utf-8")  # type: ignore[union-attr]
     parser = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
@@ -739,6 +822,8 @@ def main() -> int:
     notes = commands.add_parser("notes")
     notes.add_argument("--min", type=int, default=3, help="sources a note needs")
     notes.add_argument("--words", type=int, default=4, help="words that group notes")
+    stats = commands.add_parser("stats")
+    stats.add_argument("--campaign", help="only this party's spells and features")
     add = commands.add_parser("add")
     add.add_argument("file", help="a reviewed draft: a .py file defining EFFECTS")
     add.add_argument("--force", action="store_true")
@@ -752,6 +837,7 @@ def main() -> int:
         "features": cmd_features,
         "coverage": cmd_coverage,
         "notes": cmd_notes,
+        "stats": cmd_stats,
     }[args.command]
     return handler(args)
 
