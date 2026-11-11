@@ -336,7 +336,7 @@
    "half_on_save": false,
    "is_described": true,
    "is_unavailable": false,
-   "note": "After a hit: a different creature you can see within 5 feet of the target.",
+   "note": "A different creature you can see within 5 feet of the target.",
    "repeat_save": false,
    "roll": "Saving throw",
    "row_name": "",
@@ -344,6 +344,12 @@
    "spell_level": 0,
    "spell_name": "Green-Flame Blade",
    "summary": "4 Fire",
+   "trigger": {
+    "after": "Green-Flame Blade",
+    "aim": "another",
+    "event": "hit",
+    "optional": false
+   },
    "until": null,
    "upcast": []
   },

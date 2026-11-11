@@ -13,6 +13,8 @@ from Model.Content.Feature import (
     FeatureUses,
     RegainedOn,
 )
+from Model.Content.CombatEffect import CombatEffect, CombatRegain
+from Model.Content.CombatTriggers import CombatTrigger, TriggerEvent
 from Model.Content.Improvements import SkillProficiencyChoice
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.CharacterSources import SpellSource
@@ -596,6 +598,16 @@ class EverReadyShot(Feature):
 
     def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.INITIATIVE_ROLL
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        return [
+            CombatEffect(
+                targets_self=True,
+                spends_use=False,  # an extension's uses are its parent's
+                regains=(CombatRegain(ArcaneShot().name, count=1),),
+                trigger=CombatTrigger(TriggerEvent.ROLLS_INITIATIVE),
+            )
+        ]
 
 
 class IndomitableTeleport(Feature):

@@ -9,6 +9,7 @@ the column says there are no turns, and shows the between-encounters log."""
 import random
 from collections.abc import Iterator
 from contextlib import contextmanager
+from dataclasses import replace
 from textwrap import shorten
 
 from PyQt6.QtCore import Qt
@@ -24,6 +25,7 @@ from PyQt6.QtWidgets import (
 )
 
 import Combat.PlayerLog as PlayerLog
+from Model.Content.CombatTriggers import TriggerAim
 from Combat.Effects.modifiers import attack_plan, hit_notes, hit_plan, hit_point_maximum
 from Combat.Effects.triggers import (
     AttackOutcome,
@@ -645,12 +647,24 @@ class TurnPanelMixin(CombatWindowState):
         if target is None:
             self._show_status(f"{firing.target['name']} is no longer in the fight.")
             return
+        targets = [target]
+        if isinstance(firing, HitFiring) and (
+            firing.row.trigger.aim is TriggerAim.ANOTHER
+        ):
+            # It goes on another creature: the one right-clicked.
+            targets = [t for t in self.target_characters if t is not target]
+            if not targets:
+                self._show_status(
+                    f"Right-click the creature {firing.row.name} goes on, then"
+                    " press its button again."
+                )
+                return
         self._turn_prompts = [p for p in self._turn_prompts if p is not firing]
         self._hit_prompts = tuple(p for p in self._hit_prompts if p is not firing)
         caster = self._find_character_by_name(firing.caster) if firing.caster else None
         if caster is not None:
             self._select_character(caster)
-        self._set_targets([target])
+        self._set_targets(targets)
         self._refresh_views()
         self._show_custom_condition_dialog(pick=firing.pick)
 
@@ -725,11 +739,26 @@ class TurnPanelMixin(CombatWindowState):
         edit, and log a line for the GM about each declined one (Q45).
         Returns the firings applied, each with what was rolled at the table
         for its own roll, if anything (TriggerChoice.rolled)."""
+        # A row aimed at other creatures offers who it can go on.
+        asks = [
+            (
+                replace(firing, others=self._others_near(firing))
+                if firing.row.trigger.aim is not TriggerAim.TARGET
+                else firing
+            )
+            for firing in asks
+        ]
         choice = self._ask_triggers(asks)
         applied = []
         for firing in asks:
             if any(firing is f for f in choice.apply):
-                if self._use_trigger(firing, notes):
+                targets = self._aimed_targets(firing, choice.aimed_at(firing))
+                if not targets:
+                    notes.append(
+                        f"{firing.row.name}: no creature picked to go on, not used"
+                    )
+                    continue
+                if self._use_trigger(firing, notes, targets):
                     applied.append((firing, choice.rolled_for(firing)))
             elif not any(firing is f for f in choice.edit):
                 self._log_event(
@@ -803,14 +832,45 @@ class TurnPanelMixin(CombatWindowState):
         event loop runs in them."""
         return ask_triggers(self._window, firings)
 
-    def _use_trigger(self, firing: HitFiring, notes: list[str]) -> bool:
+    def _others_near(self, firing: HitFiring) -> tuple[dict, ...]:
+        """Who a row aimed at other creatures can go on besides its target:
+        everyone else alive in the fight but its owner. Where they stand is
+        the GM's to judge."""
+        return tuple(
+            char
+            for char in self.characters
+            if char is not firing.owner
+            and char is not firing.target
+            and self._char_death_state(char) != "dead"
+        )
+
+    @staticmethod
+    def _aimed_targets(firing: HitFiring, picked: tuple[dict, ...]) -> list[dict]:
+        """Who an applied firing goes on: its target, or for a row aimed at
+        another creature the one picked, or its target and those added."""
+        aim = firing.row.trigger.aim
+        if aim is TriggerAim.ANOTHER:
+            return list(picked[:1])
+        if aim is TriggerAim.ALSO_OTHERS:
+            return [firing.target, *(c for c in picked if c is not firing.target)]
+        return [firing.target]
+
+    def _use_trigger(
+        self, firing: HitFiring, notes: list[str], targets: list[dict] | None = None
+    ) -> bool:
         """Apply a firing's row as picking it in the Custom Effect dialog
-        would, noting in `notes` why it couldn't be. Returns whether it was."""
+        would, on `targets` (its own target if not given), noting in `notes`
+        why it couldn't be. Returns whether it was, on any of them."""
         option = firing.row.option
         if not isinstance(option, EffectOption):
             return False
-        if not self._apply_row(firing.owner, firing.target, option):
-            notes.append(f"{firing.row.name} not used on {firing.target['name']}")
+        used = False
+        for target in targets if targets is not None else [firing.target]:
+            if self._apply_row(firing.owner, target, option):
+                used = True
+            else:
+                notes.append(f"{firing.row.name} not used on {target['name']}")
+        if not used:
             return False
         if firing.row.trigger.once_per_turn:
             turn, used = self._trigger_uses

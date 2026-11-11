@@ -16,7 +16,7 @@ from Model.Content.Improvements import (
     SpeedBonus,
 )
 from Core.Definitions import Ability, DamageType, Skill
-from Model.Content.CombatEffect import CombatCondition, CombatEffect
+from Model.Content.CombatEffect import CombatCondition, CombatEffect, CombatRegain
 from Model.Content.CombatTriggers import CombatTrigger, TriggerEvent
 from Model.Content.CombatModifiers import (
     D20Mode,
@@ -698,6 +698,22 @@ class PersistentRage(Feature):
 
     def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.INITIATIVE_ROLL
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # Unending Rage only makes Rage last: nothing to apply.
+        return [
+            CombatEffect(
+                name="Persistent Rage: regain Rage",
+                targets_self=True,
+                spends_use=False,  # an extension's uses are its parent's
+                regains=(CombatRegain(Rage().name),),
+                notes=(
+                    "Once per Long Rest, which isn't counted here: skip it once"
+                    " it's used.",
+                ),
+                trigger=CombatTrigger(TriggerEvent.ROLLS_INITIATIVE),
+            )
+        ]
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF

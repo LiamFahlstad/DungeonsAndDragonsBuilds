@@ -21,6 +21,7 @@ from Model.Content.CombatEffect import (
     CombatCondition,
     CombatDamage,
     CombatEffect,
+    CombatRegain,
     TurnEdge,
     TurnOf,
 )
@@ -1435,6 +1436,14 @@ def _described_option(
             f"It takes {effect.damage_reduction} off the damage of the hit it"
             " answers, asked as that hit lands; picked here, it takes nothing off.",
         )
+    for regain in effect.regains:
+        notes.append(f"Its user regains {regain_text(regain)}.")
+    if effect.reroll_save is not None:
+        notes.insert(
+            0,
+            f"It rerolls the failed save it answers{_plus(effect.reroll_save)},"
+            " asked as a save rolled here fails; picked here, it does nothing.",
+        )
     if effect.drops_to:
         points = "Hit Point" if effect.drops_to == 1 else "Hit Points"
         notes.insert(
@@ -1499,6 +1508,8 @@ def _described_option(
         trigger=effect.trigger,
         damage_reduction=effect.damage_reduction,
         drops_to=effect.drops_to,
+        regains=effect.regains,
+        reroll_save=effect.reroll_save,
         **fields,
     )
 
@@ -1726,6 +1737,11 @@ def triggered_rows(char: dict) -> list[TriggerRow]:
                     damage_reduction=option.damage_reduction,
                     on_self=option.targets_self,
                     drops_to=option.drops_to,
+                    heals=option.amount_kind == HEALING and bool(option.rolls),
+                    regainable=sum(regained_uses(char, r) for r in option.regains),
+                    regains=bool(option.regains),
+                    spell=option.kind == SPELL,
+                    reroll_save=option.reroll_save,
                 )
             )
     return rows
@@ -1736,6 +1752,8 @@ def _trigger_row_what(option: EffectOption) -> str:
     "1d10 Fire", "1d6 Cold, Frost's Chill", "8 Temporary Hit Points",
     "Drops to 1 Hit Point instead"."""
     parts = []
+    if option.reroll_save is not None:
+        parts.append(f"Rerolls the save{_plus(option.reroll_save)}")
     if option.drops_to:
         points = "Hit Point" if option.drops_to == 1 else "Hit Points"
         parts.append(f"Drops to {option.drops_to} {points} instead")
@@ -1743,7 +1761,52 @@ def _trigger_row_what(option: EffectOption) -> str:
         kind = {HEALING: " Hit Points", TEMP_HP: " Temporary Hit Points"}
         parts.append(option.damage + kind.get(option.amount_kind, ""))
     parts += condition_names(option.condition)
+    parts += [regain_text(regain) for regain in option.regains]
     return ", ".join(parts)
+
+
+def _plus(bonus: int) -> str:
+    return f" with +{bonus}" if bonus else ""
+
+
+def regain_text(regain: CombatRegain) -> str:
+    """What a CombatRegain gives back, in words: "every expended use of
+    Monk's Focus", "uses of Bardic Inspiration until 2 are left"."""
+    if regain.count is not None:
+        uses = "a use" if regain.count == 1 else f"{regain.count} uses"
+        return f"{uses} of {regain.feature}"
+    if regain.up_to is None:
+        return f"every expended use of {regain.feature}"
+    if regain.up_to == 1:
+        return f"a use of {regain.feature} if none is left"
+    return f"uses of {regain.feature} until {regain.up_to} are left"
+
+
+def owned_feature(char: dict, name: str):
+    """char's feature called `name` (one of its extensions too), or None."""
+    features = list(char.get("_feature_objects") or [])
+    sheet = char.get("_stat_block")
+    if sheet is not None:
+        features += list(sheet.iter_features_with_extensions())
+    return next((f for f in features if f.name == name), None)
+
+
+def regained_uses(char: dict, regain: CombatRegain) -> int:
+    """How many expended uses of char's feature `regain` gives back now:
+    every one, or as many as bring it up to `up_to` left (none if it has
+    that many). 0 for a feature char doesn't have or doesn't count."""
+    feature = owned_feature(char, regain.feature)
+    uses = (
+        feature_uses(char, feature, char.get("_stat_block"))
+        if feature is not None
+        else None
+    )
+    if uses is None:
+        return 0
+    left, most = uses
+    goal = most if regain.up_to is None else min(regain.up_to, most)
+    back = max(goal - left, 0)
+    return back if regain.count is None else min(back, regain.count)
 
 
 def _trigger_row_uses(char: dict, option: EffectOption) -> tuple[int, int] | None:

@@ -30,6 +30,7 @@ from Model.Content.CombatEffect import (
     CombatEffect,
     CombatHitPoints,
     CombatInstances,
+    CombatRegain,
     EffectRoll,
     TurnEdge,
     TurnOf,
@@ -540,10 +541,9 @@ class UncannyMetabolism(Feature):
                     with_bonus(MARTIAL_ARTS_DIE.at(character), monk_level)
                 ),
                 targets_self=True,
-                notes=(
-                    "Used as you roll Initiative. You also regain all expended"
-                    " Focus Points: reset them by hand.",
-                ),
+                regains=(CombatRegain(MonksFocus().name),),
+                # Asked as the fight starts, when there's anything to regain.
+                trigger=CombatTrigger(TriggerEvent.ROLLS_INITIATIVE),
             )
         ]
 
@@ -998,6 +998,21 @@ class PerfectFocus(Feature):
 
     def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.INITIATIVE_ROLL
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        return [
+            CombatEffect(
+                targets_self=True,
+                spends_use=False,  # an extension's uses are its parent's
+                regains=(CombatRegain(MonksFocus().name, up_to=4),),
+                notes=(
+                    "Not with Uncanny Metabolism, which regains every Focus"
+                    " Point anyway.",
+                ),
+                # It happens as the fight starts, costing nothing.
+                trigger=CombatTrigger(TriggerEvent.ROLLS_INITIATIVE, optional=False),
+            )
+        ]
 
 
 class SuperiorDefense(Feature):

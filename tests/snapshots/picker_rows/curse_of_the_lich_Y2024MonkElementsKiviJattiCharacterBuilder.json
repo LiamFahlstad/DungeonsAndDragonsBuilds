@@ -335,7 +335,7 @@
    "half_on_save": false,
    "is_described": true,
    "is_unavailable": false,
-   "note": "It goes on its user, whoever is targeted. Used as you roll Initiative. You also regain all expended Focus Points: reset them by hand.",
+   "note": "It goes on its user, whoever is targeted. Its user regains every expended use of Monk's Focus.",
    "repeat_save": false,
    "roll": "Saving throw",
    "row_name": "",
@@ -344,6 +344,9 @@
    "spell_name": "",
    "summary": "1/1  heals 1d6 + 4",
    "targets_self": true,
+   "trigger": {
+    "event": "rolls initiative"
+   },
    "until": null,
    "upcast": []
   },

@@ -12,7 +12,8 @@ from Model.Content.Feature import (
     FeatureUses,
     RegainedOn,
 )
-from Model.Content.CombatEffect import CombatEffect
+from Model.Content.CombatEffect import CombatEffect, CombatRegain
+from Model.Content.CombatTriggers import CombatTrigger, TriggerEvent
 from Model.Content.Improvements import (
     GrantLanguage,
     SkillBonus,
@@ -663,3 +664,23 @@ class Archdruid(Feature):
 
     def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.INITIATIVE_ROLL
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # Longevity has nothing to apply.
+        return [
+            CombatEffect(
+                name="Evergreen Wild Shape",
+                targets_self=True,
+                spends_use=False,
+                regains=(CombatRegain("Wild Shape", up_to=1),),
+                trigger=CombatTrigger(TriggerEvent.ROLLS_INITIATIVE, optional=False),
+            ),
+            CombatEffect(
+                name="Nature Magician",
+                notes=(
+                    "Turn unexpended Wild Shape uses into one spell slot, 2 spell"
+                    " levels a use (no action): spend them and add the slot by"
+                    " hand.",
+                ),
+            ),
+        ]

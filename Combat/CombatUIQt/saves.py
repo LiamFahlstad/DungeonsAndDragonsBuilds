@@ -14,6 +14,7 @@ from Combat.Effects.modifiers import (
     save_plan,
 )
 from Core.Rules import SPELL_SAVE_DC_BASE, ability_modifier
+from Model.Content.CombatEffect import CombatRegain
 from Model.Content.CombatModifiers import Modifier
 from Model.Content.CombatTriggers import CombatTrigger
 
@@ -220,6 +221,12 @@ class EffectOption:
     # The Hit Points its user drops to instead of 0, asked as damage would
     # drop them to 0 (CombatEffect.drops_to: Relentless Endurance's 1).
     drops_to: int = 0
+    # Expended uses of its user's features it gives back (CombatEffect.regains:
+    # Uncanny Metabolism's Focus Points).
+    regains: tuple[CombatRegain, ...] = ()
+    # Rerolls the failed save it answers with this bonus (Indomitable's
+    # Fighter level); None: it doesn't (CombatEffect.reroll_save).
+    reroll_save: int | None = None
 
     def modifiers_for(self, badge: str) -> tuple[Modifier, ...]:
         """What the badge `badge` it gives does while it's on: none for a

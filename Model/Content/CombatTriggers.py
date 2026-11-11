@@ -35,8 +35,12 @@ class TriggerEvent(StrEnum):
     creature: Hellish Rebuke, Storm's Thunder); as damage lands, DROPS_TO_ZERO
     on the creature it would drop to 0 Hit Points (before it does: Relentless
     Endurance), REDUCES_TO_ZERO on the creature that dealt it (Dark One's
-    Blessing), and BLOODIED on one it leaves Bloodied (Harvest Undead). The
-    others are data until a step needs them (6.7)."""
+    Blessing), and BLOODIED on one it leaves Bloodied (Harvest Undead). As
+    a fight starts, ROLLS_INITIATIVE on everyone in it (Uncanny Metabolism).
+    USES after a row of the same source is picked and applied in the Custom
+    Effect dialog, on each of its targets (Ice Knife's explosion after its
+    shard). FAILS_SAVE as a save the dialog rolls fails (Indomitable). The
+    others are data until a step needs them."""
 
     HIT = "hit"  # the owner hits
     MISS = "miss"  # the owner misses
@@ -55,16 +59,30 @@ class TriggerEvent(StrEnum):
 # a Critical Hit.
 ATTACK_EVENTS = (TriggerEvent.HIT, TriggerEvent.MISS, TriggerEvent.HIT_BY)
 # The events with another creature in them: the one hit, the attacker, the
-# creature that dealt the damage, the one reduced to 0.
+# creature that dealt the damage, the one reduced to 0, the target of the row
+# it comes after.
 TARGET_EVENTS = (
     *ATTACK_EVENTS,
     TriggerEvent.TAKES_DAMAGE,
     TriggerEvent.REDUCES_TO_ZERO,
+    TriggerEvent.USES,
 )
 # The events that can come after one row of the source in particular.
 AFTER_EVENTS = (TriggerEvent.HIT, TriggerEvent.MISS, TriggerEvent.USES)
 # Sizes, smallest first, to compare "a Large or smaller creature".
 SIZES = tuple(CreatureSize)
+
+
+class TriggerAim(StrEnum):
+    """Who a triggered row goes on. TARGET: the other creature of what
+    happened (the one hit). ANOTHER: one other creature near it, which the GM
+    picks (Green-Flame Blade's fire "leaps from the target to a different
+    creature"). ALSO_OTHERS: it and the creatures near it the GM adds (Ice
+    Knife's explosion: "the target and each creature within 5 feet of it")."""
+
+    TARGET = "target"
+    ANOTHER = "another"
+    ALSO_OTHERS = "also others"
 
 
 @dataclass(frozen=True)
@@ -79,7 +97,8 @@ class CombatTrigger:
     not offered once it's used, and spent as the row is), the other creature
     being an enemy of the owner (`enemy_only`: Dark One's Blessing's "you
     reduce an enemy to 0 Hit Points"). What only the GM can judge is a
-    `when`, said as what follows "if": it always asks."""
+    `when`, said as what follows "if": it always asks. `aim`: who it goes on
+    (TriggerAim); any but TARGET asks, for the GM to pick."""
 
     event: TriggerEvent
     optional: bool = True
@@ -92,6 +111,7 @@ class CombatTrigger:
     reaction: bool = False
     enemy_only: bool = False
     when: str = ""
+    aim: TriggerAim = TriggerAim.TARGET
 
     def __post_init__(self):
         # Text ("hit", "Large") is taken too, as JSON and logs have it.
@@ -108,6 +128,16 @@ class CombatTrigger:
                 )
             object.__setattr__(
                 self, "largest_target", CreatureSize(self.largest_target)
+            )
+        if self.aim not in set(TriggerAim):
+            raise ValueError(
+                f"aim {self.aim!r} is not one of {[a.value for a in TriggerAim]}"
+            )
+        object.__setattr__(self, "aim", TriggerAim(self.aim))
+        if self.aim is not TriggerAim.TARGET and self.event not in TARGET_EVENTS:
+            raise ValueError(
+                f"aim needs an event with another creature in it, not"
+                f" {TriggerEvent(self.event).value!r}"
             )
         if not isinstance(self.attacks, AttackKind):
             raise ValueError(f"attacks is an AttackKind, got {self.attacks!r}")

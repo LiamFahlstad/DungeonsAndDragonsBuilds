@@ -7,7 +7,8 @@ from Model.Content.Feature import (
     RegainedOn,
     FeatureDice,
 )
-from Model.Content.CombatEffect import CombatCondition, CombatEffect
+from Model.Content.CombatEffect import CombatCondition, CombatEffect, CombatRegain
+from Model.Content.CombatTriggers import CombatTrigger, TriggerEvent
 from Model.Content.Improvements import JackOfAllTradesBonus, SkillExpertiseChoice
 from Core.Definitions import (
     Ability,
@@ -383,6 +384,16 @@ class SuperiorInspiration(Feature):
     def get_description(self, character: CharacterView) -> str:
         description = "When you roll Initiative, you regain expended uses of Bardic Inspiration until you have two if you have fewer than that."
         return description
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        return [
+            CombatEffect(
+                targets_self=True,
+                spends_use=False,  # an extension's uses are its parent's
+                regains=(CombatRegain(BardicInspiration().name, up_to=2),),
+                trigger=CombatTrigger(TriggerEvent.ROLLS_INITIATIVE, optional=False),
+            )
+        ]
 
     def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.INITIATIVE_ROLL

@@ -63,6 +63,7 @@ from Model.Content.CombatModifiers import (
 from Model.Content.CombatTriggers import (
     TRIGGER_KEYS,
     CombatTrigger,
+    TriggerAim,
     TriggerEvent,
 )
 
@@ -263,6 +264,30 @@ class CombatInstances:
 
 
 @dataclass(frozen=True)
+class CombatRegain:
+    """Expended uses of one of its user's features that a use gives back:
+    every one (`up_to` None: Uncanny Metabolism's "regain all expended Focus
+    Points"), or until `up_to` are left, if fewer are (Superior
+    Inspiration's "until you have two"), and no more than `count` (Ever-Ready
+    Shot's "regain one expended use"). `feature` is the feature's name, as
+    its uses are counted ("Monk's Focus", "Bardic Inspiration")."""
+
+    feature: str
+    up_to: int | None = None
+    count: int | None = None
+
+    def __post_init__(self):
+        if not isinstance(self.feature, str) or not self.feature.strip():
+            raise ValueError(f"feature is a feature's name, not {self.feature!r}")
+        for name in ("up_to", "count"):
+            value = getattr(self, name)
+            if value is not None and (
+                isinstance(value, bool) or not isinstance(value, int) or value < 1
+            ):
+                raise ValueError(f"{name} is 1 or more, or None, got {value!r}")
+
+
+@dataclass(frozen=True)
 class CombatTargets:
     """How many creatures one use may target: Bless's three, one more per
     slot level above 1 (`upcast`). The dialog shows it beside the slot box
@@ -346,6 +371,13 @@ class CombatEffect:
     # 1): only with a 'drops to 0' trigger, which asks as damage would drop
     # its user to 0, before it does.
     drops_to: int = 0
+    # Expended uses of its user's features it gives back (Uncanny
+    # Metabolism's Focus Points): it goes on its user (targets_self).
+    regains: tuple[CombatRegain, ...] = ()
+    # Rerolls the failed save it answers, adding this to the new roll
+    # (Indomitable's Fighter level; 0 adds nothing): only with a 'fails a
+    # save' trigger. None: it doesn't.
+    reroll_save: int | None = None
 
     def __post_init__(self):
         if self.trigger is not None and not isinstance(self.trigger, CombatTrigger):
@@ -380,6 +412,33 @@ class CombatEffect:
                     "drops_to comes with a 'drops to 0' trigger: it's used as its"
                     " user would drop to 0 Hit Points"
                 )
+        if self.reroll_save is not None:
+            if (
+                isinstance(self.reroll_save, bool)
+                or not isinstance(self.reroll_save, int)
+                or self.reroll_save < 0
+            ):
+                raise ValueError(
+                    f"reroll_save is a bonus of 0 or more, not {self.reroll_save!r}"
+                )
+            if (
+                self.trigger is None
+                or self.trigger.event is not TriggerEvent.FAILS_SAVE
+            ):
+                raise ValueError(
+                    "reroll_save comes with a 'fails a save' trigger: it answers one"
+                )
+        if self.regains:
+            if not all(isinstance(r, CombatRegain) for r in self.regains):
+                raise ValueError(
+                    'regains are CombatRegain, like CombatRegain("Monk\'s Focus"),'
+                    f" not {self.regains!r}"
+                )
+            if not self.targets_self:
+                raise ValueError("regains gives its user's uses back: targets_self")
+            names = [r.feature for r in self.regains]
+            if len(names) != len(set(names)):
+                raise ValueError(f"A feature is regained twice: {names}")
         # Text ("save") is taken too, as JSON and logs have it.
         if self.roll not in set(EffectRoll):
             raise ValueError(f"roll {self.roll!r} is not one of {list(EffectRoll)}")
@@ -483,6 +542,7 @@ def _compact(value: Any) -> Any:
             CombatCondition,
             CombatInstances,
             CombatTargets,
+            CombatRegain,
         ),
     ):
         data = {}
@@ -505,6 +565,7 @@ _HIT_POINTS_KEYS = tuple(f.name for f in fields(CombatHitPoints))
 _CONDITION_KEYS = tuple(f.name for f in fields(CombatCondition))
 _INSTANCES_KEYS = tuple(f.name for f in fields(CombatInstances))
 _TARGETS_KEYS = tuple(f.name for f in fields(CombatTargets))
+_REGAIN_KEYS = tuple(f.name for f in fields(CombatRegain))
 # "condition": one condition, as logs before 2026-11-09 have it.
 _EFFECT_KEYS = (*(f.name for f in fields(CombatEffect)), "condition")
 
@@ -693,6 +754,8 @@ class _Reader:
                 data.get("largest_target"), "trigger.largest_target", CreatureSize
             ),
             when=self.kind(data.get("when"), "trigger.when", (str,), ""),
+            aim=self.enum(data.get("aim"), "trigger.aim", TriggerAim)
+            or TriggerAim.TARGET,
             **flags,
         )
 
@@ -708,6 +771,29 @@ class _Reader:
             cantrip=self.cantrip(data.get("cantrip"), "instances.cantrip", int),
             noun=self.kind(data.get("noun"), "instances.noun", (str,), ""),
         )
+
+    def regains(self, value: Any) -> tuple[CombatRegain, ...]:
+        """The feature uses it gives back; none in data from before."""
+        if value is None:
+            return ()
+        if not isinstance(value, (list, tuple)):
+            self.fail("regains", f"expected a list, got {value!r}")
+        regains = []
+        for index, item in enumerate(value):
+            where = f"regains[{index}]"
+            data = self.mapping(item, where, _REGAIN_KEYS)
+            regains.append(
+                self.build(
+                    where,
+                    CombatRegain,
+                    feature=self.kind(
+                        data.get("feature"), f"{where}.feature", (str,), ""
+                    ),
+                    up_to=self.kind(data.get("up_to"), f"{where}.up_to", (int,)),
+                    count=self.kind(data.get("count"), f"{where}.count", (int,)),
+                )
+            )
+        return tuple(regains)
 
     def targets(self, value: Any) -> CombatTargets | None:
         if value is None:
@@ -766,4 +852,6 @@ class _Reader:
                 data.get("damage_reduction"), "damage_reduction", (str,), ""
             ),
             drops_to=self.kind(data.get("drops_to"), "drops_to", (int,), 0),
+            regains=self.regains(data.get("regains")),
+            reroll_save=self.kind(data.get("reroll_save"), "reroll_save", (int,)),
         )

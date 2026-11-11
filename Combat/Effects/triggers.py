@@ -34,10 +34,20 @@ from Model.Content.CombatModifiers import (
     Trigger,
     WhoseTurn,
 )
-from Model.Content.CombatTriggers import CombatTrigger, TriggerEvent, size_fits
+from Model.Content.CombatTriggers import (
+    CombatTrigger,
+    TriggerAim,
+    TriggerEvent,
+    size_fits,
+)
 from Model.Content.RulesConditions import conditions_with
 
-from .modifiers import _effects_with_modifiers, rules_condition, size_in_use
+from .modifiers import (
+    _effects_with_modifiers,
+    hit_point_maximum,
+    rules_condition,
+    size_in_use,
+)
 
 
 @dataclass(frozen=True)
@@ -190,6 +200,37 @@ class BloodiedOutcome:
 
 
 @dataclass(frozen=True)
+class UsesOutcome:
+    """`owner` used its row `row` on `target`, picked and applied in the
+    Custom Effect dialog (USES: Ice Knife's explosion after its shard)."""
+
+    owner: dict
+    target: dict
+    row: str
+
+
+@dataclass(frozen=True)
+class FailedSaveOutcome:
+    """`char` failed a DC `dc` save of `ability` ("WIS") the window rolled,
+    with `total`, against `against` ("Hold Person", "" if not known)
+    (FAILS_SAVE: Indomitable)."""
+
+    char: dict
+    ability: str
+    dc: int
+    total: int
+    against: str = ""
+
+
+@dataclass(frozen=True)
+class InitiativeOutcome:
+    """`char` rolls Initiative, as the fight starts (ROLLS_INITIATIVE:
+    Uncanny Metabolism, Superior Inspiration)."""
+
+    char: dict
+
+
+@dataclass(frozen=True)
 class DropOutcome:
     """`damage` (after Resistance and Temporary Hit Points) would drop
     `target` to 0 Hit Points, with `left_over` of it past 0; from `source`,
@@ -251,6 +292,15 @@ class TriggerRow:
     damage_reduction: str = ""
     on_self: bool = False  # what it gives goes on its owner (Shield)
     drops_to: int = 0  # the Hit Points it drops its owner to instead of 0
+    # For a row that only restores (as a fight starts): whether it heals,
+    # whether it gives feature uses back, and how many it would now.
+    heals: bool = False
+    regains: bool = False
+    regainable: int = 0
+    # A spell's row: a later step of a casting (`after`) follows only the
+    # casting picked in the dialog, never a hit typed in.
+    spell: bool = False
+    reroll_save: int | None = None  # the bonus it rerolls a failed save with
 
     @property
     def takes_reaction(self) -> bool:
@@ -278,6 +328,9 @@ class HitFiring:
     why: str = ""
     # What it answers (an AttackOutcome or a DamageOutcome), for its question.
     outcome: object = field(default=None, compare=False)
+    # For a row aimed at another creature (TriggerAim), who it can go on: the
+    # window fills them in before it asks.
+    others: tuple[dict, ...] = field(default=(), compare=False)
 
     @property
     def caster(self) -> str:
@@ -308,6 +361,21 @@ class HitFiring:
                 head = f"{amount.capitalize()} would drop {owner} to 0 Hit Points"
         elif event is TriggerEvent.REDUCES_TO_ZERO:
             head = f"{owner} reduces {target} to 0 Hit Points"
+        elif event is TriggerEvent.USES:
+            used = outcome.row if isinstance(outcome, UsesOutcome) else "it"
+            head = f"{owner} uses {used} on {target}"
+        elif event is TriggerEvent.FAILS_SAVE and isinstance(
+            outcome, FailedSaveOutcome
+        ):
+            against = f" against {outcome.against}" if outcome.against else ""
+            head = (
+                f"{owner} fails a DC {outcome.dc} {outcome.ability} save{against}"
+                f" with {outcome.total}"
+            )
+        elif event is TriggerEvent.FAILS_SAVE:
+            head = f"{owner} fails a save"
+        elif event is TriggerEvent.ROLLS_INITIATIVE:
+            head = f"{owner} rolls Initiative"
         elif event is TriggerEvent.BLOODIED:
             by = outcome.source if isinstance(outcome, BloodiedOutcome) else None
             whose = f"{by['name']}'s damage" if by is not None else "Damage"
@@ -345,6 +413,11 @@ class HitFiring:
         if self.row.uses is not None:
             left, most = self.row.uses
             parts.append(f"{left} of {most} uses left.")
+        aim = self.row.trigger.aim
+        if aim is TriggerAim.ANOTHER:
+            parts.append(f"It goes on another creature near {target}: pick it.")
+        elif aim is TriggerAim.ALSO_OTHERS:
+            parts.append(f"On {target}, and any creature near it you add.")
         if self.why:
             parts.append(f"Check: {self.why}.")
         return " ".join(parts)
@@ -366,6 +439,15 @@ class HitFiring:
             return (
                 f"{self.target['name']}: {self.caster}'s {self.row.name}"
                 f" (on a knockout{why})"
+            )
+        if event is TriggerEvent.ROLLS_INITIATIVE:
+            return f"{self.caster}: {self.row.name} (on rolling Initiative{why})"
+        if event is TriggerEvent.FAILS_SAVE:
+            return f"{self.caster}: {self.row.name} (a failed save{why})"
+        if event is TriggerEvent.USES:
+            return (
+                f"{self.target['name']}: {self.caster}'s {self.row.name}"
+                f" (after {self.row.trigger.after}{why})"
             )
         if event is TriggerEvent.BLOODIED:
             by = (
@@ -394,10 +476,16 @@ class TriggerChoice:
     apply: tuple[HitFiring, ...] = ()
     edit: tuple[HitFiring, ...] = ()
     rolled: tuple[tuple[HitFiring, int], ...] = ()
+    # For a firing aimed at other creatures (TriggerAim), those picked.
+    aimed: tuple[tuple[HitFiring, tuple[dict, ...]], ...] = ()
 
     def rolled_for(self, firing: HitFiring) -> int | None:
         """What was rolled at the table for firing, if it was."""
         return next((n for f, n in self.rolled if f is firing), None)
+
+    def aimed_at(self, firing: HitFiring) -> tuple[dict, ...]:
+        """The other creatures picked for firing (none if none were)."""
+        return next((chars for f, chars in self.aimed if f is firing), ())
 
 
 # For an attack of a known kind (the key), the kinds a trigger can ask for
@@ -464,7 +552,17 @@ def reaction_lack(char: dict) -> str | None:
     return None
 
 
-Outcome = AttackOutcome | DamageOutcome | KnockoutOutcome | BloodiedOutcome
+Outcome = (
+    AttackOutcome
+    | DamageOutcome
+    | KnockoutOutcome
+    | BloodiedOutcome
+    | InitiativeOutcome
+    | UsesOutcome
+    | FailedSaveOutcome
+)
+# The outcomes whose rows are the owner's own and fire on itself.
+_OWN = (BloodiedOutcome, InitiativeOutcome, FailedSaveOutcome)
 
 
 def _owner_of(outcome: Outcome) -> dict:
@@ -477,6 +575,12 @@ def _owner_of(outcome: Outcome) -> dict:
         return outcome.source
     if isinstance(outcome, BloodiedOutcome):
         return outcome.target
+    if isinstance(outcome, InitiativeOutcome):
+        return outcome.char
+    if isinstance(outcome, UsesOutcome):
+        return outcome.owner
+    if isinstance(outcome, FailedSaveOutcome):
+        return outcome.char
     return outcome.attacker
 
 
@@ -590,6 +694,20 @@ def _firing(
         if event is not TriggerEvent.BLOODIED:
             return None
         owner = target = outcome.target  # it's the owner's own
+    elif isinstance(outcome, UsesOutcome):
+        if event is not TriggerEvent.USES or trigger.after != outcome.row:
+            return None
+        owner, target = outcome.owner, outcome.target
+    elif isinstance(outcome, FailedSaveOutcome):
+        if event is not TriggerEvent.FAILS_SAVE:
+            return None
+        owner = target = outcome.char
+    elif isinstance(outcome, InitiativeOutcome):
+        if event is not TriggerEvent.ROLLS_INITIATIVE:
+            return None
+        owner = target = outcome.char
+        if (row.heals or row.regains) and not _restores_anything(owner, row):
+            return None  # nothing to regain: keep the use
     elif before_damage:
         if event is not TriggerEvent.HIT_BY or not outcome.hits:
             return None
@@ -604,7 +722,7 @@ def _firing(
         owner, target = outcome.attacker, outcome.target
     else:
         return None  # not this outcome's event
-    if owner is target and not isinstance(outcome, BloodiedOutcome):
+    if owner is target and not isinstance(outcome, _OWN):
         return None  # its own damage (Hellish Rebuke answers another's)
     if row.takes_reaction and reaction_lack(owner) is not None:
         return None
@@ -615,6 +733,8 @@ def _firing(
     if trigger.after and attack is not None:
         if attack.row and attack.row != trigger.after:
             return None
+        if not attack.row and row.spell:
+            return None  # a casting's later step follows the casting picked
         if not attack.row:
             why.append(f"if it was {trigger.after}")
     if attack is not None:
@@ -647,7 +767,11 @@ def _firing(
     if row.conditions and all(c in conditions for c in row.conditions):
         return None
     automatic = not (
-        trigger.optional or trigger.when or row.costs or row.takes_reaction
+        trigger.optional
+        or trigger.when
+        or row.costs
+        or row.takes_reaction
+        or trigger.aim is not TriggerAim.TARGET
     )
     if trigger.when:
         why.insert(0, f"if {trigger.when}")
@@ -660,6 +784,13 @@ def _firing(
         why="; ".join(why),
         outcome=outcome,
     )
+
+
+def _restores_anything(owner: dict, row: TriggerRow) -> bool:
+    """Whether a row that heals or gives feature uses back would give owner
+    anything now: Hit Points below its maximum, or a use to regain."""
+    hurt = owner.get("hp", 0) < hit_point_maximum(owner)
+    return (row.heals and hurt) or row.regainable > 0
 
 
 def drop_firings(

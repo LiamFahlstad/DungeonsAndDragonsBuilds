@@ -13,6 +13,7 @@ from PyQt6.QtCore import QRegularExpression
 from PyQt6.QtGui import QRegularExpressionValidator
 
 from PyQt6.QtWidgets import (
+    QButtonGroup,
     QCheckBox,
     QDialog,
     QHBoxLayout,
@@ -24,6 +25,7 @@ from PyQt6.QtWidgets import (
 )
 
 from Combat.Effects.triggers import HitFiring, TriggerChoice
+from Model.Content.CombatTriggers import TriggerAim, TriggerEvent
 
 from .styles import QSS
 
@@ -47,19 +49,31 @@ class TriggerPrompt(QDialog):
         layout = QVBoxLayout(self)
         layout.setContentsMargins(14, 12, 14, 12)
         layout.setSpacing(8)
-        heading = QLabel("This hit can trigger:")
+        events = {firing.row.trigger.event for firing in self._firings}
+        heading = QLabel(
+            "Rolling Initiative can trigger:"
+            if events == {TriggerEvent.ROLLS_INITIATIVE}
+            else "This hit can trigger:"
+        )
         heading.setObjectName("triggerHeading")
         layout.addWidget(heading)
         self.boxes: list[QCheckBox] = []
         # A box for each firing's own roll, by its index in firings.
         self.rolls: dict[int, QLineEdit] = {}
+        # For a firing aimed at other creatures, a box per creature it can go
+        # on, by its index in firings.
+        self.aims: dict[int, list[tuple[dict, QCheckBox]]] = {}
         for index, firing in enumerate(self._firings):
             box = QCheckBox(firing.question)
             box.setObjectName("triggerBox")
             box.setChecked(True)
             box.setToolTip(getattr(firing.row.option, "tooltip", "") or "")
             self.boxes.append(box)
-            dice = firing.row.damage_reduction
+            if firing.others:
+                layout.addWidget(box)
+                layout.addLayout(self._aim_boxes(index, firing))
+                continue
+            dice, what = _own_roll(firing)
             if not dice:
                 layout.addWidget(box)
                 continue
@@ -70,7 +84,7 @@ class TriggerPrompt(QDialog):
             rolled.setPlaceholderText(f"{dice}, blank rolls")
             rolled.setToolTip(
                 f"What was rolled at the table for {firing.row.name} ({dice}),"
-                " the total taken off the damage. Blank rolls it here."
+                f" {what}. Blank rolls it here."
             )
             rolled.setValidator(
                 QRegularExpressionValidator(QRegularExpression(_TOTAL), rolled)
@@ -103,6 +117,25 @@ class TriggerPrompt(QDialog):
         self.edit_button.clicked.connect(lambda: self._close_with("edit"))
         self.skip_button.clicked.connect(self.reject)
 
+    def _aim_boxes(self, index: int, firing: HitFiring) -> QHBoxLayout:
+        """A box per creature `firing` can go on besides its target, none
+        checked; for one other creature only, checking one unchecks the
+        rest."""
+        line = QHBoxLayout()
+        line.setContentsMargins(24, 0, 0, 0)
+        group = QButtonGroup(self)
+        group.setExclusive(firing.row.trigger.aim is TriggerAim.ANOTHER)
+        boxes = []
+        for char in firing.others:
+            other = QCheckBox(char["name"])
+            other.setObjectName("triggerAim")
+            group.addButton(other)
+            line.addWidget(other)
+            boxes.append((char, other))
+        line.addStretch(1)
+        self.aims[index] = boxes
+        return line
+
     def _close_with(self, answer: str):
         self._answer = answer
         self.accept()
@@ -116,11 +149,33 @@ class TriggerPrompt(QDialog):
             for index, box in self.rolls.items()
             if re.fullmatch(_TOTAL, box.text().strip())
         )
+        aimed = tuple(
+            (
+                self._firings[index],
+                tuple(char for char, box in boxes if box.isChecked()),
+            )
+            for index, boxes in self.aims.items()
+        )
         if self._answer == "apply":
-            return TriggerChoice(apply=checked, rolled=rolled)
+            return TriggerChoice(apply=checked, rolled=rolled, aimed=aimed)
         if self._answer == "edit":
             return TriggerChoice(edit=checked)
         return TriggerChoice()
+
+
+def _own_roll(firing: HitFiring) -> tuple[str, str]:
+    """What a firing rolls itself, and what its box's total is: Deflect
+    Attacks' reduction, Indomitable's new save. ("", "") for none."""
+    if firing.row.damage_reduction:
+        return firing.row.damage_reduction, "the total taken off the damage"
+    bonus = firing.row.reroll_save
+    if bonus is not None:
+        plus = f" + {bonus}" if bonus else ""
+        return (
+            f"d20 + save{plus}",
+            f"the new save's total, with the{plus or ' no'} bonus",
+        )
+    return "", ""
 
 
 def _total(text: str) -> int:

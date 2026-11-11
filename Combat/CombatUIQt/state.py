@@ -289,7 +289,9 @@ class CombatWindowState:
     def _drop_firings(self, outcome: DropOutcome) -> tuple[list[HitFiring], list[str]]:
         raise NotImplementedError("TurnPanelMixin._drop_firings")
 
-    def _use_trigger(self, firing: HitFiring, notes: list[str]) -> bool:
+    def _use_trigger(
+        self, firing: HitFiring, notes: list[str], targets: list[dict] | None = None
+    ) -> bool:
         raise NotImplementedError("TurnPanelMixin._use_trigger")
 
     def _answer_firings(

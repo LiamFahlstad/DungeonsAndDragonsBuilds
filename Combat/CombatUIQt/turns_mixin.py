@@ -20,6 +20,7 @@ from PyQt6.QtWidgets import (
 from Combat.PlayerLog import has_round_events
 from Model.Content.CombatModifiers import AtTurnEnd, AtTurnStart
 
+from Combat.Effects.triggers import InitiativeOutcome
 from Combat.Summons import follows_owner, numbered, place_after_owners
 
 from .stats import _default_stats
@@ -698,6 +699,11 @@ class TurnsMixin(CombatWindowState):
         self._log_turn_start()
 
         self._switch_to_combat()
+        # What rolling Initiative gives (Uncanny Metabolism, Superior
+        # Inspiration): given or asked about once, for everyone in the fight.
+        self._resolve_attack_triggers(
+            [InitiativeOutcome(char) for char in self.initiative_order]
+        )
 
     def _show_tie_break_dialog(
         self,

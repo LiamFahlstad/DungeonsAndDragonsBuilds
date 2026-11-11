@@ -63,7 +63,13 @@ from Combat.Effects.modifiers import (
     signed,
 )
 from Model.Content.CombatModifiers import Modifier
-from Combat.Effects.triggers import AttackOutcome, reduced_damage
+from Combat.Effects.triggers import (
+    AttackOutcome,
+    FailedSaveOutcome,
+    UsesOutcome,
+    outcome_firings,
+    reduced_damage,
+)
 from Combat.WildShape import current_form, form_badge
 from Core.Definitions import Condition, DamageType
 from Core.Rules import SECONDS_PER_ROUND
@@ -89,7 +95,9 @@ from .effect_options import (
     COLLAPSED_CATEGORIES,
     amount_text as _amount_text,
     effect_options,
+    regained_uses,
     spell_slot_choices,
+    triggered_rows,
 )
 from .features_mixin import FEATURE_BADGE_COLOR
 from .monster_actions import first_number, legendary_resistances_left, roll_dice
@@ -792,6 +800,8 @@ class ConditionsMixin(CombatWindowState):
                 self._heal_target(target, effect.healing, source)
             if effect.temp_hp:
                 self._give_temp_hp(target, effect.temp_hp, source)
+            if effect.pick is not None and effect.pick.regains:
+                self._regain_feature_uses(target, effect.pick)
             drops_to = effect.pick.drops_to if effect.pick is not None else 0
             if drops_to and target["hp"] <= 0:
                 # Picked late (asked too late, or the setting off): what it
@@ -901,6 +911,13 @@ class ConditionsMixin(CombatWindowState):
             if effect.repeat_save and effect.ability is not None:
                 self._track_repeat_save(target, effect)
 
+        pick = effect.pick
+        if pick is not None and pick.is_described and source is not None:
+            # What comes after this row of its source, on each of its targets
+            # (USES: Ice Knife's explosion after its shard, hit or miss).
+            for target in living:
+                if any(target is c for c in self.characters):
+                    self._after_attack(UsesOutcome(source, target, pick.name))
         if effect.concentration and caster is not None:
             self._hold_concentration(caster, label, effect, applied)
         if effect.damage and source is not None:
@@ -986,6 +1003,23 @@ class ConditionsMixin(CombatWindowState):
             self._saved_targets = saved_targets
             self._update_target_label()
         return True
+
+    def _regain_feature_uses(self, char: dict, option: EffectOption):
+        """Give char back the expended feature uses option regains
+        (Uncanny Metabolism's Focus Points), a logged line per use, as a rest
+        logs them, so the party's history replays them."""
+        used = char.setdefault("feature_uses_used", {})
+        for regain in option.regains:
+            for _ in range(regained_uses(char, regain)):
+                used[regain.feature] = max(used.get(regain.feature, 0) - 1, 0)
+                self._log_event(
+                    f"{char['name']} regains a use of {regain.feature}"
+                    f" ({option.name})",
+                    character=char["name"],
+                    action=Action.REGAIN_FEATURE_CHARGE,
+                    value=regain.feature,
+                )
+        self._rebuild_card(char)
 
     def _use_pick(self, caster: dict, effect: CustomEffect) -> bool | None:
         """Count what the dialog's pick was as used by caster, as Cast Spell,
@@ -1323,10 +1357,60 @@ class ConditionsMixin(CombatWindowState):
         )
         if result.success:
             return True
+        if result.total is not None and id(target) not in effect.typed_totals:
+            # What target answers a failed save rolled here with (Indomitable);
+            # one rolled at the table is rerolled there.
+            failed = FailedSaveOutcome(
+                target, effect.ability, effect.dc, result.total, effect.name
+            )
+            if self._reroll_failed_save(failed, effect):
+                return True
         if effect.use_legendary_resistance and legendary_resistances_left(target) > 0:
             self._use_legendary_resistance(target)
             return True
         return False
+
+    def _reroll_failed_save(
+        self, failed: FailedSaveOutcome, effect: CustomEffect
+    ) -> bool:
+        """Ask the creature that failed a save rolled here about its FAILS_SAVE
+        rows (Indomitable), now, in a pop-up of its own; one applied spends its
+        use, and the save is rolled again with its bonus, which it must keep.
+        Returns whether the new roll succeeds. With the setting ask_triggers
+        off, it's a turn-column button instead, and the save stays failed."""
+        found, spent = outcome_firings([failed], triggered_rows)
+        found = [f for f in found if f.row.reroll_save is not None]
+        if not found:
+            return False
+        if not self.settings.ask_triggers:
+            self._hit_prompts = (*self._hit_prompts, *found)
+            self._refresh_turn_prompts()
+            return False
+        status = self._status_label.text()
+        notes = list(spent)
+        applied = self._answer_firings(found[:1], notes)
+        success = False
+        for firing, at_table in applied:
+            bonus = firing.row.reroll_save or 0
+            plus = f" + {bonus}" if bonus else ""
+            if at_table is not None:
+                # The new total as rolled at the table, the bonus in it.
+                total, how = at_table, f"{at_table}, rolled at the table"
+            else:
+                again = roll_save(failed.char, failed.ability, failed.dc, effect.mode)
+                if again.total is None:
+                    continue
+                total = again.total + bonus
+                how = f"{again.total}{plus} = {total}"
+            success = total >= failed.dc
+            verb = "makes" if success else "fails"
+            self._log_event(
+                f"{failed.char['name']} rerolls the save with {firing.row.name}:"
+                f" {how}, {verb} it",
+                character=failed.char["name"],
+            )
+        self._show_status("; ".join(part for part in (status, *notes) if part))
+        return success
 
     def _end_of_turn_saves(self, char: dict):
         """As char's turn ends, the saves that could end a condition on it. A

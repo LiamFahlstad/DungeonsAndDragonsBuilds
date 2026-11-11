@@ -32,6 +32,7 @@ from Model.Content.CombatEffect import (
     TurnEdge,
     TurnOf,
 )
+from Model.Content.CombatTriggers import CombatTrigger, TriggerAim, TriggerEvent
 from Model.Content.Feature import FeatureTarget
 from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table
 from Model.View import CharacterView
@@ -1836,7 +1837,14 @@ class GreenFlameBlade(ClassSpell):
                 ),
                 spends_use=False,
                 notes=(
-                    "After a hit: a different creature you can see within 5 feet of the target.",
+                    "A different creature you can see within 5 feet of the target.",
+                ),
+                # Asked as the attack hits, for the GM to pick that creature.
+                trigger=CombatTrigger(
+                    TriggerEvent.HIT,
+                    optional=False,
+                    after="Green-Flame Blade",
+                    aim=TriggerAim.ANOTHER,
                 ),
             ),
         ]

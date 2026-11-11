@@ -350,9 +350,11 @@ def test_kivis_rows_with_a_trigger():
     from Combat.PlayerCombatant import combatant_from_character
 
     kivi = combatant_from_character(sheet)
-    # Deflect Attacks answers a hit on Kivi (6.5, tests/test_hit_by_triggers.py).
-    deflect, row = triggered_rows(kivi)
-    assert deflect.name == "Deflect Attacks"
+    # Uncanny Metabolism comes with rolling Initiative (6.7) and Deflect
+    # Attacks answers a hit on Kivi (6.5, tests/test_hit_by_triggers.py).
+    rows = {r.name: r for r in triggered_rows(kivi)}
+    assert sorted(rows) == ["Deflect Attacks", "Hill's Tumble", "Uncanny Metabolism"]
+    row = rows["Hill's Tumble"]
     assert (row.name, row.trigger, row.conditions, row.uses, row.costs) == (
         "Hill's Tumble",
         TUMBLE,
@@ -361,7 +363,8 @@ def test_kivis_rows_with_a_trigger():
         True,
     )
     kivi["feature_uses_used"] = {"Giant Ancestry": 1}
-    assert triggered_rows(kivi)[1].uses == (1, 2)
+    tumble = next(r for r in triggered_rows(kivi) if r.name == "Hill's Tumble")
+    assert tumble.uses == (1, 2)
 
 
 # ---------------------------------------------------------------------------

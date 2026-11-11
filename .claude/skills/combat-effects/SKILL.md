@@ -358,9 +358,24 @@ Names are the Python ones; `Ability`, `Condition` and `DamageType` come from
   that dealt the knockout, against the one knocked out (Dark One's
   Blessing: `optional=False, enemy_only=True` on a `targets_self`,
   `spends_use=False` row with its `temp_hp`, so it's given at once). `BLOODIED` is asked of the creature
-  damage leaves Bloodied (not at 0), on itself: Harvest Undead. The other
-  events (`FAILS_SAVE`, `ROLLS_INITIATIVE`, `CASTS_SPELL`, `USES`) are
-  data until their step (6.7).
+  damage leaves Bloodied (not at 0), on itself: Harvest Undead.
+  `ROLLS_INITIATIVE` (6.7) is given or asked once as the fight starts, and
+  a row that only heals or `regains` isn't offered when there's nothing to
+  get back. `FAILS_SAVE` is asked as a save the dialog rolls fails (not
+  one typed in from the table), with `reroll_save`. `USES` comes after
+  another row of the same source is picked and applied (`after=` names
+  it): Ice Knife's explosion after its shard, hit or miss. A spell's
+  later step (`after=` on a spell's row) follows only the casting picked
+  in the dialog, never a hit typed in. `aim`: who it goes on,
+  `TriggerAim.TARGET` (the other creature of the event), `ANOTHER` (one
+  other creature near it the GM picks in the pop-up: Green-Flame Blade's
+  leaping fire) or `ALSO_OTHERS` (it and those the GM adds: Ice Knife's
+  explosion); any but `TARGET` asks. `CASTS_SPELL` is still data.
+- **An extension's uses are its parent's**: a row of an extension with no
+  uses of its own spends its parent's (Radiance of the Dawn spends Channel
+  Divinity). A row that costs nothing (Superior Inspiration, Ever-Ready
+  Shot, Persistent Rage's regain) says `spends_use=False`, or it spends the
+  very use it gives back.
 - **`damage_reduction`** (with a `HIT_BY` trigger only): dice it takes off
   the hit's damage, before Resistance: Deflect Attacks'
   `with_bonus("1d10", DEX + Monk level)`, Stone's Endurance's
@@ -373,6 +388,17 @@ Names are the Python ones; `Ability`, `Condition` and `DamageType` come from
   The hit leaves the owner there, so it isn't knocked out (no Unconscious,
   Concentration kept, a Concentration save as usual). Picked by hand for an
   owner already at 0 (asked too late), it brings them back up to that many.
+- **`regains`** (on a `targets_self` row): `CombatRegain(feature, up_to,
+  count)`, the owner's feature uses it gives back, by the feature's name
+  (use the class's `.name`: `MonksFocus().name`). No limits: every
+  expended use (Uncanny Metabolism's Focus Points, Persistent Rage's Rage);
+  `up_to=2`: until 2 are left (Superior Inspiration; Archdruid's "if you
+  have none, one" is `up_to=1`); `count=1`: one use (Ever-Ready Shot).
+  Applied, each use comes back with a log line, as a rest's do.
+- **`reroll_save`** (with a `FAILS_SAVE` trigger only): the bonus a failed
+  save is rerolled with, which the owner must keep (Indomitable's Fighter
+  level). The pop-up has a box for the new total rolled at the table.
+  Picked by hand it does nothing.
 - **Not for spells:** `dc`, `attack_bonus` (the caster's), `action_type` and
   `concentration` (the spell's casting time and duration say them), and
   `spell` (for a feature's use that casts one).

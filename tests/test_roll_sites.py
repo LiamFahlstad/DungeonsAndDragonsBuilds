@@ -101,6 +101,9 @@ ROLL_SITES: dict[tuple[str, str, str], str] = {
     ("turn_panel_mixin.py", "_before_hit", "roll_dice"): (
         "the trigger pop-up's box (triggerRolled, 8.2)"
     ),
+    ("conditions_mixin.py", "_reroll_failed_save", "roll_save"): (
+        "the trigger pop-up's box (triggerRolled, 6.7): the new total"
+    ),
     # Initiative
     ("turns_mixin.py", "_add_initiative_row._roll", "randint"): "the row's box",
     ("turns_mixin.py", "_roll_initiative", "randint"): "the row's box",

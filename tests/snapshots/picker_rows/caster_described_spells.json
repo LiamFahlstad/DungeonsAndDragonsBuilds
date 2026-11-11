@@ -1145,7 +1145,7 @@
    "half_on_save": false,
    "is_described": true,
    "is_unavailable": false,
-   "note": "After a hit: a different creature you can see within 5 feet of the target. Add the spellcasting ability modifier to the damage.",
+   "note": "A different creature you can see within 5 feet of the target. Add the spellcasting ability modifier to the damage.",
    "repeat_save": false,
    "roll": "Saving throw",
    "row_name": "",
@@ -1153,6 +1153,12 @@
    "spell_level": 0,
    "spell_name": "Green-Flame Blade",
    "summary": "0 Fire",
+   "trigger": {
+    "after": "Green-Flame Blade",
+    "aim": "another",
+    "event": "hit",
+    "optional": false
+   },
    "until": null,
    "upcast": []
   },
@@ -1564,6 +1570,12 @@
    "spell_level": 1,
    "spell_name": "Ice Knife",
    "summary": "DC 15 DEX  2d6 Cold",
+   "trigger": {
+    "after": "Ice Knife: shard",
+    "aim": "also others",
+    "event": "uses",
+    "optional": false
+   },
    "until": null,
    "upcast": [
     "1d6"
@@ -1584,7 +1596,7 @@
    "half_on_save": false,
    "is_described": true,
    "is_unavailable": false,
-   "note": "Hit or miss, the shard then explodes: pick Ice Knife: explosion next.",
+   "note": "",
    "repeat_save": false,
    "roll": "Attack roll",
    "row_name": "",

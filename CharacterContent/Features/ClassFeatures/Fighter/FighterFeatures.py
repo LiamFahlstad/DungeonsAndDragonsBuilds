@@ -10,6 +10,7 @@ from Core.Definitions import CharacterClass
 from Model.View import CharacterView
 from Model.Content.FeatureText import Block, Facts, Paragraph, Table
 from Model.Content.CombatEffect import CombatEffect, CombatHitPoints, with_bonus
+from Model.Content.CombatTriggers import CombatTrigger, TriggerEvent
 
 
 class FightingStyle(Feature):
@@ -292,6 +293,17 @@ class Indomitable(Feature):
             return 2
         else:
             return 1
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        return [
+            CombatEffect(
+                targets_self=True,
+                # Asked as a save the simulator rolls fails; one rolled at
+                # the table is rerolled there.
+                trigger=CombatTrigger(TriggerEvent.FAILS_SAVE),
+                reroll_save=character.get_class_level(CharacterClass.FIGHTER),
+            )
+        ]
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF

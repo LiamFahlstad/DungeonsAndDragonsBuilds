@@ -49,7 +49,7 @@ from Model.Content.CombatModifiers import (
     RollMode,
     Speed,
 )
-from Model.Content.CombatTriggers import CombatTrigger, TriggerEvent
+from Model.Content.CombatTriggers import CombatTrigger, TriggerAim, TriggerEvent
 from Model.Content.Feature import FeatureTarget
 from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table
 from Model.View import CharacterView
@@ -1562,9 +1562,6 @@ class IceKnife(ClassSpell):
                 name="Ice Knife: shard",
                 roll=EffectRoll.ATTACK,
                 damage=(CombatDamage("1d10", DamageType.PIERCING),),
-                notes=(
-                    "Hit or miss, the shard then explodes: pick Ice Knife: explosion next.",
-                ),
             ),
             CombatEffect(
                 name="Ice Knife: explosion",
@@ -1574,6 +1571,13 @@ class IceKnife(ClassSpell):
                 spends_use=False,
                 notes=(
                     "The target and each creature within 5 feet of it. Part of the same casting: it spends no slot.",
+                ),
+                # Hit or miss, the shard then explodes: asked once it's applied.
+                trigger=CombatTrigger(
+                    TriggerEvent.USES,
+                    optional=False,
+                    after="Ice Knife: shard",
+                    aim=TriggerAim.ALSO_OTHERS,
                 ),
             ),
         ]
