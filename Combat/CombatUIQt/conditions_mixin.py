@@ -660,7 +660,7 @@ class ConditionsMixin(CombatWindowState):
         # What a hit's triggers are told about the attack (Combat/Effects/
         # triggers.py): a weapon's or an Unarmed Strike's, and the row.
         kind = _ATTACK_KINDS.get(effect.weapon_attack)
-        picked_row = effect.pick.name if effect.pick is not None else ""
+        picked_row = effect.pick.name if effect.pick is not None else effect.row
         for target in living:
             # Hit Points go to every target, whatever the roll decides.
             if effect.healing:
@@ -794,6 +794,10 @@ class ConditionsMixin(CombatWindowState):
         effect = _picked_effect(option, self._custom_save)
         if effect is None or any(self._effect_lacks(owner, effect)):
             return False
+        if option.note:
+            # No dialog shows its note, so what it gives carries it (a
+            # grapple's escape DC).
+            effect = replace(effect, notes=option.note)
         source, targets = self.selected_character, self.target_characters
         saved_targets = self._saved_targets
         self.selected_character, self.target_characters = owner, [target]
@@ -1920,6 +1924,7 @@ class ConditionsMixin(CombatWindowState):
                         typed_attacks={},
                         typed_totals={},
                         pick=None,
+                        row=effect.pick.name if effect.pick is not None else "",
                     )
                 effects.append(each)
             return effects

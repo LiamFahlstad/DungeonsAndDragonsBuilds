@@ -51,7 +51,7 @@ change and move on; the full suite can run later.
 | 3 | Lasting effects (3.1-3.6) | 3.1 **done** (R28-R34): `char["active_effects"]`, one plain dict per badge, in the new Qt-free `Combat/Effects/active_effects.py`; the seven old keys are read only by its `upgrade_old_keys`, where a log is read; an old fight log replays the same (`tests/test_active_effects.py`). 3.2 **done** (R27), ahead of 3.1: the rules conditions are data, and saves, attack rolls (all three paths), AC, damage Resistance and condition immunity read them. 3.3 **done** (R35-R40): a badge's `CombatCondition` says its `modifiers`, the record keeps them as JSON, and `modifiers_on` reads them beside the conditions and cover; Bless's 1d4 is rolled into the saves (a monster's Concentration save too, R40) and attack rolls the simulator makes, Shield of Faith's +2 counts in AC, cover's +2/+5 in Dexterity saves (DI-066); a typed total stays as typed, with the bonus as a reminder in the dialog. 3.4 **done** (R41-R47): `ExtraDamageFrom` (on the target, from its effect's caster) and `ExtraDamageOnHit` (on the attacker); Hunter's Mark's 1d6 Force on its caster's hits and Divine Favor's 1d4 Radiant on its caster's weapon hits are rolled into the hits the dialog and a monster's action buttons deal, doubled on a Critical Hit, each type resisted on its own; a typed damage total stays as typed, with the extra as a reminder in the dialog. 3.5 **done** (R48-R53): `AtTurnStart` / `AtTurnEnd` are modifiers on a badge that name a row of their spell; Heroism's Temporary Hit Points are given as its target's turn starts, and Spirit Guardians asks, as each enemy of its caster ends its turn, with a button that opens the Custom Effect dialog with its damage row picked. 3.6 **done** (R54-R56): ending a concentration also ends every record linked to it (`held_by_concentration`), a creature leaving the fight ends its concentration first, and a badge another running effect still holds is relinked to that effect's caster |
 | 4 | One `combat-effects` skill; feature agent; content rollout | 4.1 **done** (R57-R60): the `combat-effects` skill and `combat_effects.py` (renamed from spell-mechanics), with the principles, a Features section, `features`, `coverage` and `notes`, and features in `check`; `is_curated` is `is_described`. 4.2 **done**: the `feature-combat-effects` agent (opus); the spell agent is `spell-combat-effects`. 4.4 **done**: `coverage`. 4.3 (content): **Curse of the Lich done** (R61-R65, 2026-11-11): spells 44/44, features 23 described, 37 nothing to apply, none read from text; Time Loop PR was already done. Next: spells level by level and features class by class, which wait for the user's go (Decision 9) |
 | 5 | Sheet chips, monster score | Not started |
-| 6 | **Triggers** (new concept, 2026-11-11; see its section): a row or badge says *when* it's used (a hit, damage taken, dropping to 0, ...), and the simulator applies it itself (AUTO) or asks with a pop-up as it happens (ASK) | 6.1-6.3 **done** (R66-R73, 2026-11-11): `CombatTrigger` on a row (`CombatEffect.trigger`, `Model/Content/CombatTriggers.py`), `outcome_firings` with its gates and modes, and the hit hooks in all three hit paths: when Kivi hits a Large or smaller creature and deals it damage, one pop-up per Apply asks about Hill's Tumble; Apply gives Prone, spends a Giant Ancestry use and logs it, inside the hit's undo step. Only `HIT` and `MISS` fire; the other events are data. Next: 6.4 (monster riders: the Hill Giant's Tree Club) |
+| 6 | **Triggers** (new concept, 2026-11-11; see its section): a row or badge says *when* it's used (a hit, damage taken, dropping to 0, ...), and the simulator applies it itself (AUTO) or asks with a pop-up as it happens (ASK) | 6.1-6.3 **done** (R66-R73, 2026-11-11): `CombatTrigger` on a row (`CombatEffect.trigger`, `Model/Content/CombatTriggers.py`), `outcome_firings` with its gates and modes, and the hit hooks in all three hit paths: when Kivi hits a Large or smaller creature and deals it damage, one pop-up per Apply asks about Hill's Tumble; Apply gives Prone, spends a Giant Ancestry use and logs it, inside the hit's undo step. Only `HIT` and `MISS` fire; the other events are data. 6.4 **done** (R74-R77, 2026-11-11): a monster's hit that gives a condition in a sentence of its own ("If the target is a Large or smaller creature, it has the Prone condition", "..., and the target has the Poisoned condition until the end of its next turn", "the Grappled condition (escape DC 13)") is read as a rider row of its own ("Tree Club: Prone") with an AUTO `after=` trigger: the Hill Giant's Tree Club knocks a Large target Prone from its button and Enter and from the dialog, asks when the size isn't known, and does nothing to a Huge target or on a miss. 101 riders in the catalog. Next: 6.5 (being hit) |
 
 **Content described so far.** Spells: 57 (2024) + 1 (2014), all as classes
 (every spell is a class since S.4; 58 have combat effects);
@@ -181,6 +181,25 @@ damage from Pirate", "Edmund's Divine Favor: +4 Radiant (1d4)" on each
 weapon hit (none on the typed total), filled the Bite button's Damage field
 with "6 Piercing + 5 Force", and the player link's hit lines read "5
 Slashing + 1 Force" and "6 Slashing + 4 Radiant".
+
+**Verified 2026-11-11 (6.4, R74-R77), low overhead:** every combat test
+file (`tests/test_combat*.py`, the effects, triggers, picker rows, spell,
+feature and monster combat-effects files: 2,237; not the full suite)
+passes; `combat_effects.py check` OK; pyright 0 errors on the changed
+source files and `tests/test_hit_triggers.py`. 25 new tests there (95 in
+all), with expected values from the stat blocks' text: Tree Club and Trash
+Lob as rows, the rider shapes (a turn's duration, the source's or the
+target's; two conditions; an escape DC "from one of two claws"; "until the
+grapple ends"; a MeleeAttack's "If the target is Medium or smaller"; "While
+Grappled, ..." after it), a `when` and "Once per turn", five sentences that
+say more and stay text, and in the window the button and Enter, the dialog,
+Times 2, a Huge target, a miss, an unknown size, a typed hit, one undo, and
+an escape DC on the badge. No picker golden changed: the party has no
+monster rows, and the four homebrew monsters' hits are written as combat
+effects (Mirelle's) or say more than a rider (Curse Body Broken's "if ...
+doesn't have another creature grappled"). Five older tests that read a
+hit's condition off its attack row now read it off the rider row (Bite's
+Grappled, the Lich's Paralyzing Touch twice, the Tiger's Rend).
 
 **Verified 2026-11-11 (6.1-6.3, R66-R73), low overhead:** 20 combat test
 files pass (1,490: the new `tests/test_hit_triggers.py` with 70 tests,
@@ -765,7 +784,7 @@ fire).
 | 6.1 | **Done** (R66, R67). `TriggerEvent`, `CombatTrigger`, `CombatEffect.trigger`; `AttackKind` widened. Follow the checklist for adding a field. | Invalid combinations raise (e.g. `after` naming no row of the source, `largest_target` on an event with no target); `to_dict` / `from_dict` round-trip strictly; an old log still reads; `combat_effects.py check` refuses an `after` that names nothing |
 | 6.2 | **Done** (R68). The interpreter: `AttackOutcome`, `outcome_firings`, `rows_of`, the gates and the mode. | Tests with expected values from the rules text: Hill's Tumble on a Large target asks, on a Huge one gives nothing, on a miss nothing, on 0 damage (Immunity) nothing, with no uses left nothing (Q42), on an already Prone target nothing, on a target of unknown size asks with the reason |
 | 6.3 | **Done** (R69-R73). **First slice:** the hit hooks in the three paths, the pop-up and the setting; Kivi's Giant Ancestry (Hill's Tumble, Fire's Burn, Frost's Chill) gets triggers in place of the `on_hit` note (principle 7). | A rolled or typed hit by Kivi on an Ogre pops up Hill's Tumble once; Apply gives Prone, spends a use and logs it; one undo takes back the hit and the Prone; Times / Flurry of Blows ask once per Apply; the picker golden's only change is the note going |
-| 6.4 | Monster riders: the monster text reading turns "Hit: ... [If the target is a <size> or smaller creature,] it has the <condition> condition" (and "Grappled (escape DC N)") into a rider row with an AUTO trigger. A homebrew `MeleeAttack`'s `additional_ruling` reads the same way. | The Hill Giant's Tree Club knocks a Large target Prone from its button and Enter, and from the dialog; asks when the size isn't known; does nothing to a Huge target or on a miss; the picker goldens' new rider rows read against their stat blocks |
+| 6.4 | **Done** (R74-R77). Monster riders: the monster text reading turns "Hit: ... [If the target is a <size> or smaller creature,] it has the <condition> condition" (and "Grappled (escape DC N)") into a rider row with an AUTO trigger. A homebrew `MeleeAttack`'s `additional_ruling` reads the same way. | The Hill Giant's Tree Club knocks a Large target Prone from its button and Enter, and from the dialog; asks when the size isn't known; does nothing to a Huge target or on a miss; the picker goldens' new rider rows read against their stat blocks |
 | 6.5 | Being hit: `HIT_BY` before damage (Shield, Deflect Attacks, Stone's Endurance), and `TAKES_DAMAGE` after (Hellish Rebuke, Storm's Thunder; badges via `OnTrigger`: Armor of Agathys). Spends the Reaction (`_add_action_use`). Takes over Q30 and Q39. | Shield asked as a hit lands turns it into a miss when +5 is enough, and spends the Reaction and a slot; Deflect Attacks takes its roll off the damage; a used Reaction asks no more this round |
 | 6.6 | Hit Point thresholds: `BLOODIED`, `DROPS_TO_ZERO`, `REDUCES_TO_ZERO`. | Relentless Endurance (Orc) asks "drop to 1 HP instead?" as its owner drops to 0; Dark One's Blessing's temp HP are given at once; both inside the damage's undo step |
 | 6.7 | The rest as content needs them: `FAILS_SAVE` (Indomitable), `ROLLS_INITIATIVE` (regaining uses), `CASTS_SPELL` / `USES` (chained rows), `after=` on spells' later steps (Ice Knife, Green-Flame Blade, Booming Blade). Position events stay manual. | Per source, with a test from its rules text |
@@ -1480,6 +1499,56 @@ once.
   its outcome names no row: an `after=` rider (6.4) will ask which row hit
   on the 2nd and later copies unless `CustomEffect` keeps the row's name.
 
+- **R74. Riders are read from the text, strictly, in `monster_actions`**
+  (6.4, Q47 as suggested). `hit_riders(rider)` reads each sentence of what
+  a hit's text says after its damage, and takes one only when it's nothing
+  but a condition: "and the target has the X [and Y] condition[s] [until
+  the start/end of <whose> next turn]" joined to the damage; "[Once per
+  turn, ]If <gates>, it/the target [also] has ..."; "The target has ...";
+  each with an optional "(escape DC N)", "from <what holds it>" and ", and
+  it has the Y condition until the grapple ends", and a following "While
+  Grappled, the target has the Y condition." joins it. The gates are a size
+  ("the target is a Large or smaller creature", "is Medium or smaller")
+  and/or a `when` (what's left: "the elephant moved 20+ feet straight
+  toward it immediately before the hit", "the target isn't an Undead").
+  Anything more in the sentence (the allosaurus's extra Bite, the balor's
+  pull, the pixie's choice, a 2014 "must succeed on a ... saving throw or
+  have", extra damage from a charge) isn't a rider and stays in the text
+  (Q49). `MonsterAction.riders` holds them (a frozen `HitRider`), and
+  `MonsterAction.rider` loses their sentences, so the turn column's
+  "Also:" line and the picker's note don't say them again. 101 riders in
+  the catalog: Prone 35 (Large or smaller 21, Medium 7, Huge 7; 4 of them
+  with a `when`), Grappled 37 (12 with Restrained, Stunned or Poisoned too),
+  Poisoned 16, and 13 of Charmed, Frightened, Paralyzed, Stunned, Blinded,
+  Deafened and Incapacitated.
+  An ability with combat effects written on it is taken at its word, as
+  before: it writes its own rider rows if it wants them.
+- **R75. A rider is a row of its own, and the attack row loses its
+  condition.** `_rider_options` makes "Tree Club: Prone" right after Tree
+  Club: its conditions (the first with the turn duration), its note, and
+  `CombatTrigger(HIT, optional=False, after=<the action's name>,
+  largest_target=..., once_per_turn=..., when=...)`; its row reads "on a
+  hit, Large or smaller" rather than repeating "Prone". It has no
+  `monster_action`, so it spends nothing (the attack spent the recharge or
+  legendary actions) and its firing has no cost, so it's AUTO when every
+  gate was checked. Its sentence is taken out of the text the attack row's
+  condition is read from: before, picking Tree Club in the dialog gave
+  Prone to a target of any size, and the Damage field's Enter gave none.
+  Now all three paths give it, through the trigger. A typed hit (the main
+  window's Attack roll field) doesn't say which attack it was, so each of
+  the attacker's riders asks "if it was Tree Club" (Q50).
+- **R76. A grapple's escape DC is a note, not part of the condition's
+  name.** "Grappled (escape DC 13)" would count as Grappled
+  (`rules_condition` reads a longer name), but the card's quick menu and
+  colours go by the exact name. The rider's note says "Escape DC 13, from
+  one of two claws." and `_apply_row` puts a fired row's note on what it
+  gives (the badge's tooltip), since no dialog is open to show it; this
+  goes for every fired row (Frost's Chill's Speed note too).
+- **R77. A Times copy keeps the row it was made with** (R73's open end).
+  `CustomEffect.row` is set on the 2nd and later copies, which drop the
+  pick, and the dialog's outcome names `pick.name` or else `row`: two Tree
+  Clubs with Times 2 give Prone once and ask nothing.
+
 ## Open questions (with suggestions)
 
 - **Q2** done in 4.1 (R57, R60).
@@ -1659,7 +1728,9 @@ Q30, Q38 and Q39 are now part of Phase 6: Q30 and Q39 in step 6.5, and
 Q38's masteries as `HIT` / `MISS` triggers on weapon rows (6.7).
 
 Q40-Q45 are **built as suggested** (Decision 12, 6.1-6.3, R66-R73); Q40's
-setting is one checkbox, off meaning turn-column buttons (R71, Q48).
+setting is one checkbox, off meaning turn-column buttons (R71, Q48). Q47 is
+**built as suggested** in 6.4: riders are read from the text at runtime
+(R74).
 
 - **Q40. Pop-up or turn-column button?** The user asked for a pop-up.
   3.5's prompts are buttons, which don't interrupt but are easy to miss.
@@ -1710,6 +1781,24 @@ setting is one checkbox, off meaning turn-column buttons (R71, Q48).
   `SettingInfo` offer choices (a combo box) in `dialogs_mixin.py`, and make
   `ask_triggers` "pop-up / buttons / off"; until then, off-as-buttons loses
   nothing (a button can be ignored).
+
+- **Q49. Riders that say more than a condition.** About 15 charge riders
+  ("If the target is a Large or smaller creature and the boar moved 20+
+  feet straight toward it immediately before the hit, the target takes an
+  extra 3 (1d6) Piercing damage and has the Prone condition") add damage,
+  and a few move the target (the balor's pull) or give another attack (the
+  allosaurus). They stay text, as they were. *Suggestion:* read the extra
+  damage into the rider row too (an ASK row, as it has a `when`), once a
+  fired row's damage is doubled on a Critical Hit like the hit's own
+  (`AttackOutcome.critical` is there to pass on); the moves and attacks
+  stay the GM's.
+- **Q50. A typed hit asks about every rider of the attacker.** A Hill Giant
+  hit typed into the main window asks "Tree Club: Prone? ... if it was Tree
+  Club" and "Trash Lob: Poisoned? ... if it was Trash Lob", since nothing
+  says which attack it was. *Suggestion:* keep it while the GM mostly uses
+  the action buttons (which know). If it turns out noisy, put the
+  attacker's riders in the pop-up as one choice ("Which attack hit? Tree
+  Club / Trash Lob / neither").
 
 ## Discovered issues
 

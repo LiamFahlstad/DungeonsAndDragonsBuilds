@@ -17,7 +17,14 @@ from functools import lru_cache
 from CharacterContent.Spells.SpellFactory import SpellFactory
 from Combat.Effects.triggers import TriggerRow
 from Core.Definitions import Condition
-from Model.Content.CombatEffect import CombatCondition, CombatDamage, CombatEffect
+from Model.Content.CombatEffect import (
+    CombatCondition,
+    CombatDamage,
+    CombatEffect,
+    TurnEdge,
+    TurnOf,
+)
+from Model.Content.CombatTriggers import CombatTrigger, TriggerEvent
 
 from .monster_actions import (
     DAMAGE,
@@ -802,6 +809,9 @@ def _monster_action_condition(
     text = re.split(r"\b(?:Success|Failure or Success|Hit or Miss):", text)[0]
     if action.to_hit is not None:
         text = _HIT_ENDS.split(text)[0]
+    for rider in action.riders:
+        # Its own row gives it, as the attack hits (_rider_options).
+        text = text.replace(rider.text, "")
     condition, _, until, _ = _inflicted_condition(text)
     return condition, until
 
@@ -853,7 +863,64 @@ def monster_action_options(
     other = _action_it_uses(action, by_name)
     if other is not None:
         return [_as_other_action(char, action, other)]
-    return [_monster_action_option(char, action)]
+    return [_monster_action_option(char, action), *_rider_options(char, action)]
+
+
+def _rider_options(char: dict, action: MonsterAction) -> list[EffectOption]:
+    """A row for each condition an attack's hit gives in a sentence of its
+    own (monster_actions.hit_riders): "Tree Club: Prone", which the
+    simulator applies as Tree Club hits (Notes/combat-effects-plan.md, 6.4),
+    and asks first about what it can't check: a size it doesn't know, a
+    `when`, which attack hit. It spends nothing: the attack did."""
+    base = _NAME_ALONE.sub("", action.name)
+    options = []
+    for rider in action.riders:
+        first, *others = rider.conditions
+        until = None
+        if rider.until is not None:
+            until = (TurnEdge(rider.until[0]), TurnOf(rider.until[1]))
+        effect = CombatEffect(
+            name=f"{base}: {CONDITION_JOINER.join(rider.conditions)}",
+            conditions=(
+                CombatCondition(first, until=until),
+                *(CombatCondition(c) for c in others),
+            ),
+            spends_use=False,
+            notes=(rider.note,) if rider.note else (),
+            trigger=CombatTrigger(
+                TriggerEvent.HIT,
+                optional=False,
+                after=action.name,
+                largest_target=rider.largest_target,
+                once_per_turn=rider.once_per_turn,
+                when=rider.when,
+            ),
+        )
+        option = _described_option(
+            char,
+            effect,
+            name=action.name,
+            kind=MONSTER_ACTION,
+            tooltip=action.description,
+        )
+        # Its row says when, not again what: "Tree Club: Prone  on a hit,
+        # Large or smaller".
+        when = ["on a hit"]
+        if rider.largest_target is not None:
+            when.append(f"{rider.largest_target.value} or smaller")
+        if rider.once_per_turn:
+            when.append("once per turn")
+        if rider.when:
+            when.append(f"if {rider.when}")
+        options.append(
+            replace(
+                option,
+                summary=", ".join(when),
+                until=rider.until,
+                is_described=False,
+            )
+        )
+    return options
 
 
 def _described_monster_option(

@@ -330,8 +330,11 @@ def test_multiattack_says_to_pick_each_attack():
 
 def test_an_attack_read_from_its_text_is_unchanged():
     row = _row(Tiger(), "Rend")
-    assert (row.bonus, row.damage, row.condition) == (5, "2d6 + 3 Slashing", "Prone")
+    assert (row.bonus, row.damage, row.condition) == (5, "2d6 + 3 Slashing", "")
     assert row.amount_kind == DAMAGE_AMOUNT and not row.is_described
+    # Its Prone is a row of its own, given as Rend hits (6.4).
+    rider = _row(Tiger(), "Rend: Prone")
+    assert rider.condition == "Prone" and not rider.is_described
 
 
 def test_every_monster_still_reads():

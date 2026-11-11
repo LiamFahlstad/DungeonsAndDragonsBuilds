@@ -305,8 +305,13 @@ def test_a_monsters_save():
 
 
 def test_a_monsters_condition_and_rider():
-    bite, smite = dict(effect_options({"actions": [GRAB, SMITE]}, []))["Actions"]
-    assert bite.condition == "Grappled"
+    bite, grab, smite = dict(effect_options({"actions": [GRAB, SMITE]}, []))["Actions"]
+    # The hit's condition is a row of its own, given as the bite hits (6.4).
+    assert (bite.condition, grab.name, grab.condition) == (
+        "",
+        "Bite: Grappled",
+        "Grappled",
+    )
     assert smite.damage == "1d8 + 4"  # the type it chooses is left to the GM
     assert "type" in smite.note
     assert "Also: " in smite.note and "regain Hit Points" in smite.note
@@ -480,20 +485,24 @@ def test_a_hits_save_doesnt_give_its_condition_on_the_hit():
 
 
 def test_a_hits_own_condition_stays():
+    """As a row of its own since 6.4, which comes as the bite hits."""
     bite = {
         "name": "Bite",
         "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 7 (1d10 + 2) Piercing"
         " damage, and the target has the Grappled condition (escape DC 13).",
     }
-    (option,) = dict(effect_options({"actions": [bite]}, []))["Actions"]
-    assert option.condition == "Grappled"
+    option, rider = dict(effect_options({"actions": [bite]}, []))["Actions"]
+    assert option.condition == ""
+    assert (rider.condition, rider.note) == ("Grappled", "Escape DC 13.")
+    assert rider.trigger is not None and rider.trigger.after == "Bite"
 
 
 @pytest.mark.parametrize(
     "monster, name, condition, until",
     [
         # "has the Paralyzed condition until the start of the lich's next turn"
-        (Lich, "Paralyzing Touch", "Paralyzed", ("start", "source")),
+        # (its hit's rider row, 6.4)
+        (Lich, "Paralyzing Touch: Paralyzed", "Paralyzed", ("start", "source")),
         # "has the Stunned condition until the end of the mind flayer's next turn"
         (MindFlayer, "Mind Blast (Recharge 5–6)", "Stunned", ("end", "source")),
     ],

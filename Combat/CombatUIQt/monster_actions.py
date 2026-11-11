@@ -8,7 +8,7 @@ import random
 import re
 from dataclasses import dataclass, field
 
-from Core.Definitions import DamageType
+from Core.Definitions import Condition, CreatureSize, DamageType
 from Model.Content.CombatEffect import CombatEffect
 
 # The stat blocks don't record this; nearly every legendary creature has 3.
@@ -44,6 +44,150 @@ _LEGENDARY_COST = re.compile(r"\(Costs\s+(\d+)\s+Actions?\)")
 _START_OF_TURN = re.compile(r"start of (?:each of )?(?:its|the [\w -]+?'s) turns?")
 
 
+# A condition an attack's hit gives, in one sentence of its Hit: text
+# (Notes/combat-effects-plan.md, 6.4). Read strictly: a sentence that says
+# anything more ("and the allosaurus can make one Bite attack against it",
+# "the balor pulls the target", "(pixie's choice)") isn't one, and stays in
+# the rider for the GM to read.
+_CONDITION = "|".join(c.value for c in Condition)
+_SIZE = "|".join(s.value for s in CreatureSize)
+_SIZE_GATE = (
+    rf"(?:the )?target is (?:a |an )?(?P<size>{_SIZE}) or smaller(?: creature)?"
+)
+_GIVES = (
+    rf"(?:has|have) the (?P<first>{_CONDITION})(?: and (?P<second>{_CONDITION}))?"
+    r" conditions?"
+    r"(?: \(escape DC (?P<escape>\d+)\))?"
+    r"(?: (?P<holds>from [^,.]+?))?"
+    rf"(?:, and (?:it|the target) has the (?P<grapple>{_CONDITION}) condition"
+    r" until the grapple ends)?"
+    r"(?: until the (?P<edge>start|end) of"
+    r" (?P<whose>its|their|the [\w -]+?['’]s) next turn)?"
+)
+# "..., and the target has the Poisoned condition until the end of its next
+# turn": joined onto the damage, so the rider starts with "and".
+_JOINED_RIDER = re.compile(rf"and (?:the target|it) (?:also )?{_GIVES}")
+# "If the target is a Large or smaller creature, it has the Prone
+# condition."; with what only the GM can tell ("and the elephant moved 20+
+# feet straight toward it immediately before the hit"), or "Once per turn".
+_IF_RIDER = re.compile(
+    r"(?P<once>Once per turn, )?[Ii]f (?P<gates>[^,]+),"
+    rf" (?:it|the target) (?:also )?{_GIVES}"
+)
+_GATES = (
+    re.compile(rf"{_SIZE_GATE}(?: and (?P<when>.+))?"),
+    re.compile(rf"(?P<when>.+?) and {_SIZE_GATE}"),
+)
+# "The target has the Grappled condition (escape DC 15) from one of ten
+# tentacles, ...": a sentence of its own, with no gate.
+_PLAIN_RIDER = re.compile(rf"The target (?:also )?{_GIVES}")
+# "While Grappled, the target has the Restrained condition.", right after
+# the rider that grapples.
+_WHILE_GRAPPLED = re.compile(
+    rf"While (?P<held>{_CONDITION}), the target (?:also )?has the"
+    rf" (?P<also>{_CONDITION}) condition"
+)
+_RIDER_SENTENCE = re.compile(r"(?<=[.!?])\s+")
+_THE_TARGETS_TURN = re.compile(r"its|their|the (?:target|creature)['’]s")
+
+
+@dataclass(frozen=True)
+class HitRider:
+    """A condition an attack's hit gives, read from one sentence of its
+    Hit: text (`text`, as it was in the rider): the conditions, the largest
+    target it lands on ("If the target is a Large or smaller creature"),
+    how long the first lasts if that's a turn (("end", "target") for "until
+    the end of its next turn", as EffectOption.until has it), whether it's
+    once per turn, what only the GM can tell (`when`, said as what follows
+    "if"), and a note for the badge ("Escape DC 13, from one of two
+    claws.")."""
+
+    text: str
+    conditions: tuple[str, ...]
+    largest_target: CreatureSize | None = None
+    until: tuple[str, str] | None = None
+    once_per_turn: bool = False
+    when: str = ""
+    note: str = ""
+
+
+def hit_riders(rider: str) -> tuple[tuple[HitRider, ...], str]:
+    """The conditions an attack's hit gives that its `rider` text (what its
+    Hit: text says after the damage) says in a sentence of their own, and
+    the rest of the rider, without those sentences."""
+    riders: list[HitRider] = []
+    rest: list[str] = []
+    for sentence in _RIDER_SENTENCE.split(rider):
+        sentence = sentence.rstrip(".").strip()
+        if not sentence:
+            continue
+        found = _read_rider(sentence)
+        if found is not None:
+            riders.append(found)
+            continue
+        also = _WHILE_GRAPPLED.fullmatch(sentence)
+        if also is not None and riders and also["held"] in riders[-1].conditions:
+            last = riders[-1]
+            note = f"{also['also']} while {also['held']}."
+            riders[-1] = HitRider(
+                text=f"{last.text}. {sentence}",
+                conditions=(*last.conditions, also["also"]),
+                largest_target=last.largest_target,
+                until=last.until,
+                once_per_turn=last.once_per_turn,
+                when=last.when,
+                note=f"{last.note} {note}".strip(),
+            )
+            continue
+        rest.append(sentence)
+    if not riders:
+        return (), rider
+    return tuple(riders), ". ".join(rest)
+
+
+def _read_rider(sentence: str) -> HitRider | None:
+    """The rider one sentence is, if it's nothing but one."""
+    match = _JOINED_RIDER.fullmatch(sentence) or _PLAIN_RIDER.fullmatch(sentence)
+    size: str | None = None
+    when = ""
+    once = False
+    if match is None:
+        match = _IF_RIDER.fullmatch(sentence)
+        if match is None:
+            return None
+        once = bool(match["once"])
+        gates = match["gates"]
+        for pattern in _GATES:
+            gate = pattern.fullmatch(gates)
+            if gate is not None:
+                size, when = gate["size"], gate["when"] or ""
+                break
+        else:
+            when = gates
+    conditions = tuple(
+        c for c in (match["first"], match["second"], match["grapple"]) if c
+    )
+    until = None
+    if match["edge"]:
+        whose = "target" if _THE_TARGETS_TURN.fullmatch(match["whose"]) else "source"
+        until = (match["edge"], whose)
+    notes = []
+    if match["escape"]:
+        holds = f", {match['holds']}" if match["holds"] else ""
+        notes.append(f"Escape DC {match['escape']}{holds}.")
+    if match["grapple"]:
+        notes.append(f"{match['grapple']} until the grapple ends.")
+    return HitRider(
+        text=sentence,
+        conditions=conditions,
+        largest_target=CreatureSize(size) if size else None,
+        until=until,
+        once_per_turn=once,
+        when=when.strip(),
+        note=" ".join(notes),
+    )
+
+
 @dataclass(frozen=True)
 class DamageRoll:
     dice: str  # "2d6 + 3", or "4" for a flat amount
@@ -63,6 +207,9 @@ class MonsterAction:
     per_day: int | None = None
     legendary_cost: int = 0
     rider: str = ""  # what its text says besides that damage, conditions apart
+    # The conditions its hit gives in sentences of their own (hit_riders),
+    # which the picker makes rows of, applied as it hits; not in `rider`.
+    riders: tuple[HitRider, ...] = ()
     # What its stat block says using it does (MonsterAbility.combat_effects),
     # one per way to use it; () to read its text.
     effects: tuple[CombatEffect, ...] = ()
@@ -160,6 +307,9 @@ def parse_action(ability, legendary: bool = False) -> MonsterAction:
     attack = _ATTACK.search(description)
     save = _SAVE.search(description)
     damage, rider = _damage_rolls(description, attack is not None)
+    riders: tuple[HitRider, ...] = ()
+    if attack is not None:
+        riders, rider = hit_riders(rider)
     return MonsterAction(
         name=name,
         description=description,
@@ -169,6 +319,7 @@ def parse_action(ability, legendary: bool = False) -> MonsterAction:
         half_on_save=bool(re.search(r"Success:\s*Half", description)),
         damage=damage,
         rider=rider,
+        riders=riders,
         recharge_on=recharge_on,
         per_day=uses_per_day,
         legendary_cost=legendary_cost,

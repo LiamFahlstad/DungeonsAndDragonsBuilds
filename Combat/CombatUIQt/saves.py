@@ -119,6 +119,9 @@ class CustomEffect:
     # source uses it up (a spell cast, a feature's use, a monster's recharge)
     # along with the rest. Defined below, as effect_options needs this module.
     pick: "EffectOption | None" = None
+    # The picker row it was made with, kept on a Times copy, which drops the
+    # pick: what a hit triggers comes `after` a row by name (Tree Club).
+    row: str = ""
     # Whether the attack is made with a weapon (EffectOption.weapon_attack),
     # None when that isn't known; and whether its damage is a total rolled at
     # the table, to which a hit's extra damage isn't added (Decision 4).

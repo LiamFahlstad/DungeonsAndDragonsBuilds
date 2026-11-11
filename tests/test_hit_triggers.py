@@ -23,7 +23,7 @@ from Builds.Characters.Y2024_Monk_Elements_KiviJatti import (
 )
 from Combat.CombatUIQt.attack_rolls import parse_attack_roll
 from Combat.CombatUIQt.effect_options import effect_options, triggered_rows
-from Combat.CombatUIQt.monster_actions import parse_action
+from Combat.CombatUIQt.monster_actions import HitRider, hit_riders, parse_action
 from Combat.CombatUIQt.saves import CustomEffect
 from Combat.CombatUIQt.trigger_prompt import TriggerPrompt
 from Combat.Effects.triggers import (
@@ -716,3 +716,378 @@ def test_the_popup_gives_the_checked_rows(fight):
     prompt = TriggerPrompt(None, firings)
     prompt.skip_button.click()
     assert prompt.choice() == TriggerChoice()
+
+
+# ---------------------------------------------------------------------------
+# Monster riders (6.4): a condition a monster's hit gives, read from its text.
+# The Hill Giant's Tree Club: "Hit: 18 (3d8 + 5) Bludgeoning damage. If the
+# target is a Large or smaller creature, it has the Prone condition." Its
+# Trash Lob: "Hit: 16 (2d10 + 5) Bludgeoning damage, and the target has the
+# Poisoned condition until the end of its next turn."
+
+
+def _tree_club_ability():
+    return next(a for a in HillGiant().actions or [] if a.name == "Tree Club")
+
+
+def _attack(hit: str) -> dict:
+    return {"name": "Bite", "description": f"Melee Attack Roll: +5. Hit: {hit}"}
+
+
+def test_tree_clubs_prone_is_a_row_of_its_own_that_comes_as_it_hits():
+    giant = HillGiant()
+    char = {"name": "Hill Giant", "actions": giant.actions, "size": "Huge"}
+    (actions,) = [
+        rows for title, rows in effect_options(char, ()) if title == "Actions"
+    ]
+    by_name = {o.name: o for o in actions}
+    club = by_name["Tree Club"]
+    assert (club.bonus, club.damage, club.condition, club.note) == (
+        8,
+        "3d8 + 5 Bludgeoning",
+        "",  # the row below gives it, only to a Large or smaller target
+        "",
+    )
+    prone = by_name["Tree Club: Prone"]
+    assert prone.condition == "Prone"
+    assert prone.trigger == CombatTrigger(
+        TriggerEvent.HIT,
+        optional=False,
+        after="Tree Club",
+        largest_target=CreatureSize.LARGE,
+    )
+    assert prone.row_text == "Tree Club: Prone  on a hit, Large or smaller"
+    assert prone.monster_action is None  # it spends nothing: the attack did
+    poisoned = by_name["Trash Lob: Poisoned"]
+    assert (poisoned.condition, poisoned.until) == ("Poisoned", ("end", "target"))
+    assert poisoned.trigger is not None
+    assert poisoned.trigger.largest_target is None
+    assert by_name["Trash Lob"].condition == ""
+    assert [r.name for r in triggered_rows(char)] == [
+        "Tree Club: Prone",
+        "Trash Lob: Poisoned",
+    ]
+
+
+def test_the_turn_columns_also_line_no_longer_says_the_rider():
+    club = parse_action(_tree_club_ability())
+    assert club.rider == ""
+    (rider,) = club.riders
+    assert rider == HitRider(
+        text="If the target is a Large or smaller creature, it has the Prone"
+        " condition",
+        conditions=("Prone",),
+        largest_target=CreatureSize.LARGE,
+    )
+
+
+@pytest.mark.parametrize(
+    "hit, conditions, largest, until, note",
+    [
+        (
+            "4 (1d4 + 2) Piercing damage, and the target has the Poisoned"
+            " condition until the start of the centipede's next turn.",
+            ("Poisoned",),
+            None,
+            ("start", "source"),
+            "",
+        ),
+        (
+            "22 (2d12 + 9) Lightning damage, and the target has the Blinded and"
+            " Deafened conditions until the start of the giant's next turn.",
+            ("Blinded", "Deafened"),
+            None,
+            ("start", "source"),
+            "",
+        ),
+        (
+            "8 (1d8 + 4) Slashing damage. If the target is a Medium or smaller"
+            " creature, it has the Grappled condition (escape DC 11) from one of"
+            " two claws.",
+            ("Grappled",),
+            CreatureSize.MEDIUM,
+            None,
+            "Escape DC 11, from one of two claws.",
+        ),
+        (
+            "22 (3d8 + 9) Piercing damage. If the target is a Large or smaller"
+            " creature, it has the Grappled condition (escape DC 19), and it has"
+            " the Restrained condition until the grapple ends.",
+            ("Grappled", "Restrained"),
+            CreatureSize.LARGE,
+            None,
+            "Escape DC 19. Restrained until the grapple ends.",
+        ),
+        (
+            # A MeleeAttack's additional_ruling, as the crocodile's.
+            "7 (1d10 + 2) Piercing damage. If the target is Medium or smaller,"
+            " it has the Grappled condition (escape DC 12). While Grappled, the"
+            " target has the Restrained condition.",
+            ("Grappled", "Restrained"),
+            CreatureSize.MEDIUM,
+            None,
+            "Escape DC 12. Restrained while Grappled.",
+        ),
+    ],
+)
+def test_a_rider_reads_its_conditions_size_duration_and_note(
+    hit, conditions, largest, until, note
+):
+    action = parse_action(_attack(hit))
+    (rider,) = action.riders
+    assert (rider.conditions, rider.largest_target, rider.until, rider.note) == (
+        conditions,
+        largest,
+        until,
+        note,
+    )
+    assert (rider.when, rider.once_per_turn, action.rider) == ("", False, "")
+
+
+def test_what_only_the_gm_can_tell_is_a_when():
+    (rider,) = parse_action(
+        _attack(
+            "20 (3d8 + 7) Piercing damage. If the target is a Huge or smaller"
+            " creature and the elephant moved 20+ feet straight toward it"
+            " immediately before the hit, the target has the Prone condition."
+        )
+    ).riders
+    assert (rider.largest_target, rider.when) == (
+        CreatureSize.HUGE,
+        "the elephant moved 20+ feet straight toward it immediately before the hit",
+    )
+    (rider,), _ = hit_riders(
+        "Once per turn, if Mirelle had Advantage on the attack roll and the"
+        " target is Medium or smaller, the target also has the Prone condition"
+    )
+    assert (rider.once_per_turn, rider.largest_target, rider.when) == (
+        True,
+        CreatureSize.MEDIUM,
+        "Mirelle had Advantage on the attack roll",
+    )
+
+
+@pytest.mark.parametrize(
+    "hit",
+    [
+        # Something more happens too, or it's a choice, or a save.
+        "8 (1d8 + 4) Slashing damage. If the target is a Large or smaller"
+        " creature and the allosaurus moved 30+ feet straight toward it"
+        " immediately before the hit, the target has the Prone condition, and"
+        " the allosaurus can make one Bite attack against it.",
+        "1 Radiant damage, and the target has the Charmed or Poisoned condition"
+        " (pixie's choice) until the start of the pixie's next turn.",
+        "18 (3d6 + 8) Force damage. If the target is a Huge or smaller creature,"
+        " the balor pulls the target up to 25 feet straight toward itself, and"
+        " the target has the Prone condition.",
+        "7 (1d8 + 3) Bludgeoning damage, and the target must succeed on a DC 12"
+        " Strength saving throw or have the Prone condition.",
+        "10 (2d6 + 3) Bludgeoning damage. If this damage reduces the target to 0"
+        " Hit Points, the target becomes Stable, and it has the Poisoned"
+        " condition for 1 hour.",
+    ],
+)
+def test_a_sentence_that_says_more_is_no_rider(hit):
+    action = parse_action(_attack(hit))
+    assert action.riders == ()
+    assert action.rider  # still there for the GM to read
+
+
+def test_the_rest_of_the_text_stays_in_the_rider():
+    action = parse_action(
+        _attack(
+            "9 (2d6 + 2) Piercing damage. If the target is a Medium or smaller"
+            " creature, it has the Grappled condition (escape DC 12). Until the"
+            " grapple ends, the kuo-toa can't make Pincer Staff attacks."
+        )
+    )
+    assert len(action.riders) == 1
+    assert action.rider == (
+        "Until the grapple ends, the kuo-toa can't make Pincer Staff attacks"
+    )
+
+
+def _club_rows(giant: dict) -> list[TriggerRow]:
+    return [r for r in triggered_rows(giant) if r.name == "Tree Club: Prone"]
+
+
+def _giant_dict() -> dict:
+    giant = HillGiant()
+    return {"name": "Hill Giant", "actions": giant.actions, "conditions": []}
+
+
+def test_tree_clubs_rider_on_a_large_target_is_automatic():
+    giant = _giant_dict()
+    hit = AttackOutcome(giant, _ogre(), True, row="Tree Club", damage_dealt=20)
+    (firing,), _ = outcome_firings([hit], _club_rows)
+    assert (firing.mode, firing.why) == (TriggerMode.AUTO, "")
+    huge = replace(hit, target=_ogre(size="Huge"))
+    assert outcome_firings([huge], _club_rows) == ([], [])
+    assert outcome_firings([replace(hit, hit=False)], _club_rows) == ([], [])
+    assert outcome_firings([replace(hit, row="Trash Lob")], _club_rows) == ([], [])
+    unknown = _ogre()
+    del unknown["size"]
+    (firing,), _ = outcome_firings([replace(hit, target=unknown)], _club_rows)
+    assert (firing.mode, firing.why) == (TriggerMode.ASK, "Ogre's size isn't known")
+
+
+@pytest.fixture
+def giants_turn(fight):
+    """The Hill Giant the source, the Ogre (Large) its target."""
+    ui, kivi, ogre, giant, answers = fight
+    ui._select_character(giant)
+    ui._set_targets([ogre])
+    return ui, kivi, ogre, giant, answers
+
+
+def _tree_club(giant):
+    return parse_action(next(a for a in giant["actions"] if a.name == "Tree Club"))
+
+
+def _club_option(giant):
+    (option,) = [
+        o
+        for _, options in effect_options(giant, ())
+        for o in options
+        if o.name == "Tree Club"
+    ]
+    return option
+
+
+def _dialog_club(ui, giant, target, roll="20", times=1):
+    """The Custom Effect dialog's Apply of the giant's Tree Club, as do_apply
+    builds it (the attack roll typed in its target row), and its Times
+    copies as `repeated` does."""
+    ui._set_targets([target])
+    attack = parse_attack_roll(roll)
+    assert attack is not None
+    effect = CustomEffect(
+        name="Tree Club",
+        damage=[(18, "Bludgeoning")],
+        attack_bonus=8,
+        typed_attacks={id(target): attack},
+        pick=_club_option(giant),
+    )
+    if times == 1:
+        ui._apply_custom_effect(effect)
+    else:
+        copies = [effect] + [
+            replace(
+                effect,
+                name=f"Tree Club ({i + 1} of {times})",
+                pick=None,
+                row="Tree Club",
+            )
+            for i in range(1, times)
+        ]
+        ui._apply_custom_effects(copies)
+
+
+def test_the_giants_button_and_enter_knock_the_ogre_prone(giants_turn, monkeypatch):
+    ui, _, ogre, giant, answers = giants_turn
+    monkeypatch.setattr(random, "randint", lambda a, b: min(b, 15))
+    ui._roll_action(_tree_club(giant), giant)
+    ui._apply_damage_checked()
+    assert answers.asked == []
+    assert "Prone" in ogre["conditions"]
+    assert _lines(ui)[-1] == "Ogre gains Prone from Hill Giant"
+
+
+def test_the_giants_button_does_nothing_to_a_huge_target(giants_turn, monkeypatch):
+    ui, _, ogre, giant, answers = giants_turn
+    ogre["size"] = "Huge"
+    monkeypatch.setattr(random, "randint", lambda a, b: min(b, 15))
+    ui._roll_action(_tree_club(giant), giant)
+    ui._apply_damage_checked()
+    assert ogre["hp"] < 68
+    assert (answers.asked, "Prone" in ogre["conditions"]) == ([], False)
+
+
+def test_the_giants_miss_does_nothing(giants_turn, monkeypatch):
+    ui, _, ogre, giant, answers = giants_turn
+    monkeypatch.setattr(random, "randint", lambda a, b: 1)
+    ui._roll_action(_tree_club(giant), giant)
+    assert (answers.asked, "Prone" in ogre["conditions"]) == ([], False)
+
+
+def test_the_dialogs_tree_club_knocks_the_ogre_prone(giants_turn):
+    ui, _, ogre, giant, answers = giants_turn
+    _dialog_club(ui, giant, ogre)
+    assert answers.asked == []
+    assert ogre["hp"] == 68 - 18
+    assert "Prone" in ogre["conditions"]
+
+
+def test_the_dialogs_tree_club_does_nothing_to_a_huge_target_or_on_a_miss(
+    giants_turn,
+):
+    ui, _, ogre, giant, answers = giants_turn
+    _dialog_club(ui, giant, ogre, roll="2")
+    assert "Prone" not in ogre["conditions"]
+    ogre["size"] = "Huge"
+    _dialog_club(ui, giant, ogre)
+    assert ogre["hp"] == 68 - 18
+    assert (answers.asked, "Prone" in ogre["conditions"]) == ([], False)
+
+
+def test_times_two_knows_both_were_tree_clubs(giants_turn):
+    """The second copy has no pick, but keeps the row it was made with."""
+    ui, _, ogre, giant, answers = giants_turn
+    ogre["armor_class"] = 1  # the second copy rolls its own attack
+    _dialog_club(ui, giant, ogre, times=2)
+    assert answers.asked == []
+    assert ogre["conditions"].count("Prone") == 1
+
+
+def test_a_target_of_unknown_size_is_asked_about(giants_turn):
+    ui, _, ogre, giant, answers = giants_turn
+    del ogre["size"]
+    _dialog_club(ui, giant, ogre)
+    assert answers.asked == [
+        [
+            "Hill Giant hits Ogre: use Tree Club: Prone? Prone. Check: Ogre's"
+            " size isn't known."
+        ]
+    ]
+    assert "Prone" in ogre["conditions"]
+
+
+def test_a_typed_hit_asks_which_attack_it_was(giants_turn):
+    ui, _, ogre, _, answers = giants_turn
+    _typed_hit(ui, ogre, roll="20", damage="18 bludgeoning")
+    assert answers.asked == [
+        [
+            "Hill Giant hits Ogre (Large): use Tree Club: Prone? Prone. Check: if"
+            " it was Tree Club.",
+            "Hill Giant hits Ogre (Large): use Trash Lob: Poisoned? Poisoned."
+            " Check: if it was Trash Lob.",
+        ]
+    ]
+
+
+def test_one_undo_takes_back_the_giants_hit_and_the_prone(giants_turn):
+    ui, _, ogre, giant, _ = giants_turn
+    before = len(ui.history)
+    _dialog_club(ui, giant, ogre)
+    assert len(ui.history) == before + 1
+    ui._undo_last()
+    ogre = ui._find_character_by_name("Ogre")
+    assert (ogre["hp"], "Prone" in ogre["conditions"]) == (68, False)
+
+
+def test_a_grapples_escape_dc_goes_on_its_badge(giants_turn):
+    ui, _, ogre, giant, _ = giants_turn
+    giant["actions"] = [
+        {
+            "name": "Claw",
+            "description": "Melee Attack Roll: +8, reach 5 ft. Hit: 8 (1d8 + 4)"
+            " Slashing damage. If the target is a Large or smaller creature, it"
+            " has the Grappled condition (escape DC 14) from one of two claws.",
+        }
+    ]
+    (rider,) = triggered_rows(giant)
+    assert rider.name == "Claw: Grappled"
+    assert ui._apply_row(giant, ogre, rider.option)
+    assert "Grappled" in ogre["conditions"]
+    (record,) = [e for e in ogre["active_effects"] if e["name"] == "Grappled"]
+    assert record["tooltip"].startswith("<i>Escape DC 14, from one of two claws.</i>")

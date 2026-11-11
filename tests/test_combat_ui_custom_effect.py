@@ -2726,7 +2726,7 @@ def test_a_condition_till_a_turn_gets_that_duration(monster, monkeypatch):
     ui, pirate, _ = monster
     pirate["actions"] = [PARALYZING_TOUCH]
     dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
-    _pick(dlg, "Paralyzing Touch")
+    _pick(dlg, "Paralyzing Touch: Paralyzed")  # its hit's rider row (6.4)
     form = _form(dlg)
     assert form["condition"] == "Paralyzed"
     assert form["duration"] == {"until": "start", "of": "source"}
