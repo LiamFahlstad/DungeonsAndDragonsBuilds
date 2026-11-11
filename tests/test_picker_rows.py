@@ -109,6 +109,9 @@ def _row(option) -> dict:
     # Likewise only the rows with a trigger (Hill's Tumble).
     if option.trigger is not None:
         row["trigger"] = option.trigger.to_dict()
+    # Likewise only the rows that take damage off a hit (Deflect Attacks).
+    if option.damage_reduction:
+        row["damage_reduction"] = option.damage_reduction
     return row
 
 

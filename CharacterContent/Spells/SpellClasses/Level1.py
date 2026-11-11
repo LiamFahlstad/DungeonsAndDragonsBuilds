@@ -49,6 +49,7 @@ from Model.Content.CombatModifiers import (
     RollMode,
     Speed,
 )
+from Model.Content.CombatTriggers import CombatTrigger, TriggerEvent
 from Model.Content.Feature import FeatureTarget
 from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table
 from Model.View import CharacterView
@@ -1809,9 +1810,12 @@ class Shield(ClassSpell):
                 ),
                 targets_self=True,
                 notes=(
-                    "The +5 counts against the triggering attack too: if it now misses, take that hit back.",
+                    "Picked by hand after a hit, the +5 counts against that attack too: if it now misses, take the hit back.",
                     "You take no damage from Magic Missile until the start of your next turn.",
                 ),
+                # Asked as an attack roll hits its caster, before the damage;
+                # the +5 then counts against that attack.
+                trigger=CombatTrigger(TriggerEvent.HIT_BY),
             )
         ]
 
@@ -3700,6 +3704,23 @@ class HellishRebuke(ClassSpell):
                 "Using a Higher-Level Spell Slot",
                 (Facts((("Damage", "+1d10 for each spell slot level above 1"),)),),
             ),
+        ]
+
+    def combat_effects(
+        self, character: CharacterView | None = None
+    ) -> list[CombatEffect]:
+        return [
+            CombatEffect(
+                roll=EffectRoll.SAVE,
+                save_ability=Ability.DEXTERITY,
+                half_on_success=True,
+                damage=(CombatDamage("2d10", DamageType.FIRE, upcast="1d10"),),
+                notes=("The creature that damaged you.",),
+                trigger=CombatTrigger(
+                    TriggerEvent.TAKES_DAMAGE,
+                    when="you can see it within 60 feet",
+                ),
+            )
         ]
 
 

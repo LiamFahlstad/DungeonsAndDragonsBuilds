@@ -36,6 +36,7 @@ from Model.Content.CombatEffect import (
     with_bonus,
 )
 from Model.Content.CombatModifiers import AttacksAgainst, D20Mode, D20Test, RollMode
+from Model.Content.CombatTriggers import CombatTrigger, TriggerEvent
 from Core.Definitions import DamageType
 
 LEVEL_TO_MARTIAL_ARTS_DIE = {
@@ -621,21 +622,21 @@ class DeflectAttacks(Feature):
         # Deflect Energy (Monk level 13) takes any damage type.
         if monk_level >= 13:
             types = tuple(DamageType)
-            hits = "an attack roll hits you"
+            when = ""
         else:
             types = (DamageType.BLUDGEONING, DamageType.PIERCING, DamageType.SLASHING)
-            hits = (
-                "an attack roll hits you and its damage includes Bludgeoning,"
-                " Piercing or Slashing damage"
-            )
+            when = "its damage includes Bludgeoning, Piercing or Slashing damage"
         return [
             CombatEffect(
                 name="Deflect Attacks",
                 spends_use=False,
                 notes=(
-                    f"When {hits}: take {reduction} off the attack's total damage"
-                    " before you apply it. Nothing happens to the targets.",
+                    "Nothing happens to the attacker. If it brings the damage to"
+                    " 0, its redirect can follow (1 Focus Point).",
                 ),
+                # Asked as an attack roll hits the Monk, before the damage.
+                trigger=CombatTrigger(TriggerEvent.HIT_BY, when=when),
+                damage_reduction=reduction,
             ),
             CombatEffect(
                 name="Deflect Attacks: redirect",

@@ -350,7 +350,9 @@ def test_kivis_rows_with_a_trigger():
     from Combat.PlayerCombatant import combatant_from_character
 
     kivi = combatant_from_character(sheet)
-    (row,) = triggered_rows(kivi)
+    # Deflect Attacks answers a hit on Kivi (6.5, tests/test_hit_by_triggers.py).
+    deflect, row = triggered_rows(kivi)
+    assert deflect.name == "Deflect Attacks"
     assert (row.name, row.trigger, row.conditions, row.uses, row.costs) == (
         "Hill's Tumble",
         TUMBLE,
@@ -359,7 +361,7 @@ def test_kivis_rows_with_a_trigger():
         True,
     )
     kivi["feature_uses_used"] = {"Giant Ancestry": 1}
-    assert triggered_rows(kivi)[0].uses == (1, 2)
+    assert triggered_rows(kivi)[1].uses == (1, 2)
 
 
 # ---------------------------------------------------------------------------

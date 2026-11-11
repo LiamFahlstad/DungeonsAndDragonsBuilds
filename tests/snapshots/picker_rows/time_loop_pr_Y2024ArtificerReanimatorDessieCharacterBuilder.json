@@ -312,7 +312,7 @@
    "half_on_save": false,
    "is_described": true,
    "is_unavailable": false,
-   "note": "It goes on its user, whoever is targeted. The +5 counts against the triggering attack too: if it now misses, take that hit back. You take no damage from Magic Missile until the start of your next turn.",
+   "note": "It goes on its user, whoever is targeted. Picked by hand after a hit, the +5 counts against that attack too: if it now misses, take the hit back. You take no damage from Magic Missile until the start of your next turn.",
    "repeat_save": false,
    "roll": "Saving throw",
    "row_name": "",
@@ -321,6 +321,9 @@
    "spell_name": "Shield",
    "summary": "",
    "targets_self": true,
+   "trigger": {
+    "event": "hit by"
+   },
    "until": [
     "start",
     "source"

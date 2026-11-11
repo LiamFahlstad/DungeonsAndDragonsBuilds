@@ -18,6 +18,7 @@ from Model.Content.CombatEffect import (
     CombatEffect,
     TurnEdge,
     TurnOf,
+    with_bonus,
 )
 from Model.Content.CombatModifiers import D20Mode, D20Test, RollMode, Size, Speed
 from Model.Content.CombatTriggers import CombatTrigger, TriggerEvent
@@ -298,16 +299,23 @@ class GiantAncestry(Feature):
             GiantAncestryType.STONE_GIANT: CombatEffect(
                 name="Stone's Endurance",
                 notes=(
-                    "When you take damage: take 1d12"
-                    f" {'+' if character.get_constitution_modifier() >= 0 else '-'}"
-                    f" {abs(character.get_constitution_modifier())} off it before"
-                    " you apply it. Nothing happens to the targets.",
+                    "Nothing happens to the attacker. It's asked as an attack"
+                    " roll hits you; against other damage (a failed save), pick"
+                    " it by hand and take what it rolls off that damage.",
+                ),
+                # "When you take damage": asked before a hit's damage is dealt.
+                trigger=CombatTrigger(TriggerEvent.HIT_BY),
+                damage_reduction=with_bonus(
+                    "1d12", character.get_constitution_modifier()
                 ),
             ),
             GiantAncestryType.STORM_GIANT: CombatEffect(
                 name="Storm's Thunder",
                 damage=(CombatDamage("1d8", DamageType.THUNDER),),
-                notes=("To a creature within 60 feet that just damaged you.",),
+                notes=("To the creature that just damaged you.",),
+                trigger=CombatTrigger(
+                    TriggerEvent.TAKES_DAMAGE, when="it is within 60 feet"
+                ),
             ),
         }[self.giant_ancestry_type]
         return [effect]

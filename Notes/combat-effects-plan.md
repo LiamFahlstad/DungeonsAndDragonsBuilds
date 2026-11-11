@@ -51,7 +51,7 @@ change and move on; the full suite can run later.
 | 3 | Lasting effects (3.1-3.6) | 3.1 **done** (R28-R34): `char["active_effects"]`, one plain dict per badge, in the new Qt-free `Combat/Effects/active_effects.py`; the seven old keys are read only by its `upgrade_old_keys`, where a log is read; an old fight log replays the same (`tests/test_active_effects.py`). 3.2 **done** (R27), ahead of 3.1: the rules conditions are data, and saves, attack rolls (all three paths), AC, damage Resistance and condition immunity read them. 3.3 **done** (R35-R40): a badge's `CombatCondition` says its `modifiers`, the record keeps them as JSON, and `modifiers_on` reads them beside the conditions and cover; Bless's 1d4 is rolled into the saves (a monster's Concentration save too, R40) and attack rolls the simulator makes, Shield of Faith's +2 counts in AC, cover's +2/+5 in Dexterity saves (DI-066); a typed total stays as typed, with the bonus as a reminder in the dialog. 3.4 **done** (R41-R47): `ExtraDamageFrom` (on the target, from its effect's caster) and `ExtraDamageOnHit` (on the attacker); Hunter's Mark's 1d6 Force on its caster's hits and Divine Favor's 1d4 Radiant on its caster's weapon hits are rolled into the hits the dialog and a monster's action buttons deal, doubled on a Critical Hit, each type resisted on its own; a typed damage total stays as typed, with the extra as a reminder in the dialog. 3.5 **done** (R48-R53): `AtTurnStart` / `AtTurnEnd` are modifiers on a badge that name a row of their spell; Heroism's Temporary Hit Points are given as its target's turn starts, and Spirit Guardians asks, as each enemy of its caster ends its turn, with a button that opens the Custom Effect dialog with its damage row picked. 3.6 **done** (R54-R56): ending a concentration also ends every record linked to it (`held_by_concentration`), a creature leaving the fight ends its concentration first, and a badge another running effect still holds is relinked to that effect's caster |
 | 4 | One `combat-effects` skill; feature agent; content rollout | 4.1 **done** (R57-R60): the `combat-effects` skill and `combat_effects.py` (renamed from spell-mechanics), with the principles, a Features section, `features`, `coverage` and `notes`, and features in `check`; `is_curated` is `is_described`. 4.2 **done**: the `feature-combat-effects` agent (opus); the spell agent is `spell-combat-effects`. 4.4 **done**: `coverage`. 4.3 (content): **Curse of the Lich done** (R61-R65, 2026-11-11): spells 44/44, features 23 described, 37 nothing to apply, none read from text; Time Loop PR was already done. Next: spells level by level and features class by class, which wait for the user's go (Decision 9) |
 | 5 | Sheet chips, monster score | Not started |
-| 6 | **Triggers** (new concept, 2026-11-11; see its section): a row or badge says *when* it's used (a hit, damage taken, dropping to 0, ...), and the simulator applies it itself (AUTO) or asks with a pop-up as it happens (ASK) | 6.1-6.3 **done** (R66-R73, 2026-11-11): `CombatTrigger` on a row (`CombatEffect.trigger`, `Model/Content/CombatTriggers.py`), `outcome_firings` with its gates and modes, and the hit hooks in all three hit paths: when Kivi hits a Large or smaller creature and deals it damage, one pop-up per Apply asks about Hill's Tumble; Apply gives Prone, spends a Giant Ancestry use and logs it, inside the hit's undo step. Only `HIT` and `MISS` fire; the other events are data. 6.4 **done** (R74-R77, 2026-11-11): a monster's hit that gives a condition in a sentence of its own ("If the target is a Large or smaller creature, it has the Prone condition", "..., and the target has the Poisoned condition until the end of its next turn", "the Grappled condition (escape DC 13)") is read as a rider row of its own ("Tree Club: Prone") with an AUTO `after=` trigger: the Hill Giant's Tree Club knocks a Large target Prone from its button and Enter and from the dialog, asks when the size isn't known, and does nothing to a Huge target or on a miss. 101 riders in the catalog. Next: 6.5 (being hit) |
+| 6 | **Triggers** (new concept, 2026-11-11; see its section): a row or badge says *when* it's used (a hit, damage taken, dropping to 0, ...), and the simulator applies it itself (AUTO) or asks with a pop-up as it happens (ASK) | 6.1-6.3 **done** (R66-R73, 2026-11-11): `CombatTrigger` on a row (`CombatEffect.trigger`, `Model/Content/CombatTriggers.py`), `outcome_firings` with its gates and modes, and the hit hooks in all three hit paths: when Kivi hits a Large or smaller creature and deals it damage, one pop-up per Apply asks about Hill's Tumble; Apply gives Prone, spends a Giant Ancestry use and logs it, inside the hit's undo step. Only `HIT` and `MISS` fire; the other events are data. 6.4 **done** (R74-R77, 2026-11-11): a monster's hit that gives a condition in a sentence of its own ("If the target is a Large or smaller creature, it has the Prone condition", "..., and the target has the Poisoned condition until the end of its next turn", "the Grappled condition (escape DC 13)") is read as a rider row of its own ("Tree Club: Prone") with an AUTO `after=` trigger: the Hill Giant's Tree Club knocks a Large target Prone from its button and Enter and from the dialog, asks when the size isn't known, and does nothing to a Huge target or on a miss. 101 riders in the catalog. 6.5 **done** (R108-R114, 2026-11-11): as an attack roll hits, the creature hit is asked about its `HIT_BY` rows before the damage (Shield's +5 turns Clover's 20 against AC 18 into a miss and spends her Reaction and a slot; Kivi's Deflect Attacks takes its 1d10 + 8 off, `CombatEffect.damage_reduction`), and damage from a creature asks the one damaged about its `TAKES_DAMAGE` rows (Hellish Rebuke, newly described; Storm's Thunder); a Reaction used this round or an Incapacitated owner asks no more. Not built: a badge's `OnTrigger` (Armor of Agathys, Fire Shield; Q57). Next: 6.6 (Hit Point thresholds) |
 | 7 | **Stat changes while an effect is on** (new, 2026-11-11; see its section): AC formulas and floors, Immunity and Vulnerability beside the built Resistance, Speed, size, Hit Point maximum, worked out from the stored stat plus the badges, and shown on the card with their sources | 7.1-7.2 **done** (R78-R83, 2026-11-11): `ArmorClassBase` (Mage Armor) and `ArmorClassMinimum` (Barkskin) beside `ArmorClass`, worked out by `armor_class(char, stored)`, which every attack path reads through `armor_bonus`; the same effect twice adds once; `DamageImmunity` and `Vulnerability` beside `Resistance` in `_damage_type_modifier`; Mage Armor, Barkskin, Stoneskin, Protection from Energy (a row per type) and Rage described (`tests/test_stat_changes.py`). 7.4 **done** (R84-R89, 2026-11-11): `HitPointMaximum(amount, upcast)`, rolled as the badge is given; `hit_point_maximum(char)` is the stored `max_hp` plus the badges, read by every cap, bar and Bloodied check; giving it raises current HP as Hit Points regained, ending it caps current HP (`Action.LOSE_HIT_POINTS`, replayed); Aid and Heroes' Feast described. 7.5 **done** (R90-R93, 2026-11-11): the card's and More Info's AC is the AC in use with what changes it ("AC: 17 (15; Shield of Faith +2)", cover too), a "Max HP 35 (30; Aid +5)" line, and the defenses the conditions and badges give with where from ("Resist: ...; Bludgeoning, Piercing, Slashing (Rage)", "Cond. Immune: Frightened (Heroism)"); the player view's full rows show the AC in use. 7.3 **done** (R94-R98, 2026-11-11): `Speed(bonus, multiplier, set_to)` and `Size(steps, becomes)`, worked out by `speed_in_use` and `size_in_use`; the trigger size gates read the size in use (an Enlarged Large Ogre is Huge to Hill's Tumble); the card shows "Speed: 80 ft. (40 ft.; Haste ×2)" and, when changed, "Size Huge (Large; Enlarge/Reduce +1)"; Haste (and its lethargy row), Longstrider, Enlarge/Reduce and Large Form described. 7.6 **done** (R106, R107, 2026-11-11): the rubric's Stat changes table, `combat_effects.py stats` (each note naming AC, a defense, Speed, the Hit Point maximum or size, marked counted or NOTE ONLY), and both parties' rows: Shield's `ArmorClass(5)`, Absorb Elements' `Resistance` (a row per type), Silence's Thunder `DamageImmunity`, Shield of Faith's restating note gone. **Phase 7 done** |
 
 **Content described so far.** Spells: 57 (2024) + 1 (2014), all as classes
@@ -212,6 +212,27 @@ damage from Pirate", "Edmund's Divine Favor: +4 Radiant (1d4)" on each
 weapon hit (none on the typed total), filled the Bite button's Damage field
 with "6 Piercing + 5 Force", and the player link's hit lines read "5
 Slashing + 1 Force" and "6 Slashing + 4 Radiant".
+
+**Verified 2026-11-11 (6.5, R108-R114), low overhead:** every combat test
+file (`tests/test_combat*.py`, the trigger, picker-row, stat-change, extra
+damage, active effect, concentration, modifier and spell, feature and
+monster combat-effects files: 2,494 with the new ones; not the full suite)
+passes; `combat_effects.py check` OK (85 of 594 spells); pyright 0 errors on
+every changed source file and `tests/test_hit_by_triggers.py`. 36 new tests
+there, with expected values from Shield's, Deflect Attacks', Stone's
+Endurance's and Hellish Rebuke's text and the glossary's Reaction: the
+model field, the gates (a miss, a used Reaction, Stunned, Shield already
+on, the attacker's own rows), the questions, and in the window a typed hit,
+an attack roll then its damage, a monster button and Enter, the dialog, a
+second hit the same round, Skip, one undo, the setting off, Deflect Attacks
+taking 9 and taking it all, and Hellish Rebuke after a hit and after damage
+with no attack roll. Four picker goldens changed, each line read: Shield's
+rows (Clover, Dessie, the spells' golden) gained `{"event": "hit by"}` and
+a note for a Shield picked by hand; Kivi's Deflect Attacks gained its
+trigger (with the B/P/S `when`) and `damage_reduction` "1d10 + 8" (DEX 4 +
+Monk 4) and lost the note that said it; the spells' golden gained Hellish
+Rebuke (DC 15 DEX, 2d10 Fire, half, upcast 1d10, a Reaction). One older test
+read Kivi's only triggered row; he has two now.
 
 **Verified 2026-11-11 (6.4, R74-R77), low overhead:** every combat test
 file (`tests/test_combat*.py`, the effects, triggers, picker rows, spell,
@@ -466,7 +487,8 @@ suggested.
     - **Q30.** `WhenHit` damage to an attacker (Armor of Agathys, Fire
       Shield) is a `TAKES_DAMAGE` trigger on a badge (`OnTrigger`), fired
       by `_deal_damage` from an attack, and a prompt when it depends on
-      reach ("within 5 feet"). Step 6.5.
+      reach ("within 5 feet"). Step 6.5. *The rows' `TAKES_DAMAGE` is built
+      (R112); the badge's `OnTrigger` isn't yet (Q57).*
     - **Q36.** *Not buildable as written; back in Open questions as Q56.*
       Every free casting gets its own use count, as Paladin's Smite
       does (Q8): `FeatureUses(1, regain_all_on="long rest")` per spell of
@@ -479,7 +501,7 @@ suggested.
     - **Q39.** Reductions to damage being taken (Deflect Attacks' 1d10 + DEX
       + Monk level, Stone's Endurance's 1d12 + CON) become a reaction prompt
       (`HIT_BY`) as a hit lands on their owner. It rolls the reduction, takes
-      it off the damage and spends the Reaction. Step 6.5.
+      it off the damage and spends the Reaction. Step 6.5. *Built (R110).*
 
 ## Goal
 
@@ -952,7 +974,7 @@ fire).
 | 6.2 | **Done** (R68). The interpreter: `AttackOutcome`, `outcome_firings`, `rows_of`, the gates and the mode. | Tests with expected values from the rules text: Hill's Tumble on a Large target asks, on a Huge one gives nothing, on a miss nothing, on 0 damage (Immunity) nothing, with no uses left nothing (Q42), on an already Prone target nothing, on a target of unknown size asks with the reason |
 | 6.3 | **Done** (R69-R73). **First slice:** the hit hooks in the three paths, the pop-up and the setting; Kivi's Giant Ancestry (Hill's Tumble, Fire's Burn, Frost's Chill) gets triggers in place of the `on_hit` note (principle 7). | A rolled or typed hit by Kivi on an Ogre pops up Hill's Tumble once; Apply gives Prone, spends a use and logs it; one undo takes back the hit and the Prone; Times / Flurry of Blows ask once per Apply; the picker golden's only change is the note going |
 | 6.4 | **Done** (R74-R77). Monster riders: the monster text reading turns "Hit: ... [If the target is a <size> or smaller creature,] it has the <condition> condition" (and "Grappled (escape DC N)") into a rider row with an AUTO trigger. A homebrew `MeleeAttack`'s `additional_ruling` reads the same way. | The Hill Giant's Tree Club knocks a Large target Prone from its button and Enter, and from the dialog; asks when the size isn't known; does nothing to a Huge target or on a miss; the picker goldens' new rider rows read against their stat blocks |
-| 6.5 | Being hit: `HIT_BY` before damage (Shield, Deflect Attacks, Stone's Endurance), and `TAKES_DAMAGE` after (Hellish Rebuke, Storm's Thunder; badges via `OnTrigger`: Armor of Agathys). Spends the Reaction (`_add_action_use`). Takes over Q30 and Q39. | Shield asked as a hit lands turns it into a miss when +5 is enough, and spends the Reaction and a slot; Deflect Attacks takes its roll off the damage; a used Reaction asks no more this round |
+| 6.5 | **Done** (R108-R114), but for the badges (`OnTrigger`: Armor of Agathys, Fire Shield; Q57). Being hit: `HIT_BY` before damage (Shield, Deflect Attacks, Stone's Endurance), and `TAKES_DAMAGE` after (Hellish Rebuke, Storm's Thunder). Spends the Reaction (`_add_action_use`). Takes over Q30 and Q39. | Shield asked as a hit lands turns it into a miss when +5 is enough, and spends the Reaction and a slot; Deflect Attacks takes its roll off the damage; a used Reaction asks no more this round |
 | 6.6 | Hit Point thresholds: `BLOODIED`, `DROPS_TO_ZERO`, `REDUCES_TO_ZERO`. | Relentless Endurance (Orc) asks "drop to 1 HP instead?" as its owner drops to 0; Dark One's Blessing's temp HP are given at once; both inside the damage's undo step |
 | 6.7 | The rest as content needs them: `FAILS_SAVE` (Indomitable), `ROLLS_INITIATIVE` (regaining uses), `CASTS_SPELL` / `USES` (chained rows), `after=` on spells' later steps (Ice Knife, Green-Flame Blade, Booming Blade). Position events stay manual. | Per source, with a test from its rules text |
 | 6.8 | Tooling and content: the `combat-effects` skill's rubric gets a Triggers section (which mode, which gate, when a `when`); `combat_effects.py coverage` counts rows with triggers and lists features whose text has a `("Trigger", ...)` fact but whose rows don't; then the parties, through `feature-combat-effects`. | Curse of the Lich's party features with a Trigger fact all have a trigger or a stated reason not to |
@@ -2036,12 +2058,92 @@ rebuilt), not a pile of modifiers.
   Absorb Elements rows, Edmund's Shield of Faith note, and the Silence
   rows; read against the spell texts.
 
+- **R108. `HIT_BY` is asked by itself, before the damage, not with the
+  Apply's other triggers** (6.5). The answer changes the hit, so
+  `_before_hit(outcome)` asks at once, in a pop-up of its own, for each hit
+  target in turn, and returns whether the attack still hits and what to
+  take off its damage. The dialog's attack loop calls it after the roll is
+  checked and before damage, extra damage and conditions; the main window's
+  Damage field calls it per target before `_deal_damage`
+  (`_deal_typed_damage`, split out of `_do_apply_damage`). What it applies
+  goes through `_apply_row` as any firing does, so Shield is cast (a slot,
+  "Clover casts Shield"), its badge goes on Clover (`targets_self`), and
+  her Reaction is spent by the row's own action cost, all in the hit's undo
+  step. With `ask_triggers` off it's a turn-column button ("Clover: Shield
+  (hit by Ogre)") and the hit is dealt as it is.
+- **R109. The hit is rechecked against the AC in use after the answer**
+  (`still_hits`): a Critical Hit, an unknown total or no AC still hits. The
+  roll's total travels in `AttackOutcome.total` and `PendingAttack.total`
+  (the Attack roll field's, a typed roll's, a monster button's), and the AC
+  it was checked against in `AttackOutcome.armor`, so the pop-up says "AC
+  18 + 5 = 23: the 20 misses." (`TriggerRow.armor_bonus`, the
+  `ArmorClass` bonuses on the row's badges). A hit that now misses logs
+  "Ogre's attack roll now misses Clover" (no AC: the Limited view reads it),
+  becomes a `MISS` outcome for the attacker's rows, and the status line says
+  "then a miss". In the two-step path (Attack roll field's Enter, then the
+  Damage field's) it's asked as the damage lands, not as the roll is
+  checked: only then is the damage known, which Deflect Attacks needs.
+- **R110. `CombatEffect.damage_reduction`, dice, with a `HIT_BY` trigger
+  only** (Q39). Deflect Attacks' and Stone's Endurance's reductions are a
+  number the window rolls as the hit lands, logs ("Kivi Jätti's Deflect
+  Attacks takes 9 off the damage (1d10 + 8)") and takes off the hit's damage
+  before Resistance (the glossary: Resistance comes after other
+  modifiers), part by part (`reduced_damage`); all of it off deals nothing.
+  Not a `CombatHitPoints`: it isn't Hit Points, and a feature works out its
+  own bonus (principle 5). Picked by hand it does nothing, and its row says
+  so. Deflect Attacks' "its damage includes Bludgeoning, Piercing or
+  Slashing" is a `when` below Monk level 13, not checked from the damage
+  types (a typed hit's types are known, a monster button's too, but the
+  dialog's damage may be retyped; left to the GM for now).
+- **R111. Stone's Endurance is `HIT_BY`, though its text is "when you take
+  damage"**. A reduction must come before the damage, and only an attack
+  roll's hit has a "before" the window knows. Damage from a failed save is
+  picked by hand (its note says so). A `TAKES_DAMAGE`-before event for any
+  damage would need every damage path to pause; not worth it for one row.
+- **R112. `TAKES_DAMAGE` comes from `_deal_damage`**: damage taken (after
+  Resistance, more than 0) from a creature other than the one damaged is a
+  `DamageOutcome(source, target, taken)`, collected with the Apply's hit
+  outcomes (`_one_trigger_prompt`, which `_do_apply_damage` now wraps
+  around its whole dealing, so typed damage with no attack roll asks too).
+  `outcome_firings` takes both kinds: for damage, the rows are the damaged
+  creature's and the firing's target is the one that dealt it. What a
+  firing deals (Hellish Rebuke's 2d10 Fire) triggers in its turn, so a
+  reaction to a reaction asks after it; the Reaction gate ends the chain.
+  The source is whoever the window says dealt it (the source, else the
+  creature whose turn it is), as for the stats.
+- **R113. The Reaction gate.** A row whose action is a Reaction
+  (`TriggerRow.action`, the option's `action_cost`) or with `reaction=True`
+  isn't offered while its owner has a Reaction logged this round
+  (`action_uses`, reset as its turn starts) or has a condition that gives
+  Incapacitated (`reaction_lack`). A reaction row is never AUTO. A firing's
+  "already has every condition" check looks at its owner for a row that
+  goes on its user (`TriggerRow.on_self`: Shield already on asks nothing).
+- **R114. Questions and buttons name the event.** `HitFiring.question`
+  reads "Ogre hits Clover: use Shield? ..." for `HIT_BY` and "Ogre deals
+  Clover 7 damage: use Hellish Rebuke? 2d10 Fire. Check: if you can see it
+  within 60 feet." for `TAKES_DAMAGE` (`HitFiring.outcome` keeps what it
+  answers), and a turn-column button "Clover: Shield (hit by Ogre)". The
+  pop-up's apply/edit/skip handling is one `_answer_firings`, shared by
+  the hit's prompt and `_before_hit`.
+
 ## Open questions (with suggestions)
 
 Q4-Q10, Q13, Q18, Q21-Q29, Q31-Q35, Q37, Q46, Q48-Q50, Q53 and Q55 are
 **decided as suggested** (Decision 13, 2026-11-11), and Q14, Q16, Q30,
 Q36, Q38 and Q39 too (Decision 14); all moved there. Q11 was done as
 suggested in S.4 (R24-R26): every spell is a class.
+
+- **Q57. A badge that answers a hit (`OnTrigger`, 6.5's rest).** Armor of
+  Agathys ("a creature hits you with a melee attack roll ... takes 5 Cold
+  damage", 5 more per slot level above 1, and it ends with no Temporary Hit
+  Points) and Fire Shield. *Suggestion:* `OnTrigger(trigger, effect)` beside
+  `AtTurnStart`, naming a row of the spell ("Armor of Agathys: Cold
+  damage", `spends_use=False`), fired with the `HIT` outcomes of the one
+  hit (after the damage, so AUTO when the melee kind is known, else ASK
+  "if it was a melee attack"); its upcast amount rolled as the badge is
+  given and kept on the record, as `HitPointMaximum`'s is (R85), so the
+  fired row deals what the cast's slot said. Ending it with the last
+  Temporary Hit Point is the GM's (a note).
 
 - **Q56. Counting a feature's free castings one by one** (Q36 again). Fey
   Touched (Misty Step and a level 1 spell) and Fiendish Legacy (a level 1

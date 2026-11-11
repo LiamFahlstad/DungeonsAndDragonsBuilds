@@ -24,6 +24,7 @@ from Model.Content.CombatEffect import (
     TurnEdge,
     TurnOf,
 )
+from Model.Content.CombatModifiers import ArmorClass
 from Model.Content.CombatTriggers import CombatTrigger, TriggerEvent
 
 from .monster_actions import (
@@ -1428,6 +1429,12 @@ def _described_option(
     notes = list(effect.notes)
     if effect.targets_self:
         notes.insert(0, "It goes on its user, whoever is targeted.")
+    if effect.damage_reduction:
+        notes.insert(
+            0,
+            f"It takes {effect.damage_reduction} off the damage of the hit it"
+            " answers, asked as that hit lands; picked here, it takes nothing off.",
+        )
     for damage in effect.damage:
         if damage.damage_type is None:
             choices = ", ".join(choice.value for choice in damage.choices)
@@ -1482,6 +1489,7 @@ def _described_option(
             effect.targets.upcast if effect.targets is not None and level > 0 else 0
         ),
         trigger=effect.trigger,
+        damage_reduction=effect.damage_reduction,
         **fields,
     )
 
@@ -1699,6 +1707,15 @@ def triggered_rows(char: dict) -> list[TriggerRow]:
                     uses=uses,
                     costs=option.counts_uses or uses is not None,
                     option=option,
+                    action=option.action_cost,
+                    armor_bonus=sum(
+                        modifier.bonus
+                        for _, modifiers in option.badge_modifiers
+                        for modifier in modifiers
+                        if isinstance(modifier, ArmorClass)
+                    ),
+                    damage_reduction=option.damage_reduction,
+                    on_self=option.targets_self,
                 )
             )
     return rows

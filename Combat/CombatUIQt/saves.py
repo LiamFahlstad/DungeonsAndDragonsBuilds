@@ -207,6 +207,9 @@ class EffectOption:
     # When it's used, as its CombatEffect says (Hill's Tumble: as its owner
     # hits): Combat/Effects/triggers.py offers it then.
     trigger: CombatTrigger | None = None
+    # Dice it takes off the damage of the hit it answers (Deflect Attacks),
+    # rolled by the window as that hit lands (CombatEffect.damage_reduction).
+    damage_reduction: str = ""
 
     def modifiers_for(self, badge: str) -> tuple[Modifier, ...]:
         """What the badge `badge` it gives does while it's on: none for a

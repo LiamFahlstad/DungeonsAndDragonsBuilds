@@ -87,13 +87,14 @@
    "condition": "",
    "counts_uses": false,
    "damage": "",
+   "damage_reduction": "1d10 + 8",
    "dc": null,
    "duration_seconds": null,
    "feature_name": "Monk's Focus",
    "half_on_save": false,
    "is_described": true,
    "is_unavailable": false,
-   "note": "When an attack roll hits you and its damage includes Bludgeoning, Piercing or Slashing damage: take 1d10 + 8 off the attack's total damage before you apply it. Nothing happens to the targets.",
+   "note": "It takes 1d10 + 8 off the damage of the hit it answers, asked as that hit lands; picked here, it takes nothing off. Nothing happens to the attacker. If it brings the damage to 0, its redirect can follow (1 Focus Point).",
    "repeat_save": false,
    "roll": "Saving throw",
    "row_name": "",
@@ -101,6 +102,10 @@
    "spell_level": 0,
    "spell_name": "",
    "summary": "",
+   "trigger": {
+    "event": "hit by",
+    "when": "its damage includes Bludgeoning, Piercing or Slashing damage"
+   },
    "until": null,
    "upcast": []
   },

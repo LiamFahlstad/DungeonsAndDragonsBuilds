@@ -59,14 +59,20 @@ from Combat.Effects.modifiers import (
     signed,
 )
 from Model.Content.CombatModifiers import Modifier
-from Combat.Effects.triggers import AttackOutcome
+from Combat.Effects.triggers import AttackOutcome, reduced_damage
 from Combat.WildShape import current_form, form_badge
 from Core.Definitions import Condition, DamageType
 from Core.Rules import SECONDS_PER_ROUND
 from Model.Content.CombatModifiers import AttackKind
 from Model.Content.RulesConditions import conditions_with
 from .amounts import AmountError, parse_amount
-from .attack_rolls import AttackRoll, armor_bonus, cover_bonus, parse_attack_roll
+from .attack_rolls import (
+    AttackRoll,
+    armor_bonus,
+    armor_in_use,
+    cover_bonus,
+    parse_attack_roll,
+)
 from .effect_dialog_widgets import (
     SearchKeys,
     chip,
@@ -758,6 +764,25 @@ class ConditionsMixin(CombatWindowState):
                 else:
                     roll, notes = roll_planned_attack(effect.attack_bonus, plan)
                 hit, attack = self._resolve_attack_roll(target, roll, source, notes)
+                reduction = 0
+                if hit is not False and source is not None:
+                    # What the target answers the hit with (Shield, Deflect
+                    # Attacks), before its damage.
+                    still, reduction = self._before_hit(
+                        AttackOutcome(
+                            source,
+                            target,
+                            hit,
+                            critical=roll.is_critical,
+                            kind=kind,
+                            row=picked_row,
+                            total=roll.total,
+                            armor=armor_in_use(target),
+                        )
+                    )
+                    if not still:
+                        hit = False
+                        attack = f"{attack}, then a miss"
                 results.append(hit is not False)
                 attacks.append(attack)
                 if hit is False:
@@ -781,6 +806,8 @@ class ConditionsMixin(CombatWindowState):
                     damage = self._with_hit_extras(
                         source, target, damage, effect, roll.is_critical
                     )
+                if reduction:
+                    damage = reduced_damage(damage, reduction)
             if effect.ability is not None:
                 saved = self._roll_effect_save(target, effect)
                 results.append(saved)

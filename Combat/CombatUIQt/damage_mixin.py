@@ -10,13 +10,19 @@ from Combat.Effects.modifiers import (
     resists,
     vulnerable_to,
 )
-from Combat.Effects.triggers import AttackOutcome, PendingAttack
+from Combat.Effects.triggers import (
+    AttackOutcome,
+    DamageOutcome,
+    PendingAttack,
+    reduced_damage,
+)
 from Combat.Summons import vanishes_at_zero_hp
 from Core.Definitions import Condition
 from .amounts import AmountError, parse_amount, parse_damage
 from .attack_rolls import (
     AttackRoll,
     armor_bonus,
+    armor_in_use,
     cover_bonus,
     note_attack_roll,
     parse_attack_roll,
@@ -243,6 +249,7 @@ class DamageMixin(CombatWindowState):
                 roll.is_critical,
                 targets=tuple(hit_targets),
                 step=self._open_undo_point,
+                total=roll.total,
             )
             with self._one_trigger_prompt():
                 for target in targets:
@@ -303,7 +310,7 @@ class DamageMixin(CombatWindowState):
             targets = hit_targets
             self._checked_attack = self._rolled_attack = None
             if source is not None and roll is not None:
-                attack = PendingAttack(source, roll.is_critical)
+                attack = PendingAttack(source, roll.is_critical, total=roll.total)
             if not targets:
                 with self._one_trigger_prompt():
                     self._after_misses(attack, misses)
@@ -321,12 +328,59 @@ class DamageMixin(CombatWindowState):
                 if not all(any(t is h for h in attack.targets) for t in targets):
                     attack = None
 
-        dealt = []
+        # What the hits and the damage trigger is asked about once, at the
+        # end: the attacker's riders, the targets' Hellish Rebuke.
+        with self._one_trigger_prompt():
+            self._deal_typed_damage(
+                targets, parts, source, check_resistance, attack, misses, results
+            )
+
+    def _deal_typed_damage(
+        self,
+        targets: list[dict],
+        parts: list[tuple[int, str]],
+        source: dict | None,
+        check_resistance: bool,
+        attack: PendingAttack | None,
+        misses: list[dict],
+        results: str,
+    ):
+        """The Damage field's damage on each of `targets`. When it's an
+        attack's hit, each target first answers it (_before_hit: Shield may
+        make it a miss, Deflect Attacks takes some off), and what the hit
+        triggers comes after."""
+        hits: list[tuple[dict, int]] = []
         for target in targets:
             saved = any(target is s for s in self._saved_targets)
-            dealt.append(
-                self._deal_damage(target, parts, source, check_resistance, saved)
+            these = parts
+            if attack is not None:
+                still, reduction = self._before_hit(
+                    AttackOutcome(
+                        attack.attacker,
+                        target,
+                        True,
+                        critical=attack.critical,
+                        kind=attack.kind,
+                        row=attack.row,
+                        total=attack.total,
+                        armor=armor_in_use(target),
+                    )
+                )
+                if not still:
+                    misses = [*misses, target]
+                    results = "; ".join(
+                        part
+                        for part in (results, f"{target['name']}: then a miss")
+                        if part
+                    )
+                    continue
+                these = reduced_damage(parts, reduction)
+            dealt = (
+                self._deal_damage(target, these, source, check_resistance, saved)
+                if these
+                else 0
             )
+            hits.append((target, dealt))
 
         if source is not None:
             source["_last_damage_type"] = parts[-1][1]
@@ -340,21 +394,20 @@ class DamageMixin(CombatWindowState):
         if results:  # last, as logging the damage clears the status line
             self._show_status(results)
         if attack is not None:
-            with self._one_trigger_prompt():
-                self._after_misses(attack, misses)
-                for target, damage in zip(targets, dealt):
-                    if any(target is c for c in self.characters):
-                        self._after_attack(
-                            AttackOutcome(
-                                attack.attacker,
-                                target,
-                                True,
-                                critical=attack.critical,
-                                kind=attack.kind,
-                                row=attack.row,
-                                damage_dealt=damage,
-                            )
+            self._after_misses(attack, misses)
+            for target, damage in hits:
+                if any(target is c for c in self.characters):
+                    self._after_attack(
+                        AttackOutcome(
+                            attack.attacker,
+                            target,
+                            True,
+                            critical=attack.critical,
+                            kind=attack.kind,
+                            row=attack.row,
+                            damage_dealt=damage,
                         )
+                    )
 
     def _after_misses(self, attack: PendingAttack | None, misses: list[dict]):
         """What the misses of an attack typed in trigger."""
@@ -403,6 +456,10 @@ class DamageMixin(CombatWindowState):
                 self._ask_concentration_save(target, taken)
         if vanishes:
             self._vanish_at_zero_hp(target)
+        if source is not None and source is not target and taken > 0:
+            # What the one damaged answers it with (Hellish Rebuke), asked
+            # with the rest of the Apply's triggers.
+            self._after_attack(DamageOutcome(source, target, taken))
         return taken
 
     def _note_health(self, char: dict):

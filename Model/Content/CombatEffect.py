@@ -338,6 +338,10 @@ class CombatEffect:
     # When it's used, if something in the fight says so (Hill's Tumble: as
     # its owner hits). None: only when the GM picks it.
     trigger: CombatTrigger | None = None
+    # Dice it takes off the damage of the hit it answers (Deflect Attacks'
+    # "1d10 + 8"): only with a 'hit by' trigger, which rolls it as the hit
+    # lands, before the damage is dealt.
+    damage_reduction: str = ""
 
     def __post_init__(self):
         if self.trigger is not None and not isinstance(self.trigger, CombatTrigger):
@@ -345,6 +349,18 @@ class CombatEffect:
                 f"trigger is a CombatTrigger, like CombatTrigger(TriggerEvent.HIT),"
                 f" not {self.trigger!r}"
             )
+        if self.damage_reduction:
+            if not isinstance(self.damage_reduction, str) or not DICE.fullmatch(
+                self.damage_reduction
+            ):
+                raise ValueError(
+                    f"damage_reduction {self.damage_reduction!r} is not dice like"
+                    " '1d10 + 8'"
+                )
+            if self.trigger is None or self.trigger.event is not TriggerEvent.HIT_BY:
+                raise ValueError(
+                    "damage_reduction comes with a 'hit by' trigger: it answers a hit"
+                )
         # Text ("save") is taken too, as JSON and logs have it.
         if self.roll not in set(EffectRoll):
             raise ValueError(f"roll {self.roll!r} is not one of {list(EffectRoll)}")
@@ -726,4 +742,7 @@ class _Reader:
             spell=self.kind(data.get("spell"), "spell", (str,)),
             notes=self.strings(data.get("notes"), "notes"),
             trigger=self.trigger(data.get("trigger")),
+            damage_reduction=self.kind(
+                data.get("damage_reduction"), "damage_reduction", (str,), ""
+            ),
         )

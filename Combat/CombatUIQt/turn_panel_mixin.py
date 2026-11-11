@@ -27,16 +27,19 @@ import Combat.PlayerLog as PlayerLog
 from Combat.Effects.modifiers import attack_plan, hit_notes, hit_plan
 from Combat.Effects.triggers import (
     AttackOutcome,
+    DamageOutcome,
     Firing,
     HitFiring,
     PendingAttack,
     TriggerChoice,
     TriggerMode,
     firings,
+    hit_by_firings,
     outcome_firings,
+    still_hits,
 )
 
-from .attack_rolls import armor_bonus
+from .attack_rolls import armor_bonus, armor_in_use
 from .log_feed import LogFeed
 from .monster_actions import (
     LEGENDARY_ACTIONS_PER_ROUND,
@@ -350,6 +353,7 @@ class TurnPanelMixin(CombatWindowState):
         one target its conditions too, and its cover and modifiers in its AC."""
         result = [action.name]
         critical = False
+        total: int | None = None
         hit: bool | None = None
         notes: tuple[str, ...] = ()
         if action.to_hit is not None:
@@ -403,7 +407,9 @@ class TurnPanelMixin(CombatWindowState):
         if action.to_hit is not None and char is not None:
             # Enter in the Damage field deals it as this action's hit, so
             # what the hit triggers knows which row hit (`after=`).
-            self._rolled_attack = PendingAttack(char, critical, row=action.name)
+            self._rolled_attack = PendingAttack(
+                char, critical, row=action.name, total=None if critical else total
+            )
         rolled = " + ".join(
             f"{roll_dice(roll.dice, critical)} {roll.damage_type or _CHOOSE_A_TYPE}"
             for roll in action.damage
@@ -642,22 +648,26 @@ class TurnPanelMixin(CombatWindowState):
         self._attack_outcomes = ()
         try:
             yield
-            outcomes: list[AttackOutcome] = [*(self._attack_outcomes or ())]
+            outcomes: list[AttackOutcome | DamageOutcome] = [
+                *(self._attack_outcomes or ())
+            ]
         finally:
             self._attack_outcomes = None
         self._resolve_attack_triggers(outcomes)
 
-    def _after_attack(self, outcome: AttackOutcome):
+    def _after_attack(self, outcome: AttackOutcome | DamageOutcome):
         """What an attack roll's outcome triggers: asked about now, or with
         the rest of its Apply's (_one_trigger_prompt). Every hit path calls
         it: the Custom Effect dialog, the main window's Attack roll and
-        Damage fields, a monster's action button."""
+        Damage fields, a monster's action button. Damage a creature dealt
+        another comes this way too (DamageMixin._deal_damage), for what the
+        one damaged answers it with (TAKES_DAMAGE: Hellish Rebuke)."""
         if self._attack_outcomes is not None:
             self._attack_outcomes = (*self._attack_outcomes, outcome)
             return
         self._resolve_attack_triggers([outcome])
 
-    def _resolve_attack_triggers(self, outcomes: list[AttackOutcome]):
+    def _resolve_attack_triggers(self, outcomes: list[AttackOutcome | DamageOutcome]):
         """Apply what `outcomes` trigger that happens by itself (AUTO), then
         ask about the rest in one pop-up (with the setting ask_triggers off,
         as turn-column buttons instead). What's applied goes through the Custom Effect
@@ -683,37 +693,96 @@ class TurnPanelMixin(CombatWindowState):
             self._hit_prompts = (*self._hit_prompts, *asks)
             self._refresh_turn_prompts()
         elif asks:
-            choice = self._ask_triggers(asks)
-            for firing in asks:
-                if any(firing is f for f in choice.apply):
-                    self._use_trigger(firing, notes)
-                elif not any(firing is f for f in choice.edit):
-                    self._log_event(
-                        f"{firing.caster} didn't use {firing.row.name}"
-                        f" on {firing.target['name']}",
-                        character=firing.caster,
-                        public=False,
-                    )
-            for firing in choice.edit:
-                self._edit_trigger(firing)
+            self._answer_firings(asks, notes)
         if notes or found:
             # Logging cleared the hit's own status line; it comes back first.
             self._show_status("; ".join(part for part in (status, *notes) if part))
+
+    def _answer_firings(
+        self, asks: list[HitFiring], notes: list[str]
+    ) -> list[HitFiring]:
+        """Ask the GM about `asks` in one pop-up and do what they answer:
+        apply the checked ones, open the Custom Effect dialog for those to
+        edit, and log a line for the GM about each declined one (Q45).
+        Returns the firings applied."""
+        choice = self._ask_triggers(asks)
+        applied = []
+        for firing in asks:
+            if any(firing is f for f in choice.apply):
+                if self._use_trigger(firing, notes):
+                    applied.append(firing)
+            elif not any(firing is f for f in choice.edit):
+                self._log_event(
+                    f"{firing.caster} didn't use {firing.row.name}"
+                    f" on {firing.target['name']}",
+                    character=firing.caster,
+                    public=False,
+                )
+        for firing in choice.edit:
+            self._edit_trigger(firing)
+        return applied
+
+    def _before_hit(self, outcome: AttackOutcome) -> tuple[bool, int]:
+        """What the creature hit answers the hit with before its damage is
+        dealt (HIT_BY: Shield, Deflect Attacks), asked now, in a pop-up of
+        its own: the answer changes the hit. What it applies goes through
+        the Custom Effect dialog's path (_apply_row), spending its Reaction,
+        slot or use, inside the hit's undo step. Returns whether the attack
+        still hits (Shield's +5 counted in the AC it's checked against now)
+        and the damage to take off it (what Deflect Attacks rolled). With
+        the setting ask_triggers off, each is a turn-column button instead,
+        and the hit is dealt as it is."""
+        found, spent = hit_by_firings(
+            outcome,
+            triggered_rows,
+            is_dead=lambda char: self._char_death_state(char) == "dead",
+        )
+        if not found:
+            return True, 0
+        if not self.settings.ask_triggers:
+            self._hit_prompts = (*self._hit_prompts, *found)
+            self._refresh_turn_prompts()
+            return True, 0
+        status = self._status_label.text()
+        notes = list(spent)
+        reduction = 0
+        target = outcome.target
+        for firing in self._answer_firings(found, notes):
+            dice = firing.row.damage_reduction
+            if dice:
+                amount = roll_dice(dice)
+                reduction += amount
+                self._log_event(
+                    f"{target['name']}'s {firing.row.name} takes {amount} off"
+                    f" the damage ({dice})",
+                    character=target["name"],
+                )
+        hits = still_hits(outcome, armor_in_use(target))
+        if not hits:
+            self._log_event(
+                f"{outcome.attacker['name']}'s attack roll now misses"
+                f" {target['name']}",
+                character=target["name"],
+            )
+            notes.append(f"{target['name']}: now a miss")
+        # Logging cleared the hit's own status line; it comes back first.
+        self._show_status("; ".join(part for part in (status, *notes) if part))
+        return hits, reduction
 
     def _ask_triggers(self, firings: list[HitFiring]) -> TriggerChoice:
         """The pop-up (trigger_prompt.py). Tests replace this, so no modal
         event loop runs in them."""
         return ask_triggers(self._window, firings)
 
-    def _use_trigger(self, firing: HitFiring, notes: list[str]):
+    def _use_trigger(self, firing: HitFiring, notes: list[str]) -> bool:
         """Apply a firing's row as picking it in the Custom Effect dialog
-        would, noting in `notes` why it couldn't be."""
+        would, noting in `notes` why it couldn't be. Returns whether it was."""
         option = firing.row.option
         if not isinstance(option, EffectOption):
-            return
+            return False
         if not self._apply_row(firing.owner, firing.target, option):
             notes.append(f"{firing.row.name} not used on {firing.target['name']}")
-            return
+            return False
         if firing.row.trigger.once_per_turn:
             turn, used = self._trigger_uses
             used = used if turn == self._turn_key() else frozenset()
@@ -721,6 +790,7 @@ class TurnPanelMixin(CombatWindowState):
                 self._turn_key(),
                 used | {(firing.caster, firing.row.name)},
             )
+        return True
 
     def _edit_trigger(self, firing: HitFiring):
         """Open the Custom Effect dialog for a firing, its owner the source,

@@ -29,8 +29,11 @@ from Model.Content.CombatModifiers import AttackKind
 class TriggerEvent(StrEnum):
     """What happens in the fight that a row comes with. The simulator fires
     HIT and MISS (in every hit path: the Custom Effect dialog, the main
-    window's attack roll and Damage fields, a monster's action button); the
-    others are data until a step needs them (6.5-6.7)."""
+    window's attack roll and Damage fields, a monster's action button), and
+    on the creature hit or damaged HIT_BY (as the hit lands, before its
+    damage: Shield, Deflect Attacks) and TAKES_DAMAGE (after damage from a
+    creature: Hellish Rebuke, Storm's Thunder); the others are data until a
+    step needs them (6.6, 6.7)."""
 
     HIT = "hit"  # the owner hits
     MISS = "miss"  # the owner misses
@@ -69,7 +72,8 @@ class CombatTrigger:
     attack's kind (`attacks`), the target's size (`largest_target`, "a Large
     or smaller creature"), damage dealt after Resistance and Immunity
     (`needs_damage`, "and deal damage to it"), a Critical Hit, once per turn,
-    the owner's Reaction (`reaction`, spent: 6.5). What only the GM can
+    the owner's Reaction (`reaction`, or a row whose action is a Reaction:
+    not offered once it's used, and spent as the row is). What only the GM can
     judge is a `when`, said as what follows "if": it always asks."""
 
     event: TriggerEvent

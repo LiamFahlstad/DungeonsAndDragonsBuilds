@@ -297,13 +297,15 @@ Names are the Python ones; `Ability`, `Condition` and `DamageType` come from
   "no damage from Magic Missile"), an area it doesn't track (Spirit
   Guardians' halved Speed), or a stat read as a gate rather than changed
   (Patient Defense's "ends if your Speed is 0", Sleep's "immune to
-  Exhaustion"). Don't repeat in a note what the modifier already counts
+  Exhaustion"). Shield's `HIT_BY` trigger counts its +5 against the hit
+  that triggered it; its note is for a Shield picked by hand after the hit.
+  Don't repeat in a note what the modifier already counts
   (Shield of Faith has no note). The owner's own always-on traits (a
   species' Resistance, Unarmored Defense) stay on the sheet, not here.
   `combat_effects.py stats [--campaign X]` lists every note naming AC, a
   defense, Speed, the Hit Point maximum or size, and whether the row's
   badge already has a modifier for it.
-- **Triggers** are modifiers too: `AtTurnStart(effect, whose, when)` and
+- **Turn triggers** are modifiers: `AtTurnStart(effect, whose, when)` and
   `AtTurnEnd(...)` for what the badge does as a turn starts or ends. `effect`
   names a second effect of the same spell with `spends_use=False`, which is
   what happens: Heroism's `AtTurnStart("Heroism: Temporary Hit Points")`
@@ -339,8 +341,22 @@ Names are the Python ones; `Ability`, `Condition` and `DamageType` come from
   `needs_damage`, `critical_only`, `once_per_turn`, `reaction`; what only
   the GM can judge is a `when` (it always asks). `after="Tree Club"` makes it
   come only after that other row of the same source (`check` refuses one
-  naming no row). Only `HIT` and `MISS` fire so far; the other events are
-  data until their step (6.5-6.7).
+  naming no row). `HIT` and `MISS` fire for the attacker; `HIT_BY` (as an
+  attack roll hits the owner, before its damage) and `TAKES_DAMAGE` (after
+  damage from another creature, against that creature) for the one hit or
+  damaged. A row whose action is a Reaction (Shield, Hellish Rebuke, Deflect
+  Attacks) isn't offered once the Reaction is used this round or while its
+  owner is Incapacitated, and is spent as it's used: `reaction=True` is
+  only for a row whose action doesn't say so. Shield: `HIT_BY` on its
+  `targets_self` badge with `ArmorClass(5)`; the window rechecks the hit
+  against the new AC, so a 20 against AC 18 + 5 misses. Hellish Rebuke:
+  `TAKES_DAMAGE, when="you can see it within 60 feet"`. The other events
+  are data until their step (6.6, 6.7).
+- **`damage_reduction`** (with a `HIT_BY` trigger only): dice it takes off
+  the hit's damage, before Resistance: Deflect Attacks'
+  `with_bonus("1d10", DEX + Monk level)`, Stone's Endurance's
+  `with_bonus("1d12", CON)`. The window rolls it as the hit lands and logs
+  it. Picked by hand, it takes nothing off (its row's note says so).
 - **Not for spells:** `dc`, `attack_bonus` (the caster's), `action_type` and
   `concentration` (the spell's casting time and duration say them), and
   `spell` (for a feature's use that casts one).
