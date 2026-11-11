@@ -52,7 +52,7 @@ change and move on; the full suite can run later.
 | 4 | One `combat-effects` skill; feature agent; content rollout | 4.1 **done** (R57-R60): the `combat-effects` skill and `combat_effects.py` (renamed from spell-mechanics), with the principles, a Features section, `features`, `coverage` and `notes`, and features in `check`; `is_curated` is `is_described`. 4.2 **done**: the `feature-combat-effects` agent (opus); the spell agent is `spell-combat-effects`. 4.4 **done**: `coverage`. 4.3 (content): **Curse of the Lich done** (R61-R65, 2026-11-11): spells 44/44, features 23 described, 37 nothing to apply, none read from text; Time Loop PR was already done. Next: spells level by level and features class by class, which wait for the user's go (Decision 9) |
 | 5 | Sheet chips, monster score | Not started |
 | 6 | **Triggers** (new concept, 2026-11-11; see its section): a row or badge says *when* it's used (a hit, damage taken, dropping to 0, ...), and the simulator applies it itself (AUTO) or asks with a pop-up as it happens (ASK) | 6.1-6.3 **done** (R66-R73, 2026-11-11): `CombatTrigger` on a row (`CombatEffect.trigger`, `Model/Content/CombatTriggers.py`), `outcome_firings` with its gates and modes, and the hit hooks in all three hit paths: when Kivi hits a Large or smaller creature and deals it damage, one pop-up per Apply asks about Hill's Tumble; Apply gives Prone, spends a Giant Ancestry use and logs it, inside the hit's undo step. Only `HIT` and `MISS` fire; the other events are data. 6.4 **done** (R74-R77, 2026-11-11): a monster's hit that gives a condition in a sentence of its own ("If the target is a Large or smaller creature, it has the Prone condition", "..., and the target has the Poisoned condition until the end of its next turn", "the Grappled condition (escape DC 13)") is read as a rider row of its own ("Tree Club: Prone") with an AUTO `after=` trigger: the Hill Giant's Tree Club knocks a Large target Prone from its button and Enter and from the dialog, asks when the size isn't known, and does nothing to a Huge target or on a miss. 101 riders in the catalog. Next: 6.5 (being hit) |
-| 7 | **Stat changes while an effect is on** (new, 2026-11-11; see its section): AC formulas and floors, Immunity and Vulnerability beside the built Resistance, Speed, size, Hit Point maximum, worked out from the stored stat plus the badges, and shown on the card with their sources | 7.1-7.2 **done** (R78-R83, 2026-11-11): `ArmorClassBase` (Mage Armor) and `ArmorClassMinimum` (Barkskin) beside `ArmorClass`, worked out by `armor_class(char, stored)`, which every attack path reads through `armor_bonus`; the same effect twice adds once; `DamageImmunity` and `Vulnerability` beside `Resistance` in `_damage_type_modifier`; Mage Armor, Barkskin, Stoneskin, Protection from Energy (a row per type) and Rage described (`tests/test_stat_changes.py`). Next: 7.3 (Speed and size) |
+| 7 | **Stat changes while an effect is on** (new, 2026-11-11; see its section): AC formulas and floors, Immunity and Vulnerability beside the built Resistance, Speed, size, Hit Point maximum, worked out from the stored stat plus the badges, and shown on the card with their sources | 7.1-7.2 **done** (R78-R83, 2026-11-11): `ArmorClassBase` (Mage Armor) and `ArmorClassMinimum` (Barkskin) beside `ArmorClass`, worked out by `armor_class(char, stored)`, which every attack path reads through `armor_bonus`; the same effect twice adds once; `DamageImmunity` and `Vulnerability` beside `Resistance` in `_damage_type_modifier`; Mage Armor, Barkskin, Stoneskin, Protection from Energy (a row per type) and Rage described (`tests/test_stat_changes.py`). 7.4 **done** (R84-R89, 2026-11-11): `HitPointMaximum(amount, upcast)`, rolled as the badge is given; `hit_point_maximum(char)` is the stored `max_hp` plus the badges, read by every cap, bar and Bloodied check; giving it raises current HP as Hit Points regained, ending it caps current HP (`Action.LOSE_HIT_POINTS`, replayed); Aid and Heroes' Feast described. Next: 7.3 (Speed and size) or 7.5 (the card) |
 
 **Content described so far.** Spells: 57 (2024) + 1 (2014), all as classes
 (every spell is a class since S.4; 58 have combat effects);
@@ -96,6 +96,11 @@ Spellcasting, riders on weapon rows, the owner's own resistances).
 Energy (a row per type: Acid, Cold, Fire, Lightning, Thunder) and the
 Barbarian's Rage (Resistance, Strength Advantage, its damage as a note):
 79 spells have combat effects (`combat_effects.py check`).
+
+**7.4 (2026-11-11).** Aid (`HitPointMaximum("5", upcast="5")`, "up to
+three creatures") and Heroes' Feast (24 hours: Resistance to Poison,
+immunity to Frightened and Poisoned, `HitPointMaximum("2d10")`): 81
+spells have combat effects.
 
 **Verified 2026-11-09 (after S.3):** full suite passes (9,917); every
 picker-row change reviewed field by field against the previous golden.
@@ -822,8 +827,9 @@ damage lists. The simulator works out the stat it uses from the stored one
 plus the modifiers on the creature (`modifiers_on(char)`), as `armor_bonus`
 already does for AC. So ending a badge (by hand, timer, Concentration, R54),
 undo and log replay need nothing new: the stat goes back because the
-modifier is gone. The one exception is the Hit Point maximum, whose change
-also moves current HP (7.4).
+modifier is gone. The Hit Point maximum is worked out the same way
+(`hit_point_maximum`, R84); only current HP is written, as the badge is
+given and as it ends (7.4).
 
 ### Vocabulary (in `Model/Content/CombatModifiers.py`)
 
@@ -833,10 +839,10 @@ also moves current HP (7.4).
 | `ArmorClassBase(base, abilities)` (**built**, 7.1) | Mage Armor (13 + DEX, for a creature "who isn't wearing armor") | Replaces the stored AC when higher (R79); what the target must be when it's given is the GM's to check (R80) |
 | `ArmorClassMinimum(value)` (**built**, 7.1) | Barkskin (2024: "can't be less than 17") | The AC used is at least `value`, after the bonuses |
 | `Resistance(types)` (**built**, 3.2/3.3) | Rage (B/P/S on its owner), Stoneskin, Protection from Energy, Absorb Elements | Halves that type in `_damage_target` |
-| `DamageImmunity(types)` / `Vulnerability(types)` (**built**, 7.2) | Heroes' Feast (Poison Immunity); a Vulnerability from a monster's or homebrew effect | Zeroes / doubles that type, in the same place as Resistance, in the glossary's order (Resistance, then Vulnerability) |
+| `DamageImmunity(types)` / `Vulnerability(types)` (**built**, 7.2) | No 2024 spell gives Immunity for a while (Heroes' Feast is Resistance to Poison); for a monster's or a homebrew effect | Zeroes / doubles that type, in the same place as Resistance, in the glossary's order (Resistance, then Vulnerability) |
 | `Speed(bonus=0, multiplier=1, set_to=None, modes=())` | Haste ×2, Longstrider +10, Ray of Frost -10, Steady Aim / Halt 0 (Q37) | Shown only: the simulator moves nothing (principle 8). Grappled / Restrained keep their own rules speed of 0 |
 | `Size(steps=0, set_to=None)` | Enlarge/Reduce (one step), Large Form (Large) | The size the Phase 6 gates read (`largest_target`, R68); shown on the card |
-| `HitPointMaximum(amount, upcast)` | Aid (+5, and +5 per slot level above 2), Heroes' Feast (2d10); a monster's "its Hit Point maximum is reduced" rider | Raises (or lowers) `max_hp` while on, see 7.4 |
+| `HitPointMaximum(amount, upcast)` (**built**, 7.4) | Aid (+5, and +5 per slot level above 2), Heroes' Feast (2d10); a monster's "its Hit Point maximum is reduced" rider | Added to the stored `max_hp` while on (R84); current HP moves as it's given and ends (R86, R87) |
 | `D20Mode` / `D20Bonus` (**built**) | Enlarge's and Rage's Advantage on Strength checks and saves, Haste's Advantage on DEX saves | As today |
 | `ExtraDamageOnHit` (**built**, 3.4) | Enlarge's +1d4 weapon damage, Reduce's -1d4, Rage's damage (Q26) | As today, once `damage_type=None` (the hit's own type) exists |
 | `Note(text)` | Haste's extra action, Rage's "can't cast spells", reach changes | Shown on the card, not counted |
@@ -867,9 +873,9 @@ what the GM hides today (R27's known-AC notes take the bonus off).
 | # | Step | Done when |
 |---|---|---|
 | 7.1 | **Done** (R78-R81). `armor_class(char, stored)`: `ArmorClassBase`, `ArmorClassMinimum` next to the built `ArmorClass`, with the stacking rule; every attack path reads it through `armor_bonus`. Mage Armor and Barkskin described. | Mage Armor on a creature with stat-block AC 12 and DEX +3 makes an attack need 16; Barkskin on AC 13 makes it 17, and with Shield of Faith still 17 (17 is the floor, not a bonus); two Shields of Faith give +2; ending each badge gives the old AC back; an old log replays the same |
-| 7.2 | **Done** (R82, R83). `DamageImmunity` / `Vulnerability` beside `Resistance` in `_damage_type_modifier`, in the glossary's order. Rage's Resistances and Stoneskin / Protection from Energy described (Rage as a badge its owner puts on itself). | Rage halves a Slashing hit on its owner and not a Fire one; a Vulnerability doubles; Resistance and Vulnerability to the same type halve, then double (11 Slashing becomes 10); Heroes' Feast takes no Poison damage; ending Rage ends it |
+| 7.2 | **Done** (R82, R83). `DamageImmunity` / `Vulnerability` beside `Resistance` in `_damage_type_modifier`, in the glossary's order. Rage's Resistances and Stoneskin / Protection from Energy described (Rage as a badge its owner puts on itself). | Rage halves a Slashing hit on its owner and not a Fire one; a Vulnerability doubles; Resistance and Vulnerability to the same type halve, then double (11 Slashing becomes 10); an Immunity from a badge takes it all; ending Rage ends it |
 | 7.3 | `Speed` and `Size`: shown on the card; `Size` read by the Phase 6 gates. Haste, Longstrider, Enlarge/Reduce, Large Form described. | An Enlarged Medium creature is Large to Hill's Tumble's gate (asks) and a Reduced Large one Medium; Haste shows "Speed 60 ft. (30 ×2 Haste)"; both go when the badge ends |
-| 7.4 | `HitPointMaximum`: giving it raises `max_hp` and current HP by the same amount (Aid: "a creature's Hit Point maximum and current Hit Points increase"); ending it lowers `max_hp` and caps current HP at it; the Bloodied check (`damage_mixin`) uses the new maximum. All inside the giving step's undo. | Aid +5 on a creature at 20/30 gives 25/35; taking Aid off at 33/35 leaves 30/30, at 10/35 leaves 10/30; one undo takes back the cast and the HP; a log replays the same |
+| 7.4 | **Done** (R84-R89). `HitPointMaximum`: giving it raises `max_hp` and current HP by the same amount (Aid: "a creature's Hit Point maximum and current Hit Points increase"); ending it lowers `max_hp` and caps current HP at it; the Bloodied check (`damage_mixin`) uses the new maximum. All inside the giving step's undo. (Built without writing `max_hp`: R84.) | Aid +5 on a creature at 20/30 gives 25/35; taking Aid off at 33/35 leaves 30/30, at 10/35 leaves 10/30; one undo takes back the cast and the HP; a log replays the same |
 | 7.5 | The card and player view show the stats in use with their sources (Q20 done). | Shield of Faith's card reads "AC 17 (15 +2 Shield of Faith)"; a Resistances line names Rage; the player view's AC notes unchanged |
 | 7.6 | Content and tooling: the `combat-effects` skill's rubric gets a "stat changes" section (which modifier, a note only when nothing counts it); `combat_effects.py notes` lists rows whose notes say "AC", "Resistance", "Speed", "Hit Point maximum", "size"; then the parties, through `spell-combat-effects` / `feature-combat-effects`. | Curse of the Lich's and Time Loop PR's rows with such a note use a modifier or say why not |
 
@@ -1687,6 +1693,55 @@ rebuilt), not a pile of modifiers.
   Bonus Action (2024), Concentration on Stoneskin and Protection from
   Energy only.
 
+- **R84. The Hit Point maximum is worked out, not written** (7.4). The
+  plan said giving Aid "raises `max_hp`". But a player's `max_hp` is
+  refilled from the sheet whenever a fight is loaded
+  (`_take_combatants_from`, `_rebuild_players_from_log`) while its
+  `active_effects` come back from the log, so a raised `max_hp` would be
+  lost or, worse, taken off twice. `hit_point_maximum(char)` is the
+  stored `max_hp` plus each rolled `HitPointMaximum` on its badges (once
+  per effect, never below 0), and every reader uses it: the heal cap,
+  Bloodied, the card's bar, the player view's bar and known-maximum
+  notes, the rest dialog, the encounter and log summaries. The `<= 0`
+  checks for a summon whose HP isn't set still read the stored value.
+- **R85. Dice and upcast are rolled once, as the badge is given**
+  (`rolled_modifiers`): Heroes' Feast's 2d10 per creature, Aid's 5 plus 5
+  for each slot level above 2 (the cast's `slot_level`, or the dialog's
+  slot box, against the pick's `spell_level`). The record keeps the
+  number (`HitPointMaximum("10")`), so the maximum is the same on every
+  read and after a reload; an unrolled one counts nothing. All three
+  places that give a badge's modifiers (the dialog's pick, Cast Spell,
+  Enable Feature) go through one `_give_badge_modifiers`.
+- **R86. The rise in current HP is Hit Points regained** (`_heal_target`
+  from the caster): it's capped by the new maximum, logged and replayed
+  as a heal, counted in the stats, and brings a dying creature to ("Aid
+  ... current Hit Points increase by 5"). A dead one gets nothing, as
+  with any healing. A line before it says the new maximum ("Tiger's Hit
+  Point maximum is 35 (30, Aid: +5)"). Aid given again on a creature that
+  has it keeps one number, so nothing is added (Combining Game Effects).
+- **R87. The drop as it ends is its own action**, `Action.LOSE_HIT_POINTS`
+  (`{"hp_delta": -3, "reason": "Aid"}`), not damage: it isn't damage
+  taken (no stats, no Concentration save) but the party's history must
+  replay it, as it replays damage and heals. `_remove_condition_from`
+  measures the maximum before the badge goes and, when it changed, caps
+  current HP and rechecks Bloodied by the new maximum (17 of 35 is
+  Bloodied, 17 of 30 isn't). A GM taking Bloodied off by hand is left
+  alone: only a change in the maximum rechecks it. The public log shows
+  the line as minor.
+- **R88. Heroes' Feast gives Resistance to Poison, not Immunity** (2024).
+  The vocabulary table and 7.2's "done when" had named it as the
+  `DamageImmunity` example; no 2024 spell gives a damage Immunity for a
+  while, so that modifier is for monsters' and homebrew effects. Heroes'
+  Feast is a 24-hour badge with `Resistance` (Poison), `ConditionImmunity`
+  (Frightened, Poisoned) and `HitPointMaximum("2d10")`.
+- **R89. A test 7.2 broke, found in 7.4**: describing Rage gave its row
+  the "Rage" badge, and `test_rage_and_danger_sense_have_no_save` asserted
+  it gave none (it guarded against reading "Incapacitated" from Rage's
+  text as a condition). The test now asks for the Rage badge. 7.2 had run
+  only the modifier and picker tests, not the effect-options file: run
+  `test_combat_ui_effect_options.py` too whenever a party's or a
+  sheet's feature gets combat effects.
+
 ## Open questions (with suggestions)
 
 - **Q2** done in 4.1 (R57, R60).
@@ -1958,6 +2013,9 @@ setting is one checkbox, off meaning turn-column buttons (R71, Q48). Q47 is
   *Suggestion:* a badge with `HitPointMaximum(-amount)` and no timer,
   given by a Phase 6 rider row; the amount is the damage the hit dealt,
   so it needs the `AttackOutcome.damage_dealt` the rider already sees.
+  Since 7.4 a negative `HitPointMaximum` already works on a badge (the
+  maximum drops, current HP is capped); what's left is the rider row and
+  "until a Long Rest" (no timer, a rest takes it off).
 - **Q54. Should a shown stat change go in the log?** *Suggestion:* no
   line of its own: the log already says the badge was given and ended.
   The card's "AC 17 (15 +2 Shield of Faith)" is the reminder.
@@ -2090,8 +2148,11 @@ top). The full suite runs later, when the user asks.
   strict errors for each new modifier. Expected values from the rules text
   and the glossary's Combining Game Effects and Damage Resistance and
   Vulnerability: Mage Armor, Barkskin with and without Shield of Faith,
-  two Shields of Faith, Rage, Heroes' Feast, Enlarge's size in a Phase 6
-  gate, Aid's maximum and current HP given and taken back. Each badge
+  two Shields of Faith, Rage, Enlarge's size in a Phase 6 gate; 7.4: Aid's
+  maximum and current HP given (level 2 and 3) and taken back (above and
+  below the new maximum), Bloodied by the maximum in use, one undo, Aid
+  again, a dying creature coming to, Heroes' Feast's 2d10 rolled once, and
+  the drop replayed. Also `test_combat_ui_effect_options.py` (R89). Each badge
   ending by hand, timer and Concentration; one undo; an old log replaying
   the same. Plus `test_effect_modifiers.py` and `test_extra_damage.py`,
   to show what Phase 3 built didn't change.
