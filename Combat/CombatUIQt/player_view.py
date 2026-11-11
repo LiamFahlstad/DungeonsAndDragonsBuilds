@@ -35,7 +35,11 @@ from PyQt6.QtWidgets import (
 )
 
 from Combat.Definitions import CombatStatus
-from Combat.Effects.modifiers import immune_to_condition, resists_all_damage
+from Combat.Effects.modifiers import (
+    immune_to_condition,
+    immune_to_damage,
+    resists,
+)
 from Combat.Summons import is_out, owner_name
 from Core.Definitions import Condition
 from Core.Rules import ability_modifier
@@ -292,11 +296,12 @@ def _note_defense(char: dict, key: str, name: str):
 
 def note_damage_defense(char: dict, damage_type: str, outcome: str | None):
     """Keep what a damage line players read showed of char's defenses, `outcome`
-    being what _damage_type_modifier said. A condition can give Resistance to
-    all damage (Petrified), and then "resisted" says nothing about char."""
-    if outcome == "immune":
+    being what _damage_type_modifier said. A condition or a badge can give
+    Resistance or Immunity (Petrified, to all damage; Stoneskin), and then
+    the outcome says nothing about char's own defenses."""
+    if outcome == "immune" and not immune_to_damage(char, damage_type):
         _note_defense(char, "known_immunities", damage_type)
-    elif outcome and "resisted" in outcome and not resists_all_damage(char):
+    elif outcome and "resisted" in outcome and not resists(char, damage_type):
         _note_defense(char, "known_resistances", damage_type)
 
 

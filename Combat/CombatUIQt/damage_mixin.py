@@ -1,7 +1,12 @@
 """Damage/healing mixin for CombatAppQt."""
 
 from Combat.Definitions import Action
-from Combat.Effects.modifiers import hit_notes, resists
+from Combat.Effects.modifiers import (
+    hit_notes,
+    immune_to_damage,
+    resists,
+    vulnerable_to,
+)
 from Combat.Effects.triggers import AttackOutcome, PendingAttack
 from Combat.Summons import vanishes_at_zero_hp
 from Core.Definitions import Condition
@@ -72,13 +77,18 @@ class DamageMixin(CombatWindowState):
                     return True
             return False
 
-        if has_type(target.get("damage_immunities")):
+        # A condition or a badge can give these too (Petrified's Resistance
+        # to all damage, Stoneskin's, Heroes' Feast's Poison Immunity).
+        if has_type(target.get("damage_immunities")) or immune_to_damage(
+            target, damage_type
+        ):
             return 0, "immune"
-        # A condition can give Resistance too (Petrified, to all damage).
         resisted = has_type(target.get("damage_resistances")) or resists(
             target, damage_type
         )
-        vulnerable = has_type(target.get("damage_vulnerabilities"))
+        vulnerable = has_type(target.get("damage_vulnerabilities")) or vulnerable_to(
+            target, damage_type
+        )
         if resisted:
             dmg //= 2
         if vulnerable:

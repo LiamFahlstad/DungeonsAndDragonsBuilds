@@ -26,6 +26,40 @@
    "until": null,
    "upcast": []
   },
+  "All spells | Barkskin": {
+   "ability": null,
+   "action_cost": "Bonus Action",
+   "amount_kind": "Damage",
+   "badge_modifiers": {
+    "Barkskin": [
+     {
+      "type": "ArmorClassMinimum",
+      "value": 17
+     }
+    ]
+   },
+   "bonus": null,
+   "concentration": false,
+   "condition": "Barkskin",
+   "counts_uses": true,
+   "damage": "",
+   "dc": null,
+   "duration_seconds": 3600,
+   "feature_name": "",
+   "half_on_save": false,
+   "is_described": true,
+   "is_unavailable": false,
+   "note": "",
+   "repeat_save": false,
+   "roll": "Saving throw",
+   "row_name": "",
+   "slot_level": "None",
+   "spell_level": 2,
+   "spell_name": "Barkskin",
+   "summary": "",
+   "until": null,
+   "upcast": []
+  },
   "All spells | Bless": {
    "ability": null,
    "action_cost": "Action",
@@ -1154,6 +1188,43 @@
    "until": null,
    "upcast": []
   },
+  "All spells | Mage Armor": {
+   "ability": null,
+   "action_cost": "Action",
+   "amount_kind": "Damage",
+   "badge_modifiers": {
+    "Mage Armor": [
+     {
+      "abilities": [
+       "Dexterity"
+      ],
+      "base": 13,
+      "type": "ArmorClassBase"
+     }
+    ]
+   },
+   "bonus": null,
+   "concentration": false,
+   "condition": "Mage Armor",
+   "counts_uses": true,
+   "damage": "",
+   "dc": null,
+   "duration_seconds": 28800,
+   "feature_name": "",
+   "half_on_save": false,
+   "is_described": true,
+   "is_unavailable": false,
+   "note": "Pick a creature who isn't wearing armor; it ends if the target dons armor.",
+   "repeat_save": false,
+   "roll": "Saving throw",
+   "row_name": "",
+   "slot_level": "None",
+   "spell_level": 1,
+   "spell_name": "Mage Armor",
+   "summary": "",
+   "until": null,
+   "upcast": []
+  },
   "All spells | Magic Missile": {
    "ability": null,
    "action_cost": "Action",
@@ -1231,6 +1302,186 @@
    "spell_level": 0,
    "spell_name": "Produce Flame",
    "summary": "+7  1d8 Fire",
+   "until": null,
+   "upcast": []
+  },
+  "All spells | Protection from Energy: Acid": {
+   "ability": null,
+   "action_cost": "Action",
+   "amount_kind": "Damage",
+   "badge_modifiers": {
+    "Protection from Energy": [
+     {
+      "damage_types": [
+       "Acid"
+      ],
+      "type": "Resistance"
+     }
+    ]
+   },
+   "bonus": null,
+   "concentration": true,
+   "condition": "Protection from Energy",
+   "counts_uses": true,
+   "damage": "",
+   "dc": null,
+   "duration_seconds": 3600,
+   "feature_name": "",
+   "half_on_save": false,
+   "is_described": true,
+   "is_unavailable": false,
+   "note": "",
+   "repeat_save": false,
+   "roll": "Saving throw",
+   "row_name": "",
+   "slot_level": "None",
+   "spell_level": 3,
+   "spell_name": "Protection from Energy",
+   "summary": "",
+   "until": null,
+   "upcast": []
+  },
+  "All spells | Protection from Energy: Cold": {
+   "ability": null,
+   "action_cost": "Action",
+   "amount_kind": "Damage",
+   "badge_modifiers": {
+    "Protection from Energy": [
+     {
+      "damage_types": [
+       "Cold"
+      ],
+      "type": "Resistance"
+     }
+    ]
+   },
+   "bonus": null,
+   "concentration": true,
+   "condition": "Protection from Energy",
+   "counts_uses": true,
+   "damage": "",
+   "dc": null,
+   "duration_seconds": 3600,
+   "feature_name": "",
+   "half_on_save": false,
+   "is_described": true,
+   "is_unavailable": false,
+   "note": "",
+   "repeat_save": false,
+   "roll": "Saving throw",
+   "row_name": "",
+   "slot_level": "None",
+   "spell_level": 3,
+   "spell_name": "Protection from Energy",
+   "summary": "",
+   "until": null,
+   "upcast": []
+  },
+  "All spells | Protection from Energy: Fire": {
+   "ability": null,
+   "action_cost": "Action",
+   "amount_kind": "Damage",
+   "badge_modifiers": {
+    "Protection from Energy": [
+     {
+      "damage_types": [
+       "Fire"
+      ],
+      "type": "Resistance"
+     }
+    ]
+   },
+   "bonus": null,
+   "concentration": true,
+   "condition": "Protection from Energy",
+   "counts_uses": true,
+   "damage": "",
+   "dc": null,
+   "duration_seconds": 3600,
+   "feature_name": "",
+   "half_on_save": false,
+   "is_described": true,
+   "is_unavailable": false,
+   "note": "",
+   "repeat_save": false,
+   "roll": "Saving throw",
+   "row_name": "",
+   "slot_level": "None",
+   "spell_level": 3,
+   "spell_name": "Protection from Energy",
+   "summary": "",
+   "until": null,
+   "upcast": []
+  },
+  "All spells | Protection from Energy: Lightning": {
+   "ability": null,
+   "action_cost": "Action",
+   "amount_kind": "Damage",
+   "badge_modifiers": {
+    "Protection from Energy": [
+     {
+      "damage_types": [
+       "Lightning"
+      ],
+      "type": "Resistance"
+     }
+    ]
+   },
+   "bonus": null,
+   "concentration": true,
+   "condition": "Protection from Energy",
+   "counts_uses": true,
+   "damage": "",
+   "dc": null,
+   "duration_seconds": 3600,
+   "feature_name": "",
+   "half_on_save": false,
+   "is_described": true,
+   "is_unavailable": false,
+   "note": "",
+   "repeat_save": false,
+   "roll": "Saving throw",
+   "row_name": "",
+   "slot_level": "None",
+   "spell_level": 3,
+   "spell_name": "Protection from Energy",
+   "summary": "",
+   "until": null,
+   "upcast": []
+  },
+  "All spells | Protection from Energy: Thunder": {
+   "ability": null,
+   "action_cost": "Action",
+   "amount_kind": "Damage",
+   "badge_modifiers": {
+    "Protection from Energy": [
+     {
+      "damage_types": [
+       "Thunder"
+      ],
+      "type": "Resistance"
+     }
+    ]
+   },
+   "bonus": null,
+   "concentration": true,
+   "condition": "Protection from Energy",
+   "counts_uses": true,
+   "damage": "",
+   "dc": null,
+   "duration_seconds": 3600,
+   "feature_name": "",
+   "half_on_save": false,
+   "is_described": true,
+   "is_unavailable": false,
+   "note": "",
+   "repeat_save": false,
+   "roll": "Saving throw",
+   "row_name": "",
+   "slot_level": "None",
+   "spell_level": 3,
+   "spell_name": "Protection from Energy",
+   "summary": "",
    "until": null,
    "upcast": []
   },
@@ -1714,6 +1965,44 @@
    "spell_level": 0,
    "spell_name": "Starry Wisp",
    "summary": "+7  1d8 Radiant",
+   "until": null,
+   "upcast": []
+  },
+  "All spells | Stoneskin": {
+   "ability": null,
+   "action_cost": "Action",
+   "amount_kind": "Damage",
+   "badge_modifiers": {
+    "Stoneskin": [
+     {
+      "damage_types": [
+       "Bludgeoning",
+       "Piercing",
+       "Slashing"
+      ],
+      "type": "Resistance"
+     }
+    ]
+   },
+   "bonus": null,
+   "concentration": true,
+   "condition": "Stoneskin",
+   "counts_uses": true,
+   "damage": "",
+   "dc": null,
+   "duration_seconds": 3600,
+   "feature_name": "",
+   "half_on_save": false,
+   "is_described": true,
+   "is_unavailable": false,
+   "note": "",
+   "repeat_save": false,
+   "roll": "Saving throw",
+   "row_name": "",
+   "slot_level": "None",
+   "spell_level": 4,
+   "spell_name": "Stoneskin",
+   "summary": "",
    "until": null,
    "upcast": []
   },

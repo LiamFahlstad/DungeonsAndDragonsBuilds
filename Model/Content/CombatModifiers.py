@@ -133,9 +133,60 @@ class ArmorClass:
     bonus: int
 
 
+def _check_whole_number(modifier, name: str):
+    value = getattr(modifier, name)
+    if not isinstance(value, int) or isinstance(value, bool):
+        raise ValueError(
+            f"A {type(modifier).__name__}'s {name} is a whole number, got {value!r}"
+        )
+
+
+@dataclass(frozen=True)
+class ArmorClassBase:
+    """Its base AC becomes `base` plus these abilities' modifiers: Mage
+    Armor's 13 + Dexterity. It counts only when that beats the AC it has
+    (its stat block's or sheet's, which already counts its armor): there is
+    one way to work out an AC, and the best one is used. What the target
+    must be when it's given ("who isn't wearing armor") is the GM's to check
+    then."""
+
+    base: int
+    abilities: tuple[Ability, ...] = ()
+
+    def __post_init__(self):
+        _check_whole_number(self, "base")
+
+
+@dataclass(frozen=True)
+class ArmorClassMinimum:
+    """Its AC is at least `value`, whatever adds to it: Barkskin's "an Armor
+    Class of 17 if its AC is lower than that". Cover still adds to it."""
+
+    value: int
+
+    def __post_init__(self):
+        _check_whole_number(self, "value")
+
+
 @dataclass(frozen=True)
 class Resistance:
     """Resistance to damage of these types; to all damage if none are given."""
+
+    damage_types: tuple[DamageType, ...] = ()
+
+
+@dataclass(frozen=True)
+class DamageImmunity:
+    """Immunity to damage of these types (it takes none); to all damage if
+    none are given: Heroes' Feast's Poison."""
+
+    damage_types: tuple[DamageType, ...] = ()
+
+
+@dataclass(frozen=True)
+class Vulnerability:
+    """Vulnerability to damage of these types (it takes double, after any
+    Resistance); to all damage if none are given."""
 
     damage_types: tuple[DamageType, ...] = ()
 
@@ -295,7 +346,11 @@ Modifier = (
     | D20Bonus
     | CriticalHitsAgainst
     | ArmorClass
+    | ArmorClassBase
+    | ArmorClassMinimum
     | Resistance
+    | DamageImmunity
+    | Vulnerability
     | ExtraDamageFrom
     | ExtraDamageOnHit
     | ConditionImmunity
@@ -313,7 +368,11 @@ MODIFIER_TYPES: dict[str, type] = {
         D20Bonus,
         CriticalHitsAgainst,
         ArmorClass,
+        ArmorClassBase,
+        ArmorClassMinimum,
         Resistance,
+        DamageImmunity,
+        Vulnerability,
         ExtraDamageFrom,
         ExtraDamageOnHit,
         ConditionImmunity,
@@ -346,6 +405,8 @@ _PLAIN: dict[str, type] = {
     "effect": str,
     "per_level": bool,
     "bonus": int,
+    "base": int,
+    "value": int,
 }
 
 

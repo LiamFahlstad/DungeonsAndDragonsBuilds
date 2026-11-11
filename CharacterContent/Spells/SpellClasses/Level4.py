@@ -21,7 +21,13 @@ from CharacterContent.Spells.SpellFactory.SpellFields import (
     Range,
 )
 from Core.Definitions import Ability, CharacterClass, DamageType
-from Model.Content.CombatEffect import CombatDamage, CombatEffect, EffectRoll
+from Model.Content.CombatEffect import (
+    CombatCondition,
+    CombatDamage,
+    CombatEffect,
+    EffectRoll,
+)
+from Model.Content.CombatModifiers import Resistance
 from Model.Content.Feature import FeatureTarget
 from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table
 from Model.View import CharacterView
@@ -3174,6 +3180,28 @@ class Stoneskin(ClassSpell):
                     ),
                 )
             )
+        ]
+
+    def combat_effects(
+        self, character: CharacterView | None = None
+    ) -> list[CombatEffect]:
+        return [
+            CombatEffect(
+                conditions=(
+                    CombatCondition(
+                        "Stoneskin",
+                        modifiers=(
+                            Resistance(
+                                (
+                                    DamageType.BLUDGEONING,
+                                    DamageType.PIERCING,
+                                    DamageType.SLASHING,
+                                )
+                            ),
+                        ),
+                    ),
+                ),
+            ),
         ]
 
 

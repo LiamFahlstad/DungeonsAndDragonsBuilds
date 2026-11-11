@@ -15,7 +15,15 @@ from Model.Content.Improvements import (
     SkillProficiencyChoice,
     SpeedBonus,
 )
-from Core.Definitions import Ability, Skill
+from Core.Definitions import Ability, DamageType, Skill
+from Model.Content.CombatEffect import CombatCondition, CombatEffect
+from Model.Content.CombatModifiers import (
+    D20Mode,
+    D20Test,
+    Note,
+    Resistance,
+    RollMode,
+)
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Utils import StringUtils
 from Core.Rules import ALL_LEVELS
@@ -151,6 +159,47 @@ class Rage(Feature):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        barbarian_level = character.get_class_level(
+            Definitions.CharacterClass.BARBARIAN
+        )
+        bonus = get_rage_damage_bonus(barbarian_level)
+        return [
+            CombatEffect(
+                conditions=(
+                    CombatCondition(
+                        "Rage",
+                        duration_seconds=10 * 60,
+                        modifiers=(
+                            Resistance(
+                                (
+                                    DamageType.BLUDGEONING,
+                                    DamageType.PIERCING,
+                                    DamageType.SLASHING,
+                                )
+                            ),
+                            D20Mode(
+                                (D20Test.ABILITY_CHECK, D20Test.SAVING_THROW),
+                                RollMode.ADVANTAGE,
+                                (Ability.STRENGTH,),
+                            ),
+                            Note(
+                                f"+{bonus} damage on attacks using Strength"
+                                " (Rage Damage)"
+                            ),
+                            Note("Can't maintain Concentration or cast spells"),
+                        ),
+                    ),
+                ),
+                notes=(
+                    "Pick yourself as the target. It lasts until the end of your"
+                    " next turn; take it off then unless you attacked an enemy,"
+                    " forced an enemy to save or took a Bonus Action to extend it."
+                    " It ends early if you don Heavy armor or are Incapacitated.",
+                ),
+            )
+        ]
 
 
 class UnarmoredDefenseText(Feature):

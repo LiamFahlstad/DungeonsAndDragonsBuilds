@@ -29,7 +29,7 @@ from Model.Content.CombatEffect import (
     CombatEffect,
     EffectRoll,
 )
-from Model.Content.CombatModifiers import AtTurnEnd, WhoseTurn
+from Model.Content.CombatModifiers import AtTurnEnd, Resistance, WhoseTurn
 from Model.Content.Feature import FeatureTarget
 from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table
 from Model.View import CharacterView
@@ -3402,6 +3402,57 @@ class ProtectionFromEnergy(ClassSpell):
                         "For the duration, Resistance to one damage type of your choice: Acid, Cold, Fire, Lightning, or Thunder",
                     ),
                 )
+            ),
+        ]
+
+    def combat_effects(
+        self, character: CharacterView | None = None
+    ) -> list[CombatEffect]:
+        return [
+            CombatEffect(
+                name="Protection from Energy: Acid",
+                conditions=(
+                    CombatCondition(
+                        "Protection from Energy",
+                        modifiers=(Resistance((DamageType.ACID,)),),
+                    ),
+                ),
+            ),
+            CombatEffect(
+                name="Protection from Energy: Cold",
+                conditions=(
+                    CombatCondition(
+                        "Protection from Energy",
+                        modifiers=(Resistance((DamageType.COLD,)),),
+                    ),
+                ),
+            ),
+            CombatEffect(
+                name="Protection from Energy: Fire",
+                conditions=(
+                    CombatCondition(
+                        "Protection from Energy",
+                        modifiers=(Resistance((DamageType.FIRE,)),),
+                    ),
+                ),
+            ),
+            CombatEffect(
+                name="Protection from Energy: Lightning",
+                conditions=(
+                    CombatCondition(
+                        "Protection from Energy",
+                        modifiers=(Resistance((DamageType.LIGHTNING,)),),
+                    ),
+                ),
+            ),
+            CombatEffect(
+                name="Protection from Energy: Thunder",
+                conditions=(
+                    CombatCondition(
+                        "Protection from Energy",
+                        modifiers=(Resistance((DamageType.THUNDER,)),),
+                    ),
+                ),
             ),
         ]
 

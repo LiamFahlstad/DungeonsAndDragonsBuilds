@@ -35,6 +35,7 @@ from Model.Content.CombatEffect import (
 )
 from Model.Content.CombatModifiers import (
     ArmorClass,
+    ArmorClassBase,
     AtTurnStart,
     AttackKind,
     AttacksAgainst,
@@ -4167,6 +4168,23 @@ class MageArmor(ClassSpell):
                     ("Ends early", "If the target dons armor"),
                 )
             )
+        ]
+
+    def combat_effects(
+        self, character: CharacterView | None = None
+    ) -> list[CombatEffect]:
+        return [
+            CombatEffect(
+                conditions=(
+                    CombatCondition(
+                        "Mage Armor",
+                        modifiers=(ArmorClassBase(13, (Ability.DEXTERITY,)),),
+                    ),
+                ),
+                notes=(
+                    "Pick a creature who isn't wearing armor; it ends if the target dons armor.",
+                ),
+            ),
         ]
 
 

@@ -30,6 +30,7 @@ from Model.Content.CombatEffect import (
     CombatInstances,
     EffectRoll,
 )
+from Model.Content.CombatModifiers import ArmorClassMinimum
 from Model.Content.Feature import FeatureTarget
 from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table
 from Model.View import CharacterView
@@ -1074,6 +1075,17 @@ class Barkskin(ClassSpell):
                     ),
                 )
             )
+        ]
+
+    def combat_effects(
+        self, character: CharacterView | None = None
+    ) -> list[CombatEffect]:
+        return [
+            CombatEffect(
+                conditions=(
+                    CombatCondition("Barkskin", modifiers=(ArmorClassMinimum(17),)),
+                ),
+            ),
         ]
 
 

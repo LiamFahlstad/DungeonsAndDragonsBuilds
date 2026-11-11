@@ -22,14 +22,18 @@ from collections.abc import Iterable
 from dataclasses import dataclass
 
 from Core.Definitions import Ability, Condition
+from Core.Rules import ability_modifier
 from Model.Content.CombatModifiers import (
     ArmorClass,
+    ArmorClassBase,
+    ArmorClassMinimum,
     AttackKind,
     AttacksAgainst,
     AutoFail,
     ConditionImmunity,
     CriticalHitsAgainst,
     D20Bonus,
+    DamageImmunity,
     D20Mode,
     D20Test,
     ExtraDamageFrom,
@@ -37,6 +41,7 @@ from Model.Content.CombatModifiers import (
     Modifier,
     Resistance,
     RollMode,
+    Vulnerability,
     modifier_from_dict,
 )
 from Model.Content.RulesConditions import CONDITION_RULES, conditions_given_by
@@ -400,9 +405,58 @@ def hit_plan(
     return HitPlan(tuple(extras), tuple(notes))
 
 
-def armor_class_bonus(char: dict) -> int:
-    """What char's modifiers add to its AC: its cover's and its effects'."""
-    return sum(m.bonus for _, m in modifiers_on(char) if isinstance(m, ArmorClass))
+def _ability_bonus(char: dict, ability: Ability) -> int:
+    scores = char.get("Ability Scores") or {}
+    score = scores.get(ability.short_name)
+    return ability_modifier(score) if isinstance(score, int) else 0
+
+
+def _own_armor_modifiers(char: dict) -> list[tuple[str, Modifier]]:
+    """The AC modifiers on char but its cover's, each once: two of the same
+    effect don't add up (Rules Glossary, Combining Game Effects)."""
+    where = cover(char)
+    seen: list[tuple[str, Modifier]] = []
+    for source, modifier in modifiers_on(char):
+        pair = (_label(source), modifier)
+        if (
+            source != where
+            and pair not in seen
+            and isinstance(modifier, (ArmorClass, ArmorClassBase, ArmorClassMinimum))
+        ):
+            seen.append(pair)
+    return seen
+
+
+def armor_class(char: dict, stored: int) -> int:
+    """Char's AC with its modifiers in it, from the AC it has (`stored`: its
+    stat block's or sheet's). The best of that and each ArmorClassBase, then
+    what adds to it (ArmorClass), then at least each ArmorClassMinimum, and
+    then its cover, which adds to whatever its AC is."""
+    pairs = _own_armor_modifiers(char)
+    armor = max(
+        [stored]
+        + [
+            m.base + sum(_ability_bonus(char, a) for a in m.abilities)
+            for _, m in pairs
+            if isinstance(m, ArmorClassBase)
+        ]
+    )
+    armor += sum(m.bonus for _, m in pairs if isinstance(m, ArmorClass))
+    armor = max(
+        [armor] + [m.value for _, m in pairs if isinstance(m, ArmorClassMinimum)]
+    )
+    return armor + cover_armor_bonus(char)
+
+
+def armor_class_bonus(char: dict, stored: int | None = None) -> int:
+    """What char's modifiers do to its AC, as a number added to `stored`
+    (the AC it has; armor_class). With no AC to start from, only what adds
+    to one counts: its cover's and its effects' ArmorClass."""
+    if stored is None:
+        return cover_armor_bonus(char) + sum(
+            m.bonus for _, m in _own_armor_modifiers(char) if isinstance(m, ArmorClass)
+        )
+    return armor_class(char, stored) - stored
 
 
 def cover_armor_bonus(char: dict) -> int:
@@ -414,21 +468,44 @@ def cover_armor_bonus(char: dict) -> int:
 
 
 def armor_class_notes(char: dict) -> list[str]:
-    """What adds to char's AC, but cover: "Shield of Faith: +2 AC"."""
-    return [
-        f"{_label(source)}: {m.bonus:+d} AC"
-        for source, m in modifiers_on(char)
-        if isinstance(m, ArmorClass) and source != cover(char)
-    ]
+    """What changes char's AC, but cover: "Shield of Faith: +2 AC", "Mage
+    Armor: base AC 13 + DEX", "Barkskin: AC at least 17"."""
+    notes = []
+    for label, m in _own_armor_modifiers(char):
+        if isinstance(m, ArmorClass):
+            notes.append(f"{label}: {m.bonus:+d} AC")
+        elif isinstance(m, ArmorClassBase):
+            added = "".join(f" + {a.short_name}" for a in m.abilities)
+            notes.append(f"{label}: base AC {m.base}{added}")
+        elif isinstance(m, ArmorClassMinimum):
+            notes.append(f"{label}: AC at least {m.value}")
+    return notes
+
+
+def _damage_modifier(char: dict, kind: type, damage_type: str) -> bool:
+    """Whether a modifier of `kind` (Resistance, DamageImmunity,
+    Vulnerability) on char covers `damage_type`: none listed means all."""
+    return any(
+        isinstance(m, (Resistance, DamageImmunity, Vulnerability))
+        and type(m) is kind
+        and (not m.damage_types or any(t.value == damage_type for t in m.damage_types))
+        for _, m in modifiers_on(char)
+    )
 
 
 def resists(char: dict, damage_type: str) -> bool:
     """Whether char's modifiers give it Resistance to `damage_type`."""
-    return any(
-        isinstance(m, Resistance)
-        and (not m.damage_types or any(t.value == damage_type for t in m.damage_types))
-        for _, m in modifiers_on(char)
-    )
+    return _damage_modifier(char, Resistance, damage_type)
+
+
+def immune_to_damage(char: dict, damage_type: str) -> bool:
+    """Whether char's modifiers give it Immunity to `damage_type`."""
+    return _damage_modifier(char, DamageImmunity, damage_type)
+
+
+def vulnerable_to(char: dict, damage_type: str) -> bool:
+    """Whether char's modifiers give it Vulnerability to `damage_type`."""
+    return _damage_modifier(char, Vulnerability, damage_type)
 
 
 def resists_all_damage(char: dict) -> bool:

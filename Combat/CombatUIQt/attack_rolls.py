@@ -9,6 +9,7 @@ from dataclasses import dataclass
 
 from Combat.Effects.modifiers import armor_class_bonus, cover_armor_bonus
 from .amounts import parse_amount
+from .monster_actions import first_number
 
 _NATURAL = re.compile(r"\s*nat(?:ural)?\s*(1|20)\s*", re.IGNORECASE)
 _ALWAYS_HITS = 20
@@ -61,8 +62,9 @@ def cover_bonus(char: dict) -> int:
 
 def armor_bonus(char: dict) -> int:
     """What char's AC has added to it now: its cover, and what its lasting
-    effects give (Shield of Faith's +2; Combat/Effects)."""
-    return armor_class_bonus(char)
+    effects do to it (Shield of Faith's +2, Mage Armor's base AC, Barkskin's
+    17 at least; Combat/Effects), as a number added to its stored AC."""
+    return armor_class_bonus(char, first_number(char.get("ac")))
 
 
 def note_attack_roll(char: dict, roll: AttackRoll, hit: bool | None, bonus: int = 0):
