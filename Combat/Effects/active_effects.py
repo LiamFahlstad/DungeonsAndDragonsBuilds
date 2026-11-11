@@ -17,6 +17,7 @@ ends and what its badge shows when hovered:
         "tooltip_from": None,           # ... and what wrote it (TOOLTIP_FROM)
         "color": None,                  # the badge's colour
         "modifiers": [],                # what it does to rolls, AC and damage
+        "linked": ["Charmed"],          # only on a spell's badge: see below
     }
 
 `duration` is a timer, {"time_left": seconds, "duration": seconds,
@@ -27,6 +28,11 @@ ends and what its badge shows when hovered:
 `modifiers` are the badge's, as its CombatCondition says them (Bless's
 D20Bonus), each as Model/Content/CombatModifiers.modifier_to_dict writes it;
 Combat/Effects/modifiers.py counts them while the badge is on.
+`linked` is on a spell's own badge given beside the rules conditions it gave
+("Friends" beside "Charmed"), so the card says which spell they're from: the
+conditions it stands for. Taking the badge off takes them off, unless another
+badge stands for them too, and taking the last of them off takes the badge
+off (linked_badges_left_without, R125). A record without it links nothing.
 
 A record lasts while it says something (a tooltip, a duration, a repeat save,
 a concentration link or modifiers) and goes with its badge: ConditionsMixin
@@ -38,7 +44,7 @@ turns them into records, and is the only code that reads them. It also gives
 a record from before `modifiers` existed none. Nothing here imports Qt."""
 
 from collections.abc import Iterable
-from typing import TypedDict
+from typing import NotRequired, TypedDict
 
 from Core.Rules import SECONDS_PER_ROUND
 from Model.Content.CombatEffect import CombatEffect
@@ -84,6 +90,7 @@ class ActiveEffect(TypedDict):
     tooltip_from: str | None
     color: str | None
     modifiers: list[dict]
+    linked: NotRequired[list[str]]
 
 
 def new_effect(name: str) -> ActiveEffect:
@@ -124,8 +131,9 @@ def effect_for(char: dict, name: str) -> ActiveEffect:
 
 def says_something(effect: ActiveEffect) -> bool:
     """Whether an effect still holds anything: a badge tooltip or colour, a
-    duration, a repeat save, a concentration link or modifiers."""
-    return bool(effect.get("modifiers")) or any(
+    duration, a repeat save, a concentration link, modifiers or linked
+    conditions."""
+    return bool(effect.get("modifiers") or effect.get("linked")) or any(
         effect[key] is not None
         for key in ("tooltip", "color", "duration", "repeat_save", "concentration")
     )
@@ -198,6 +206,37 @@ def note_origin(
         effect["source"] = source
     if caster:
         effect["caster"] = caster
+
+
+def link_badge(char: dict, badge: str, conditions: Iterable[str]):
+    """char's badge `badge` (a spell's name) stands for `conditions`, the
+    rules conditions that spell gave it: one goes with the others."""
+    linked = effect_for(char, badge).setdefault("linked", [])
+    linked.extend(c for c in conditions if c not in linked and c != badge)
+
+
+def linked_conditions(char: dict, badge: str) -> list[str]:
+    """The conditions char's badge `badge` stands for (link_badge)."""
+    effect = find_effect(char, badge)
+    return list(effect.get("linked") or []) if effect is not None else []
+
+
+def is_linked(char: dict, condition: str) -> bool:
+    """Whether a badge on char stands for its `condition`."""
+    return any(condition in (e.get("linked") or ()) for e in active_effects(char))
+
+
+def linked_badges_left_without(char: dict, condition: str) -> list[str]:
+    """char no longer has `condition`: no badge stands for it any more. The
+    badges that stood for nothing else, which go with it."""
+    emptied = []
+    for effect in active_effects(char):
+        linked = effect.get("linked")
+        if linked and condition in linked:
+            linked.remove(condition)
+            if not linked:
+                emptied.append(effect["name"])
+    return emptied
 
 
 def link_concentration(char: dict, name: str, concentrator: str):

@@ -478,12 +478,14 @@ def test_a_typed_hit_on_an_ogre_asks_once_and_apply_tumbles_it(fight):
         ]
     ]
     assert "Prone" in ogre["conditions"]
+    assert "Hill's Tumble" in ogre["conditions"]  # its own badge (R126)
     assert _uses_spent(kivi) == 1
     lines = _lines(ui)
-    assert lines[-3:] == [
+    assert lines[-4:] == [
         "Ogre takes 7 Bludgeoning damage from Kivi Jätti",
         "Kivi Jätti uses Giant Ancestry",
         "Ogre gains Prone from Kivi Jätti",
+        "Ogre gains Hill's Tumble from Kivi Jätti",
     ]
     assert ui._status_label.text() == "Ogre: 18 vs AC 11, hit"
 

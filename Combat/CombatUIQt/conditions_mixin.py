@@ -24,7 +24,7 @@ from PyQt6.QtWidgets import (
     QWidget,
 )
 
-from Combat.Definitions import Action, CombatStatus
+from Combat.Definitions import Action, CombatStatus, ConditionRule
 from Combat.Effects.active_effects import (
     CUSTOM,
     FEATURE,
@@ -35,7 +35,11 @@ from Combat.Effects.active_effects import (
     drop_repeat_save,
     duration_entry,
     give_modifiers,
+    is_linked,
+    link_badge,
     link_concentration,
+    linked_badges_left_without,
+    linked_conditions,
     note_origin,
     remove_effect,
     repeat_saves,
@@ -437,16 +441,27 @@ class ConditionsMixin(CombatWindowState):
     """Mixin for condition and visibility management."""
 
     @undoable
-    def _add_condition_to(self, char: dict, cond: str, source: dict | None = None):
+    def _add_condition_to(
+        self,
+        char: dict,
+        cond: str,
+        source: dict | None = None,
+        *,
+        counted: bool = True,
+    ):
+        """char gets `cond` from `source`, logged. Not `counted` in the fight's
+        stats: a spell's badge beside the conditions it gave (Friends beside
+        Charmed), which aren't one more condition."""
         if cond not in char["conditions"]:
             char["conditions"].append(cond)
             char.setdefault("stats", _default_stats())
-            char["stats"]["conditions_received"] = (
-                char["stats"].get("conditions_received", 0) + 1
-            )
-            increment_named_stat(char["stats"], "conditions_received_by_name", cond)
+            if counted:
+                char["stats"]["conditions_received"] = (
+                    char["stats"].get("conditions_received", 0) + 1
+                )
+                increment_named_stat(char["stats"], "conditions_received_by_name", cond)
             source_name = source["name"] if source is not None else None
-            if source is not None:
+            if source is not None and counted:
                 source.setdefault("stats", _default_stats())
                 source["stats"]["conditions_given"] = (
                     source["stats"].get("conditions_given", 0) + 1
@@ -550,9 +565,11 @@ class ConditionsMixin(CombatWindowState):
         if cond in char["conditions"]:
             # What it did to the Hit Point maximum (Aid) goes with it.
             maximum = hit_point_maximum(char)
+            stands_for = linked_conditions(char, cond)
             char["conditions"].remove(cond)
             # Its tooltip, colour, timer and repeat save go with it.
             remove_effect(char, cond)
+            emptied = linked_badges_left_without(char, cond)
             if hit_point_maximum(char) != maximum:
                 self._keep_hit_points_in_maximum(char, cond)
             source_name = source["name"] if source is not None else None
@@ -573,6 +590,16 @@ class ConditionsMixin(CombatWindowState):
                 value=cond_value,
             )
             self._forget_effect_on(char, cond)
+            # A spell's badge and the conditions it stands for go together
+            # (Friends and Charmed): those no other badge stands for, and a
+            # badge left standing for none. Not Unconscious from 0 HP.
+            for other in [*stands_for, *emptied]:
+                if (
+                    other in char["conditions"]
+                    and not is_linked(char, other)
+                    and (other != Condition.UNCONSCIOUS.value or char["hp"] > 0)
+                ):
+                    self._remove_condition_from(char, other, source=source)
             if cond == CombatStatus.CONCENTRATING.value:
                 char.pop("concentration_checks", None)
                 self._end_concentration_spells(char)
@@ -854,13 +881,18 @@ class ConditionsMixin(CombatWindowState):
             for condition in effect.pick.ends_conditions if effect.pick else ():
                 if condition in target["conditions"]:
                     self._remove_condition_from(target, condition, source=source)
+            linked = []
             for condition in effect.conditions:
                 row = {"target": target["name"], "condition": condition}
                 already_had = condition in target["conditions"]
                 held_by_a_spell = self._held_by_effect(row)
+                held_by_a_badge = is_linked(target, condition)
                 if self._give_effect_condition(target, effect, condition):
                     if held_by_a_spell or not already_had:
                         applied.append(row)
+                    if held_by_a_badge or not already_had:
+                        linked.append(condition)
+            self._give_pick_badge(target, effect, linked)
             if effect.repeat_save and effect.ability is not None:
                 self._track_repeat_save(target, effect)
 
@@ -1127,6 +1159,73 @@ class ConditionsMixin(CombatWindowState):
                 )
         return True
 
+    def _picked_feature(self, owner: dict, option: EffectOption):
+        """owner's feature object for a picked feature row: the row's own
+        feature (Hill's Tumble), else the one whose uses it spends."""
+        features = owner.get("_feature_objects", [])
+        for name in (option.name, option.feature_name):
+            feature = next((f for f in features if f.name == name), None)
+            if feature is not None:
+                return feature
+        return None
+
+    def _give_pick_badge(
+        self, target: dict, effect: CustomEffect, conditions: list[str]
+    ):
+        """Beside the rules conditions a picked spell or feature just gave
+        target (Friends' Charmed, Turn Undead's Frightened), a badge of the
+        spell's or feature's own name with its card, so the card says where
+        they're from. It stands for `conditions`: it comes off with the last
+        of them, and they come off with it (link_badge). None for a pick
+        whose badge is its own name already (Bless), a weapon's or a
+        monster's action (its rider is plain in the log), or conditions that
+        aren't rules conditions (Hexed)."""
+        option = effect.pick
+        if option is None:
+            return
+        if not any(ConditionRule.from_name(c) is not None for c in conditions):
+            return
+        source = self.selected_character or self._current_turn_character()
+        # A spell's badge, for a spell or a feature's use that casts one.
+        badge = option.spell_name or (option.name if option.kind == SPELL else "")
+        if badge:
+            spell = self._spell_named(badge)
+            if spell is not None and badge not in effect.conditions:
+                describe(
+                    target,
+                    badge,
+                    spell_badge_description(spell),
+                    spell_badge_color(spell),
+                    SPELL,
+                )
+        elif option.kind == FEATURE:
+            badge = option.name
+            feature = (
+                self._picked_feature(source, option) if source is not None else None
+            )
+            if (
+                source is not None
+                and feature is not None
+                and badge not in effect.conditions
+            ):
+                describe(
+                    target,
+                    badge,
+                    self._feature_condition_tooltip(source, feature),
+                    FEATURE_BADGE_COLOR,
+                    FEATURE,
+                )
+        if not badge or badge in effect.conditions:
+            return
+        self._add_condition_to(target, badge, source=source, counted=False)
+        link_badge(target, badge, conditions)
+        note_origin(
+            target,
+            badge,
+            source=effect.name or badge,
+            caster=source["name"] if source is not None else None,
+        )
+
     def _track_repeat_save(self, target: dict, effect: CustomEffect):
         """The save target repeats at the end of each of its turns, ending
         every condition the effect gave it: one save for them all (Turn
@@ -1172,14 +1271,7 @@ class ConditionsMixin(CombatWindowState):
                 return
         owner = self.selected_character or self._current_turn_character()
         if option.kind == FEATURE and owner is not None:
-            feature = next(
-                (
-                    f
-                    for f in owner.get("_feature_objects", [])
-                    if f.name == (option.feature_name or option.name)
-                ),
-                None,
-            )
+            feature = self._picked_feature(owner, option)
             if feature is not None:
                 describe(
                     target,
