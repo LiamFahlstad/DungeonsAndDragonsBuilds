@@ -319,10 +319,17 @@ class HitFiring:
 @dataclass(frozen=True)
 class TriggerChoice:
     """What the GM answered the pop-up: the firings to apply now, and those
-    to open the Custom Effect dialog for. The rest were declined."""
+    to open the Custom Effect dialog for. The rest were declined. `rolled`:
+    what was rolled at the table for a firing's own roll (Deflect Attacks'
+    1d10 + 8), by firing; the rest are rolled here (plan principle 13)."""
 
     apply: tuple[HitFiring, ...] = ()
     edit: tuple[HitFiring, ...] = ()
+    rolled: tuple[tuple[HitFiring, int], ...] = ()
+
+    def rolled_for(self, firing: HitFiring) -> int | None:
+        """What was rolled at the table for firing, if it was."""
+        return next((n for f, n in self.rolled if f is firing), None)
 
 
 # For an attack of a known kind (the key), the kinds a trigger can ask for

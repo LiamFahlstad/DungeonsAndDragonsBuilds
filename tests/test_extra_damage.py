@@ -607,8 +607,10 @@ def test_the_dialog_reminds_of_the_marks_extra_damage(fight, monkeypatch):
     dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
     _chips(dlg, "rollKindButtons")[ATTACK_ROLL].click()
     ((text, tooltip),) = _rows(dlg)
-    assert text == "AC 15, +1d6 Force on a hit"
+    assert text == "AC 15"  # the mark has a row of its own (plan step 8.1)
     assert "Pirate's Hunter's Mark: +1d6 Force on a hit" in tooltip
+    (extra,) = dlg.findChildren(QLabel, "extraRowInfo")
+    assert extra.text() == "Hunter's Mark: +1d6 Force on a hit"
 
 
 def test_the_dialog_shows_no_mark_for_another_source(fight, monkeypatch):

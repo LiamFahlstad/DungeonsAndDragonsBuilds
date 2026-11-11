@@ -18,7 +18,7 @@ notes it can't have known about come with it. The roll modes are the UI's
 text: "Neutral", "Advantage", "Disadvantage".
 """
 
-from collections.abc import Callable, Iterable
+from collections.abc import Callable, Iterable, Mapping
 from dataclasses import dataclass
 from typing import TypeVar
 
@@ -381,24 +381,37 @@ class HitPlan:
     """What a hit deals on top of its own damage: `extras`, (label, amount,
     damage type) each, ("Gabriel's Hunter's Mark", "1d6", "Force"), rolled
     where the damage is, and doubled on a Critical Hit; and what could come
-    with it but isn't counted, for the GM."""
+    with it but isn't counted, for the GM. `at_table`: the labels whose
+    amount is a total rolled at the table ("4"), to add as it is."""
 
     extras: tuple[tuple[str, str, str], ...] = ()
     notes: tuple[str, ...] = ()
+    at_table: tuple[str, ...] = ()
 
 
 def hit_plan(
-    attacker: dict | None, target: dict | None, weapon_attack: bool | None
+    attacker: dict | None,
+    target: dict | None,
+    weapon_attack: bool | None,
+    rolled: Mapping[str, int] | None = None,
 ) -> HitPlan:
     """The extra damage a hit by attacker on target deals (hit_extras).
     `weapon_attack`: whether the attack was made with a weapon, None when
     that isn't known (a monster's attack, a spell, an effect typed in).
     What only comes with a weapon attack adds nothing to one that isn't,
     and is noted, not counted, when that isn't known; one with a `when` is
-    noted too (plan principle 8)."""
+    noted too (plan principle 8). `rolled`: totals rolled at the table, by
+    label (principle 13); one counts whatever the rest would decide, as
+    the GM typing it is the GM deciding it applies."""
+    rolled = rolled or {}
     extras: list[tuple[str, str, str]] = []
     notes: list[str] = []
+    at_table: list[str] = []
     for label, modifier in hit_extras(attacker, target):
+        if label in rolled:
+            extras.append((label, str(rolled[label]), modifier.damage_type.value))
+            at_table.append(label)
+            continue
         weapons_only = modifier.attacks == AttackKind.WEAPON
         if weapons_only and weapon_attack is False:
             continue
@@ -406,7 +419,7 @@ def hit_plan(
             notes.append(f"{label} (not counted): {extra_text(modifier)}")
         else:
             extras.append((label, modifier.amount, modifier.damage_type.value))
-    return HitPlan(tuple(extras), tuple(notes))
+    return HitPlan(tuple(extras), tuple(notes), tuple(at_table))
 
 
 def _ability_bonus(char: dict, ability: Ability) -> int:

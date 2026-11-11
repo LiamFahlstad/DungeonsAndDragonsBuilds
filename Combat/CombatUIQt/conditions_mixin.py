@@ -350,7 +350,8 @@ def _bonus_notes(plan: RollPlan) -> list[str]:
 def _attack_text(source: dict | None, target: dict) -> str:
     """A target's row for an attack roll: what it has to meet, the mode the
     modifiers give it and what they add to it, to roll it that way at the
-    table ("AC 15, Advantage", "AC 15, +1d4 to hit")."""
+    table ("AC 15, Advantage", "AC 15, +1d4 to hit"). The extra damage a hit
+    on it deals has a row of its own under it (target_roll_rows' extras)."""
     plan = attack_plan(source, target, "Neutral")
     parts = [_armor_text(target)]
     if plan.mode != "Neutral":
@@ -359,7 +360,6 @@ def _attack_text(source: dict | None, target: dict) -> str:
     added = " ".join(p for p in (f"{flat:+d}" if flat else "", dice) if p)
     if added:
         parts.append(f"{added} to hit")
-    parts += [extra_text(extra) for _, extra in hit_extras(source, target)]
     return ", ".join(parts)
 
 
@@ -367,7 +367,11 @@ def _attack_tooltip(source: dict | None, target: dict) -> str:
     plan = attack_plan(source, target, "Neutral")
     extras = [f"{label}: {extra_text(m)}" for label, m in hit_extras(source, target)]
     if extras:
-        extras.append("Rolled and added to a hit's damage, not to a total typed in")
+        extras.append(
+            "Rolled and added to a hit's damage, or typed in its box on this"
+            " row if rolled at the table. A damage total typed in has it"
+            " already, unless it's typed in its box."
+        )
     return "\n".join(
         [
             "What the attack roll has to meet, cover included",
@@ -802,7 +806,7 @@ class ConditionsMixin(CombatWindowState):
                 critical = roll.is_critical
                 if roll.is_critical:
                     damage = effect.critical_damage or damage
-                if damage and not effect.typed_damage:
+                if damage:
                     damage = self._with_hit_extras(
                         source, target, damage, effect, roll.is_critical
                     )
@@ -875,10 +879,26 @@ class ConditionsMixin(CombatWindowState):
         """A hit's damage with the extra damage that comes with it (Hunter's
         Mark's on its caster's hits, Divine Favor's on its caster's weapon
         hits), rolled after the attack's own dice, doubled for a Critical
-        Hit. The log says what each adds, and what wasn't counted."""
-        plan = hit_plan(source, target, effect.weapon_attack)
+        Hit. The log says what each adds, and what wasn't counted. One
+        rolled at the table (its box under Damage) is added as typed, even
+        to a typed damage total; a typed total gets none rolled here, as it
+        was all rolled at the table (Decision 4)."""
+        rolled = effect.typed_extras.get(id(target), {})
+        plan = hit_plan(source, target, effect.weapon_attack, rolled)
+        in_total: list[str] = []
+        if effect.typed_damage:
+            in_total = [
+                f"{label}: not rolled, as the damage total typed has it"
+                for label, _, _ in plan.extras
+                if label not in plan.at_table
+            ]
+            plan = replace(
+                plan,
+                extras=tuple(e for e in plan.extras if e[0] in plan.at_table),
+                notes=(),
+            )
         extra, lines = roll_extra_damage(plan, critical)
-        for line in (*lines, *plan.notes):
+        for line in (*lines, *plan.notes, *in_total):
             # After the hit's line, for the GM only: the player link joins a
             # hit's damage to its line, which a line between would stop.
             self._log_event(line, character=target["name"], public=False)
@@ -1202,7 +1222,8 @@ class ConditionsMixin(CombatWindowState):
     def _end_of_turn_saves(self, char: dict):
         """As char's turn ends, the saves that could end a condition on it. A
         monster rolls, keeping the roll if the turn is undone and passed again;
-        a player rolls at the table, so they get a reminder."""
+        a player rolls at the table, so they get a reminder, as a monster does
+        with the setting monsters_roll_turn_dice off."""
         if self._char_death_state(char) == "dead":
             return
         for effect in list(repeat_saves(char)):
@@ -1214,7 +1235,7 @@ class ConditionsMixin(CombatWindowState):
             if entry is None:
                 continue  # dropped by an earlier save this turn
             ability = next(f for f, short in ABILITIES if short == entry["ability"])
-            if char.get("_is_player"):
+            if char.get("_is_player") or not self.settings.monsters_roll_turn_dice:
                 self._turn_start_notes.append(
                     f"{char['name']}: DC {entry['dc']} {ability} save to end {condition}"
                 )
@@ -1490,18 +1511,36 @@ class ConditionsMixin(CombatWindowState):
         rolls_hint = QLabel("Rolled at the table? Type it; blank rolls.")
         rolls_hint.setObjectName("secondary")
         roll_box.addWidget(rolls_hint)
-        save_rows, typed_inputs, save_infos = target_roll_rows(
+        save_rows, typed_inputs, save_infos, _ = target_roll_rows(
             targets,
             "typedTotal",
             "The total with the save bonus already in it, like 14 or 9+5."
             " Blank rolls for them.",
         )
         roll_box.addWidget(save_rows)
-        attack_rows, attack_inputs, attack_infos = target_roll_rows(
+        # A hit's extra damage (Hunter's Mark) is a roll of its own: a box
+        # more on its target's row, for what was rolled at the table.
+        extra_boxes = {
+            id(target): [
+                (
+                    (id(target), label),
+                    f"{label[len(source['name']) + 3:]}: {extra_text(extra)}",
+                    f"{label}: what was rolled at the table for its"
+                    f" {extra_text(extra)}, its dice twice over on a Critical"
+                    " Hit. Blank rolls it, unless the damage is a total typed"
+                    " in, which has it already. 0 leaves it out.",
+                )
+                for label, extra in hit_extras(source, target)
+            ]
+            for target in targets
+            if source is not None
+        }
+        attack_rows, attack_inputs, attack_infos, extra_rows = target_roll_rows(
             targets,
             "typedAttack",
             "The total with the bonus already in it, like 17 or 12+5, or"
             " nat 20 or nat 1. Blank rolls for the source.",
+            extra_boxes,
         )
         roll_box.addWidget(attack_rows)
         for target in targets:
@@ -1763,6 +1802,9 @@ class ConditionsMixin(CombatWindowState):
             rolls_hint.setVisible(kind != NO_ROLL)
             save_rows.setVisible(bool(typed_inputs) and has_save)
             attack_rows.setVisible(bool(attack_inputs) and is_attack)
+            for row in extra_rows.values():
+                for widget in row:
+                    widget.setVisible(amount_kind() == DAMAGE_AMOUNT)
             mode_combo.setEnabled(has_save or is_attack)
             for widget in (dc_input, half_box, repeat_box, resist_box):
                 widget.setEnabled(has_save)
@@ -1919,6 +1961,25 @@ class ConditionsMixin(CombatWindowState):
                 rolls[key] = roll
             return rolls
 
+        def typed_extras() -> dict[int, dict[str, int]] | None:
+            """The extra damage rolled at the table, by target and what gives
+            it, or None having said what's wrong with one."""
+            extras: dict[int, dict[str, int]] = {}
+            for (key, label), (_, extra_input) in extra_rows.items():
+                text = extra_input.text().strip()
+                if not text:
+                    continue
+                total = int(text) if _WHOLE_NUMBER.fullmatch(text) else None
+                if total is None:
+                    total = parse_amount(text)
+                if total is None or total < 0:
+                    problem_lbl.setText(
+                        f"'{text}' isn't an amount of damage for {label}."
+                    )
+                    return None
+                extras.setdefault(key, {})[label] = total
+            return extras
+
         def do_apply():
             if applied:
                 return
@@ -1961,7 +2022,8 @@ class ConditionsMixin(CombatWindowState):
                 return
             totals = typed_totals() if ability is not None else {}
             attacks = typed_attacks() if is_attack else {}
-            if totals is None or attacks is None:
+            extras = typed_extras() if is_attack and kind == DAMAGE_AMOUNT else {}
+            if totals is None or attacks is None or extras is None:
                 return
             applied.append(True)
             duration = duration_combo.currentData()
@@ -1996,6 +2058,7 @@ class ConditionsMixin(CombatWindowState):
                 concentration=concentrate_box.isChecked(),
                 attack_bonus=bonus_input.value() if is_attack else None,
                 typed_attacks=attacks,
+                typed_extras=extras,
                 ability=ability,
                 dc=dc_input.value(),
                 mode=mode_combo.currentText(),
@@ -2053,6 +2116,7 @@ class ConditionsMixin(CombatWindowState):
                         concentration=False,
                         typed_attacks={},
                         typed_totals={},
+                        typed_extras={},
                         pick=None,
                         row=effect.pick.name if effect.pick is not None else "",
                     )
@@ -2269,7 +2333,11 @@ class ConditionsMixin(CombatWindowState):
         notes_input.returnPressed.connect(do_apply)
         damage_input.returnPressed.connect(do_apply)
         name_input.returnPressed.connect(do_apply)
-        for total_input in [*typed_inputs.values(), *attack_inputs.values()]:
+        for total_input in [
+            *typed_inputs.values(),
+            *attack_inputs.values(),
+            *(box for _, box in extra_rows.values()),
+        ]:
             total_input.returnPressed.connect(do_apply)
         cancel_btn.clicked.connect(dlg.reject)
         for keys, action in (

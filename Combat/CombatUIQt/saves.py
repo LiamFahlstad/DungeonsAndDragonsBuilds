@@ -127,6 +127,10 @@ class CustomEffect:
     # the table, to which a hit's extra damage isn't added (Decision 4).
     weapon_attack: bool | None = None
     typed_damage: bool = False
+    # A hit's extra damage rolled at the table (plan principle 13), by the
+    # target's id() and then by what gives it ("Gabriel's Hunter's Mark"):
+    # added as it is, even to a typed damage total; the rest are rolled.
+    typed_extras: dict[int, dict[str, int]] = field(default_factory=dict)
 
     @property
     def conditions(self) -> list[str]:
@@ -378,10 +382,16 @@ def roll_extra_damage(
     for a Critical Hit, as the rules roll all of an attack's damage dice),
     as (amount, damage type) parts, and the lines saying so: "Gabriel's
     Hunter's Mark: +4 Force (1d6)". Nothing is rolled for a plan without
-    any, so a fight without them throws the dice it always did."""
+    any, so a fight without them throws the dice it always did. A total
+    rolled at the table (`plan.at_table`) is added as it is, critical or
+    not: "+4 Force (rolled at the table)"."""
     parts = []
     lines = []
     for label, amount, damage_type in plan.extras:
+        if label in plan.at_table:
+            parts.append((int(amount), damage_type))
+            lines.append(f"{label}: +{amount} {damage_type} (rolled at the table)")
+            continue
         rolled = roll_dice(amount, critical)
         parts.append((rolled, damage_type))
         die = DIE.fullmatch(amount)

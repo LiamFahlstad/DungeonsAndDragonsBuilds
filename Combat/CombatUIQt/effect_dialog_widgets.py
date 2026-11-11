@@ -3,7 +3,7 @@ _show_custom_condition_dialog): one-click chips that stand in for a combo box,
 framed sections, the row per target for a roll made at the table, and moving
 through the picker from the search box."""
 
-from typing import Callable, Iterable
+from typing import Any, Callable, Hashable, Iterable, Mapping, Sequence
 
 from PyQt6.QtCore import QEvent, QObject, Qt
 from PyQt6.QtGui import QKeyEvent
@@ -26,6 +26,8 @@ from PyQt6.QtWidgets import (
 # about four targets.
 TYPED_ROWS_MAX_HEIGHT = 140
 _TARGET_NAME_WIDTH = 150
+# The least an extra roll's box gets, beside its label.
+_EXTRA_BOX_WIDTH = 110
 
 
 def row_widget(object_name: str = "") -> tuple[QWidget, QHBoxLayout]:
@@ -115,13 +117,25 @@ def section(title: str) -> tuple[QFrame, QVBoxLayout, QLabel]:
 
 
 def target_roll_rows(
-    chars: list[dict], object_name: str, tooltip: str
-) -> tuple[QScrollArea, dict[int, QLineEdit], dict[int, QLabel]]:
+    chars: list[dict],
+    object_name: str,
+    tooltip: str,
+    extras: Mapping[int, Sequence[tuple[Hashable, str, str]]] | None = None,
+) -> tuple[
+    QScrollArea,
+    dict[int, QLineEdit],
+    dict[int, QLabel],
+    dict[Any, tuple[QLabel, QLineEdit]],
+]:
     """A row for each of chars: its name, what it rolls against or with (an
     "AC 15" or "DEX +3" the caller keeps up to date), and a box for what was
-    rolled at the table. Returns (the rows, scrolling past about four
-    targets, so the dialog still fits the smallest window), their boxes and
-    their middle labels, by id(char)."""
+    rolled at the table. `extras`, by id(char): a row under its own for each
+    other roll that comes with it (key, what it is, tooltip), a hit's extra
+    damage, with a box named "typedExtra" (plan principle 13). Returns (the
+    rows, scrolling past about four, so the dialog still fits the smallest
+    window), their boxes and their middle labels, by id(char), and each
+    extra row's label and box, by key."""
+    extras = extras or {}
     rows = QWidget()
     grid = QGridLayout(rows)
     grid.setContentsMargins(0, 0, 0, 0)
@@ -130,7 +144,9 @@ def target_roll_rows(
     grid.setColumnStretch(2, 1)
     inputs: dict[int, QLineEdit] = {}
     infos: dict[int, QLabel] = {}
-    for line, char in enumerate(chars):
+    extra_rows: dict[Any, tuple[QLabel, QLineEdit]] = {}
+    line = 0
+    for char in chars:
         name = QLabel(char["name"])
         name.setObjectName("targetRowName")
         name.setToolTip(char["name"])
@@ -154,6 +170,21 @@ def target_roll_rows(
         grid.addWidget(box, line, 2)
         inputs[id(char)] = box
         infos[id(char)] = info
+        line += 1
+        for key, what, hint in extras.get(id(char), ()):
+            label = QLabel(what)
+            label.setObjectName("extraRowInfo")
+            label.setWordWrap(True)  # a long one wraps rather than crowd the box
+            extra = QLineEdit()
+            extra.setObjectName("typedExtra")
+            extra.setMinimumWidth(_EXTRA_BOX_WIDTH)
+            extra.setPlaceholderText("Rolled, or blank to roll")
+            extra.setAccessibleName(f"{char['name']}: {what}")
+            extra.setToolTip(hint)
+            grid.addWidget(label, line, 0, 1, 2, Qt.AlignmentFlag.AlignRight)
+            grid.addWidget(extra, line, 2)
+            extra_rows[key] = (label, extra)
+            line += 1
     scroll = QScrollArea()
     scroll.setObjectName("targetRolls")
     scroll.setWidget(rows)
@@ -161,7 +192,7 @@ def target_roll_rows(
     scroll.setFrameShape(QFrame.Shape.NoFrame)
     scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
     scroll.setFixedHeight(min(rows.sizeHint().height(), TYPED_ROWS_MAX_HEIGHT))
-    return scroll, inputs, infos
+    return scroll, inputs, infos, extra_rows
 
 
 def pickable_rows(tree: QTreeWidget) -> list[QTreeWidgetItem]:

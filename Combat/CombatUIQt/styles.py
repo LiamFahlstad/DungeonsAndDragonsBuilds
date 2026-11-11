@@ -134,7 +134,8 @@ QLabel#effectPreview {
     color: #5ac8f5;
     font-size: 12px;
 }
-QLabel#targetRowInfo {
+QLabel#targetRowInfo,
+QLabel#extraRowInfo {
     color: #9fb4d0;
     min-width: 64px;
 }

@@ -513,6 +513,13 @@ class TurnPanelMixin(CombatWindowState):
             for action in actions:
                 if action.recharge_on is None or action.name not in spent:
                     continue
+                if not self.settings.monsters_roll_turn_dice:
+                    # Rolled at the table: ↺ makes it ready (_restore_ability).
+                    self._turn_start_notes.append(
+                        f"{name}{action.name}: roll its recharge (a d6 of"
+                        f" {action.recharge_on} or more), ↺ if it comes back"
+                    )
+                    continue
                 roll = self._recharge_roll(char, action)
                 if roll >= action.recharge_on:
                     del spent[action.name]
@@ -700,17 +707,18 @@ class TurnPanelMixin(CombatWindowState):
 
     def _answer_firings(
         self, asks: list[HitFiring], notes: list[str]
-    ) -> list[HitFiring]:
+    ) -> list[tuple[HitFiring, int | None]]:
         """Ask the GM about `asks` in one pop-up and do what they answer:
         apply the checked ones, open the Custom Effect dialog for those to
         edit, and log a line for the GM about each declined one (Q45).
-        Returns the firings applied."""
+        Returns the firings applied, each with what was rolled at the table
+        for its own roll, if anything (TriggerChoice.rolled)."""
         choice = self._ask_triggers(asks)
         applied = []
         for firing in asks:
             if any(firing is f for f in choice.apply):
                 if self._use_trigger(firing, notes):
-                    applied.append(firing)
+                    applied.append((firing, choice.rolled_for(firing)))
             elif not any(firing is f for f in choice.edit):
                 self._log_event(
                     f"{firing.caster} didn't use {firing.row.name}"
@@ -747,14 +755,15 @@ class TurnPanelMixin(CombatWindowState):
         notes = list(spent)
         reduction = 0
         target = outcome.target
-        for firing in self._answer_firings(found, notes):
+        for firing, at_table in self._answer_firings(found, notes):
             dice = firing.row.damage_reduction
             if dice:
-                amount = roll_dice(dice)
+                amount = roll_dice(dice) if at_table is None else at_table
+                how = dice if at_table is None else f"{dice}, rolled at the table"
                 reduction += amount
                 self._log_event(
                     f"{target['name']}'s {firing.row.name} takes {amount} off"
-                    f" the damage ({dice})",
+                    f" the damage ({how})",
                     character=target["name"],
                 )
         hits = still_hits(outcome, armor_in_use(target))

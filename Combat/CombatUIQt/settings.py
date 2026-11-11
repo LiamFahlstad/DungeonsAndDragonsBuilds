@@ -24,6 +24,10 @@ class CombatSettings:
     # Triggers (TurnPanelMixin._resolve_attack_triggers): what a hit
     # triggers is asked in a pop-up, or off, as turn-column buttons (Q40).
     ask_triggers: bool = True
+    # Dice nobody is asked about (in the Damage section, which has room) (TurnPanelMixin._start_monster_turn,
+    # ConditionsMixin._end_of_turn_saves): off, each is a turn reminder,
+    # rolled at the table (plan principle 13).
+    monsters_roll_turn_dice: bool = True
     # Initiative (TurnsMixin._start_combat)
     ask_initiative_ties: bool = True
     # Display (WindowMixin._apply_panel_settings)
@@ -115,33 +119,36 @@ SETTING_SECTIONS: list[tuple[str, list[SettingInfo]]] = [
             SettingInfo(
                 "remember_damage_type",
                 "Remember each source's damage type",
-                "Picking a source sets the damage type it last dealt. Typing a"
-                " type in the Damage field (12 fi) always wins.",
+                "Picking a source sets the type it last dealt. A type typed"
+                " with the amount (12 fi) wins.",
             ),
             SettingInfo(
                 "reset_damage_type_after_hit",
                 "Reset the damage type after each hit",
                 "Back to the source's remembered type, or blank. Off keeps the"
-                " last one picked, for several hits of a type in a row.",
+                " last one picked, for hits of a type in a row.",
             ),
             SettingInfo(
                 "ask_concentration_saves",
                 "Ask for a Concentration save",
-                "When a concentrating creature takes damage, show the"
-                " Constitution save on its card. Off leaves the save to you"
-                " (Ctrl+C removes Concentrating from the source).",
+                "When a concentrating creature takes damage, show the save"
+                " on its card. Off: up to you (Ctrl+C ends Concentrating).",
             ),
             SettingInfo(
                 "monsters_roll_concentration",
                 "Roll monsters' Concentration saves",
-                "Monsters roll the save themselves and the result is logged;"
-                " players' saves stay on their cards.",
+                "Logged; players' saves stay on their cards.",
+            ),
+            SettingInfo(
+                "monsters_roll_turn_dice",
+                "Roll monsters' recharges and repeat saves",
+                "Off: turn reminders, to roll at the table.",
             ),
             SettingInfo(
                 "focus_damage_on_target",
                 "Jump to Damage after picking a target",
-                "Right-click a card, then just type the amount. Letter and"
-                " number shortcuts type into the field until Esc.",
+                "Right-click a card, then just type the amount. Shortcuts"
+                " type into the field until Esc.",
             ),
         ],
     ),

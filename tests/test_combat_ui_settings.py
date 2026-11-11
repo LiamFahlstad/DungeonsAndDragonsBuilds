@@ -61,6 +61,8 @@ def test_the_defaults_keep_the_window_as_it_was():
         ask_concentration_saves=True,
         monsters_roll_concentration=False,
         focus_damage_on_target=False,
+        ask_triggers=True,
+        monsters_roll_turn_dice=True,
         ask_initiative_ties=True,
         show_more_controls=False,
         limited_player_view=False,
