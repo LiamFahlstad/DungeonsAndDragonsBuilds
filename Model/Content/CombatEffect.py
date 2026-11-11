@@ -39,6 +39,10 @@ Several uses (Command's options, Divine Spark's healing or harm) are several
 effects, one picker row each. Several attacks or darts from one use
 (Scorching Ray) are its `instances`. Damage only some targets take (Divine
 Smite's extra 1d8 against a Fiend or an Undead) has a `when`.
+
+A row used when something happens in the fight (Hill's Tumble, as its owner
+hits) says so in its `trigger` (Model/Content/CombatTriggers.py); the row
+stays in the picker for use by hand.
 """
 
 import re
@@ -46,14 +50,20 @@ from dataclasses import dataclass, fields
 from enum import StrEnum
 from typing import Any
 
-from Core.Definitions import Ability, Condition, DamageType
+from Core.Definitions import Ability, Condition, CreatureSize, DamageType
 from Model.Content.ActionType import ActionType
 from Model.Content.CombatModifiers import (
     MODIFIER_CLASSES,
+    AttackKind,
     HasConditions,
     Modifier,
     modifier_from_dict,
     modifier_to_dict,
+)
+from Model.Content.CombatTriggers import (
+    TRIGGER_KEYS,
+    CombatTrigger,
+    TriggerEvent,
 )
 
 # "2d4", "1d8 + 3", or a flat "5".
@@ -289,8 +299,16 @@ class CombatEffect:
     spell: str | None = None
     # For the user, about what the form can't do (moving, a choice, a rider).
     notes: tuple[str, ...] = ()
+    # When it's used, if something in the fight says so (Hill's Tumble: as
+    # its owner hits). None: only when the GM picks it.
+    trigger: CombatTrigger | None = None
 
     def __post_init__(self):
+        if self.trigger is not None and not isinstance(self.trigger, CombatTrigger):
+            raise ValueError(
+                f"trigger is a CombatTrigger, like CombatTrigger(TriggerEvent.HIT),"
+                f" not {self.trigger!r}"
+            )
         # Text ("save") is taken too, as JSON and logs have it.
         if self.roll not in set(EffectRoll):
             raise ValueError(f"roll {self.roll!r} is not one of {list(EffectRoll)}")
@@ -354,10 +372,12 @@ def _compact(value: Any) -> Any:
     """`value` as JSON-ready data: a dataclass as a dict without its default
     fields, enums as their values, a cantrip's steps as {"5": "2d8", ...},
     a modifier as modifier_to_dict writes it."""
-    if isinstance(value, (Ability, DamageType, ActionType, StrEnum)):
+    if isinstance(value, (Ability, DamageType, ActionType, CreatureSize, StrEnum)):
         return value.value
     if isinstance(value, MODIFIER_CLASSES):
         return modifier_to_dict(value)
+    if isinstance(value, CombatTrigger):
+        return value.to_dict()
     if isinstance(
         value,
         (CombatEffect, CombatDamage, CombatHitPoints, CombatCondition, CombatInstances),
@@ -540,6 +560,37 @@ class _Reader:
             for index, item in enumerate(value)
         )
 
+    def trigger(self, value: Any) -> CombatTrigger | None:
+        """Its trigger; none in data from before triggers existed."""
+        if value is None:
+            return None
+        data = self.mapping(value, "trigger", TRIGGER_KEYS)
+        if "event" not in data:
+            self.fail("trigger", "needs an event")
+        flags = {
+            name: self.kind(data.get(name), f"trigger.{name}", (bool,), default)
+            for name, default in (
+                ("optional", True),
+                ("needs_damage", False),
+                ("critical_only", False),
+                ("once_per_turn", False),
+                ("reaction", False),
+            )
+        }
+        return self.build(
+            "trigger",
+            CombatTrigger,
+            event=self.enum(data["event"], "trigger.event", TriggerEvent),
+            after=self.kind(data.get("after"), "trigger.after", (str,), ""),
+            attacks=self.enum(data.get("attacks"), "trigger.attacks", AttackKind)
+            or AttackKind.ANY,
+            largest_target=self.enum(
+                data.get("largest_target"), "trigger.largest_target", CreatureSize
+            ),
+            when=self.kind(data.get("when"), "trigger.when", (str,), ""),
+            **flags,
+        )
+
     def instances(self, value: Any) -> CombatInstances | None:
         if value is None:
             return None
@@ -587,4 +638,5 @@ class _Reader:
             spends_use=self.kind(data.get("spends_use"), "spends_use", (bool,), True),
             spell=self.kind(data.get("spell"), "spell", (str,)),
             notes=self.strings(data.get("notes"), "notes"),
+            trigger=self.trigger(data.get("trigger")),
         )

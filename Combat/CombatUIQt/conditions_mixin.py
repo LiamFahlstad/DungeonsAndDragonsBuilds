@@ -55,9 +55,11 @@ from Combat.Effects.modifiers import (
     rules_condition,
     signed,
 )
+from Combat.Effects.triggers import AttackOutcome
 from Combat.WildShape import current_form, form_badge
 from Core.Definitions import Condition, DamageType
 from Core.Rules import SECONDS_PER_ROUND
+from Model.Content.CombatModifiers import AttackKind
 from Model.Content.RulesConditions import conditions_with
 from .amounts import AmountError, parse_amount
 from .attack_rolls import AttackRoll, armor_bonus, cover_bonus, parse_attack_roll
@@ -85,6 +87,7 @@ from .saves import (
     ATTACK_ROLL,
     CONDITION_JOINER,
     DAMAGE_AMOUNT,
+    DEFAULT_SAVE_DC,
     FEATURE,
     HEALING,
     MONSTER_ACTION,
@@ -124,6 +127,62 @@ def incapacitates(name: str) -> bool:
     """Whether a condition named `name` gives Incapacitated, also under a
     longer custom name ("Stunned by Stunning Strike")."""
     return rules_condition(name) in _INCAPACITATING
+
+
+# What a hit made with a weapon's row (True) or an Unarmed Strike's (False)
+# is, for its triggers; None: not known.
+_ATTACK_KINDS: dict[bool | None, AttackKind | None] = {
+    True: AttackKind.WEAPON,
+    False: AttackKind.UNARMED,
+    None: None,
+}
+
+
+def _picked_effect(option: EffectOption, last_save: dict) -> CustomEffect | None:
+    """What the Custom Effect dialog applies for `option` picked and nothing
+    edited: its roll, damage rolled now (twice over for a Critical Hit),
+    conditions, duration and costs. A DC or attack bonus it leaves unset is
+    the dialog's last (`last_save`, ConditionsMixin._custom_save). None when
+    its damage can't be applied as it is (a damage type to choose)."""
+    is_attack = option.roll == ATTACK_ROLL
+    text = option.damage_at(option.slot_level)
+    damage: list[tuple[int, str]] = []
+    critical: list[tuple[int, str]] = []
+    hit_points = 0
+    if option.amount_kind == DAMAGE_AMOUNT:
+        damage, problem = read_damage(text)
+        if is_attack and not problem:
+            critical, problem = read_damage(text, critical=True)
+    else:
+        hit_points, problem = read_hit_points(text, option.amount_kind)
+    if problem:
+        return None
+    duration: dict | None = None
+    if option.until is not None:
+        duration = {"until": option.until[0], "of": option.until[1]}
+    elif option.duration_seconds:
+        duration = {"seconds": option.duration_seconds}
+    dc = option.dc if option.dc is not None else last_save.get("dc")
+    bonus = option.bonus if option.bonus is not None else last_save.get("bonus")
+    return CustomEffect(
+        name=option.name,
+        condition=option.condition,
+        duration=duration,
+        damage=damage,
+        critical_damage=critical,
+        healing=hit_points if option.amount_kind == HEALING else 0,
+        temp_hp=hit_points if option.amount_kind == TEMP_HP else 0,
+        slot_level=option.slot_level,
+        action_cost=option.action_cost,
+        concentration=option.concentration,
+        attack_bonus=(bonus or 0) if is_attack else None,
+        ability=None if is_attack else option.ability,
+        dc=dc if dc is not None else DEFAULT_SAVE_DC,
+        half_on_save=option.half_on_save,
+        repeat_save=option.repeat_save,
+        pick=option,
+        weapon_attack=option.weapon_attack,
+    )
 
 
 # The durations the Custom Condition dialog offers, as (label, duration). A
@@ -535,6 +594,13 @@ class ConditionsMixin(CombatWindowState):
 
     @undoable
     def _apply_custom_effect(self, effect: CustomEffect):
+        """Apply a Custom dialog effect to every living target
+        (_apply_effect_to_targets), then ask about what its hits trigger
+        (Hill's Tumble), in the same undo step."""
+        with self._one_trigger_prompt():
+            self._apply_effect_to_targets(effect)
+
+    def _apply_effect_to_targets(self, effect: CustomEffect):
         """Apply a Custom dialog effect to every living target: what it costs
         the source, then with an attack roll, the source rolls against each
         one's AC: a hit takes it all, a critical hit with the dice rolled twice
@@ -591,6 +657,10 @@ class ConditionsMixin(CombatWindowState):
         results = []
         attacks = []
         applied = []
+        # What a hit's triggers are told about the attack (Combat/Effects/
+        # triggers.py): a weapon's or an Unarmed Strike's, and the row.
+        kind = _ATTACK_KINDS.get(effect.weapon_attack)
+        picked_row = effect.pick.name if effect.pick is not None else ""
         for target in living:
             # Hit Points go to every target, whatever the roll decides.
             if effect.healing:
@@ -599,6 +669,8 @@ class ConditionsMixin(CombatWindowState):
                 self._give_temp_hp(target, effect.temp_hp, source)
             saved = any(target is s for s in self._saved_targets)
             damage = effect.damage
+            hit: bool | None = None
+            critical = False
             if effect.attack_bonus is not None:
                 # The attacker's and the target's conditions count in a roll
                 # made here; one typed in gets what it couldn't count.
@@ -612,8 +684,20 @@ class ConditionsMixin(CombatWindowState):
                 results.append(hit is not False)
                 attacks.append(attack)
                 if hit is False:
+                    if source is not None:
+                        self._after_attack(
+                            AttackOutcome(
+                                source,
+                                target,
+                                False,
+                                kind=kind,
+                                row=picked_row,
+                                damage_dealt=0,
+                            )
+                        )
                     continue
                 saved = False
+                critical = roll.is_critical
                 if roll.is_critical:
                     damage = effect.critical_damage or damage
                 if damage and not effect.typed_damage:
@@ -624,12 +708,26 @@ class ConditionsMixin(CombatWindowState):
                 saved = self._roll_effect_save(target, effect)
                 results.append(saved)
             avoided = effect.ability is not None and saved and not effect.half_on_save
+            dealt = 0
             if damage and not avoided:
-                self._deal_damage(
+                dealt = self._deal_damage(
                     target, damage, source, effect.count_resistances, saved
                 )
                 if not any(c is target for c in self.characters):
                     continue  # a summon that vanished at 0 HP
+            if effect.attack_bonus is not None and source is not None:
+                # What the hit triggers is asked once the Apply is done.
+                self._after_attack(
+                    AttackOutcome(
+                        source,
+                        target,
+                        hit,
+                        critical=critical,
+                        kind=kind,
+                        row=picked_row,
+                        damage_dealt=dealt,
+                    )
+                )
             if saved:
                 continue
             for condition in effect.conditions:
@@ -680,9 +778,33 @@ class ConditionsMixin(CombatWindowState):
     @undoable
     def _apply_custom_effects(self, effects: list[CustomEffect]):
         """Several Custom dialog effects as one step (the rays of one
-        Scorching Ray): undone together."""
-        for effect in effects:
+        Scorching Ray): undone together, and what their hits trigger asked
+        about once (Q41)."""
+        with self._one_trigger_prompt():
+            for effect in effects:
+                self._apply_custom_effect(effect)
+
+    def _apply_row(self, owner: dict, target: dict, option: EffectOption) -> bool:
+        """Use one picker row of owner's on target, as picking it in the
+        Custom Effect dialog and applying it as it's filled in would: what
+        it costs (a use, logged), its roll, damage and conditions. What a
+        hit triggers comes this way (TurnPanelMixin._use_trigger). Returns
+        whether it was applied: not if owner is out of what it spends (no
+        uses left, the action used), which the caller says."""
+        effect = _picked_effect(option, self._custom_save)
+        if effect is None or any(self._effect_lacks(owner, effect)):
+            return False
+        source, targets = self.selected_character, self.target_characters
+        saved_targets = self._saved_targets
+        self.selected_character, self.target_characters = owner, [target]
+        self._saved_targets = []
+        try:
             self._apply_custom_effect(effect)
+        finally:
+            self.selected_character, self.target_characters = source, targets
+            self._saved_targets = saved_targets
+            self._update_target_label()
+        return True
 
     def _use_pick(self, caster: dict, effect: CustomEffect) -> bool | None:
         """Count what the dialog's pick was as used by caster, as Cast Spell,

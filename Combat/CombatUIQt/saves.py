@@ -15,6 +15,7 @@ from Combat.Effects.modifiers import (
 )
 from Core.Rules import SPELL_SAVE_DC_BASE, ability_modifier
 from Model.Content.CombatModifiers import Modifier
+from Model.Content.CombatTriggers import CombatTrigger
 
 from .amounts import AmountError, parse_damage
 from .attack_rolls import AttackRoll, rolled_attack
@@ -191,6 +192,9 @@ class EffectOption:
     # Strike's isn't, and None when it can't be told (a spell can grant a
     # weapon attack, a monster's attack doesn't say).
     weapon_attack: bool | None = None
+    # When it's used, as its CombatEffect says (Hill's Tumble: as its owner
+    # hits): Combat/Effects/triggers.py offers it then.
+    trigger: CombatTrigger | None = None
 
     def modifiers_for(self, badge: str) -> tuple[Modifier, ...]:
         """What the badge `badge` it gives does while it's on: none for a

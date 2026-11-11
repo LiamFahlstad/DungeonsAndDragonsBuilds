@@ -21,6 +21,9 @@ class CombatSettings:
     ask_concentration_saves: bool = True
     monsters_roll_concentration: bool = False
     focus_damage_on_target: bool = False
+    # Triggers (TurnPanelMixin._resolve_attack_triggers): what a hit
+    # triggers is asked in a pop-up, or off, as turn-column buttons (Q40).
+    ask_triggers: bool = True
     # Initiative (TurnsMixin._start_combat)
     ask_initiative_ties: bool = True
     # Display (WindowMixin._apply_panel_settings)
@@ -90,12 +93,19 @@ SETTING_SECTIONS: list[tuple[str, list[SettingInfo]]] = [
         ],
     ),
     (
-        "Initiative",
+        # The triggers' setting is here, not beside the Concentration saves,
+        # as that column has no room left (the dialog fits a 600-high window).
+        "Initiative and triggers",
         [
             SettingInfo(
                 "ask_initiative_ties",
                 "Ask how to break initiative ties",
                 "Off puts the higher Dexterity first and starts straight away.",
+            ),
+            SettingInfo(
+                "ask_triggers",
+                "Ask what a hit triggers in a pop-up",
+                "Hill's Tumble and the like. Off: as turn-column buttons.",
             ),
         ],
     ),

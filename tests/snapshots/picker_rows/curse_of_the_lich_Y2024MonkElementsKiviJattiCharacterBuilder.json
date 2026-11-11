@@ -223,7 +223,7 @@
    "half_on_save": false,
    "is_described": true,
    "is_unavailable": false,
-   "note": "Right after you hit a Large or smaller creature with an attack roll and deal damage to it.",
+   "note": "",
    "repeat_save": false,
    "roll": "Saving throw",
    "row_name": "",
@@ -231,6 +231,11 @@
    "spell_level": 0,
    "spell_name": "",
    "summary": "2/2  Prone",
+   "trigger": {
+    "event": "hit",
+    "largest_target": "Large",
+    "needs_damage": true
+   },
    "until": null,
    "upcast": []
   },

@@ -271,6 +271,20 @@ Names are the Python ones; `Ability`, `Condition` and `DamageType` come from
   missing (`Notes/combat-effects-plan.md`, principle 7).
 - **`spends_use=False`** only on a later step of one casting (Ice Knife's
   explosion): that row spends no slot, no action and counts no cast.
+- **`trigger`** (`Model/Content/CombatTriggers.py`, plan Phase 6): when a
+  row is used, in place of a "Right after you hit ..." note (a row says
+  what, a trigger says when). `CombatTrigger(TriggerEvent.HIT,
+  needs_damage=True, largest_target=CreatureSize.LARGE)` is Hill's Tumble's
+  "When you hit a Large or smaller creature with an attack roll and deal
+  damage to it, you can ...". `optional=True` (the default) is "you can":
+  the GM is asked as the hit lands; `optional=False` is "it happens" (a
+  monster's rider), applied without asking when every gate is checked and
+  nothing is spent. Gates: `attacks` (an `AttackKind`), `largest_target`,
+  `needs_damage`, `critical_only`, `once_per_turn`, `reaction`; what only
+  the GM can judge is a `when` (it always asks). `after="Tree Club"` makes it
+  come only after that other row of the same source (`check` refuses one
+  naming no row). Only `HIT` and `MISS` fire so far; the other events are
+  data until their step (6.5-6.7).
 - **Not for spells:** `dc`, `attack_bonus` (the caster's), `action_type` and
   `concentration` (the spell's casting time and duration say them), and
   `spell` (for a feature's use that casts one).

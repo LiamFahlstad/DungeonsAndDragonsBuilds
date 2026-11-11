@@ -51,7 +51,7 @@ change and move on; the full suite can run later.
 | 3 | Lasting effects (3.1-3.6) | 3.1 **done** (R28-R34): `char["active_effects"]`, one plain dict per badge, in the new Qt-free `Combat/Effects/active_effects.py`; the seven old keys are read only by its `upgrade_old_keys`, where a log is read; an old fight log replays the same (`tests/test_active_effects.py`). 3.2 **done** (R27), ahead of 3.1: the rules conditions are data, and saves, attack rolls (all three paths), AC, damage Resistance and condition immunity read them. 3.3 **done** (R35-R40): a badge's `CombatCondition` says its `modifiers`, the record keeps them as JSON, and `modifiers_on` reads them beside the conditions and cover; Bless's 1d4 is rolled into the saves (a monster's Concentration save too, R40) and attack rolls the simulator makes, Shield of Faith's +2 counts in AC, cover's +2/+5 in Dexterity saves (DI-066); a typed total stays as typed, with the bonus as a reminder in the dialog. 3.4 **done** (R41-R47): `ExtraDamageFrom` (on the target, from its effect's caster) and `ExtraDamageOnHit` (on the attacker); Hunter's Mark's 1d6 Force on its caster's hits and Divine Favor's 1d4 Radiant on its caster's weapon hits are rolled into the hits the dialog and a monster's action buttons deal, doubled on a Critical Hit, each type resisted on its own; a typed damage total stays as typed, with the extra as a reminder in the dialog. 3.5 **done** (R48-R53): `AtTurnStart` / `AtTurnEnd` are modifiers on a badge that name a row of their spell; Heroism's Temporary Hit Points are given as its target's turn starts, and Spirit Guardians asks, as each enemy of its caster ends its turn, with a button that opens the Custom Effect dialog with its damage row picked. 3.6 **done** (R54-R56): ending a concentration also ends every record linked to it (`held_by_concentration`), a creature leaving the fight ends its concentration first, and a badge another running effect still holds is relinked to that effect's caster |
 | 4 | One `combat-effects` skill; feature agent; content rollout | 4.1 **done** (R57-R60): the `combat-effects` skill and `combat_effects.py` (renamed from spell-mechanics), with the principles, a Features section, `features`, `coverage` and `notes`, and features in `check`; `is_curated` is `is_described`. 4.2 **done**: the `feature-combat-effects` agent (opus); the spell agent is `spell-combat-effects`. 4.4 **done**: `coverage`. 4.3 (content): **Curse of the Lich done** (R61-R65, 2026-11-11): spells 44/44, features 23 described, 37 nothing to apply, none read from text; Time Loop PR was already done. Next: spells level by level and features class by class, which wait for the user's go (Decision 9) |
 | 5 | Sheet chips, monster score | Not started |
-| 6 | **Triggers** (new concept, 2026-11-11; see its section): a row or badge says *when* it's used (a hit, damage taken, dropping to 0, ...), and the simulator applies it itself (AUTO) or asks with a pop-up as it happens (ASK) | Planned. 6.3 (hit hooks, the pop-up, Kivi's Hill's Tumble) is the first slice, then 6.4 (monster riders: the Hill Giant's Tree Club) |
+| 6 | **Triggers** (new concept, 2026-11-11; see its section): a row or badge says *when* it's used (a hit, damage taken, dropping to 0, ...), and the simulator applies it itself (AUTO) or asks with a pop-up as it happens (ASK) | 6.1-6.3 **done** (R66-R73, 2026-11-11): `CombatTrigger` on a row (`CombatEffect.trigger`, `Model/Content/CombatTriggers.py`), `outcome_firings` with its gates and modes, and the hit hooks in all three hit paths: when Kivi hits a Large or smaller creature and deals it damage, one pop-up per Apply asks about Hill's Tumble; Apply gives Prone, spends a Giant Ancestry use and logs it, inside the hit's undo step. Only `HIT` and `MISS` fire; the other events are data. Next: 6.4 (monster riders: the Hill Giant's Tree Club) |
 
 **Content described so far.** Spells: 57 (2024) + 1 (2014), all as classes
 (every spell is a class since S.4; 58 have combat effects);
@@ -182,6 +182,24 @@ weapon hit (none on the typed total), filled the Bite button's Damage field
 with "6 Piercing + 5 Force", and the player link's hit lines read "5
 Slashing + 1 Force" and "6 Slashing + 4 Radiant".
 
+**Verified 2026-11-11 (6.1-6.3, R66-R73), low overhead:** 20 combat test
+files pass (1,490: the new `tests/test_hit_triggers.py` with 70 tests,
+`test_turn_triggers.py` unchanged and passing, extra damage, active
+effects, picker rows, feature, spell and monster combat effects, the Custom
+Effect dialog's files, fast play, settings, layering; not the full suite);
+`combat_effects.py check` OK (75 of 594 spells); pyright 0 errors on
+`Combat/CombatUIQt`, `Combat/Effects`, `Model/Content` and the changed tests
+and script. One picker golden changed, Kivi's, in one row (Hill's Tumble):
+its note went and a `trigger` key came, `{"event": "hit", "largest_target":
+"Large", "needs_damage": true}`, nothing else. The tests take their values
+from Hill's Tumble's text (a Large Ogre asks, a Huge Hill Giant, a miss, 0
+damage after Immunity, no uses left, an already Prone Ogre give nothing, an
+unknown size asks with the reason, 2 uses at Proficiency Bonus 2), and drive
+each hit path once: an attack roll and damage typed together, the Attack
+roll field's Enter then the Damage field's, a monster action button, and
+the Custom Effect dialog's attack loop (Times 2 asks once). The pop-up was
+looked at in a screenshot.
+
 **Verified 2026-11-11 (4.3, Curse of the Lich, R61-R65), low overhead:**
 every combat test file plus the spell, feature and monster combat-effects
 tests pass (3,380; not the full suite); `combat_effects.py check` OK (75 of
@@ -269,6 +287,13 @@ suggested.
     step, no agent branches, no parity runs that rely on a worktree; every
     step is edited in the main checkout, committed there and pushed to
     origin main. (CLAUDE.md says the same for all work.)
+12. **Q40-Q45 as suggested** (the user, 2026-11-11: "start on 6.1-6.3",
+    taken as accepting them, as "continue with plan" did for Decisions 7
+    and 8): a modal pop-up for hits, one per Apply with a checkbox per
+    (target, trigger); a row with no uses left is left out and said in the
+    status line; an unknown attack kind asks; the trigger is a field on the
+    row (`CombatEffect.trigger`); a declined prompt logs a GM-only line.
+    Built in 6.1-6.3 (R66-R73), with the setting as one checkbox (R71).
 
 ## Goal
 
@@ -330,6 +355,7 @@ CombatEffect(
     repeat_save=False, attack_bonus=None,
     damage=(), healing=None, temp_hp=None, conditions=(), instances=None,
     action_type=None, concentration=False, spends_use=True, spell=None, notes=(),
+    trigger=None,   # a CombatTrigger (Phase 6, Model/Content/CombatTriggers.py)
 )
 with_bonus("1d8", 4) == "1d8 + 4"
 ```
@@ -736,9 +762,9 @@ fire).
 
 | # | Step | Done when |
 |---|---|---|
-| 6.1 | `TriggerEvent`, `CombatTrigger`, `CombatEffect.trigger`; `AttackKind` widened. Follow the checklist for adding a field. | Invalid combinations raise (e.g. `after` naming no row of the source, `largest_target` on an event with no target); `to_dict` / `from_dict` round-trip strictly; an old log still reads; `combat_effects.py check` refuses an `after` that names nothing |
-| 6.2 | The interpreter: `AttackOutcome`, `outcome_firings`, `rows_of`, the gates and the mode. | Tests with expected values from the rules text: Hill's Tumble on a Large target asks, on a Huge one gives nothing, on a miss nothing, on 0 damage (Immunity) nothing, with no uses left nothing (Q42), on an already Prone target nothing, on a target of unknown size asks with the reason |
-| 6.3 | **First slice:** the hit hooks in the three paths, the pop-up and the setting; Kivi's Giant Ancestry (Hill's Tumble, Fire's Burn, Frost's Chill) gets triggers in place of the `on_hit` note (principle 7). | A rolled or typed hit by Kivi on an Ogre pops up Hill's Tumble once; Apply gives Prone, spends a use and logs it; one undo takes back the hit and the Prone; Times / Flurry of Blows ask once per Apply; the picker golden's only change is the note going |
+| 6.1 | **Done** (R66, R67). `TriggerEvent`, `CombatTrigger`, `CombatEffect.trigger`; `AttackKind` widened. Follow the checklist for adding a field. | Invalid combinations raise (e.g. `after` naming no row of the source, `largest_target` on an event with no target); `to_dict` / `from_dict` round-trip strictly; an old log still reads; `combat_effects.py check` refuses an `after` that names nothing |
+| 6.2 | **Done** (R68). The interpreter: `AttackOutcome`, `outcome_firings`, `rows_of`, the gates and the mode. | Tests with expected values from the rules text: Hill's Tumble on a Large target asks, on a Huge one gives nothing, on a miss nothing, on 0 damage (Immunity) nothing, with no uses left nothing (Q42), on an already Prone target nothing, on a target of unknown size asks with the reason |
+| 6.3 | **Done** (R69-R73). **First slice:** the hit hooks in the three paths, the pop-up and the setting; Kivi's Giant Ancestry (Hill's Tumble, Fire's Burn, Frost's Chill) gets triggers in place of the `on_hit` note (principle 7). | A rolled or typed hit by Kivi on an Ogre pops up Hill's Tumble once; Apply gives Prone, spends a use and logs it; one undo takes back the hit and the Prone; Times / Flurry of Blows ask once per Apply; the picker golden's only change is the note going |
 | 6.4 | Monster riders: the monster text reading turns "Hit: ... [If the target is a <size> or smaller creature,] it has the <condition> condition" (and "Grappled (escape DC N)") into a rider row with an AUTO trigger. A homebrew `MeleeAttack`'s `additional_ruling` reads the same way. | The Hill Giant's Tree Club knocks a Large target Prone from its button and Enter, and from the dialog; asks when the size isn't known; does nothing to a Huge target or on a miss; the picker goldens' new rider rows read against their stat blocks |
 | 6.5 | Being hit: `HIT_BY` before damage (Shield, Deflect Attacks, Stone's Endurance), and `TAKES_DAMAGE` after (Hellish Rebuke, Storm's Thunder; badges via `OnTrigger`: Armor of Agathys). Spends the Reaction (`_add_action_use`). Takes over Q30 and Q39. | Shield asked as a hit lands turns it into a miss when +5 is enough, and spends the Reaction and a slot; Deflect Attacks takes its roll off the damage; a used Reaction asks no more this round |
 | 6.6 | Hit Point thresholds: `BLOODIED`, `DROPS_TO_ZERO`, `REDUCES_TO_ZERO`. | Relentless Endurance (Orc) asks "drop to 1 HP instead?" as its owner drops to 0; Dark One's Blessing's temp HP are given at once; both inside the damage's undo step |
@@ -1360,6 +1386,100 @@ once.
   row whose note says to give the weapon's own bonus and damage, as the
   spell can't know the weapon.
 
+- **R66. A trigger is its own module, and `after=` is checked per source**
+  (6.1, 2026-11-11). `TriggerEvent` and `CombatTrigger` are in
+  `Model/Content/CombatTriggers.py`, not `CombatModifiers.py`: a trigger is
+  not a modifier of a badge, and `CombatModifiers` keeps `AtTurnStart` /
+  `AtTurnEnd` as they were (Q46). `CombatTrigger.__post_init__` refuses
+  what no row could mean: `largest_target` on an event with no other
+  creature (`BLOODIED`), `needs_damage` other than on `HIT`, `critical_only`
+  other than on `HIT` / `HIT_BY`, a non-`ANY` `attacks` on an event that's
+  no attack, `after` other than on `HIT` / `MISS` / `USES`, a `USES` without
+  `after`, text with spaces around it. An `after` naming no other row can't
+  be seen from one row, so `trigger_problems(source, effects)` checks a
+  source's rows together (a row's name, or the source's when it has none),
+  and `combat_effects.py check` runs it on every spell and party feature.
+  As JSON a trigger is its fields not at their default, enums as values
+  (`{"event": "hit", "largest_target": "Large", "needs_damage": true}`);
+  `from_dict` is strict, a missing key is no trigger, and a log that wrote
+  every field (`asdict`) reads too. Every event in the sketch is in the
+  enum; only `HIT` and `MISS` fire (MISS came free with the same hooks).
+- **R67. `AttackKind` widened, extra damage not.** MELEE, RANGED, UNARMED
+  and SPELL are for triggers; `ExtraDamageFrom` / `ExtraDamageOnHit` refuse
+  them (`EXTRA_DAMAGE_ATTACKS`), so `hit_plan`'s ANY / WEAPON mean what they
+  did and no extra damage is counted for a kind it can't read. A trigger's
+  kind is matched by `triggers.kind_fits` (an Unarmed Strike is melee; a
+  weapon attack may be melee or ranged, so that asks). The dialog's
+  outcome kind is WEAPON from a weapon's row, UNARMED from an Unarmed
+  Strike's (`weapon_attack` False), else unknown; the main window's and a
+  monster button's are unknown (Q43).
+- **R68. `rows_of` is the picker's, passed in** (6.2). `Combat/Effects`
+  stays Qt-free, and `effect_options` can't be imported from it (its
+  package imports the window), so `outcome_firings(outcomes, rows_of, *,
+  is_dead, used_this_turn)` takes the rows as a function, and the window
+  passes `effect_options.triggered_rows`: a combatant's own rows with a
+  trigger (actions, traits, weapons, own spells, features and extensions,
+  never "All spells"), each a `TriggerRow` with its conditions, a line of
+  what it does, its uses (left, most) and whether it costs anything. Not
+  cached: it takes 2 ms for Kivi, and it's always the combatant's form and
+  uses now. `outcome_firings` takes no `chars`: the target's own reactions
+  are 6.5. It returns the firings and the "no uses left" lines (Q42) for
+  the status line. `EffectOption.trigger` carries the effect's trigger (the
+  picker goldens show it only on rows that have one, as `badge_modifiers`).
+- **R69. One prompt per Apply, from every hit path** (6.3).
+  `_one_trigger_prompt()` collects the outcomes of what runs inside it
+  (`_apply_custom_effect`, whose body moved to `_apply_effect_to_targets`,
+  and `_apply_custom_effects`, so Times copies share one), and the outermost
+  asks once. The main window knows a hit three ways: the Attack roll field
+  checked by the same Enter; the Attack roll field's own Enter, remembered
+  (`PendingAttack`) while its undo step is still the last one, so an undo
+  or anything done in between forgets it; and a monster action button's
+  roll, remembered while it's in the Damage field (an undo clears that).
+  Damage typed with no attack roll isn't a hit (a spell's, a fall's).
+  `_deal_damage` now returns the damage taken, which is the `needs_damage`
+  gate. A miss in any path is an outcome too (`MISS`).
+- **R70. Applying a firing is the dialog's path, without the dialog.**
+  `_apply_row(owner, target, option)` builds the `CustomEffect` that
+  `do_apply` would for the row picked and nothing edited
+  (`_picked_effect`: damage rolled now, its DC or bonus else the dialog's
+  last) and runs `_apply_custom_effect` with the owner as source and the
+  target alone as target, inside the hit's undo step. The log reads as a
+  pick: "Kivi Jätti uses Giant Ancestry", "Ogre gains Prone from Kivi
+  Jätti". What the owner is out of (two targets and one use left) isn't
+  asked with `_go_ahead_anyway` in the middle of a hit: that firing isn't
+  used, and the status line says so.
+- **R71. The setting is one checkbox: off is turn-column buttons** (Q40's
+  own suggestion). `ask_triggers` on: the pop-up; off: a button per firing
+  under the turn's prompts (`_hit_prompts`, for the rest of the turn),
+  which opens the Custom Effect dialog with the row picked (3.5's button
+  and `_use_turn_prompt`; both firings have a `pick`). Not the three
+  states the brief named (pop-up / button / off): the Settings dialog has
+  room for exactly one more checkbox in a 600-high window
+  (`test_the_settings_dialog_fits_the_smallest_window`), and none beside
+  the Concentration saves, so it's in the first column's section, renamed
+  "Initiative and triggers". A true "off" needs a choice setting or a third
+  column in `dialogs_mixin.py` (Q48). AUTO firings are applied whatever the
+  setting, as they ask nothing.
+- **R72. What the pop-up is.** `trigger_prompt.TriggerPrompt`: a checkbox
+  per firing, all checked, with its question ("Kivi Jätti hits Ogre
+  (Large): use Hill's Tumble? Prone. 2 of 2 uses left."; "Check: Ogre's
+  size isn't known." when a gate couldn't be), and Apply, Skip, Edit.
+  Edit opens the Custom Effect dialog for each checked one in turn, then
+  gives back the GM's source and targets. The window calls it through
+  `_ask_triggers`, which tests replace. A declined firing logs "Kivi Jätti
+  didn't use Hill's Tumble on Ogre" with `public=False`, in the hit's undo
+  step (Q45). Once-per-turn uses are kept by the window per turn
+  (`_trigger_uses`), not in the combatant, so an undo doesn't give one
+  back (no content uses it yet).
+- **R73. Giant Ancestry's three hit benefits carry triggers.** Hill's
+  Tumble `HIT, needs_damage, largest_target=LARGE`; Fire's Burn and Frost's
+  Chill `HIT, needs_damage`, all optional (ASK, "you can", and they spend a
+  use). Their "Right after you hit ..." notes went (principle 7); Frost's
+  Chill keeps its Speed note. Stone's Endurance and Storm's Thunder wait
+  for 6.5, Cloud's Jaunt has no trigger. A Times copy drops the pick, so
+  its outcome names no row: an `after=` rider (6.4) will ask which row hit
+  on the 2nd and later copies unless `CustomEffect` keeps the row's name.
+
 ## Open questions (with suggestions)
 
 - **Q2** done in 4.1 (R57, R60).
@@ -1538,6 +1658,9 @@ once.
 Q30, Q38 and Q39 are now part of Phase 6: Q30 and Q39 in step 6.5, and
 Q38's masteries as `HIT` / `MISS` triggers on weapon rows (6.7).
 
+Q40-Q45 are **built as suggested** (Decision 12, 6.1-6.3, R66-R73); Q40's
+setting is one checkbox, off meaning turn-column buttons (R71, Q48).
+
 - **Q40. Pop-up or turn-column button?** The user asked for a pop-up.
   3.5's prompts are buttons, which don't interrupt but are easy to miss.
   *Suggestion:* a modal pop-up for events that happen *during* a roll (a
@@ -1580,6 +1703,13 @@ Q38's masteries as `HIT` / `MISS` triggers on weapon rows (6.7).
   text in `monster_actions.py` (6.4), which also covers fight logs saved
   before. Teach `generate_monsters.py` to emit structured rows only if the
   reading proves fragile.
+- **Q48. A true "off" for what hits trigger?** `ask_triggers` is one
+  checkbox (R71): on asks in a pop-up, off leaves turn-column buttons. The
+  Settings dialog only has checkboxes, and no room for a second one in a
+  600-high window. *Suggestion:* if buttons turn out noisy too, let
+  `SettingInfo` offer choices (a combo box) in `dialogs_mixin.py`, and make
+  `ask_triggers` "pop-up / buttons / off"; until then, off-as-buttons loses
+  nothing (a button can be ignored).
 
 ## Discovered issues
 

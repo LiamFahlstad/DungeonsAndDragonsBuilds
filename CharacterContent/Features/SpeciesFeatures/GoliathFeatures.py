@@ -20,6 +20,7 @@ from Model.Content.CombatEffect import (
     TurnOf,
 )
 from Model.Content.CombatModifiers import D20Mode, D20Test, RollMode
+from Model.Content.CombatTriggers import CombatTrigger, TriggerEvent
 from Core.Definitions import Ability, Condition, DamageType
 
 SPEED = 35  # Given by your species
@@ -256,9 +257,9 @@ class GiantAncestry(Feature):
         return character.get_proficiency_bonus()
 
     def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
-        on_hit = (
-            "Right after you hit a target with an attack roll and deal damage to it."
-        )
+        # "When you hit a target with an attack roll and deal damage to it,
+        # you can ...": asked as the hit lands (Combat/Effects/triggers.py).
+        on_hit = CombatTrigger(TriggerEvent.HIT, needs_damage=True)
         effect = {
             GiantAncestryType.CLOUD_GIANT: CombatEffect(
                 name="Cloud's Jaunt",
@@ -270,7 +271,7 @@ class GiantAncestry(Feature):
             GiantAncestryType.FIRE_GIANT: CombatEffect(
                 name="Fire's Burn",
                 damage=(CombatDamage("1d10", DamageType.FIRE),),
-                notes=(on_hit,),
+                trigger=on_hit,
             ),
             GiantAncestryType.FROST_GIANT: CombatEffect(
                 name="Frost's Chill",
@@ -280,14 +281,16 @@ class GiantAncestry(Feature):
                         "Frost's Chill", until=(TurnEdge.START, TurnOf.SOURCE)
                     ),
                 ),
-                notes=(on_hit, "Its Speed is 10 feet less while it has the badge."),
+                notes=("Its Speed is 10 feet less while it has the badge.",),
+                trigger=on_hit,
             ),
             GiantAncestryType.HILL_GIANT: CombatEffect(
                 name="Hill's Tumble",
                 conditions=(CombatCondition(Condition.PRONE),),
-                notes=(
-                    "Right after you hit a Large or smaller creature with an"
-                    " attack roll and deal damage to it.",
+                trigger=CombatTrigger(
+                    TriggerEvent.HIT,
+                    needs_damage=True,
+                    largest_target=CreatureSize.LARGE,
                 ),
             ),
             GiantAncestryType.STONE_GIANT: CombatEffect(

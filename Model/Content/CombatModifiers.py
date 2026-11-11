@@ -141,12 +141,23 @@ class Resistance:
 
 
 class AttackKind(StrEnum):
-    """The hits extra damage comes with: any attack roll's (Hunter's Mark,
+    """The attacks something comes with: any attack roll's (Hunter's Mark,
     Hex), or only a weapon attack's, "an attack roll made with a weapon"
-    (Divine Favor), which an Unarmed Strike or a spell attack isn't."""
+    (Divine Favor), which an Unarmed Strike or a spell attack isn't. A
+    trigger (CombatTriggers.py) can also ask for a melee or a ranged attack,
+    an Unarmed Strike or a spell attack; extra damage takes ANY and WEAPON
+    only, which is all hit_plan reads."""
 
     ANY = "attack roll"
     WEAPON = "weapon attack"
+    MELEE = "melee attack"
+    RANGED = "ranged attack"
+    UNARMED = "unarmed strike"
+    SPELL = "spell attack"
+
+
+# What extra damage can come with: hit_plan reads no other kind.
+EXTRA_DAMAGE_ATTACKS = (AttackKind.ANY, AttackKind.WEAPON)
 
 
 def _check_extra_damage(modifier):
@@ -165,6 +176,11 @@ def _check_extra_damage(modifier):
     if not isinstance(modifier.attacks, AttackKind):
         raise ValueError(
             f"A {name}'s attacks is an AttackKind, got {modifier.attacks!r}"
+        )
+    if modifier.attacks not in EXTRA_DAMAGE_ATTACKS:
+        raise ValueError(
+            f"A {name}'s attacks is {AttackKind.ANY.name} or"
+            f" {AttackKind.WEAPON.name}, got {modifier.attacks.name}"
         )
 
 

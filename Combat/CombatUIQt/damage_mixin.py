@@ -2,6 +2,7 @@
 
 from Combat.Definitions import Action
 from Combat.Effects.modifiers import hit_notes, resists
+from Combat.Effects.triggers import AttackOutcome, PendingAttack
 from Combat.Summons import vanishes_at_zero_hp
 from Core.Definitions import Condition
 from .amounts import AmountError, parse_amount, parse_damage
@@ -204,15 +205,61 @@ class DamageMixin(CombatWindowState):
     @undoable
     def _apply_attack_roll(self):
         """Enter in the Attack roll field: a hit goes on to its damage, for the
-        targets it hit, and a miss leaves the field empty for the next roll."""
+        targets it hit, and a miss leaves the field empty for the next roll.
+        The Damage field's Enter deals it as this roll's hit, while this is
+        the last step (what the hit triggers needs it); a miss triggers what
+        comes with one now."""
+        roll = parse_attack_roll(self.attack_roll_input.text().strip())
+        targets = list(self.target_characters)
         checked = self._check_attack_roll()
         if checked is None:
             return
         hit_targets, results = checked
+        source = self.selected_character or self._current_turn_character()
+        self._checked_attack = None
+        if source is not None and roll is not None:
+            self._checked_attack = PendingAttack(
+                source,
+                roll.is_critical,
+                targets=tuple(hit_targets),
+                step=self._open_undo_point,
+            )
+            with self._one_trigger_prompt():
+                for target in targets:
+                    if not any(target is t for t in hit_targets):
+                        self._after_attack(
+                            AttackOutcome(source, target, False, damage_dealt=0)
+                        )
         self._show_status(results)
         if hit_targets:
             self._set_targets(hit_targets)
             self._focus_damage_input()
+
+    def _pending_attack(self, source: dict | None) -> PendingAttack | None:
+        """The attack whose damage the Damage field now holds, rolled in the
+        step before by source: the Attack roll field's (while that's still
+        the last step), or a monster's action button's (while its roll is
+        still in the field, which an undo clears). Each is used once."""
+        checked, rolled = self._checked_attack, self._rolled_attack
+        self._checked_attack = None
+        self._rolled_attack = None
+        if source is None:
+            return None
+        if (
+            checked is not None
+            and checked.attacker is source
+            and checked.step is not None
+            and self.history
+            and self.history[-1] is checked.step
+        ):
+            return checked
+        if (
+            rolled is not None
+            and rolled.attacker is source
+            and self._rolled_damage_text
+        ):
+            return rolled
+        return None
 
     @undoable
     def _do_apply_damage(self, check_resistance: bool):
@@ -220,13 +267,26 @@ class DamageMixin(CombatWindowState):
         if parts is None:
             return
         targets = list(self.target_characters)
+        source = self.selected_character or self._current_turn_character()
         results = ""
+        # The attack this damage is the hit of, if it's known to be one: the
+        # roll typed in the Attack roll field, or one rolled the step before.
+        attack: PendingAttack | None = None
+        misses: list[dict] = []
         if self.attack_roll_input.text().strip():
+            roll = parse_attack_roll(self.attack_roll_input.text().strip())
             checked = self._check_attack_roll()
             if checked is None:
                 return
-            targets, results = checked
+            hit_targets, results = checked
+            misses = [t for t in targets if not any(t is h for h in hit_targets)]
+            targets = hit_targets
+            self._checked_attack = self._rolled_attack = None
+            if source is not None and roll is not None:
+                attack = PendingAttack(source, roll.is_critical)
             if not targets:
+                with self._one_trigger_prompt():
+                    self._after_misses(attack, misses)
                 # The roll's used up, so applying again deals it: some damage
                 # lands on a miss, like the Graze mastery's.
                 self._show_status(
@@ -234,11 +294,19 @@ class DamageMixin(CombatWindowState):
                     " Apply again to deal it anyway."
                 )
                 return
-        source = self.selected_character or self._current_turn_character()
+        else:
+            attack = self._pending_attack(source)
+            if attack is not None and attack.targets is not None:
+                # Only the targets the roll hit are its hits.
+                if not all(any(t is h for h in attack.targets) for t in targets):
+                    attack = None
 
+        dealt = []
         for target in targets:
             saved = any(target is s for s in self._saved_targets)
-            self._deal_damage(target, parts, source, check_resistance, saved)
+            dealt.append(
+                self._deal_damage(target, parts, source, check_resistance, saved)
+            )
 
         if source is not None:
             source["_last_damage_type"] = parts[-1][1]
@@ -251,6 +319,31 @@ class DamageMixin(CombatWindowState):
             self._rebuild_card(target)
         if results:  # last, as logging the damage clears the status line
             self._show_status(results)
+        if attack is not None:
+            with self._one_trigger_prompt():
+                self._after_misses(attack, misses)
+                for target, damage in zip(targets, dealt):
+                    if any(target is c for c in self.characters):
+                        self._after_attack(
+                            AttackOutcome(
+                                attack.attacker,
+                                target,
+                                True,
+                                critical=attack.critical,
+                                kind=attack.kind,
+                                row=attack.row,
+                                damage_dealt=damage,
+                            )
+                        )
+
+    def _after_misses(self, attack: PendingAttack | None, misses: list[dict]):
+        """What the misses of an attack typed in trigger."""
+        if attack is None:
+            return
+        for target in misses:
+            self._after_attack(
+                AttackOutcome(attack.attacker, target, False, damage_dealt=0)
+            )
 
     def _deal_damage(
         self,
@@ -259,9 +352,10 @@ class DamageMixin(CombatWindowState):
         source: dict | None,
         check_resistance: bool,
         saved: bool,
-    ):
+    ) -> int:
         """One hit on target, of each (amount, damage type) in parts, and what
-        the hit does to it: falling Unconscious, a Concentration save."""
+        the hit does to it: falling Unconscious, a Concentration save.
+        Returns the damage it took, after Resistance and Immunity."""
         taken = 0
         knockout = False
         for amount, damage_type in parts:
@@ -289,6 +383,7 @@ class DamageMixin(CombatWindowState):
                 self._ask_concentration_save(target, taken)
         if vanishes:
             self._vanish_at_zero_hp(target)
+        return taken
 
     def _note_health(self, char: dict):
         """Note what the change of HP that's just over showed the players. The

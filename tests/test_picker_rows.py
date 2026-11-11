@@ -97,6 +97,9 @@ def _row(option) -> dict:
             badge: [modifier_to_dict(m) for m in modifiers]
             for badge, modifiers in option.badge_modifiers
         }
+    # Likewise only the rows with a trigger (Hill's Tumble).
+    if option.trigger is not None:
+        row["trigger"] = option.trigger.to_dict()
     return row
 
 

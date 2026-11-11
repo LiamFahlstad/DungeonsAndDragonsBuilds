@@ -15,6 +15,7 @@ from dataclasses import dataclass, fields, replace
 from functools import lru_cache
 
 from CharacterContent.Spells.SpellFactory import SpellFactory
+from Combat.Effects.triggers import TriggerRow
 from Core.Definitions import Condition
 from Model.Content.CombatEffect import CombatCondition, CombatDamage, CombatEffect
 
@@ -45,6 +46,7 @@ from .saves import (
     TEMP_HP,
     WEAPON,
     EffectOption,
+    condition_names,
     damage_text,
     known_save_dc,
     known_spell_attack_bonus,
@@ -1402,6 +1404,7 @@ def _described_option(
             instances.upcast if instances is not None and level > 0 else 0
         ),
         badge_modifiers=tuple((c.name, c.modifiers) for c in conditions if c.modifiers),
+        trigger=effect.trigger,
         **fields,
     )
 
@@ -1596,3 +1599,55 @@ def trigger_option(
     return next(
         (o for _, rows in effect_options(who) for o in rows if o.name == name), None
     )
+
+
+def triggered_rows(char: dict) -> list[TriggerRow]:
+    """char's own picker rows that have a trigger (Hill's Tumble), for
+    Combat/Effects/triggers.py: from its stat-block actions and traits, its
+    weapons, its own spells and its features with their extensions, never
+    "All spells". Each is built as the picker builds it, for char as it is now
+    (a Wild Shape form's actions, uses spent), so nothing is cached."""
+    rows = []
+    for _, options in effect_options(char, all_spells=()):
+        for option in options:
+            if option.trigger is None:
+                continue
+            uses = _trigger_row_uses(char, option)
+            rows.append(
+                TriggerRow(
+                    name=option.name,
+                    trigger=option.trigger,
+                    conditions=tuple(condition_names(option.condition)),
+                    what=_trigger_row_what(option),
+                    uses=uses,
+                    costs=option.counts_uses or uses is not None,
+                    option=option,
+                )
+            )
+    return rows
+
+
+def _trigger_row_what(option: EffectOption) -> str:
+    """What a triggered row does, for its line in the pop-up: "Prone",
+    "1d10 Fire", "1d6 Cold, Frost's Chill"."""
+    parts = [option.damage] if option.damage else []
+    parts += condition_names(option.condition)
+    return ", ".join(parts)
+
+
+def _trigger_row_uses(char: dict, option: EffectOption) -> tuple[int, int] | None:
+    """(uses left, uses at most) of what a triggered row spends: a feature's
+    uses, or a monster's limited action (none left once it's spent). None
+    when it spends nothing counted."""
+    if option.kind == FEATURE and option.counts_uses:
+        sheet = char.get("_stat_block")
+        name = option.feature_name or option.name
+        features = list(char.get("_feature_objects") or [])
+        if sheet is not None:
+            features += list(sheet.iter_features_with_extensions())
+        feature = next((f for f in features if f.name == name), None)
+        return feature_uses(char, feature, sheet) if feature is not None else None
+    action = option.monster_action
+    if action is not None and action.is_limited:
+        return (0, 1) if is_spent(char, action) else (1, 1)
+    return None

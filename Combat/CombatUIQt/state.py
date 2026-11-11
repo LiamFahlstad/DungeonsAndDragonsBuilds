@@ -12,6 +12,7 @@ place, and the type checker can verify every use.
   last in CombatAppQt's method resolution order, so a stub is never called.
 """
 
+from contextlib import AbstractContextManager
 from pathlib import Path
 
 from PyQt6.QtCore import QSettings, QTimer
@@ -29,7 +30,7 @@ from PyQt6.QtWidgets import (
     QWidget,
 )
 
-from Combat.Effects.triggers import Firing
+from Combat.Effects.triggers import AttackOutcome, Firing, HitFiring, PendingAttack
 from Combat.Rules import Rule
 from Combat.Scenario import CombatScenario
 from Combat.Summons import SummonOption
@@ -39,6 +40,7 @@ from Model.Creatures.Combatants import BasicCombatantData
 from .attack_rolls import AttackRoll
 from .monster_actions import MonsterAction
 from .player_server import PlayerServer
+from .saves import EffectOption
 from .settings import CombatSettings
 from .undo import UndoPoint
 
@@ -76,6 +78,18 @@ class CombatWindowState:
     # What the turn's triggers ask the GM, and those found as it started.
     _turn_prompts: list[Firing]
     _turn_start_prompts: list[Firing]
+    # What hits triggered, asked as turn-column buttons (the setting
+    # ask_triggers off), for the rest of the turn (TurnPanelMixin).
+    _hit_prompts: tuple[HitFiring, ...] = ()
+    # One Apply's attack outcomes, while its hits are being dealt: their
+    # triggers are asked about together once it's done (None: no Apply is
+    # collecting them; TurnPanelMixin._one_trigger_prompt).
+    _attack_outcomes: tuple[AttackOutcome, ...] | None = None
+    # An attack rolled in one step whose damage the next applies: a monster's
+    # action button's (valid while _rolled_damage_text is), and the Attack
+    # roll field's Enter (valid while its step is the last undo step).
+    _rolled_attack: PendingAttack | None = None
+    _checked_attack: PendingAttack | None = None
     # The player link. It listens only once the GM starts it (TurnPanelMixin
     # publishes to it, DialogsMixin._show_player_link_dialog controls it).
     _player_server: PlayerServer
@@ -257,8 +271,20 @@ class CombatWindowState:
         source: dict | None,
         check_resistance: bool,
         saved: bool,
-    ):
+    ) -> int:
         raise NotImplementedError("DamageMixin._deal_damage")
+
+    def _after_attack(self, outcome: AttackOutcome):
+        raise NotImplementedError("TurnPanelMixin._after_attack")
+
+    def _one_trigger_prompt(self) -> AbstractContextManager[None]:
+        raise NotImplementedError("TurnPanelMixin._one_trigger_prompt")
+
+    def _resolve_attack_triggers(self, outcomes: list[AttackOutcome]):
+        raise NotImplementedError("TurnPanelMixin._resolve_attack_triggers")
+
+    def _apply_row(self, owner: dict, target: dict, option: EffectOption) -> bool:
+        raise NotImplementedError("ConditionsMixin._apply_row")
 
     def _resolve_attack_roll(
         self,

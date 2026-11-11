@@ -47,6 +47,7 @@ from CharacterContent.Spells.SpellFactory import DataSpell, SpellFactory  # noqa
 from Combat.CombatUIQt import effect_options as eo  # noqa: E402
 from Core.Definitions import Ability, Condition  # noqa: E402
 from Model.Content.CombatEffect import CombatEffect  # noqa: E402
+from Model.Content.CombatTriggers import trigger_problems  # noqa: E402
 from Model.Content.FeatureText import Facts, Option  # noqa: E402
 
 _CONDITIONS = {condition.value for condition in Condition}
@@ -70,8 +71,9 @@ CASTER = {
 def effect_problems(name: str, effects: list[CombatEffect], spell) -> list[str]:
     """Where a spell's effects break a rubric rule a script can check: a
     condition that's neither a rules condition nor the spell's own badge,
-    cantrip dice on a levelled spell, upcast dice on a cantrip."""
-    problems = []
+    cantrip dice on a levelled spell, upcast dice on a cantrip, a trigger
+    that comes `after` no other row of the spell."""
+    problems = list(trigger_problems(name, effects))
     for index, effect in enumerate(effects):
         for condition in effect.conditions:
             if condition.name not in _CONDITIONS | {name}:
@@ -568,8 +570,9 @@ def where_defined(feature) -> str:
 
 
 def feature_problems() -> list[str]:
-    """Every party feature whose combat effects don't build, or whose use
-    casts a spell there isn't."""
+    """Every party feature whose combat effects don't build, whose use
+    casts a spell there isn't, or whose trigger comes `after` no other row
+    of the feature."""
     problems = []
     spells = {spell.name for spell in SpellFactory.all_spells()}
     seen: set[type] = set()
@@ -585,6 +588,10 @@ def feature_problems() -> list[str]:
                 if type(feature) in seen:
                     continue
                 seen.add(type(feature))
+                problems += [
+                    f"{where_defined(feature)}: {problem}"
+                    for problem in trigger_problems(feature.name, list(effects or ()))
+                ]
                 for index, effect in enumerate(effects or ()):
                     if effect.spell and effect.spell not in spells:
                         problems.append(

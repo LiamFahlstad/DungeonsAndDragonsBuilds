@@ -7,6 +7,8 @@ log fills the bottom of the column, with its own scrollbar. Between encounters
 the column says there are no turns, and shows the between-encounters log."""
 
 import random
+from collections.abc import Iterator
+from contextlib import contextmanager
 from textwrap import shorten
 
 from PyQt6.QtCore import Qt
@@ -23,7 +25,16 @@ from PyQt6.QtWidgets import (
 
 import Combat.PlayerLog as PlayerLog
 from Combat.Effects.modifiers import attack_plan, hit_notes, hit_plan
-from Combat.Effects.triggers import Firing, firings
+from Combat.Effects.triggers import (
+    AttackOutcome,
+    Firing,
+    HitFiring,
+    PendingAttack,
+    TriggerChoice,
+    TriggerMode,
+    firings,
+    outcome_firings,
+)
 
 from .attack_rolls import armor_bonus
 from .log_feed import LogFeed
@@ -40,8 +51,16 @@ from .monster_actions import (
 )
 from .player_server import PLAYER_PORT
 from .resources import legendary_resistance_lack, monster_action_lack
-from .effect_options import trigger_option
-from .saves import ATTACK_ROLL, HEALING, TEMP_HP, roll_bonuses, roll_extra_damage
+from .effect_options import trigger_option, triggered_rows
+from .saves import (
+    ATTACK_ROLL,
+    HEALING,
+    TEMP_HP,
+    EffectOption,
+    roll_bonuses,
+    roll_extra_damage,
+)
+from .trigger_prompt import ask_triggers
 from .player_view import (
     PlayerViewRow,
     PlayerViewWindow,
@@ -71,6 +90,13 @@ class TurnPanelMixin(CombatWindowState):
     # The buttons for the turn's prompts (_refresh_turn_prompts).
     _turn_prompts_box: QWidget
     _turn_prompts_layout: QVBoxLayout
+    # The once-per-turn triggered rows used, as (owner, row) names, and the
+    # turn they were used in, (round, turn index). Not undone: undoing one
+    # such use leaves it counted for the turn.
+    _trigger_uses: tuple[tuple[int, int] | None, frozenset[tuple[str, str]]] = (
+        None,
+        frozenset(),
+    )
 
     # ── Building and refreshing ─────────────────────────────────────────────
 
@@ -181,6 +207,7 @@ class TurnPanelMixin(CombatWindowState):
         )
         self._turn_reminders_label.setText("")
         self._turn_prompts = []
+        self._hit_prompts = ()
         self._refresh_turn_prompts()
         self._legendary_ready_label.setText("")
 
@@ -366,8 +393,17 @@ class TurnPanelMixin(CombatWindowState):
         self.attack_roll_input.clear()  # this action has rolled its own
         self.damage_input.clear()
         self._rolled_damage_text = ""
+        self._rolled_attack = None
+        if hit is False and char is not None and len(self.target_characters) == 1:
+            self._after_attack(
+                AttackOutcome(char, self.target_characters[0], False, row=action.name)
+            )
         if hit is False or not action.damage:
             return
+        if action.to_hit is not None and char is not None:
+            # Enter in the Damage field deals it as this action's hit, so
+            # what the hit triggers knows which row hit (`after=`).
+            self._rolled_attack = PendingAttack(char, critical, row=action.name)
         rolled = " + ".join(
             f"{roll_dice(roll.dice, critical)} {roll.damage_type or _CHOOSE_A_TYPE}"
             for roll in action.damage
@@ -496,6 +532,7 @@ class TurnPanelMixin(CombatWindowState):
         below it stay put while the turn is played."""
         reminders = list(self._turn_start_notes)
         self._turn_start_notes = []
+        self._hit_prompts = ()
         seen = set()
         for char in self._current_turn_group():
             if self._char_death_state(char) == "dying":
@@ -562,7 +599,8 @@ class TurnPanelMixin(CombatWindowState):
             if widget is not None:
                 widget.hide()
                 widget.deleteLater()
-        for firing in self._turn_prompts:
+        prompts: list[Firing | HitFiring] = [*self._turn_prompts, *self._hit_prompts]
+        for firing in prompts:
             button = QPushButton(firing.prompt)
             button.setObjectName("turnPromptBtn")
             button.setToolTip(
@@ -574,7 +612,7 @@ class TurnPanelMixin(CombatWindowState):
             )
             self._turn_prompts_layout.addWidget(button)
 
-    def _use_turn_prompt(self, firing: Firing):
+    def _use_turn_prompt(self, firing: Firing | HitFiring):
         """Open the Custom Effect dialog for a prompt: its caster (if still
         in the fight) as the source, its creature as the target, its effect
         picked. The prompt goes once it's used."""
@@ -583,12 +621,130 @@ class TurnPanelMixin(CombatWindowState):
             self._show_status(f"{firing.target['name']} is no longer in the fight.")
             return
         self._turn_prompts = [p for p in self._turn_prompts if p is not firing]
+        self._hit_prompts = tuple(p for p in self._hit_prompts if p is not firing)
         caster = self._find_character_by_name(firing.caster) if firing.caster else None
         if caster is not None:
             self._select_character(caster)
         self._set_targets([target])
         self._refresh_views()
-        self._show_custom_condition_dialog(pick=firing.trigger.effect)
+        self._show_custom_condition_dialog(pick=firing.pick)
+
+    # ── What a hit triggers ─────────────────────────────────────────────────
+
+    @contextmanager
+    def _one_trigger_prompt(self) -> Iterator[None]:
+        """Collect the attack outcomes of everything inside (an Apply's
+        Times copies, its targets), and ask about what they trigger once, at
+        the end (Q41). Nested, only the outermost asks."""
+        if self._attack_outcomes is not None:
+            yield
+            return
+        self._attack_outcomes = ()
+        try:
+            yield
+            outcomes: list[AttackOutcome] = [*(self._attack_outcomes or ())]
+        finally:
+            self._attack_outcomes = None
+        self._resolve_attack_triggers(outcomes)
+
+    def _after_attack(self, outcome: AttackOutcome):
+        """What an attack roll's outcome triggers: asked about now, or with
+        the rest of its Apply's (_one_trigger_prompt). Every hit path calls
+        it: the Custom Effect dialog, the main window's Attack roll and
+        Damage fields, a monster's action button."""
+        if self._attack_outcomes is not None:
+            self._attack_outcomes = (*self._attack_outcomes, outcome)
+            return
+        self._resolve_attack_triggers([outcome])
+
+    def _resolve_attack_triggers(self, outcomes: list[AttackOutcome]):
+        """Apply what `outcomes` trigger that happens by itself (AUTO), then
+        ask about the rest in one pop-up (with the setting ask_triggers off,
+        as turn-column buttons instead). What's applied goes through the Custom Effect
+        dialog's path (_apply_row), inside the hit's undo step; a declined
+        one logs a line for the GM only (Q45). Rows with no uses left are
+        left out and said in the status line (Q42)."""
+        if not outcomes:
+            return
+        found, spent = outcome_firings(
+            outcomes,
+            triggered_rows,
+            is_dead=lambda char: self._char_death_state(char) == "dead",
+            used_this_turn=self._triggers_used_this_turn(),
+        )
+        status = self._status_label.text()
+        notes = list(spent)
+        for firing in found:
+            if firing.mode is TriggerMode.AUTO:
+                self._use_trigger(firing, notes)
+        asks = [f for f in found if f.mode is TriggerMode.ASK]
+        if asks and not self.settings.ask_triggers:
+            # A button each in the turn column, for the rest of the turn.
+            self._hit_prompts = (*self._hit_prompts, *asks)
+            self._refresh_turn_prompts()
+        elif asks:
+            choice = self._ask_triggers(asks)
+            for firing in asks:
+                if any(firing is f for f in choice.apply):
+                    self._use_trigger(firing, notes)
+                elif not any(firing is f for f in choice.edit):
+                    self._log_event(
+                        f"{firing.caster} didn't use {firing.row.name}"
+                        f" on {firing.target['name']}",
+                        character=firing.caster,
+                        public=False,
+                    )
+            for firing in choice.edit:
+                self._edit_trigger(firing)
+        if notes or found:
+            # Logging cleared the hit's own status line; it comes back first.
+            self._show_status("; ".join(part for part in (status, *notes) if part))
+
+    def _ask_triggers(self, firings: list[HitFiring]) -> TriggerChoice:
+        """The pop-up (trigger_prompt.py). Tests replace this, so no modal
+        event loop runs in them."""
+        return ask_triggers(self._window, firings)
+
+    def _use_trigger(self, firing: HitFiring, notes: list[str]):
+        """Apply a firing's row as picking it in the Custom Effect dialog
+        would, noting in `notes` why it couldn't be."""
+        option = firing.row.option
+        if not isinstance(option, EffectOption):
+            return
+        if not self._apply_row(firing.owner, firing.target, option):
+            notes.append(f"{firing.row.name} not used on {firing.target['name']}")
+            return
+        if firing.row.trigger.once_per_turn:
+            turn, used = self._trigger_uses
+            used = used if turn == self._turn_key() else frozenset()
+            self._trigger_uses = (
+                self._turn_key(),
+                used | {(firing.caster, firing.row.name)},
+            )
+
+    def _edit_trigger(self, firing: HitFiring):
+        """Open the Custom Effect dialog for a firing, its owner the source,
+        its target the only target and its row picked; the selection the GM
+        had comes back after."""
+        owner = self._find_character_by_name(firing.caster)
+        target = self._find_character_by_name(firing.target["name"])
+        if owner is None or target is None:
+            return
+        source, targets = self.selected_character, list(self.target_characters)
+        self._select_character(owner)
+        self._set_targets([target])
+        self._show_custom_condition_dialog(pick=firing.pick)
+        if source is not None and source is not owner:
+            self._select_character(source)
+        self._set_targets([t for t in targets if any(t is c for c in self.characters)])
+
+    def _turn_key(self) -> tuple[int, int]:
+        return (self.round_number, self.current_turn_idx)
+
+    def _triggers_used_this_turn(self) -> frozenset[tuple[str, str]]:
+        """The once-per-turn rows used this turn, as (owner, row) names."""
+        turn, used = self._trigger_uses
+        return used if turn == self._turn_key() else frozenset()
 
     # ── The players' screen ─────────────────────────────────────────────────
 
