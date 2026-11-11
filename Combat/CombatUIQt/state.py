@@ -380,6 +380,15 @@ class CombatWindowState:
     def _roll_into_turn_order(self, char: dict) -> int:
         raise NotImplementedError("TurnsMixin._roll_into_turn_order")
 
+    def _can_set_initiative(self, char: dict) -> bool:
+        raise NotImplementedError("TurnsMixin._can_set_initiative")
+
+    def _ask_initiative(self, char: dict):
+        raise NotImplementedError("TurnsMixin._ask_initiative")
+
+    def _place_as_in_turn_order(self, char: dict):
+        raise NotImplementedError("SummonsMixin._place_as_in_turn_order")
+
     def _check_start_button(self):
         raise NotImplementedError("TurnsMixin._check_start_button")
 

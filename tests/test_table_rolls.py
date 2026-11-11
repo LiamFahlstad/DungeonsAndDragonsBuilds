@@ -13,15 +13,18 @@ a number rolled at the table instead.
   player's repeat saves are."""
 
 import random
+from dataclasses import replace
 
 import pytest
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import (
     QDialog,
+    QInputDialog,
     QLabel,
     QLineEdit,
     QMessageBox,
     QPushButton,
+    QSpinBox,
     QTreeWidget,
     QWidget,
 )
@@ -32,13 +35,14 @@ from Builds.Characters.Y2024_Paladin_Devotion_Edmund import (
 from CharacterContent.Spells.SpellFactory import SpellFactory
 from Combat.Combatants import Pirate, Tiger
 from Combat.CombatUIQt import turn_panel_mixin as turn_panel
+from Combat.CombatUIQt.monster_actions import DamageRoll
 from Combat.CombatUIQt.saves import CustomEffect, roll_extra_damage
 from Combat.CombatUIQt.trigger_prompt import TriggerPrompt
 from Combat.Effects.active_effects import give_modifiers, note_origin, repeat_saves
-from Combat.Effects.modifiers import hit_plan
+from Combat.Effects.modifiers import hit_plan, hit_point_maximum
 from Combat.Effects.triggers import TriggerChoice
 from Core.Definitions import DamageType
-from Model.Content.CombatModifiers import ExtraDamageFrom
+from Model.Content.CombatModifiers import ExtraDamageFrom, HitPointMaximum
 from tests._combat_ui import make_ui, open_dialog
 from tests.test_hit_by_triggers import _lines as _hit_by_lines
 from tests.test_hit_by_triggers import _typed_hit
@@ -395,3 +399,142 @@ def test_the_dialog_fits_with_two_extras_on_one_target(paladin, monkeypatch):
         "Hunter's Mark: +1d6 Force on a hit",
     ]
     assert dlg.layout().totalHeightForWidth(dlg.width()) <= 600
+
+
+# ---------------------------------------------------------------------------
+# 8.4 Anyone's initiative, set to what was rolled at the table
+
+
+def test_set_initiative_moves_a_turn_and_keeps_whose_turn_it_is(fight):
+    """The Pirate (15) has the turn; the Tiger's 10 becomes 20: it goes
+    first from now on, and it's still the Pirate's turn."""
+    ui, pirate, tiger = fight
+    ui._set_initiative(tiger, 20)
+    assert ui.initiative_order == [tiger, pirate]
+    assert ui.initiative_order[ui.current_turn_idx] is pirate
+    assert "Tiger's initiative is 20" in _lines(ui)
+    ui._undo_last()
+    assert ui.initiative_order == [pirate, tiger]
+    assert ui.initiative_order[ui.current_turn_idx] is pirate
+
+
+def test_set_initiative_on_the_current_turn_keeps_it(fight):
+    ui, pirate, tiger = fight
+    ui._set_initiative(pirate, 1)
+    assert ui.initiative_order == [tiger, pirate]
+    assert ui.initiative_order[ui.current_turn_idx] is pirate
+
+
+def test_the_card_menu_asks_for_the_initiative(fight, monkeypatch):
+    ui, _, tiger = fight
+    monkeypatch.setattr(QInputDialog, "getInt", lambda *args: (18, True))
+    menu = ui._card_menu(tiger)
+    action = next(a for a in menu.actions() if a.text() == "Set initiative...")
+    action.trigger()
+    assert tiger["_initiative"] == 18
+    assert ui.initiative_order[0] is tiger
+
+
+def test_no_initiative_to_set_before_the_fight(tmp_path):
+    ui = make_ui(tmp_path, [Pirate(), Tiger()])
+    pirate, _ = ui.characters
+    assert not ui._can_set_initiative(pirate)
+    assert not any(
+        a.text() == "Set initiative..." for a in ui._card_menu(pirate).actions()
+    )
+
+
+# ---------------------------------------------------------------------------
+# 8.5 A roll for each of the Times
+
+
+def _box(dlg, name: str) -> QLineEdit:
+    (box,) = dlg.findChildren(QLineEdit, name)
+    return box
+
+
+def test_each_time_takes_its_own_typed_attack_and_extra(paladin, monkeypatch):
+    """Times 2, "nat 1, nat 20": the first misses, the second is a Critical
+    Hit (2d8 + 4 = 8, every die a 2) with Divine Favor's 5 typed for it."""
+    ui, _, tiger = paladin
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    _pick(dlg, "Longsword")
+    dlg.findChild(QSpinBox, "effectTimes").setValue(2)
+    _box(dlg, "typedAttack").setText("nat 1, nat 20")
+    _extra_box(dlg).setText(", 5")
+    _apply(dlg)
+    assert tiger["hp"] == 30 - 8 - 5
+    lines = _lines(ui)
+    assert any("Divine Favor: +5 Radiant (rolled at the table)" in e for e in lines)
+
+
+def test_a_short_list_rolls_the_rest(paladin, monkeypatch):
+    """Times 2, "nat 1": the second attack is rolled (a 15 hits AC 15)."""
+    ui, _, tiger = paladin
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    _pick(dlg, "Longsword")
+    dlg.findChild(QSpinBox, "effectTimes").setValue(2)
+    _box(dlg, "typedAttack").setText("nat 1")
+    _apply(dlg)
+    assert tiger["hp"] == 30 - 6 - 2
+
+
+def test_more_rolls_than_times_are_refused(paladin, monkeypatch):
+    ui, _, tiger = paladin
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    _pick(dlg, "Longsword")
+    _box(dlg, "typedAttack").setText("17, 9")
+    _apply(dlg)
+    assert tiger["hp"] == 30
+    problems = [lbl.text() for lbl in dlg.findChildren(QLabel, "statusLabel")]
+    assert any("'17, 9': 2 rolls for Times 1." in text for text in problems)
+
+
+# ---------------------------------------------------------------------------
+# 8.6 Dice Hit Points
+
+
+def test_a_hit_point_maximum_rolled_at_the_table_is_given_as_typed(fight, monkeypatch):
+    """Heroes' Feast's 2d10, rolled at the table as 12: nothing rolled here."""
+    ui, pirate, tiger = fight
+    _d20s_only(monkeypatch, 10)
+    tiger["conditions"].append("Heroes' Feast")
+    ui._give_badge_modifiers(
+        tiger, "Heroes' Feast", (HitPointMaximum("2d10"),), rolled_maximum=12
+    )
+    assert hit_point_maximum(tiger) == 30 + 12
+
+
+def test_the_maximum_box_shows_only_for_a_pick_that_rolls_one(paladin, monkeypatch):
+    ui, _, _ = paladin
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    _pick(dlg, "Longsword")
+    assert not _box(dlg, "typedHitPointMaximum").isVisibleTo(dlg)
+
+
+def _heroism_with_dice(monkeypatch, dice: str):
+    """Heroism's Temporary Hit Points as `dice` instead of a number."""
+    real = turn_panel.trigger_option
+
+    def with_dice(caster, source, effect):
+        option = real(caster, source, effect)
+        return replace(option, rolls=(DamageRoll(dice, None),))
+
+    monkeypatch.setattr(turn_panel, "trigger_option", with_dice)
+
+
+def test_a_players_dice_hit_points_are_a_button_not_rolled(tmp_path, monkeypatch):
+    ui = make_ui(tmp_path, [Tiger()], [Edmund().build()])
+    edmund, tiger = ui.characters
+    ui._initiative_inputs[id(edmund)].setText("15")
+    ui._initiative_inputs[id(tiger)].setText("10")
+    ui._start_combat()
+    ui._select_character(edmund)
+    ui._set_targets([edmund])
+    ui._apply_cast_spell(SpellFactory.create("Heroism"), 1)
+    _heroism_with_dice(monkeypatch, "1d4")
+    _d20s_only(monkeypatch, 10)  # no d4
+    ui._advance_turn()
+    ui._advance_turn()  # Edmund's turn: a button, no temp HP given
+    assert edmund.get("temp_hp", 0) == 0
+    assert any("Heroism" in f.prompt for f in ui._turn_prompts)

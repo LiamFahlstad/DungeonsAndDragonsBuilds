@@ -411,6 +411,9 @@ class CardsMixin(CombatWindowState):
             menu.addSeparator()
             menu.addMenu(wild_shape)
         self._add_summon_actions(menu, char)
+        if self._can_set_initiative(char):
+            # Rolled at the table (plan step 8.4): a summon's was rolled here.
+            menu.addAction("Set initiative...", lambda c=char: self._ask_initiative(c))
         if not char.get("_is_player"):
             hidden = menu.addAction("Hidden from players")
             assert hidden is not None  # addAction with a text always makes one

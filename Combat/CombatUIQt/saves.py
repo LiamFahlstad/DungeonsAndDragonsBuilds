@@ -131,6 +131,9 @@ class CustomEffect:
     # target's id() and then by what gives it ("Gabriel's Hunter's Mark"):
     # added as it is, even to a typed damage total; the rest are rolled.
     typed_extras: dict[int, dict[str, int]] = field(default_factory=dict)
+    # A badge's Hit Point maximum rolled at the table (Heroes' Feast's 2d10,
+    # its upcast in it), by the target's id(); the rest are rolled (8.6).
+    typed_hit_point_maximum: dict[int, int] = field(default_factory=dict)
 
     @property
     def conditions(self) -> list[str]:

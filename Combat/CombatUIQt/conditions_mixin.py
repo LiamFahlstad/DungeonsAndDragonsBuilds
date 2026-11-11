@@ -63,7 +63,7 @@ from Combat.Effects.triggers import AttackOutcome, reduced_damage
 from Combat.WildShape import current_form, form_badge
 from Core.Definitions import Condition, DamageType
 from Core.Rules import SECONDS_PER_ROUND
-from Model.Content.CombatModifiers import AttackKind
+from Model.Content.CombatModifiers import AttackKind, HitPointMaximum
 from Model.Content.RulesConditions import conditions_with
 from .amounts import AmountError, parse_amount
 from .attack_rolls import (
@@ -488,14 +488,25 @@ class ConditionsMixin(CombatWindowState):
         *,
         levels_up: int = 0,
         source: dict | None = None,
+        rolled_maximum: int | None = None,
     ):
         """char's badge `name` gives `modifiers` while it's on, their dice
-        rolled now (rolled_modifiers). One that raises its Hit Point maximum
+        rolled now (rolled_modifiers), or a Hit Point maximum's as
+        `rolled_maximum`, rolled at the table (upcast and all; 8.6). One that raises its Hit Point maximum
         raises its current Hit Points by as much (Aid: "Hit Point maximum and
         current Hit Points increase by 5"), as Hit Points regained from
         `source`, so a creature at 0 HP comes to; one that lowers it leaves
         no more than the new maximum."""
         before = hit_point_maximum(char)
+        if rolled_maximum is not None:
+            modifiers = [
+                (
+                    HitPointMaximum(str(rolled_maximum))
+                    if isinstance(m, HitPointMaximum) and not m.rolled
+                    else m
+                )
+                for m in modifiers
+            ]
         kept: tuple[Modifier, ...] = rolled_modifiers(modifiers, levels_up, roll_dice)
         give_modifiers(char, name, kept)
         change = hit_point_maximum(char) - before
@@ -1108,6 +1119,7 @@ class ConditionsMixin(CombatWindowState):
                 effect.pick.modifiers_for(condition),
                 levels_up=levels_up,
                 source=source,
+                rolled_maximum=effect.typed_hit_point_maximum.get(id(target)),
             )
             if source is not None:
                 note_origin(
@@ -1640,6 +1652,18 @@ class ConditionsMixin(CombatWindowState):
         notes_input.setPlaceholderText("Notes (optional, shown on hover)")
         condition_box.addWidget(notes_input)
 
+        # A Hit Point maximum the badge rolls (Heroes' Feast's 2d10), rolled at
+        # the table instead (plan step 8.6); shown for a pick that has one.
+        maximum_input = QLineEdit()
+        maximum_input.setObjectName("typedHitPointMaximum")
+        maximum_input.setToolTip(
+            "The Hit Point maximum rolled at the table, upcast and all: one"
+            " total for every target, or one per target in the order they're"
+            " listed (12, 9, 15). Blank rolls it for each."
+        )
+        maximum_input.hide()
+        condition_box.addWidget(maximum_input)
+
         duration_combo = QComboBox()
         duration_combo.setObjectName("conditionDuration")
         duration_combo.setToolTip("How long the condition lasts")
@@ -1920,65 +1944,137 @@ class ConditionsMixin(CombatWindowState):
         # Enter in a text box and the Apply button can both fire; apply once.
         applied: list[bool] = []
 
-        def typed_totals() -> dict[int, int] | None:
-            """The totals typed, or None having said what's wrong with one: a
-            total ("14") or a sum ("9+5"), as an attack's. A total can be
-            negative: a low roll with a negative save. A natural 20 or 1 is
-            nothing special on a save, so it's the total that's wanted."""
-            totals = {}
+        # A box takes a roll for each of the Times ("17, 9, nat 20"), in
+        # order; a short list rolls the rest (plan step 8.5).
+        def rolls_in(text: str) -> list[str] | None:
+            """The rolls typed in a box, one per time, or None having said
+            there are more than the Times."""
+            parts = [part.strip() for part in text.split(",")]
+            if len(parts) > times_input.value():
+                problem_lbl.setText(
+                    f"'{text}': {len(parts)} rolls for Times" f" {times_input.value()}."
+                )
+                return None
+            return parts
+
+        def typed_totals() -> dict[int, list[int | None]] | None:
+            """The totals typed, a list for each target, or None having said
+            what's wrong with one: a total ("14") or a sum ("9+5"), as an
+            attack's. A total can be negative: a low roll with a negative
+            save. A natural 20 or 1 is nothing special on a save, so it's the
+            total that's wanted."""
+            totals: dict[int, list[int | None]] = {}
             for key, total_input in typed_inputs.items():
                 text = total_input.text().strip()
                 if not text:
                     continue
-                if _NATURAL_ROLL.fullmatch(text):
-                    problem_lbl.setText(
-                        f"'{text}': a natural roll is nothing special on a"
-                        " save. Type the total instead."
-                    )
+                parts = rolls_in(text)
+                if parts is None:
                     return None
-                total = int(text) if _WHOLE_NUMBER.fullmatch(text) else None
-                if total is None:
-                    total = parse_amount(text)
-                if total is None:
-                    problem_lbl.setText(f"'{text}' isn't a saving throw total.")
-                    return None
-                totals[key] = total
+                for part in parts:
+                    total = None
+                    if not part:
+                        totals.setdefault(key, []).append(None)
+                        continue
+                    if _NATURAL_ROLL.fullmatch(part):
+                        problem_lbl.setText(
+                            f"'{part}': a natural roll is nothing special on a"
+                            " save. Type the total instead."
+                        )
+                        return None
+                    if _WHOLE_NUMBER.fullmatch(part):
+                        total = int(part)
+                    if total is None:
+                        total = parse_amount(part)
+                    if total is None:
+                        problem_lbl.setText(f"'{part}' isn't a saving throw total.")
+                        return None
+                    totals.setdefault(key, []).append(total)
             return totals
 
-        def typed_attacks() -> dict[int, AttackRoll] | None:
-            """The attack rolls typed, or None having said what's wrong with one."""
-            rolls = {}
+        def typed_attacks() -> dict[int, list[AttackRoll | None]] | None:
+            """The attack rolls typed, a list for each target, or None having
+            said what's wrong with one."""
+            rolls: dict[int, list[AttackRoll | None]] = {}
             for key, roll_input in attack_inputs.items():
                 text = roll_input.text().strip()
                 if not text:
                     continue
-                roll = parse_attack_roll(text)
-                if roll is None:
-                    problem_lbl.setText(
-                        f"'{text}' isn't an attack roll. Try 17, 12+5 or nat 20."
-                    )
+                parts = rolls_in(text)
+                if parts is None:
                     return None
-                rolls[key] = roll
+                for part in parts:
+                    roll = parse_attack_roll(part) if part else None
+                    if part and roll is None:
+                        problem_lbl.setText(
+                            f"'{part}' isn't an attack roll. Try 17, 12+5 or" " nat 20."
+                        )
+                        return None
+                    rolls.setdefault(key, []).append(roll)
             return rolls
 
-        def typed_extras() -> dict[int, dict[str, int]] | None:
+        def typed_extras() -> dict[int, dict[str, list[int | None]]] | None:
             """The extra damage rolled at the table, by target and what gives
-            it, or None having said what's wrong with one."""
-            extras: dict[int, dict[str, int]] = {}
+            it, a list for each, or None having said what's wrong with one."""
+            extras: dict[int, dict[str, list[int | None]]] = {}
             for (key, label), (_, extra_input) in extra_rows.items():
                 text = extra_input.text().strip()
                 if not text:
                     continue
-                total = int(text) if _WHOLE_NUMBER.fullmatch(text) else None
-                if total is None:
-                    total = parse_amount(text)
-                if total is None or total < 0:
-                    problem_lbl.setText(
-                        f"'{text}' isn't an amount of damage for {label}."
-                    )
+                parts = rolls_in(text)
+                if parts is None:
                     return None
-                extras.setdefault(key, {})[label] = total
+                for part in parts:
+                    total = None
+                    if part and _WHOLE_NUMBER.fullmatch(part):
+                        total = int(part)
+                    elif part:
+                        total = parse_amount(part)
+                    if part and (total is None or total < 0):
+                        problem_lbl.setText(
+                            f"'{part}' isn't an amount of damage for {label}."
+                        )
+                        return None
+                    extras.setdefault(key, {}).setdefault(label, []).append(total)
             return extras
+
+        def typed_maximum() -> dict[int, int] | None:
+            """The Hit Point maximum typed, by target, or None having said
+            what's wrong with it: one total for all, or one per target."""
+            text = maximum_input.text().strip()
+            if not maximum_input.isVisibleTo(dlg) or not text:
+                return {}
+            parts = [part.strip() for part in text.split(",")]
+            if len(parts) not in (1, len(targets)):
+                problem_lbl.setText(
+                    f"'{text}': one Hit Point maximum for all, or one for each"
+                    f" of the {len(targets)} targets."
+                )
+                return None
+            if not all(_WHOLE_NUMBER.fullmatch(part) for part in parts):
+                problem_lbl.setText(f"'{text}' isn't a Hit Point maximum.")
+                return None
+            values = [int(part) for part in parts] * (
+                len(targets) if len(parts) == 1 else 1
+            )
+            return {id(t): value for t, value in zip(targets, values)}
+
+        def nth(lists: dict, index: int) -> dict:
+            """What was typed for time `index` (from 0), by key; a nested
+            dict (the extras) by its keys too. A blank or missing one is left
+            out, so it's rolled."""
+            picked = {}
+            for key, value in lists.items():
+                if isinstance(value, dict):
+                    inner = nth(value, index)
+                    if inner:
+                        picked[key] = inner
+                elif index < len(value) and value[index] is not None:
+                    picked[key] = value[index]
+            return picked
+
+        # The rolls typed for each of the Times, as do_apply read them.
+        typed_rolls: dict[str, dict] = {"totals": {}, "attacks": {}, "extras": {}}
 
         def do_apply():
             if applied:
@@ -2023,8 +2119,10 @@ class ConditionsMixin(CombatWindowState):
             totals = typed_totals() if ability is not None else {}
             attacks = typed_attacks() if is_attack else {}
             extras = typed_extras() if is_attack and kind == DAMAGE_AMOUNT else {}
-            if totals is None or attacks is None or extras is None:
+            maximum = typed_maximum()
+            if totals is None or attacks is None or extras is None or maximum is None:
                 return
+            typed_rolls.update(totals=totals, attacks=attacks, extras=extras)
             applied.append(True)
             duration = duration_combo.currentData()
             if duration == "custom":
@@ -2057,15 +2155,16 @@ class ConditionsMixin(CombatWindowState):
                 action_cost=action_combo.currentData(),
                 concentration=concentrate_box.isChecked(),
                 attack_bonus=bonus_input.value() if is_attack else None,
-                typed_attacks=attacks,
-                typed_extras=extras,
+                typed_attacks=nth(attacks, 0),
+                typed_extras=nth(extras, 0),
                 ability=ability,
                 dc=dc_input.value(),
                 mode=mode_combo.currentText(),
                 half_on_save=half_box.isChecked(),
                 use_legendary_resistance=resist_box.isChecked(),
                 repeat_save=repeat_box.isChecked(),
-                typed_totals=totals,
+                typed_totals=nth(totals, 0),
+                typed_hit_point_maximum=maximum,
                 pick=pick,
                 weapon_attack=pick.weapon_attack if pick is not None else None,
                 # A total with no dice, not the pick's own damage, was rolled
@@ -2083,8 +2182,9 @@ class ConditionsMixin(CombatWindowState):
 
         def repeated(effect: CustomEffect, times: int) -> list[CustomEffect]:
             """`effect` `times` over: each with its own damage roll, named
-            "Scorching Ray (2 of 3)" in the log, and only the first costing
-            the source anything or using the totals typed in."""
+            "Scorching Ray (2 of 3)" in the log, only the first costing the
+            source anything, and each with its own of the rolls typed in
+            ("17, 9": the first time's 17, the second's 9; plan step 8.5)."""
             kind = amount_kind()
             effects = []
             for index in range(times):
@@ -2114,9 +2214,9 @@ class ConditionsMixin(CombatWindowState):
                         slot_level=None,
                         action_cost=None,
                         concentration=False,
-                        typed_attacks={},
-                        typed_totals={},
-                        typed_extras={},
+                        typed_attacks=nth(typed_rolls["attacks"], index),
+                        typed_totals=nth(typed_rolls["totals"], index),
+                        typed_extras=nth(typed_rolls["extras"], index),
                         pick=None,
                         row=effect.pick.name if effect.pick is not None else "",
                     )
@@ -2212,6 +2312,7 @@ class ConditionsMixin(CombatWindowState):
             problem_lbl.setText("")
             show_details(option)
             show_target_count(option)
+            show_maximum_box(option)
             picked.update(
                 option=option, damage=damage, times=times, search=search_box.text()
             )
@@ -2228,6 +2329,23 @@ class ConditionsMixin(CombatWindowState):
             note_lbl.hide()
             show_details(None)
             show_target_count(None)
+            show_maximum_box(None)
+
+        def show_maximum_box(option: EffectOption | None):
+            """The Hit Point maximum box, for a pick whose badge rolls one."""
+            dice = [
+                m.amount
+                for _, modifiers in (option.badge_modifiers if option else ())
+                for m in modifiers
+                if isinstance(m, HitPointMaximum) and "d" in m.amount + m.upcast
+            ]
+            maximum_input.clear()
+            maximum_input.setPlaceholderText(
+                f"Hit Point maximum ({dice[0]}) rolled, or blank to roll"
+                if dice
+                else ""
+            )
+            maximum_input.setVisible(bool(dice))
 
         def show_target_count(option: EffectOption | None):
             """How many creatures the pick may target at the slot chosen

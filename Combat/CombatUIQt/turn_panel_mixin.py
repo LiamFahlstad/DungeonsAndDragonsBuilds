@@ -42,6 +42,7 @@ from Combat.Effects.triggers import (
 from .attack_rolls import armor_bonus, armor_in_use
 from .log_feed import LogFeed
 from .monster_actions import (
+    DIE,
     LEGENDARY_ACTIONS_PER_ROUND,
     MonsterAction,
     first_number,
@@ -578,7 +579,10 @@ class TurnPanelMixin(CombatWindowState):
 
     def _give_trigger_hit_points(self, firing: Firing) -> bool:
         """Give the Hit Points firing's effect gives, if that's all it does
-        (no roll, no damage, an amount known). Returns whether it did."""
+        (no roll, no damage, an amount known). Returns whether it did. Dice a
+        player rolls (a player's badge), or a monster's with the setting
+        monsters_roll_turn_dice off, are left to the turn-column button,
+        whose dialog takes the total rolled at the table (plan step 8.6)."""
         caster = self._find_character_by_name(firing.caster) if firing.caster else None
         option = trigger_option(caster, firing.source, firing.trigger.effect)
         if (
@@ -589,7 +593,13 @@ class TurnPanelMixin(CombatWindowState):
             or not option.rolls
         ):
             return False
-        amount = roll_dice(option.damage_at(None))
+        dice = option.damage_at(None)
+        at_the_table = caster is None or caster.get("_is_player")
+        if DIE.search(dice) and (
+            at_the_table or not self.settings.monsters_roll_turn_dice
+        ):
+            return False
+        amount = roll_dice(dice)
         target = firing.target
         if option.amount_kind == TEMP_HP:
             if amount > 0:

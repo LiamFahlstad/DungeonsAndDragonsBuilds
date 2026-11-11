@@ -4,6 +4,7 @@ import random
 
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import (
+    QInputDialog,
     QApplication,
     QDialog,
     QHBoxLayout,
@@ -378,6 +379,12 @@ class TurnsMixin(CombatWindowState):
         isn't known (a fight continued from its log) isn't compared; with
         none known, it goes last. Returns the roll."""
         value = random.randint(1, 20) + self._dex_mod(char)
+        self._place_in_turn_order(char, value)
+        return value
+
+    def _place_in_turn_order(self, char: dict, value: int):
+        """Give char (not in the turn order) the initiative `value` and put
+        it in the turn order by it, as _roll_into_turn_order does."""
         char[INITIATIVE_KEY] = value
         order = self.initiative_order
         current = order[self.current_turn_idx] if order else None
@@ -393,7 +400,60 @@ class TurnsMixin(CombatWindowState):
         if current is not None:
             now = next(i for i, c in enumerate(order) if c is current)
             self.current_turn_idx = self._turn_span(now)[0]
-        return value
+
+    def _can_set_initiative(self, char: dict) -> bool:
+        """Whether char's initiative can be set by itself (Set initiative...):
+        in a fight, with a turn of its own, not an initiative group's."""
+        if self.phase != "COMBAT":
+            return False
+        at = next((i for i, c in enumerate(self.initiative_order) if c is char), None)
+        if at is None:
+            return False
+        start, end = self._turn_span(at)
+        return end - start == 1
+
+    def _ask_initiative(self, char: dict):
+        """Ask for char's initiative, rolled at the table (plan step 8.4: a
+        summon's, rolled here as it joined the fight, or anyone's)."""
+        value, ok = QInputDialog.getInt(
+            self._window,
+            "Set initiative",
+            f"{char['name']}'s initiative:",
+            char.get(INITIATIVE_KEY) or 10,
+            -20,
+            99,
+        )
+        if ok:
+            self._set_initiative(char, value)
+
+    @undoable
+    def _set_initiative(self, char: dict, value: int):
+        """char's initiative is `value`: it moves in the turn order (before
+        the first turn that rolled lower, as a summon joining is placed),
+        and in the window. Whoever's turn it is keeps it; char keeps its
+        turn if it was its."""
+        if not self._can_set_initiative(char):
+            return
+        order = self.initiative_order
+        current = order[self.current_turn_idx]
+        order.remove(char)
+        if current is not char:
+            # Its index moved if char's turn was before it.
+            at = next(i for i, c in enumerate(order) if c is current)
+            self.current_turn_idx = self._turn_span(at)[0]
+        elif order:
+            self.current_turn_idx = min(self.current_turn_idx, len(order) - 1)
+        self._place_in_turn_order(char, value)
+        if current is char:
+            self.current_turn_idx = next(i for i, c in enumerate(order) if c is char)
+        if any(c is char for c in self.characters):
+            self.characters.remove(char)
+            self._place_as_in_turn_order(char)
+        self._log_event(
+            f"{char['name']}'s initiative is {value}", character=char["name"]
+        )
+        self._save_fight_state()
+        self._refresh_views()
 
     def _unique_name(self, name: str) -> str:
         """name, numbered if it's taken: effects find their targets by name."""
