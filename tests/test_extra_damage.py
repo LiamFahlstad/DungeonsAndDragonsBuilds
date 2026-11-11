@@ -714,3 +714,41 @@ def test_each_time_of_a_picked_weapon_gets_divine_favor(paladin, monkeypatch):
     favors = [e for e in _events(ui) if "Divine Favor: +2 Radiant" in e]
     assert len(favors) == 2
     assert tiger["hp"] == 30 - 2 * (6 + 2)
+
+
+# ---------------------------------------------------------------------------
+# A typed attack roll in the main window (Q27): the status line says what to
+# add, since a typed damage total gets none of it.
+
+
+def _typed_attack(ui, text: str) -> str:
+    ui.attack_roll_input.setText(text)
+    ui._apply_attack_roll()
+    return ui._status_label.text()
+
+
+def test_a_typed_hit_on_the_marked_target_says_the_extra(fight):
+    ui, pirate, tiger, _ = fight
+    _mark(ui, pirate, tiger)
+    ui._select_character(pirate)
+    status = _typed_attack(ui, "17")
+    assert "+1d6 Force on a hit (Pirate's Hunter's Mark)" in status
+    assert "dice twice" not in status
+
+
+def test_a_typed_critical_hit_says_to_roll_the_extra_twice(fight):
+    ui, pirate, tiger, _ = fight
+    _mark(ui, pirate, tiger)
+    ui._select_character(pirate)
+    status = _typed_attack(ui, "nat 20")
+    assert "+1d6 Force on a hit (Pirate's Hunter's Mark), its dice twice" in status
+
+
+def test_a_typed_miss_or_another_attacker_says_no_extra(fight):
+    ui, pirate, tiger, bugbear = fight
+    _mark(ui, pirate, tiger)
+    ui._select_character(pirate)
+    assert "Hunter's Mark" not in _typed_attack(ui, "3")
+    ui._select_character(bugbear)
+    ui._set_targets([tiger])
+    assert "Hunter's Mark" not in _typed_attack(ui, "17")

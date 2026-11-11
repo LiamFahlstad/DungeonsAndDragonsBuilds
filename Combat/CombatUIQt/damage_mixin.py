@@ -2,6 +2,8 @@
 
 from Combat.Definitions import Action
 from Combat.Effects.modifiers import (
+    extra_text,
+    hit_extras,
     hit_notes,
     hit_point_maximum,
     immune_to_damage,
@@ -171,6 +173,13 @@ class DamageMixin(CombatWindowState):
             hit, result = self._resolve_attack_roll(target, roll, source)
             if hit is not False:
                 hit_targets.append(target)
+                # A typed total gets none of a hit's extra damage (Decision 4),
+                # so say what to add at the table (Q27).
+                twice = ", its dice twice" if roll.is_critical else ""
+                result += "".join(
+                    f"; {extra_text(extra)} ({label}){twice}"
+                    for label, extra in hit_extras(source, target)
+                )
             results.append(result)
         self.attack_roll_input.clear()
         return hit_targets, "; ".join(results)
