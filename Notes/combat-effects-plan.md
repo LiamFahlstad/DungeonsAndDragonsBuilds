@@ -51,6 +51,7 @@ change and move on; the full suite can run later.
 | 3 | Lasting effects (3.1-3.6) | 3.1 **done** (R28-R34): `char["active_effects"]`, one plain dict per badge, in the new Qt-free `Combat/Effects/active_effects.py`; the seven old keys are read only by its `upgrade_old_keys`, where a log is read; an old fight log replays the same (`tests/test_active_effects.py`). 3.2 **done** (R27), ahead of 3.1: the rules conditions are data, and saves, attack rolls (all three paths), AC, damage Resistance and condition immunity read them. 3.3 **done** (R35-R40): a badge's `CombatCondition` says its `modifiers`, the record keeps them as JSON, and `modifiers_on` reads them beside the conditions and cover; Bless's 1d4 is rolled into the saves (a monster's Concentration save too, R40) and attack rolls the simulator makes, Shield of Faith's +2 counts in AC, cover's +2/+5 in Dexterity saves (DI-066); a typed total stays as typed, with the bonus as a reminder in the dialog. 3.4 **done** (R41-R47): `ExtraDamageFrom` (on the target, from its effect's caster) and `ExtraDamageOnHit` (on the attacker); Hunter's Mark's 1d6 Force on its caster's hits and Divine Favor's 1d4 Radiant on its caster's weapon hits are rolled into the hits the dialog and a monster's action buttons deal, doubled on a Critical Hit, each type resisted on its own; a typed damage total stays as typed, with the extra as a reminder in the dialog. 3.5 **done** (R48-R53): `AtTurnStart` / `AtTurnEnd` are modifiers on a badge that name a row of their spell; Heroism's Temporary Hit Points are given as its target's turn starts, and Spirit Guardians asks, as each enemy of its caster ends its turn, with a button that opens the Custom Effect dialog with its damage row picked. 3.6 **done** (R54-R56): ending a concentration also ends every record linked to it (`held_by_concentration`), a creature leaving the fight ends its concentration first, and a badge another running effect still holds is relinked to that effect's caster |
 | 4 | One `combat-effects` skill; feature agent; content rollout | 4.1 **done** (R57-R60): the `combat-effects` skill and `combat_effects.py` (renamed from spell-mechanics), with the principles, a Features section, `features`, `coverage` and `notes`, and features in `check`; `is_curated` is `is_described`. 4.2 **done**: the `feature-combat-effects` agent (opus); the spell agent is `spell-combat-effects`. 4.4 **done**: `coverage`. 4.3 (content): **Curse of the Lich done** (R61-R65, 2026-11-11): spells 44/44, features 23 described, 37 nothing to apply, none read from text; Time Loop PR was already done. Next: spells level by level and features class by class, which wait for the user's go (Decision 9) |
 | 5 | Sheet chips, monster score | Not started |
+| 6 | **Triggers** (new concept, 2026-11-11; see its section): a row or badge says *when* it's used (a hit, damage taken, dropping to 0, ...), and the simulator applies it itself (AUTO) or asks with a pop-up as it happens (ASK) | Planned. 6.3 (hit hooks, the pop-up, Kivi's Hill's Tumble) is the first slice, then 6.4 (monster riders: the Hill Giant's Tree Club) |
 
 **Content described so far.** Spells: 57 (2024) + 1 (2014), all as classes
 (every spell is a class since S.4; 58 have combat effects);
@@ -308,6 +309,11 @@ should be filled in **by one model, through one code path**, so that:
 11. **An extension's uses are its parent's** (R10): an extension that describes
     combat effects adds rows under its parent and spends the parent's uses
     unless it has its own; one that only changes the parent uses the hook.
+12. **A row says what, a trigger says when** (Phase 6). "Right after you
+    hit ..." in a note is a trigger that wasn't written down. The simulator
+    applies a triggered row itself only when the rules say it happens and
+    it can check every gate. Otherwise it asks; it never decides for the
+    GM.
 
 ## The design as built
 
@@ -493,7 +499,8 @@ with one list, `char["active_effects"]`, of plain dicts (Decision 5).
 | `Note(text)` | anything not modelled, shown on the card |
 
 Triggers: `AtTurnStart(effect)`, `AtTurnEnd(effect)` (today's repeat save is
-one), `WhenHit(effect)`. Position-dependent ones are prompts. The rules
+one), `WhenHit(effect)` (Phase 6 widens this to every event of a fight:
+see "Triggers"). Position-dependent ones are prompts. The rules
 conditions become data in the same vocabulary. Modifiers count in the rolls
 the simulator makes; for typed totals they're reminders (Decision 4). Start
 with a vertical slice: Restrained, Bless, Shield of Faith, Rage, Hunter's
@@ -530,6 +537,217 @@ Mark, Heroism. The modifier types go in a sibling module,
 
 Sheet chips ("DEX save · half · 8d6 Fire") from the same data;
 `monster_score.py` reads `combat_effects`.
+
+## Triggers (Phase 6, new concept, 2026-11-11)
+
+**Why** (the user, 2026-11-11: "when a hill giant hits someone I want a
+pop-up to ask if they fall prone or not. This is better than me needing to
+remember to click and load the feature"). A row the GM has to remember to
+pick at the right moment gets forgotten. Today:
+
+- Kivi's **Hill's Tumble** (Goliath, `GoliathFeatures.py`) is a picker row
+  that gives Prone, with the note "Right after you hit a Large or smaller
+  creature with an attack roll and deal damage to it." Nothing offers it
+  when Kivi hits.
+- The **Hill Giant's Tree Club** (`CR_5/monsters.py`, generated) says "If
+  the target is a Large or smaller creature, it has the Prone condition."
+  The turn column shows that as "Also: ..." under the button, and nothing
+  applies it. Pressing Enter in the Damage field deals the damage only.
+
+A **trigger** says *when* a row is used. When nothing is left to decide,
+the simulator applies the row itself. Otherwise it asks, with a pop-up, at
+the moment the thing happens. 3.5's `AtTurnStart` / `AtTurnEnd` are the
+first triggers (R48-R50): a badge's modifier that names a row, fired as a
+turn starts or ends. Phase 6 widens "when" from turn edges to the other
+events of a fight, and lets a source's own row carry a trigger, not just a
+badge.
+
+### What a trigger is
+
+1. **Event:** what happens in the fight (a hit, damage taken, a failed
+   save, dropping to 0 HP, ...).
+2. **Role:** the owner's part in the event. The owner did it ("you hit"),
+   it was done to the owner ("a creature hits you"), or, for a badge, it
+   happened to someone the badge's caster opposes (`WhoseTurn.ENEMY`'s
+   idea, R51).
+3. **Gates:** what must also be true. Some the simulator can check: the
+   target's size (`char["size"]`), the attack kind when it's known (a
+   weapon row in the dialog; R44's `weapon_attack`), a hit or a Critical
+   Hit, damage dealt after Resistance and Immunity, once per turn, uses or
+   a Reaction left, the target not already having the condition. Whatever
+   else matters goes in a `when`, which only the GM judges (as everywhere
+   else, principle 8).
+4. **Response:** the row it uses. For a row's own trigger that's the row
+   itself; for a badge, the row it names (R49). **Mode:** AUTO, ASK or
+   REMIND (below).
+
+### Trigger types, from the content
+
+Survey (2026-11-11): 351 `("Trigger", ...)` facts in `CharacterContent`'s
+feature and spell descriptions, and about 116 on-hit condition riders in
+the generated monster stat blocks (Prone 33, Grappled 32, Poisoned 20,
+Restrained 12, 19 others). 90 of those riders are gated on size ("If the
+target is a Large or smaller creature").
+
+| Event (role) | Examples | Can the simulator see it? | Default mode |
+|---|---|---|---|
+| **Turn starts / ends** (bearer, enemy) | Heroism, Spirit Guardians; "A Frightened creature starts its turn within 60 feet" | Yes (**built**, 3.5) | AUTO if it only gives Hit Points, else REMIND |
+| **Hits** (owner attacks) | Hill's Tumble, Fire's Burn, Frost's Chill, Stunning Strike, Paladin's Smite, Battle Master maneuvers, Sneak Attack, Open Hand Technique, Weapon Mastery Topple/Vex/Sap (Q38); monster riders: Tree Club's Prone, a Wolf's Prone, "Grappled (escape DC 13)" | Yes, in all three hit paths | A monster rider: AUTO. "You can": ASK |
+| **Misses** (owner attacks) | Graze mastery, "You miss with an attack roll" | Yes | ASK |
+| **Is hit, before damage** (owner is the target) | Shield, Deflect Attacks, Uncanny Dodge, Stone's Endurance (Q39), a monster's Parry | Yes, but the answer changes the hit (AC, damage), so it must come before damage is dealt | ASK |
+| **Takes damage, after** (owner is the target) | Hellish Rebuke, Storm's Thunder, Absorb Elements; badges: Armor of Agathys, Fire Shield (Q30) | Yes (`_damage_target`) | ASK (a melee gate isn't known on a typed hit) |
+| **Hit Point thresholds** | Bloodied; drops to 0 (Relentless Endurance, Relentless Rage); reduces a creature to 0 (Dark One's Blessing, Great Weapon Master's extra attack) | Yes (`_damage_target` knows a knockout) | AUTO if it only gives Hit Points (Dark One's Blessing), else ASK |
+| **D20 tests** | Fails a save (Indomitable, Diamond Soul); another creature's roll (Cutting Words, Silvery Barbs, Bardic Inspiration) | Only for rolls the simulator makes (`roll_save`, attack rolls); a roll typed in from the table, no | ASK |
+| **Casts or uses** | Casts a spell of a school or with a slot (Arcane Ward, Disciple of Life); uses a feature (Flurry of Blows -> Open Hand Technique, Action Surge -> Tactical Master) | Yes (Cast Spell, the dialog's pick) | ASK (a choice between options) |
+| **Initiative** | "You roll Initiative": Uncanny Metabolism, Fighting Spirit, Superior Inspiration | Yes, as a fight starts | AUTO for regaining uses, else ASK |
+| **Movement and position** | Enters or ends its turn in an area, moves into reach (Sentinel, Opportunity Attacks), falls, an ally within 5 feet is attacked (Protection, Interception) | No (principle 8) | REMIND at most; otherwise left to the picker |
+
+### Modes
+
+- **AUTO:** the rules say it happens ("it has the Prone condition"), every
+  gate is checked, and there's nothing to choose. The simulator applies
+  it and logs it, as it gives Heroism's temp HP (R50).
+- **ASK:** a pop-up when it happens, for example: "Kivi hits Ogre (Large).
+  Use Hill's Tumble? Ogre has the Prone condition. 2 of 2 uses left."
+  with [Apply] [Skip] [Edit...]. Edit opens the Custom Effect dialog with
+  the row picked. A trigger asks when its source says "you can", when it
+  costs something (a use, a Reaction, a slot), when it has a `when`, or
+  when a gate can't be checked (a size or attack kind not known). A rider
+  that would be AUTO asks instead when one of its gates is unknown.
+- **REMIND:** a button in the turn column, as 3.5's Spirit Guardians. For
+  things only the GM can see (where creatures are).
+
+What a trigger applies goes through the same path as picking its row in
+the Custom Effect dialog (spending, logging, conditions, badges, their
+records). It happens inside the undo step of the hit that fired it, so one
+undo takes back the hit and what it triggered. Declining a prompt changes
+nothing (Q45). No new log format: the log reads as if the GM had picked
+the row ("Kivi uses Hill's Tumble", "Ogre has the Prone condition").
+
+### The model (sketch)
+
+In `Model/Content/` (principle 4), next to `AtTurnStart` /
+`AtTurnEnd`:
+
+```python
+class TriggerEvent(StrEnum):
+    HIT = "hit"                    # the owner hits
+    MISS = "miss"
+    HIT_BY = "hit by"              # before damage
+    TAKES_DAMAGE = "takes damage"  # after damage
+    BLOODIED = "bloodied"
+    DROPS_TO_ZERO = "drops to 0"
+    REDUCES_TO_ZERO = "reduces to 0"
+    FAILS_SAVE = "fails a save"
+    ROLLS_INITIATIVE = "rolls initiative"
+    CASTS_SPELL = "casts a spell"
+    USES = "uses"                  # another row of the same source
+
+@dataclass(frozen=True)
+class CombatTrigger:
+    event: TriggerEvent
+    optional: bool = True                   # "you can": ASK; False: it happens
+    after: str = ""                         # only after this row of the source ("Tree Club")
+    attacks: AttackKind = AttackKind.ANY    # widened: MELEE, RANGED, UNARMED, SPELL
+    largest_target: CreatureSize | None = None  # "a Large or smaller creature"
+    needs_damage: bool = False              # "and deal damage to it"
+    critical_only: bool = False
+    once_per_turn: bool = False
+    reaction: bool = False                  # spends the owner's Reaction (action_uses)
+    when: str = ""                          # what the GM judges: always ASK
+```
+
+It goes in one of two places:
+
+- **On a row:** `CombatEffect.trigger`, meaning "this row is used when
+  ...". This is for what a creature always has: a feature, a monster's
+  ability, a reaction spell it knows (Shield, Hellish Rebuke). The row
+  stays in the picker for use by hand.
+- **On a badge:** a modifier `OnTrigger(trigger, effect="<row name>")`
+  next to `AtTurnStart` / `AtTurnEnd` (R48, R49). This is for lasting
+  effects: Armor of Agathys, Fire Shield, moving Hunter's Mark (Q24).
+  `AtTurnStart` / `AtTurnEnd` stay as they are (Q46).
+
+The two examples:
+
+```python
+# Kivi's Hill's Tumble: the trigger replaces the "Right after you hit ..." note
+CombatEffect(
+    name="Hill's Tumble",
+    conditions=(CombatCondition(Condition.PRONE),),
+    trigger=CombatTrigger(
+        TriggerEvent.HIT, needs_damage=True, largest_target=CreatureSize.LARGE
+    ),
+)
+# The Hill Giant's Tree Club, read from its text (monsters.py is generated)
+CombatEffect(name="Tree Club", roll=EffectRoll.ATTACK, attack_bonus=8, damage=(...,))
+CombatEffect(
+    name="Tree Club: Prone",
+    spends_use=False,
+    conditions=(CombatCondition(Condition.PRONE),),
+    trigger=CombatTrigger(
+        TriggerEvent.HIT, optional=False, after="Tree Club",
+        largest_target=CreatureSize.LARGE,
+    ),
+)
+```
+
+A monster rider becomes its own row (`after=`), not a condition on the
+attack row. The main window's Damage field never applies an attack row's
+conditions, but a rider row works from every hit path. Ice Knife's
+explosion and Green-Flame Blade's leaping fire, today later steps the GM
+picks by hand, can get the same `after=` (as `USES`, or `HIT` for the
+fire).
+
+### The interpreter and the hooks
+
+- `Combat/Effects/triggers.py` (Qt-free, beside `firings`): an
+  `AttackOutcome(attacker, target, hit, critical, kind, row, damage_dealt)`
+  and `outcome_firings(chars, outcome, rows_of)`. Each `Firing` gets a
+  `mode` and a `why` ("Ogre's size isn't known"). `rows_of(char)` gives a
+  combatant's rows that have a trigger, from `feature_options`,
+  `spell_options` and its monster abilities. They are built once per
+  combatant and rebuilt when its sheet or form changes (Wild Shape). The
+  gates are checked here, not in the window.
+- One hook per event in the window, called from every path that makes the
+  event:
+  - `_after_attack(outcome)`: the dialog's attack loop (after
+    `_deal_damage`); the main window's `_do_apply_damage` when it checked
+    an attack roll; a monster button's hit. `_roll_action` remembers the
+    action it rolled, so Enter knows it was Tree Club (`after=`).
+  - `_before_hit(outcome)` (6.5): before damage, for Shield and the
+    like. The answer may turn the hit into a miss or take damage off it.
+  - `_damage_target`: `TAKES_DAMAGE`, `BLOODIED`, `DROPS_TO_ZERO`,
+    `REDUCES_TO_ZERO`.
+  - `roll_save` (only saves the simulator rolls): `FAILS_SAVE`. Initiative:
+    `ROLLS_INITIATIVE`. Cast Spell and the dialog's pick: `CASTS_SPELL`,
+    `USES`.
+- **Order on one hit:** the target's before-hit reactions, then the damage,
+  then the attacker's AUTO riders, then one pop-up with the attacker's ASKs
+  and the target's after-damage reactions.
+- **One pop-up per Apply** (Times 3, Multiattack's two Tree Clubs), with a
+  row per (target, trigger) and no repeats. A row is left out when the
+  target already has every condition it gives, when it's once per turn
+  and was used this turn, or when the target is dead.
+- A setting, `ask_triggers` (pop-up / turn-column button / off), like
+  `ask_concentration_saves`.
+
+### Steps
+
+| # | Step | Done when |
+|---|---|---|
+| 6.1 | `TriggerEvent`, `CombatTrigger`, `CombatEffect.trigger`; `AttackKind` widened. Follow the checklist for adding a field. | Invalid combinations raise (e.g. `after` naming no row of the source, `largest_target` on an event with no target); `to_dict` / `from_dict` round-trip strictly; an old log still reads; `combat_effects.py check` refuses an `after` that names nothing |
+| 6.2 | The interpreter: `AttackOutcome`, `outcome_firings`, `rows_of`, the gates and the mode. | Tests with expected values from the rules text: Hill's Tumble on a Large target asks, on a Huge one gives nothing, on a miss nothing, on 0 damage (Immunity) nothing, with no uses left nothing (Q42), on an already Prone target nothing, on a target of unknown size asks with the reason |
+| 6.3 | **First slice:** the hit hooks in the three paths, the pop-up and the setting; Kivi's Giant Ancestry (Hill's Tumble, Fire's Burn, Frost's Chill) gets triggers in place of the `on_hit` note (principle 7). | A rolled or typed hit by Kivi on an Ogre pops up Hill's Tumble once; Apply gives Prone, spends a use and logs it; one undo takes back the hit and the Prone; Times / Flurry of Blows ask once per Apply; the picker golden's only change is the note going |
+| 6.4 | Monster riders: the monster text reading turns "Hit: ... [If the target is a <size> or smaller creature,] it has the <condition> condition" (and "Grappled (escape DC N)") into a rider row with an AUTO trigger. A homebrew `MeleeAttack`'s `additional_ruling` reads the same way. | The Hill Giant's Tree Club knocks a Large target Prone from its button and Enter, and from the dialog; asks when the size isn't known; does nothing to a Huge target or on a miss; the picker goldens' new rider rows read against their stat blocks |
+| 6.5 | Being hit: `HIT_BY` before damage (Shield, Deflect Attacks, Stone's Endurance), and `TAKES_DAMAGE` after (Hellish Rebuke, Storm's Thunder; badges via `OnTrigger`: Armor of Agathys). Spends the Reaction (`_add_action_use`). Takes over Q30 and Q39. | Shield asked as a hit lands turns it into a miss when +5 is enough, and spends the Reaction and a slot; Deflect Attacks takes its roll off the damage; a used Reaction asks no more this round |
+| 6.6 | Hit Point thresholds: `BLOODIED`, `DROPS_TO_ZERO`, `REDUCES_TO_ZERO`. | Relentless Endurance (Orc) asks "drop to 1 HP instead?" as its owner drops to 0; Dark One's Blessing's temp HP are given at once; both inside the damage's undo step |
+| 6.7 | The rest as content needs them: `FAILS_SAVE` (Indomitable), `ROLLS_INITIATIVE` (regaining uses), `CASTS_SPELL` / `USES` (chained rows), `after=` on spells' later steps (Ice Knife, Green-Flame Blade, Booming Blade). Position events stay manual. | Per source, with a test from its rules text |
+| 6.8 | Tooling and content: the `combat-effects` skill's rubric gets a Triggers section (which mode, which gate, when a `when`); `combat_effects.py coverage` counts rows with triggers and lists features whose text has a `("Trigger", ...)` fact but whose rows don't; then the parties, through `feature-combat-effects`. | Curse of the Lich's party features with a Trigger fact all have a trigger or a stated reason not to |
+
+6.1-6.4 are the engine Decision 9 waits for. 6.3 is the vertical slice to
+build first. It's what the user asked for, and it touches every hit path
+once.
 
 ## Revisions (better solutions found while building)
 
@@ -1317,6 +1535,52 @@ Sheet chips ("DEX save · half · 8d6 Fire") from the same data;
   reaction prompt as a hit lands on its owner that rolls the reduction and
   takes it off the damage.
 
+Q30, Q38 and Q39 are now part of Phase 6: Q30 and Q39 in step 6.5, and
+Q38's masteries as `HIT` / `MISS` triggers on weapon rows (6.7).
+
+- **Q40. Pop-up or turn-column button?** The user asked for a pop-up.
+  3.5's prompts are buttons, which don't interrupt but are easy to miss.
+  *Suggestion:* a modal pop-up for events that happen *during* a roll (a
+  hit, damage, a save), since the answer belongs to that moment and to its
+  undo step. Buttons stay for turn edges and position. `ask_triggers` can
+  switch hit events to buttons for a GM who finds the pop-ups noisy.
+- **Q41. How many pop-ups for several hits?** Times 3, Multiattack and
+  Flurry of Blows make several hits in a row. *Suggestion:* one pop-up per
+  Apply (or per monster button and its Enter), with a checkbox per (target,
+  trigger) and no repeats. A trigger that can't fire twice (once per turn,
+  or the target is already Prone) is listed once.
+- **Q42. A trigger with no uses left.** Hide it, or show it greyed out?
+  *Suggestion:* leave it out of the pop-up, and say in the status line
+  "Hill's Tumble: no uses left". With every uses-bound trigger spent, there
+  is no pop-up. The picker can still use it by hand, with
+  `_go_ahead_anyway`.
+- **Q43. An attack kind that isn't known.** A typed attack roll or a
+  monster button doesn't say whether it was a melee weapon or an Unarmed
+  Strike (Stunning Strike needs a Monk weapon or an Unarmed Strike).
+  *Suggestion:* as `hit_plan` does: unknown never counts as AUTO. It
+  asks, with "if it was a Monk weapon or an Unarmed Strike" in the
+  pop-up. The dialog's weapon rows know the kind and pass it in.
+- **Q44. Standing triggers: a field on the row, or a feature method?**
+  *Suggestion:* `CombatEffect.trigger`. The row is already what a trigger
+  applies (R49), already goes through `to_dict` and the picker, and a
+  monster's ability gets it the same way. A separate
+  `Feature.combat_triggers()` would need a second list and a second
+  validator (design goal 2).
+- **Q45. Log a declined prompt?** *Suggestion:* a GM-only line ("Kivi
+  didn't use Hill's Tumble on Ogre"), so a replayed fight shows it was
+  offered, but no state change and no undo point of its own.
+- **Q46. Rewrite `AtTurnStart` / `AtTurnEnd` as `CombatTrigger` events?**
+  *Suggestion:* no, as R52 kept repeat saves. They work, logs hold them, and
+  rewriting them adds no behaviour. `TriggerEvent` leaves out turn edges
+  until a row (not a badge) needs one ("A Frightened creature starts its
+  turn within 60 feet", which is REMIND anyway).
+- **Q47. Generated monsters' riders: read at runtime, or generated?**
+  `monsters.py` can't be hand-edited, so Tree Club's rider can't be
+  written as a `combat_effects` row there. *Suggestion:* read it from the
+  text in `monster_actions.py` (6.4), which also covers fight logs saved
+  before. Teach `generate_monsters.py` to emit structured rows only if the
+  reading proves fragile.
+
 ## Discovered issues
 
 - **DI-060** (open): pre-existing pyright errors in the combat-effects tests;
@@ -1434,6 +1698,13 @@ top). The full suite runs later, when the user asks.
   Concentration; Spirit Guardians' prompts and buttons, nothing rolled by
   itself, a prompt opening the dialog picked and spending no slot, its
   Wisdom save, a creature gone or dead).
+- **Phase 6:** `tests/test_hit_triggers.py` (new). The JSON form and its
+  strict errors. `outcome_firings`' gates and modes, with expected values
+  from the rules text (Hill's Tumble, Tree Club, Shield). In the window,
+  each of the three hit paths fires once; Apply and Skip; one undo for
+  the hit and what it triggered; one pop-up per Apply; `ask_triggers`
+  off. Plus `test_turn_triggers.py`, to show 3.5's triggers didn't change,
+  and the picker goldens' diff read before `UPDATE_SNAPSHOTS=1`.
 
 ## Checklist: adding a field to the model
 
