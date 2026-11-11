@@ -1,5 +1,5 @@
 """What a lasting effect changes on its bearer while it's on (plan Phase 7,
-steps 7.1 and 7.2): its AC worked out from a new base (Mage Armor) or kept
+steps 7.1 to 7.5): its AC worked out from a new base (Mage Armor) or kept
 at a floor (Barkskin) beside what adds to it (Shield of Faith, cover), and
 damage Immunity and Vulnerability beside Resistance (Stoneskin, Protection
 from Energy, Rage). Expected values come from the 2024 rules text: Mage
@@ -38,10 +38,18 @@ from Combat.Effects.modifiers import (
     resists,
     rolled_modifiers,
     save_plan,
+    size_in_use,
+    size_text,
+    speed_changes,
+    speed_in_use,
     vulnerable_to,
 )
-from Core.Definitions import Ability, Condition, DamageType
+from Combat.CombatUIQt.dialogs_mixin import _speed_text
+from Combat.CombatUIQt.player_view import _unit_details
+from Combat.Effects.triggers import AttackOutcome, TriggerRow, outcome_firings
+from Core.Definitions import Ability, Condition, CreatureSize, DamageType
 from Model.Content.CombatEffect import CombatEffect
+from Model.Content.CombatTriggers import CombatTrigger, TriggerEvent
 from Model.Content.CombatModifiers import (
     ArmorClass,
     ArmorClassBase,
@@ -51,6 +59,8 @@ from Model.Content.CombatModifiers import (
     HitPointMaximum,
     Note,
     Resistance,
+    Size,
+    Speed,
     Vulnerability,
     modifier_from_dict,
     modifier_to_dict,
@@ -621,3 +631,201 @@ def test_the_card_shows_the_stats_in_use(aided):
     texts = _card_texts(ui, tiger)
     assert not any(t.startswith("Max HP") or t.startswith("Resist") for t in texts)
     assert any(t.startswith("AC: 13") and "(" not in t.split("   ")[0] for t in texts)
+
+
+# ---------------------------------------------------------------------------
+# 7.3: Speed and size. Expected values from the 2024 rules text: Haste ("the
+# target's Speed is doubled"; as it ends, "has a Speed of 0 until the end of
+# its next turn"), Longstrider ("Speed increases by 10 feet"), Enlarge/Reduce
+# ("size increases by one category - from Medium to Large"; "decreases by
+# one category"), Large Form ("change your size to Large", "your Speed
+# increases by 10 feet") and the Rules Glossary's Speed ("any special speed
+# you have increases or decreases by an equal amount", "if your Speed is
+# halved ... your Fly Speed is also halved").
+# ---------------------------------------------------------------------------
+
+HASTE = Speed(multiplier=2)
+LONGSTRIDER = Speed(bonus=10)
+ENLARGE, REDUCE = Size(steps=1), Size(steps=-1)
+
+
+@pytest.mark.parametrize(
+    "modifier, data",
+    [
+        (HASTE, {"type": "Speed", "multiplier": 2}),
+        (Speed(multiplier=0.5), {"type": "Speed", "multiplier": 0.5}),
+        (Speed(bonus=-10), {"type": "Speed", "bonus": -10}),
+        (Speed(set_to=0), {"type": "Speed", "set_to": 0}),
+        (REDUCE, {"type": "Size", "steps": -1}),
+        (Size(becomes=CreatureSize.LARGE), {"type": "Size", "becomes": "Large"}),
+    ],
+)
+def test_speed_and_size_read_back_as_written(modifier, data):
+    written = modifier_to_dict(modifier)
+    assert written == data
+    assert modifier_from_dict(written) == modifier
+
+
+@pytest.mark.parametrize(
+    "make",
+    [
+        lambda: Speed(),
+        lambda: Speed(multiplier=0),
+        lambda: Speed(bonus=10.0),  # type: ignore[arg-type]
+        lambda: Speed(set_to=-5),
+        lambda: Speed(bonus=10, set_to=0),
+        lambda: Size(),
+        lambda: Size(becomes="Enormous"),  # type: ignore[arg-type]
+        lambda: modifier_from_dict({"type": "Speed", "multiplier": "2"}),
+        lambda: modifier_from_dict({"type": "Size", "becomes": "Enormous"}),
+    ],
+)
+def test_a_speed_or_size_that_says_nothing_or_nonsense_is_refused(make):
+    with pytest.raises(ValueError):
+        make()
+
+
+def test_haste_doubles_every_speed_after_longstrider():
+    """Bonuses count first, then the doubling: (30 + 10) x 2."""
+    hasted = _with({"Haste": (HASTE,), "Longstrider": (LONGSTRIDER,)})
+    assert speed_in_use(hasted, 30) == 80
+    assert speed_in_use(hasted, 60) == 140, "a Fly Speed changes the same way"
+    assert speed_changes(hasted) == ["Longstrider +10 ft.", "Haste ×2"]
+
+
+def test_a_speed_set_to_0_wins_and_nothing_goes_below_0():
+    slowed = _with({"Haste": (Speed(set_to=0),), "Longstrider": (LONGSTRIDER,)})
+    assert speed_in_use(slowed, 30) == 0
+    assert speed_changes(slowed) == ["Haste 0 ft."]
+    frozen = _with({"Ray of Frost": (Speed(bonus=-10),)})
+    assert speed_in_use(frozen, 5) == 0
+    halved = _with({"Slow": (Speed(multiplier=0.5),)})
+    assert speed_in_use(halved, 25) == 12, "rounded down"
+    assert speed_changes(halved) == ["Slow halved"]
+
+
+def test_the_same_speed_effect_twice_counts_once():
+    twice = _with({"Longstrider": (LONGSTRIDER, LONGSTRIDER)})
+    assert speed_in_use(twice, 30) == 40
+
+
+@pytest.mark.parametrize(
+    "size, badges, in_use",
+    [
+        ("Medium", {"Enlarge/Reduce": (ENLARGE,)}, CreatureSize.LARGE),
+        ("Large", {"Enlarge/Reduce": (REDUCE,)}, CreatureSize.MEDIUM),
+        ("Gargantuan", {"Enlarge/Reduce": (ENLARGE,)}, CreatureSize.GARGANTUAN),
+        ("Tiny", {"Enlarge/Reduce": (REDUCE,)}, CreatureSize.TINY),
+        (
+            "Medium",
+            {"Large Form": (Size(becomes=CreatureSize.LARGE),)},
+            CreatureSize.LARGE,
+        ),
+        (
+            "Medium",
+            {
+                "Enlarge/Reduce": (ENLARGE,),
+                "Large Form": (Size(becomes=CreatureSize.LARGE),),
+            },
+            CreatureSize.HUGE,
+        ),
+        (CreatureSize.HUGE, {}, CreatureSize.HUGE),
+        (None, {"Enlarge/Reduce": (ENLARGE,)}, None),
+    ],
+)
+def test_the_size_in_use(size, badges, in_use):
+    char = _with(badges, **({"size": size} if size else {}))
+    assert size_in_use(char) == in_use
+
+
+def test_the_size_text():
+    assert size_text(_with({}, size="Medium")) == ""
+    enlarged = _with({"Enlarge/Reduce": (ENLARGE,)}, size="Medium")
+    assert size_text(enlarged) == "Large (Medium; Enlarge/Reduce +1)"
+    goliath = _with({"Large Form": (Size(becomes=CreatureSize.LARGE),)}, size="Medium")
+    assert size_text(goliath) == "Large (Medium; Large Form)"
+
+
+def _tumble_firings(target: dict):
+    kivi = {"name": "Kivi", "conditions": [], "hp": 27, "max_hp": 27}
+    tumble = CombatTrigger(
+        TriggerEvent.HIT, needs_damage=True, largest_target=CreatureSize.LARGE
+    )
+    row = TriggerRow(
+        name="Hill's Tumble",
+        trigger=tumble,
+        conditions=("Prone",),
+        what="Prone",
+        uses=(2, 2),
+        costs=True,
+    )
+    hit = AttackOutcome(kivi, target, True, damage_dealt=7)
+    return outcome_firings([hit], lambda char: [row] if char is kivi else [])[0]
+
+
+def test_hills_tumble_goes_by_the_size_in_use():
+    """An Enlarged Large Ogre is Huge: no Tumble. A Reduced Huge giant is
+    Large: Tumble asks, naming the size it is now. Both go with the badge."""
+    ogre = _with({"Enlarge/Reduce": (ENLARGE,)}, name="Ogre", size="Large", hp=60)
+    assert _tumble_firings(ogre) == []
+    ogre["conditions"].remove("Enlarge/Reduce")
+    assert len(_tumble_firings(ogre)) == 1
+    giant = _with({"Enlarge/Reduce": (REDUCE,)}, name="Giant", size="Huge", hp=100)
+    (firing,) = _tumble_firings(giant)
+    assert firing.question.startswith("Kivi hits Giant (Large): use Hill's Tumble?")
+    giant["conditions"].remove("Enlarge/Reduce")
+    assert _tumble_firings(giant) == []
+
+
+def test_the_spells_and_large_form_give_speed_and_size():
+    hasted, lethargy = _effects("Haste")
+    assert HASTE in _badge_modifiers(hasted)
+    assert ArmorClass(2) in _badge_modifiers(hasted)
+    assert [c.name for c in lethargy.conditions] == ["Incapacitated", "Haste"]
+    assert lethargy.conditions[1].modifiers == (Speed(set_to=0),)
+    assert not lethargy.spends_use
+    (longstrider,) = _effects("Longstrider")
+    assert _badge_modifiers(longstrider) == (LONGSTRIDER,)
+    enlarge, reduce = _effects("Enlarge/Reduce")
+    assert ENLARGE in _badge_modifiers(enlarge)
+    assert REDUCE in _badge_modifiers(reduce)
+    assert reduce.save_ability == Ability.CONSTITUTION
+    large_form = _large_form_badge()
+    assert Size(becomes=CreatureSize.LARGE) in large_form
+    assert LONGSTRIDER in large_form, "Speed +10 feet, as Longstrider's"
+
+
+def _large_form_badge() -> tuple:
+    from Builds.Characters.Y2024_Monk_Elements_KiviJatti import (
+        Y2024MonkElementsKiviJattiCharacterBuilder as Kivi,
+    )
+    from CharacterContent.Features.SpeciesFeatures.GoliathFeatures import LargeForm
+
+    sheet = Kivi().build()
+    assert LargeForm().combat_effects(sheet) == [], "Kivi is below level 5"
+    level_5 = type("Level5", (), {"character_level": 5})()
+    (effect,) = LargeForm().combat_effects(level_5)  # type: ignore[arg-type]
+    return _badge_modifiers(effect)
+
+
+def test_the_card_shows_speed_and_size_in_use(fight):
+    """Haste on the Tiger (Large, Speed 40): "Speed: 80 ft. (40 ft.; Haste
+    x2)"; Enlarge/Reduce's Enlarge: "Size Huge (Large; Enlarge/Reduce +1)".
+    Both go when the badges end; the player view shows only the speed and
+    size in use."""
+    ui, pirate, tiger = fight
+    tiger.update(size="Large", speed_ground_ft=40)
+    ui._select_character(pirate)
+    ui._apply_cast_spell(SpellFactory.create("Haste"))
+    tiger["conditions"].append("Enlarge/Reduce")
+    give_modifiers(tiger, "Enlarge/Reduce", (ENLARGE,))
+    texts = _card_texts(ui, tiger)
+    assert any(t.endswith("Speed: 80 ft. (40 ft.; Haste ×2)") for t in texts)
+    assert "Size Huge (Large; Enlarge/Reduce +1)" in texts
+    assert _speed_text(tiger, sources=False) == "80 ft."
+    assert "Huge" in _unit_details([tiger])
+    for name in ("Haste", "Enlarge/Reduce"):
+        ui._remove_condition_from(tiger, name)
+    texts = _card_texts(ui, tiger)
+    assert any(t.endswith("Speed: 40 ft.") for t in texts)
+    assert not any(t.startswith("Size") for t in texts)

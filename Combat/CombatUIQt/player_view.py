@@ -40,6 +40,7 @@ from Combat.Effects.modifiers import (
     immune_to_condition,
     immune_to_damage,
     resists,
+    size_in_use,
 )
 from Combat.Summons import is_out, owner_name
 from Core.Definitions import Condition
@@ -269,7 +270,11 @@ def known_max_hp_text(char: dict) -> str:
 
 def _unit_speeds(unit: list[dict]) -> list[str]:
     return list(
-        dict.fromkeys(f"Speed {speed}" for speed in map(_speed_text, unit) if speed)
+        dict.fromkeys(
+            f"Speed {speed}"
+            for speed in (_speed_text(c, sources=False) for c in unit)
+            if speed
+        )
     )
 
 
@@ -277,7 +282,9 @@ def _unit_details(unit: list[dict]) -> str:
     """Everyone's size, Challenge Rating (monsters and summons have one), AC
     and speed. A player's AC is a sentence once they have a Shield, so only
     the number they have now is shown."""
-    sizes = [_display(c["size"]) for c in unit if c.get("size")]
+    # The size in use (an Enlarged Medium creature is Large); a size that
+    # isn't a rules one is shown as it is.
+    sizes = [_display(size_in_use(c) or c["size"]) for c in unit if c.get("size")]
     ratings = [f"CR {c['cr']}" for c in unit if c.get("cr")]
     armor = [f"AC {armor_in_use(c)}" for c in unit if armor_in_use(c) is not None]
     return " · ".join(dict.fromkeys(sizes + ratings + armor + _unit_speeds(unit)))

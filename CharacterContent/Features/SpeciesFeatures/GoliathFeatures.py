@@ -19,7 +19,7 @@ from Model.Content.CombatEffect import (
     TurnEdge,
     TurnOf,
 )
-from Model.Content.CombatModifiers import D20Mode, D20Test, RollMode
+from Model.Content.CombatModifiers import D20Mode, D20Test, RollMode, Size, Speed
 from Model.Content.CombatTriggers import CombatTrigger, TriggerEvent
 from Core.Definitions import Ability, Condition, DamageType
 
@@ -88,13 +88,14 @@ class LargeForm(Feature):
                                 RollMode.ADVANTAGE,
                                 (Ability.STRENGTH,),
                             ),
+                            Size(becomes=CreatureSize.LARGE),
+                            Speed(bonus=10),
                         ),
                     ),
                 ),
                 notes=(
                     "Pick yourself as the target, if there's room to be Large."
-                    " Your size is Large and your Speed increases by 10 feet. You"
-                    " can end it early (no action).",
+                    " You can end it early (no action).",
                 ),
             )
         ]

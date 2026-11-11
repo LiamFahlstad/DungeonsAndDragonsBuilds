@@ -32,7 +32,7 @@ from Model.Content.CombatModifiers import (
 )
 from Model.Content.CombatTriggers import CombatTrigger, TriggerEvent, size_fits
 
-from .modifiers import _effects_with_modifiers
+from .modifiers import _effects_with_modifiers, size_in_use
 
 
 @dataclass(frozen=True)
@@ -219,9 +219,9 @@ class HitFiring:
     def question(self) -> str:
         """Its line in the pop-up: "Kivi hits Ogre (Large): use Hill's
         Tumble? Prone. 2 of 2 uses left." """
-        size = self.target.get("size")
-        # A monster's card keeps its CreatureSize, a player's its text.
-        shown = f" ({getattr(size, 'value', size)})" if size else ""
+        # The size it has now: Enlarge makes a Medium creature Large.
+        size = size_in_use(self.target)
+        shown = f" ({size.value})" if size else ""
         verb = "misses" if self.row.trigger.event is TriggerEvent.MISS else "hits"
         parts = [
             f"{self.owner['name']} {verb} {self.target['name']}{shown}:"
@@ -387,7 +387,7 @@ def _firing(
         if outcome.damage_dealt is None:
             why.append(f"if it dealt {target['name']} damage")
     if trigger.largest_target is not None:
-        fits_size = size_fits(target.get("size"), trigger.largest_target)
+        fits_size = size_fits(size_in_use(target), trigger.largest_target)
         if fits_size is False:
             return None
         if fits_size is None:

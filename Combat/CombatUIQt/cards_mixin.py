@@ -22,6 +22,7 @@ from Combat.Effects.modifiers import (
     defenses_from_modifiers,
     hit_point_maximum,
     hit_point_maximum_text,
+    size_text,
 )
 from .attack_rolls import armor_text
 from .dialogs_mixin import _damage_entry_text, _speed_text
@@ -237,6 +238,7 @@ class CardsMixin(CombatWindowState):
         self._add_concentration_checks(layout, char)
         layout.addLayout(_hp_row(char))
         _add_hit_point_maximum(layout, char)
+        _add_size(layout, char)
         layout.addWidget(_ac_speed_label(char))
         self._add_condition_badges(layout, char)
         self._add_visibility_badges(layout, char)
@@ -650,9 +652,21 @@ def _add_hit_point_maximum(layout: QVBoxLayout, char: dict):
         layout.addWidget(lbl)
 
 
+def _add_size(layout: QVBoxLayout, char: dict):
+    """Char's size, when something changes it: "Size Large (Medium; Enlarge
+    +1)". The card doesn't show a size nothing changes."""
+    text = size_text(char)
+    if text:
+        lbl = QLabel(f"Size {text}")
+        lbl.setObjectName("secondary")
+        lbl.setStyleSheet("font-size: 10px;")
+        lbl.setWordWrap(True)
+        layout.addWidget(lbl)
+
+
 def _ac_speed_label(char: dict) -> QLabel:
-    """The AC in use, with what changes it ("AC: 17 (15; Shield of Faith
-    +2)"), and the speed."""
+    """The AC and speed in use, with what changes them ("AC: 17 (15; Shield
+    of Faith +2)   Speed: 60 ft. (30 ft.; Haste ×2)")."""
     ac_speed_text = f"AC: {armor_text(char)}"
     speed_text = _speed_text(char)
     if speed_text:

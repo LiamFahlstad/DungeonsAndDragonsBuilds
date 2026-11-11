@@ -36,15 +36,16 @@ from Model.Content.CombatEffect import (
 from Model.Content.CombatModifiers import (
     ArmorClass,
     ArmorClassBase,
-    AtTurnStart,
     AttackKind,
     AttacksAgainst,
+    AtTurnStart,
     ConditionImmunity,
     D20Bonus,
     D20Test,
     ExtraDamageFrom,
     ExtraDamageOnHit,
     RollMode,
+    Speed,
 )
 from Model.Content.Feature import FeatureTarget
 from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table
@@ -1608,10 +1609,10 @@ class Longstrider(ClassSpell):
     ) -> list[CombatEffect]:
         return [
             CombatEffect(
-                conditions=(CombatCondition("Longstrider"),),
-                notes=(
-                    "The target's Speed increases by 10 feet. One more target per slot level above 1.",
+                conditions=(
+                    CombatCondition("Longstrider", modifiers=(Speed(bonus=10),)),
                 ),
+                notes=("One more target per slot level above 1.",),
             )
         ]
 

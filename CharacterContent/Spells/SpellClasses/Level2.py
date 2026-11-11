@@ -30,7 +30,15 @@ from Model.Content.CombatEffect import (
     CombatInstances,
     EffectRoll,
 )
-from Model.Content.CombatModifiers import ArmorClassMinimum, HitPointMaximum
+from Model.Content.CombatModifiers import (
+    ArmorClassMinimum,
+    D20Mode,
+    D20Test,
+    HitPointMaximum,
+    Note,
+    RollMode,
+    Size,
+)
 from Model.Content.Feature import FeatureTarget
 from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table
 from Model.View import CharacterView
@@ -2354,6 +2362,53 @@ class EnlargeReduce(ClassSpell):
                         "-1d4 on a hit (not below 1)",
                     ),
                 ),
+            ),
+        ]
+
+    def combat_effects(
+        self, character: CharacterView | None = None
+    ) -> list[CombatEffect]:
+        strength = (D20Test.ABILITY_CHECK, D20Test.SAVING_THROW)
+        return [
+            CombatEffect(
+                name="Enlarge/Reduce: Enlarge",
+                conditions=(
+                    CombatCondition(
+                        "Enlarge/Reduce",
+                        modifiers=(
+                            Size(steps=1),
+                            D20Mode(strength, RollMode.ADVANTAGE, (Ability.STRENGTH,)),
+                            Note(
+                                "Its attacks with its enlarged weapons or Unarmed"
+                                " Strikes deal an extra 1d4 damage on a hit."
+                            ),
+                        ),
+                    ),
+                ),
+                notes=(
+                    "An unwilling target makes a Constitution save first; on a success, the spell has no effect.",
+                ),
+            ),
+            CombatEffect(
+                name="Enlarge/Reduce: Reduce",
+                roll=EffectRoll.SAVE,
+                save_ability=Ability.CONSTITUTION,
+                conditions=(
+                    CombatCondition(
+                        "Enlarge/Reduce",
+                        modifiers=(
+                            Size(steps=-1),
+                            D20Mode(
+                                strength, RollMode.DISADVANTAGE, (Ability.STRENGTH,)
+                            ),
+                            Note(
+                                "Its attacks with its reduced weapons or Unarmed"
+                                " Strikes deal 1d4 less damage on a hit (not below 1)."
+                            ),
+                        ),
+                    ),
+                ),
+                notes=("Only an unwilling target saves.",),
             ),
         ]
 

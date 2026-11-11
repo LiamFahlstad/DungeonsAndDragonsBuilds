@@ -22,14 +22,26 @@ from CharacterContent.Spells.SpellFactory.SpellFields import (
     Duration,
     Range,
 )
-from Core.Definitions import Ability, CharacterClass, DamageType
+from Core.Definitions import Ability, CharacterClass, Condition, DamageType
 from Model.Content.CombatEffect import (
     CombatCondition,
     CombatDamage,
     CombatEffect,
     EffectRoll,
+    TurnEdge,
+    TurnOf,
 )
-from Model.Content.CombatModifiers import AtTurnEnd, Resistance, WhoseTurn
+from Model.Content.CombatModifiers import (
+    ArmorClass,
+    AtTurnEnd,
+    D20Mode,
+    D20Test,
+    Note,
+    Resistance,
+    RollMode,
+    Speed,
+    WhoseTurn,
+)
 from Model.Content.Feature import FeatureTarget
 from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table
 from Model.View import CharacterView
@@ -2289,6 +2301,50 @@ class Haste(ClassSpell):
                         "The target is Incapacitated and has a Speed of 0 until the end of its next turn, as a wave of lethargy washes over it",
                     ),
                 )
+            ),
+        ]
+
+    def combat_effects(
+        self, character: CharacterView | None = None
+    ) -> list[CombatEffect]:
+        next_turn = (TurnEdge.END, TurnOf.TARGET)
+        return [
+            CombatEffect(
+                conditions=(
+                    CombatCondition(
+                        "Haste",
+                        modifiers=(
+                            Speed(multiplier=2),
+                            ArmorClass(2),
+                            D20Mode(
+                                (D20Test.SAVING_THROW,),
+                                RollMode.ADVANTAGE,
+                                (Ability.DEXTERITY,),
+                            ),
+                            Note(
+                                "An additional action on each of its turns: the"
+                                " Attack (one attack only), Dash, Disengage, Hide"
+                                " or Utilize action only."
+                            ),
+                        ),
+                    ),
+                ),
+                notes=("When the spell ends, pick Haste: lethargy for the target.",),
+            ),
+            CombatEffect(
+                name="Haste: lethargy",
+                conditions=(
+                    CombatCondition(Condition.INCAPACITATED, until=next_turn),
+                    CombatCondition(
+                        "Haste",
+                        until=next_turn,
+                        modifiers=(Speed(set_to=0),),
+                    ),
+                ),
+                spends_use=False,
+                notes=(
+                    "As Haste ends on the target: its badge then gives a Speed of 0 instead. Part of the same casting: it spends no slot.",
+                ),
             ),
         ]
 

@@ -246,7 +246,13 @@ Names are the Python ones; `Ability`, `Condition` and `DamageType` come from
   while it's on, which the simulator counts: `D20Bonus` (Bless),
   `ArmorClass` (Shield of Faith), `ExtraDamageFrom` (Hunter's Mark, on the
   target), `ExtraDamageOnHit` (Divine Favor, on the caster),
-  `ConditionImmunity` (Heroism's Frightened). Never on a rules condition.
+  `ConditionImmunity` (Heroism's Frightened), `Speed(bonus, multiplier,
+  set_to)` (Longstrider `bonus=10`, Haste `multiplier=2`, a Speed of 0
+  `set_to=0`; every special speed changes with it) and `Size(steps,
+  becomes)` (Enlarge `steps=1`, Large Form `becomes=CreatureSize.LARGE`;
+  the trigger size gates read the size in use). Never on a rules condition.
+  A spell's badge keeps the spell's name even when its rows differ
+  (Enlarge/Reduce's two rows both give "Enlarge/Reduce").
 - **Triggers** are modifiers too: `AtTurnStart(effect, whose, when)` and
   `AtTurnEnd(...)` for what the badge does as a turn starts or ends. `effect`
   names a second effect of the same spell with `spends_use=False`, which is

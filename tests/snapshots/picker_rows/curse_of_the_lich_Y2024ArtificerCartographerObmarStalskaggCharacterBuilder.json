@@ -348,6 +348,14 @@
    "ability": null,
    "action_cost": "Action",
    "amount_kind": "Damage",
+   "badge_modifiers": {
+    "Longstrider": [
+     {
+      "bonus": 10,
+      "type": "Speed"
+     }
+    ]
+   },
    "bonus": null,
    "concentration": false,
    "condition": "Longstrider",
@@ -359,7 +367,7 @@
    "half_on_save": false,
    "is_described": true,
    "is_unavailable": false,
-   "note": "The target's Speed increases by 10 feet. One more target per slot level above 1.",
+   "note": "One more target per slot level above 1.",
    "repeat_save": false,
    "roll": "Saving throw",
    "row_name": "",

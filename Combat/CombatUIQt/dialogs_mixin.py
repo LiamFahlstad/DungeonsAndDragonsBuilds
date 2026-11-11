@@ -30,7 +30,13 @@ from Model.Creatures.MonsterAbilities import DcMonsterAbility, extract_dc_from_t
 from Combat.Rules import Rule, group_by_category, load_rules
 from Combat.PlayerCombatant import weapon_summary
 from Combat.WildShape import current_form
-from Combat.Effects.modifiers import hit_point_maximum, hit_point_maximum_text
+from Combat.Effects.modifiers import (
+    hit_point_maximum,
+    hit_point_maximum_text,
+    size_text,
+    speed_changes,
+    speed_in_use,
+)
 from Core.Definitions import DiceRollCondition, Die
 from Utils.DamageCalculator import probability_of_success
 
@@ -91,10 +97,16 @@ def _creature_type_text(char: dict) -> str:
     return creature_text
 
 
+def _size_shown(char: dict) -> str:
+    """Char's size as More Info shows it: its own, or the one in use with
+    what changes it, "Large (Medium; Enlarge +1)"."""
+    return size_text(char) or (_display(char["size"]) if char.get("size") else "")
+
+
 def _monster_type_text(char: dict) -> str:
     parts = []
-    if char.get("size"):
-        parts.append(_display(char["size"]))
+    if _size_shown(char):
+        parts.append(_size_shown(char))
     creature_text = _creature_type_text(char)
     if creature_text:
         parts.append(creature_text)
@@ -105,19 +117,36 @@ def _monster_type_text(char: dict) -> str:
     return text
 
 
-def _speed_text(char: dict) -> str:
+def _speeds_text(char: dict, speed) -> str:
+    """Char's speeds, each made what `speed` makes of the stored one: "30
+    ft., climb 30 ft., fly 60 ft."."""
     parts = []
     if char.get("speed_ground_ft") is not None:
-        parts.append(f"{char['speed_ground_ft']} ft.")
+        parts.append(f"{speed(char['speed_ground_ft'])} ft.")
     elif char.get("speed") not in (None, ""):
         # Player characters store ground speed as a plain "speed" int, not
         # the speed_ground_ft/climb/fly breakdown monsters use.
-        parts.append(f"{char['speed']} ft.")
+        parts.append(f"{speed(char['speed'])} ft.")
     if char.get("speed_climb_ft") is not None:
-        parts.append(f"climb {char['speed_climb_ft']} ft.")
+        parts.append(f"climb {speed(char['speed_climb_ft'])} ft.")
     if char.get("speed_fly_ft") is not None:
-        parts.append(f"fly {char['speed_fly_ft']} ft.")
-    text = ", ".join(parts)
+        parts.append(f"fly {speed(char['speed_fly_ft'])} ft.")
+    return ", ".join(parts)
+
+
+def _speed_text(char: dict, sources: bool = True) -> str:
+    """Char's speeds in use, with what changes them when something does and
+    `sources` ("60 ft. (30 ft.; Haste ×2)"), then its stat block's special
+    rules. A speed that isn't a number is shown as it is."""
+
+    def in_use(stored):
+        return speed_in_use(char, stored) if isinstance(stored, int) else stored
+
+    text = _speeds_text(char, in_use)
+    changes = speed_changes(char)
+    if sources and changes and text:
+        stored = _speeds_text(char, lambda feet: feet)
+        text = f"{text} ({stored}; {', '.join(changes)})"
     special = char.get("speed_special_rules")
     if special:
         text = f"{text} ({special})" if text else special
@@ -415,9 +444,9 @@ def _add_player_summary(panel: _InfoPanel, char: dict):
     if char.get("proficiency_bonus"):
         panel.field("Proficiency Bonus", f"+{char['proficiency_bonus']}")
     if char.get("speed"):
-        panel.field("Speed", f"{char['speed']} ft.")
-    if char.get("size"):
-        panel.field("Size", char["size"])
+        panel.field("Speed", _speed_text(char))
+    if _size_shown(char):
+        panel.field("Size", _size_shown(char))
 
 
 def _add_player_skill_table(panel: _InfoPanel, sb):

@@ -587,6 +587,104 @@
    "until": null,
    "upcast": []
   },
+  "All spells | Enlarge/Reduce: Enlarge": {
+   "ability": null,
+   "action_cost": "Action",
+   "amount_kind": "Damage",
+   "badge_modifiers": {
+    "Enlarge/Reduce": [
+     {
+      "steps": 1,
+      "type": "Size"
+     },
+     {
+      "abilities": [
+       "Strength"
+      ],
+      "mode": "Advantage",
+      "tests": [
+       "ability check",
+       "saving throw"
+      ],
+      "type": "D20Mode"
+     },
+     {
+      "text": "Its attacks with its enlarged weapons or Unarmed Strikes deal an extra 1d4 damage on a hit.",
+      "type": "Note"
+     }
+    ]
+   },
+   "bonus": null,
+   "concentration": true,
+   "condition": "Enlarge/Reduce",
+   "counts_uses": true,
+   "damage": "",
+   "dc": null,
+   "duration_seconds": 60,
+   "feature_name": "",
+   "half_on_save": false,
+   "is_described": true,
+   "is_unavailable": false,
+   "note": "An unwilling target makes a Constitution save first; on a success, the spell has no effect.",
+   "repeat_save": false,
+   "roll": "Saving throw",
+   "row_name": "",
+   "slot_level": "None",
+   "spell_level": 2,
+   "spell_name": "Enlarge/Reduce",
+   "summary": "",
+   "until": null,
+   "upcast": []
+  },
+  "All spells | Enlarge/Reduce: Reduce": {
+   "ability": "CON",
+   "action_cost": "Action",
+   "amount_kind": "Damage",
+   "badge_modifiers": {
+    "Enlarge/Reduce": [
+     {
+      "steps": -1,
+      "type": "Size"
+     },
+     {
+      "abilities": [
+       "Strength"
+      ],
+      "mode": "Disadvantage",
+      "tests": [
+       "ability check",
+       "saving throw"
+      ],
+      "type": "D20Mode"
+     },
+     {
+      "text": "Its attacks with its reduced weapons or Unarmed Strikes deal 1d4 less damage on a hit (not below 1).",
+      "type": "Note"
+     }
+    ]
+   },
+   "bonus": null,
+   "concentration": true,
+   "condition": "Enlarge/Reduce",
+   "counts_uses": true,
+   "damage": "",
+   "dc": 15,
+   "duration_seconds": 60,
+   "feature_name": "",
+   "half_on_save": false,
+   "is_described": true,
+   "is_unavailable": false,
+   "note": "Only an unwilling target saves.",
+   "repeat_save": false,
+   "roll": "Saving throw",
+   "row_name": "",
+   "slot_level": "None",
+   "spell_level": 2,
+   "spell_name": "Enlarge/Reduce",
+   "summary": "DC 15 CON",
+   "until": null,
+   "upcast": []
+  },
   "All spells | Ensnaring Strike": {
    "ability": "STR",
    "action_cost": "Bonus Action",
@@ -904,6 +1002,95 @@
    "upcast": [
     "1d6"
    ]
+  },
+  "All spells | Haste": {
+   "ability": null,
+   "action_cost": "Action",
+   "amount_kind": "Damage",
+   "badge_modifiers": {
+    "Haste": [
+     {
+      "multiplier": 2,
+      "type": "Speed"
+     },
+     {
+      "bonus": 2,
+      "type": "ArmorClass"
+     },
+     {
+      "abilities": [
+       "Dexterity"
+      ],
+      "mode": "Advantage",
+      "tests": [
+       "saving throw"
+      ],
+      "type": "D20Mode"
+     },
+     {
+      "text": "An additional action on each of its turns: the Attack (one attack only), Dash, Disengage, Hide or Utilize action only.",
+      "type": "Note"
+     }
+    ]
+   },
+   "bonus": null,
+   "concentration": true,
+   "condition": "Haste",
+   "counts_uses": true,
+   "damage": "",
+   "dc": null,
+   "duration_seconds": 60,
+   "feature_name": "",
+   "half_on_save": false,
+   "is_described": true,
+   "is_unavailable": false,
+   "note": "When the spell ends, pick Haste: lethargy for the target.",
+   "repeat_save": false,
+   "roll": "Saving throw",
+   "row_name": "",
+   "slot_level": "None",
+   "spell_level": 3,
+   "spell_name": "Haste",
+   "summary": "",
+   "until": null,
+   "upcast": []
+  },
+  "All spells | Haste: lethargy": {
+   "ability": null,
+   "action_cost": null,
+   "amount_kind": "Damage",
+   "badge_modifiers": {
+    "Haste": [
+     {
+      "set_to": 0,
+      "type": "Speed"
+     }
+    ]
+   },
+   "bonus": null,
+   "concentration": false,
+   "condition": "Incapacitated + Haste",
+   "counts_uses": false,
+   "damage": "",
+   "dc": null,
+   "duration_seconds": 60,
+   "feature_name": "",
+   "half_on_save": false,
+   "is_described": true,
+   "is_unavailable": false,
+   "note": "As Haste ends on the target: its badge then gives a Speed of 0 instead. Part of the same casting: it spends no slot.",
+   "repeat_save": false,
+   "roll": "Saving throw",
+   "row_name": "",
+   "slot_level": "None",
+   "spell_level": 3,
+   "spell_name": "Haste",
+   "summary": "Incapacitated",
+   "until": [
+    "end",
+    "target"
+   ],
+   "upcast": []
   },
   "All spells | Healing Word": {
    "ability": null,
@@ -1248,6 +1435,14 @@
    "ability": null,
    "action_cost": "Action",
    "amount_kind": "Damage",
+   "badge_modifiers": {
+    "Longstrider": [
+     {
+      "bonus": 10,
+      "type": "Speed"
+     }
+    ]
+   },
    "bonus": null,
    "concentration": false,
    "condition": "Longstrider",
@@ -1259,7 +1454,7 @@
    "half_on_save": false,
    "is_described": true,
    "is_unavailable": false,
-   "note": "The target's Speed increases by 10 feet. One more target per slot level above 1.",
+   "note": "One more target per slot level above 1.",
    "repeat_save": false,
    "roll": "Saving throw",
    "row_name": "",

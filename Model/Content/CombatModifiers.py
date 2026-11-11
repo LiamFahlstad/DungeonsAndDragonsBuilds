@@ -10,7 +10,7 @@ Each modifier is what one sentence of the rules says. One the simulator can't
 decide by itself, because it depends on where creatures are or what they can
 see, has a `when`, said as what follows "if" ("the attacker is within 5
 feet"): it is never counted, only shown to the GM next to the roll. Anything
-that changes no roll, AC, Hit Point maximum or damage is a Note.
+that changes no roll, AC, Hit Point maximum, Speed, size or damage is a Note.
 
 modifier_to_dict() and modifier_from_dict() are a modifier as plain data, the
 way a fight's log keeps the ones a lasting effect gives (Bless's D20Bonus):
@@ -24,7 +24,7 @@ from dataclasses import dataclass, fields
 from enum import Enum, StrEnum
 from typing import Any, NoReturn
 
-from Core.Definitions import Ability, Condition, DamageType
+from Core.Definitions import Ability, Condition, CreatureSize, DamageType
 
 # A D20Bonus's amount: dice or a number, with a sign or without ("1d4",
 # "-1d4", "-2", "+5").
@@ -203,6 +203,63 @@ class HitPointMaximum:
     def rolled(self) -> bool:
         """Whether it's a number already: what a badge keeps."""
         return "d" not in self.amount and not self.upcast
+
+
+@dataclass(frozen=True)
+class Speed:
+    """What it does to its Speed, and so to every special speed it has (Rules
+    Glossary, Speed: "any special speed you have increases or decreases by an
+    equal amount", "if your Speed is halved ... your Fly Speed is also
+    halved"): `bonus` feet more or less (Longstrider's 10, Ray of Frost's
+    -10), then times `multiplier` (Haste's 2, a halving's 0.5), or `set_to`
+    that many feet whatever else changes it (a Speed of 0). Shown, not
+    counted: the simulator moves nothing."""
+
+    bonus: int = 0
+    multiplier: int | float = 1
+    set_to: int | None = None
+
+    def __post_init__(self):
+        _check_whole_number(self, "bonus")
+        if (
+            not isinstance(self.multiplier, (int, float))
+            or isinstance(self.multiplier, bool)
+            or self.multiplier <= 0
+        ):
+            raise ValueError(
+                f"A Speed's multiplier is a number above 0 (2, 0.5), got"
+                f" {self.multiplier!r}"
+            )
+        if self.set_to is not None:
+            _check_whole_number(self, "set_to")
+            if self.set_to < 0:
+                raise ValueError(f"A Speed can't be set below 0, got {self.set_to}")
+            if self.bonus or self.multiplier != 1:
+                raise ValueError("A Speed set_to a number takes no bonus or multiplier")
+        elif not self.bonus and self.multiplier == 1:
+            raise ValueError("A Speed needs a bonus, a multiplier or a set_to")
+
+
+@dataclass(frozen=True)
+class Size:
+    """What it does to its size: `steps` categories larger (Enlarge's 1) or
+    smaller (Reduce's -1), never past Tiny or Gargantuan, or it `becomes` a
+    size (Large Form's Large), before any steps."""
+
+    steps: int = 0
+    becomes: CreatureSize | None = None
+
+    def __post_init__(self):
+        _check_whole_number(self, "steps")
+        if self.becomes is not None:
+            try:
+                object.__setattr__(self, "becomes", CreatureSize(self.becomes))
+            except ValueError:
+                raise ValueError(
+                    f"A Size becomes a CreatureSize, got {self.becomes!r}"
+                ) from None
+        elif not self.steps:
+            raise ValueError("A Size needs steps or a size it becomes")
 
 
 @dataclass(frozen=True)
@@ -387,6 +444,8 @@ Modifier = (
     | ArmorClassBase
     | ArmorClassMinimum
     | HitPointMaximum
+    | Speed
+    | Size
     | Resistance
     | DamageImmunity
     | Vulnerability
@@ -410,6 +469,8 @@ MODIFIER_TYPES: dict[str, type] = {
         ArmorClassBase,
         ArmorClassMinimum,
         HitPointMaximum,
+        Speed,
+        Size,
         Resistance,
         DamageImmunity,
         Vulnerability,
@@ -437,8 +498,9 @@ _ENUMS: dict[str, type[Enum]] = {
     "damage_type": DamageType,
     "attacks": AttackKind,
     "whose": WhoseTurn,
+    "becomes": CreatureSize,
 }
-_PLAIN: dict[str, type] = {
+_PLAIN: dict[str, type | tuple[type, ...]] = {
     "when": str,
     "amount": str,
     "text": str,
@@ -448,6 +510,9 @@ _PLAIN: dict[str, type] = {
     "base": int,
     "value": int,
     "upcast": str,
+    "multiplier": (int, float),
+    "set_to": int,
+    "steps": int,
 }
 
 
@@ -502,9 +567,11 @@ def modifier_from_dict(data: Any, where: str = "a modifier") -> Modifier:
         elif name in _ENUMS:
             values[name] = enum(_ENUMS[name], value, name)
         else:
-            kind = _PLAIN[name]
-            if type(value) is not kind:
-                fail(f"{name}: expected {kind.__name__}, got {value!r}")
+            kinds = _PLAIN[name]
+            kinds = kinds if isinstance(kinds, tuple) else (kinds,)
+            if type(value) not in kinds:
+                wanted = " or ".join(kind.__name__ for kind in kinds)
+                fail(f"{name}: expected {wanted}, got {value!r}")
             values[name] = value
     try:
         return cls(**values)

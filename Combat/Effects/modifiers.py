@@ -20,8 +20,9 @@ text: "Neutral", "Advantage", "Disadvantage".
 
 from collections.abc import Callable, Iterable
 from dataclasses import dataclass
+from typing import TypeVar
 
-from Core.Definitions import Ability, Condition
+from Core.Definitions import Ability, Condition, CreatureSize
 from Core.Rules import ability_modifier
 from Model.Content.CombatModifiers import (
     ArmorClass,
@@ -42,6 +43,8 @@ from Model.Content.CombatModifiers import (
     Modifier,
     Resistance,
     RollMode,
+    Size,
+    Speed,
     Vulnerability,
     modifier_from_dict,
 )
@@ -543,6 +546,116 @@ def hit_point_maximum_text(char: dict) -> str:
     if not changes:
         return ""
     return f"{hit_point_maximum(char)} ({char.get('max_hp', 0)}; {', '.join(changes)})"
+
+
+_Kind = TypeVar("_Kind")
+
+
+def _counted_once(char: dict, kind: type[_Kind]) -> list[tuple[str, _Kind]]:
+    """The modifiers of `kind` on char, by what gives each, each once: two of
+    the same effect don't add up (Combining Game Effects)."""
+    seen: list[tuple[str, _Kind]] = []
+    for source, modifier in modifiers_on(char):
+        if isinstance(modifier, kind) and (_label(source), modifier) not in seen:
+            seen.append((_label(source), modifier))
+    return seen
+
+
+def _speed_steps(char: dict) -> list[tuple[str, Speed]]:
+    """The Speed modifiers that make char's speeds, in the order they count:
+    every bonus, then every multiplier; or only the lowest set_to, which
+    no other changes."""
+    pairs = _counted_once(char, Speed)
+    fixed = [(m.set_to, label, m) for label, m in pairs if m.set_to is not None]
+    if fixed:
+        _, label, lowest = min(fixed, key=lambda entry: entry[0])
+        return [(label, lowest)]
+    return sorted(pairs, key=lambda pair: pair[1].multiplier != 1)
+
+
+def speed_in_use(char: dict, stored: int) -> int:
+    """One of char's speeds (its Speed, or its Fly Speed, ...) from the one
+    it has (`stored`, its stat block's or sheet's), with its modifiers: the
+    Rules Glossary has every special speed change as its Speed does. Never
+    below 0, and rounded down."""
+    steps = _speed_steps(char)
+    if steps and steps[0][1].set_to is not None:
+        return steps[0][1].set_to
+    speed = stored + sum(m.bonus for _, m in steps)
+    for _, m in steps:
+        speed *= m.multiplier
+    return max(int(speed), 0)
+
+
+def _times(multiplier: int | float) -> str:
+    if multiplier == 0.5:
+        return "halved"
+    return f"×{multiplier:g}"
+
+
+def speed_changes(char: dict) -> list[str]:
+    """What changes char's speeds, in the order it counts: "Longstrider +10
+    ft.", "Haste ×2", "Haste 0 ft."."""
+    changes = []
+    for label, m in _speed_steps(char):
+        if m.set_to is not None:
+            changes.append(f"{label} {m.set_to} ft.")
+        else:
+            if m.bonus:
+                changes.append(f"{label} {m.bonus:+d} ft.")
+            if m.multiplier != 1:
+                changes.append(f"{label} {_times(m.multiplier)}")
+    return changes
+
+
+SIZES = tuple(CreatureSize)
+
+
+def _stored_size(char: dict) -> CreatureSize | None:
+    """Char's own size: a monster's card keeps its CreatureSize, a player's
+    and a log's its text ("Medium"). None when it isn't known."""
+    try:
+        return CreatureSize(char["size"]) if char.get("size") else None
+    except ValueError:
+        return None
+
+
+def _size_steps(char: dict) -> tuple[CreatureSize | None, list[str]]:
+    """Char's size with its modifiers (size_in_use), and what made it that:
+    "Large Form", "Enlarge +1"."""
+    size, changes = _stored_size(char), []
+    pairs = _counted_once(char, Size)
+    for label, m in pairs:
+        if m.becomes is not None:
+            size = m.becomes
+            changes.append(label)
+    for label, m in pairs:
+        if m.steps:
+            changes.append(f"{label} {m.steps:+d}")
+            if size is not None:
+                at = SIZES.index(size) + m.steps
+                size = SIZES[min(max(at, 0), len(SIZES) - 1)]
+    return size, changes
+
+
+def size_in_use(char: dict) -> CreatureSize | None:
+    """Char's size now: its own, or the one a Size it has makes it (Large
+    Form's Large, then Enlarge's one larger). None when it isn't known, as
+    when it only has steps and no size of its own."""
+    return _size_steps(char)[0]
+
+
+def size_text(char: dict) -> str:
+    """Char's size with what changes it, "Large (Medium; Enlarge +1)", or
+    "" when nothing does, or when the size isn't known (steps from a size
+    nobody gave it): its badge is on its card anyway. "Large (Large Form)"
+    when only what changes it gives it a size."""
+    size, changes = _size_steps(char)
+    if not changes or size is None:
+        return ""
+    stored = _stored_size(char)
+    was = f"{stored.value}; " if stored is not None else ""
+    return f"{size.value} ({was}{', '.join(changes)})"
 
 
 def rolled_modifiers(
