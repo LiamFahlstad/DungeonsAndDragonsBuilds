@@ -52,6 +52,7 @@ change and move on; the full suite can run later.
 | 4 | One `combat-effects` skill; feature agent; content rollout | 4.1 **done** (R57-R60): the `combat-effects` skill and `combat_effects.py` (renamed from spell-mechanics), with the principles, a Features section, `features`, `coverage` and `notes`, and features in `check`; `is_curated` is `is_described`. 4.2 **done**: the `feature-combat-effects` agent (opus); the spell agent is `spell-combat-effects`. 4.4 **done**: `coverage`. 4.3 (content): **Curse of the Lich done** (R61-R65, 2026-11-11): spells 44/44, features 23 described, 37 nothing to apply, none read from text; Time Loop PR was already done. Next: spells level by level and features class by class, which wait for the user's go (Decision 9) |
 | 5 | Sheet chips, monster score | Not started |
 | 6 | **Triggers** (new concept, 2026-11-11; see its section): a row or badge says *when* it's used (a hit, damage taken, dropping to 0, ...), and the simulator applies it itself (AUTO) or asks with a pop-up as it happens (ASK) | 6.1-6.3 **done** (R66-R73, 2026-11-11): `CombatTrigger` on a row (`CombatEffect.trigger`, `Model/Content/CombatTriggers.py`), `outcome_firings` with its gates and modes, and the hit hooks in all three hit paths: when Kivi hits a Large or smaller creature and deals it damage, one pop-up per Apply asks about Hill's Tumble; Apply gives Prone, spends a Giant Ancestry use and logs it, inside the hit's undo step. Only `HIT` and `MISS` fire; the other events are data. 6.4 **done** (R74-R77, 2026-11-11): a monster's hit that gives a condition in a sentence of its own ("If the target is a Large or smaller creature, it has the Prone condition", "..., and the target has the Poisoned condition until the end of its next turn", "the Grappled condition (escape DC 13)") is read as a rider row of its own ("Tree Club: Prone") with an AUTO `after=` trigger: the Hill Giant's Tree Club knocks a Large target Prone from its button and Enter and from the dialog, asks when the size isn't known, and does nothing to a Huge target or on a miss. 101 riders in the catalog. Next: 6.5 (being hit) |
+| 7 | **Stat changes while an effect is on** (new, 2026-11-11; see its section): AC formulas and floors, Immunity and Vulnerability beside the built Resistance, Speed, size, Hit Point maximum, worked out from the stored stat plus the badges, and shown on the card with their sources | 7.1-7.2 **done** (R78-R83, 2026-11-11): `ArmorClassBase` (Mage Armor) and `ArmorClassMinimum` (Barkskin) beside `ArmorClass`, worked out by `armor_class(char, stored)`, which every attack path reads through `armor_bonus`; the same effect twice adds once; `DamageImmunity` and `Vulnerability` beside `Resistance` in `_damage_type_modifier`; Mage Armor, Barkskin, Stoneskin, Protection from Energy (a row per type) and Rage described (`tests/test_stat_changes.py`). Next: 7.3 (Speed and size) |
 
 **Content described so far.** Spells: 57 (2024) + 1 (2014), all as classes
 (every spell is a class since S.4; 58 have combat effects);
@@ -88,6 +89,13 @@ Abjure Foes (Channel Divinity), Sacred Weapon, Fiendish Legacy's and Fey
 Touched's free castings, Obmar's Second Wind and Illuminated Cartography,
 Thum's Steady Aim; the rest `[]` (senses, proficiencies, languages,
 Spellcasting, riders on weapon rows, the owner's own resistances).
+
+**7.1-7.2 (2026-11-11).** With stat changes on their badge: Mage Armor
+(`ArmorClassBase(13, DEX)`), Barkskin (`ArmorClassMinimum(17)`), Stoneskin
+(`Resistance` to Bludgeoning, Piercing and Slashing), Protection from
+Energy (a row per type: Acid, Cold, Fire, Lightning, Thunder) and the
+Barbarian's Rage (Resistance, Strength Advantage, its damage as a note):
+79 spells have combat effects (`combat_effects.py check`).
 
 **Verified 2026-11-09 (after S.3):** full suite passes (9,917); every
 picker-row change reviewed field by field against the previous golden.
@@ -537,7 +545,7 @@ with one list, `char["active_effects"]`, of plain dicts (Decision 5).
 | `D20Mode(rolls, mode, ability=None)` | Restrained (Disadvantage on DEX saves and attacks), Dodge |
 | `AttacksAgainst(mode)` | Faerie Fire, Restrained, Blinded, Dodge |
 | `ArmorClass(bonus)` | Shield (+5), Shield of Faith (+2), Haste (+2) |
-| `Resistance(types)` / `Immunity` / `Vulnerability` | Rage, Absorb Elements, Protection from Energy |
+| `Resistance(types)` / `Immunity` / `Vulnerability` | Rage, Absorb Elements, Protection from Energy (only `Resistance` was built in 3.3; the rest is Phase 7) |
 | `ExtraDamageFrom(amount, damage_type, attacks, when)` | Hunter's Mark, Hex: on the target, "hits from the caster deal 1d6 more" (the record's `caster`, R42) |
 | `ExtraDamageOnHit(amount, damage_type, attacks, when)` | Rage damage, Divine Favor: on the attacker |
 | `NoHealing` | Chill Touch (now a badge with a note) |
@@ -793,6 +801,83 @@ fire).
 6.1-6.4 are the engine Decision 9 waits for. 6.3 is the vertical slice to
 build first. It's what the user asked for, and it touches every hit path
 once.
+
+## Stat changes while an effect is on (Phase 7, new, 2026-11-11)
+
+**Why** (the user, 2026-11-11: "temporary modifications to a character, AC
+increase, new resistances, etc. while a feature/spell is active"). Phase 3
+built the first of these: `ArmorClass(bonus)` (Shield of Faith's +2, counted
+in every attack roll) and `Resistance(types)` (counted in `_damage_target`).
+The rest of what a running spell or feature changes on its bearer is still a
+note the GM has to remember: Mage Armor's AC, Barkskin's floor of 17, Rage's
+Resistances on its owner, Haste's Speed, Enlarge/Reduce's size, Aid's Hit
+Point maximum, Protection from Energy's or Stoneskin's Resistance, a
+Vulnerability or Immunity a spell gives. And the card still shows the stat
+block's numbers (Q20).
+
+### The rule: computed, never written over
+
+A badge never edits `char["ac"]`, `char["speed"]`, `char["size"]` or the
+damage lists. The simulator works out the stat it uses from the stored one
+plus the modifiers on the creature (`modifiers_on(char)`), as `armor_bonus`
+already does for AC. So ending a badge (by hand, timer, Concentration, R54),
+undo and log replay need nothing new: the stat goes back because the
+modifier is gone. The one exception is the Hit Point maximum, whose change
+also moves current HP (7.4).
+
+### Vocabulary (in `Model/Content/CombatModifiers.py`)
+
+| Modifier | Examples | What the simulator does with it |
+|---|---|---|
+| `ArmorClass(bonus)` (**built**, 3.3) | Shield of Faith +2, Shield +5, Haste +2 | Added to the AC an attack is compared with |
+| `ArmorClassBase(base, abilities)` (**built**, 7.1) | Mage Armor (13 + DEX, for a creature "who isn't wearing armor") | Replaces the stored AC when higher (R79); what the target must be when it's given is the GM's to check (R80) |
+| `ArmorClassMinimum(value)` (**built**, 7.1) | Barkskin (2024: "can't be less than 17") | The AC used is at least `value`, after the bonuses |
+| `Resistance(types)` (**built**, 3.2/3.3) | Rage (B/P/S on its owner), Stoneskin, Protection from Energy, Absorb Elements | Halves that type in `_damage_target` |
+| `DamageImmunity(types)` / `Vulnerability(types)` (**built**, 7.2) | Heroes' Feast (Poison Immunity); a Vulnerability from a monster's or homebrew effect | Zeroes / doubles that type, in the same place as Resistance, in the glossary's order (Resistance, then Vulnerability) |
+| `Speed(bonus=0, multiplier=1, set_to=None, modes=())` | Haste ×2, Longstrider +10, Ray of Frost -10, Steady Aim / Halt 0 (Q37) | Shown only: the simulator moves nothing (principle 8). Grappled / Restrained keep their own rules speed of 0 |
+| `Size(steps=0, set_to=None)` | Enlarge/Reduce (one step), Large Form (Large) | The size the Phase 6 gates read (`largest_target`, R68); shown on the card |
+| `HitPointMaximum(amount, upcast)` | Aid (+5, and +5 per slot level above 2), Heroes' Feast (2d10); a monster's "its Hit Point maximum is reduced" rider | Raises (or lowers) `max_hp` while on, see 7.4 |
+| `D20Mode` / `D20Bonus` (**built**) | Enlarge's and Rage's Advantage on Strength checks and saves, Haste's Advantage on DEX saves | As today |
+| `ExtraDamageOnHit` (**built**, 3.4) | Enlarge's +1d4 weapon damage, Reduce's -1d4, Rage's damage (Q26) | As today, once `damage_type=None` (the hit's own type) exists |
+| `Note(text)` | Haste's extra action, Rage's "can't cast spells", reach changes | Shown on the card, not counted |
+
+**Stacking** follows the glossary's Combining Game Effects: the same
+spell's or feature's effects don't add (two Shields of Faith give +2), and
+different ones do. Of several `ArmorClassBase`s only the best counts (one
+way to work out AC); `ArmorClassMinimum` is taken after every bonus.
+
+**Where the badge comes from** doesn't change: a spell's or feature's row
+gives it to its targets (the dialog's pick, Cast Spell), and a self buff
+(Rage, Large Form, Patient Defense's Dodge, Sacred Weapon) goes on its
+owner, which Q35's `targets_self` makes one click. Always-on traits (an
+owner's own Resistances, Unarmored Defense) stay on the sheet and in the
+stat block, not here.
+
+### Showing it
+
+The card and the player view show the stat in use with what changes it:
+"AC 17 (15 +2 Shield of Faith)", "Speed 60 ft. (30 ×2 Haste)", "Large
+(Medium, Enlarge)", "HP 25 / 35 (30 +5 Aid)", and a Resistances line that
+says where each came from ("Bludgeoning, Piercing, Slashing: Rage"). This
+takes over Q20; cover's +2/+5 shows the same way. The player view hides
+what the GM hides today (R27's known-AC notes take the bonus off).
+
+### Steps
+
+| # | Step | Done when |
+|---|---|---|
+| 7.1 | **Done** (R78-R81). `armor_class(char, stored)`: `ArmorClassBase`, `ArmorClassMinimum` next to the built `ArmorClass`, with the stacking rule; every attack path reads it through `armor_bonus`. Mage Armor and Barkskin described. | Mage Armor on a creature with stat-block AC 12 and DEX +3 makes an attack need 16; Barkskin on AC 13 makes it 17, and with Shield of Faith still 17 (17 is the floor, not a bonus); two Shields of Faith give +2; ending each badge gives the old AC back; an old log replays the same |
+| 7.2 | **Done** (R82, R83). `DamageImmunity` / `Vulnerability` beside `Resistance` in `_damage_type_modifier`, in the glossary's order. Rage's Resistances and Stoneskin / Protection from Energy described (Rage as a badge its owner puts on itself). | Rage halves a Slashing hit on its owner and not a Fire one; a Vulnerability doubles; Resistance and Vulnerability to the same type halve, then double (11 Slashing becomes 10); Heroes' Feast takes no Poison damage; ending Rage ends it |
+| 7.3 | `Speed` and `Size`: shown on the card; `Size` read by the Phase 6 gates. Haste, Longstrider, Enlarge/Reduce, Large Form described. | An Enlarged Medium creature is Large to Hill's Tumble's gate (asks) and a Reduced Large one Medium; Haste shows "Speed 60 ft. (30 ×2 Haste)"; both go when the badge ends |
+| 7.4 | `HitPointMaximum`: giving it raises `max_hp` and current HP by the same amount (Aid: "a creature's Hit Point maximum and current Hit Points increase"); ending it lowers `max_hp` and caps current HP at it; the Bloodied check (`damage_mixin`) uses the new maximum. All inside the giving step's undo. | Aid +5 on a creature at 20/30 gives 25/35; taking Aid off at 33/35 leaves 30/30, at 10/35 leaves 10/30; one undo takes back the cast and the HP; a log replays the same |
+| 7.5 | The card and player view show the stats in use with their sources (Q20 done). | Shield of Faith's card reads "AC 17 (15 +2 Shield of Faith)"; a Resistances line names Rage; the player view's AC notes unchanged |
+| 7.6 | Content and tooling: the `combat-effects` skill's rubric gets a "stat changes" section (which modifier, a note only when nothing counts it); `combat_effects.py notes` lists rows whose notes say "AC", "Resistance", "Speed", "Hit Point maximum", "size"; then the parties, through `spell-combat-effects` / `feature-combat-effects`. | Curse of the Lich's and Time Loop PR's rows with such a note use a modifier or say why not |
+
+7.1 and 7.2 are the slice to build first: they change the rolls and the
+damage the simulator works out. 7.3 and 7.5 only change what is shown,
+apart from the size gate. Wild Shape and Polymorph, which swap the whole
+stat block, stay as they are (a form change, after which `rows_of` is
+rebuilt), not a pile of modifiers.
 
 ## Revisions (better solutions found while building)
 
@@ -1549,6 +1634,59 @@ once.
   pick, and the dialog's outcome names `pick.name` or else `row`: two Tree
   Clubs with Times 2 give Prone once and ask nothing.
 
+- **R78. `armor_bonus` stays the one thing the attack paths read** (7.1).
+  The plan named an `effective_ac(char)` for every path to call. The four
+  paths (the dialog's target rows and attack loop, the main window's
+  Attack roll field, a monster's buttons) already add `armor_bonus(target)`
+  to `first_number(target["ac"])`, so `armor_bonus` now returns *the AC in
+  use minus the stored AC*: `armor_class_bonus(char, stored)`, which is
+  `armor_class(char, stored) - stored`. No caller changed, and
+  `note_attack_roll`, which takes that bonus off a roll, keeps the players'
+  known-AC notes about the stored AC, so they stay true when Mage Armor or
+  Barkskin ends (Barkskin on AC 13 adds 4: a 15 that misses shows "AC >
+  11"). With no stored AC only what adds to one counts, as before.
+- **R79. The stored AC is the base Mage Armor competes with** (Q51 as
+  suggested). A player's `ac` is the sheet's total and a monster's its
+  stat block's; `ArmorClassBase` counts only when its 13 + DEX beats it.
+  DEX comes from `char["Ability Scores"]` (0 without one). A shield the
+  sheet already counts is lost under Mage Armor; that's the GM's edge.
+- **R80. No `when` on `ArmorClassBase`** (Q52 decided otherwise). "A
+  willing creature who isn't wearing armor" and Rage's "aren't wearing
+  Heavy armor" are what the target must be when the effect is given, not
+  something that comes and goes: the GM checks them by giving the badge.
+  A `when` would mean "never counted" (principle 8), which is wrong here.
+  Mage Armor's row says so in a note, with "it ends if the target dons
+  armor".
+- **R81. The order of AC modifiers** (7.1): the best of the stored AC and
+  each `ArmorClassBase`, then every `ArmorClass`, then at least each
+  `ArmorClassMinimum`, then cover. Barkskin is a floor under the AC the
+  creature's own effects give (Shield of Faith on 13 is 15, so 17; on 16
+  it's 18), and cover adds to whatever that is (Barkskin with Half Cover
+  is 19), since cover is about the attack, not the creature. Each
+  (source, modifier) pair counts once: two records of Shield of Faith
+  give +2 (Combining Game Effects). The dialog's notes say each: "Mage
+  Armor: base AC 13 + DEX", "Barkskin: AC at least 17".
+- **R82. Immunity and Vulnerability from a badge go where Resistance
+  does** (7.2): `_damage_type_modifier` reads `immune_to_damage` and
+  `vulnerable_to` beside the stat block's lists, as it read `resists`.
+  The three share `_damage_modifier`; none listed means all damage, as
+  Petrified's Resistance. The player view no longer learns a defense a
+  badge gave: `note_damage_defense` skips a resisted or immune type the
+  creature's modifiers cover (before, only Resistance to all damage was
+  skipped, so a monster's Stoneskin would have shown as "Resists
+  Slashing").
+- **R83. Rage is a 10-minute badge its owner puts on itself** (7.2):
+  Resistance to Bludgeoning, Piercing and Slashing, `D20Mode` Advantage on
+  Strength checks and saves, and two `Note`s (its Rage Damage bonus for
+  the Barbarian's level, Q26 still open; no Concentration or spells). It
+  lasts "until the end of your next turn" unless extended, which the
+  simulator can't see, so the row's note tells the GM to take it off.
+  No party has a Barbarian, so no picker golden changed for it. The
+  spells' golden (`caster_described_spells`) gained the 8 new rows, read
+  against their text: same shape as Bless and Shield of Faith, Barkskin a
+  Bonus Action (2024), Concentration on Stoneskin and Protection from
+  Energy only.
+
 ## Open questions (with suggestions)
 
 - **Q2** done in 4.1 (R57, R60).
@@ -1611,7 +1749,8 @@ once.
   and shows it in the dialog's target rows, but the card still shows the
   stat block's AC, as it does under cover. *Suggestion:* yes, "AC 17 (15
   +2)", with cover too, in Phase 5 with the sheet chips; the player view's
-  known-AC notes already take the bonus off (R27).
+  known-AC notes already take the bonus off (R27). *Now step 7.5*, with
+  Speed, size, Hit Point maximum and Resistances shown the same way.
 - **Q21. Bless's note now says what the badge counts.** "Each target adds
   1d4 to its attack rolls and saving throws" was the GM's reminder; now the
   simulator adds it, and the spell-mechanics rubric says not to restate what
@@ -1800,6 +1939,29 @@ setting is one checkbox, off meaning turn-column buttons (R71, Q48). Q47 is
   attacker's riders in the pop-up as one choice ("Which attack hit? Tree
   Club / Trash Lob / neither").
 
+- **Q51** built as suggested (R79). **Is the stored AC a base or a total?** A player's `char["ac"]`
+  is the sheet's total (armor, shield, Unarmored Defense), and a monster's
+  is its stat block's. `ArmorClassBase` (Mage Armor) needs the base it
+  replaces. *Suggestion:* treat the stored AC as the base the creature has
+  without effects, and let `ArmorClassBase` replace it only when higher
+  (13 + DEX on a Wizard with 12 is 15; on a Fighter in plate, nothing).
+  The shield bonus the sheet already counts is the edge case: say so in
+  Mage Armor's `when`.
+- **Q52** decided otherwise (R80): no `when`. **Gates on a stat change the simulator can't see** ("if it isn't
+  wearing armor", Rage's "while you aren't wearing Heavy armor").
+  *Suggestion:* the same as everywhere (principle 8): a `when` on the
+  modifier, counted by default and shown in the card's tooltip, so the
+  GM takes the badge off when it doesn't hold.
+- **Q53. Hit Point maximum changes on monsters' hits** ("its Hit Point
+  maximum is reduced by an amount equal to the damage taken", a Wight's
+  Life Drain) last until a Long Rest, not while a badge is on.
+  *Suggestion:* a badge with `HitPointMaximum(-amount)` and no timer,
+  given by a Phase 6 rider row; the amount is the damage the hit dealt,
+  so it needs the `AttackOutcome.damage_dealt` the rider already sees.
+- **Q54. Should a shown stat change go in the log?** *Suggestion:* no
+  line of its own: the log already says the badge was given and ended.
+  The card's "AC 17 (15 +2 Shield of Faith)" is the reminder.
+
 ## Discovered issues
 
 - **DI-060** (open): pre-existing pyright errors in the combat-effects tests;
@@ -1924,6 +2086,15 @@ top). The full suite runs later, when the user asks.
   the hit and what it triggered; one pop-up per Apply; `ask_triggers`
   off. Plus `test_turn_triggers.py`, to show 3.5's triggers didn't change,
   and the picker goldens' diff read before `UPDATE_SNAPSHOTS=1`.
+- **Phase 7:** `tests/test_stat_changes.py` (new). The JSON form and its
+  strict errors for each new modifier. Expected values from the rules text
+  and the glossary's Combining Game Effects and Damage Resistance and
+  Vulnerability: Mage Armor, Barkskin with and without Shield of Faith,
+  two Shields of Faith, Rage, Heroes' Feast, Enlarge's size in a Phase 6
+  gate, Aid's maximum and current HP given and taken back. Each badge
+  ending by hand, timer and Concentration; one undo; an old log replaying
+  the same. Plus `test_effect_modifiers.py` and `test_extra_damage.py`,
+  to show what Phase 3 built didn't change.
 
 ## Checklist: adding a field to the model
 
