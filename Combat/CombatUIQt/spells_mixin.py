@@ -20,7 +20,6 @@ from Combat.Effects.active_effects import (
     SPELL,
     badge_modifiers,
     describe,
-    give_modifiers,
     held_by_concentration,
     link_concentration,
     note_origin,
@@ -639,7 +638,13 @@ class SpellsMixin(CombatWindowState):
             describe(char, spell.name, tooltip_html, badge_color, SPELL)
             self._add_condition_to(char, spell.name, source=source)
             note_origin(char, spell.name, source=spell.name, caster=source["name"])
-            give_modifiers(char, spell.name, modifiers)
+            self._give_badge_modifiers(
+                char,
+                spell.name,
+                modifiers,
+                levels_up=max((slot_level or spell.level) - spell.level, 0),
+                source=source,
+            )
             # The active spell below holds what it put on whom.
             if has_duration and any(r["target"] == char["name"] for r in applied):
                 link_concentration(char, spell.name, source["name"])

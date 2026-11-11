@@ -30,7 +30,7 @@ from Model.Content.CombatEffect import (
     CombatInstances,
     EffectRoll,
 )
-from Model.Content.CombatModifiers import ArmorClassMinimum
+from Model.Content.CombatModifiers import ArmorClassMinimum, HitPointMaximum
 from Model.Content.Feature import FeatureTarget
 from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table
 from Model.View import CharacterView
@@ -667,6 +667,20 @@ class Aid(ClassSpell):
             Option(
                 "Using a Higher-Level Spell Slot",
                 (Facts((("Hit Points", "+5 for each spell slot level above 2"),)),),
+            ),
+        ]
+
+    def combat_effects(
+        self, character: CharacterView | None = None
+    ) -> list[CombatEffect]:
+        return [
+            CombatEffect(
+                conditions=(
+                    CombatCondition(
+                        "Aid", modifiers=(HitPointMaximum("5", upcast="5"),)
+                    ),
+                ),
+                notes=("Up to three creatures.",),
             ),
         ]
 

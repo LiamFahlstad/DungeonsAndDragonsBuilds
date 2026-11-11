@@ -18,6 +18,7 @@ from PyQt6.QtWidgets import (
 
 from Combat.Definitions import ConditionRule
 from Combat.Effects.active_effects import find_effect, timers
+from Combat.Effects.modifiers import hit_point_maximum
 from .dialogs_mixin import _damage_entry_text, _speed_text
 from Core.Rules import ability_modifier
 from .monster_actions import (
@@ -605,7 +606,7 @@ def _hp_chunk_color(hp: int, max_hp: int) -> str:
 def _hp_row(char: dict) -> QHBoxLayout:
     """The HP bar, colored by how hurt the combatant is, plus any temp HP."""
     hp = char["hp"]
-    max_hp = char["max_hp"]
+    max_hp = hit_point_maximum(char)
     temp_hp = char.get("temp_hp", 0)
 
     hp_row = QHBoxLayout()

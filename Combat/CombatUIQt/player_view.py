@@ -36,6 +36,7 @@ from PyQt6.QtWidgets import (
 
 from Combat.Definitions import CombatStatus
 from Combat.Effects.modifiers import (
+    hit_point_maximum,
     immune_to_condition,
     immune_to_damage,
     resists,
@@ -153,11 +154,13 @@ def _health_text(char: dict, death_state: str) -> str:
         )
         return f"Dying ({fails} failed, {saves} saved)"
     temp = char.get("temp_hp", 0)
-    return f"{char['hp']} / {char['max_hp']}" + (f" (+{temp} temp)" if temp else "")
+    return f"{char['hp']} / {hit_point_maximum(char)}" + (
+        f" (+{temp} temp)" if temp else ""
+    )
 
 
 def _health(char: dict, death_state: str) -> PlayerViewHealth:
-    hp, max_hp = max(char["hp"], 0), max(char["max_hp"], 1)
+    hp, max_hp = max(char["hp"], 0), max(hit_point_maximum(char), 1)
     return PlayerViewHealth(
         char["name"],
         _health_text(char, death_state),
@@ -174,7 +177,8 @@ def _limited_health(char: dict, death_state: str) -> PlayerViewHealth:
         text = "Dying" if death_state == "dying" else _health_text(char, death_state)
         return PlayerViewHealth(char["name"], text, 0, _hp_chunk_color(0, 1))
     # A summon whose HP isn't set yet (max HP 0) has nothing to be hurt from.
-    left = min(100 * char["hp"] / char["max_hp"], 100) if char["max_hp"] > 0 else 100
+    top = hit_point_maximum(char)
+    left = min(100 * char["hp"] / top, 100) if top > 0 else 100
     percent, word = next(band for band in _HEALTH_WORDS if left <= band[0])
     return PlayerViewHealth(char["name"], word, percent, _hp_chunk_color(percent, 100))
 
@@ -229,7 +233,7 @@ def note_health(char: dict):
         return
     stats = char.get("stats", {})
     lost = stats.get("damage_taken", 0) - stats.get("healing_received", 0)
-    hp, max_hp = char["hp"], char["max_hp"]
+    hp, max_hp = char["hp"], hit_point_maximum(char)
     # A summon whose HP isn't set yet (max HP 0) has no maximum to show.
     if lost <= 0 or max_hp <= 0:
         return

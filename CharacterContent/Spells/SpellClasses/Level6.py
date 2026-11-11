@@ -22,8 +22,15 @@ from CharacterContent.Spells.SpellFactory.SpellFields import (
     Duration,
     Range,
 )
-from Core.Definitions import CharacterClass
+from Core.Definitions import CharacterClass, Condition, DamageType
+from Model.Content.CombatEffect import CombatCondition, CombatEffect
+from Model.Content.CombatModifiers import (
+    ConditionImmunity,
+    HitPointMaximum,
+    Resistance,
+)
 from Model.Content.Feature import FeatureTarget
+from Model.View import CharacterView
 from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table
 
 
@@ -1867,6 +1874,30 @@ class HeroesFeast(ClassSpell):
                     ),
                 )
             )
+        ]
+
+    def combat_effects(
+        self, character: CharacterView | None = None
+    ) -> list[CombatEffect]:
+        return [
+            CombatEffect(
+                conditions=(
+                    CombatCondition(
+                        "Heroes' Feast",
+                        duration_seconds=24 * 60 * 60,
+                        modifiers=(
+                            Resistance((DamageType.POISON,)),
+                            ConditionImmunity(
+                                (Condition.FRIGHTENED, Condition.POISONED)
+                            ),
+                            HitPointMaximum("2d10"),
+                        ),
+                    ),
+                ),
+                notes=(
+                    "Up to twelve creatures that partook of the feast, an hour after it was conjured; each rolls its own 2d10.",
+                ),
+            ),
         ]
 
 

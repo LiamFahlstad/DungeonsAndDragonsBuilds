@@ -34,6 +34,7 @@ from Combat.Campaign import Campaign
 from Model.Content.Feature import RegainedOn
 from Combat.Definitions import Action
 from Combat.PlayerCombatant import max_pact_slots
+from Combat.Effects.modifiers import hit_point_maximum
 from Core.Definitions import Condition
 
 from .app import CombatAppQt
@@ -158,7 +159,7 @@ def short_rest_dialog(app: CombatAppQt, parent: QWidget | None = None) -> QDialo
     hp_labels: dict[str, QLabel] = {}
     for row, char in enumerate(players):
         name_lbl = QLabel(char["name"])
-        hp_lbl = QLabel(f"{char['hp']}/{char['max_hp']} HP")
+        hp_lbl = QLabel(f"{char['hp']}/{hit_point_maximum(char)} HP")
         hp_lbl.setObjectName("secondary")
         heal_input = QLineEdit()
         heal_input.setPlaceholderText("Heal amount…")
@@ -185,7 +186,7 @@ def short_rest_dialog(app: CombatAppQt, parent: QWidget | None = None) -> QDialo
                 continue
             was_downed = death_state != "alive"
             pre_hp = char["hp"]
-            char["hp"] = min(char["hp"] + heal, char["max_hp"])
+            char["hp"] = min(char["hp"] + heal, hit_point_maximum(char))
             actual_heal = char["hp"] - pre_hp
             heal_value = {
                 "heal": actual_heal,
@@ -203,7 +204,9 @@ def short_rest_dialog(app: CombatAppQt, parent: QWidget | None = None) -> QDialo
                 char["death_saves_success"] = 0
                 app._remove_condition_from(char, Condition.UNCONSCIOUS.value)
             app._apply_bloodied_condition(char)
-            hp_labels[char["name"]].setText(f"{char['hp']}/{char['max_hp']} HP")
+            hp_labels[char["name"]].setText(
+                f"{char['hp']}/{hit_point_maximum(char)} HP"
+            )
             heal_inputs[char["name"]].clear()
 
     btn_row = QHBoxLayout()

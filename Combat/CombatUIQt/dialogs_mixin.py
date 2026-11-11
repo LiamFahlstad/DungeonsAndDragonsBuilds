@@ -30,6 +30,7 @@ from Model.Creatures.MonsterAbilities import DcMonsterAbility, extract_dc_from_t
 from Combat.Rules import Rule, group_by_category, load_rules
 from Combat.PlayerCombatant import weapon_summary
 from Combat.WildShape import current_form
+from Combat.Effects.modifiers import hit_point_maximum
 from Core.Definitions import DiceRollCondition, Die
 from Utils.DamageCalculator import probability_of_success
 
@@ -321,7 +322,7 @@ def _description_label(text: str) -> QLabel:
 
 def _add_vitals(panel: _InfoPanel, char: dict):
     """HP, AC, conditions and remaining spell slots."""
-    hp_str = f"{char['hp']} / {char['max_hp']}"
+    hp_str = f"{char['hp']} / {hit_point_maximum(char)}"
     if char.get("temp_hp"):
         hp_str += f"  (+{char['temp_hp']} temp)"
     panel.field("HP", hp_str)

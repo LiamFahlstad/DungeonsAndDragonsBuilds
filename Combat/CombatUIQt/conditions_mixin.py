@@ -52,9 +52,13 @@ from Combat.Effects.modifiers import (
     extra_text,
     hit_extras,
     hit_plan,
+    hit_point_maximum,
+    hit_point_maximum_notes,
+    rolled_modifiers,
     rules_condition,
     signed,
 )
+from Model.Content.CombatModifiers import Modifier
 from Combat.Effects.triggers import AttackOutcome
 from Combat.WildShape import current_form, form_badge
 from Core.Definitions import Condition, DamageType
@@ -78,7 +82,7 @@ from .effect_options import (
     spell_slot_choices,
 )
 from .features_mixin import FEATURE_BADGE_COLOR
-from .monster_actions import first_number, legendary_resistances_left
+from .monster_actions import first_number, legendary_resistances_left, roll_dice
 from .player_view import note_condition_immunity
 from .resources import feature_lack, monster_action_lack, spell_slot_lack
 from .saves import (
@@ -464,12 +468,70 @@ class ConditionsMixin(CombatWindowState):
             if incapacitates(cond) and current_form(char):
                 self._leave_wild_shape(char, reason=cond)
 
+    def _give_badge_modifiers(
+        self,
+        char: dict,
+        name: str,
+        modifiers,
+        *,
+        levels_up: int = 0,
+        source: dict | None = None,
+    ):
+        """char's badge `name` gives `modifiers` while it's on, their dice
+        rolled now (rolled_modifiers). One that raises its Hit Point maximum
+        raises its current Hit Points by as much (Aid: "Hit Point maximum and
+        current Hit Points increase by 5"), as Hit Points regained from
+        `source`, so a creature at 0 HP comes to; one that lowers it leaves
+        no more than the new maximum."""
+        before = hit_point_maximum(char)
+        kept: tuple[Modifier, ...] = rolled_modifiers(modifiers, levels_up, roll_dice)
+        give_modifiers(char, name, kept)
+        change = hit_point_maximum(char) - before
+        if not change:
+            return
+        notes = ", ".join(hit_point_maximum_notes(char))
+        self._log_event(
+            f"{char['name']}'s Hit Point maximum is {hit_point_maximum(char)}"
+            f" ({char['max_hp']}, {notes})",
+            character=char["name"],
+        )
+        if change > 0:
+            # _heal_target sees to Bloodied by the new maximum.
+            self._heal_target(char, change, source)
+        else:
+            self._keep_hit_points_in_maximum(char, name)
+
+    def _keep_hit_points_in_maximum(self, char: dict, reason: str):
+        """char has no more Hit Points than its maximum, now that `reason`
+        changed it (Aid ending), logged so the party's history replays it.
+        Bloodied goes by the new maximum."""
+        top = hit_point_maximum(char)
+        if char["hp"] > top:
+            lost = char["hp"] - top
+            char["hp"] = top
+            self._log_event(
+                f"{char['name']} has {top} HP, the most its Hit Point maximum"
+                f" allows without {reason}",
+                character=char["name"],
+                action=Action.LOSE_HIT_POINTS,
+                value={
+                    "hp_delta": -lost,
+                    "reason": reason,
+                    "target_name": char["name"],
+                },
+            )
+        self._apply_bloodied_condition(char, source=char)
+
     @undoable
     def _remove_condition_from(self, char: dict, cond: str, source: dict | None = None):
         if cond in char["conditions"]:
+            # What it did to the Hit Point maximum (Aid) goes with it.
+            maximum = hit_point_maximum(char)
             char["conditions"].remove(cond)
             # Its tooltip, colour, timer and repeat save go with it.
             remove_effect(char, cond)
+            if hit_point_maximum(char) != maximum:
+                self._keep_hit_points_in_maximum(char, cond)
             source_name = source["name"] if source is not None else None
             cond_value = {
                 "condition": cond,
@@ -965,10 +1027,21 @@ class ConditionsMixin(CombatWindowState):
         self._add_custom_condition(condition, effect.duration, effect.notes, [target])
         note_origin(target, condition, source=effect.name)
         if effect.pick is not None:
-            give_modifiers(target, condition, effect.pick.modifiers_for(condition))
             # Who gave it, also on a record only its modifiers made: extra
             # damage from its caster's hits (Hunter's Mark) goes by it.
             source = self.selected_character or self._current_turn_character()
+            levels_up = max(
+                (effect.slot_level or effect.pick.spell_level)
+                - effect.pick.spell_level,
+                0,
+            )
+            self._give_badge_modifiers(
+                target,
+                condition,
+                effect.pick.modifiers_for(condition),
+                levels_up=levels_up,
+                source=source,
+            )
             if source is not None:
                 note_origin(
                     target, condition, source=effect.name, caster=source["name"]

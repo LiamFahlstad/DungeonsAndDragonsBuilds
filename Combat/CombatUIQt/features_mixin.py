@@ -20,7 +20,6 @@ from Combat.Effects.active_effects import (
     FEATURE,
     badge_modifiers,
     describe,
-    give_modifiers,
     note_origin,
 )
 from Presentation.FeatureCards import feature_label
@@ -402,7 +401,7 @@ class FeaturesMixin(CombatWindowState):
             describe(char, feature.name, tooltip_html, badge_color, FEATURE)
             self._add_condition_to(char, feature.name, source=source)
             note_origin(char, feature.name, source=feature.name, caster=source["name"])
-            give_modifiers(char, feature.name, modifiers)
+            self._give_badge_modifiers(char, feature.name, modifiers, source=source)
 
             if has_duration:
                 char.setdefault("active_features", []).append(

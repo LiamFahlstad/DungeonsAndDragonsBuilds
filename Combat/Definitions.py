@@ -25,6 +25,9 @@ class Action(str, Enum):
     ADD_TEMP_HP = "add_temp_hp"
     REGAIN_FEATURE_CHARGE = "regain_feature_charge"
     REVIVE = "revive"
+    # Hit Points lost without damage, as an effect that raised the Hit Point
+    # maximum ends (Aid): {"hp_delta": -3, "reason": "Aid", "target_name": ...}.
+    LOSE_HIT_POINTS = "lose_hit_points"
     # A Druid taking on a Wild Shape form ({"form": "Brown Bear"}) or
     # leaving it (Combat/WildShape.py).
     WILD_SHAPE = "wild_shape"

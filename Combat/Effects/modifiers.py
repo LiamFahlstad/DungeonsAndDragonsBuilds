@@ -18,7 +18,7 @@ notes it can't have known about come with it. The roll modes are the UI's
 text: "Neutral", "Advantage", "Disadvantage".
 """
 
-from collections.abc import Iterable
+from collections.abc import Callable, Iterable
 from dataclasses import dataclass
 
 from Core.Definitions import Ability, Condition
@@ -38,6 +38,7 @@ from Model.Content.CombatModifiers import (
     D20Test,
     ExtraDamageFrom,
     ExtraDamageOnHit,
+    HitPointMaximum,
     Modifier,
     Resistance,
     RollMode,
@@ -480,6 +481,53 @@ def armor_class_notes(char: dict) -> list[str]:
         elif isinstance(m, ArmorClassMinimum):
             notes.append(f"{label}: AC at least {m.value}")
     return notes
+
+
+def _hit_point_changes(char: dict) -> list[tuple[str, HitPointMaximum]]:
+    """The HitPointMaximum modifiers on char that count, each once: two of
+    the same effect don't add up (Combining Game Effects). One not rolled
+    yet (dice, an upcast) counts nothing: a badge keeps its number."""
+    seen: list[tuple[str, HitPointMaximum]] = []
+    for source, modifier in modifiers_on(char):
+        if isinstance(modifier, HitPointMaximum) and modifier.rolled:
+            pair = (_label(source), modifier)
+            if pair not in seen:
+                seen.append(pair)
+    return seen
+
+
+def hit_point_maximum(char: dict) -> int:
+    """Char's Hit Point maximum with what its effects do to it (Aid's +5):
+    its stored `max_hp` is the one without them, so it comes back when they
+    end, and a player's sheet is never changed. Never below 0."""
+    changes = sum(int(m.amount) for _, m in _hit_point_changes(char))
+    return max(char.get("max_hp", 0) + changes, 0)
+
+
+def hit_point_maximum_notes(char: dict) -> list[str]:
+    """What changes char's Hit Point maximum: "Aid: +5"."""
+    return [f"{label}: {int(m.amount):+d}" for label, m in _hit_point_changes(char)]
+
+
+def rolled_modifiers(
+    modifiers: Iterable[Modifier], levels_up: int, roll: Callable[[str], int]
+) -> tuple[Modifier, ...]:
+    """`modifiers` as a badge keeps them once given: a HitPointMaximum's
+    dice rolled with `roll` and its upcast added for each of `levels_up`
+    slot levels above the spell's (Aid at level 3: 5 + 5). The rest as
+    they are."""
+    kept: list[Modifier] = []
+    for modifier in modifiers:
+        if not isinstance(modifier, HitPointMaximum) or modifier.rolled:
+            kept.append(modifier)
+            continue
+        sign = -1 if modifier.amount.startswith("-") else 1
+        total = sign * roll(modifier.amount.lstrip("-"))
+        if modifier.upcast:
+            total += sign * sum(roll(modifier.upcast) for _ in range(levels_up))
+        if total:
+            kept.append(HitPointMaximum(str(total)))
+    return tuple(kept)
 
 
 def _damage_modifier(char: dict, kind: type, damage_type: str) -> bool:

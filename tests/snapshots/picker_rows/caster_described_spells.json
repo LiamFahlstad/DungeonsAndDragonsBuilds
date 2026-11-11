@@ -26,6 +26,41 @@
    "until": null,
    "upcast": []
   },
+  "All spells | Aid": {
+   "ability": null,
+   "action_cost": "Action",
+   "amount_kind": "Damage",
+   "badge_modifiers": {
+    "Aid": [
+     {
+      "amount": "5",
+      "type": "HitPointMaximum",
+      "upcast": "5"
+     }
+    ]
+   },
+   "bonus": null,
+   "concentration": false,
+   "condition": "Aid",
+   "counts_uses": true,
+   "damage": "",
+   "dc": null,
+   "duration_seconds": 28800,
+   "feature_name": "",
+   "half_on_save": false,
+   "is_described": true,
+   "is_unavailable": false,
+   "note": "Up to three creatures.",
+   "repeat_save": false,
+   "roll": "Saving throw",
+   "row_name": "",
+   "slot_level": "None",
+   "spell_level": 2,
+   "spell_name": "Aid",
+   "summary": "",
+   "until": null,
+   "upcast": []
+  },
   "All spells | Barkskin": {
    "ability": null,
    "action_cost": "Bonus Action",
@@ -897,6 +932,53 @@
    "upcast": [
     "2d4"
    ]
+  },
+  "All spells | Heroes' Feast": {
+   "ability": null,
+   "action_cost": null,
+   "amount_kind": "Damage",
+   "badge_modifiers": {
+    "Heroes' Feast": [
+     {
+      "damage_types": [
+       "Poison"
+      ],
+      "type": "Resistance"
+     },
+     {
+      "conditions": [
+       "Frightened",
+       "Poisoned"
+      ],
+      "type": "ConditionImmunity"
+     },
+     {
+      "amount": "2d10",
+      "type": "HitPointMaximum"
+     }
+    ]
+   },
+   "bonus": null,
+   "concentration": false,
+   "condition": "Heroes' Feast",
+   "counts_uses": true,
+   "damage": "",
+   "dc": null,
+   "duration_seconds": 86400,
+   "feature_name": "",
+   "half_on_save": false,
+   "is_described": true,
+   "is_unavailable": false,
+   "note": "Up to twelve creatures that partook of the feast, an hour after it was conjured; each rolls its own 2d10.",
+   "repeat_save": false,
+   "roll": "Saving throw",
+   "row_name": "",
+   "slot_level": "None",
+   "spell_level": 6,
+   "spell_name": "Heroes' Feast",
+   "summary": "",
+   "until": null,
+   "upcast": []
   },
   "All spells | Heroism": {
    "ability": null,

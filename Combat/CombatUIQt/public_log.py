@@ -26,6 +26,7 @@ _KINDS: dict[str, str] = {
     Action.DEATH_SAVE_FAIL: "down",
     Action.DEATH_SAVE_SUCCESS: "heal",
     Action.REVIVE: "heal",
+    Action.LOSE_HIT_POINTS: "minor",
 }
 # The lines an attack's damage can still join: anything else came between them.
 _ATTACK_KINDS = {"hit", "crit", "miss", "damage", "bloodied"}

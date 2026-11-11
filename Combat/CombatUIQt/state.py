@@ -323,6 +323,17 @@ class CombatWindowState:
     def _heal_target(self, char: dict, heal: int, source: dict | None) -> bool:
         raise NotImplementedError("DamageMixin._heal_target")
 
+    def _give_badge_modifiers(
+        self,
+        char: dict,
+        name: str,
+        modifiers,
+        *,
+        levels_up: int = 0,
+        source: dict | None = None,
+    ):
+        raise NotImplementedError("ConditionsMixin._give_badge_modifiers")
+
     def _summon_owner(self, char: dict) -> dict | None:
         raise NotImplementedError("SummonsMixin._summon_owner")
 

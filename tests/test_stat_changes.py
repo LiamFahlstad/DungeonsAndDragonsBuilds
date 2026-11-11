@@ -22,14 +22,17 @@ from CharacterContent.Features.ClassFeatures.Barbarian.BarbarianFeatures import 
 from CharacterContent.Spells.SpellFactory import SpellFactory
 from Combat.Combatants import Pirate, Tiger
 from Combat.CombatUIQt.player_view import note_damage_defense
+from Combat.PlayerLog import is_round_key
 from Combat.CombatUIQt.saves import CustomEffect
 from Combat.Effects.active_effects import KEY, give_modifiers, new_effect
 from Combat.Effects.modifiers import (
     armor_class,
     armor_class_bonus,
     armor_class_notes,
+    hit_point_maximum,
     immune_to_damage,
     resists,
+    rolled_modifiers,
     save_plan,
     vulnerable_to,
 )
@@ -40,6 +43,7 @@ from Model.Content.CombatModifiers import (
     ArmorClassBase,
     ArmorClassMinimum,
     DamageImmunity,
+    HitPointMaximum,
     Note,
     Resistance,
     Vulnerability,
@@ -222,7 +226,7 @@ def test_the_spells_give_these_badges():
 def test_immunity_and_vulnerability_from_a_badge():
     char = _with(
         {
-            "Feast": (DamageImmunity((DamageType.POISON,)),),
+            "Warded": (DamageImmunity((DamageType.POISON,)),),
             "Cursed": (Vulnerability((DamageType.FIRE,)),),
         }
     )
@@ -340,8 +344,8 @@ def test_damage_from_a_badge(fight):
         10,
         "resisted and vulnerable",
     )
-    tiger["conditions"].append("Feast")
-    give_modifiers(tiger, "Feast", (DamageImmunity((DamageType.POISON,)),))
+    tiger["conditions"].append("Warded")
+    give_modifiers(tiger, "Warded", (DamageImmunity((DamageType.POISON,)),))
     assert ui._damage_type_modifier(tiger, 11, POISON) == (0, "immune")
 
 
@@ -349,7 +353,7 @@ def test_players_learn_nothing_from_a_defense_a_badge_gives():
     monster = _with(
         {
             "Stoneskin": (Resistance((DamageType.SLASHING,)),),
-            "Feast": (DamageImmunity((DamageType.POISON,)),),
+            "Warded": (DamageImmunity((DamageType.POISON,)),),
         }
     )
     note_damage_defense(monster, SLASHING, "resisted")
@@ -358,3 +362,164 @@ def test_players_learn_nothing_from_a_defense_a_badge_gives():
     assert "known_immunities" not in monster
     note_damage_defense(monster, FIRE, "resisted")
     assert monster["known_resistances"] == [FIRE]
+
+
+# ---------------------------------------------------------------------------
+# 7.4: the Hit Point maximum (Aid: "Each target's Hit Point maximum and
+# current Hit Points increase by 5 for the duration", 5 more "for each spell
+# slot level above 2"; Heroes' Feast: "Its Hit Point maximum also increases
+# by 2d10, and it gains the same number of Hit Points")
+# ---------------------------------------------------------------------------
+
+
+def test_a_hit_point_maximum_reads_back_and_refuses_nonsense():
+    aid = HitPointMaximum("5", upcast="5")
+    assert modifier_to_dict(aid) == {
+        "type": "HitPointMaximum",
+        "amount": "5",
+        "upcast": "5",
+    }
+    assert modifier_from_dict(modifier_to_dict(aid)) == aid
+    for amount in ("0", "five", "+5", "2d0", ""):
+        with pytest.raises(ValueError, match="HitPointMaximum"):
+            HitPointMaximum(amount)
+    with pytest.raises(ValueError, match="upcast"):
+        HitPointMaximum("5", upcast="-5")
+
+
+def test_dice_and_upcast_are_rolled_as_the_badge_is_given():
+    """Aid at level 4 is 5 + 5 + 5; Heroes' Feast's 2d10 is the roll; the
+    rest stays as it is."""
+    resist = Resistance((DamageType.POISON,))
+    rolls = {"5": 5, "2d10": 13}
+    assert rolled_modifiers(
+        (HitPointMaximum("5", upcast="5"), resist), 2, rolls.__getitem__
+    ) == (HitPointMaximum("15"), resist)
+    assert rolled_modifiers((HitPointMaximum("2d10"),), 0, rolls.__getitem__) == (
+        HitPointMaximum("13"),
+    )
+
+
+def test_the_maximum_counts_a_badges_number_once():
+    aid = HitPointMaximum("5")
+    char = _with({"Aid": (aid,)}, max_hp=30)
+    assert hit_point_maximum(char) == 35
+    effect = new_effect("Aid")
+    effect["modifiers"] = [modifier_to_dict(aid)]
+    char[KEY].append(effect)
+    assert hit_point_maximum(char) == 35, "the same effect twice adds once"
+    char["conditions"].remove("Aid")
+    assert hit_point_maximum(char) == 30
+    assert (
+        hit_point_maximum(_with({"Drained": (HitPointMaximum("-40"),)}, max_hp=30)) == 0
+    )
+    unrolled = _with({"Feast": (HitPointMaximum("2d10"),)}, max_hp=30)
+    assert hit_point_maximum(unrolled) == 30, "dice not rolled count nothing"
+
+
+@pytest.fixture
+def aided(fight):
+    """The Tiger at 20 of 30 HP, and a Pirate with a level 2 and a level 3
+    slot to cast Aid with."""
+    ui, pirate, tiger = fight
+    tiger.update(max_hp=30, hp=20)
+    pirate["spell_slots"] = {2: 1, 3: 1}
+    ui._select_character(pirate)
+    return ui, pirate, tiger
+
+
+def _cast_aid(ui, slot_level=2):
+    ui._apply_cast_spell(SpellFactory.create("Aid"), slot_level=slot_level)
+
+
+def test_aid_raises_the_maximum_and_current_hit_points(aided):
+    ui, _, tiger = aided
+    _cast_aid(ui)
+    assert (tiger["hp"], hit_point_maximum(tiger)) == (25, 35)
+    assert tiger["max_hp"] == 30, "the stored maximum stays the sheet's"
+    assert "Tiger's Hit Point maximum is 35 (30, Aid: +5)" in str(ui._read_log())
+
+
+def test_aid_at_level_3_gives_10(aided):
+    ui, _, tiger = aided
+    _cast_aid(ui, slot_level=3)
+    assert (tiger["hp"], hit_point_maximum(tiger)) == (30, 40)
+
+
+@pytest.mark.parametrize("hp, left", [(33, 30), (10, 10)])
+def test_aid_ending_leaves_no_more_than_the_maximum(aided, hp, left):
+    ui, _, tiger = aided
+    _cast_aid(ui)
+    tiger["hp"] = hp
+    ui._remove_condition_from(tiger, "Aid")
+    assert (tiger["hp"], hit_point_maximum(tiger)) == (left, 30)
+
+
+def test_bloodied_goes_by_the_maximum_in_use(aided):
+    """17 of 35 is half or less; 17 of 30 isn't."""
+    ui, _, tiger = aided
+    _cast_aid(ui)
+    tiger["hp"] = 17
+    ui._apply_bloodied_condition(tiger)
+    assert "Bloodied" in tiger["conditions"]
+    ui._remove_condition_from(tiger, "Aid")
+    assert "Bloodied" not in tiger["conditions"]
+
+
+def test_one_undo_takes_back_the_cast_and_its_hit_points(aided):
+    ui, _, tiger = aided
+    _cast_aid(ui)
+    ui._undo_last()
+    assert (tiger["hp"], hit_point_maximum(tiger)) == (20, 30)
+    assert "Aid" not in tiger["conditions"]
+
+
+def test_aid_again_adds_nothing(aided):
+    """The same badge given again keeps one number: Aid's 5 doesn't stack."""
+    ui, pirate, tiger = aided
+    _cast_aid(ui)
+    ui._give_badge_modifiers(
+        tiger, "Aid", (HitPointMaximum("5", upcast="5"),), source=pirate
+    )
+    assert (tiger["hp"], hit_point_maximum(tiger)) == (25, 35)
+
+
+def test_aid_brings_a_creature_at_0_hp_to(aided):
+    """A creature that makes Death Saving Throws, at 0 HP and dying."""
+    ui, _, tiger = aided
+    tiger.update(hp=0, death_saves=True)
+    ui._apply_cast_spell(SpellFactory.create("Aid"), slot_level=2)
+    assert tiger["hp"] == 5
+    assert "regains consciousness" in str(ui._read_log())
+
+
+def test_heroes_feast_rolls_its_2d10_once(fight, monkeypatch):
+    ui, pirate, tiger = fight
+    tiger.update(max_hp=30, hp=30)
+    rolls = iter([4, 9])
+    monkeypatch.setattr(random, "randint", lambda low, high: next(rolls))
+    ui._select_character(pirate)
+    ui._apply_cast_spell(SpellFactory.create("Heroes' Feast"))
+    assert (tiger["hp"], hit_point_maximum(tiger)) == (43, 43)
+    assert hit_point_maximum(tiger) == 43, "the badge keeps the roll"
+    assert resists(tiger, POISON)
+
+
+def test_the_hit_points_lost_as_it_ends_replay(aided):
+    """The party's history replays the drop, as it replays damage."""
+    ui, _, tiger = aided
+    _cast_aid(ui)
+    tiger["hp"] = 33
+    ui._remove_condition_from(tiger, "Aid")
+    log = ui._read_log()
+    (event,) = [
+        e
+        for key in log
+        if is_round_key(key)
+        for e in log[key]
+        if isinstance(e, dict) and e.get("action") == "lose_hit_points"
+    ]
+    assert event["value"]["hp_delta"] == -3
+    replayed = {"name": "Tiger", "hp": 33, "max_hp": 30, "conditions": []}
+    ui._apply_replay_action(replayed, event["action"], event["value"])
+    assert replayed["hp"] == 30

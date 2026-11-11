@@ -277,10 +277,12 @@ def test_merely_mentioning_a_save_isnt_one(text):
 def test_rage_and_danger_sense_have_no_save():
     ymira = combatant_from_character(Ymira().build())
     options = dict(effect_options(ymira, all_spells=[]))[FEATURES]
-    for name in ("Rage", "Danger Sense"):
+    # Rage's text says it ends on Incapacitated, which isn't what it gives:
+    # its own badge, which its combat effect describes.
+    for name, condition in (("Rage", "Rage"), ("Danger Sense", "")):
         option = next(o for o in options if o.name == name)
         assert option.ability is None, name
-        assert option.condition == "", name  # Rage ends on Incapacitated
+        assert option.condition == condition, name
 
 
 # ---------------------------------------------------------------------------

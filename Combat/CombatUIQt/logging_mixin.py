@@ -24,6 +24,7 @@ from Combat.PlayerCombatant import combatant_from_character
 from Combat.PlayerLog import has_round_events, is_round_key, session_label
 from Combat.Summons import upgrade_keys
 from Combat.WildShape import assume_form, leave_form
+from Combat.Effects.modifiers import hit_point_maximum
 
 from .player_view import may_read_log_line
 from .public_log import public_log_rounds
@@ -589,6 +590,9 @@ class LoggingMixin(CombatWindowState):
                         )
             else:
                 char["temp_hp"] = max(char.get("temp_hp", 0), value)
+        elif action == Action.LOSE_HIT_POINTS:
+            char["hp"] = max(char["hp"] + value["hp_delta"], 0)
+            self._apply_bloodied_condition(char)
         elif action == Action.REVIVE:
             char["hp"] = value["hp"]
             char["death_saves_fail"] = 0
@@ -741,7 +745,7 @@ class LoggingMixin(CombatWindowState):
             for c in players:
                 conditions = ", ".join(c.get("conditions", [])) or "—"
                 lines.append(
-                    f"  {c['name']}: {c['hp']}/{c.get('max_hp', c['hp'])} HP"
+                    f"  {c['name']}: {c['hp']}/{hit_point_maximum(c) if 'max_hp' in c else c['hp']} HP"
                     f" (+{c.get('temp_hp', 0)} temp) — {conditions}"
                 )
             lines.append("")

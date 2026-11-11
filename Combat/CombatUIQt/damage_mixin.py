@@ -3,6 +3,7 @@
 from Combat.Definitions import Action
 from Combat.Effects.modifiers import (
     hit_notes,
+    hit_point_maximum,
     immune_to_damage,
     resists,
     vulnerable_to,
@@ -78,7 +79,7 @@ class DamageMixin(CombatWindowState):
             return False
 
         # A condition or a badge can give these too (Petrified's Resistance
-        # to all damage, Stoneskin's, Heroes' Feast's Poison Immunity).
+        # to all damage, Stoneskin's, Heroes' Feast's Poison).
         if has_type(target.get("damage_immunities")) or immune_to_damage(
             target, damage_type
         ):
@@ -105,7 +106,7 @@ class DamageMixin(CombatWindowState):
         """Auto-apply/remove Bloodied condition based on HP threshold. Pass
         `source` (the damage dealer/healer) to log the change with a source,
         same as any other condition; omit it for silent resyncs (replay)."""
-        max_hp = char.get("max_hp", 1)
+        max_hp = hit_point_maximum(char) if "max_hp" in char else 1
         hp = char.get("hp", 0)
         is_bloodied = "Bloodied" in char.get("conditions", [])
         should_be_bloodied = hp > 0 and hp <= max_hp / 2
@@ -615,7 +616,7 @@ class DamageMixin(CombatWindowState):
         source_name = source["name"] if source is not None else None
 
         pre_hp = char["hp"]
-        char["hp"] = min(char["hp"] + heal, char["max_hp"])
+        char["hp"] = min(char["hp"] + heal, hit_point_maximum(char))
         actual_heal = char["hp"] - pre_hp
 
         char.setdefault("stats", _default_stats())

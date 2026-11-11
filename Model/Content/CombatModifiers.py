@@ -10,7 +10,7 @@ Each modifier is what one sentence of the rules says. One the simulator can't
 decide by itself, because it depends on where creatures are or what they can
 see, has a `when`, said as what follows "if" ("the attacker is within 5
 feet"): it is never counted, only shown to the GM next to the roll. Anything
-that changes no roll, AC or damage is a Note.
+that changes no roll, AC, Hit Point maximum or damage is a Note.
 
 modifier_to_dict() and modifier_from_dict() are a modifier as plain data, the
 way a fight's log keeps the ones a lasting effect gives (Bless's D20Bonus):
@@ -168,6 +168,43 @@ class ArmorClassMinimum:
         _check_whole_number(self, "value")
 
 
+# A Hit Point maximum's change: dice or a number, with a minus or without
+# ("5", "2d10", "-5"); its upcast is what each slot level above adds ("5").
+HIT_POINT_AMOUNT = re.compile(r"-?(?:[1-9]\d*d[1-9]\d*|[1-9]\d*)")
+
+
+@dataclass(frozen=True)
+class HitPointMaximum:
+    """Its Hit Point maximum changes by `amount` while it has this, and its
+    current Hit Points by the same when it's given: Aid's "Hit Point maximum
+    and current Hit Points increase by 5", "and 5 more per slot level above
+    2" (`upcast`); Heroes' Feast's 2d10. Dice are rolled once, as it's
+    given, and the badge keeps the number. When it ends, its current Hit
+    Points are no more than its maximum."""
+
+    amount: str
+    upcast: str = ""
+
+    def __post_init__(self):
+        if not isinstance(self.amount, str) or not HIT_POINT_AMOUNT.fullmatch(
+            self.amount
+        ):
+            raise ValueError(
+                f"A HitPointMaximum needs an amount like '5', '2d10' or '-5',"
+                f" got {self.amount!r}"
+            )
+        if self.upcast and not EXTRA_DAMAGE_AMOUNT.fullmatch(self.upcast):
+            raise ValueError(
+                f"A HitPointMaximum's upcast is like '5' or '1d8', got"
+                f" {self.upcast!r}"
+            )
+
+    @property
+    def rolled(self) -> bool:
+        """Whether it's a number already: what a badge keeps."""
+        return "d" not in self.amount and not self.upcast
+
+
 @dataclass(frozen=True)
 class Resistance:
     """Resistance to damage of these types; to all damage if none are given."""
@@ -178,7 +215,8 @@ class Resistance:
 @dataclass(frozen=True)
 class DamageImmunity:
     """Immunity to damage of these types (it takes none); to all damage if
-    none are given: Heroes' Feast's Poison."""
+    none are given. No 2024 spell gives one for a while; a monster's or a
+    homebrew effect can."""
 
     damage_types: tuple[DamageType, ...] = ()
 
@@ -348,6 +386,7 @@ Modifier = (
     | ArmorClass
     | ArmorClassBase
     | ArmorClassMinimum
+    | HitPointMaximum
     | Resistance
     | DamageImmunity
     | Vulnerability
@@ -370,6 +409,7 @@ MODIFIER_TYPES: dict[str, type] = {
         ArmorClass,
         ArmorClassBase,
         ArmorClassMinimum,
+        HitPointMaximum,
         Resistance,
         DamageImmunity,
         Vulnerability,
@@ -407,6 +447,7 @@ _PLAIN: dict[str, type] = {
     "bonus": int,
     "base": int,
     "value": int,
+    "upcast": str,
 }
 
 

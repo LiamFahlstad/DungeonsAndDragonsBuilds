@@ -34,6 +34,7 @@ from Combat.EncounterLogs import (
 from Combat.LogFiles import BrokenLogError, read_json
 from Combat.PlayerCombatant import combatant_from_stat_block
 from Combat.Scenario import CombatScenario
+from Combat.Effects.modifiers import hit_point_maximum
 
 from .state import CombatWindowState
 from .styles import QSS
@@ -334,7 +335,7 @@ class EncountersMixin(CombatWindowState):
     def _party_line(char: dict) -> str:
         """One member or ally of the party in the party view: HP, slots and
         conditions."""
-        line = f"{char['name']}:  {char['hp']}/{char.get('max_hp', char['hp'])} HP"
+        line = f"{char['name']}:  {char['hp']}/{hit_point_maximum(char) if 'max_hp' in char else char['hp']} HP"
         if char.get("temp_hp"):
             line += f"  (+{char['temp_hp']} temp)"
         slots = char.get("spell_slots") or {}
