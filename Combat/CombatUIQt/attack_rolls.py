@@ -7,7 +7,12 @@ is kept in the target's public keys, so undo and a saved fight keep it too."""
 import re
 from dataclasses import dataclass
 
-from Combat.Effects.modifiers import armor_class_bonus, cover_armor_bonus
+from Combat.Effects.modifiers import (
+    armor_class,
+    armor_class_bonus,
+    armor_class_text,
+    cover_armor_bonus,
+)
 from .amounts import parse_amount
 from .monster_actions import first_number
 
@@ -65,6 +70,23 @@ def armor_bonus(char: dict) -> int:
     effects do to it (Shield of Faith's +2, Mage Armor's base AC, Barkskin's
     17 at least; Combat/Effects), as a number added to its stored AC."""
     return armor_class_bonus(char, first_number(char.get("ac")))
+
+
+def armor_in_use(char: dict) -> int | None:
+    """The AC an attack against char has to meet now: its stored AC with its
+    effects and cover. None with no AC."""
+    stored = first_number(char.get("ac"))
+    return None if stored is None else armor_class(char, stored)
+
+
+def armor_text(char: dict) -> str:
+    """Char's AC as its card and More Info show it: the stored text when
+    nothing changes it (a player's "18 (with Shield) and 16 (without
+    Shield)"), else the AC in use with what changes it, "17 (15; Shield of
+    Faith +2)"."""
+    stored = first_number(char.get("ac"))
+    text = "" if stored is None else armor_class_text(char, stored)
+    return text if stored is not None and text != str(stored) else str(char["ac"])
 
 
 def note_attack_roll(char: dict, roll: AttackRoll, hit: bool | None, bonus: int = 0):

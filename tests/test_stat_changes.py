@@ -25,23 +25,28 @@ from Combat.CombatUIQt.player_view import note_damage_defense
 from Combat.PlayerLog import is_round_key
 from Combat.CombatUIQt.saves import CustomEffect
 from Combat.Effects.active_effects import KEY, give_modifiers, new_effect
+from Combat.CombatUIQt.attack_rolls import armor_text
 from Combat.Effects.modifiers import (
     armor_class,
     armor_class_bonus,
     armor_class_notes,
+    armor_class_text,
+    defenses_from_modifiers,
     hit_point_maximum,
+    hit_point_maximum_text,
     immune_to_damage,
     resists,
     rolled_modifiers,
     save_plan,
     vulnerable_to,
 )
-from Core.Definitions import Ability, DamageType
+from Core.Definitions import Ability, Condition, DamageType
 from Model.Content.CombatEffect import CombatEffect
 from Model.Content.CombatModifiers import (
     ArmorClass,
     ArmorClassBase,
     ArmorClassMinimum,
+    ConditionImmunity,
     DamageImmunity,
     HitPointMaximum,
     Note,
@@ -523,3 +528,96 @@ def test_the_hit_points_lost_as_it_ends_replay(aided):
     replayed = {"name": "Tiger", "hp": 33, "max_hp": 30, "conditions": []}
     ui._apply_replay_action(replayed, event["action"], event["value"])
     assert replayed["hp"] == 30
+
+
+# ---------------------------------------------------------------------------
+# 7.5: what the card and More Info show
+# ---------------------------------------------------------------------------
+
+
+def test_the_ac_text_says_what_changes_it():
+    assert armor_class_text(_with({}), 15) == "15"
+    faith = _with({"Shield of Faith": (SHIELD_OF_FAITH,)})
+    assert armor_class_text(faith, 15) == "17 (15; Shield of Faith +2)"
+    both = _with(
+        {"Barkskin": (BARKSKIN,), "Shield of Faith": (SHIELD_OF_FAITH,)},
+        visibility_states=[HALF],
+    )
+    assert armor_class_text(both, 13) == (
+        "19 (13; Shield of Faith +2, Barkskin at least 17, Half Cover +2)"
+    )
+    assert armor_class_text(both, 16) == (
+        "20 (16; Shield of Faith +2, Half Cover +2)"
+    ), "a floor under the AC isn't named"
+    armored = _with({"Mage Armor": (MAGE_ARMOR,)}, **{"Ability Scores": {"DEX": 16}})
+    assert armor_class_text(armored, 12) == "16 (12; Mage Armor 13 + DEX)"
+    assert armor_class_text(armored, 18) == "18", "a base that doesn't beat it"
+
+
+def test_a_players_ac_sentence_stays_when_nothing_changes_it():
+    sentence = "18 (with Shield) and 16 (without Shield)"
+    assert armor_text({"name": "Edmund", "conditions": [], "ac": sentence}) == sentence
+    faith = _with({"Shield of Faith": (SHIELD_OF_FAITH,)}, ac=sentence)
+    assert armor_text(faith) == "20 (18; Shield of Faith +2)"
+
+
+def test_the_hit_point_maximum_text():
+    assert hit_point_maximum_text(_with({}, max_hp=30)) == ""
+    aided = _with({"Aid": (HitPointMaximum("5"),)}, max_hp=30)
+    assert hit_point_maximum_text(aided) == "35 (30; Aid +5)"
+
+
+def test_defenses_given_say_where_from():
+    char = _with(
+        {
+            "Rage": (
+                Resistance(
+                    (DamageType.BLUDGEONING, DamageType.PIERCING, DamageType.SLASHING)
+                ),
+            ),
+            "Heroism": (ConditionImmunity((Condition.FRIGHTENED,)),),
+            "Cursed": (Vulnerability(),),
+        }
+    )
+    assert defenses_from_modifiers(char) == {
+        "Resist": ["Bludgeoning, Piercing, Slashing (Rage)"],
+        "Cond. Immune": ["Frightened (Heroism)"],
+        "Vulnerable": ["all damage (Cursed)"],
+    }
+    petrified = {"name": "Statue", "conditions": [Condition.PETRIFIED.value]}
+    assert defenses_from_modifiers(petrified)["Resist"] == ["all damage (Petrified)"]
+
+
+def _card_texts(ui, char) -> list[str]:
+    from PyQt6.QtWidgets import QLabel
+
+    card = ui._make_card(char)  # kept, so its labels live while read
+    return [label.text() for label in card.findChildren(QLabel)]
+
+
+def test_the_card_shows_the_stats_in_use(aided):
+    ui, pirate, tiger = aided
+    tiger["damage_resistances"] = []
+    _cast_aid(ui)
+    for name, modifiers in (
+        (
+            "Stoneskin",
+            (
+                Resistance(
+                    (DamageType.BLUDGEONING, DamageType.PIERCING, DamageType.SLASHING)
+                ),
+            ),
+        ),
+        ("Shield of Faith", (SHIELD_OF_FAITH,)),
+    ):
+        tiger["conditions"].append(name)
+        give_modifiers(tiger, name, modifiers)
+    texts = _card_texts(ui, tiger)
+    assert "Max HP 35 (30; Aid +5)" in texts
+    assert any(t.startswith("AC: 15 (13; Shield of Faith +2)") for t in texts)
+    assert "Resist: Bludgeoning, Piercing, Slashing (Stoneskin)" in texts
+    for name in ("Aid", "Stoneskin", "Shield of Faith"):
+        ui._remove_condition_from(tiger, name)
+    texts = _card_texts(ui, tiger)
+    assert not any(t.startswith("Max HP") or t.startswith("Resist") for t in texts)
+    assert any(t.startswith("AC: 13") and "(" not in t.split("   ")[0] for t in texts)

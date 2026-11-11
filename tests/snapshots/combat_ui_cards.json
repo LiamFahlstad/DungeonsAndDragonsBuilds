@@ -4398,7 +4398,7 @@
       "cursor": "PointingHandCursor",
       "mouse_transparent": true,
       "object_name": "secondary",
-      "text": "AC: 18   Speed: 30 ft., fly 30 ft. (hover)",
+      "text": "AC: 20 (18; Half Cover +2)   Speed: 30 ft., fly 30 ft. (hover)",
       "type": "QLabel",
       "word_wrap": true
      },

@@ -18,7 +18,12 @@ from PyQt6.QtWidgets import (
 
 from Combat.Definitions import ConditionRule
 from Combat.Effects.active_effects import find_effect, timers
-from Combat.Effects.modifiers import hit_point_maximum
+from Combat.Effects.modifiers import (
+    defenses_from_modifiers,
+    hit_point_maximum,
+    hit_point_maximum_text,
+)
+from .attack_rolls import armor_text
 from .dialogs_mixin import _damage_entry_text, _speed_text
 from Core.Rules import ability_modifier
 from .monster_actions import (
@@ -231,6 +236,7 @@ class CardsMixin(CombatWindowState):
         self._add_saved_toggle(layout, char)
         self._add_concentration_checks(layout, char)
         layout.addLayout(_hp_row(char))
+        _add_hit_point_maximum(layout, char)
         layout.addWidget(_ac_speed_label(char))
         self._add_condition_badges(layout, char)
         self._add_visibility_badges(layout, char)
@@ -632,8 +638,22 @@ def _hp_row(char: dict) -> QHBoxLayout:
     return hp_row
 
 
+def _add_hit_point_maximum(layout: QVBoxLayout, char: dict):
+    """What changes char's Hit Point maximum, when something does: "Max HP
+    35 (30; Aid +5)". The bar already counts it."""
+    text = hit_point_maximum_text(char)
+    if text:
+        lbl = QLabel(f"Max HP {text}")
+        lbl.setObjectName("secondary")
+        lbl.setStyleSheet("font-size: 10px;")
+        lbl.setWordWrap(True)
+        layout.addWidget(lbl)
+
+
 def _ac_speed_label(char: dict) -> QLabel:
-    ac_speed_text = f"AC: {char['ac']}"
+    """The AC in use, with what changes it ("AC: 17 (15; Shield of Faith
+    +2)"), and the speed."""
+    ac_speed_text = f"AC: {armor_text(char)}"
     speed_text = _speed_text(char)
     if speed_text:
         ac_speed_text = f"{ac_speed_text}   Speed: {speed_text}"
@@ -644,29 +664,38 @@ def _ac_speed_label(char: dict) -> QLabel:
 
 
 def _add_defenses(layout: QVBoxLayout, char: dict):
-    """Damage vulnerabilities/resistances/immunities and condition immunities."""
+    """Damage vulnerabilities/resistances/immunities and condition immunities:
+    the stat block's, then what its conditions and badges give, with where
+    from ("Resist: Fire; Bludgeoning, Piercing, Slashing (Rage)")."""
+    given = defenses_from_modifiers(char)
     defense_rows = [
-        ("Vulnerable", char.get("damage_vulnerabilities") or [], "#e74c3c"),
-        ("Resist", char.get("damage_resistances") or [], "#4caf82"),
-        ("Immune", char.get("damage_immunities") or [], "#4a9fc4"),
+        (label, [_damage_entry_text(e) for e in char.get(key) or []], color)
+        for label, key, color in (
+            ("Vulnerable", "damage_vulnerabilities", "#e74c3c"),
+            ("Resist", "damage_resistances", "#4caf82"),
+            ("Immune", "damage_immunities", "#4a9fc4"),
+        )
     ]
     defense_rows = [
-        (label, entries, color) for label, entries, color in defense_rows if entries
+        (label, texts + given.get(label, []), color)
+        for label, texts, color in defense_rows
+        if texts or given.get(label)
     ]
-    condition_immunities = char.get("condition_immunities")
+    condition_immunities = [
+        c.value if hasattr(c, "value") else str(c)
+        for c in char.get("condition_immunities") or []
+    ] + given.get("Cond. Immune", [])
     if not defense_rows and not condition_immunities:
         return
     layout.addWidget(_separator())
-    for label, entries, color in defense_rows:
-        text = "; ".join(_damage_entry_text(e) for e in entries)
+    for label, texts, color in defense_rows:
+        text = "; ".join(texts)
         def_lbl = QLabel(f"{label}: {text}")
         def_lbl.setStyleSheet(f"color: {color}; font-size: 10px;")
         def_lbl.setWordWrap(True)
         layout.addWidget(def_lbl)
     if condition_immunities:
-        cond_immune_text = ", ".join(
-            c.value if hasattr(c, "value") else str(c) for c in condition_immunities
-        )
+        cond_immune_text = ", ".join(condition_immunities)
         cond_immune_lbl = QLabel(f"Cond. Immune: {cond_immune_text}")
         cond_immune_lbl.setStyleSheet("color: #4a9fc4; font-size: 10px;")
         cond_immune_lbl.setWordWrap(True)

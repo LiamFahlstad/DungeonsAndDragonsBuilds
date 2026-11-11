@@ -30,7 +30,7 @@ from Model.Creatures.MonsterAbilities import DcMonsterAbility, extract_dc_from_t
 from Combat.Rules import Rule, group_by_category, load_rules
 from Combat.PlayerCombatant import weapon_summary
 from Combat.WildShape import current_form
-from Combat.Effects.modifiers import hit_point_maximum
+from Combat.Effects.modifiers import hit_point_maximum, hit_point_maximum_text
 from Core.Definitions import DiceRollCondition, Die
 from Utils.DamageCalculator import probability_of_success
 
@@ -40,6 +40,7 @@ from .stats import (
     damage_taken_key,
     spell_slots_used_key,
 )
+from .attack_rolls import armor_text
 from .player_server import PlayerServerError, lan_addresses
 from .settings import SETTING_SECTIONS
 from .styles import QSS
@@ -326,8 +327,10 @@ def _add_vitals(panel: _InfoPanel, char: dict):
     if char.get("temp_hp"):
         hp_str += f"  (+{char['temp_hp']} temp)"
     panel.field("HP", hp_str)
+    if hit_point_maximum_text(char):
+        panel.field("Max HP", hit_point_maximum_text(char))
 
-    ac_val = str(char["ac"])
+    ac_val = armor_text(char)
     if char.get("ac_note"):
         ac_val = f"{ac_val} ({char['ac_note']})"
     panel.field("AC", ac_val)

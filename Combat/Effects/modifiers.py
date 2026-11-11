@@ -428,25 +428,52 @@ def _own_armor_modifiers(char: dict) -> list[tuple[str, Modifier]]:
     return seen
 
 
+def _armor_class_steps(char: dict, stored: int) -> tuple[int, list[str]]:
+    """Char's AC from `stored` (armor_class), and what made it that, in the
+    order it counts: a base only when it beats `stored`, a floor only when
+    it lifts the AC, every bonus and the cover ("Mage Armor 13 + DEX",
+    "Shield of Faith +2", "Barkskin at least 17", "Half Cover +2")."""
+    pairs = _own_armor_modifiers(char)
+    armor, changes = stored, []
+    best = None
+    for label, m in pairs:
+        if isinstance(m, ArmorClassBase):
+            value = m.base + sum(_ability_bonus(char, a) for a in m.abilities)
+            if value > armor:
+                armor = value
+                added = "".join(f" + {a.short_name}" for a in m.abilities)
+                best = f"{label} {m.base}{added}"
+    changes += [best] if best else []
+    for label, m in pairs:
+        if isinstance(m, ArmorClass):
+            armor += m.bonus
+            changes.append(f"{label} {m.bonus:+d}")
+    floors = [
+        (m.value, label) for label, m in pairs if isinstance(m, ArmorClassMinimum)
+    ]
+    if floors and max(floors)[0] > armor:
+        armor, label = max(floors)
+        changes.append(f"{label} at least {armor}")
+    where = cover(char)
+    if where is not None and cover_armor_bonus(char):
+        armor += cover_armor_bonus(char)
+        changes.append(f"{where} +{cover_armor_bonus(char)}")
+    return armor, changes
+
+
 def armor_class(char: dict, stored: int) -> int:
     """Char's AC with its modifiers in it, from the AC it has (`stored`: its
     stat block's or sheet's). The best of that and each ArmorClassBase, then
     what adds to it (ArmorClass), then at least each ArmorClassMinimum, and
     then its cover, which adds to whatever its AC is."""
-    pairs = _own_armor_modifiers(char)
-    armor = max(
-        [stored]
-        + [
-            m.base + sum(_ability_bonus(char, a) for a in m.abilities)
-            for _, m in pairs
-            if isinstance(m, ArmorClassBase)
-        ]
-    )
-    armor += sum(m.bonus for _, m in pairs if isinstance(m, ArmorClass))
-    armor = max(
-        [armor] + [m.value for _, m in pairs if isinstance(m, ArmorClassMinimum)]
-    )
-    return armor + cover_armor_bonus(char)
+    return _armor_class_steps(char, stored)[0]
+
+
+def armor_class_text(char: dict, stored: int) -> str:
+    """Char's AC as a card shows it: "15", or with what changes it, "17 (15;
+    Shield of Faith +2)", "19 (13; Barkskin at least 17, Half Cover +2)"."""
+    armor, changes = _armor_class_steps(char, stored)
+    return f"{armor} ({stored}; {', '.join(changes)})" if changes else str(stored)
 
 
 def armor_class_bonus(char: dict, stored: int | None = None) -> int:
@@ -509,6 +536,15 @@ def hit_point_maximum_notes(char: dict) -> list[str]:
     return [f"{label}: {int(m.amount):+d}" for label, m in _hit_point_changes(char)]
 
 
+def hit_point_maximum_text(char: dict) -> str:
+    """Char's Hit Point maximum with what changes it, "35 (30; Aid +5)", or
+    "" when nothing does."""
+    changes = [f"{label} {int(m.amount):+d}" for label, m in _hit_point_changes(char)]
+    if not changes:
+        return ""
+    return f"{hit_point_maximum(char)} ({char.get('max_hp', 0)}; {', '.join(changes)})"
+
+
 def rolled_modifiers(
     modifiers: Iterable[Modifier], levels_up: int, roll: Callable[[str], int]
 ) -> tuple[Modifier, ...]:
@@ -562,6 +598,34 @@ def resists_all_damage(char: dict) -> bool:
     return any(
         isinstance(m, Resistance) and not m.damage_types for _, m in modifiers_on(char)
     )
+
+
+# The card's words for each kind of damage defense, the order it lists them.
+DEFENSE_WORDS: tuple[tuple[type, str], ...] = (
+    (Vulnerability, "Vulnerable"),
+    (Resistance, "Resist"),
+    (DamageImmunity, "Immune"),
+)
+
+
+def defenses_from_modifiers(char: dict) -> dict[str, list[str]]:
+    """The damage defenses and condition immunities char's modifiers give,
+    by the card's word for them, each with where it comes from, once:
+    {"Resist": ["Bludgeoning, Piercing, Slashing (Rage)"], "Cond. Immune":
+    ["Frightened (Heroism)"]}. None listed is all damage (Petrified)."""
+    found: dict[str, list[str]] = {}
+    for source, m in modifiers_on(char):
+        if isinstance(m, ConditionImmunity):
+            word, names = "Cond. Immune", [c.value for c in m.conditions]
+        elif isinstance(m, (Resistance, DamageImmunity, Vulnerability)):
+            word = next(w for kind, w in DEFENSE_WORDS if type(m) is kind)
+            names = [t.value for t in m.damage_types] or ["all damage"]
+        else:
+            continue
+        text = f"{', '.join(names)} ({_label(source)})"
+        if text not in found.setdefault(word, []):
+            found[word].append(text)
+    return found
 
 
 def immune_to_condition(char: dict, condition: str) -> bool:

@@ -44,7 +44,7 @@ from Combat.Effects.modifiers import (
 from Combat.Summons import is_out, owner_name
 from Core.Definitions import Condition
 from Core.Rules import ability_modifier
-from .attack_rolls import known_ac_text
+from .attack_rolls import armor_in_use, known_ac_text
 from .cards_mixin import _hp_chunk_color
 from .dialogs_mixin import (
     _MONSTER_ABILITY_SECTIONS,
@@ -279,11 +279,7 @@ def _unit_details(unit: list[dict]) -> str:
     the number they have now is shown."""
     sizes = [_display(c["size"]) for c in unit if c.get("size")]
     ratings = [f"CR {c['cr']}" for c in unit if c.get("cr")]
-    armor = [
-        f"AC {first_number(c.get('ac'))}"
-        for c in unit
-        if first_number(c.get("ac")) is not None
-    ]
+    armor = [f"AC {armor_in_use(c)}" for c in unit if armor_in_use(c) is not None]
     return " · ".join(dict.fromkeys(sizes + ratings + armor + _unit_speeds(unit)))
 
 
