@@ -97,6 +97,15 @@ def _row(option) -> dict:
             badge: [modifier_to_dict(m) for m in modifiers]
             for badge, modifiers in option.badge_modifiers
         }
+    # Likewise only the rows that end conditions (Lay on Hands: end Poisoned).
+    if option.ends_conditions:
+        row["ends_conditions"] = list(option.ends_conditions)
+    # Likewise only the rows that go on their user (Second Wind), and those
+    # that say how many they may target (Bless).
+    if option.targets_self:
+        row["targets_self"] = True
+    if option.target_count is not None:
+        row["targets"] = [option.target_count, option.target_upcast]
     # Likewise only the rows with a trigger (Hill's Tumble).
     if option.trigger is not None:
         row["trigger"] = option.trigger.to_dict()

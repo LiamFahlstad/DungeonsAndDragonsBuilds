@@ -301,7 +301,7 @@
    "half_on_save": false,
    "is_described": true,
    "is_unavailable": false,
-   "note": "One more target per slot level above 1.",
+   "note": "",
    "repeat_save": false,
    "roll": "Saving throw",
    "row_name": "",
@@ -309,6 +309,10 @@
    "spell_level": 1,
    "spell_name": "Longstrider",
    "summary": "",
+   "targets": [
+    1,
+    1
+   ],
    "until": null,
    "upcast": []
   },

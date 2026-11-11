@@ -145,7 +145,7 @@
    "half_on_save": false,
    "is_described": true,
    "is_unavailable": false,
-   "note": "They're the caster's: pick the caster as the target.",
+   "note": "It goes on its user, whoever is targeted.",
    "repeat_save": false,
    "roll": "Saving throw",
    "row_name": "",
@@ -153,6 +153,7 @@
    "spell_level": 1,
    "spell_name": "False Life",
    "summary": "2d4 + 4 temp HP",
+   "targets_self": true,
    "until": null,
    "upcast": [
     "5"

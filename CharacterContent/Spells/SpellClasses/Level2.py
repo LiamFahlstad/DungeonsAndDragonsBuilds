@@ -28,6 +28,7 @@ from Model.Content.CombatEffect import (
     CombatDamage,
     CombatEffect,
     CombatInstances,
+    CombatTargets,
     EffectRoll,
 )
 from Model.Content.CombatModifiers import (
@@ -110,7 +111,8 @@ class HoldPerson(ClassSpell):
                 save_ability=Ability.WISDOM,
                 repeat_save=True,
                 conditions=(CombatCondition(Condition.PARALYZED),),
-                notes=("Humanoids only. One more target per slot level above 2.",),
+                targets=CombatTargets(1, upcast=1),
+                notes=("Humanoids only.",),
             )
         ]
 
@@ -173,8 +175,9 @@ class Invisibility(ClassSpell):
         return [
             CombatEffect(
                 conditions=(CombatCondition(Condition.INVISIBLE),),
+                targets=CombatTargets(1, upcast=1),
                 notes=(
-                    "It ends right after the target makes an attack roll, deals damage or casts a spell. One more target per slot level above 2.",
+                    "It ends right after the target makes an attack roll, deals damage or casts a spell.",
                 ),
             )
         ]
@@ -688,7 +691,7 @@ class Aid(ClassSpell):
                         "Aid", modifiers=(HitPointMaximum("5", upcast="5"),)
                     ),
                 ),
-                notes=("Up to three creatures.",),
+                targets=CombatTargets(3),
             ),
         ]
 
@@ -3360,6 +3363,23 @@ class LesserRestoration(ClassSpell):
             Facts((("Conditions", "Blinded, Deafened, Paralyzed, or Poisoned"),)),
         ]
 
+    def combat_effects(
+        self, character: CharacterView | None = None
+    ) -> list[CombatEffect]:
+        # "End one condition": a row per condition it can end.
+        return [
+            CombatEffect(
+                name=f"Lesser Restoration: {condition.value}",
+                ends_conditions=(condition,),
+            )
+            for condition in (
+                Condition.BLINDED,
+                Condition.DEAFENED,
+                Condition.PARALYZED,
+                Condition.POISONED,
+            )
+        ]
+
 
 class Levitate(ClassSpell):
     rules = SpellRules(
@@ -4602,8 +4622,9 @@ class SeeInvisibility(ClassSpell):
         return [
             CombatEffect(
                 conditions=(CombatCondition("See Invisibility"),),
+                targets_self=True,
                 notes=(
-                    "It's the caster's: pick the caster as the target. You see creatures and objects with the Invisible condition as if they were visible.",
+                    "You see creatures and objects with the Invisible condition as if they were visible.",
                 ),
             )
         ]

@@ -94,10 +94,13 @@ class TurnEdge(StrEnum):
 
 class TurnOf(StrEnum):
     """Whose next turn a condition lasts until: the one who used it, or the
-    target it landed on."""
+    target it landed on. CURRENT is the turn it's given on, not a next one:
+    (TurnEdge.END, TurnOf.CURRENT) is "until the end of the current turn"
+    (Steady Aim's and Sentinel's Halt's Speed 0), and only goes with END."""
 
     SOURCE = "source"
     TARGET = "target"
+    CURRENT = "current"
 
 
 def _is_rules_condition(name: str) -> bool:
@@ -220,6 +223,10 @@ class CombatCondition:
                     f" got {self.until!r}"
                 )
             object.__setattr__(self, "until", (TurnEdge(edge), TurnOf(whose)))
+            if self.until == (TurnEdge.START, TurnOf.CURRENT):
+                raise ValueError(
+                    "The current turn has already started: until=(end, current)"
+                )
 
 
 @dataclass(frozen=True)
@@ -256,6 +263,26 @@ class CombatInstances:
 
 
 @dataclass(frozen=True)
+class CombatTargets:
+    """How many creatures one use may target: Bless's three, one more per
+    slot level above 1 (`upcast`). The dialog shows it beside the slot box
+    and warns when more are targeted; it doesn't refuse them."""
+
+    count: int
+    upcast: int = 0
+
+    def __post_init__(self):
+        if isinstance(self.count, bool) or self.count < 1:
+            raise ValueError(f"count must be 1 or more, got {self.count!r}")
+        if isinstance(self.upcast, bool) or self.upcast < 0:
+            raise ValueError(f"upcast can't be negative, got {self.upcast!r}")
+
+    def at(self, levels_up: int) -> int:
+        """The count cast `levels_up` slot levels above the spell's."""
+        return self.count + self.upcast * levels_up
+
+
+@dataclass(frozen=True)
 class CombatEffect:
     """One use in a fight: what it rolls, what it does to its targets and
     what it costs. See the module docstring."""
@@ -284,6 +311,15 @@ class CombatEffect:
     # Each lands on every target that fails or is hit: Turn Undead's
     # Frightened and Incapacitated. They last the same time and end together.
     conditions: tuple[CombatCondition, ...] = ()
+    # The conditions it ends on the same targets (Lay on Hands' Poisoned).
+    # "End one of" is a row per condition (Lesser Restoration).
+    ends_conditions: tuple[str, ...] = ()
+    # It goes on its user, whoever is targeted (Second Wind, Rage, False
+    # Life): the dialog applies it to the source alone.
+    targets_self: bool = False
+    # How many creatures it may target (Bless: 3, one more per slot level
+    # above 1); None: as many as the GM picks.
+    targets: CombatTargets | None = None
     # Rolls and damage repeated in one use; None is once.
     instances: CombatInstances | None = None
     # None: the source's action (a feature's FeatureActivation, a spell's
@@ -328,6 +364,23 @@ class CombatEffect:
         names = [condition.name for condition in self.conditions]
         if len(names) != len(set(names)):
             raise ValueError(f"A condition is named twice: {names}")
+        # Text is taken too (Condition.POISONED is kept as "Poisoned").
+        object.__setattr__(
+            self,
+            "ends_conditions",
+            tuple(
+                c.value if isinstance(c, Condition) else c for c in self.ends_conditions
+            ),
+        )
+        ends = self.ends_conditions
+        if any(not isinstance(c, str) or not c.strip() for c in ends):
+            raise ValueError(f"ends_conditions are condition names, not {ends!r}")
+        if len(ends) != len(set(ends)):
+            raise ValueError(f"A condition to end is named twice: {list(ends)}")
+        if set(ends) & set(names):
+            raise ValueError(
+                f"It can't both give and end {sorted(set(ends) & set(names))}"
+            )
         for field, points in (("healing", self.healing), ("temp_hp", self.temp_hp)):
             if points is not None and not isinstance(points, CombatHitPoints):
                 raise ValueError(
@@ -343,6 +396,14 @@ class CombatEffect:
             raise ValueError(
                 "Only one of damage, healing and temp_hp: the rest go in notes"
             )
+        if self.targets is not None:
+            if not isinstance(self.targets, CombatTargets):
+                raise ValueError(
+                    f"targets is a CombatTargets, like CombatTargets(3, upcast=1),"
+                    f" not {self.targets!r}"
+                )
+            if self.targets_self:
+                raise ValueError("A use that goes on its user has no targets to count")
 
     def to_dict(self) -> dict:
         """The effect as plain data, leaving out what's at its default: what
@@ -380,7 +441,14 @@ def _compact(value: Any) -> Any:
         return value.to_dict()
     if isinstance(
         value,
-        (CombatEffect, CombatDamage, CombatHitPoints, CombatCondition, CombatInstances),
+        (
+            CombatEffect,
+            CombatDamage,
+            CombatHitPoints,
+            CombatCondition,
+            CombatInstances,
+            CombatTargets,
+        ),
     ):
         data = {}
         for field in fields(value):
@@ -401,6 +469,7 @@ _DAMAGE_KEYS = tuple(f.name for f in fields(CombatDamage))
 _HIT_POINTS_KEYS = tuple(f.name for f in fields(CombatHitPoints))
 _CONDITION_KEYS = tuple(f.name for f in fields(CombatCondition))
 _INSTANCES_KEYS = tuple(f.name for f in fields(CombatInstances))
+_TARGETS_KEYS = tuple(f.name for f in fields(CombatTargets))
 # "condition": one condition, as logs before 2026-11-09 have it.
 _EFFECT_KEYS = (*(f.name for f in fields(CombatEffect)), "condition")
 
@@ -604,6 +673,17 @@ class _Reader:
             noun=self.kind(data.get("noun"), "instances.noun", (str,), ""),
         )
 
+    def targets(self, value: Any) -> CombatTargets | None:
+        if value is None:
+            return None
+        data = self.mapping(value, "targets", _TARGETS_KEYS)
+        return self.build(
+            "targets",
+            CombatTargets,
+            count=self.kind(data.get("count"), "targets.count", (int,), 0),
+            upcast=self.kind(data.get("upcast"), "targets.upcast", (int,), 0),
+        )
+
     def effect(self, value: Any) -> CombatEffect:
         data = self.mapping(value, "effect", _EFFECT_KEYS)
         damage = data.get("damage") or []
@@ -630,6 +710,13 @@ class _Reader:
             healing=self.hit_points(data.get("healing"), "healing"),
             temp_hp=self.hit_points(data.get("temp_hp"), "temp_hp"),
             conditions=self.conditions(data),
+            ends_conditions=self.strings(
+                data.get("ends_conditions"), "ends_conditions"
+            ),
+            targets_self=self.kind(
+                data.get("targets_self"), "targets_self", (bool,), False
+            ),
+            targets=self.targets(data.get("targets")),
             instances=self.instances(data.get("instances")),
             action_type=self.enum(data.get("action_type"), "action_type", ActionType),
             concentration=self.kind(

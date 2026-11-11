@@ -829,3 +829,43 @@ def test_the_card_shows_speed_and_size_in_use(fight):
     texts = _card_texts(ui, tiger)
     assert any(t.endswith("Speed: 40 ft.") for t in texts)
     assert not any(t.startswith("Size") for t in texts)
+
+
+# ---------------------------------------------------------------------------
+# "Until the end of the current turn" (Q37): Steady Aim and Sentinel's Halt
+
+
+def test_the_current_turn_has_no_start():
+    from Model.Content.CombatEffect import CombatCondition, TurnEdge, TurnOf
+
+    with pytest.raises(ValueError, match="already started"):
+        CombatCondition("Halt", until=(TurnEdge.START, TurnOf.CURRENT))
+    assert CombatCondition("Halt", until=("end", "current")).until == (
+        TurnEdge.END,
+        TurnOf.CURRENT,
+    )
+
+
+def test_steady_aim_sets_speed_0_until_the_end_of_the_current_turn():
+    """2024 Rogue: "your Speed is 0 until the end of the current turn"."""
+    from CharacterContent.Features.ClassFeatures.Rogue.RogueFeatures import SteadyAim
+    from Model.Content.CombatEffect import TurnEdge, TurnOf
+
+    (row,) = SteadyAim().combat_effects(None)  # type: ignore[arg-type]
+    (condition,) = row.conditions
+    assert condition.until == (TurnEdge.END, TurnOf.CURRENT)
+    assert Speed(set_to=0) in condition.modifiers
+    assert not any("Speed is 0" in note for note in row.notes)
+
+
+def test_sentinels_halt_sets_speed_0_for_the_rest_of_the_turn():
+    """Halt: "the creature's Speed becomes 0 for the rest of the current turn"."""
+    from CharacterContent.Features.CharacterFeats.GeneralFeats import Sentinel
+    from Model.Content.CombatEffect import TurnEdge, TurnOf
+
+    feat = Sentinel(4, Ability.DEXTERITY)
+    (row,) = feat.combat_effects(None)  # type: ignore[arg-type]
+    (condition,) = row.conditions
+    assert (row.name, condition.name) == ("Halt", "Halt")
+    assert condition.until == (TurnEdge.END, TurnOf.CURRENT)
+    assert condition.modifiers == (Speed(set_to=0),)

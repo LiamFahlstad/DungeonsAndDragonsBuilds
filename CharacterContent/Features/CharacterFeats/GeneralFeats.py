@@ -96,7 +96,8 @@ from Model.Content.FeatureText import (
     Table,
     dc_formula,
 )
-from Model.Content.CombatEffect import CombatEffect
+from Model.Content.CombatEffect import CombatCondition, CombatEffect, TurnEdge, TurnOf
+from Model.Content.CombatModifiers import Speed
 
 
 class GeneralFeat(Feature):
@@ -1304,9 +1305,21 @@ class Sentinel(_AbilityScoreFeat):
         return FeatureTarget.ENEMY
 
     def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
-        # Riders on its owner's Opportunity Attacks, which are weapon rows;
-        # Halt's Speed 0 lasts the current turn only: set it by hand.
-        return []
+        # Guardian's Opportunity Attack is a weapon row; Halt is what its hit
+        # gives, for the rest of the current turn.
+        return [
+            CombatEffect(
+                name="Halt",
+                conditions=(
+                    CombatCondition(
+                        "Halt",
+                        until=(TurnEdge.END, TurnOf.CURRENT),
+                        modifiers=(Speed(set_to=0),),
+                    ),
+                ),
+                notes=("After you hit it with an Opportunity Attack.",),
+            )
+        ]
 
 
 class ShadowTouched(_AbilityScoreFeat):

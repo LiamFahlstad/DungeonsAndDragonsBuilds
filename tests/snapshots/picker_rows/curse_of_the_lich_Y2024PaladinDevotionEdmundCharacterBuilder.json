@@ -183,7 +183,7 @@
    "half_on_save": false,
    "is_described": true,
    "is_unavailable": false,
-   "note": "Each target adds 1d4 to its attack rolls and saving throws for the duration. Up to three creatures, one more per slot level above 1.",
+   "note": "Each target adds 1d4 to its attack rolls and saving throws for the duration.",
    "repeat_save": false,
    "roll": "Saving throw",
    "row_name": "",
@@ -191,6 +191,10 @@
    "spell_level": 1,
    "spell_name": "Bless",
    "summary": "",
+   "targets": [
+    3,
+    1
+   ],
    "until": null,
    "upcast": []
   },
@@ -264,7 +268,7 @@
    "half_on_save": false,
    "is_described": true,
    "is_unavailable": false,
-   "note": "On its next turn, the target moves toward you by the shortest and most direct route, ending its turn if it moves within 5 feet of you. One more target per slot level above 1.",
+   "note": "On its next turn, the target moves toward you by the shortest and most direct route, ending its turn if it moves within 5 feet of you.",
    "repeat_save": false,
    "roll": "Saving throw",
    "row_name": "",
@@ -272,6 +276,10 @@
    "spell_level": 1,
    "spell_name": "Command",
    "summary": "DC 12 WIS",
+   "targets": [
+    1,
+    1
+   ],
    "until": [
     "end",
     "target"
@@ -293,7 +301,7 @@
    "half_on_save": false,
    "is_described": true,
    "is_unavailable": false,
-   "note": "On its next turn, the target drops whatever it is holding and then ends its turn. One more target per slot level above 1.",
+   "note": "On its next turn, the target drops whatever it is holding and then ends its turn.",
    "repeat_save": false,
    "roll": "Saving throw",
    "row_name": "",
@@ -301,6 +309,10 @@
    "spell_level": 1,
    "spell_name": "Command",
    "summary": "DC 12 WIS",
+   "targets": [
+    1,
+    1
+   ],
    "until": [
     "end",
     "target"
@@ -322,7 +334,7 @@
    "half_on_save": false,
    "is_described": true,
    "is_unavailable": false,
-   "note": "On its next turn, the target spends its turn moving away from you by the fastest available means. One more target per slot level above 1.",
+   "note": "On its next turn, the target spends its turn moving away from you by the fastest available means.",
    "repeat_save": false,
    "roll": "Saving throw",
    "row_name": "",
@@ -330,6 +342,10 @@
    "spell_level": 1,
    "spell_name": "Command",
    "summary": "DC 12 WIS",
+   "targets": [
+    1,
+    1
+   ],
    "until": [
     "end",
     "target"
@@ -351,7 +367,7 @@
    "half_on_save": false,
    "is_described": true,
    "is_unavailable": false,
-   "note": "On its next turn, the target has the Prone condition and then ends its turn. One more target per slot level above 1.",
+   "note": "On its next turn, the target has the Prone condition and then ends its turn.",
    "repeat_save": false,
    "roll": "Saving throw",
    "row_name": "",
@@ -359,6 +375,10 @@
    "spell_level": 1,
    "spell_name": "Command",
    "summary": "DC 12 WIS  Prone",
+   "targets": [
+    1,
+    1
+   ],
    "until": null,
    "upcast": []
   },
@@ -377,7 +397,7 @@
    "half_on_save": false,
    "is_described": true,
    "is_unavailable": false,
-   "note": "On its next turn, the target doesn't move and takes no action or Bonus Action. One more target per slot level above 1.",
+   "note": "On its next turn, the target doesn't move and takes no action or Bonus Action.",
    "repeat_save": false,
    "roll": "Saving throw",
    "row_name": "",
@@ -385,6 +405,10 @@
    "spell_level": 1,
    "spell_name": "Command",
    "summary": "DC 12 WIS",
+   "targets": [
+    1,
+    1
+   ],
    "until": [
     "end",
     "target"
@@ -498,7 +522,7 @@
    "half_on_save": false,
    "is_described": true,
    "is_unavailable": false,
-   "note": "They're the caster's: pick the caster as the target.",
+   "note": "It goes on its user, whoever is targeted.",
    "repeat_save": false,
    "roll": "Saving throw",
    "row_name": "",
@@ -506,6 +530,7 @@
    "spell_level": 1,
    "spell_name": "False Life",
    "summary": "2d4 + 4 temp HP",
+   "targets_self": true,
    "until": null,
    "upcast": [
     "5"
@@ -639,7 +664,7 @@
    "bonus": null,
    "concentration": false,
    "condition": "",
-   "counts_uses": false,
+   "counts_uses": true,
    "damage": "2d8 Radiant",
    "dc": null,
    "duration_seconds": 0,
@@ -654,7 +679,7 @@
    "slot_level": "None",
    "spell_level": 0,
    "spell_name": "Divine Smite",
-   "summary": "2d8 Radiant",
+   "summary": "1/1  2d8 Radiant",
    "until": null,
    "upcast": []
   },
@@ -673,7 +698,7 @@
    "half_on_save": false,
    "is_described": true,
    "is_unavailable": false,
-   "note": "Without a spell slot, once per Long Rest. They're the caster's: pick the caster as the target.",
+   "note": "It goes on its user, whoever is targeted. Without a spell slot, once per Long Rest.",
    "repeat_save": false,
    "roll": "Saving throw",
    "row_name": "",
@@ -681,7 +706,45 @@
    "spell_level": 0,
    "spell_name": "False Life",
    "summary": "2d4 + 4 temp HP",
+   "targets_self": true,
    "until": null,
+   "upcast": []
+  },
+  "Features | Halt": {
+   "ability": null,
+   "action_cost": null,
+   "amount_kind": "Damage",
+   "badge_modifiers": {
+    "Halt": [
+     {
+      "set_to": 0,
+      "type": "Speed"
+     }
+    ]
+   },
+   "bonus": null,
+   "concentration": false,
+   "condition": "Halt",
+   "counts_uses": false,
+   "damage": "",
+   "dc": null,
+   "duration_seconds": null,
+   "feature_name": "Sentinel",
+   "half_on_save": false,
+   "is_described": true,
+   "is_unavailable": false,
+   "note": "After you hit it with an Opportunity Attack.",
+   "repeat_save": false,
+   "roll": "Saving throw",
+   "row_name": "",
+   "slot_level": "None",
+   "spell_level": 0,
+   "spell_name": "",
+   "summary": "",
+   "until": [
+    "end",
+    "current"
+   ],
    "upcast": []
   },
   "Features | Lay on Hands": {
@@ -699,7 +762,7 @@
    "half_on_save": false,
    "is_described": true,
    "is_unavailable": false,
-   "note": "Type the Hit Points spent from the pool (20 after a Long Rest). Touch: the target can be you. Or spend 5 from the pool to end the Poisoned condition on the target, healing nothing: take it off by hand.",
+   "note": "Type the Hit Points spent from the pool (20 after a Long Rest). Touch: the target can be you.",
    "repeat_save": false,
    "roll": "Saving throw",
    "row_name": "",
@@ -707,6 +770,35 @@
    "spell_level": 0,
    "spell_name": "",
    "summary": "",
+   "until": null,
+   "upcast": []
+  },
+  "Features | Lay on Hands: end Poisoned": {
+   "ability": null,
+   "action_cost": "Bonus Action",
+   "amount_kind": "Damage",
+   "bonus": null,
+   "concentration": false,
+   "condition": "",
+   "counts_uses": false,
+   "damage": "",
+   "dc": null,
+   "duration_seconds": null,
+   "ends_conditions": [
+    "Poisoned"
+   ],
+   "feature_name": "Lay on Hands",
+   "half_on_save": false,
+   "is_described": true,
+   "is_unavailable": false,
+   "note": "Spends 5 from the pool, which restore no Hit Points. Touch: the target can be you.",
+   "repeat_save": false,
+   "roll": "Saving throw",
+   "row_name": "",
+   "slot_level": "None",
+   "spell_level": 0,
+   "spell_name": "",
+   "summary": "ends Poisoned",
    "until": null,
    "upcast": []
   },
@@ -737,7 +829,7 @@
    "half_on_save": false,
    "is_described": true,
    "is_unavailable": false,
-   "note": "When you take the Attack action: pick yourself as the target. Each hit with the weapon can deal Radiant damage instead of its own type. The weapon sheds Bright Light in a 20-foot radius and Dim Light 20 feet beyond. It ends early if you use it again, end it (no action) or stop carrying the weapon.",
+   "note": "It goes on its user, whoever is targeted. Used as you take the Attack action. Each hit with the weapon can deal Radiant damage instead of its own type. The weapon sheds Bright Light in a 20-foot radius and Dim Light 20 feet beyond. It ends early if you use it again, end it (no action) or stop carrying the weapon.",
    "repeat_save": false,
    "roll": "Saving throw",
    "row_name": "",
@@ -745,6 +837,7 @@
    "spell_level": 0,
    "spell_name": "",
    "summary": "2/2",
+   "targets_self": true,
    "until": null,
    "upcast": []
   }

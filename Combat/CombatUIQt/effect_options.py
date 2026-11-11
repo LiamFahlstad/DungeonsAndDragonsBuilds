@@ -1426,6 +1426,8 @@ def _described_option(
         ),
     )
     notes = list(effect.notes)
+    if effect.targets_self:
+        notes.insert(0, "It goes on its user, whoever is targeted.")
     for damage in effect.damage:
         if damage.damage_type is None:
             choices = ", ".join(choice.value for choice in damage.choices)
@@ -1435,6 +1437,8 @@ def _described_option(
     notes += _condition_notes(conditions)
     notes += lead_notes
     parts = [*lead, *_roll_summary(text, dc, bonus, rolls, amount_kind)]
+    if effect.ends_conditions:
+        parts.append(f"ends {' or '.join(effect.ends_conditions)}")
     instances = effect.instances
     count = instances.at(char_level, 0) if instances is not None else 1
     if count > 1:
@@ -1471,6 +1475,12 @@ def _described_option(
             instances.upcast if instances is not None and level > 0 else 0
         ),
         badge_modifiers=tuple((c.name, c.modifiers) for c in conditions if c.modifiers),
+        ends_conditions=effect.ends_conditions,
+        targets_self=effect.targets_self,
+        target_count=effect.targets.count if effect.targets is not None else None,
+        target_upcast=(
+            effect.targets.upcast if effect.targets is not None and level > 0 else 0
+        ),
         trigger=effect.trigger,
         **fields,
     )

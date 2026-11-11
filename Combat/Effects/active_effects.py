@@ -232,7 +232,8 @@ def duration_entry(
 ) -> dict | None:
     """The `duration` an effect lasting `duration` (a Custom Condition
     duration: {"seconds": n}, or {"until": "start" | "end", "of": "source" |
-    "target"}) on `target` (a name) has, given by `source` (a name, or None)
+    "target"}, or {"until": "end", "of": "current"}: the end of the turn
+    being taken) on `target` (a name) has, given by `source` (a name, or None)
     during the turn of `turn` (names: [] outside combat). None when it lasts
     until removed, or until a turn of a source there isn't."""
     if duration is None:
@@ -243,10 +244,20 @@ def duration_entry(
             "duration": duration["seconds"],
             "ticks_on": turn[0] if turn else None,
         }
+    until = duration["until"]
+    if duration["of"] == "current":
+        # The end of the turn being taken now; outside combat there is none.
+        if not turn:
+            return None
+        return {
+            "until": "end",
+            "of": turn[0],
+            "turns_left": 1,
+            "text": f"Until the end of {turn[0]}'s turn",
+        }
     whose = source if duration["of"] == "source" else target
     if whose is None:
         return None
-    until = duration["until"]
     # The end of `whose` next turn is the end of the one after this, if this
     # is their turn; the start of their next turn is always the first to come.
     taking_turn = whose in turn

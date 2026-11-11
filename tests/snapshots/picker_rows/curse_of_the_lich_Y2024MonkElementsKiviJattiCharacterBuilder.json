@@ -145,7 +145,7 @@
    "half_on_save": false,
    "is_described": true,
    "is_unavailable": false,
-   "note": "At the start of your turn: pick yourself as the target. It ends early if you have the Incapacitated condition. Your Unarmed Strikes have 10 feet more reach, and a hit can deal Acid, Cold, Fire, Lightning or Thunder damage instead of its type.",
+   "note": "It goes on its user, whoever is targeted. Used at the start of your turn. It ends early if you have the Incapacitated condition. Your Unarmed Strikes have 10 feet more reach, and a hit can deal Acid, Cold, Fire, Lightning or Thunder damage instead of its type.",
    "repeat_save": false,
    "roll": "Saving throw",
    "row_name": "",
@@ -153,6 +153,7 @@
    "spell_level": 0,
    "spell_name": "",
    "summary": "4/4",
+   "targets_self": true,
    "until": null,
    "upcast": []
   },
@@ -273,7 +274,7 @@
    "half_on_save": false,
    "is_described": true,
    "is_unavailable": false,
-   "note": "Pick yourself as the target. Without the Focus Point it's the Disengage action alone. The Dodge ends early if you have the Incapacitated condition or your Speed is 0.",
+   "note": "It goes on its user, whoever is targeted. Without the Focus Point it's the Disengage action alone. The Dodge ends early if you have the Incapacitated condition or your Speed is 0.",
    "repeat_save": false,
    "roll": "Saving throw",
    "row_name": "",
@@ -281,6 +282,7 @@
    "spell_level": 0,
    "spell_name": "",
    "summary": "4/4  Dodge",
+   "targets_self": true,
    "until": [
     "start",
     "source"
@@ -328,7 +330,7 @@
    "half_on_save": false,
    "is_described": true,
    "is_unavailable": false,
-   "note": "When you roll Initiative: pick yourself as the target. You also regain all expended Focus Points: reset them by hand.",
+   "note": "It goes on its user, whoever is targeted. Used as you roll Initiative. You also regain all expended Focus Points: reset them by hand.",
    "repeat_save": false,
    "roll": "Saving throw",
    "row_name": "",
@@ -336,6 +338,7 @@
    "spell_level": 0,
    "spell_name": "",
    "summary": "1/1  heals 1d6 + 4",
+   "targets_self": true,
    "until": null,
    "upcast": []
   },

@@ -145,7 +145,7 @@
    "half_on_save": false,
    "is_described": true,
    "is_unavailable": false,
-   "note": "You regain them: pick yourself as the target.",
+   "note": "It goes on its user, whoever is targeted.",
    "repeat_save": false,
    "roll": "Saving throw",
    "row_name": "",
@@ -153,6 +153,7 @@
    "spell_level": 0,
    "spell_name": "",
    "summary": "2/2  heals 1d10 + 1",
+   "targets_self": true,
    "until": null,
    "upcast": []
   },
@@ -367,7 +368,7 @@
    "half_on_save": false,
    "is_described": true,
    "is_unavailable": false,
-   "note": "One more target per slot level above 1.",
+   "note": "",
    "repeat_save": false,
    "roll": "Saving throw",
    "row_name": "",
@@ -375,6 +376,10 @@
    "spell_level": 1,
    "spell_name": "Longstrider",
    "summary": "",
+   "targets": [
+    1,
+    1
+   ],
    "until": null,
    "upcast": []
   },

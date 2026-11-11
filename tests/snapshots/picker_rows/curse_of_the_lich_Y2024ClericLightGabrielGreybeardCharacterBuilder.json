@@ -287,7 +287,7 @@
    "half_on_save": false,
    "is_described": true,
    "is_unavailable": false,
-   "note": "Each target adds 1d4 to its attack rolls and saving throws for the duration. Up to three creatures, one more per slot level above 1.",
+   "note": "Each target adds 1d4 to its attack rolls and saving throws for the duration.",
    "repeat_save": false,
    "roll": "Saving throw",
    "row_name": "",
@@ -295,6 +295,10 @@
    "spell_level": 1,
    "spell_name": "Bless",
    "summary": "",
+   "targets": [
+    3,
+    1
+   ],
    "until": null,
    "upcast": []
   },
@@ -555,7 +559,7 @@
    "half_on_save": false,
    "is_described": true,
    "is_unavailable": false,
-   "note": "It's the caster's: pick the caster as the target. You see creatures and objects with the Invisible condition as if they were visible.",
+   "note": "It goes on its user, whoever is targeted. You see creatures and objects with the Invisible condition as if they were visible.",
    "repeat_save": false,
    "roll": "Saving throw",
    "row_name": "",
@@ -563,6 +567,7 @@
    "spell_level": 2,
    "spell_name": "See Invisibility",
    "summary": "",
+   "targets_self": true,
    "until": null,
    "upcast": []
   },

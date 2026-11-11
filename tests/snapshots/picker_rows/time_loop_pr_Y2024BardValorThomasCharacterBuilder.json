@@ -253,7 +253,7 @@
    "half_on_save": false,
    "is_described": true,
    "is_unavailable": false,
-   "note": "It ends right after the target makes an attack roll, deals damage or casts a spell. One more target per slot level above 2.",
+   "note": "It ends right after the target makes an attack roll, deals damage or casts a spell.",
    "repeat_save": false,
    "roll": "Saving throw",
    "row_name": "",
@@ -261,6 +261,10 @@
    "spell_level": 2,
    "spell_name": "Invisibility",
    "summary": "Invisible",
+   "targets": [
+    1,
+    1
+   ],
    "until": null,
    "upcast": []
   },
@@ -305,7 +309,7 @@
    "half_on_save": false,
    "is_described": true,
    "is_unavailable": false,
-   "note": "It can't end the Prone condition on itself. It also repeats the save each time it takes damage, with Advantage. One more target per slot level above 1.",
+   "note": "It can't end the Prone condition on itself. It also repeats the save each time it takes damage, with Advantage.",
    "repeat_save": true,
    "roll": "Saving throw",
    "row_name": "",
@@ -313,6 +317,10 @@
    "spell_level": 1,
    "spell_name": "Tasha's Hideous Laughter",
    "summary": "DC 13 WIS  Incapacitated + Prone",
+   "targets": [
+    1,
+    1
+   ],
    "until": null,
    "upcast": []
   },

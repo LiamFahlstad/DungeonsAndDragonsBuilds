@@ -29,6 +29,7 @@ from Model.Content.CombatEffect import (
     CombatEffect,
     CombatHitPoints,
     CombatInstances,
+    CombatTargets,
     EffectRoll,
     TurnEdge,
     TurnOf,
@@ -251,8 +252,9 @@ class Bless(ClassSpell):
                         ),
                     ),
                 ),
+                targets=CombatTargets(3, upcast=1),
                 notes=(
-                    "Each target adds 1d4 to its attack rolls and saving throws for the duration. Up to three creatures, one more per slot level above 1.",
+                    "Each target adds 1d4 to its attack rolls and saving throws for the duration.",
                 ),
             )
         ]
@@ -389,9 +391,10 @@ class CharmPerson(ClassSpell):
                 roll=EffectRoll.SAVE,
                 save_ability=Ability.WISDOM,
                 conditions=(CombatCondition(Condition.CHARMED),),
+                targets=CombatTargets(1, upcast=1),
                 notes=(
                     "Humanoids only. The target has Advantage on the save if you or your allies are fighting it.",
-                    "It ends early if you or your allies damage the target. One more target per slot level above 1.",
+                    "It ends early if you or your allies damage the target.",
                 ),
             )
         ]
@@ -575,9 +578,9 @@ class Command(ClassSpell):
                 conditions=(
                     CombatCondition("Command", until=(TurnEdge.END, TurnOf.TARGET)),
                 ),
+                targets=CombatTargets(1, upcast=1),
                 notes=(
                     "On its next turn, the target moves toward you by the shortest and most direct route, ending its turn if it moves within 5 feet of you.",
-                    "One more target per slot level above 1.",
                 ),
             ),
             CombatEffect(
@@ -587,9 +590,9 @@ class Command(ClassSpell):
                 conditions=(
                     CombatCondition("Command", until=(TurnEdge.END, TurnOf.TARGET)),
                 ),
+                targets=CombatTargets(1, upcast=1),
                 notes=(
                     "On its next turn, the target drops whatever it is holding and then ends its turn.",
-                    "One more target per slot level above 1.",
                 ),
             ),
             CombatEffect(
@@ -599,9 +602,9 @@ class Command(ClassSpell):
                 conditions=(
                     CombatCondition("Command", until=(TurnEdge.END, TurnOf.TARGET)),
                 ),
+                targets=CombatTargets(1, upcast=1),
                 notes=(
                     "On its next turn, the target spends its turn moving away from you by the fastest available means.",
-                    "One more target per slot level above 1.",
                 ),
             ),
             CombatEffect(
@@ -609,9 +612,9 @@ class Command(ClassSpell):
                 roll=EffectRoll.SAVE,
                 save_ability=Ability.WISDOM,
                 conditions=(CombatCondition(Condition.PRONE),),
+                targets=CombatTargets(1, upcast=1),
                 notes=(
                     "On its next turn, the target has the Prone condition and then ends its turn.",
-                    "One more target per slot level above 1.",
                 ),
             ),
             CombatEffect(
@@ -621,9 +624,9 @@ class Command(ClassSpell):
                 conditions=(
                     CombatCondition("Command", until=(TurnEdge.END, TurnOf.TARGET)),
                 ),
+                targets=CombatTargets(1, upcast=1),
                 notes=(
                     "On its next turn, the target doesn't move and takes no action or Bonus Action.",
-                    "One more target per slot level above 1.",
                 ),
             ),
         ]
@@ -1124,7 +1127,7 @@ class FalseLife(ClassSpell):
         return [
             CombatEffect(
                 temp_hp=CombatHitPoints(dice="2d4 + 4", upcast="5"),
-                notes=("They're the caster's: pick the caster as the target.",),
+                targets_self=True,
             )
         ]
 
@@ -1612,7 +1615,7 @@ class Longstrider(ClassSpell):
                 conditions=(
                     CombatCondition("Longstrider", modifiers=(Speed(bonus=10),)),
                 ),
-                notes=("One more target per slot level above 1.",),
+                targets=CombatTargets(1, upcast=1),
             )
         ]
 
@@ -2030,9 +2033,9 @@ class TashasHideousLaughter(ClassSpell):
                     CombatCondition(Condition.INCAPACITATED),
                     CombatCondition(Condition.PRONE),
                 ),
+                targets=CombatTargets(1, upcast=1),
                 notes=(
                     "It can't end the Prone condition on itself. It also repeats the save each time it takes damage, with Advantage.",
-                    "One more target per slot level above 1.",
                 ),
             )
         ]
@@ -3740,7 +3743,7 @@ class Heroism(ClassSpell):
                         ),
                     ),
                 ),
-                notes=("One more target per slot level above 1.",),
+                targets=CombatTargets(1, upcast=1),
             ),
             CombatEffect(
                 name="Heroism: Temporary Hit Points",

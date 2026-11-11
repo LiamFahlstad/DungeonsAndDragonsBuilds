@@ -174,7 +174,7 @@
    "half_on_save": false,
    "is_described": true,
    "is_unavailable": false,
-   "note": "Humanoids only. The target has Advantage on the save if you or your allies are fighting it. It ends early if you or your allies damage the target. One more target per slot level above 1.",
+   "note": "Humanoids only. The target has Advantage on the save if you or your allies are fighting it. It ends early if you or your allies damage the target.",
    "repeat_save": false,
    "roll": "Saving throw",
    "row_name": "",
@@ -182,6 +182,10 @@
    "spell_level": 1,
    "spell_name": "Charm Person",
    "summary": "DC 14 WIS  Charmed",
+   "targets": [
+    1,
+    1
+   ],
    "until": null,
    "upcast": []
   },
@@ -386,7 +390,7 @@
    "half_on_save": false,
    "is_described": true,
    "is_unavailable": false,
-   "note": "Humanoids only. One more target per slot level above 2.",
+   "note": "Humanoids only.",
    "repeat_save": true,
    "roll": "Saving throw",
    "row_name": "",
@@ -394,6 +398,10 @@
    "spell_level": 2,
    "spell_name": "Hold Person",
    "summary": "DC 14 WIS  Paralyzed",
+   "targets": [
+    1,
+    1
+   ],
    "until": null,
    "upcast": []
   },

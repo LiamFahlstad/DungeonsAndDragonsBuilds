@@ -112,9 +112,10 @@ class ElementalAttunement(Feature):
                         duration_seconds=10 * 60,  # or until Incapacitated
                     ),
                 ),
+                targets_self=True,
                 notes=(
-                    "At the start of your turn: pick yourself as the target. It"
-                    " ends early if you have the Incapacitated condition.",
+                    "Used at the start of your turn. It ends early if you have"
+                    " the Incapacitated condition.",
                     "Your Unarmed Strikes have 10 feet more reach, and a hit can"
                     " deal Acid, Cold, Fire, Lightning or Thunder damage instead"
                     " of its type.",

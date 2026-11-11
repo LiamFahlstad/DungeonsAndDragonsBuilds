@@ -559,7 +559,17 @@ def test_lay_on_hands_heals_what_the_gm_types_from_the_pool():
     assert (row.amount_kind, row.damage) == (HEALING, "")
     assert row.action_cost == "Bonus Action"
     assert f"({pool} after a Long Rest)" in row.note
-    assert "Poisoned" in row.note
+    assert "Poisoned" not in row.note  # a row of its own now (Q7)
+
+
+def test_lay_on_hands_ends_poisoned_in_a_row_of_its_own():
+    """ "expend 5 Hit Points from the pool ... to remove the Poisoned
+    condition from the creature; those points don't also restore Hit Points"."""
+    row = _rows(Edmund)["Lay on Hands: end Poisoned"]
+    assert row.ends_conditions == ("Poisoned",)
+    assert (row.damage, row.condition) == ("", "")
+    assert row.action_cost == "Bonus Action"
+    assert "Spends 5 from the pool" in row.note
 
 
 def test_paladins_smite_casts_divine_smite_without_a_slot():
@@ -568,6 +578,25 @@ def test_paladins_smite_casts_divine_smite_without_a_slot():
     assert row.spell_name == "Divine Smite" and row.slot_level is None
     assert row.action_cost == "Bonus Action"  # the spell's casting time
     assert row.note.startswith("Without a spell slot, once per Long Rest.")
+
+
+def test_paladins_smite_counts_its_one_free_casting():
+    """ "you must finish a Long Rest before you can cast it in this way
+    again": one use, all back on a Long Rest (Q8)."""
+    from CharacterContent.Features.ClassFeatures.Paladin.PaladinFeatures import (
+        PaladinsSmite,
+    )
+    from Combat.CombatUIQt.resources import feature_lack
+
+    uses = PaladinsSmite().uses
+    assert uses is not None
+    assert (uses.max_uses, uses.regain_all_on) == (1, "long rest")
+    row = _rows(Edmund)["Divine Smite (Paladin's Smite)"]
+    assert row.counts_uses and row.feature_name == "Paladin's Smite"
+    char = combatant_from_character(_sheet(Edmund))
+    assert feature_lack(char, "Paladin's Smite") is None
+    char["feature_uses_used"] = {"Paladin's Smite": 1}
+    assert feature_lack(char, "Paladin's Smite") == "Paladin's Smite: no uses left"
     assert "If the target is a Fiend or an Undead: 1d8 Radiant more" in row.note
 
 

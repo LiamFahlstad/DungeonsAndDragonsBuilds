@@ -16,6 +16,7 @@ UNTIL_START_OF_SOURCE = {"until": "start", "of": "source"}
 UNTIL_END_OF_SOURCE = {"until": "end", "of": "source"}
 UNTIL_START_OF_TARGET = {"until": "start", "of": "target"}
 UNTIL_END_OF_TARGET = {"until": "end", "of": "target"}
+UNTIL_END_OF_CURRENT = {"until": "end", "of": "current"}
 
 
 @pytest.fixture
@@ -85,6 +86,44 @@ def test_until_end_of_target_next_turn(fight):
     assert "Sapped" in tiger["conditions"]
     _turns(ui, 1)  # ... and ends
     assert "Sapped" not in tiger["conditions"]
+
+
+def test_until_end_of_the_current_turn(fight):
+    """Sentinel's Halt: "Speed becomes 0 for the rest of the current turn".
+    Given on the Pirate's turn, it ends as that turn ends, not a next one."""
+    ui, _, tiger = fight
+    ui._add_custom_condition("Halt", UNTIL_END_OF_CURRENT)
+
+    assert timers(tiger)[0]["text"] == "Until the end of Pirate's turn"
+    _turns(ui, 1)  # the Pirate's turn ends
+    assert _whose_turn(ui) == (1, "Tiger")
+    assert "Halt" not in tiger["conditions"]
+
+
+def test_until_end_of_the_current_turn_given_on_the_targets_turn(fight):
+    """Steady Aim on its owner's own turn ends with that turn too."""
+    ui, _, tiger = fight
+    _turns(ui, 1)  # the Tiger's turn
+    ui._add_custom_condition("Steady Aim", UNTIL_END_OF_CURRENT, targets=[tiger])
+    assert "Steady Aim" in tiger["conditions"]
+    _turns(ui, 1)
+    assert "Steady Aim" not in tiger["conditions"]
+
+
+def test_until_end_of_the_current_turn_outside_combat_lasts_until_removed(tmp_path):
+    ui = make_ui(tmp_path, [Pirate(), Tiger()])
+    _, tiger = ui.characters
+    ui._add_custom_condition("Halt", UNTIL_END_OF_CURRENT, targets=[tiger])
+    assert "Halt" in tiger["conditions"]
+    assert timed_effects(tiger) == []
+
+
+def test_the_dialog_offers_the_current_turn(fight, monkeypatch):
+    ui, _, _ = fight
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    duration_combo = dlg.findChild(QComboBox, "conditionDuration")
+    index = duration_combo.findData(UNTIL_END_OF_CURRENT)
+    assert duration_combo.itemText(index) == "Until the end of this turn"
 
 
 def test_target_durations_follow_each_target_own_turn(fight):

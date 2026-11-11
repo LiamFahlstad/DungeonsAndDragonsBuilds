@@ -93,9 +93,10 @@ class LargeForm(Feature):
                         ),
                     ),
                 ),
+                targets_self=True,
                 notes=(
-                    "Pick yourself as the target, if there's room to be Large."
-                    " You can end it early (no action).",
+                    "Only if there's room to be Large. You can end it early (no"
+                    " action).",
                 ),
             )
         ]

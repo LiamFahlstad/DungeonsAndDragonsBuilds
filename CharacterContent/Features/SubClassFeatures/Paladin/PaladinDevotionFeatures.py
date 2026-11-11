@@ -115,9 +115,9 @@ class SacredWeapon(Feature):
                         ),
                     ),
                 ),
+                targets_self=True,
                 notes=(
-                    "When you take the Attack action: pick yourself as the"
-                    " target. Each hit with the weapon can deal Radiant damage"
+                    "Used as you take the Attack action. Each hit with the weapon can deal Radiant damage"
                     " instead of its own type.",
                     "The weapon sheds Bright Light in a 20-foot radius and Dim"
                     " Light 20 feet beyond. It ends early if you use it again,"

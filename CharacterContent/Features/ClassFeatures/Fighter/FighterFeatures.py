@@ -102,7 +102,7 @@ class SecondWind(Feature):
         return [
             CombatEffect(
                 healing=CombatHitPoints(with_bonus("1d10", level)),
-                notes=("You regain them: pick yourself as the target.",),
+                targets_self=True,
             )
         ]
 

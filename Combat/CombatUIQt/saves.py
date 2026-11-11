@@ -190,6 +190,15 @@ class EffectOption:
     # What the badges it gives do while they're on, by badge: (("Bless",
     # (D20Bonus(...),)),), as its CombatCondition says.
     badge_modifiers: tuple[tuple[str, tuple[Modifier, ...]], ...] = ()
+    # The conditions it ends on each target its conditions would land on
+    # (CombatEffect.ends_conditions: Lay on Hands' Poisoned).
+    ends_conditions: tuple[str, ...] = ()
+    # It goes on its user alone, whoever is targeted (CombatEffect.targets_self).
+    targets_self: bool = False
+    # How many creatures it may target, and how many more per slot level
+    # above the spell's (CombatEffect.targets); None: not said.
+    target_count: int | None = None
+    target_upcast: int = 0
     # Whether its attack roll is made with a weapon, for extra damage that
     # only a weapon attack deals (Divine Favor): a weapon's is, an Unarmed
     # Strike's isn't, and None when it can't be told (a spell can grant a
@@ -209,6 +218,14 @@ class EffectOption:
         own level)."""
         levels_up = max((slot_level or self.spell_level) - self.spell_level, 0)
         return self.instances + self.instances_upcast * levels_up
+
+    def targets_at(self, slot_level: int | None) -> int | None:
+        """How many creatures it may target with a spell cast using a slot of
+        slot_level (None: at its own level); None when it doesn't say."""
+        if self.target_count is None:
+            return None
+        levels_up = max((slot_level or self.spell_level) - self.spell_level, 0)
+        return self.target_count + self.target_upcast * levels_up
 
     @property
     def row_text(self) -> str:

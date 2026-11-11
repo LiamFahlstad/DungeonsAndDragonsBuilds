@@ -193,9 +193,11 @@ def _picked_effect(option: EffectOption, last_save: dict) -> CustomEffect | None
 # duration is None (until removed), {"seconds": n} (counted down a round at a
 # time, on the turn it was given in), or {"until": "start" | "end", "of":
 # "source" | "target"} (ends at the start or end of the source's, or each
-# target's, next turn). "{source}" in a label is the source's name.
+# target's, next turn), or {"until": "end", "of": "current"} (ends as the
+# turn being taken ends). "{source}" in a label is the source's name.
 CUSTOM_CONDITION_DURATIONS: list[tuple[str, dict | None]] = [
     ("Until removed", None),
+    ("Until the end of this turn", {"until": "end", "of": "current"}),
     ("Until the start of {source}'s next turn", {"until": "start", "of": "source"}),
     ("Until the end of {source}'s next turn", {"until": "end", "of": "source"}),
     ("Until the start of the target's next turn", {"until": "start", "of": "target"}),
@@ -658,7 +660,20 @@ class ConditionsMixin(CombatWindowState):
     def _apply_custom_effect(self, effect: CustomEffect):
         """Apply a Custom dialog effect to every living target
         (_apply_effect_to_targets), then ask about what its hits trigger
-        (Hill's Tumble), in the same undo step."""
+        (Hill's Tumble), in the same undo step. A pick that goes on its user
+        (Second Wind: targets_self) goes on the source alone, whoever is
+        targeted; the targets stay as they were."""
+        owner = self.selected_character or self._current_turn_character()
+        if effect.pick is not None and effect.pick.targets_self and owner is not None:
+            targets, saved_targets = self.target_characters, self._saved_targets
+            self.target_characters, self._saved_targets = [owner], []
+            try:
+                with self._one_trigger_prompt():
+                    self._apply_effect_to_targets(effect)
+            finally:
+                self.target_characters, self._saved_targets = targets, saved_targets
+                self._update_target_label()
+            return
         with self._one_trigger_prompt():
             self._apply_effect_to_targets(effect)
 
@@ -792,6 +807,11 @@ class ConditionsMixin(CombatWindowState):
                 )
             if saved:
                 continue
+            # What it ends (Lay on Hands' Poisoned) goes from the same targets
+            # its conditions would land on.
+            for condition in effect.pick.ends_conditions if effect.pick else ():
+                if condition in target["conditions"]:
+                    self._remove_condition_from(target, condition, source=source)
             for condition in effect.conditions:
                 row = {"target": target["name"], "condition": condition}
                 already_had = condition in target["conditions"]
@@ -1234,6 +1254,8 @@ class ConditionsMixin(CombatWindowState):
             words.append(f"{effect.temp_hp} temp HP")
         if effect.condition:
             words.append(effect.condition)
+        if effect.pick is not None and effect.pick.ends_conditions:
+            words.append(f"ends {' or '.join(effect.pick.ends_conditions)}")
         self._action_result_label.setText(" · ".join(words))
         self._action_result_label.setToolTip("")
 
@@ -1587,6 +1609,12 @@ class ConditionsMixin(CombatWindowState):
             if level is not None:
                 slot_combo.addItem(label, level)
         cost_box.addWidget(slot_combo)
+        # How many creatures the pick may target (Bless: 3), at the slot chosen.
+        target_count_lbl = QLabel("")
+        target_count_lbl.setObjectName("targetCount")
+        target_count_lbl.setWordWrap(True)
+        target_count_lbl.hide()
+        cost_box.addWidget(target_count_lbl)
         action_combo = QComboBox()
         action_combo.setObjectName("actionCost")
         action_combo.addItem("No action", None)
@@ -1890,6 +1918,7 @@ class ConditionsMixin(CombatWindowState):
             pick: EffectOption | None = picked["option"]
             # A pick the source spends (a feature with no numbers) is enough.
             spends = pick is not None and pick.is_tracked and caster is not None
+            ends = pick is not None and bool(pick.ends_conditions)
             if (
                 not is_attack
                 and ability is None
@@ -1897,6 +1926,7 @@ class ConditionsMixin(CombatWindowState):
                 and not hit_points
                 and not condition
                 and not spends
+                and not ends
             ):
                 problem_lbl.setText(
                     "Add a saving throw, damage, healing or a condition."
@@ -2090,6 +2120,7 @@ class ConditionsMixin(CombatWindowState):
             show_duration(option.duration_seconds, option.until)
             problem_lbl.setText("")
             show_details(option)
+            show_target_count(option)
             picked.update(
                 option=option, damage=damage, times=times, search=search_box.text()
             )
@@ -2105,11 +2136,29 @@ class ConditionsMixin(CombatWindowState):
             note_lbl.setText("")
             note_lbl.hide()
             show_details(None)
+            show_target_count(None)
+
+        def show_target_count(option: EffectOption | None):
+            """How many creatures the pick may target at the slot chosen
+            ("Targets: 4 at level 2" for Bless), and when more are targeted,
+            how many too many. It warns; the GM can still apply it."""
+            slot = slot_combo.currentData()
+            count = option.targets_at(slot) if option is not None else None
+            if option is None or count is None:
+                target_count_lbl.hide()
+                return
+            at = f" at level {int(slot)}" if option.target_upcast and slot else ""
+            text = f"Targets: {count}{at}"
+            if len(targets) > count:
+                text += f" ({len(targets)} targeted: {len(targets) - count} too many)"
+            target_count_lbl.setText(text)
+            target_count_lbl.show()
 
         def upcast():
             """A pick's damage and times at the slot now chosen, unless they've
             been edited."""
             option = picked["option"]
+            show_target_count(option)
             if option is None:
                 return
             if times_input.value() == picked["times"]:

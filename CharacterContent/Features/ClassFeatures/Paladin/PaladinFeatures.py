@@ -59,10 +59,16 @@ class LayOnHands(Feature):
                 notes=(
                     f"Type the Hit Points spent from the pool ({pool} after a Long"
                     " Rest). Touch: the target can be you.",
-                    "Or spend 5 from the pool to end the Poisoned condition on"
-                    " the target, healing nothing: take it off by hand.",
                 ),
-            )
+            ),
+            CombatEffect(
+                name="Lay on Hands: end Poisoned",
+                ends_conditions=(Condition.POISONED,),
+                notes=(
+                    "Spends 5 from the pool, which restore no Hit Points. Touch:"
+                    " the target can be you.",
+                ),
+            ),
         ]
 
     def get_description(self, character: CharacterView) -> str:
@@ -152,7 +158,12 @@ class FightingStyle(Feature):
 
 class PaladinsSmite(Feature):
     def __init__(self):
-        super().__init__(name="Paladin's Smite", origin="Paladin Level 2")
+        super().__init__(
+            name="Paladin's Smite",
+            origin="Paladin Level 2",
+            # Its free casting of Divine Smite (Q8).
+            uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
+        )
 
     def granted_spells(self) -> list[FeatureSpell]:
         return [FeatureSpell(PaladinLevel1Spells.DIVINE_SMITE)]

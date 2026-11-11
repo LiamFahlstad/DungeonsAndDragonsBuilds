@@ -237,11 +237,29 @@ Names are the Python ones; `Ability`, `Condition` and `DamageType` come from
   a spell that's instantaneous. Nothing is put on a target unless the effect
   says so. Use `until` only when it lasts until the start or end of a turn
   (`until=(TurnEdge.END, TurnOf.TARGET)` = the end of the target's next turn;
-  `TurnOf.SOURCE` = the caster's); otherwise it lasts the spell's duration.
+  `TurnOf.SOURCE` = the caster's; `(TurnEdge.END, TurnOf.CURRENT)` = "until
+  the end of the current turn", Steady Aim's and Sentinel's Halt's Speed 0);
+  otherwise it lasts the spell's duration.
   List every condition it gives (Tasha's: Incapacitated and Prone): the
   dialog applies them all, for the same time, and one repeat save ends them
   all. A spell whose option only lasts the target's next turn (Command: Halt)
   marks it with its own name until `(TurnEdge.END, TurnOf.TARGET)`.
+- **`ends_conditions`.** The conditions it ends, by name, on the targets its
+  conditions would land on (every target with no roll): Lay on Hands'
+  `(Condition.POISONED,)`. "End one of ..." is a row per condition
+  (Lesser Restoration: Blinded, Deafened, Paralyzed, Poisoned), not one row
+  ending them all. Don't also write "take it off by hand" in `notes`.
+- **`targets_self=True`** when it goes on its user, whoever is targeted
+  ("You gain ...", "you regain ...", a buff on yourself: Second Wind, Rage,
+  Patient Defense, Large Form, False Life, See Invisibility). The dialog
+  applies it to the source alone and the row says so, so don't write "pick
+  yourself as the target" in `notes`. Not for a self-centred area that hits
+  others (it has a save or attack against them).
+- **`targets`.** `CombatTargets(count, upcast=0)` when the spell says how
+  many creatures it may target: Bless `CombatTargets(3, upcast=1)`, Command
+  `CombatTargets(1, upcast=1)`, Aid `CombatTargets(3)`. The dialog shows
+  "Targets: 4 at level 2" beside the slot box and warns when more are
+  targeted. Don't also write "one more target per slot level" in `notes`.
 - **A badge's `modifiers`** (`Model.Content.CombatModifiers`): what it does
   while it's on, which the simulator counts: `D20Bonus` (Bless),
   `ArmorClass` (Shield of Faith), `ExtraDamageFrom` (Hunter's Mark, on the

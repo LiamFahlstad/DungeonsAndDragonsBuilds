@@ -98,6 +98,7 @@ _IMPORTS = {
     "CombatEffect": "Model.Content.CombatEffect",
     "CombatHitPoints": "Model.Content.CombatEffect",
     "CombatInstances": "Model.Content.CombatEffect",
+    "CombatTargets": "Model.Content.CombatEffect",
     "EffectRoll": "Model.Content.CombatEffect",
     "TurnEdge": "Model.Content.CombatEffect",
     "TurnOf": "Model.Content.CombatEffect",

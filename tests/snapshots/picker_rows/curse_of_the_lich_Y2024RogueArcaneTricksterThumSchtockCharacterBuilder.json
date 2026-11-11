@@ -247,6 +247,10 @@
       ],
       "type": "D20Mode",
       "when": "it's its next attack roll this turn"
+     },
+     {
+      "set_to": 0,
+      "type": "Speed"
      }
     ]
    },
@@ -261,7 +265,7 @@
    "half_on_save": false,
    "is_described": true,
    "is_unavailable": false,
-   "note": "Only if you haven't moved this turn: pick yourself as the target. Your Speed is 0 until the end of the turn.",
+   "note": "It goes on its user, whoever is targeted. Only if you haven't moved this turn.",
    "repeat_save": false,
    "roll": "Saving throw",
    "row_name": "",
@@ -269,9 +273,10 @@
    "spell_level": 0,
    "spell_name": "",
    "summary": "",
+   "targets_self": true,
    "until": [
-    "start",
-    "source"
+    "end",
+    "current"
    ],
    "upcast": []
   },

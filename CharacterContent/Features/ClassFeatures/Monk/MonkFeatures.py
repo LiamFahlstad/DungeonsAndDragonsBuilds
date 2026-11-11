@@ -365,9 +365,9 @@ class PatientDefense(Feature):
                         ),
                     ),
                 ),
+                targets_self=True,
                 notes=(
-                    "Pick yourself as the target. Without the Focus Point it's"
-                    " the Disengage action alone.",
+                    "Without the Focus Point it's the Disengage action alone.",
                     "The Dodge ends early if you have the Incapacitated condition"
                     " or your Speed is 0.",
                 ),
@@ -538,9 +538,10 @@ class UncannyMetabolism(Feature):
                 healing=CombatHitPoints(
                     with_bonus(MARTIAL_ARTS_DIE.at(character), monk_level)
                 ),
+                targets_self=True,
                 notes=(
-                    "When you roll Initiative: pick yourself as the target. You"
-                    " also regain all expended Focus Points: reset them by hand.",
+                    "Used as you roll Initiative. You also regain all expended"
+                    " Focus Points: reset them by hand.",
                 ),
             )
         ]

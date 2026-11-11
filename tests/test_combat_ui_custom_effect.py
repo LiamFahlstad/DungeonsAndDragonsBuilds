@@ -2695,15 +2695,17 @@ def test_a_pick_filling_the_name_keeps_it(paladin, monkeypatch):
 def test_a_passive_feature_cant_be_applied_by_itself(paladin, monkeypatch):
     ui, edmund, _ = paladin
     # One always on and not described: no uses, no action, nothing to apply
-    # (Edmund's own such features all say they have nothing to apply).
+    # (Edmund's own untracked features are described: Sentinel's Halt).
     edmund["_feature_objects"] = [
         *edmund["_feature_objects"],
         Feature(name="Plain Feature", origin="Test"),
     ]
     dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
     options = [row.data(0, Qt.ItemDataRole.UserRole) for row in _rows(dlg)]
-    passive = next(o for o in options if o.kind == "feature" and not o.is_tracked)
-    assert passive.name == "Plain Feature"
+    passive = next(
+        o for o in options if o.kind == "feature" and o.name == "Plain Feature"
+    )
+    assert not passive.is_tracked
     _pick(dlg, passive.name)
     _apply(dlg)
     assert ui.history == []
@@ -3112,3 +3114,94 @@ def test_picking_a_damage_spell_after_healing_is_damage_again(paladin, monkeypat
     _search(dlg).returnPressed.emit()
     assert _combo(dlg, "amountKind").currentText() == DAMAGE_AMOUNT
     assert _form(dlg)["damage"] == "8d6 Fire"
+
+
+# ---------------------------------------------------------------------------
+# Ending conditions (Q7: CombatEffect.ends_conditions)
+
+
+def test_lay_on_hands_ends_poisoned_and_undo_gives_it_back(paladin, monkeypatch):
+    """ "expend 5 Hit Points from the pool ... to remove the Poisoned
+    condition from the creature"; it ends nothing else."""
+    ui, _, tiger = paladin
+    ui._add_custom_condition("Poisoned", targets=[tiger])
+    ui._add_custom_condition("Prone", targets=[tiger])
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    _pick(dlg, "Lay on Hands: end Poisoned")
+    _apply(dlg)
+    assert "Poisoned" not in tiger["conditions"]
+    assert "Prone" in tiger["conditions"]
+    assert "ends Poisoned" in ui._action_result_label.text()
+    ui._undo_last()
+    assert "Poisoned" in tiger["conditions"]
+
+
+def test_ending_a_condition_the_target_hasnt_got_does_nothing(paladin, monkeypatch):
+    ui, _, tiger = paladin
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    _pick(dlg, "Lay on Hands: end Poisoned")
+    _apply(dlg)
+    assert ui.history, "applied (and its Bonus Action spent), not refused"
+    assert "Poisoned" not in tiger["conditions"]
+
+
+# ---------------------------------------------------------------------------
+# A row that goes on its user (Q35: CombatEffect.targets_self)
+
+
+def test_a_self_row_goes_on_its_user_whoever_is_targeted(paladin, monkeypatch):
+    """False Life: "You gain 2d4 + 4 Temporary Hit Points". Edmund targets
+    the Tiger; the Temporary Hit Points are Edmund's, and the Tiger stays
+    targeted."""
+    ui, edmund, tiger = paladin
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    _pick(dlg, "False Life")
+    _apply(dlg)
+    assert edmund["temp_hp"] > 0
+    assert not tiger.get("temp_hp")
+    assert ui.target_characters == [tiger]
+    ui._undo_last()
+    assert not edmund.get("temp_hp")
+
+
+# ---------------------------------------------------------------------------
+# How many it may target (Q34: CombatEffect.targets)
+
+
+def _target_count(dlg) -> QLabel:
+    return dlg.findChild(QLabel, "targetCount")
+
+
+def test_bless_says_three_targets_and_one_more_per_slot_level(paladin, monkeypatch):
+    """Bless: "up to three creatures ... one additional creature for each
+    spell slot level above 1"."""
+    ui, edmund, _ = paladin
+    edmund["spell_slots"] = {1: 4, 2: 2}
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    label = _target_count(dlg)
+    assert label.isHidden()
+    _pick(dlg, "Bless")
+    assert not label.isHidden()
+    assert label.text() == "Targets: 3 at level 1"
+    slots = _combo(dlg, "spellSlot")
+    slots.setCurrentIndex(slots.findData(2))
+    assert label.text() == "Targets: 4 at level 2"
+
+
+def test_too_many_targets_are_warned_about_not_refused(paladin_fight, monkeypatch):
+    """Command at level 1 targets one creature; Edmund has two targeted."""
+    ui, edmund, tiger = paladin_fight
+    ui._select_character(edmund)
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    _pick(dlg, "Command: Halt")
+    assert _target_count(dlg).text() == (
+        "Targets: 1 at level 1 (2 targeted: 1 too many)"
+    )
+
+
+def test_a_row_that_doesnt_say_shows_no_count(paladin, monkeypatch):
+    ui, *_ = paladin
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    _pick(dlg, "Bless")
+    _pick(dlg, "Longsword")
+    assert _target_count(dlg).isHidden()

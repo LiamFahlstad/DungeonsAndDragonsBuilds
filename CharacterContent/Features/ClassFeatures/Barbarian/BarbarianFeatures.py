@@ -192,9 +192,9 @@ class Rage(Feature):
                         ),
                     ),
                 ),
+                targets_self=True,
                 notes=(
-                    "Pick yourself as the target. It lasts until the end of your"
-                    " next turn; take it off then unless you attacked an enemy,"
+                    "It lasts until the end of your next turn; take it off then unless you attacked an enemy,"
                     " forced an enemy to save or took a Bonus Action to extend it."
                     " It ends early if you don Heavy armor or are Incapacitated.",
                 ),

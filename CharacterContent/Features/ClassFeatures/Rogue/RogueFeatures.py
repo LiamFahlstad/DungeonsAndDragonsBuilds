@@ -23,7 +23,7 @@ from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.View import CharacterView
 from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table, dc_formula
 from Model.Content.CombatEffect import CombatCondition, TurnEdge, TurnOf
-from Model.Content.CombatModifiers import D20Mode, D20Test, RollMode
+from Model.Content.CombatModifiers import D20Mode, D20Test, RollMode, Speed
 
 
 class Expertise(Feature):
@@ -261,20 +261,19 @@ class SteadyAim(Feature):
                 conditions=(
                     CombatCondition(
                         "Steady Aim",
-                        until=(TurnEdge.START, TurnOf.SOURCE),
+                        until=(TurnEdge.END, TurnOf.CURRENT),
                         modifiers=(
                             D20Mode(
                                 (D20Test.ATTACK_ROLL,),
                                 RollMode.ADVANTAGE,
                                 when="it's its next attack roll this turn",
                             ),
+                            Speed(set_to=0),
                         ),
                     ),
                 ),
-                notes=(
-                    "Only if you haven't moved this turn: pick yourself as the"
-                    " target. Your Speed is 0 until the end of the turn.",
-                ),
+                targets_self=True,
+                notes=("Only if you haven't moved this turn.",),
             )
         ]
 

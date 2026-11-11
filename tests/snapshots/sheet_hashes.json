@@ -3,11 +3,11 @@
   "full": {
    "character.html": "a8b909ea312625fae7d90b9178385480b3bc26765b2fbb16928653f759c911e7",
    "features/level_01.html": "dc3ecc4adc9383dd6e0867dae20670e25e6a309e06d6416e8156b910b8a74402",
-   "features/level_02.html": "0378d02ad5be370283a3f3b94e078416503c11acad708467a07ca614728bcb42",
+   "features/level_02.html": "7a76b47da55977351c96b306993655342ed4f1bdc51d1de7e9962ec0c2f4e37d",
    "features/level_03.html": "14c389623535ea107144008e26f2ea7581270db5653191d8c2b33bc9d647028f",
    "features/level_04.html": "ee8c6ce60883e0f06edfa74d29178b2563934630e87b6263e2309de0055547d8",
    "fighting_styles.html": "0231ca6f2b7463ad4bb9d43d5e6e27715b38a087e51917a533b5a24b495e7598",
-   "full_character_sheet.html": "ec4579a6c9eb560166c0a5a44b1ccab8761a17c8ab9d2c5776909fc104ad4e58",
+   "full_character_sheet.html": "fdaf52288aea6818705c087a13b4d54410551a2296073bfe00e4e5cb38854b02",
    "items.html": "89668547fd30648355d5a668e7f243841c6da947a123292c95a446c64fb9b2c0"
   }
  },
@@ -15,12 +15,12 @@
   "full": {
    "character.html": "67a6baa375e78e7873a5102e4575c1193f0bab9753aade890b793e746b0b7d74",
    "features/level_01.html": "2a6ee74d7ac48834078fac640677275946e17f59b7043e87cca1c9aa9b528122",
-   "features/level_02.html": "2eb7a4ea36fc393a103e99cdf2bc021716cb52bfb8c63307a58af135daf301ef",
+   "features/level_02.html": "d24b00ce533797facbedbad73b5e949135412cd10d807425acdc8e5f5e383242",
    "features/level_03.html": "d65afc758712bd7c18d0f008e6bfade3b3a6a5d3bcc166de638547c75d467569",
    "features/level_04.html": "2aae97edede488d7984c6ced245fb7ed849cb345b12e34c6fd18c530013617af",
    "features/level_05.html": "7d091912587232da2e9dcbaa86f7e0f8fe40448098f389f565774c320637e296",
    "fighting_styles.html": "d5986e25d07ed70f71953e0cb64ecaf293ba114b1308b3e82d1fa88f0aab2d95",
-   "full_character_sheet.html": "e878cb0ed5f2bbc30be349d67ccac2ea2e73595750011db829c68eb5b3ca7d2a",
+   "full_character_sheet.html": "2754e790c6a777efd161b211167c63ee6a20051c42beb2fb1dae487e4f33c294",
    "items.html": "1060c5f16d56e3b08b4d6676cab0835f1d805dee60adc7b9d10b0453510c8450"
   }
  },
@@ -660,7 +660,7 @@
   "full": {
    "character.html": "14880f056c7a80f2552ed3eef596b5fcdafa8da29789e4fd088faad5741fd905",
    "features/level_01.html": "50125015b09740f88edabcc61b30dbb54ffcd3370a77fbe46db11e882c7df79d",
-   "features/level_02.html": "18e8e5ab98a2d16bdd06f166c07ef1d6de8a14d48643a61d9db4e867623e1eb6",
+   "features/level_02.html": "61446737a25a95169ebe1d6cf7dace36205b1a7da7533b02e460b5a7ecafbe51",
    "features/level_03.html": "a1ae2ee4bf9bcde7ecc736fd6c9e873f9871f4e304a8ffc7c944afa1b64bc7e5",
    "features/level_04.html": "961c96564031f19e0a23aeb988ad708074d094f45db264f6fbbfd6d13d292007",
    "features/level_05.html": "c898c4b91a43ecae8696c8c52a4af30191f498c967288eb4303d93a1ba17781d",
@@ -680,7 +680,7 @@
    "features/level_19.html": "08baac1a2a580892d7e21df4ebc7da521c2258fb22cd36dc9c614fd7ba3606b5",
    "features/level_20.html": "9af34c497ef99a67d32e44b00cc9ae054f71b964e1d298dfbf7ca593a029fc89",
    "fighting_styles.html": "6fb652603333d1d5977adab21336579e7ca97d0fd95edc11f1b1edfc4cb5968d",
-   "full_character_sheet.html": "e080c6dea9122a046a6a20d11efe18ffe73b3c83aafd38ceeb49a4e8f7c9e8a2",
+   "full_character_sheet.html": "a7bd363ea38d34116665fbe527f36abde675e9b22d8378bf5829bc6f808b49a3",
    "items.html": "b1dffd2f7d8b27af4cff86ee517a30a02dd3e1362ad440f0200cd179816b0863"
   }
  },
@@ -688,7 +688,7 @@
   "full": {
    "character.html": "0f7d37bc408baa8d86d3ba9081d9909c275f552863ca64eeec0e6cc318b2acd9",
    "features/level_01.html": "94dafea6227088b2ffb23db9e5d4fef98b054a841bbb59fa31ca44b8045050e1",
-   "features/level_02.html": "f8cdf8852f0e9d84ec8d1d44edebe396bf81bbc081455423e16456ab9ece52b4",
+   "features/level_02.html": "f86d5de6d82da41b2fb41327d8c0751180093c3591cfb7d04d5d5f1129138b8e",
    "features/level_03.html": "be4a145b991883c3e66da179a77bab06e3662da41afe509b7f7dbb10b704c159",
    "features/level_04.html": "9352d41db8984a8fd4bf3705381fdfb155a1fa194c4b19f28981776e008bb759",
    "features/level_05.html": "314538c6a22ec57843d0db29a2a930308e56e88a4e76d39ccbff7f20b73c2fe0",
@@ -708,7 +708,7 @@
    "features/level_19.html": "7f3200ec215721055b32747ddb16a3f1eeab2cd8c893ef6d456bef780194d4dc",
    "features/level_20.html": "cb4c594f30399b489367ddc9734ae5feecca87c7ebd6b72db831cff95e27371b",
    "fighting_styles.html": "c7c1879d04291991a45835e1515c14b1727f35d1b629ff9f12f56e4082fd9e9c",
-   "full_character_sheet.html": "feb2370cfae02fff05aa8bf0dff06a1ce414c34febd04cb4397cfa0453caf233",
+   "full_character_sheet.html": "edb9814bf00f51d12cd0d5ba581bb931a05ae02a3a11effccc4fff2ae7e40c24",
    "items.html": "d380956fddf0fd422c38d8b9a2103e7a42237556fdf9a71dd28059ffb2ae73d8"
   }
  },
@@ -716,7 +716,7 @@
   "full": {
    "character.html": "b6325a59e59fd994bc6661da29dc866054c1ab54f13597c8ad76dd4e3649180b",
    "features/level_01.html": "c59e996397fcd19cfa7f365a41537a75a43d29b92b4687b31a93d3a0ad9c62a2",
-   "features/level_02.html": "1b5174c186f701693a0ccbfb5d667762e5d4be3a66bec774cb97a435d9a5b068",
+   "features/level_02.html": "f87a0f18f41da282498d2421cc0a7f139daab2f47234bc08d8908210bbdc4f29",
    "features/level_03.html": "a3f2b3b633993e39270bc347e459a3201dee4c7e0d727f1a625086862588b9d8",
    "features/level_04.html": "ed1aad2436ed612ad6adb3e131a45d5f08489f6fa5daa14ef03e975fe5f67569",
    "features/level_05.html": "dfe3f9d33ac7566a33b97fa8d2c8c564fa0808b4630fbdb5063a9791c4a47ff9",
@@ -736,7 +736,7 @@
    "features/level_19.html": "716e6d0906f42def957313ee91454b15f2ca66e189a0d6d4237f9a92bd5315d2",
    "features/level_20.html": "47b64dfb4197f0612f87451c2cc3596d0d17e901a05186a2597e96c839a77d98",
    "fighting_styles.html": "28a4fff9e40728f637464aaf283c2435289f0d31d5738c3077abe638d732ee78",
-   "full_character_sheet.html": "6c3238fbd8bc245af7dba087ed00df22362a370356e69e26825fa0ef29a11000",
+   "full_character_sheet.html": "06dee6cb2ea3515ab920826fdcf833c52d7c80540b5d41fb5c038eff00377349",
    "items.html": "565c27fb4a67e71dfef0f50dc24aa6cef4ba6f43d6600e32583fd729490372fa"
   }
  },
@@ -744,7 +744,7 @@
   "full": {
    "character.html": "52045b505e4d9607308f0544276c7bb2c56c24f6be715e90cdfa5850639aa848",
    "features/level_01.html": "efec8bee633cda8780f4a53c540461f261abf4f7fdfa8aa766b65f38d75ce86b",
-   "features/level_02.html": "4f1f40622de289477615ca5dffd4348e5c653ff1f72ee29e8c43436829c0b788",
+   "features/level_02.html": "adc92d46302b786dea94e3550a857ce830273fa575ec90a1d69dd96016103d99",
    "features/level_03.html": "dc14c9a3c145435c5160ae7f1111d360fbfdfd6bdd63e1b4954a9ca62547430d",
    "features/level_04.html": "3ecfdc549628c0da94e425ee98af05f24d5dda73abe996928ca94d47becb83b2",
    "features/level_05.html": "4a1fd83dec4b234796f2c061eddef42feaaf2f9f223c96221c4cec09ac595050",
@@ -764,7 +764,7 @@
    "features/level_19.html": "bbca703c8fa76e2c6240092d7a8a6ffe0f036e7a2a7aa46bb137a8c9d138b25f",
    "features/level_20.html": "e7bcf7c3cc5c19ad042fdd0331fb114ec934d8abfe368553b69102dd8cd32d8c",
    "fighting_styles.html": "6304ee7b0e902795f2dfa7dc04c869be58b18a1dba5748416c2b732fb3fb4d3e",
-   "full_character_sheet.html": "fd763d5975a7e7ce7c38920e171f1cbbb16c7db108ca2ddf41e9fffba61f1c5e",
+   "full_character_sheet.html": "b478f1b8224d8a6fd7842234b108315e66034da53416c976687bdda4930be735",
    "items.html": "8319741a4e50f09cd8bbdf6bd4f16620c638c923410d9391b1ffc205fde94bd0"
   }
  },
@@ -772,7 +772,7 @@
   "full": {
    "character.html": "115132d595a8d90ea9ec5face690706d5e589c5ed528c078550765ad9d2b34f8",
    "features/level_01.html": "b6d6930c55995c8c49413a790aaed112c1ef7cd95948ef88800d34663fd7c621",
-   "features/level_02.html": "dc6dc7ea07145ae2bda4d3752ea85799c4c0d08e49c11a77dbdcfcf16da91e3c",
+   "features/level_02.html": "5f0323fd940af076cb36474ffc549032e31b3b303fff6e00e8f168c34f788333",
    "features/level_03.html": "d9abec1e050cd9a670b015200a07cc25f58643c6d9f6cb78650a60a185059a5a",
    "features/level_04.html": "bf503e8ac939b3c758877d37b38063b8442288f91311d31fa5ae31dd669fd219",
    "features/level_05.html": "f2c4bbc0d5ab8fbfbfc2dbccfe48071a86ecaff7d7cdd081841110f5656f8bb8",
@@ -792,7 +792,7 @@
    "features/level_19.html": "092464c367ce7222a6d27082e8bfedaca4df7d82e6f95bcc42f0e806f3e4aabe",
    "features/level_20.html": "3973cff1f320c74113e2312ab0354883496152675e2a8359c43f8a2599b992e6",
    "fighting_styles.html": "55a51f6ca5082fee14fe1b06cfd06b813c312ea886b171774bb436c86bf9ecfb",
-   "full_character_sheet.html": "c54d0c0886be7aa6a7e6919d6d0e2246fb4ba81c08d4e4e310402e045aaf87c0",
+   "full_character_sheet.html": "685d4e7cc99cf82ed37913dd7f5fced4325fdf5847d022232003e2c49547b35d",
    "items.html": "bcb919ff1c72d3f50b38efabdf4de66321e3ee2c93ef6c4ff1537b61f8a3e919"
   }
  },
@@ -1675,10 +1675,10 @@
   "full": {
    "character.html": "0217c111edfbd4b800d0d28fc2845b1990caef1bb90b3e9d03ecb8a480685bae",
    "features/level_01.html": "a33217f15566e4efb4c3a22f07eddc65e40afe10c2f10bc7b9da090b3625f819",
-   "features/level_02.html": "520067ca56e576f384f05420bd6d17bab4d4eae98f927833e9292a67493a4227",
+   "features/level_02.html": "c97bf0f94207510440771c37a1bfa8c9822648633fea11594562231c6952c40c",
    "features/level_03.html": "b485809590beaeea071557d8f6a6d4c19460461e78f9ed08fdf474349257b46a",
    "fighting_styles.html": "4a123bdbac85cb7b452753a7bdabf2ade7bf5c27a67bd89b9cc0900053f77f83",
-   "full_character_sheet.html": "4a70eb7555ab283c5e41f8a040b71ca5845927b74169c89ef164f84d2e5456b7",
+   "full_character_sheet.html": "e8cd93a19edaab547707a6d43e9c0f521a72e94228607a1c49c80957ccb1a7aa",
    "items.html": "b52c0e1dffe4ba162bede61bce405a96d0098ea46221c2cef1191eb7c22819d5"
   }
  },
@@ -1686,10 +1686,10 @@
   "full": {
    "character.html": "65675f363ca7f2f7d5ec5656560cd83d9078579a6faf1e60f8055ef9af325816",
    "features/level_01.html": "47e20241dc6456b2b304eb5c263c4d7429b9842739e5a09f83821495dfcd57d7",
-   "features/level_02.html": "ec7a703014b8545e87f71c3a10a240afe34ec099b961a90ff45767bf38a5032e",
+   "features/level_02.html": "f5c751660798debe8f0bba3c598bdd6e63fdae12649c371f0c5b8d53bbaee312",
    "features/level_03.html": "dd866a93097c6483a3e652a22d2344c9c0e3393416d7946bf4471821521689c2",
    "fighting_styles.html": "d2a0703e94aeac2d56cf449e8d91ce2195ed252724d6c6a680d01e0e3afe38db",
-   "full_character_sheet.html": "76d2309357c4c8e29d8210bb14ee4e5d85699713a6267a592fcab2dd153da471",
+   "full_character_sheet.html": "8dceeb5beeeed3b9ae6680ea5d76fa2984ab0d89596b2400f149519bf35a3b20",
    "items.html": "d80ba601c397a7e33795c5fa6f308dbc89cec18cc5b2fc4c0d34f42d1a4a2342"
   }
  },
@@ -1697,10 +1697,10 @@
   "full": {
    "character.html": "1b2c23e2727b18200c4eee304612d8e71fe1d5ad0afad73f38b1ce192e4ca800",
    "features/level_01.html": "548d4f3d770e14e7d2262a926e777f5576f314df41d4d3c92db0b83bc25d26ac",
-   "features/level_02.html": "37789c0ca52fce46d59e99fb40b223cef6f0ecb032834febd6ac35e4715188b3",
+   "features/level_02.html": "4ebb0552eba6a999cdba05062844732d89728a700d3ebb55c7bd4d9907346b09",
    "features/level_03.html": "5358da8459702707ac9c034769e38a435f34e55d84f66ee59f73c8ad44140650",
    "fighting_styles.html": "8ebca7c46edf733d3d95c8bde68c1ddf150c73470272c8454994b4786762bffd",
-   "full_character_sheet.html": "e09d1cecf723328f7cc3235f3a8ce20e81f6eba831c031d647e2e16f3b428aa8",
+   "full_character_sheet.html": "13f08a03070018d54d6f87bfa22bcc96fcc2c81e81335b6772d5e9c9364d909f",
    "items.html": "38d5e5ec2ceb4e8901a68643583b6aa00d847dc87e6a950799623817a794ee35"
   }
  },
@@ -1708,7 +1708,7 @@
   "full": {
    "character.html": "a171d99c7bbfb89e15461583045e5260319f33b71478f93cb0f13f2c4ec8a247",
    "features/level_01.html": "6f59fec7a5b62058c1ef6208b226570379c9f32879057fe3e9d4b823c8c7f953",
-   "features/level_02.html": "b888b6a8bd0a3e976a461dd6e0013cb2644362b4bdb2b4939d3167be966dcd2e",
+   "features/level_02.html": "8d27b44bf02ee0b73c5cf14fb6061f1ba730495d322878c9e345e92a70255422",
    "features/level_03.html": "2f775bec7c802f1b5dacf76747f402f2b646e561348bb15e554c55f44a95a745",
    "features/level_04.html": "cd909bd9202c9912d7c5d8cc43c27126eace410ac3121ac98338ed229c41bed3",
    "features/level_05.html": "c44c7f9c97b591d2e7aaecb3ec7a4cda297d95b14cd4c433e91359ad080c6cd8",
@@ -1728,7 +1728,7 @@
    "features/level_19.html": "b6e2d19598a95a581696c2a6d64c9945058314cd8ee0612baaab0df3374bfaec",
    "features/level_20.html": "e96aa4fe5361806aa64c479c845e0b64716cf949c6ef7f11f75d43ffc7d0af76",
    "fighting_styles.html": "3be8cf21404a99a29e20ebd1835d2b4bd37f2ee857d92a1e02bcdee70d9ff1e8",
-   "full_character_sheet.html": "e623086603f7fcaa3a70afe261cc9f2a3ec82c7929738ff11ffa8c37e2a12187",
+   "full_character_sheet.html": "0a52dcf64af218e5c248d3aff8a72c39c86f255eb1773681512682560b9171ab",
    "items.html": "1d90f2ab9e586b0a5efcebef224977449445794bf57cc894be583047fb5a4d26"
   }
  },
@@ -1736,10 +1736,10 @@
   "full": {
    "character.html": "9a8f49add6e48034459562e27d2695b1b53a66152c42949108488a260134b3ee",
    "features/level_01.html": "a51caa5baab04c8444bcc0bc73cd0a91a37d2f1cf10b1ff3fe77b61475da0cb3",
-   "features/level_02.html": "e45dfecec1615144ebd8f79ed2031b6598588e3bcd8aea913bc41744ea77d859",
+   "features/level_02.html": "ac28f2c5b68892100007861530b027e23b40930b39d032f2e7e54fab9f7ae3f1",
    "features/level_03.html": "7dc50f40345578fd7c2d61c9793218ab7afccc59ee8c27ed58e5ec68c10bc150",
    "fighting_styles.html": "10b532668bad3624a9ebc60e67144dc143fa3feb91d1462d5e0df694f9be16f6",
-   "full_character_sheet.html": "ff265aadf4ef79ecf522259bcb17f1ec8c48d5ed10e531fd1d98b1a613d1daad",
+   "full_character_sheet.html": "a0ce5c6d38e02f855835a84445ad7d4d79e7955bc3af03fdb50e7d4e5b769f6b",
    "items.html": "17ca62394ef829df2879fb409f9076c97407306cfb4b35c8984575fffaea4978"
   }
  },
@@ -2331,11 +2331,11 @@
   "full": {
    "character.html": "8ab5f6e4b249bf4fd53e7fcaf9ec11b0e26fc075b521c78d21f765ff8b72dde4",
    "features/level_01.html": "77d06923a1c78f57f0a090b28a27924dbe60bd1407ead2572ab4fb36a081767a",
-   "features/level_02.html": "f65fae8b8125814292dba26bb860021ded452385c0ee8864c5c3157b94644843",
+   "features/level_02.html": "fb60e7be4aa0d2b4aa3567a2dddba67698ba0d3570476eb4fbccc4aa6ce83db0",
    "features/level_03.html": "fa0cb18101ab7c3d176bbcc7e8282ff10fb504930119239fcf3888814f86d939",
    "features/level_04.html": "19886c6caa79e83c066f24d55ecde2f0b84fa816c72bd65e79b706d22b0b5afd",
    "fighting_styles.html": "0d77da6551e2b1f2d0c0b9e06431c8aba7c9475cda6a4ead75c213fad20b7f22",
-   "full_character_sheet.html": "7f7e0406c7e9c5c1e039d1d2e11147c34de122991287611d44df13932c32d183",
+   "full_character_sheet.html": "647b6f0e8de42532d5165535096be527ab109c38cd38fe91eb0b340dfcbb608b",
    "items.html": "e7c7f74daed184568fedc88be600dad7772994c4dc1d9fca3911564556795729"
   }
  },
@@ -2343,7 +2343,7 @@
   "full": {
    "character.html": "bc69dd09ca9a08246fd53b2463f96271f1f54eb753b65ee3336ca4def0e6f164",
    "features/level_01.html": "5821f2ab531a583d201bf86823318d1211d5654268fd61a1c3b7fbc6edb192d2",
-   "features/level_02.html": "61fbbc073a20d8d08da6b2396331d5d549333d4cb2db0f4166d86e5902938ce1",
+   "features/level_02.html": "de3e0670ce4267c81048ece2a19773640e8e67f0697111731ed3f54bc6f8fd86",
    "features/level_03.html": "debf36b1a7ed507ebf2a91f1997a04315b6edee7dd6ff48291b19f5d3c0fa2c1",
    "features/level_04.html": "0c17eb0cb230e768cbbc2c1a66d86a89cd5112d8ea3b0bf7d575057387d8898c",
    "features/level_05.html": "a416aec4e028835968f64f1a4c0d9c065df8847d581b614b36fcb76141f6a4f8",
@@ -2362,7 +2362,7 @@
    "features/level_18.html": "aa7a144b211da119977ea7fb71a6a80b48aef6d1deb2ed08790b77a9b73c9552",
    "features/level_19.html": "82bd254b4ca6c96960c8844aca7cd3f92d5dc3588760d142b6cc8560838652c1",
    "fighting_styles.html": "d479f6acfb3a3089c54547ddae15cbff6835a52100fc01686f679bc25e3bde2d",
-   "full_character_sheet.html": "29b2216c9ccf6b916cfdd3d33c1ab8811eac45c6fc0ef8d22361ad421817bd4d",
+   "full_character_sheet.html": "57b8073693a7945346bcde834bd54ee381437f0a41f6b4f180c9afdcbe23e25b",
    "items.html": "5e3877338dab488f467d8df30f713de3792ecab9e3c896b1d5a6f53744588b8f"
   }
  },
@@ -2370,7 +2370,7 @@
   "full": {
    "character.html": "76cbd27c992c7ec80bef6a771d6a35b2e146c08e90c4d7f174828cbe1e0cfd39",
    "features/level_01.html": "8f22614b588f8e95a974bd3aec710cf52e18e1f245e2b51952419ce6df11dfb5",
-   "features/level_02.html": "ac8b4c61e89ebf32e2a323d4f732c7f06bba19ae775487dc7835b4ffac97dfb0",
+   "features/level_02.html": "78f10469f4ef8afdfcef8567c8e680946de1c4c7222cd7a6b0d6dd322cd0d4f5",
    "features/level_03.html": "cf058476c518b6c905e21ccc5e614544ff231498c4f7ad05e98c659b4c0a6520",
    "features/level_04.html": "f4d32adceaa871b2b7d518b0e823c6c787d1b43cf308ef4c40e28280dabbcf1c",
    "features/level_05.html": "271704c1fb0b279682c207e38af8115dafd72e7e76839aef28e184e06d94005a",
@@ -2390,7 +2390,7 @@
    "features/level_19.html": "4263bfc5de3ae3f5f184cd013d2817367dc31c4e8a5633d4def51a41675200ab",
    "features/level_20.html": "d1bb40c4de4a24023bf62f6e20d38113cc806fdb2f49cc6b4a511b1e9e9d08cf",
    "fighting_styles.html": "f7d6bef1dbf0cd6f7ea2ffff1c92eff0fe7af86443abd2e96ae9370c15f1de9f",
-   "full_character_sheet.html": "e4f3c055b3b2f57d1204a0f9a246a44107426a362c43f43ed73e691c50a4f506",
+   "full_character_sheet.html": "85424040f17e682f740a70630edc00048345b818491912e4640113aefe028d0f",
    "items.html": "e456a27b7eaad84676309dc8d3ff05b74661c3cb6ff65178b6c0a39e2c2bcaa6"
   }
  },
@@ -2398,10 +2398,10 @@
   "full": {
    "character.html": "4df5d667fc24c08272f5fdf27e8d6947305866fdf135876229f1233cfa999cda",
    "features/level_01.html": "ee06df4bde444e5444182c8ef78870849557f123ba6f6972fe366d7113713998",
-   "features/level_02.html": "da391eb005ecd733a17c57a4a28373ab331932c8ff8bf22af4c0cded13bbb710",
+   "features/level_02.html": "612cf067fd0f5f552d405103abc7ee2826a50af7bbc142a6c4ede9e95292047e",
    "features/level_03.html": "90971cfce50a9a112fbffe422d8fd0de889440b111062f79cf17ec431db538e9",
    "fighting_styles.html": "f7dcc2c64a2be682bf8aeb9f411312266fbbb9d7620991ddd471f684fc20dc86",
-   "full_character_sheet.html": "2184b766bdb5e5e14d9df6398e956f824dfdd6696915fb7cf6e52e03dd87e820",
+   "full_character_sheet.html": "aac58938e7844f4d856c4a6608feee75bb4101d4cc2b0bfb6f86d78d5c0919e7",
    "items.html": "b0eab98a6e0c95b65a94e0a5901d70c346161f59933ae595291460fe60c98258"
   }
  },

@@ -539,7 +539,7 @@ def test_false_life_gives_temporary_hit_points():
     assert life.amount_kind == TEMP_HP
     assert life.damage == "2d4 + 4"
     assert life.damage_at(3) == "2d4 + 4 + 10"
-    assert "the caster as the target" in life.note
+    assert life.targets_self  # "You gain": on the caster, whoever is targeted
 
 
 def test_an_entry_in_a_2014_file():
@@ -549,3 +549,79 @@ def test_an_entry_in_a_2014_file():
     assert absorb.is_described
     assert absorb.damage == ""
     assert "Resistance" in absorb.note
+
+
+# ---------------------------------------------------------------------------
+# Ending conditions (Q7)
+
+
+def test_ends_conditions_are_names_and_round_trip():
+    effect = CombatEffect(name="Cure", ends_conditions=(Condition.POISONED, "Charmed"))
+    assert effect.ends_conditions == ("Poisoned", "Charmed")
+    assert effect.to_dict()["ends_conditions"] == ["Poisoned", "Charmed"]
+    assert CombatEffect.from_dict(effect.to_dict()) == effect
+    assert CombatEffect.from_dict({}).ends_conditions == ()  # older data
+
+
+@pytest.mark.parametrize(
+    "ends, problem",
+    [
+        (("",), "condition names"),
+        (("Poisoned", "Poisoned"), "named twice"),
+        (("Prone",), "both give and end"),
+    ],
+)
+def test_ends_conditions_are_checked(ends, problem):
+    with pytest.raises(ValueError, match=problem):
+        CombatEffect(
+            conditions=(CombatCondition(Condition.PRONE),), ends_conditions=ends
+        )
+
+
+def test_lesser_restoration_is_a_row_per_condition_it_ends():
+    """ "end one condition on it: Blinded, Deafened, Paralyzed, or Poisoned"."""
+    effects = SpellFactory.create("Lesser Restoration").combat_effects()
+    assert [e.ends_conditions for e in effects] == [
+        ("Blinded",),
+        ("Deafened",),
+        ("Paralyzed",),
+        ("Poisoned",),
+    ]
+    assert all(not e.conditions and e.roll == "none" for e in effects)
+
+
+def test_targets_self_round_trips_and_is_noted_in_the_row():
+    effect = CombatEffect(temp_hp=CombatHitPoints("5"), targets_self=True)
+    assert effect.to_dict()["targets_self"] is True
+    assert CombatEffect.from_dict(effect.to_dict()) == effect
+    assert CombatEffect.from_dict({}).targets_self is False  # older data
+    see = _option("See Invisibility")
+    assert see.targets_self
+    assert see.note.startswith("It goes on its user, whoever is targeted.")
+
+
+def test_targets_round_trip_and_count_up_with_the_slot():
+    from Model.Content.CombatEffect import CombatTargets
+
+    effect = CombatEffect(targets=CombatTargets(3, upcast=1))
+    assert effect.to_dict() == {"targets": {"count": 3, "upcast": 1}}
+    assert CombatEffect.from_dict(effect.to_dict()) == effect
+    assert CombatEffect.from_dict({}).targets is None  # older data
+    assert CombatTargets(3, upcast=1).at(2) == 5
+    bless = _option("Bless")
+    assert (bless.targets_at(None), bless.targets_at(3)) == (3, 5)
+
+
+@pytest.mark.parametrize("count, upcast", [(0, 0), (1, -1), (True, 0)])
+def test_targets_are_checked(count, upcast):
+    from Model.Content.CombatEffect import CombatTargets
+
+    with pytest.raises(ValueError):
+        CombatTargets(count, upcast=upcast)
+
+
+def test_a_use_on_its_user_has_no_targets_to_count():
+    from Model.Content.CombatEffect import CombatTargets
+
+    with pytest.raises(ValueError, match="no targets to count"):
+        CombatEffect(targets_self=True, targets=CombatTargets(1))
