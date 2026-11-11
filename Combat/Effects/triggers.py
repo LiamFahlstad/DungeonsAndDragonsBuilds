@@ -7,7 +7,10 @@ itself, and anything else, or anything with a `when`, is a prompt for the GM.
 And what a hit or a miss triggers (Phase 6): the rows with a CombatTrigger an
 attacker has (Hill's Tumble), as `outcome_firings` finds them for each
 AttackOutcome, with the gates checked here and the mode (AUTO: applied
-without asking; ASK: the GM decides) and why it asks.
+without asking; ASK: the GM decides) and why it asks. And what Hit Points
+reaching 0 triggers (6.6): the rows of a creature damage would drop to 0
+(drop_firings: Relentless Endurance, asked before it drops), and of the one
+that reduced a creature to 0 (KnockoutOutcome: Dark One's Blessing).
 
 A trigger of WhoseTurn.BEARER comes with each turn of whoever has the badge
 (Heroism's target). One of WhoseTurn.ENEMY comes with each turn of every
@@ -168,6 +171,36 @@ class DamageOutcome:
     taken: int
 
 
+@dataclass(frozen=True)
+class KnockoutOutcome:
+    """`source` reduced `target` to 0 Hit Points (REDUCES_TO_ZERO: Dark
+    One's Blessing), as the window dealt the damage."""
+
+    source: dict
+    target: dict
+
+
+@dataclass(frozen=True)
+class BloodiedOutcome:
+    """Damage, from `source` if known, left `target` Bloodied, though it
+    wasn't, and not at 0 Hit Points (BLOODIED: Harvest Undead)."""
+
+    target: dict
+    source: dict | None = None
+
+
+@dataclass(frozen=True)
+class DropOutcome:
+    """`damage` (after Resistance and Temporary Hit Points) would drop
+    `target` to 0 Hit Points, with `left_over` of it past 0; from `source`,
+    if known (DROPS_TO_ZERO: Relentless Endurance, asked before it drops)."""
+
+    target: dict
+    source: dict | None
+    damage: int
+    left_over: int = 0
+
+
 def still_hits(outcome: AttackOutcome, armor: int | None) -> bool:
     """Whether the attack of `outcome` hits AC `armor` (its target's AC now,
     after it answered the hit): a Critical Hit always does, and a roll or
@@ -217,6 +250,7 @@ class TriggerRow:
     armor_bonus: int = 0
     damage_reduction: str = ""
     on_self: bool = False  # what it gives goes on its owner (Shield)
+    drops_to: int = 0  # the Hit Points it drops its owner to instead of 0
 
     @property
     def takes_reaction(self) -> bool:
@@ -264,7 +298,21 @@ class HitFiring:
         event = self.row.trigger.event
         owner, target = self.owner["name"], self.target["name"]
         outcome = self.outcome
-        if event is TriggerEvent.HIT_BY:
+        if event is TriggerEvent.DROPS_TO_ZERO:
+            drop = outcome if isinstance(outcome, DropOutcome) else None
+            by = drop.source if drop is not None else None
+            amount = f"{drop.damage} damage" if drop is not None else "damage"
+            if by is not None and by is not self.owner:
+                head = f"{by['name']}'s {amount} would drop {owner} to 0 Hit Points"
+            else:
+                head = f"{amount.capitalize()} would drop {owner} to 0 Hit Points"
+        elif event is TriggerEvent.REDUCES_TO_ZERO:
+            head = f"{owner} reduces {target} to 0 Hit Points"
+        elif event is TriggerEvent.BLOODIED:
+            by = outcome.source if isinstance(outcome, BloodiedOutcome) else None
+            whose = f"{by['name']}'s damage" if by is not None else "Damage"
+            head = f"{whose} leaves {owner} Bloodied"
+        elif event is TriggerEvent.HIT_BY:
             head = f"{target} hits {owner}"
         elif event is TriggerEvent.TAKES_DAMAGE:
             taken = outcome.taken if isinstance(outcome, DamageOutcome) else None
@@ -307,6 +355,26 @@ class HitFiring:
         hit)"; "Clover: Clover's Shield (hit by Ogre)"."""
         event = self.row.trigger.event
         why = f"; {self.why}" if self.why else ""
+        if event is TriggerEvent.DROPS_TO_ZERO:
+            drop = self.outcome if isinstance(self.outcome, DropOutcome) else None
+            by = drop.source if drop is not None else None
+            by_whom = (
+                f" by {by['name']}" if by is not None and by is not self.owner else ""
+            )
+            return f"{self.caster}: {self.row.name} (dropped to 0{by_whom}{why})"
+        if event is TriggerEvent.REDUCES_TO_ZERO:
+            return (
+                f"{self.target['name']}: {self.caster}'s {self.row.name}"
+                f" (on a knockout{why})"
+            )
+        if event is TriggerEvent.BLOODIED:
+            by = (
+                self.outcome.source
+                if isinstance(self.outcome, BloodiedOutcome)
+                else None
+            )
+            by_whom = f" by {by['name']}" if by is not None else ""
+            return f"{self.caster}: {self.row.name} (Bloodied{by_whom}{why})"
         if event in (TriggerEvent.HIT_BY, TriggerEvent.TAKES_DAMAGE):
             how = "hit by" if event is TriggerEvent.HIT_BY else "damaged by"
             return (
@@ -396,14 +464,24 @@ def reaction_lack(char: dict) -> str | None:
     return None
 
 
-def _owner_of(outcome: AttackOutcome | DamageOutcome) -> dict:
-    """Whose rows come with outcome: the attacker's (HIT, MISS), or those of
-    the creature that took the damage (TAKES_DAMAGE)."""
-    return outcome.target if isinstance(outcome, DamageOutcome) else outcome.attacker
+Outcome = AttackOutcome | DamageOutcome | KnockoutOutcome | BloodiedOutcome
+
+
+def _owner_of(outcome: Outcome) -> dict:
+    """Whose rows come with outcome: the attacker's (HIT, MISS), those of
+    the creature that took the damage (TAKES_DAMAGE), or of the one that
+    reduced a creature to 0 Hit Points (REDUCES_TO_ZERO)."""
+    if isinstance(outcome, DamageOutcome):
+        return outcome.target
+    if isinstance(outcome, KnockoutOutcome):
+        return outcome.source
+    if isinstance(outcome, BloodiedOutcome):
+        return outcome.target
+    return outcome.attacker
 
 
 def outcome_firings(
-    outcomes: Iterable[AttackOutcome | DamageOutcome],
+    outcomes: Iterable[Outcome],
     rows_of: Callable[[dict], list[TriggerRow]],
     *,
     is_dead: Callable[[dict], bool] = is_down,
@@ -411,15 +489,18 @@ def outcome_firings(
 ) -> tuple[list[HitFiring], list[str]]:
     """The triggered rows (`rows_of`, effect_options.triggered_rows) that
     come with `outcomes` (one Apply's: Times 3 is three, Multiattack's two
-    attacks two): an attacker's for its hits and misses, and for damage a
+    attacks two): an attacker's for its hits and misses, for damage a
     creature took, that creature's (Hellish Rebuke, against the one that
-    dealt it). Each once per (owner, target, row), and a once-per-turn row
+    dealt it), for a creature reduced to 0 Hit Points, the one that did
+    it (Dark One's Blessing), and for one damage left Bloodied, its own
+    (Harvest Undead). Each once per (owner, target, row), and a once-per-turn row
     once in all, nor if it's in `used_this_turn` ((owner, row) names).
 
     A row is left out when its event isn't what happened (HIT, MISS,
     TAKES_DAMAGE), it comes `after` another row that it wasn't, its attack
     kind isn't the attack's, it needs a Critical Hit or damage dealt that the
-    attack didn't have, the target is bigger than `largest_target`, dead, or
+    attack didn't have, the target is bigger than `largest_target`, not an
+    enemy of the owner (`enemy_only`), dead (but for a knockout's), or
     already has every condition the row gives, or it takes a Reaction its
     owner can't take (used this round, Incapacitated). With no uses left
     it's left out too, and said in the second list ("Hill's Tumble: no uses
@@ -487,7 +568,7 @@ def hit_by_firings(
 
 
 def _firing(
-    outcome: AttackOutcome | DamageOutcome,
+    outcome: Outcome,
     row: TriggerRow,
     is_dead: Callable[[dict], bool],
     *,
@@ -501,6 +582,14 @@ def _firing(
         if event is not TriggerEvent.TAKES_DAMAGE or outcome.taken <= 0:
             return None
         owner, target = outcome.target, outcome.source
+    elif isinstance(outcome, KnockoutOutcome):
+        if event is not TriggerEvent.REDUCES_TO_ZERO:
+            return None
+        owner, target = outcome.source, outcome.target
+    elif isinstance(outcome, BloodiedOutcome):
+        if event is not TriggerEvent.BLOODIED:
+            return None
+        owner = target = outcome.target  # it's the owner's own
     elif before_damage:
         if event is not TriggerEvent.HIT_BY or not outcome.hits:
             return None
@@ -515,7 +604,7 @@ def _firing(
         owner, target = outcome.attacker, outcome.target
     else:
         return None  # not this outcome's event
-    if owner is target:
+    if owner is target and not isinstance(outcome, BloodiedOutcome):
         return None  # its own damage (Hellish Rebuke answers another's)
     if row.takes_reaction and reaction_lack(owner) is not None:
         return None
@@ -547,7 +636,10 @@ def _firing(
             return None
         if fits_size is None:
             why.append(f"{target['name']}'s size isn't known")
-    if is_dead(target):
+    if trigger.enemy_only and on_party_side(owner) == on_party_side(target):
+        return None
+    # The one a knockout reduced to 0 may well be dead: that's what it's for.
+    if is_dead(target) and not isinstance(outcome, KnockoutOutcome):
         return None
     # What it gives lands on its owner (Shield) or its target (Prone).
     gets = owner if row.on_self else target
@@ -568,6 +660,54 @@ def _firing(
         why="; ".join(why),
         outcome=outcome,
     )
+
+
+def drop_firings(
+    outcome: DropOutcome,
+    rows_of: Callable[[dict], list[TriggerRow]],
+    *,
+    maximum: int,
+) -> tuple[list[HitFiring], list[str]]:
+    """What the creature `outcome`'s damage would drop to 0 Hit Points can
+    use instead, before it drops (DROPS_TO_ZERO: Relentless Endurance's "you
+    can drop to 1 Hit Point instead"): its rows of that event, each firing
+    on itself. None if it's killed outright, the damage past 0 being at
+    least its Hit Point maximum `maximum` (the rules' Instant Death, which
+    the simulator doesn't apply itself: DI-002), said in the second list as
+    rows with no uses left are. A row is AUTO when it isn't optional, has no
+    `when` and costs nothing; otherwise ASK."""
+    owner = outcome.target
+    found: list[HitFiring] = []
+    spent: list[str] = []
+    for row in rows_of(owner):
+        trigger = row.trigger
+        if trigger.event is not TriggerEvent.DROPS_TO_ZERO:
+            continue
+        if row.takes_reaction and reaction_lack(owner) is not None:
+            continue
+        if outcome.left_over >= maximum > 0:
+            spent.append(
+                f"{row.name}: not when killed outright ({outcome.left_over}"
+                f" damage past 0, Hit Point maximum {maximum})"
+            )
+            continue
+        if row.uses is not None and row.uses[0] <= 0:
+            spent.append(f"{row.name}: no uses left")
+            continue
+        automatic = not (
+            trigger.optional or trigger.when or row.costs or row.takes_reaction
+        )
+        found.append(
+            HitFiring(
+                owner=owner,
+                target=owner,
+                row=row,
+                mode=TriggerMode.AUTO if automatic else TriggerMode.ASK,
+                why=f"if {trigger.when}" if trigger.when else "",
+                outcome=outcome,
+            )
+        )
+    return found, spent
 
 
 def reduced_damage(

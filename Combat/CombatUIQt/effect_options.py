@@ -1435,6 +1435,14 @@ def _described_option(
             f"It takes {effect.damage_reduction} off the damage of the hit it"
             " answers, asked as that hit lands; picked here, it takes nothing off.",
         )
+    if effect.drops_to:
+        points = "Hit Point" if effect.drops_to == 1 else "Hit Points"
+        notes.insert(
+            0,
+            f"Its user drops to {effect.drops_to} {points} instead of 0, asked as"
+            " damage would drop them to 0; picked here for one at 0 Hit Points"
+            f" (asked too late), they regain up to {effect.drops_to}.",
+        )
     for damage in effect.damage:
         if damage.damage_type is None:
             choices = ", ".join(choice.value for choice in damage.choices)
@@ -1490,6 +1498,7 @@ def _described_option(
         ),
         trigger=effect.trigger,
         damage_reduction=effect.damage_reduction,
+        drops_to=effect.drops_to,
         **fields,
     )
 
@@ -1716,6 +1725,7 @@ def triggered_rows(char: dict) -> list[TriggerRow]:
                     ),
                     damage_reduction=option.damage_reduction,
                     on_self=option.targets_self,
+                    drops_to=option.drops_to,
                 )
             )
     return rows
@@ -1723,8 +1733,15 @@ def triggered_rows(char: dict) -> list[TriggerRow]:
 
 def _trigger_row_what(option: EffectOption) -> str:
     """What a triggered row does, for its line in the pop-up: "Prone",
-    "1d10 Fire", "1d6 Cold, Frost's Chill"."""
-    parts = [option.damage] if option.damage else []
+    "1d10 Fire", "1d6 Cold, Frost's Chill", "8 Temporary Hit Points",
+    "Drops to 1 Hit Point instead"."""
+    parts = []
+    if option.drops_to:
+        points = "Hit Point" if option.drops_to == 1 else "Hit Points"
+        parts.append(f"Drops to {option.drops_to} {points} instead")
+    if option.damage:
+        kind = {HEALING: " Hit Points", TEMP_HP: " Temporary Hit Points"}
+        parts.append(option.damage + kind.get(option.amount_kind, ""))
     parts += condition_names(option.condition)
     return ", ".join(parts)
 

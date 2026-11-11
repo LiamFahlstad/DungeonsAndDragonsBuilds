@@ -338,8 +338,9 @@ Names are the Python ones; `Ability`, `Condition` and `DamageType` come from
   the GM is asked as the hit lands; `optional=False` is "it happens" (a
   monster's rider), applied without asking when every gate is checked and
   nothing is spent. Gates: `attacks` (an `AttackKind`), `largest_target`,
-  `needs_damage`, `critical_only`, `once_per_turn`, `reaction`; what only
-  the GM can judge is a `when` (it always asks). `after="Tree Club"` makes it
+  `needs_damage`, `critical_only`, `once_per_turn`, `reaction`,
+  `enemy_only` (the other creature is an enemy of the owner: "you reduce an
+  enemy to 0"); what only the GM can judge is a `when` (it always asks). `after="Tree Club"` makes it
   come only after that other row of the same source (`check` refuses one
   naming no row). `HIT` and `MISS` fire for the attacker; `HIT_BY` (as an
   attack roll hits the owner, before its damage) and `TAKES_DAMAGE` (after
@@ -350,13 +351,28 @@ Names are the Python ones; `Ability`, `Condition` and `DamageType` come from
   only for a row whose action doesn't say so. Shield: `HIT_BY` on its
   `targets_self` badge with `ArmorClass(5)`; the window rechecks the hit
   against the new AC, so a 20 against AC 18 + 5 misses. Hellish Rebuke:
-  `TAKES_DAMAGE, when="you can see it within 60 feet"`. The other events
-  are data until their step (6.6, 6.7).
+  `TAKES_DAMAGE, when="you can see it within 60 feet"`. Hit Points at 0
+  (6.6): `DROPS_TO_ZERO` is asked as damage would drop the owner to 0,
+  before it does, and not when it's killed outright (damage past 0 at
+  least its Hit Point maximum); `REDUCES_TO_ZERO` fires for the creature
+  that dealt the knockout, against the one knocked out (Dark One's
+  Blessing: `optional=False, enemy_only=True` on a `targets_self`,
+  `spends_use=False` row with its `temp_hp`, so it's given at once). `BLOODIED` is asked of the creature
+  damage leaves Bloodied (not at 0), on itself: Harvest Undead. The other
+  events (`FAILS_SAVE`, `ROLLS_INITIATIVE`, `CASTS_SPELL`, `USES`) are
+  data until their step (6.7).
 - **`damage_reduction`** (with a `HIT_BY` trigger only): dice it takes off
   the hit's damage, before Resistance: Deflect Attacks'
   `with_bonus("1d10", DEX + Monk level)`, Stone's Endurance's
   `with_bonus("1d12", CON)`. The window rolls it as the hit lands and logs
   it. Picked by hand, it takes nothing off (its row's note says so).
+- **`drops_to`** (with a `DROPS_TO_ZERO` trigger only, on a `targets_self`
+  row): the Hit Points its owner drops to instead of 0, worked out by the
+  feature: Relentless Endurance's `1`, Relentless Rage's `2 * level` (with
+  its DC 10 Constitution save as the trigger's `when`: the GM rolls it).
+  The hit leaves the owner there, so it isn't knocked out (no Unconscious,
+  Concentration kept, a Concentration save as usual). Picked by hand for an
+  owner already at 0 (asked too late), it brings them back up to that many.
 - **Not for spells:** `dc`, `attack_bonus` (the caster's), `action_type` and
   `concentration` (the spell's casting time and duration say them), and
   `spell` (for a feature's use that casts one).

@@ -17,6 +17,7 @@ from Model.Content.Improvements import (
 )
 from Core.Definitions import Ability, DamageType, Skill
 from Model.Content.CombatEffect import CombatCondition, CombatEffect
+from Model.Content.CombatTriggers import CombatTrigger, TriggerEvent
 from Model.Content.CombatModifiers import (
     D20Mode,
     D20Test,
@@ -593,6 +594,25 @@ class RelentlessRage(Feature):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        level = character.get_class_level(Definitions.CharacterClass.BARBARIAN)
+        # The save is the GM's to roll: its DC grows with each use since a
+        # rest, which nothing here counts.
+        return [
+            CombatEffect(
+                targets_self=True,
+                trigger=CombatTrigger(
+                    TriggerEvent.DROPS_TO_ZERO,
+                    when=(
+                        "your Rage is active and you succeed on a DC 10"
+                        " Constitution saving throw (5 higher for each use"
+                        " since your last Short or Long Rest)"
+                    ),
+                ),
+                drops_to=2 * level,
+            )
+        ]
 
 
 class ImprovedBrutalStrikeLevel13(Feature):

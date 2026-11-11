@@ -1,6 +1,9 @@
 from Core.Definitions import (
     Ability,
+    CharacterClass,
 )
+from Model.Content.CombatEffect import CombatEffect, CombatHitPoints
+from Model.Content.CombatTriggers import CombatTrigger, TriggerEvent
 from Model.Content.Feature import Feature, FeatureUses, RegainedOn, FeatureTarget
 from Core.Rules import MAX_ABILITY_MODIFIER
 from Model.View import CharacterView
@@ -62,6 +65,28 @@ class DarkOnesBlessing(Feature):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        amount = max(
+            1,
+            character.get_charisma_modifier()
+            + character.get_class_level(CharacterClass.WARLOCK),
+        )
+        return [
+            CombatEffect(
+                temp_hp=CombatHitPoints(str(amount)),
+                targets_self=True,
+                spends_use=False,
+                notes=(
+                    "Also when someone else reduces an enemy within 10 feet of"
+                    " you to 0 Hit Points: pick it then.",
+                ),
+                # Given at once as the Warlock reduces an enemy to 0.
+                trigger=CombatTrigger(
+                    TriggerEvent.REDUCES_TO_ZERO, optional=False, enemy_only=True
+                ),
+            )
+        ]
 
 
 class DarkOnesOwnLuck(Feature):

@@ -12,8 +12,12 @@ from Combat.Effects.modifiers import (
 )
 from Combat.Effects.triggers import (
     AttackOutcome,
+    BloodiedOutcome,
     DamageOutcome,
+    DropOutcome,
+    KnockoutOutcome,
     PendingAttack,
+    TriggerMode,
     reduced_damage,
 )
 from Combat.Summons import vanishes_at_zero_hp
@@ -428,15 +432,34 @@ class DamageMixin(CombatWindowState):
     ) -> int:
         """One hit on target, of each (amount, damage type) in parts, and what
         the hit does to it: falling Unconscious, a Concentration save.
-        Returns the damage it took, after Resistance and Immunity."""
+        Returns the damage it took, after Resistance and Immunity. If it
+        would drop target to 0 Hit Points, target is asked first about what
+        it can drop to instead (_drops_to_instead: Relentless Endurance);
+        if it does, the hit leaves it there, and it isn't knocked out."""
+        drops_to, notes = self._drops_to_instead(
+            target, parts, source, check_resistance, saved
+        )
         taken = 0
         knockout = False
+        was_bloodied = "Bloodied" in target.get("conditions", [])
         for amount, damage_type in parts:
             dmg, downed = self._damage_target(
-                target, amount, damage_type, source, check_resistance, saved
+                target,
+                amount,
+                damage_type,
+                source,
+                check_resistance,
+                saved,
+                floor=drops_to,
             )
             taken += dmg
             knockout = knockout or downed
+        if drops_to:
+            points = "Hit Point" if drops_to == 1 else "Hit Points"
+            self._log_event(
+                f"{target['name']} drops to {target['hp']} {points} instead of 0",
+                character=target["name"],
+            )
         self._note_health(target)
         # A summon whose spec says so vanishes at 0 HP (a drake), once
         # what it was concentrating on has ended.
@@ -460,7 +483,81 @@ class DamageMixin(CombatWindowState):
             # What the one damaged answers it with (Hellish Rebuke), asked
             # with the rest of the Apply's triggers.
             self._after_attack(DamageOutcome(source, target, taken))
+        if source is not None and source is not target and knockout:
+            # What the one that did it gets for it (Dark One's Blessing).
+            self._after_attack(KnockoutOutcome(source, target))
+        if (
+            not was_bloodied
+            and target["hp"] > 0
+            and "Bloodied" in target.get("conditions", [])
+        ):
+            # What the one left Bloodied does then (Harvest Undead).
+            self._after_attack(BloodiedOutcome(target, source))
+        if notes:
+            # After the damage, whose log lines cleared the status line.
+            status = self._status_label.text()
+            self._show_status("; ".join(part for part in (status, *notes) if part))
         return taken
+
+    def _drops_to_instead(
+        self,
+        target: dict,
+        parts: list[tuple[int, str]],
+        source: dict | None,
+        check_resistance: bool,
+        saved: bool,
+    ) -> tuple[int, list[str]]:
+        """The Hit Points target drops to instead of 0, if `parts` would drop
+        it there and it uses something that says so (DROPS_TO_ZERO: Relentless
+        Endurance's 1): applied by itself when nothing's to decide, otherwise
+        asked now, in a pop-up of its own, before any of the damage is dealt;
+        what it spends is spent inside the hit's undo step. 0 when nothing
+        is used. With the setting ask_triggers off, it's a turn-column button
+        instead (picked late, it brings target back up), and target drops.
+        Also what the status line should say of it once the damage is dealt
+        ("Relentless Endurance: no uses left")."""
+        if target["hp"] <= 0:
+            return 0, []
+        damage = sum(
+            self._damage_after_defenses(target, amount, kind, check_resistance, saved)
+            for amount, kind in parts
+        )
+        past_temp = damage - min(target.get("temp_hp", 0), damage)
+        if past_temp < target["hp"]:
+            return 0, []
+        found, spent = self._drop_firings(
+            DropOutcome(target, source, damage, past_temp - target["hp"])
+        )
+        notes = list(spent)
+        drops_to = 0
+        if found:
+            used = []
+            for firing in found:
+                if firing.mode is TriggerMode.AUTO and self._use_trigger(firing, notes):
+                    used.append(firing)
+            asks = [f for f in found if f.mode is TriggerMode.ASK]
+            if asks and not self.settings.ask_triggers:
+                self._hit_prompts = (*self._hit_prompts, *asks)
+                self._refresh_turn_prompts()
+            elif asks and not used:
+                used += [firing for firing, _ in self._answer_firings(asks, notes)]
+            drops_to = max((f.row.drops_to for f in used), default=0)
+        return drops_to, notes
+
+    def _damage_after_defenses(
+        self,
+        target: dict,
+        amount: int,
+        damage_type: str,
+        check_resistance: bool,
+        saved: bool,
+    ) -> int:
+        """What one damage type of a hit comes to on target: halved first
+        if it saved, then its Immunity, Resistance and Vulnerability."""
+        dmg = amount // 2 if saved else amount
+        if check_resistance:
+            dmg, _ = self._damage_type_modifier(target, dmg, damage_type)
+        return dmg
 
     def _note_health(self, char: dict):
         """Note what the change of HP that's just over showed the players. The
@@ -476,9 +573,13 @@ class DamageMixin(CombatWindowState):
         source: dict | None,
         check_resistance: bool,
         saved: bool,
+        floor: int = 0,
     ) -> tuple[int, bool]:
-        """Deal one damage type to target, halved first if it saved. Returns
-        (the damage dealt, whether it took target to 0 HP)."""
+        """Deal one damage type to target, halved first if it saved, leaving
+        it no fewer Hit Points than `floor` (what it drops to instead of 0:
+        Relentless Endurance's 1, Relentless Rage's twice the Barbarian's
+        level, even if that's more). Returns (the damage dealt, whether it
+        took target to 0 HP)."""
         source_name = source["name"] if source is not None else None
         dmg = amount // 2 if saved else amount
         outcome = None
@@ -493,8 +594,8 @@ class DamageMixin(CombatWindowState):
 
         temp_reduction = min(target["temp_hp"], dmg)
         target["temp_hp"] -= temp_reduction
-        # Hit Points can't go below 0.
-        target["hp"] = max(0, target["hp"] - (dmg - temp_reduction))
+        # Hit Points can't go below 0, nor below what it drops to instead.
+        target["hp"] = max(floor, target["hp"] - (dmg - temp_reduction))
 
         hp_delta = target["hp"] - pre_hp
         temp_delta = target["temp_hp"] - pre_temp

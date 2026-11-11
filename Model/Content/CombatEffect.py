@@ -342,6 +342,10 @@ class CombatEffect:
     # "1d10 + 8"): only with a 'hit by' trigger, which rolls it as the hit
     # lands, before the damage is dealt.
     damage_reduction: str = ""
+    # The Hit Points its user drops to instead of 0 (Relentless Endurance's
+    # 1): only with a 'drops to 0' trigger, which asks as damage would drop
+    # its user to 0, before it does.
+    drops_to: int = 0
 
     def __post_init__(self):
         if self.trigger is not None and not isinstance(self.trigger, CombatTrigger):
@@ -360,6 +364,21 @@ class CombatEffect:
             if self.trigger is None or self.trigger.event is not TriggerEvent.HIT_BY:
                 raise ValueError(
                     "damage_reduction comes with a 'hit by' trigger: it answers a hit"
+                )
+        if self.drops_to:
+            if isinstance(self.drops_to, bool) or not isinstance(self.drops_to, int):
+                raise ValueError(
+                    f"drops_to is a number of Hit Points, not {self.drops_to!r}"
+                )
+            if self.drops_to < 0:
+                raise ValueError(f"drops_to can't be negative, got {self.drops_to}")
+            if (
+                self.trigger is None
+                or self.trigger.event is not TriggerEvent.DROPS_TO_ZERO
+            ):
+                raise ValueError(
+                    "drops_to comes with a 'drops to 0' trigger: it's used as its"
+                    " user would drop to 0 Hit Points"
                 )
         # Text ("save") is taken too, as JSON and logs have it.
         if self.roll not in set(EffectRoll):
@@ -660,6 +679,7 @@ class _Reader:
                 ("critical_only", False),
                 ("once_per_turn", False),
                 ("reaction", False),
+                ("enemy_only", False),
             )
         }
         return self.build(
@@ -745,4 +765,5 @@ class _Reader:
             damage_reduction=self.kind(
                 data.get("damage_reduction"), "damage_reduction", (str,), ""
             ),
+            drops_to=self.kind(data.get("drops_to"), "drops_to", (int,), 0),
         )

@@ -7,6 +7,8 @@ from Model.Content.Feature import (
     RegainedOn,
     FeatureTarget,
 )
+from Model.Content.CombatEffect import CombatEffect
+from Model.Content.CombatTriggers import CombatTrigger, TriggerEvent
 from Model.Content.Improvements import GrantSense
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Core.Rules import PROFICIENCY_BONUS_GAINED_AT, MAX_PROFICIENCY_BONUS
@@ -104,3 +106,14 @@ class RelentlessEndurance(Feature):
     def get_description(self, character: CharacterView) -> str:
         text = "When you are reduced to 0 Hit Points but not killed outright, you can drop to 1 Hit Point instead. Once you use this trait, you can't do so again until you finish a Long Rest."
         return text
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # Asked as damage would drop the Orc to 0, before it does; killed
+        # outright (damage past 0 at least its Hit Point maximum), it isn't.
+        return [
+            CombatEffect(
+                targets_self=True,
+                trigger=CombatTrigger(TriggerEvent.DROPS_TO_ZERO),
+                drops_to=1,
+            )
+        ]

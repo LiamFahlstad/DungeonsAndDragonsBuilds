@@ -217,6 +217,9 @@ class EffectOption:
     # Dice it takes off the damage of the hit it answers (Deflect Attacks),
     # rolled by the window as that hit lands (CombatEffect.damage_reduction).
     damage_reduction: str = ""
+    # The Hit Points its user drops to instead of 0, asked as damage would
+    # drop them to 0 (CombatEffect.drops_to: Relentless Endurance's 1).
+    drops_to: int = 0
 
     def modifiers_for(self, badge: str) -> tuple[Modifier, ...]:
         """What the badge `badge` it gives does while it's on: none for a

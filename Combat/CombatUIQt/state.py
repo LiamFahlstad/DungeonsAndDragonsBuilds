@@ -32,9 +32,10 @@ from PyQt6.QtWidgets import (
 
 from Combat.Effects.triggers import (
     AttackOutcome,
-    DamageOutcome,
+    DropOutcome,
     Firing,
     HitFiring,
+    Outcome,
     PendingAttack,
 )
 from Combat.Rules import Rule
@@ -90,8 +91,9 @@ class CombatWindowState:
     # One Apply's attack outcomes, while its hits are being dealt: their
     # triggers are asked about together once it's done (None: no Apply is
     # collecting them; TurnPanelMixin._one_trigger_prompt).
-    # Damage dealt from a creature is one too (Hellish Rebuke's).
-    _attack_outcomes: tuple[AttackOutcome | DamageOutcome, ...] | None = None
+    # Damage dealt from a creature is one too (Hellish Rebuke's), and a
+    # creature reduced to 0 Hit Points (Dark One's Blessing's).
+    _attack_outcomes: tuple[Outcome, ...] | None = None
     # An attack rolled in one step whose damage the next applies: a monster's
     # action button's (valid while _rolled_damage_text is), and the Attack
     # roll field's Enter (valid while its step is the last undo step).
@@ -281,8 +283,22 @@ class CombatWindowState:
     ) -> int:
         raise NotImplementedError("DamageMixin._deal_damage")
 
-    def _after_attack(self, outcome: AttackOutcome | DamageOutcome):
+    def _after_attack(self, outcome: Outcome):
         raise NotImplementedError("TurnPanelMixin._after_attack")
+
+    def _drop_firings(self, outcome: DropOutcome) -> tuple[list[HitFiring], list[str]]:
+        raise NotImplementedError("TurnPanelMixin._drop_firings")
+
+    def _use_trigger(self, firing: HitFiring, notes: list[str]) -> bool:
+        raise NotImplementedError("TurnPanelMixin._use_trigger")
+
+    def _answer_firings(
+        self, asks: list[HitFiring], notes: list[str]
+    ) -> list[tuple[HitFiring, int | None]]:
+        raise NotImplementedError("TurnPanelMixin._answer_firings")
+
+    def _refresh_turn_prompts(self):
+        raise NotImplementedError("TurnPanelMixin._refresh_turn_prompts")
 
     def _before_hit(self, outcome: AttackOutcome) -> tuple[bool, int]:
         raise NotImplementedError("TurnPanelMixin._before_hit")
@@ -290,7 +306,7 @@ class CombatWindowState:
     def _one_trigger_prompt(self) -> AbstractContextManager[None]:
         raise NotImplementedError("TurnPanelMixin._one_trigger_prompt")
 
-    def _resolve_attack_triggers(self, outcomes: list[AttackOutcome | DamageOutcome]):
+    def _resolve_attack_triggers(self, outcomes: list[Outcome]):
         raise NotImplementedError("TurnPanelMixin._resolve_attack_triggers")
 
     def _apply_row(self, owner: dict, target: dict, option: EffectOption) -> bool:

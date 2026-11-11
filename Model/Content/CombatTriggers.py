@@ -32,8 +32,11 @@ class TriggerEvent(StrEnum):
     window's attack roll and Damage fields, a monster's action button), and
     on the creature hit or damaged HIT_BY (as the hit lands, before its
     damage: Shield, Deflect Attacks) and TAKES_DAMAGE (after damage from a
-    creature: Hellish Rebuke, Storm's Thunder); the others are data until a
-    step needs them (6.6, 6.7)."""
+    creature: Hellish Rebuke, Storm's Thunder); as damage lands, DROPS_TO_ZERO
+    on the creature it would drop to 0 Hit Points (before it does: Relentless
+    Endurance), REDUCES_TO_ZERO on the creature that dealt it (Dark One's
+    Blessing), and BLOODIED on one it leaves Bloodied (Harvest Undead). The
+    others are data until a step needs them (6.7)."""
 
     HIT = "hit"  # the owner hits
     MISS = "miss"  # the owner misses
@@ -73,8 +76,10 @@ class CombatTrigger:
     or smaller creature"), damage dealt after Resistance and Immunity
     (`needs_damage`, "and deal damage to it"), a Critical Hit, once per turn,
     the owner's Reaction (`reaction`, or a row whose action is a Reaction:
-    not offered once it's used, and spent as the row is). What only the GM can
-    judge is a `when`, said as what follows "if": it always asks."""
+    not offered once it's used, and spent as the row is), the other creature
+    being an enemy of the owner (`enemy_only`: Dark One's Blessing's "you
+    reduce an enemy to 0 Hit Points"). What only the GM can judge is a
+    `when`, said as what follows "if": it always asks."""
 
     event: TriggerEvent
     optional: bool = True
@@ -85,6 +90,7 @@ class CombatTrigger:
     critical_only: bool = False
     once_per_turn: bool = False
     reaction: bool = False
+    enemy_only: bool = False
     when: str = ""
 
     def __post_init__(self):
@@ -111,6 +117,7 @@ class CombatTrigger:
             "critical_only",
             "once_per_turn",
             "reaction",
+            "enemy_only",
         ):
             if not isinstance(getattr(self, name), bool):
                 raise ValueError(
@@ -132,6 +139,11 @@ class CombatTrigger:
         if self.largest_target is not None and event not in TARGET_EVENTS:
             raise ValueError(
                 f"largest_target needs an event with another creature in it,"
+                f" not {event.value!r}"
+            )
+        if self.enemy_only and event not in TARGET_EVENTS:
+            raise ValueError(
+                f"enemy_only needs an event with another creature in it,"
                 f" not {event.value!r}"
             )
         if self.needs_damage and event is not TriggerEvent.HIT:

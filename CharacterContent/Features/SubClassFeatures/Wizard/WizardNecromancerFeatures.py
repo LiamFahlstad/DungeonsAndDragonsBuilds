@@ -1,4 +1,6 @@
-from Core.Definitions import DamageType
+from Core.Definitions import CharacterClass, DamageType
+from Model.Content.CombatEffect import CombatEffect, CombatHitPoints
+from Model.Content.CombatTriggers import CombatTrigger, TriggerEvent
 from Model.Content.Feature import (
     ActionType,
     Feature,
@@ -251,6 +253,23 @@ class HarvestUndead(Feature):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        level = character.get_class_level(CharacterClass.WIZARD)
+        return [
+            CombatEffect(
+                healing=CombatHitPoints(str(level)),
+                targets_self=True,
+                notes=(
+                    "The Undead it drains drops to 0 Hit Points: deal that by hand.",
+                ),
+                # Asked as damage leaves the Wizard Bloodied (its Reaction).
+                trigger=CombatTrigger(
+                    TriggerEvent.BLOODIED,
+                    when="an Undead under your control you can see is there to drain",
+                ),
+            )
+        ]
 
 
 class DeathsMaster(Feature):

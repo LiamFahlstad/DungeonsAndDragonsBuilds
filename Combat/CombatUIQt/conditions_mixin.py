@@ -792,6 +792,11 @@ class ConditionsMixin(CombatWindowState):
                 self._heal_target(target, effect.healing, source)
             if effect.temp_hp:
                 self._give_temp_hp(target, effect.temp_hp, source)
+            drops_to = effect.pick.drops_to if effect.pick is not None else 0
+            if drops_to and target["hp"] <= 0:
+                # Picked late (asked too late, or the setting off): what it
+                # would have dropped to instead of 0, it comes back up to.
+                self._heal_target(target, drops_to, source)
             saved = any(target is s for s in self._saved_targets)
             damage = effect.damage
             hit: bool | None = None

@@ -24,15 +24,17 @@ from PyQt6.QtWidgets import (
 )
 
 import Combat.PlayerLog as PlayerLog
-from Combat.Effects.modifiers import attack_plan, hit_notes, hit_plan
+from Combat.Effects.modifiers import attack_plan, hit_notes, hit_plan, hit_point_maximum
 from Combat.Effects.triggers import (
     AttackOutcome,
-    DamageOutcome,
+    DropOutcome,
     Firing,
     HitFiring,
+    Outcome,
     PendingAttack,
     TriggerChoice,
     TriggerMode,
+    drop_firings,
     firings,
     hit_by_firings,
     outcome_firings,
@@ -665,26 +667,26 @@ class TurnPanelMixin(CombatWindowState):
         self._attack_outcomes = ()
         try:
             yield
-            outcomes: list[AttackOutcome | DamageOutcome] = [
-                *(self._attack_outcomes or ())
-            ]
+            outcomes: list[Outcome] = [*(self._attack_outcomes or ())]
         finally:
             self._attack_outcomes = None
         self._resolve_attack_triggers(outcomes)
 
-    def _after_attack(self, outcome: AttackOutcome | DamageOutcome):
+    def _after_attack(self, outcome: Outcome):
         """What an attack roll's outcome triggers: asked about now, or with
         the rest of its Apply's (_one_trigger_prompt). Every hit path calls
         it: the Custom Effect dialog, the main window's Attack roll and
         Damage fields, a monster's action button. Damage a creature dealt
         another comes this way too (DamageMixin._deal_damage), for what the
-        one damaged answers it with (TAKES_DAMAGE: Hellish Rebuke)."""
+        one damaged answers it with (TAKES_DAMAGE: Hellish Rebuke), and a
+        creature reduced to 0 Hit Points, for what the one that did it gets
+        (REDUCES_TO_ZERO: Dark One's Blessing)."""
         if self._attack_outcomes is not None:
             self._attack_outcomes = (*self._attack_outcomes, outcome)
             return
         self._resolve_attack_triggers([outcome])
 
-    def _resolve_attack_triggers(self, outcomes: list[AttackOutcome | DamageOutcome]):
+    def _resolve_attack_triggers(self, outcomes: list[Outcome]):
         """Apply what `outcomes` trigger that happens by itself (AUTO), then
         ask about the rest in one pop-up (with the setting ask_triggers off,
         as turn-column buttons instead). What's applied goes through the Custom Effect
@@ -787,6 +789,14 @@ class TurnPanelMixin(CombatWindowState):
         # Logging cleared the hit's own status line; it comes back first.
         self._show_status("; ".join(part for part in (status, *notes) if part))
         return hits, reduction
+
+    def _drop_firings(self, outcome: DropOutcome) -> tuple[list[HitFiring], list[str]]:
+        """What the creature outcome's damage would drop to 0 Hit Points can
+        use instead (drop_firings: Relentless Endurance), for
+        DamageMixin._drops_to_instead, which asks."""
+        return drop_firings(
+            outcome, triggered_rows, maximum=hit_point_maximum(outcome.target)
+        )
 
     def _ask_triggers(self, firings: list[HitFiring]) -> TriggerChoice:
         """The pop-up (trigger_prompt.py). Tests replace this, so no modal
