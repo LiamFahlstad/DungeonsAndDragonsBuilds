@@ -51,7 +51,7 @@ change and move on; the full suite can run later.
 | 3 | Lasting effects (3.1-3.6) | 3.1 **done** (R28-R34): `char["active_effects"]`, one plain dict per badge, in the new Qt-free `Combat/Effects/active_effects.py`; the seven old keys are read only by its `upgrade_old_keys`, where a log is read; an old fight log replays the same (`tests/test_active_effects.py`). 3.2 **done** (R27), ahead of 3.1: the rules conditions are data, and saves, attack rolls (all three paths), AC, damage Resistance and condition immunity read them. 3.3 **done** (R35-R40): a badge's `CombatCondition` says its `modifiers`, the record keeps them as JSON, and `modifiers_on` reads them beside the conditions and cover; Bless's 1d4 is rolled into the saves (a monster's Concentration save too, R40) and attack rolls the simulator makes, Shield of Faith's +2 counts in AC, cover's +2/+5 in Dexterity saves (DI-066); a typed total stays as typed, with the bonus as a reminder in the dialog. 3.4 **done** (R41-R47): `ExtraDamageFrom` (on the target, from its effect's caster) and `ExtraDamageOnHit` (on the attacker); Hunter's Mark's 1d6 Force on its caster's hits and Divine Favor's 1d4 Radiant on its caster's weapon hits are rolled into the hits the dialog and a monster's action buttons deal, doubled on a Critical Hit, each type resisted on its own; a typed damage total stays as typed, with the extra as a reminder in the dialog. 3.5 **done** (R48-R53): `AtTurnStart` / `AtTurnEnd` are modifiers on a badge that name a row of their spell; Heroism's Temporary Hit Points are given as its target's turn starts, and Spirit Guardians asks, as each enemy of its caster ends its turn, with a button that opens the Custom Effect dialog with its damage row picked. 3.6 **done** (R54-R56): ending a concentration also ends every record linked to it (`held_by_concentration`), a creature leaving the fight ends its concentration first, and a badge another running effect still holds is relinked to that effect's caster. Added after (Decision 17, R125, 2026-11-11): a picked spell that gives a rules condition gives a badge of its own name beside it ("Charmed" and "Friends"), with its card, and taking either off takes the other off; a picked feature too (R126: "Turn Undead" beside Frightened and Incapacitated, "Hill's Tumble" beside Prone), not a weapon or a monster's action |
 | 4 | One `combat-effects` skill; feature agent; content rollout | 4.1 **done** (R57-R60): the `combat-effects` skill and `combat_effects.py` (renamed from spell-mechanics), with the principles, a Features section, `features`, `coverage` and `notes`, and features in `check`; `is_curated` is `is_described`. 4.2 **done**: the `feature-combat-effects` agent (opus); the spell agent is `spell-combat-effects`. 4.4 **done**: `coverage`. 4.3 (content): **Curse of the Lich done** (R61-R65, 2026-11-11): spells 44/44, features 23 described, 37 nothing to apply, none read from text; Time Loop PR was already done. Next: spells level by level and features class by class, which wait for the user's go (Decision 9) |
 | 5 | Sheet chips, monster score | Not started |
-| 6 | **Triggers** (new concept, 2026-11-11; see its section): a row or badge says *when* it's used (a hit, damage taken, dropping to 0, ...), and the simulator applies it itself (AUTO) or asks with a pop-up as it happens (ASK) | 6.1-6.3 **done** (R66-R73, 2026-11-11): `CombatTrigger` on a row (`CombatEffect.trigger`, `Model/Content/CombatTriggers.py`), `outcome_firings` with its gates and modes, and the hit hooks in all three hit paths: when Kivi hits a Large or smaller creature and deals it damage, one pop-up per Apply asks about Hill's Tumble; Apply gives Prone, spends a Giant Ancestry use and logs it, inside the hit's undo step. Only `HIT` and `MISS` fire; the other events are data. 6.4 **done** (R74-R77, 2026-11-11): a monster's hit that gives a condition in a sentence of its own ("If the target is a Large or smaller creature, it has the Prone condition", "..., and the target has the Poisoned condition until the end of its next turn", "the Grappled condition (escape DC 13)") is read as a rider row of its own ("Tree Club: Prone") with an AUTO `after=` trigger: the Hill Giant's Tree Club knocks a Large target Prone from its button and Enter and from the dialog, asks when the size isn't known, and does nothing to a Huge target or on a miss. 101 riders in the catalog. 6.5 **done** (R108-R114, 2026-11-11): as an attack roll hits, the creature hit is asked about its `HIT_BY` rows before the damage (Shield's +5 turns Clover's 20 against AC 18 into a miss and spends her Reaction and a slot; Kivi's Deflect Attacks takes its 1d10 + 8 off, `CombatEffect.damage_reduction`), and damage from a creature asks the one damaged about its `TAKES_DAMAGE` rows (Hellish Rebuke, newly described; Storm's Thunder); a Reaction used this round or an Incapacitated owner asks no more. Not built: a badge's `OnTrigger` (Armor of Agathys, Fire Shield; Q57). Next: 6.6 (Hit Point thresholds) |
+| 6 | **Triggers** (new concept, 2026-11-11; see its section): a row or badge says *when* it's used (a hit, damage taken, dropping to 0, ...), and the simulator applies it itself (AUTO) or asks with a pop-up as it happens (ASK) | 6.1-6.3 **done** (R66-R73, 2026-11-11): `CombatTrigger` on a row (`CombatEffect.trigger`, `Model/Content/CombatTriggers.py`), `outcome_firings` with its gates and modes, and the hit hooks in all three hit paths: when Kivi hits a Large or smaller creature and deals it damage, one pop-up per Apply asks about Hill's Tumble; Apply gives Prone, spends a Giant Ancestry use and logs it, inside the hit's undo step. Only `HIT` and `MISS` fire; the other events are data. 6.4 **done** (R74-R77, 2026-11-11): a monster's hit that gives a condition in a sentence of its own ("If the target is a Large or smaller creature, it has the Prone condition", "..., and the target has the Poisoned condition until the end of its next turn", "the Grappled condition (escape DC 13)") is read as a rider row of its own ("Tree Club: Prone") with an AUTO `after=` trigger: the Hill Giant's Tree Club knocks a Large target Prone from its button and Enter and from the dialog, asks when the size isn't known, and does nothing to a Huge target or on a miss. 101 riders in the catalog. 6.5 **done** (R108-R114, 2026-11-11): as an attack roll hits, the creature hit is asked about its `HIT_BY` rows before the damage (Shield's +5 turns Clover's 20 against AC 18 into a miss and spends her Reaction and a slot; Kivi's Deflect Attacks takes its 1d10 + 8 off, `CombatEffect.damage_reduction`), and damage from a creature asks the one damaged about its `TAKES_DAMAGE` rows (Hellish Rebuke, newly described; Storm's Thunder); a Reaction used this round or an Incapacitated owner asks no more. Not built: a badge's `OnTrigger` (Armor of Agathys, Fire Shield; Q57). 6.6 **done** (R127-R131, 2026-11-12): as damage would drop a creature to 0 Hit Points, it's asked first about its `DROPS_TO_ZERO` rows (Ymira's Relentless Endurance: Apply leaves her at 1, not Unconscious, a use spent, in the hit's undo step; not when killed outright), `CombatEffect.drops_to`; a creature that reduces an enemy to 0 gets its `REDUCES_TO_ZERO` rows (Dark One's Blessing's 6 Temporary Hit Points, given at once; the trigger's new `enemy_only` gate); Relentless Rage described too; damage that leaves a creature Bloodied asks about its `BLOODIED` rows (Harvest Undead, R131). Next: 6.7 |
 | 7 | **Stat changes while an effect is on** (new, 2026-11-11; see its section): AC formulas and floors, Immunity and Vulnerability beside the built Resistance, Speed, size, Hit Point maximum, worked out from the stored stat plus the badges, and shown on the card with their sources | 7.1-7.2 **done** (R78-R83, 2026-11-11): `ArmorClassBase` (Mage Armor) and `ArmorClassMinimum` (Barkskin) beside `ArmorClass`, worked out by `armor_class(char, stored)`, which every attack path reads through `armor_bonus`; the same effect twice adds once; `DamageImmunity` and `Vulnerability` beside `Resistance` in `_damage_type_modifier`; Mage Armor, Barkskin, Stoneskin, Protection from Energy (a row per type) and Rage described (`tests/test_stat_changes.py`). 7.4 **done** (R84-R89, 2026-11-11): `HitPointMaximum(amount, upcast)`, rolled as the badge is given; `hit_point_maximum(char)` is the stored `max_hp` plus the badges, read by every cap, bar and Bloodied check; giving it raises current HP as Hit Points regained, ending it caps current HP (`Action.LOSE_HIT_POINTS`, replayed); Aid and Heroes' Feast described. 7.5 **done** (R90-R93, 2026-11-11): the card's and More Info's AC is the AC in use with what changes it ("AC: 17 (15; Shield of Faith +2)", cover too), a "Max HP 35 (30; Aid +5)" line, and the defenses the conditions and badges give with where from ("Resist: ...; Bludgeoning, Piercing, Slashing (Rage)", "Cond. Immune: Frightened (Heroism)"); the player view's full rows show the AC in use. 7.3 **done** (R94-R98, 2026-11-11): `Speed(bonus, multiplier, set_to)` and `Size(steps, becomes)`, worked out by `speed_in_use` and `size_in_use`; the trigger size gates read the size in use (an Enlarged Large Ogre is Huge to Hill's Tumble); the card shows "Speed: 80 ft. (40 ft.; Haste ×2)" and, when changed, "Size Huge (Large; Enlarge/Reduce +1)"; Haste (and its lethargy row), Longstrider, Enlarge/Reduce and Large Form described. 7.6 **done** (R106, R107, 2026-11-11): the rubric's Stat changes table, `combat_effects.py stats` (each note naming AC, a defense, Speed, the Hit Point maximum or size, marked counted or NOTE ONLY), and both parties' rows: Shield's `ArmorClass(5)`, Absorb Elements' `Resistance` (a row per type), Silence's Thunder `DamageImmunity`, Shield of Faith's restating note gone. **Phase 7 done** |
 | 8 | **Rolled at the table** (new, 2026-11-11, Decision 15; see its section): whatever the simulator rolls, the GM can give it a number rolled at the table instead | **Done** (R115-R124, 2026-11-11). 8.1-8.3: a hit's extra damage (Hunter's Mark, Divine Favor) has a box per target in the Custom Effect dialog, added as typed, even to a typed damage total, Critical Hit or not; Deflect Attacks' and Stone's Endurance's reduction has a box in the trigger pop-up; the setting "Roll monsters' recharges and repeat saves" (`monsters_roll_turn_dice`) off turns those into turn reminders. 8.4-8.7 (Decision 16): a card's Set initiative... (a summon's roll, or anyone's); a box takes one roll per Times copy ("nat 1, nat 20"); a Hit Point maximum box for a pick whose badge rolls one (Heroes' Feast), and a player's dice Hit Points at a turn's start left to a turn-column button; `tests/test_roll_sites.py` fails on a new place that rolls until it's listed with its way to the table (`tests/test_table_rolls.py`) |
 
@@ -73,6 +73,13 @@ badge (3.5, both newly described): Heroism (`ConditionImmunity` to
 Frightened and `AtTurnStart` of its "Heroism: Temporary Hit Points" row)
 and Spirit Guardians (`AtTurnEnd` of its "Spirit Guardians: damage" row,
 for its caster's enemies, with a `when`), so 61 spells have combat effects.
+
+**6.6 (2026-11-12).** With Hit Point triggers: Relentless Endurance
+(Orc; `DROPS_TO_ZERO`, `drops_to=1`), Relentless Rage (Barbarian 11;
+`drops_to` twice the level, its save a `when`) and Dark One's Blessing
+(Fiend Warlock 3; `REDUCES_TO_ZERO`, `enemy_only`, Charisma modifier +
+Warlock level Temporary Hit Points, at least 1) and Harvest Undead
+(Necromancer 10; `BLOODIED`, healing the Wizard level, a Reaction).
 
 **4.3, Curse of the Lich (2026-11-11).** The party's last 14 spells: Booming
 Blade and Green-Flame Blade (an attack row as True Strike's, and a later
@@ -213,6 +220,28 @@ damage from Pirate", "Edmund's Divine Favor: +4 Radiant (1d4)" on each
 weapon hit (none on the typed total), filled the Bite button's Damage field
 with "6 Piercing + 5 Force", and the player link's hit lines read "5
 Slashing + 1 Force" and "6 Slashing + 4 Radiant".
+
+**Verified 2026-11-12 (6.6, R127-R131), low overhead:** every combat test
+file (`tests/test_combat*.py`, the trigger, hit-by, picker-row, stat-change,
+extra damage, active effect, concentration, modifier, table-roll, roll-site
+and spell, feature and monster combat-effects files: 2,462 with the new
+ones; not the full suite) passes; `combat_effects.py check` OK; pyright 0
+errors on every changed source file and `tests/test_hit_point_triggers.py`.
+30 new tests there, with expected values from Relentless Endurance's, Dark
+One's Blessing's, Relentless Rage's and Harvest Undead's text and the
+rules' Instant Death:
+the model fields and gates, the questions and buttons, and in the window a
+typed hit that would drop Ymira (Apply: 1 HP, no Unconscious, the use
+spent, the damage line's `knockout` false; Skip: 0 HP and Unconscious; one
+undo), a second drop with no use left, damage that leaves her standing,
+temporary Hit Points and Resistance counted first, a hit of two types asked
+once, the setting off (a button, and the late pick bringing her back to 1),
+and Wrenna's knockout of the Ogre giving 6 Temporary Hit Points (and one
+undo taking them back), a hit that doesn't, and none for an ally; and
+Mordecai's Harvest Undead asked once as damage leaves him Bloodied
+(healing 20, his Reaction spent), not again while he stays Bloodied, nor
+as he drops to 0. No picker golden changed: no party member has these
+features at its level.
 
 **Verified 2026-11-11 (6.5, R108-R114), low overhead:** every combat test
 file (`tests/test_combat*.py`, the trigger, picker-row, stat-change, extra
@@ -1017,7 +1046,7 @@ fire).
 | 6.3 | **Done** (R69-R73). **First slice:** the hit hooks in the three paths, the pop-up and the setting; Kivi's Giant Ancestry (Hill's Tumble, Fire's Burn, Frost's Chill) gets triggers in place of the `on_hit` note (principle 7). | A rolled or typed hit by Kivi on an Ogre pops up Hill's Tumble once; Apply gives Prone, spends a use and logs it; one undo takes back the hit and the Prone; Times / Flurry of Blows ask once per Apply; the picker golden's only change is the note going |
 | 6.4 | **Done** (R74-R77). Monster riders: the monster text reading turns "Hit: ... [If the target is a <size> or smaller creature,] it has the <condition> condition" (and "Grappled (escape DC N)") into a rider row with an AUTO trigger. A homebrew `MeleeAttack`'s `additional_ruling` reads the same way. | The Hill Giant's Tree Club knocks a Large target Prone from its button and Enter, and from the dialog; asks when the size isn't known; does nothing to a Huge target or on a miss; the picker goldens' new rider rows read against their stat blocks |
 | 6.5 | **Done** (R108-R114), but for the badges (`OnTrigger`: Armor of Agathys, Fire Shield; Q57). Being hit: `HIT_BY` before damage (Shield, Deflect Attacks, Stone's Endurance), and `TAKES_DAMAGE` after (Hellish Rebuke, Storm's Thunder). Spends the Reaction (`_add_action_use`). Takes over Q30 and Q39. | Shield asked as a hit lands turns it into a miss when +5 is enough, and spends the Reaction and a slot; Deflect Attacks takes its roll off the damage; a used Reaction asks no more this round |
-| 6.6 | Hit Point thresholds: `BLOODIED`, `DROPS_TO_ZERO`, `REDUCES_TO_ZERO`. | Relentless Endurance (Orc) asks "drop to 1 HP instead?" as its owner drops to 0; Dark One's Blessing's temp HP are given at once; both inside the damage's undo step |
+| 6.6 | **Done** (R127-R131). Hit Point thresholds: `BLOODIED`, `DROPS_TO_ZERO`, `REDUCES_TO_ZERO`. | Relentless Endurance (Orc) asks "drop to 1 HP instead?" as its owner drops to 0; Dark One's Blessing's temp HP are given at once; both inside the damage's undo step |
 | 6.7 | The rest as content needs them: `FAILS_SAVE` (Indomitable), `ROLLS_INITIATIVE` (regaining uses), `CASTS_SPELL` / `USES` (chained rows), `after=` on spells' later steps (Ice Knife, Green-Flame Blade, Booming Blade). Position events stay manual. | Per source, with a test from its rules text |
 | 6.8 | Tooling and content: the `combat-effects` skill's rubric gets a Triggers section (which mode, which gate, when a `when`); `combat_effects.py coverage` counts rows with triggers and lists features whose text has a `("Trigger", ...)` fact but whose rows don't; then the parties, through `feature-combat-effects`. | Curse of the Lich's party features with a Trigger fact all have a trigger or a stated reason not to |
 
@@ -2330,6 +2359,63 @@ roll, and stays as it is.
   from Kivi Jätti"; `tests/test_hit_triggers.py` updated). A weapon's or a
   monster's action (Tree Club's Prone rider) gets none: its rider is plain
   in the log.
+- **R127. `DROPS_TO_ZERO` is asked before the damage, not after** (6.6).
+  "Drop to 1 Hit Point instead" means the creature never reaches 0: no
+  Unconscious, Concentration kept (its save from the damage still asked),
+  no knockout in the stats or on the player link. So `_deal_damage` first
+  works out whether the whole hit (every damage type, after the save's
+  half, Immunity, Resistance and Vulnerability, then Temporary Hit Points)
+  would drop its target to 0 (`_drops_to_instead`, with the pure
+  `_damage_after_defenses`), and asks then, in a pop-up of its own as
+  `_before_hit` does; what it applies goes through `_apply_row` (the use is
+  spent and logged), inside the hit's undo step. The damage is then dealt
+  with a `floor` (`_damage_target(floor=)`): Hit Points don't go below it,
+  so the damage lines log the real `hp_delta` and `knockout: false` and
+  replay as they are, with no new log action. A line "Ymira drops to 1 Hit
+  Point instead of 0" follows. Asked once per hit: its other damage types
+  are held at the floor too. A floor higher than the creature's Hit Points
+  (Relentless Rage's twice the Barbarian level) raises them, as its text
+  says ("your Hit Points instead change to").
+- **R128. `CombatEffect.drops_to`, a number, with a `DROPS_TO_ZERO`
+  trigger only.** The feature works out its own number (principle 5):
+  Relentless Endurance's 1, Relentless Rage's `2 * level`. Picked by hand
+  (the setting off, so it was a turn-column button, or the GM noticed
+  late) for an owner at 0 Hit Points that isn't dead, it brings them back
+  up to that many through `_heal_target` (logged as regaining
+  consciousness); its row's note says so. Relentless Rage's DC 10
+  Constitution save, 5 higher per use since a rest, is its trigger's
+  `when`: nothing counts the uses, so the GM rolls it.
+- **R129. Killed outright is a gate, though the simulator doesn't kill
+  outright** (DI-002). The damage past 0 is known before it's dealt, so a
+  `drop_firings` row isn't offered when it's at least the Hit Point
+  maximum in use, and the status line says why ("Relentless Endurance: not
+  when killed outright (45 damage past 0, Hit Point maximum 45)"). The
+  creature still drops to 0 and dying, as before; DI-002 stays open.
+- **R130. `REDUCES_TO_ZERO` is a `KnockoutOutcome(source, target)` from
+  `_deal_damage`, collected with the Apply's other outcomes** (after its
+  `DamageOutcome`), its rows the source's. Its target is usually dead, so
+  the dead-target gate doesn't apply to it. A new gate,
+  `CombatTrigger.enemy_only` (for the events with another creature in
+  them), checks the two are on different sides (`on_party_side`): Dark
+  One's Blessing's "you reduce an enemy to 0". Its row is
+  `optional=False`, `spends_use=False`, `targets_self` with its
+  `temp_hp`, so it's AUTO: Wrenna's 6 Temporary Hit Points are given as the
+  Apply ends, in its undo step. Its "someone else reduces an enemy within
+  10 feet of you" is a note for now (Q63). The pop-up says what a row
+  gives in words ("6 Temporary Hit Points", "Drops to 1 Hit Point
+  instead"; `_trigger_row_what`).
+- **R131. `BLOODIED` is a `BloodiedOutcome(target, source)` from
+  `_deal_damage`**: damage that leaves its target Bloodied, when it wasn't
+  before the hit, and not at 0 Hit Points ("become Bloodied but aren't
+  reduced to 0 Hit Points from taking damage"), collected with the Apply's
+  outcomes. Its rows are the target's own and fire on itself, so the
+  "its own damage" check doesn't apply to it. Not from healing or a
+  maximum that rises (Bloodied then goes, not comes), nor from a log being
+  replayed. The one source here is the Necromancer's Harvest Undead
+  (level 10: a Reaction, healing the Wizard level, `targets_self`; the
+  Undead it drains is a `when` and a note, dealt by hand). The homebrew
+  monsters' "While Bloodied" traits (Bloodied Frenzy) are a state, not a
+  trigger: they'd be a badge modifier, not this.
 
 ## Open questions (with suggestions)
 
@@ -2339,6 +2425,16 @@ Q36, Q38 and Q39 too (Decision 14), Q58-Q61 (Decision 16) and Q62 (Decision 17);
 moved there. Q11 was done as suggested in S.4 (R24-R26): every spell is
 a class.
 
+- **Q63. Dark One's Blessing for someone else's knockout** (R130). "You
+  also gain this benefit if someone else reduces an enemy within 10 feet
+  of you to 0 Hit Points": the knockout is seen, the 10 feet aren't.
+  *Suggestion:* a gate `by_anyone: bool` on a `REDUCES_TO_ZERO` trigger,
+  whose rows then fire for every creature's knockout of one of the
+  owner's enemies, the owner's own as AUTO and another's as ASK with a
+  `when` ("it was within 10 feet of you"). Until then the note says to
+  pick it by hand. The two homebrew monsters with "drops to 1 Hit Point
+  instead" (CR 1's assassin, CR 2's Harat) are freeform abilities; they
+  get a `drops_to` row when they're converted.
 - **Q57. A badge that answers a hit (`OnTrigger`, 6.5's rest).** Armor of
   Agathys ("a creature hits you with a melee attack roll ... takes 5 Cold
   damage", 5 more per slot level above 1, and it ends with no Temporary Hit
