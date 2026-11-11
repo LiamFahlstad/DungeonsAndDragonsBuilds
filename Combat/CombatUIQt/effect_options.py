@@ -256,6 +256,9 @@ def _gain_note(gain: HitPointGain, level: int, modifier: int | None) -> str:
 
 
 def _with_modifier(roll: DamageRoll, modifier: int) -> DamageRoll:
+    if roll.dice == "0":
+        # The modifier alone (Green-Flame Blade's fire before level 5).
+        return DamageRoll(str(max(modifier, 0)), roll.damage_type)
     if not modifier:
         return roll
     sign = "+" if modifier > 0 else "-"

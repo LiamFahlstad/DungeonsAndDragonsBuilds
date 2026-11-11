@@ -3861,6 +3861,11 @@ class MistyStep(ClassSpell):
             )
         ]
 
+    def combat_effects(
+        self, character: CharacterView | None = None
+    ) -> list[CombatEffect]:
+        return []
+
 
 class NathairsMischief(ClassSpell):
     rules = SpellRules(
@@ -4510,6 +4515,18 @@ class SeeInvisibility(ClassSpell):
             ),
         ]
 
+    def combat_effects(
+        self, character: CharacterView | None = None
+    ) -> list[CombatEffect]:
+        return [
+            CombatEffect(
+                conditions=(CombatCondition("See Invisibility"),),
+                notes=(
+                    "It's the caster's: pick the caster as the target. You see creatures and objects with the Invisible condition as if they were visible.",
+                ),
+            )
+        ]
+
 
 class ShadowBlade(ClassSpell):
     rules = SpellRules(
@@ -4670,6 +4687,19 @@ class Silence(ClassSpell):
                     ),
                 )
             ),
+        ]
+
+    def combat_effects(
+        self, character: CharacterView | None = None
+    ) -> list[CombatEffect]:
+        return [
+            CombatEffect(
+                conditions=(CombatCondition(Condition.DEAFENED),),
+                notes=(
+                    "Each creature entirely inside the 20-foot-radius Sphere: take Deafened off when it leaves.",
+                    "Inside, creatures and objects have Immunity to Thunder damage, and no spell with a Verbal component can be cast.",
+                ),
+            )
         ]
 
 
@@ -5545,6 +5575,11 @@ class ZoneOfTruth(ClassSpell):
                 )
             ),
         ]
+
+    def combat_effects(
+        self, character: CharacterView | None = None
+    ) -> list[CombatEffect]:
+        return []
 
 
 class FortunesFavor(ClassSpell):

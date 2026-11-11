@@ -112,7 +112,10 @@ class CombatDamage:
     """Damage one use deals: dice and a type, or None with the types the user
     chooses from. A spell's damage can also grow: `upcast` per slot level
     above the spell's, `cantrip` from each of CANTRIP_LEVELS on, and
-    `add_modifier` adds the caster's spellcasting ability modifier."""
+    `add_modifier` adds the caster's spellcasting ability modifier. Dice
+    "0" with `add_modifier` is the modifier alone (Green-Flame Blade's
+    fire "equal to your spellcasting ability modifier", before its
+    cantrip dice)."""
 
     dice: str
     damage_type: DamageType | None

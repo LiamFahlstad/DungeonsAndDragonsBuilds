@@ -37,11 +37,13 @@ from Model.Content.CombatModifiers import (
     ArmorClass,
     AtTurnStart,
     AttackKind,
+    AttacksAgainst,
     ConditionImmunity,
     D20Bonus,
     D20Test,
     ExtraDamageFrom,
     ExtraDamageOnHit,
+    RollMode,
 )
 from Model.Content.Feature import FeatureTarget
 from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table
@@ -2677,6 +2679,11 @@ class Ceremony(ClassSpell):
             ),
         ]
 
+    def combat_effects(
+        self, character: CharacterView | None = None
+    ) -> list[CombatEffect]:
+        return []
+
 
 class ChaosBolt(ClassSpell):
     rules = SpellRules(
@@ -2907,6 +2914,11 @@ class ComprehendLanguages(ClassSpell):
             ),
         ]
 
+    def combat_effects(
+        self, character: CharacterView | None = None
+    ) -> list[CombatEffect]:
+        return []
+
 
 class CreateOrDestroyWater(ClassSpell):
     rules = SpellRules(
@@ -3085,6 +3097,11 @@ class DetectMagic(ClassSpell):
                 )
             ),
         ]
+
+    def combat_effects(
+        self, character: CharacterView | None = None
+    ) -> list[CombatEffect]:
+        return []
 
 
 class DetectPoisonAndDisease(ClassSpell):
@@ -4206,6 +4223,33 @@ class ProtectionFromEvilAndGood(ClassSpell):
             ),
         ]
 
+    def combat_effects(
+        self, character: CharacterView | None = None
+    ) -> list[CombatEffect]:
+        return [
+            CombatEffect(
+                conditions=(
+                    CombatCondition(
+                        "Protection from Evil and Good",
+                        modifiers=(
+                            AttacksAgainst(
+                                RollMode.DISADVANTAGE,
+                                when="the attacker is an Aberration, Celestial,"
+                                " Elemental, Fey, Fiend or Undead",
+                            ),
+                        ),
+                    ),
+                ),
+                notes=(
+                    "One willing creature you touch.",
+                    "It can't be possessed by, or gain the Charmed or Frightened"
+                    " condition from, an Aberration, Celestial, Elemental, Fey,"
+                    " Fiend or Undead; if one already has, it has Advantage on any"
+                    " new save against that effect.",
+                ),
+            )
+        ]
+
 
 class PurifyFoodAndDrink(ClassSpell):
     rules = SpellRules(
@@ -4413,6 +4457,11 @@ class SilentImage(ClassSpell):
                 )
             ),
         ]
+
+    def combat_effects(
+        self, character: CharacterView | None = None
+    ) -> list[CombatEffect]:
+        return []
 
 
 class SilveryBarbs(ClassSpell):

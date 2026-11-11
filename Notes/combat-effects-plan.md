@@ -28,7 +28,7 @@ change and move on; the full suite can run later.
 - No parity runs against main, `verify-agent-work`, `code-reviewer` or
   `rules-checker` passes per step unless asked.
 
-## Status (2026-11-10, Phase 3 done and Phase 4's tooling (4.1, 4.2, 4.4): lasting effects are one list, the rules conditions are data, effects carry modifiers the simulator counts, hits deal the extra damage effects give, badges act as turns start and end, and a concentration ends everything linked to it)
+## Status (2026-11-11, Phase 3 done, Phase 4's tooling (4.1, 4.2, 4.4) done, and 4.3's first party done: lasting effects are one list, the rules conditions are data, effects carry modifiers the simulator counts, hits deal the extra damage effects give, badges act as turns start and end, a concentration ends everything linked to it, and every spell and feature of the Curse of the Lich party is described)
 
 | Phase | Step | State |
 |---|---|---|
@@ -49,7 +49,7 @@ change and move on; the full suite can run later.
 | 2 | Extensions list their own uses under their parent | **Done** (R10, new) |
 | S | **Spells as classes** (new direction, 2026-11-09; see its section) | S.1 base class, factory and converter **done**; S.2 the 57 spells with combat effects converted **done**; S.2c card lines as dataclasses **done** (R20); S.3 new effects go into classes **done** (R22); S.5 drift check **done** (R23); S.4 **done** (R26): all 594 spells are classes, the agents' tools switched over (R24), Q15 and DI-065 done (R25), every companion file deleted and nothing reads them |
 | 3 | Lasting effects (3.1-3.6) | 3.1 **done** (R28-R34): `char["active_effects"]`, one plain dict per badge, in the new Qt-free `Combat/Effects/active_effects.py`; the seven old keys are read only by its `upgrade_old_keys`, where a log is read; an old fight log replays the same (`tests/test_active_effects.py`). 3.2 **done** (R27), ahead of 3.1: the rules conditions are data, and saves, attack rolls (all three paths), AC, damage Resistance and condition immunity read them. 3.3 **done** (R35-R40): a badge's `CombatCondition` says its `modifiers`, the record keeps them as JSON, and `modifiers_on` reads them beside the conditions and cover; Bless's 1d4 is rolled into the saves (a monster's Concentration save too, R40) and attack rolls the simulator makes, Shield of Faith's +2 counts in AC, cover's +2/+5 in Dexterity saves (DI-066); a typed total stays as typed, with the bonus as a reminder in the dialog. 3.4 **done** (R41-R47): `ExtraDamageFrom` (on the target, from its effect's caster) and `ExtraDamageOnHit` (on the attacker); Hunter's Mark's 1d6 Force on its caster's hits and Divine Favor's 1d4 Radiant on its caster's weapon hits are rolled into the hits the dialog and a monster's action buttons deal, doubled on a Critical Hit, each type resisted on its own; a typed damage total stays as typed, with the extra as a reminder in the dialog. 3.5 **done** (R48-R53): `AtTurnStart` / `AtTurnEnd` are modifiers on a badge that name a row of their spell; Heroism's Temporary Hit Points are given as its target's turn starts, and Spirit Guardians asks, as each enemy of its caster ends its turn, with a button that opens the Custom Effect dialog with its damage row picked. 3.6 **done** (R54-R56): ending a concentration also ends every record linked to it (`held_by_concentration`), a creature leaving the fight ends its concentration first, and a badge another running effect still holds is relinked to that effect's caster |
-| 4 | One `combat-effects` skill; feature agent; content rollout | 4.1 **done** (R57-R60): the `combat-effects` skill and `combat_effects.py` (renamed from spell-mechanics), with the principles, a Features section, `features`, `coverage` and `notes`, and features in `check`; `is_curated` is `is_described`. 4.2 **done**: the `feature-combat-effects` agent (opus); the spell agent is `spell-combat-effects`. 4.4 **done**: `coverage`. 4.3 (content) next: Curse of the Lich has 40 features read from text and 6 extensions without effects |
+| 4 | One `combat-effects` skill; feature agent; content rollout | 4.1 **done** (R57-R60): the `combat-effects` skill and `combat_effects.py` (renamed from spell-mechanics), with the principles, a Features section, `features`, `coverage` and `notes`, and features in `check`; `is_curated` is `is_described`. 4.2 **done**: the `feature-combat-effects` agent (opus); the spell agent is `spell-combat-effects`. 4.4 **done**: `coverage`. 4.3 (content): **Curse of the Lich done** (R61-R65, 2026-11-11): spells 44/44, features 23 described, 37 nothing to apply, none read from text; Time Loop PR was already done. Next: spells level by level and features class by class, which wait for the user's go (Decision 9) |
 | 5 | Sheet chips, monster score | Not started |
 
 **Content described so far.** Spells: 57 (2024) + 1 (2014), all as classes
@@ -69,8 +69,24 @@ Radiant on weapon attacks; newly described, R47); with triggers on their
 badge (3.5, both newly described): Heroism (`ConditionImmunity` to
 Frightened and `AtTurnStart` of its "Heroism: Temporary Hit Points" row)
 and Spirit Guardians (`AtTurnEnd` of its "Spirit Guardians: damage" row,
-for its caster's enemies, with a `when`), so 61 spells have combat effects;
-everything else waits for Phase 4.
+for its caster's enemies, with a `when`), so 61 spells have combat effects.
+
+**4.3, Curse of the Lich (2026-11-11).** The party's last 14 spells: Booming
+Blade and Green-Flame Blade (an attack row as True Strike's, and a later
+step each: the Thunder for moving, the leaping fire), Protection from Evil
+and Good (a badge with `AttacksAgainst` Disadvantage and a `when`), See
+Invisibility (a badge on the caster), Silence (Deafened, with a note), and
+`[]` for Elementalism, Mage Hand, Prestidigitation, Ceremony, Comprehend
+Languages, Detect Magic, Silent Image, Misty Step and Zone of Truth: 75
+spells have combat effects. The party's 46 features left: Kivi's Monk
+(Martial Arts' Bonus Unarmed Strike, Flurry of Blows, Patient Defense's
+Dodge badge, Step of the Wind, Deflect Attacks and its redirect, Uncanny
+Metabolism, Elemental Attunement and its Strength save), Giant Ancestry
+(all six ancestries), Large Form (from level 5), Edmund's Divine Sense and
+Abjure Foes (Channel Divinity), Sacred Weapon, Fiendish Legacy's and Fey
+Touched's free castings, Obmar's Second Wind and Illuminated Cartography,
+Thum's Steady Aim; the rest `[]` (senses, proficiencies, languages,
+Spellcasting, riders on weapon rows, the owner's own resistances).
 
 **Verified 2026-11-09 (after S.3):** full suite passes (9,917); every
 picker-row change reviewed field by field against the previous golden.
@@ -164,6 +180,20 @@ damage from Pirate", "Edmund's Divine Favor: +4 Radiant (1d4)" on each
 weapon hit (none on the typed total), filled the Bite button's Damage field
 with "6 Piercing + 5 Force", and the player link's hit lines read "5
 Slashing + 1 Force" and "6 Slashing + 4 Radiant".
+
+**Verified 2026-11-11 (4.3, Curse of the Lich, R61-R65), low overhead:**
+every combat test file plus the spell, feature and monster combat-effects
+tests pass (3,380; not the full suite); `combat_effects.py check` OK (75 of
+594 spells); pyright 0 errors on every changed source file (the test file
+keeps its DI-060 errors). Picker goldens: the six party members' and
+`caster_described_spells`, every changed row read field by field against
+the rules text (Kivi's strikes +6 / 1d6 + 4 like his Unarmed Strike row,
+Deflect Attacks 1d10 + 8 (DEX 4 + Monk 4), its redirect DC 13; Sacred
+Weapon +2 (Edmund's CHA); Clover's leaping fire 4 Fire; Second Wind 1d10 +
+1); the rows that went are the `[]` features, which the picker hides.
+Five tests picked Edmund's Channel Divinity row, now Divine Sense (a use of
+it, still logged and counted as Channel Divinity); one needed an always-on
+feature that isn't described, which Edmund no longer has, so it adds one.
 
 **Verified 2026-11-10 (4.1/4.2, R57-R60), low overhead:** the spell,
 feature and monster combat-effects tests, the picker goldens, the Custom
@@ -1069,6 +1099,48 @@ Sheet chips ("DEX save · half · 8d6 Fire") from the same data;
 - **R60. `is_described` everywhere.** `EffectOption.is_curated` and every
   reader, test and picker golden key; the goldens changed by that key
   alone (checked line by line).
+- **R61. A feature's free casting is a row, as Paladin's Smite's** (4.3,
+  2026-11-11). Fey Touched, Fiendish Legacy and Mapping Magic's
+  Illuminated Cartography give one row per spell they let their owner cast
+  without a slot (`spell=`, "Without a spell slot, once per Long Rest."),
+  so the GM casts it from the picker without spending a slot. Magic
+  Initiate (Time Loop PR) still says `[]`, from before; it should follow
+  when its party is next looked at. A cantrip's free casting (Fiendish
+  Legacy's Chill Touch) gets none. Mapping Magic has `FeatureUses`, so its
+  row counts them; the others have none (Q36).
+- **R62. A feature's own attack works out its bonus.** The picker fills a
+  feature's attack with the spell attack bonus unless the effect sets
+  `attack_bonus`, and `CharacterView` has no weapons. So Monk's Martial Arts,
+  Flurry of Blows and Deflect Attacks' redirect use a module helper,
+  `MonkFeatures.unarmed_strike(character)`: the Martial Arts die and the
+  better of Strength and Dexterity (Dexterous Attacks), the same numbers as
+  the build's Unarmed Strike row (+6, 1d6 + 4 for Kivi).
+- **R63. A pool's rows are its uses.** Monk's Focus returns `[]`: its
+  extensions are the ways to spend Focus Points, each with its own rows,
+  spending the parent's uses (principle 11). Paladin's Channel Divinity gives
+  Divine Sense a notes-only row (a sense, but it spends the pool Sacred
+  Weapon draws on) and Abjure Foes one from Paladin level 9; Stonecunning,
+  a sense with its own uses, stays `[]` as the rubric says.
+- **R64. A badge on its owner, with a `when` for what the GM judges.**
+  Dodge (Patient Defense), Steady Aim, Sacred Weapon, Elemental Attunement,
+  Large Form and See Invisibility are badges the owner puts on itself
+  ("pick yourself as the target"). What they do only some of the time is a
+  `when`, so it's a reminder, not counted: Dodge's Disadvantage "if it can
+  see the attacker" (as Invisible's, Q16), Sacred Weapon's +CHA "if the
+  attack is made with the imbued weapon" (Edmund also throws a Handaxe),
+  Steady Aim's Advantage on "its next attack roll this turn", Protection
+  from Evil and Good's Disadvantage for the six creature types. Dodge's
+  Advantage on Dexterity saves is counted. A duration with "or until ..."
+  (Sacred Weapon's, Elemental Attunement's) doesn't read as seconds, so
+  their badges set `duration_seconds=10 * 60`.
+- **R65. Damage that is the modifier alone is dice "0".** Green-Flame
+  Blade's leaping fire is "equal to your spellcasting ability modifier"
+  until level 5, then 1d8 + it. `CombatDamage("0", FIRE, cantrip=..., add_modifier=True)`
+  says that, and `_with_modifier` writes "0" plus a modifier as the
+  modifier alone ("4 Fire", not "0 + 4 Fire"). A spell's weapon attack
+  (Booming Blade, Green-Flame Blade) is written as True Strike's: an attack
+  row whose note says to give the weapon's own bonus and damage, as the
+  spell can't know the weapon.
 
 ## Open questions (with suggestions)
 
@@ -1213,6 +1285,37 @@ Sheet chips ("DEX save · half · 8d6 Fire") from the same data;
   *Suggestion:* a `targets: CombatTargets(count, upcast=1)` field, which
   the dialog shows next to the slot box ("Targets: 2 at level 2") and
   warns when more targets are picked; until then it stays a note.
+- **Q35. "Pick yourself as the target" is a missing field** (4.3): seven
+  features say it mid-sentence (Second Wind, Sacred Weapon, Steady Aim,
+  Patient Defense, Elemental Attunement, Uncanny Metabolism, Large Form),
+  and False Life and See Invisibility say "pick the caster", which `notes`
+  misses as it groups by first words. Several rows also say "nothing
+  happens to the targets" (Divine Sense, Step of the Wind, Deflect Attacks,
+  Cloud's Jaunt, Tinker's Magic). *Suggestion:* the picker reads the
+  source's own `target()` (`FeatureTarget.SELF`, already set on most of
+  these) or a `targets_self` field on the effect, and the dialog picks the
+  user as the only target; a row with nothing to apply needs no target at
+  all. Then drop those sentences.
+- **Q36. Free castings aren't counted** (R61). Paladin's Smite (Q8), Fey
+  Touched and Fiendish Legacy have no `FeatureUses`, so their "once per Long
+  Rest" rows can be used again and again. *Suggestion:* with Q8, a
+  `FeatureUses(1, regain_all_on="long rest")` per spell (a sheet change:
+  read the snapshot diff), or uses kept by the combat UI per free casting.
+- **Q37. "Until the end of the current turn"** has no duration: Sentinel's
+  Halt (Speed 0 for the rest of the turn, so Sentinel stays `[]`) and Steady
+  Aim's Speed 0. `(TurnEdge.END, TurnOf.TARGET)` given on the target's own
+  turn lasts to the end of its next one. *Suggestion:* a third `TurnOf`,
+  `CURRENT`, ending as this turn ends.
+- **Q38. Weapon Mastery properties** (Topple, Vex, Sap, Push, ...) ride on
+  weapon rows, so Weapon Mastery is `[]` for the Fighter, Paladin and Rogue.
+  *Suggestion:* a weapon row adds its mastery's effect when its owner has
+  it (Topple: a Constitution save or Prone; Vex: Advantage on the next
+  attack, a badge), in Phase 5 or when the GM asks.
+- **Q39. Reductions to damage being taken** (Deflect Attacks' 1d10 + DEX +
+  Monk level, Stone's Endurance's 1d12 + CON) are notes: the GM takes them
+  off before applying the hit. *Suggestion:* with `WhenHit` (Q30), a
+  reaction prompt as a hit lands on its owner that rolls the reduction and
+  takes it off the damage.
 
 ## Discovered issues
 

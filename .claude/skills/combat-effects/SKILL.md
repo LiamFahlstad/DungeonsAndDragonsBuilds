@@ -150,7 +150,16 @@ The rubric above applies; on top of it:
 - **A use that casts a spell** sets `spell="Hunter's Mark"` and only what
   differs: its `name` ("Divine Smite (Paladin's Smite)"), a note ("Without
   a spell slot, once per Long Rest."), another action. The spell's own
-  effect, badge and modifiers come along.
+  effect, badge and modifiers come along. A feature that lets its owner
+  cast a level 1+ spell it grants without a slot (Fey Touched, Fiendish
+  Legacy) gives one such row per spell; a cantrip's needs none.
+- **A feature's own attack** (Martial Arts' Bonus Unarmed Strike, Flurry of
+  Blows) sets `attack_bonus` itself, worked out from `character`: the
+  picker's default is the spell attack bonus.
+- **A badge its owner puts on itself** (Patient Defense's Dodge, Sacred
+  Weapon) says "pick yourself as the target" in a note; what it does only
+  some of the time is a modifier with a `when` (Dodge's Disadvantage "if
+  it can see the attacker"), which the simulator shows but doesn't count.
 - **Several ways to use one feature** are several effects, each with a
   `name` (Channel Divinity's "Divine Spark: heal", "Divine Spark: harm", "Turn Undead"); an extension's ways go
   in the extension's own `combat_effects()`, not the parent's.
@@ -193,7 +202,9 @@ Names are the Python ones; `Ability`, `Condition` and `DamageType` come from
   `upcast="1d6"` goes only on the part the higher-level paragraph names.
   `cantrip=((5, "2d8"), (11, "3d8"), (17, "4d8"))` only when the dice
   themselves grow (Eldritch Blast's extra beams are `instances`). `add_modifier=True`
-  when the text adds "your spellcasting ability modifier". When the caster
+  when the text adds "your spellcasting ability modifier"; damage equal to
+  the modifier alone is dice `"0"` with it (Green-Flame Blade's leaping
+  fire, `cantrip` giving its dice from level 5). When the caster
   picks the type: `CombatDamage("2d6", None, (DamageType.ACID, DamageType.COLD,
   ...))`. Damage only some targets take is a part with `when`, what follows
   "if": Divine Smite's `CombatDamage("1d8", DamageType.RADIANT, when="the

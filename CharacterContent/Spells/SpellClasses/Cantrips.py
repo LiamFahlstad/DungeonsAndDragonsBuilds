@@ -1250,6 +1250,38 @@ class BoomingBlade(ClassSpell):
             ),
         ]
 
+    def combat_effects(
+        self, character: CharacterView | None = None
+    ) -> list[CombatEffect]:
+        return [
+            CombatEffect(
+                roll=EffectRoll.ATTACK,
+                conditions=(
+                    CombatCondition(
+                        "Booming Blade", until=(TurnEdge.START, TurnOf.SOURCE)
+                    ),
+                ),
+                notes=(
+                    "One melee attack with the weapon used in the casting, against a creature within 5 feet: give the weapon's own attack bonus and damage.",
+                    "Extra Thunder damage on a hit: 1d8 from character level 5, 2d8 from 11, 3d8 from 17.",
+                ),
+            ),
+            CombatEffect(
+                name="Booming Blade: moved",
+                damage=(
+                    CombatDamage(
+                        "1d8",
+                        DamageType.THUNDER,
+                        cantrip=((5, "2d8"), (11, "3d8"), (17, "4d8")),
+                    ),
+                ),
+                spends_use=False,
+                notes=(
+                    "If the target willingly moves 5 feet or more before the start of your next turn. Then the spell ends: take the badge off.",
+                ),
+            ),
+        ]
+
 
 class ControlFlames(ClassSpell):
     rules = SpellRules(
@@ -1545,6 +1577,11 @@ class Elementalism(ClassSpell):
             ),
         ]
 
+    def combat_effects(
+        self, character: CharacterView | None = None
+    ) -> list[CombatEffect]:
+        return []
+
 
 class EncodeThoughts(ClassSpell):
     rules = SpellRules(
@@ -1772,6 +1809,34 @@ class GreenFlameBlade(ClassSpell):
                             ("17", "3d8", "3d8 + spellcasting ability modifier"),
                         ),
                     ),
+                ),
+            ),
+        ]
+
+    def combat_effects(
+        self, character: CharacterView | None = None
+    ) -> list[CombatEffect]:
+        return [
+            CombatEffect(
+                roll=EffectRoll.ATTACK,
+                notes=(
+                    "One melee attack with the weapon used in the casting, against a creature within 5 feet: give the weapon's own attack bonus and damage.",
+                    "Extra Fire damage on a hit: 1d8 from character level 5, 2d8 from 11, 3d8 from 17.",
+                ),
+            ),
+            CombatEffect(
+                name="Green-Flame Blade: leaping fire",
+                damage=(
+                    CombatDamage(
+                        "0",
+                        DamageType.FIRE,
+                        cantrip=((5, "1d8"), (11, "2d8"), (17, "3d8")),
+                        add_modifier=True,
+                    ),
+                ),
+                spends_use=False,
+                notes=(
+                    "After a hit: a different creature you can see within 5 feet of the target.",
                 ),
             ),
         ]
@@ -2092,6 +2157,11 @@ class MageHand(ClassSpell):
                 )
             )
         ]
+
+    def combat_effects(
+        self, character: CharacterView | None = None
+    ) -> list[CombatEffect]:
+        return []
 
 
 class MagicStone(ClassSpell):
@@ -2439,6 +2509,11 @@ class Prestidigitation(ClassSpell):
                 ),
             ),
         ]
+
+    def combat_effects(
+        self, character: CharacterView | None = None
+    ) -> list[CombatEffect]:
+        return []
 
 
 class PrimalSavagery(ClassSpell):
