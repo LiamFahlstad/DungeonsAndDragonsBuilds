@@ -7,6 +7,8 @@ from Model.Content.Feature import (
 )
 from Model.View import CharacterView
 from Model.Content.FeatureText import Block, Facts, Paragraph, Table
+from Model.Content.CombatEffect import CombatCondition, CombatEffect
+from Model.Content.CombatModifiers import D20Bonus, D20Test
 
 
 class OathOfDevotionSpells(Feature):
@@ -95,6 +97,34 @@ class SacredWeapon(Feature):
             "You can end this effect early (no action required). This effect also ends if you aren't carrying the weapon."
         )
         return description
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        bonus = max(1, character.get_charisma_modifier())
+        return [
+            CombatEffect(
+                conditions=(
+                    CombatCondition(
+                        "Sacred Weapon",
+                        duration_seconds=10 * 60,  # or until used again
+                        modifiers=(
+                            D20Bonus(
+                                (D20Test.ATTACK_ROLL,),
+                                f"+{bonus}",
+                                when="the attack is made with the imbued weapon",
+                            ),
+                        ),
+                    ),
+                ),
+                notes=(
+                    "When you take the Attack action: pick yourself as the"
+                    " target. Each hit with the weapon can deal Radiant damage"
+                    " instead of its own type.",
+                    "The weapon sheds Bright Light in a 20-foot radius and Dim"
+                    " Light 20 feet beyond. It ends early if you use it again,"
+                    " end it (no action) or stop carrying the weapon.",
+                ),
+            )
+        ]
 
 
 class AuraOfDevotion(Feature):

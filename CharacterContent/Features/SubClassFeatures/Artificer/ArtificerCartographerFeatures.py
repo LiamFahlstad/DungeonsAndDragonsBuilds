@@ -8,6 +8,7 @@ from Model.Content.Feature import (
 from Core.Rules import MAX_ABILITY_MODIFIER
 from Model.View import CharacterView
 from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table
+from Model.Content.CombatEffect import CombatEffect
 
 
 class CartographerToolsOfTheTrade(Feature):
@@ -41,6 +42,10 @@ class CartographerToolsOfTheTrade(Feature):
             "Scroll Crafting. When you scribe a Spell Scroll using the crafting rules in the Player's Handbook, the amount of time required to craft it is halved."
         )
         return description
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # Tool proficiencies and faster scrolls: nothing to apply.
+        return []
 
 
 class CartographerSpells(Feature):
@@ -78,6 +83,10 @@ class CartographerSpells(Feature):
             "17	Scrying, Teleportation Circle"
         )
         return description
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # Its spells are in the picker as spells.
+        return []
 
 
 class AdventurersAtlas(Feature):
@@ -138,6 +147,11 @@ class AdventurersAtlas(Feature):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # Its maps are made after a Long Rest; their 1d4 is added to
+        # Initiative, which isn't rolled in the picker.
+        return []
 
 
 class MappingMagic(Feature):
@@ -202,6 +216,16 @@ class MappingMagic(Feature):
 
     def number_of_uses(self, character: CharacterView) -> int:
         return max(1, character.get_intelligence_modifier())
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # Illuminated Cartography's free castings; Portal Jump is movement.
+        return [
+            CombatEffect(
+                name="Faerie Fire (Illuminated Cartography)",
+                spell="Faerie Fire",
+                notes=("Without a spell slot.",),
+            )
+        ]
 
 
 class GuidedPrecision(Feature):

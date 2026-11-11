@@ -96,6 +96,7 @@ from Model.Content.FeatureText import (
     Table,
     dc_formula,
 )
+from Model.Content.CombatEffect import CombatEffect
 
 
 class GeneralFeat(Feature):
@@ -600,6 +601,20 @@ class FeyTouched(_AbilityScoreFeat):
             "Fey Magic. Choose one level 1 spell from the Divination or Enchantment school of magic. You always have that spell and the Misty Step spell prepared. You can cast each of these spells without expending a spell slot. Once you cast either spell in this way, you can't cast that spell in this way again until you finish a Long Rest. You can also cast these spells using spell slots you have of the appropriate level. The spells' spellcasting ability is the ability increased by this feat.\n"
         )
 
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # Its free castings; the spells themselves are in the picker as spells.
+        spells = [ConjurationLevel2Spells.MISTY_STEP.value]
+        if self.spell is not None:
+            spells.append(getattr(self.spell, "value", self.spell))
+        return [
+            CombatEffect(
+                name=f"{spell} (Fey Touched)",
+                spell=spell,
+                notes=("Without a spell slot, once per Long Rest.",),
+            )
+            for spell in spells
+        ]
+
 
 class Grappler(_AbilityScoreFeat):
     _NAME = "Grappler"
@@ -638,6 +653,11 @@ class Grappler(_AbilityScoreFeat):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # Riders on its owner's Unarmed Strikes (a weapon row) and its
+        # attack rolls against a creature it grapples.
+        return []
 
 
 class GreatWeaponMaster(_AbilityScoreFeat):
@@ -1283,6 +1303,11 @@ class Sentinel(_AbilityScoreFeat):
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # Riders on its owner's Opportunity Attacks, which are weapon rows;
+        # Halt's Speed 0 lasts the current turn only: set it by hand.
+        return []
+
 
 class ShadowTouched(_AbilityScoreFeat):
     _NAME = "Shadow Touched"
@@ -1773,6 +1798,10 @@ class WarCaster(_AbilityScoreFeat):
             "Reactive Spell. When a creature provokes an Opportunity Attack from you by leaving your reach, you can take a Reaction to cast a spell at the creature rather than making an Opportunity Attack. The spell must have a casting time of one action and must target only that creature.\n"
             "Somatic Components. You can perform the Somatic components of spells even when you have weapons or a Shield in one or both hands.\n"
         )
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # Its owner's own Concentration saves and casting.
+        return []
 
 
 class WeaponMaster(_AbilityScoreFeat):

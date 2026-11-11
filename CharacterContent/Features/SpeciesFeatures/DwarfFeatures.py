@@ -16,6 +16,7 @@ from Model.Ledger.LedgerWriter import LedgerWriter
 from Core.Rules import PROFICIENCY_BONUS_GAINED_AT, MAX_PROFICIENCY_BONUS
 from Model.View import CharacterView
 from Model.Content.FeatureText import Block, Facts
+from Model.Content.CombatEffect import CombatEffect
 
 SPEED = 30  # Given by your species
 SIZE = CreatureSize.MEDIUM  # Given by your species
@@ -61,6 +62,10 @@ class DwarvenResilience(Feature):
 
     def get_description(self, character: CharacterView) -> str:
         return "You have Resistance to Poison damage. You also have Advantage on saving throws you make to avoid or end the Poisoned condition."
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # Its Resistance and Advantage are its owner's own.
+        return []
 
 
 class DwarvenToughness(Feature):
@@ -131,3 +136,7 @@ class Stonecunning(Feature):
 
     def number_of_uses(self, character: CharacterView) -> int:
         return character.get_proficiency_bonus()
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # A sense (Tremorsense): nothing to put on a creature.
+        return []

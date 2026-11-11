@@ -12,6 +12,15 @@ from Model.Content.Feature import (
 from Core.Rules import PROFICIENCY_BONUS_GAINED_AT, MAX_PROFICIENCY_BONUS
 from Model.View import CharacterView
 from Model.Content.FeatureText import Block, Facts, Option, Paragraph
+from Model.Content.CombatEffect import (
+    CombatCondition,
+    CombatDamage,
+    CombatEffect,
+    TurnEdge,
+    TurnOf,
+)
+from Model.Content.CombatModifiers import D20Mode, D20Test, RollMode
+from Core.Definitions import Ability, Condition, DamageType
 
 SPEED = 35  # Given by your species
 SIZE = CreatureSize.MEDIUM  # Given by your species
@@ -64,6 +73,31 @@ class LargeForm(Feature):
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        if character.character_level < 5:
+            return []  # not before character level 5
+        return [
+            CombatEffect(
+                conditions=(
+                    CombatCondition(
+                        "Large Form",
+                        modifiers=(
+                            D20Mode(
+                                (D20Test.ABILITY_CHECK,),
+                                RollMode.ADVANTAGE,
+                                (Ability.STRENGTH,),
+                            ),
+                        ),
+                    ),
+                ),
+                notes=(
+                    "Pick yourself as the target, if there's room to be Large."
+                    " Your size is Large and your Speed increases by 10 feet. You"
+                    " can end it early (no action).",
+                ),
+            )
+        ]
+
 
 class PowerfulBuild(Feature):
     def __init__(self):
@@ -86,6 +120,10 @@ class PowerfulBuild(Feature):
 
     def get_description(self, character: CharacterView) -> str:
         return "You have Advantage on any ability check you make to end the Grappled condition. You also count as one size larger when determining your carrying capacity."
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # Its owner's own ability checks and carrying capacity.
+        return []
 
 
 # The benefits that take a Bonus Action or a Reaction; the rest ride on a hit.
@@ -216,3 +254,55 @@ class GiantAncestry(Feature):
 
     def number_of_uses(self, character: CharacterView) -> int:
         return character.get_proficiency_bonus()
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        on_hit = (
+            "Right after you hit a target with an attack roll and deal damage to it."
+        )
+        effect = {
+            GiantAncestryType.CLOUD_GIANT: CombatEffect(
+                name="Cloud's Jaunt",
+                notes=(
+                    "You teleport up to 30 feet to an unoccupied space you can"
+                    " see: nothing happens to the targets.",
+                ),
+            ),
+            GiantAncestryType.FIRE_GIANT: CombatEffect(
+                name="Fire's Burn",
+                damage=(CombatDamage("1d10", DamageType.FIRE),),
+                notes=(on_hit,),
+            ),
+            GiantAncestryType.FROST_GIANT: CombatEffect(
+                name="Frost's Chill",
+                damage=(CombatDamage("1d6", DamageType.COLD),),
+                conditions=(
+                    CombatCondition(
+                        "Frost's Chill", until=(TurnEdge.START, TurnOf.SOURCE)
+                    ),
+                ),
+                notes=(on_hit, "Its Speed is 10 feet less while it has the badge."),
+            ),
+            GiantAncestryType.HILL_GIANT: CombatEffect(
+                name="Hill's Tumble",
+                conditions=(CombatCondition(Condition.PRONE),),
+                notes=(
+                    "Right after you hit a Large or smaller creature with an"
+                    " attack roll and deal damage to it.",
+                ),
+            ),
+            GiantAncestryType.STONE_GIANT: CombatEffect(
+                name="Stone's Endurance",
+                notes=(
+                    "When you take damage: take 1d12"
+                    f" {'+' if character.get_constitution_modifier() >= 0 else '-'}"
+                    f" {abs(character.get_constitution_modifier())} off it before"
+                    " you apply it. Nothing happens to the targets.",
+                ),
+            ),
+            GiantAncestryType.STORM_GIANT: CombatEffect(
+                name="Storm's Thunder",
+                damage=(CombatDamage("1d8", DamageType.THUNDER),),
+                notes=("To a creature within 60 feet that just damaged you.",),
+            ),
+        }[self.giant_ancestry_type]
+        return [effect]

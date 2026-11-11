@@ -5,6 +5,7 @@ from Model.Content.Improvements import DamageResistance, GrantSense
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.View import CharacterView
 from Model.Content.FeatureText import Block, Facts, Paragraph, Table
+from Model.Content.CombatEffect import CombatEffect
 
 SPEED = 30  # Given by your species
 SIZE = CreatureSize.MEDIUM  # Given by your species
@@ -27,6 +28,10 @@ class FiendishResistance(Feature):
     def get_description(self, character: CharacterView) -> str:
         return f"You have Resistance to {self.damage_type} damage."
 
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # Its Resistance is its owner's own.
+        return []
+
 
 class Darkvision(Feature):
     def __init__(self, distance: int):
@@ -42,6 +47,10 @@ class Darkvision(Feature):
 
     def get_description(self, character: CharacterView) -> str:
         return f"You have Darkvision with a range of {self.distance} feet."
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # A sense: nothing to put on a creature.
+        return []
 
 
 class FiendishLegacy(Feature):
@@ -101,6 +110,23 @@ class FiendishLegacy(Feature):
             text += "You can cast each of these spells once without a spell slot, and you regain the ability to cast it in that way when you finish a Long Rest. You can also cast them using any spell slots you have of the appropriate level.\n"
         return text
 
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # The free castings of its level 1 and 2 spells; the spells (and the
+        # cantrip) are in the picker as spells.
+        spells = []
+        if self.spell_1 is not None and character.character_level >= 3:
+            spells.append(self.spell_1.value)
+        if self.spell_2 is not None and character.character_level >= 5:
+            spells.append(self.spell_2.value)
+        return [
+            CombatEffect(
+                name=f"{spell} (Fiendish Legacy)",
+                spell=spell,
+                notes=("Without a spell slot, once per Long Rest.",),
+            )
+            for spell in spells
+        ]
+
 
 class OtherworldlyPresence(Feature):
     def __init__(self):
@@ -121,3 +147,7 @@ class OtherworldlyPresence(Feature):
 
     def get_description(self, character: CharacterView) -> str:
         return "You know the Thaumaturgy cantrip. When you cast it with this trait, the spell uses the same spellcasting ability you use for your Fiendish Legacy trait."
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # Thaumaturgy, in the picker as a spell.
+        return []

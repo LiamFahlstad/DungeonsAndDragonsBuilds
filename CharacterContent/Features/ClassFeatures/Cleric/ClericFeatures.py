@@ -95,6 +95,10 @@ class Spellcasting(Feature):
     def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # Its spells are in the picker as spells.
+        return []
+
 
 class DivineOrderProtector(Feature):
     def __init__(self):
@@ -118,6 +122,10 @@ class DivineOrderProtector(Feature):
     def get_description(self, character: CharacterView) -> str:
         description = "Trained for battle, you gain proficiency with Martial weapons and training with Heavy armor."
         return description
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # Weapon proficiency and armor training.
+        return []
 
 
 class DivineOrderThaumaturge(Feature):

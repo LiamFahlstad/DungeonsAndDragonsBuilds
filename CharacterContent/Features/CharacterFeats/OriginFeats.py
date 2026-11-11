@@ -579,6 +579,11 @@ class TavernBrawler(OriginFeat):
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # Riders on its owner's Unarmed Strikes (a weapon row): the reroll
+        # and the push are the GM's.
+        return []
+
 
 class Tough(OriginFeat):
     def __init__(self):

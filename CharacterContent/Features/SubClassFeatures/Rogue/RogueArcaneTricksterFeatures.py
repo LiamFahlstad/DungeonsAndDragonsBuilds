@@ -17,6 +17,7 @@ from Core.Definitions import Ability
 from CharacterContent.Features.SubClassFeatures.ThirdCasterSpellcasting import (
     spellcasting_table,
 )
+from Model.Content.CombatEffect import CombatEffect
 
 
 class Spellcasting(Feature):
@@ -68,6 +69,10 @@ class Spellcasting(Feature):
     def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # Its spells are in the picker as spells.
+        return []
+
 
 class MageHandLegerdemain(Feature):
     def __init__(self):
@@ -100,6 +105,10 @@ class MageHandLegerdemain(Feature):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.OBJECT
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # It changes how Mage Hand is cast and used.
+        return []
 
 
 class MagicalAmbush(Feature):

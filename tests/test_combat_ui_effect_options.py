@@ -418,21 +418,22 @@ def test_a_players_weapon_matches_the_sheet():
 
 
 def test_a_features_uses_show_and_running_out_is_said():
+    # Divine Sense is a use of Channel Divinity, and counts its uses.
     edmund = combatant_from_character(Edmund().build())
     divinity = next(
         o
         for o in dict(effect_options(edmund, []))[FEATURES]
-        if o.name == "Channel Divinity"
+        if o.name == "Divine Sense"
     )
     assert divinity.counts_uses
-    assert divinity.row_text.startswith("Channel Divinity  2/2")
+    assert divinity.row_text.startswith("Divine Sense  2/2")
     edmund["feature_uses_used"] = {"Channel Divinity": 2}
     spent = next(
         o
         for o in dict(effect_options(edmund, []))[FEATURES]
-        if o.name == "Channel Divinity"
+        if o.name == "Divine Sense"
     )
-    assert spent.row_text.startswith("Channel Divinity  0/2")
+    assert spent.row_text.startswith("Divine Sense  0/2")
     assert "No uses left" in spent.note
     assert not spent.is_unavailable  # still the GM's to pick
 

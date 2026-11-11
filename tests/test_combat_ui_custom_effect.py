@@ -57,6 +57,7 @@ from Combat.CombatUIQt.saves import (
     save_modifier,
 )
 from Core.Definitions import Condition, DamageType
+from Model.Content.Feature import Feature
 from Model.Creatures.Combatants import DamageTypeEntry, Visibility
 from tests._combat_ui import answer_out_of_resources, make_ui, open_dialog
 
@@ -2471,7 +2472,7 @@ def test_a_feature_with_no_uses_left_asks_first(paladin, monkeypatch):
     ui, edmund, _ = paladin
     edmund["feature_uses_used"] = {"Channel Divinity": 99}
     dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
-    _pick(dlg, "Channel Divinity")
+    _pick(dlg, "Divine Sense")
     asked = answer_out_of_resources(monkeypatch, yes=True)
     _apply(dlg)
     assert "Channel Divinity: no uses left" in asked[0]
@@ -2525,7 +2526,7 @@ def test_an_upcast_says_its_level(paladin, monkeypatch):
 def test_a_picked_feature_is_used_with_nothing_else(paladin, monkeypatch):
     ui, edmund, _ = paladin
     dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
-    _pick(dlg, "Channel Divinity")
+    _pick(dlg, "Divine Sense")
     _apply(dlg)
     assert edmund["feature_uses_used"] == {"Channel Divinity": 1}
     assert edmund["stats"]["features_enabled_by_name"] == {"Channel Divinity": 1}
@@ -2665,11 +2666,11 @@ PARALYZING_TOUCH = {
 
 
 def test_retyping_the_name_drops_the_pick(paladin, monkeypatch):
-    """The GM picked Channel Divinity, then typed in something else: that's
+    """The GM picked Divine Sense, then typed in something else: that's
     their own effect, so Channel Divinity isn't used."""
     ui, edmund, tiger = paladin
     dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
-    _pick(dlg, "Channel Divinity")
+    _pick(dlg, "Divine Sense")
     name = dlg.findChild(QLineEdit, "effectName")
     name.setText("Poison Spray")
     name.textEdited.emit("Poison Spray")
@@ -2685,17 +2686,24 @@ def test_retyping_the_name_drops_the_pick(paladin, monkeypatch):
 def test_a_pick_filling_the_name_keeps_it(paladin, monkeypatch):
     ui, edmund, _ = paladin
     dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
-    _pick(dlg, "Channel Divinity")
-    dlg.findChild(QLineEdit, "effectName").textEdited.emit("Channel Divinity")
+    _pick(dlg, "Divine Sense")
+    dlg.findChild(QLineEdit, "effectName").textEdited.emit("Divine Sense")
     _apply(dlg)
     assert edmund["feature_uses_used"] == {"Channel Divinity": 1}
 
 
 def test_a_passive_feature_cant_be_applied_by_itself(paladin, monkeypatch):
-    ui, *_ = paladin
+    ui, edmund, _ = paladin
+    # One always on and not described: no uses, no action, nothing to apply
+    # (Edmund's own such features all say they have nothing to apply).
+    edmund["_feature_objects"] = [
+        *edmund["_feature_objects"],
+        Feature(name="Plain Feature", origin="Test"),
+    ]
     dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
     options = [row.data(0, Qt.ItemDataRole.UserRole) for row in _rows(dlg)]
     passive = next(o for o in options if o.kind == "feature" and not o.is_tracked)
+    assert passive.name == "Plain Feature"
     _pick(dlg, passive.name)
     _apply(dlg)
     assert ui.history == []

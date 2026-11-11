@@ -9,6 +9,7 @@ from Model.Content.Feature import (
 from Core.Definitions import CharacterClass
 from Model.View import CharacterView
 from Model.Content.FeatureText import Block, Facts, Paragraph, Table
+from Model.Content.CombatEffect import CombatEffect, CombatHitPoints, with_bonus
 
 
 class FightingStyle(Feature):
@@ -35,6 +36,10 @@ class FightingStyle(Feature):
             "Whenever you gain a Fighter level, you can replace the feat you chose with a different Fighting Style feat."
         )
         return description
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # The chosen Fighting Style is a feat of its own.
+        return []
 
 
 class SecondWind(Feature):
@@ -92,6 +97,15 @@ class SecondWind(Feature):
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        level = character.get_class_level(CharacterClass.FIGHTER)
+        return [
+            CombatEffect(
+                healing=CombatHitPoints(with_bonus("1d10", level)),
+                notes=("You regain them: pick yourself as the target.",),
+            )
+        ]
+
 
 class WeaponMastery(Feature):
     def __init__(self):
@@ -122,6 +136,10 @@ class WeaponMastery(Feature):
             "When you reach certain Fighter levels, you gain the ability to use the mastery properties of more kinds of weapons, as shown in the Weapon Mastery column of the Fighter Features table."
         )
         return description
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # Mastery properties ride on weapon attacks, which are weapon rows.
+        return []
 
 
 class ActionSurge(Feature):

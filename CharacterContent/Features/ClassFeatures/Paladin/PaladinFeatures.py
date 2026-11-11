@@ -15,6 +15,8 @@ from Model.Spells import FeatureSpell
 from Model.View import CharacterView
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.Content.FeatureText import Block, Facts, Option, Paragraph, dc_formula
+from Model.Content.CombatEffect import CombatCondition, EffectRoll
+from Core.Definitions import Condition
 
 
 class LayOnHands(Feature):
@@ -105,6 +107,10 @@ class WeaponMastery(Feature):
             "Whenever you finish a Long Rest, you can change the kinds of weapons you chose. For example, you could switch to using the mastery properties of Halberds and Flails."
         )
         return description
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # Mastery properties ride on weapon attacks, which are weapon rows.
+        return []
 
 
 class FightingStyle(Feature):
@@ -384,6 +390,44 @@ class ChannelDivinity(Feature):
     def number_of_uses(self, character: CharacterView) -> int:
         paladin_level = character.get_class_level(CharacterClass.PALADIN)
         return 3 if paladin_level >= 11 else 2
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # A subclass's options (Sacred Weapon, Vow of Enmity) are extensions
+        # of this feature and list their own uses of it.
+        effects = []
+        if "Divine Sense" in self.spells:
+            effects.append(
+                CombatEffect(
+                    name="Divine Sense",
+                    action_type=ActionType.BONUS_ACTION,
+                    notes=(
+                        "For 10 minutes you know the location and creature type of"
+                        " Celestials, Fiends and Undead within 60 feet, and sense"
+                        " consecrated or desecrated places and objects: nothing"
+                        " happens to the targets.",
+                    ),
+                )
+            )
+        if self._has_abjure_foes(character):
+            effects.append(
+                CombatEffect(
+                    name="Abjure Foes",
+                    roll=EffectRoll.SAVE,
+                    save_ability=Ability.WISDOM,
+                    conditions=(
+                        CombatCondition(Condition.FRIGHTENED, duration_seconds=60),
+                    ),
+                    action_type=ActionType.ACTION,
+                    notes=(
+                        f"Up to {max(1, character.get_charisma_modifier())}"
+                        " creatures you can see within 60 feet.",
+                        "It ends early on a creature that takes damage. While"
+                        " Frightened, on its turns it can move, or take an action,"
+                        " or a Bonus Action: only one of them.",
+                    ),
+                )
+            )
+        return effects
 
 
 class ExtraAttack(Feature):

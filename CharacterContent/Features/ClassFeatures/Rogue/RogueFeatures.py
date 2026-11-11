@@ -22,6 +22,8 @@ from Model.Content.CombatEffect import CombatDamage, CombatEffect
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.View import CharacterView
 from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table, dc_formula
+from Model.Content.CombatEffect import CombatCondition, TurnEdge, TurnOf
+from Model.Content.CombatModifiers import D20Mode, D20Test, RollMode
 
 
 class Expertise(Feature):
@@ -157,6 +159,10 @@ class ThievesCant(Feature):
         description = "You picked up various languages in the communities where you plied your roguish talents. You know Thieves' Cant and one other language of your choice, which you choose from the language tables in Chapter 2."
         return description
 
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # Languages.
+        return []
+
 
 class WeaponMastery(Feature):
     def __init__(self):
@@ -185,6 +191,10 @@ class WeaponMastery(Feature):
         )
         return description
 
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # Mastery properties ride on weapon attacks, which are weapon rows.
+        return []
+
 
 class CunningAction(Feature):
     def __init__(self):
@@ -210,6 +220,11 @@ class CunningAction(Feature):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # Dash, Disengage or Hide, its owner's own actions; Hide's
+        # Invisible needs its Stealth check, so it's given by hand.
+        return []
 
 
 class SteadyAim(Feature):
@@ -239,6 +254,29 @@ class SteadyAim(Feature):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        return [
+            CombatEffect(
+                conditions=(
+                    CombatCondition(
+                        "Steady Aim",
+                        until=(TurnEdge.START, TurnOf.SOURCE),
+                        modifiers=(
+                            D20Mode(
+                                (D20Test.ATTACK_ROLL,),
+                                RollMode.ADVANTAGE,
+                                when="it's its next attack roll this turn",
+                            ),
+                        ),
+                    ),
+                ),
+                notes=(
+                    "Only if you haven't moved this turn: pick yourself as the"
+                    " target. Your Speed is 0 until the end of the turn.",
+                ),
+            )
+        ]
 
 
 class CunningStrike(Feature):

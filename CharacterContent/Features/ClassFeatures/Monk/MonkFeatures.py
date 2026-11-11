@@ -24,6 +24,19 @@ from Model.View import CharacterView
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Core.Rules import MAX_LEVEL
 from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table, dc_formula
+from Model.Content.CombatEffect import (
+    CombatCondition,
+    CombatDamage,
+    CombatEffect,
+    CombatHitPoints,
+    CombatInstances,
+    EffectRoll,
+    TurnEdge,
+    TurnOf,
+    with_bonus,
+)
+from Model.Content.CombatModifiers import AttacksAgainst, D20Mode, D20Test, RollMode
+from Core.Definitions import DamageType
 
 LEVEL_TO_MARTIAL_ARTS_DIE = {
     1: WeaponDamageRolls.D6,
@@ -77,6 +90,22 @@ MARTIAL_ARTS_DIE = FeatureDice.from_function(
     lambda level: LEVEL_TO_MARTIAL_ARTS_DIE[level].value,
     scales_with=CharacterClass.MONK,
 )
+
+
+def unarmed_strike(character: CharacterView) -> tuple[int, str]:
+    """The attack bonus and damage of an Unarmed Strike with Martial Arts:
+    the Martial Arts die, and the better of Strength and Dexterity
+    (Dexterous Attacks)."""
+    modifier = max(
+        character.get_strength_modifier(), character.get_dexterity_modifier()
+    )
+    bonus = modifier + character.get_proficiency_bonus()
+    return bonus, with_bonus(MARTIAL_ARTS_DIE.at(character), modifier)
+
+
+def _rolls_of(die: str, times: int) -> str:
+    """`times` rolls of a one-die roll: _rolls_of("1d8", 2) == "2d8"."""
+    return f"{times}d{die.split('d')[1]}"
 
 
 class MartialArts(Feature):
@@ -135,6 +164,22 @@ class MartialArts(Feature):
             "    * Dexterous Attacks. You can use your Dexterity modifier instead of your Strength modifier for the attack and damage rolls of your Unarmed Strikes and Monk weapons. In addition, when you use the Grapple or Shove option of your Unarmed Strike, you can use your Dexterity modifier instead of your Strength modifier to determine the save DC."
         )
         return description
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        bonus, dice = unarmed_strike(character)
+        return [
+            CombatEffect(
+                name="Bonus Unarmed Strike",
+                roll=EffectRoll.ATTACK,
+                attack_bonus=bonus,
+                damage=(CombatDamage(dice, DamageType.BLUDGEONING),),
+                action_type=ActionType.BONUS_ACTION,
+                notes=(
+                    "While you're unarmed or wielding only Monk weapons, and"
+                    " wear no armor or Shield.",
+                ),
+            )
+        ]
 
 
 class UnarmoredDefenseText(Feature):
@@ -211,6 +256,11 @@ class MonksFocus(Feature):
         monk_level = character.get_class_level(Definitions.CharacterClass.MONK)
         return LEVEL_TO_FOCUS_POINTS.get(monk_level, 0)
 
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # A pool of Focus Points: its extensions (Flurry of Blows, ...) are
+        # the ways to spend them, each with rows of its own.
+        return []
+
 
 class FlurryOfBlows(Feature):
     def __init__(self):
@@ -240,6 +290,18 @@ class FlurryOfBlows(Feature):
         if monk_level <= MAX_LEVEL:
             return "You can expend 1 Focus Point to make three Unarmed Strikes as a Bonus Action."
         raise ValueError(f"Invalid monk level: {monk_level}")
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        bonus, dice = unarmed_strike(character)
+        monk_level = character.get_class_level(Definitions.CharacterClass.MONK)
+        return [
+            CombatEffect(
+                roll=EffectRoll.ATTACK,
+                attack_bonus=bonus,
+                damage=(CombatDamage(dice, DamageType.BLUDGEONING),),
+                instances=CombatInstances(3 if monk_level >= 10 else 2, noun="strike"),
+            )
+        ]
 
 
 class PatientDefense(Feature):
@@ -277,6 +339,41 @@ class PatientDefense(Feature):
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        monk_level = character.get_class_level(Definitions.CharacterClass.MONK)
+        # "two rolls of your Martial Arts die" (from Monk level 10).
+        temp_hp = None
+        if monk_level >= 10:
+            temp_hp = CombatHitPoints(_rolls_of(MARTIAL_ARTS_DIE.at(character), 2))
+        return [
+            CombatEffect(
+                name="Patient Defense: Disengage and Dodge",
+                temp_hp=temp_hp,
+                conditions=(
+                    CombatCondition(
+                        "Dodge",
+                        until=(TurnEdge.START, TurnOf.SOURCE),
+                        modifiers=(
+                            AttacksAgainst(
+                                RollMode.DISADVANTAGE, when="it can see the attacker"
+                            ),
+                            D20Mode(
+                                (D20Test.SAVING_THROW,),
+                                RollMode.ADVANTAGE,
+                                (Ability.DEXTERITY,),
+                            ),
+                        ),
+                    ),
+                ),
+                notes=(
+                    "Pick yourself as the target. Without the Focus Point it's"
+                    " the Disengage action alone.",
+                    "The Dodge ends early if you have the Incapacitated condition"
+                    " or your Speed is 0.",
+                ),
+            )
+        ]
+
 
 class StepOfTheWind(Feature):
     def __init__(self):
@@ -312,6 +409,25 @@ class StepOfTheWind(Feature):
         if monk_level <= MAX_LEVEL:
             return "You can take the Dash action as a Bonus Action. Alternatively, you can expend 1 Focus Point to take both the Disengage and Dash actions as a Bonus Action, and your jump distance is doubled for the turn. When you expend a Focus Point to use Step of the Wind, you can choose a willing creature within 5 feet of yourself that is Large or smaller. You move the creature with you until the end of your turn. The creature's movement doesn't provoke Opportunity Attacks."
         raise ValueError(f"Invalid monk level: {monk_level}")
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        monk_level = character.get_class_level(Definitions.CharacterClass.MONK)
+        notes = [
+            "You take the Disengage and Dash actions, and your jump distance is"
+            " doubled this turn: nothing happens to the targets. Without the"
+            " Focus Point it's the Dash action alone.",
+        ]
+        if monk_level >= 10:
+            notes.append(
+                "A willing Large or smaller creature within 5 feet can move with"
+                " you until the end of your turn, without provoking Opportunity"
+                " Attacks."
+            )
+        return [
+            CombatEffect(
+                name="Step of the Wind: Disengage and Dash", notes=tuple(notes)
+            )
+        ]
 
 
 LEVEL_TO_UNARMORED_MOVEMENT_BONUS = {
@@ -415,6 +531,20 @@ class UncannyMetabolism(Feature):
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        monk_level = character.get_class_level(Definitions.CharacterClass.MONK)
+        return [
+            CombatEffect(
+                healing=CombatHitPoints(
+                    with_bonus(MARTIAL_ARTS_DIE.at(character), monk_level)
+                ),
+                notes=(
+                    "When you roll Initiative: pick yourself as the target. You"
+                    " also regain all expended Focus Points: reset them by hand.",
+                ),
+            )
+        ]
+
 
 class DeflectAttacks(Feature):
     def __init__(self):
@@ -483,6 +613,51 @@ class DeflectAttacks(Feature):
             )
             return description
 
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        monk_level = character.get_class_level(Definitions.CharacterClass.MONK)
+        dexterity = character.get_dexterity_modifier()
+        reduction = with_bonus("1d10", dexterity + monk_level)
+        # Deflect Energy (Monk level 13) takes any damage type.
+        if monk_level >= 13:
+            types = tuple(DamageType)
+            hits = "an attack roll hits you"
+        else:
+            types = (DamageType.BLUDGEONING, DamageType.PIERCING, DamageType.SLASHING)
+            hits = (
+                "an attack roll hits you and its damage includes Bludgeoning,"
+                " Piercing or Slashing damage"
+            )
+        return [
+            CombatEffect(
+                name="Deflect Attacks",
+                spends_use=False,
+                notes=(
+                    f"When {hits}: take {reduction} off the attack's total damage"
+                    " before you apply it. Nothing happens to the targets.",
+                ),
+            ),
+            CombatEffect(
+                name="Deflect Attacks: redirect",
+                roll=EffectRoll.SAVE,
+                save_ability=Ability.DEXTERITY,
+                damage=(
+                    CombatDamage(
+                        with_bonus(
+                            _rolls_of(MARTIAL_ARTS_DIE.at(character), 2), dexterity
+                        ),
+                        None,
+                        types,
+                    ),
+                ),
+                notes=(
+                    f"Only once Deflect Attacks ({reduction}) brings the attack's"
+                    " damage to 0: one creature you can see within 5 feet (a melee"
+                    " attack), or within 60 feet and not behind Total Cover (a"
+                    " ranged one). The damage is the attack's type.",
+                ),
+            ),
+        ]
+
 
 class SlowFall(Feature):
     def __init__(self):
@@ -513,6 +688,10 @@ class SlowFall(Feature):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # It reduces its owner's own falling damage, dealt by hand.
+        return []
 
 
 class ExtraAttack(Feature):

@@ -7,6 +7,7 @@ from CharacterContent.Spells.SpellLists import DruidLevel0Spells
 from Model.Spells import FeatureSpell
 from Model.View import CharacterView
 from Model.Content.FeatureText import Block, Facts, Option, Paragraph, dc_formula
+from Model.Content.CombatEffect import CombatCondition, CombatEffect, EffectRoll
 
 LEVEL_TO_MARTIAL_ARTS_DIE = {
     1: WeaponDamageRolls.D6,
@@ -101,6 +102,37 @@ class ElementalAttunement(Feature):
         )
         return description
 
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # It spends a Focus Point (Monk's Focus, its parent).
+        return [
+            CombatEffect(
+                conditions=(
+                    CombatCondition(
+                        "Elemental Attunement",
+                        duration_seconds=10 * 60,  # or until Incapacitated
+                    ),
+                ),
+                notes=(
+                    "At the start of your turn: pick yourself as the target. It"
+                    " ends early if you have the Incapacitated condition.",
+                    "Your Unarmed Strikes have 10 feet more reach, and a hit can"
+                    " deal Acid, Cold, Fire, Lightning or Thunder damage instead"
+                    " of its type.",
+                ),
+            ),
+            CombatEffect(
+                name="Elemental Strikes: move",
+                roll=EffectRoll.SAVE,
+                save_ability=Ability.STRENGTH,
+                spends_use=False,
+                notes=(
+                    "After an Unarmed Strike deals Acid, Cold, Fire, Lightning or"
+                    " Thunder damage while Elemental Attunement is on. On a failed"
+                    " save, move the target up to 10 feet toward or away from you.",
+                ),
+            ),
+        ]
+
 
 class ManipulateElements(Feature):
     def __init__(self):
@@ -126,6 +158,10 @@ class ManipulateElements(Feature):
     def get_description(self, character: CharacterView) -> str:
         description = "You know the Elementalism spell. Wisdom is your spellcasting ability for it."
         return description
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # Elementalism, in the picker as a spell.
+        return []
 
 
 class ElementalBurst(Feature):
