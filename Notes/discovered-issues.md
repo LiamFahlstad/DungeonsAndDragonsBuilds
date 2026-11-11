@@ -414,16 +414,6 @@ The GM marks a creature Invisible through the visibility combo (char['visibility
 **History**
 - 2026-11-09 rules-checker: found
 
-### DI-069 · A monster ability's combat effects are written to the encounter log with dataclasses.asdict, which drops a badge modifier's type, so one with modifiers can't be read back
-- **Status:** open
-- **Area:** combat-simulator
-- **Where:** `Combat/EncounterLogs.py:73 LogJSONEncoder.default`, `Combat/CombatUIQt/monster_actions.py:124`
-
-Plan step 3.3 gave CombatCondition a modifiers tuple (Model/Content/CombatModifiers.py types). CombatEffect.to_dict writes each as {'type': 'D20Bonus', ...}; LogJSONEncoder asdict()s a MonsterAbility, so its combat_effects' modifiers lose 'type', and CombatEffect.from_dict (monster_actions.py:124) refuses them ('type None is not one of ...'). No monster ability gives a badge with modifiers yet, so nothing fails today. Fix: in LogJSONEncoder, write a MonsterAbility's combat_effects as [e.to_dict() for e in o.combat_effects] (from_dict reads both forms). Reproduce: CombatEffect.from_dict(dataclasses.asdict(Bless().combat_effects()[0])).
-
-**History**
-- 2026-11-09 combat-simulator: found
-
 ### DI-070 · SpellClassConverter's _IMPORTS has no modifier names (D20Bonus, D20Test, ArmorClass, ...), so spell_mechanics.py add can't write a badge with modifiers into a module that doesn't import them yet
 - **Status:** open
 - **Area:** spell-mechanics
@@ -857,6 +847,17 @@ Cover.md: Half Cover gives +2 to AC and Dexterity saving throws, Three-Quarters 
 - 2026-11-09 main-session: found
 - 2026-11-09 combat-simulator: marked in-progress; Plan step 3.3: cover as a source of modifiers (ArmorClass and a D20Bonus on Dexterity saves)
 - 2026-11-09 combat-simulator: marked fixed; Plan step 3.3 (R38), uncommitted in worktree agent-a30cb9221e9d3c056: COVER_RULES in Combat/Effects/modifiers.py gives each cover an ArmorClass and a D20Bonus on Dexterity saves (most protective only); roll_save adds it ('Half Cover: +2'), the dialog's row reads 'DEX +5 (cover)'.
+
+### DI-069 · A monster ability's combat effects are written to the encounter log with dataclasses.asdict, which drops a badge modifier's type, so one with modifiers can't be read back
+- **Status:** fixed · 2026-11-11 · uncommitted
+- **Area:** combat-simulator
+- **Where:** `Combat/EncounterLogs.py:73 LogJSONEncoder.default`, `Combat/CombatUIQt/monster_actions.py:124`
+
+Plan step 3.3 gave CombatCondition a modifiers tuple (Model/Content/CombatModifiers.py types). CombatEffect.to_dict writes each as {'type': 'D20Bonus', ...}; LogJSONEncoder asdict()s a MonsterAbility, so its combat_effects' modifiers lose 'type', and CombatEffect.from_dict (monster_actions.py:124) refuses them ('type None is not one of ...'). No monster ability gives a badge with modifiers yet, so nothing fails today. Fix: in LogJSONEncoder, write a MonsterAbility's combat_effects as [e.to_dict() for e in o.combat_effects] (from_dict reads both forms). Reproduce: CombatEffect.from_dict(dataclasses.asdict(Bless().combat_effects()[0])).
+
+**History**
+- 2026-11-09 combat-simulator: found
+- 2026-11-11 claude-opus-5-5: marked fixed; LogJSONEncoder writes a MonsterAbility's combat_effects with CombatEffect.to_dict at any depth (Combat/EncounterLogs.py _encode); test_a_badge_with_modifiers_comes_back_from_the_log
 
 ### DI-071 · A monster's Concentration save rolled by the simulator ignores its modifiers (Bless's 1d4, Exhaustion's note)
 - **Status:** fixed · 2026-11-10 · uncommitted

@@ -335,6 +335,142 @@ suggested.
     row (`CombatEffect.trigger`); a declined prompt logs a GM-only line.
     Built in 6.1-6.3 (R66-R73), with the setting as one checkbox (R71).
 
+13. **Thirty open questions as suggested** (the user, 2026-11-11: "resolve
+    30 of the easier questions, choosing your suggestion"). Each says when
+    it's built. **Built 2026-11-11** (R99-R105): Q7, Q8, Q13, Q23, Q27, Q34,
+    Q35, Q37; the rest are answered by the decision alone or wait for what
+    they name. The seven left open here were decided next (Decision 14).
+    - **Q4.** A cast spell's notes all come along (Jolt to Life shows Spare
+      the Dying's range). Revisit only if a row gets noisy.
+    - **Q5.** Hook notes keep following the sheet's feature order. Add a
+      shuffled-order test once a second hook on the same source exists.
+    - **Q6.** Agonizing Blast, Empowered Evocation, Potent Cantrip and Potent
+      Spellcasting become `adjust_combat_effect` hooks when a party has
+      them, not before.
+    - **Q7.** **Built** (R99). An `ends_conditions: tuple[str, ...]` field on `CombatEffect`,
+      which the dialog applies as "take these off each target" (one
+      `_remove_condition_from` per target). It gets a small step of its own
+      and follows the field checklist. Lay on Hands' Poisoned, Lesser
+      Restoration, Remove Curse and Calm Emotions then drop their notes.
+    - **Q8.** **Built** (R100). Paladin's Smite gets `FeatureUses(1, regain_all_on="long
+      rest")`, so the picker counts its free casting. This adds a use box to
+      its sheet card: read the snapshot diff before regenerating. (Q36,
+      Decision 14, does the same for the other free castings.)
+    - **Q9.** Times still splits across targets by applying again. A
+      per-target count comes only if the GM asks.
+    - **Q10.** Repeated saves (Times with a saving throw) wait until a
+      described effect uses one. Then it gets a test.
+    - **Q13.** **Built** before this (da650afe): `is_command_line_tool`. The converter stays beside `SpellGenerator.py`, and
+      `review-house-rules`' debug-print check learns that a module with a
+      `__main__` block may print.
+    - **Q18.** The badge shows no `source` or `caster`, since the log already
+      says it. Revisit if the GM asks.
+    - **Q21.** In Phase 4's tooling, the picker writes out a badge's
+      modifiers as a generated note (like R14's `when`), the rubric gets a
+      `modifiers` line, and Bless's hand-written sentence goes (one picker
+      golden change per Bless row).
+    - **Q22.** A badge typed by hand in the Custom Condition dialog gets no
+      modifiers. Revisit if the GM asks.
+    - **Q23.** **Built** (R101; DI-069 fixed). The encounter log's encoder uses `to_dict()` for a monster
+      ability's `combat_effects` (DI-069). Fix it before the first monster
+      ability gives a badge with modifiers.
+    - **Q24.** Moving a mark (Hunter's Mark, Hex). When a target carrying a
+      living caster's mark drops to 0 HP, a reminder says "Hanna can move
+      Hunter's Mark (a Bonus Action)". A card's right-click "Move Hunter's
+      Mark here" moves the record (caster, modifiers, concentration link and
+      the active spell's `applied` row) and spends the Bonus Action. Its own
+      small step, alongside 6.6's `DROPS_TO_ZERO`.
+    - **Q25.** Hex is a variant row per ability (R15). Each "Hex" badge has
+      `ExtraDamageFrom("1d6", NECROTIC)` and `D20Mode((ABILITY_CHECK,),
+      DISADVANTAGE, (ability,))`; the second part is only a reminder until
+      the simulator rolls ability checks. A Hex moved to a new target keeps
+      its variant.
+    - **Q26.** Rage's damage is `ExtraDamageOnHit` with `damage_type=None`
+      (meaning the type of the hit's first part) and `AttackKind.STRENGTH`,
+      which a weapon pick can tell from the weapon's ability. A Finesse
+      weapon is the GM's call, through a `when`. Built with the Barbarian's
+      features.
+    - **Q27.** **Built** (R102). After an attack roll typed into the main window hits, the
+      status line adds "+1d6 Force (Pirate's Hunter's Mark)", as the
+      dialog's target rows do.
+    - **Q28.** The extra damage's log line stays GM-only. If players ask,
+      `public_log.py` reads it as part of the hit (kind "hit-extra").
+    - **Q29.** The caster's active spell remembers the slot it was cast with
+      (DI-078). A `spends_use=False` row fills its dice at that level, with
+      the slot box left at "No spell slot".
+    - **Q31.** Spirit Guardians keeps asking about every enemy of its
+      caster. A right-click "Not in Spirit Guardians" comes only if the GM
+      finds it noisy.
+    - **Q32.** A cast that gives modifiers to a hand-typed badge of the same
+      name takes that badge over: an `applied` row and a concentration link
+      (DI-079).
+    - **Q33.** Monsters dropped when the next encounter loads end their
+      concentration through `_end_linked_effects` (in `encounters_mixin`).
+      Built once a monster gives a party member a concentration badge in
+      play.
+    - **Q34.** **Built** (R103). A `targets: CombatTargets(count, upcast=1)` field (Command,
+      Heroism, Tasha's Hideous Laughter, Bless, Charm Person). The dialog
+      shows "Targets: 2 at level 2" next to the slot box and warns when more
+      targets are picked. Until it's built, the count stays a note.
+    - **Q35.** **Built** (R104). "Pick yourself as the target": the picker reads the source's
+      own `target()` (`FeatureTarget.SELF`) or a `targets_self` field on the
+      effect, and the dialog picks the user as the only target. A row with
+      nothing to apply needs no target at all. The "pick yourself" and
+      "nothing happens to the targets" sentences then go.
+    - **Q37.** **Built** (R105). A third `TurnOf`, `CURRENT`, which ends when the current turn
+      ends (Sentinel's Halt, Steady Aim's Speed 0).
+    - **Q46.** `AtTurnStart` / `AtTurnEnd` stay as they are and are not
+      rewritten as `CombatTrigger` events.
+    - **Q48.** `ask_triggers` stays one checkbox. A "pop-up / buttons / off"
+      combo box (`SettingInfo` choices) comes only if the buttons turn out
+      noisy too.
+    - **Q49.** A rider's extra damage is read into the rider row (an ASK
+      row, since it has a `when`), once a fired row's damage is doubled on a
+      Critical Hit (passing on `AttackOutcome.critical`). Moves and extra
+      attacks stay the GM's.
+    - **Q50.** A typed hit keeps asking about every rider of the attacker. A
+      "Which attack hit?" choice in the pop-up comes only if it turns out
+      noisy.
+    - **Q53.** Hit Point maximum reductions from a monster's hit (a Wight's
+      Life Drain): a Phase 6 rider row gives a badge with
+      `HitPointMaximum(-amount)`, the amount being
+      `AttackOutcome.damage_dealt`. The badge has no timer, and a Long Rest
+      takes it off.
+    - **Q55.** An `AtEnd(effect)` modifier beside `AtTurnStart` /
+      `AtTurnEnd`. It is used as the record ends (by hand, timer or
+      Concentration, R54), inside that step's undo, so Haste's badge gives
+      its lethargy row itself.
+
+14. **The last open questions as suggested** (the user, 2026-11-11: "fix
+    them now", after Decision 13 left seven open). None is built yet. Q11
+    needed no decision: S.4 did it as suggested (R24-R26).
+    - **Q14.** A `Sourcebook` enum with one member per book. The scrapers
+      map every scraped spelling onto it ("Forgotten Realms - Heroes of
+      Faerun" and its accented twin, "Player's Handbook 2024" and "... (BR)"),
+      and `SpellRules.source` becomes the enum. Done with a re-scrape, not
+      in the converter.
+    - **Q16.** Invisible's Advantage and Disadvantage count by default, with
+      "unless it can see it" as the note the GM overrides with the mode
+      buttons. Built together with DI-068, which makes the simulator see the
+      Invisible condition at all.
+    - **Q30.** `WhenHit` damage to an attacker (Armor of Agathys, Fire
+      Shield) is a `TAKES_DAMAGE` trigger on a badge (`OnTrigger`), fired
+      by `_deal_damage` from an attack, and a prompt when it depends on
+      reach ("within 5 feet"). Step 6.5.
+    - **Q36.** *Not buildable as written; back in Open questions as Q56.*
+      Every free casting gets its own use count, as Paladin's Smite
+      does (Q8): `FeatureUses(1, regain_all_on="long rest")` per spell of
+      Fey Touched and Fiendish Legacy. This changes their sheet cards, so
+      read the snapshot diff before regenerating.
+    - **Q38.** A weapon row adds its Weapon Mastery property's effect when
+      its owner has that mastery, as `HIT` / `MISS` triggers on the row
+      (Topple: a Constitution save or Prone; Vex: Advantage on the next
+      attack, as a badge). Step 6.7, not Phase 5.
+    - **Q39.** Reductions to damage being taken (Deflect Attacks' 1d10 + DEX
+      + Monk level, Stone's Endurance's 1d12 + CON) become a reaction prompt
+      (`HIT_BY`) as a hit lands on their owner. It rolls the reduction, takes
+      it off the damage and spends the Reaction. Step 6.5.
+
 ## Goal
 
 The Custom Effect dialog is what the GM uses for almost everything in a fight.
@@ -1823,62 +1959,74 @@ rebuilt), not a pile of modifiers.
   Enlarge/Reduce's rows, and Longstrider's (Obmar's, Hanna's) lost the
   Speed sentence from its note. Read against the spell texts.
 
+- **R99. `ends_conditions`** (Q7). `CombatEffect.ends_conditions`, names
+  (a `Condition` is kept as its name), not also given by the same effect.
+  The dialog takes each off the targets its conditions would land on (a
+  failed save, a hit, every target with no roll), through
+  `_remove_condition_from`, so it's logged, replayed and undone with the
+  Apply. A row with only that to do can be applied (the form's "Add a
+  saving throw ..." check counts it). Lay on Hands has a row "Lay on Hands:
+  end Poisoned"; Lesser Restoration a row per condition it can end
+  ("end one condition"). The row's summary says "ends Poisoned".
+- **R100. Paladin's Smite counts its free casting** (Q8):
+  `FeatureUses(max_uses=1, regain_all_on="long rest")`. Its sheet card got
+  a use box on all 16 Paladin builds (32 pages, the "Uses / Regain all on a
+  long rest." lines only, read with `snapshot_diff.py`); its picker row's
+  `counts_uses` is true. Regenerating the sheet goldens needs `-n 0`: the
+  parallel workers each rewrite `sheet_hashes.json` and lose updates.
+- **R101. The log encoder writes a monster ability's combat effects with
+  `to_dict`** (Q23, DI-069), at any depth (`_encode` in
+  `Combat/EncounterLogs.py` replaces `asdict`), so a badge's modifiers keep
+  their `type`. Other dataclasses encode as before.
+- **R102. A typed hit says its extra damage** (Q27): the Attack roll field's
+  status line adds "; +1d6 Force on a hit (Pirate's Hunter's Mark)" per hit
+  target, ", its dice twice" on a Critical Hit. Nothing is rolled for it
+  (Decision 4).
+- **R103. `targets: CombatTargets(count, upcast)`** (Q34), on 13 rows of 10
+  spells (Bless 3 +1, Aid 3, Command's five, Charm Person, Heroism,
+  Longstrider, Tasha's Hideous Laughter, Hold Person, Invisibility: 1 +1).
+  The dialog shows "Targets: 4 at level 2" under the slot box and, with too
+  many targeted, "(5 targeted: 1 too many)"; it doesn't refuse. Their "one
+  more target per slot level" sentences went.
+- **R104. `targets_self` is a field, not the source's `target()`** (Q35).
+  `target()` didn't fit: Sacred Weapon's is OBJECT, and Elemental Strikes'
+  is SELF while its save is against others. The dialog applies a
+  `targets_self` row to the source alone and leaves the GM's targets as
+  they were; the row's note starts "It goes on its user, whoever is
+  targeted." Set on Second Wind, Rage, Patient Defense, Uncanny
+  Metabolism, Steady Aim, Large Form, Elemental Attunement, Sacred Weapon,
+  False Life and See Invisibility, whose "pick yourself" sentences went.
+  Not built: opening the dialog with no target for a row with nothing to
+  apply (Divine Sense, Step of the Wind, ...); their notes stay.
+- **R105. `TurnOf.CURRENT`** (Q37): `(TurnEdge.END, TurnOf.CURRENT)`, which
+  `CombatCondition` refuses with START. `duration_entry` makes it the end of
+  the turn being taken (its first combatant's), and outside combat it
+  lasts until removed. The Custom Condition dialog offers "Until the end
+  of this turn". Steady Aim's badge uses it with `Speed(set_to=0)` (it was
+  until the start of the Rogue's next turn, with the Speed in a note), and
+  Sentinel's Halt is described (a "Halt" badge with `Speed(set_to=0)`;
+  Edmund's picker gained the row).
+
 ## Open questions (with suggestions)
 
+Q4-Q10, Q13, Q18, Q21-Q29, Q31-Q35, Q37, Q46, Q48-Q50, Q53 and Q55 are
+**decided as suggested** (Decision 13, 2026-11-11), and Q14, Q16, Q30,
+Q36, Q38 and Q39 too (Decision 14); all moved there. Q11 was done as
+suggested in S.4 (R24-R26): every spell is a class.
+
+- **Q56. Counting a feature's free castings one by one** (Q36 again). Fey
+  Touched (Misty Step and a level 1 spell) and Fiendish Legacy (a level 1
+  and a level 2 spell) each give two castings, once per Long Rest each,
+  but a feature has one `FeatureUses`, so Q36's "a `FeatureUses(1)` per
+  spell" can't be written. `FeatureUses(2)` would let one spell be cast
+  twice. *Suggestion:* count them in the combat UI, not on the sheet: a
+  row with `spends_use=True` and a new `CombatEffect.uses_per_long_rest=1`
+  counts under its own row name in `feature_uses_used` ("Misty Step (Fey
+  Touched)"), so `feature_lack` refuses a second casting until a Long Rest.
+  The sheet cards don't change.
+
 - **Q2** done in 4.1 (R57, R60).
-- **Q4. Should a cast spell's notes all come along?** (Jolt to Life shows
-  Spare the Dying's range.) *Suggestion:* keep it; revisit if a row gets noisy.
-- **Q5. Hook notes follow the sheet's feature order.** *Suggestion:* add a
-  shuffled-order test when a second hook on the same source exists.
-- **Q6. Agonizing Blast, Empowered Evocation, Potent Cantrip, Potent
-  Spellcasting** are natural hook users. *Suggestion:* write each when a party
-  has it.
-- **Q7. "Ends a condition" is now the most repeated note** (Lay on Hands'
-  Poisoned, and spells like Lesser Restoration, Remove Curse, Calm Emotions).
-  *Suggestion:* an `ends_conditions: tuple[str, ...]` field, applied by the
-  dialog as "take these off each target". Do it with Phase 3.1, since
-  `ActiveEffect` is what it removes. *Not done in 3.1:* it is a field on
-  `Model/Content/CombatEffect.py`, outside 3.1's scope. With 3.1 the dialog's
-  half is one call per target (`_remove_condition_from`, which drops the
-  record); suggest it as its own small step before 3.3.
-- **Q8. Paladin's Smite is once per Long Rest but has no `FeatureUses`,** so
-  the picker can't count its free casting. *Suggestion:* give it
-  `FeatureUses(1, regain_all_on="long rest")`; that adds a use box to its sheet
-  card, so read the snapshot diff before regenerating.
-- **Q9. Times splits across targets by applying again** (three rays: two at
-  one target, one at another means two Applies). *Suggestion:* good enough at
-  the table; a per-target count is only worth it if the GM asks.
-- **Q10. Repeated *saves* (Times with a saving throw)** are possible but no
-  described effect uses them yet. *Suggestion:* leave it until one does, then
-  test it.
-- **Q11. Convert all spells now, or as they're described?** All at once
-  (`--all`: about 900 classes over both editions) gives one source right
-  away and lets S.4 delete the companion files and `DataSpell`'s merging; but
-  the `spell-improved-descriptions` agent's JSON workflow then has to move to
-  classes in the same step, and the diff is large. *Suggestion:* first S.3
-  (new combat effects go into classes), then convert level by level with the
-  agents' workflow switched over, cantrips first; delete the companion files
-  in S.4 once nothing is left in them.
-- **Q13. Where should the converter live?** It's a command-line tool in
-  content code (beside `SpellGenerator.py`), so `review-house-rules` flags
-  its `print` calls as debug output. *Suggestion:* keep it there (it
-  belongs with the spells and the generator) and teach the check that a
-  module with a `__main__` block may print.
-- **Q14. Sourcebooks as an enum?** `source` has 25 values, several of them
-  the same book spelled two ways ("Forgotten Realms - Heroes of Faerun" /
-  "Forgotten Realms: Heroes of Faer�n", "Player's Handbook 2024" / "...
-  (BR)"). *Suggestion:* a `Sourcebook` enum with one member per book and the
-  scraped spellings mapped onto it in the scrapers, then `SpellRules.source`
-  becomes the enum. Do it with a re-scrape, not in the converter.
-- **Q16. Should Invisible count by default?** The glossary gives its
-  Advantage/Disadvantage "unless a creature can somehow see you", so the
-  usual case applies, but 3.2 gives both a `when` and only notes them
-  (principle 8). *Suggestion:* count them, with "unless it can see it" as
-  the note the GM can override with the mode buttons; decide together with
-  DI-068, which makes the simulator see Invisible at all.
 - **Q17** moved to Decisions (10, R39): no.
-- **Q18. Show `source` and `caster` on the badge** ("from Edmund's Bless")?
-  *Suggestion:* not until the GM asks; the log says it already.
 - **Q19** decided in 3.5 (R52): repeat saves stay as they are.
 - **Q20** built in 7.5 (R90), as "17 (15; Shield of Faith +2)". **Should the card show an AC with what adds to it** (Shield of
   Faith's 17, not the stat block's 15)? 3.3 counts it in every attack roll
@@ -1887,120 +2035,6 @@ rebuilt), not a pile of modifiers.
   +2)", with cover too, in Phase 5 with the sheet chips; the player view's
   known-AC notes already take the bonus off (R27). *Now step 7.5*, with
   Speed, size, Hit Point maximum and Resistances shown the same way.
-- **Q21. Bless's note now says what the badge counts.** "Each target adds
-  1d4 to its attack rolls and saving throws" was the GM's reminder; now the
-  simulator adds it, and the spell-mechanics rubric says not to restate what
-  the form shows. *Suggestion:* in Phase 4, have the picker say a badge's
-  modifiers itself (a generated note, as R14's `when`), give the rubric a
-  `modifiers` line, then drop the hand-written sentence. Both notes were
-  kept as they are in 3.3, so no row's text changed.
-- **Q22. A badge typed by hand gets no modifiers.** Only the dialog's pick,
-  Cast Spell and Enable Feature know a badge's source; typing "Bless" in the
-  Custom Condition dialog gives a badge that adds nothing. *Suggestion:*
-  leave it: the picker row is how a spell's badge is given, and a hand-typed
-  name may mean something else. Revisit if the GM asks.
-- **Q23. Monster abilities' badges and the encounter log** (DI-069): the
-  log `asdict`s a monster ability, which drops a modifier's type. No monster
-  ability gives a badge with modifiers yet. *Suggestion:* fix the encoder
-  (`to_dict()` for `combat_effects`) before the first monster gets one, in
-  Phase 4.
-- **Q24. Moving the mark when its target drops to 0 HP** (Hunter's Mark,
-  Hex: "you can take a Bonus Action to move the mark to a new creature").
-  *Suggestion:* in 3.5 (prompts): when a target with a living caster's
-  mark drops to 0, the turn reminder says "Hanna can move Hunter's Mark (a
-  Bonus Action)", and a card's right-click "Move Hunter's Mark here" moves
-  the record (caster, modifiers, concentration link and the caster's
-  active spell's `applied` row) and spends the Bonus Action. *Not done in
-  3.5:* its prompts come with turns, and this one comes with a creature
-  dropping to 0; left for its own small step.
-- **Q25. Hex's chosen ability** ("Disadvantage on ability checks made with
-  the chosen ability"). *Suggestion:* Hex as a variant row per ability
-  (R15), each badge "Hex" with `ExtraDamageFrom("1d6", NECROTIC)` and a
-  `D20Mode((ABILITY_CHECK,), DISADVANTAGE, (ability,))`; the simulator
-  rolls no ability checks, so that part is a reminder until it does. A
-  Hex given again on a new target keeps the ability (the same variant).
-- **Q26. Rage's damage** is a bonus to the weapon's own damage (no type of
-  its own), and only "when you make an attack using Strength". *Suggestion:*
-  with the Barbarian's features in Phase 4: `damage_type=None` meaning the
-  hit's first part's type, and `AttackKind.STRENGTH`, which a weapon pick
-  can tell (its ability, Finesse aside: then the GM's choice, a `when`).
-- **Q27. The main window's Attack roll and Damage fields** take totals rolled
-  at the table, so a mark adds nothing there and nothing says it should.
-  *Suggestion:* after a typed attack roll hits, the status line adds "+1d6
-  Force (Pirate's Hunter's Mark)", as the dialog's target rows do.
-- **Q28. Should the extra's log line be public?** It's GM-only so the player
-  link keeps joining a hit's damage to its line (R46), and the hit line
-  already shows the Force. *Suggestion:* leave it; if players ask where the
-  Force came from, let `public_log.py` read the line as part of the hit
-  (kind "hit-extra") instead.
-- **Q29. Remember the slot a spell was cast with** (DI-078). A later step
-  (Spirit Guardians' damage, Ice Knife's explosion) starts at the spell's
-  own dice, and picking a higher slot in the dialog spends one.
-  *Suggestion:* keep the slot on the caster's active spell, and fill a
-  `spends_use=False` row's dice at that level, with the slot box left at
-  "No spell slot".
-- **Q30. `WhenHit` triggers** (Armor of Agathys, Fire Shield: damage to an
-  attacker that hits). Not built in 3.5: no described spell needs it yet.
-  *Suggestion:* the same shape as `AtTurnEnd`, fired by `_deal_damage` from
-  an attack, a prompt when it depends on reach ("within 5 feet").
-- **Q31. Many enemies, many prompts.** Spirit Guardians asks about every
-  enemy of its caster as its turn ends, as the simulator can't tell who is
-  near. *Suggestion:* keep it until the GM finds it noisy; then a
-  right-click "Not in Spirit Guardians" on a card that silences it for
-  that creature until it's given again.
-
-- **Q32. A hand-given badge a cast also gives** (DI-079): Cast Spell's
-  Bless on a target that already has a "Bless" badge typed by hand gives
-  that badge Bless's 1d4 and tooltip, but doesn't link it (the cast didn't
-  put it on), so it outlives the concentration. *Suggestion:* treat it as
-  the cast's (an `applied` row and a link) whenever the cast gives the
-  badge modifiers; the hand badge almost always meant this spell.
-- **Q33. A monster caster's concentration across encounters.** Loading the
-  next encounter drops the monsters without ending what they concentrated
-  on, so a player keeps a monster's badge linked to a caster that's gone.
-  *Suggestion:* end those through `_end_linked_effects` where the monsters
-  are dropped (`encounters_mixin`), once a monster gives a party member a
-  concentration badge in play.
-- **Q34. Extra targets per slot level** is the one note `notes` finds on
-  three spells ("One more target per slot level above 1": Command, Heroism,
-  Tasha's Hideous Laughter; Bless and Charm Person say it inside a longer note, which grouping by first words misses).
-  *Suggestion:* a `targets: CombatTargets(count, upcast=1)` field, which
-  the dialog shows next to the slot box ("Targets: 2 at level 2") and
-  warns when more targets are picked; until then it stays a note.
-- **Q35. "Pick yourself as the target" is a missing field** (4.3): seven
-  features say it mid-sentence (Second Wind, Sacred Weapon, Steady Aim,
-  Patient Defense, Elemental Attunement, Uncanny Metabolism, Large Form),
-  and False Life and See Invisibility say "pick the caster", which `notes`
-  misses as it groups by first words. Several rows also say "nothing
-  happens to the targets" (Divine Sense, Step of the Wind, Deflect Attacks,
-  Cloud's Jaunt, Tinker's Magic). *Suggestion:* the picker reads the
-  source's own `target()` (`FeatureTarget.SELF`, already set on most of
-  these) or a `targets_self` field on the effect, and the dialog picks the
-  user as the only target; a row with nothing to apply needs no target at
-  all. Then drop those sentences.
-- **Q36. Free castings aren't counted** (R61). Paladin's Smite (Q8), Fey
-  Touched and Fiendish Legacy have no `FeatureUses`, so their "once per Long
-  Rest" rows can be used again and again. *Suggestion:* with Q8, a
-  `FeatureUses(1, regain_all_on="long rest")` per spell (a sheet change:
-  read the snapshot diff), or uses kept by the combat UI per free casting.
-- **Q37. "Until the end of the current turn"** has no duration: Sentinel's
-  Halt (Speed 0 for the rest of the turn, so Sentinel stays `[]`) and Steady
-  Aim's Speed 0. `(TurnEdge.END, TurnOf.TARGET)` given on the target's own
-  turn lasts to the end of its next one. *Suggestion:* a third `TurnOf`,
-  `CURRENT`, ending as this turn ends.
-- **Q38. Weapon Mastery properties** (Topple, Vex, Sap, Push, ...) ride on
-  weapon rows, so Weapon Mastery is `[]` for the Fighter, Paladin and Rogue.
-  *Suggestion:* a weapon row adds its mastery's effect when its owner has
-  it (Topple: a Constitution save or Prone; Vex: Advantage on the next
-  attack, a badge), in Phase 5 or when the GM asks.
-- **Q39. Reductions to damage being taken** (Deflect Attacks' 1d10 + DEX +
-  Monk level, Stone's Endurance's 1d12 + CON) are notes: the GM takes them
-  off before applying the hit. *Suggestion:* with `WhenHit` (Q30), a
-  reaction prompt as a hit lands on its owner that rolls the reduction and
-  takes it off the damage.
-
-Q30, Q38 and Q39 are now part of Phase 6: Q30 and Q39 in step 6.5, and
-Q38's masteries as `HIT` / `MISS` triggers on weapon rows (6.7).
 
 Q40-Q45 are **built as suggested** (Decision 12, 6.1-6.3, R66-R73); Q40's
 setting is one checkbox, off meaning turn-column buttons (R71, Q48). Q47 is
@@ -2038,42 +2072,12 @@ setting is one checkbox, off meaning turn-column buttons (R71, Q48). Q47 is
 - **Q45. Log a declined prompt?** *Suggestion:* a GM-only line ("Kivi
   didn't use Hill's Tumble on Ogre"), so a replayed fight shows it was
   offered, but no state change and no undo point of its own.
-- **Q46. Rewrite `AtTurnStart` / `AtTurnEnd` as `CombatTrigger` events?**
-  *Suggestion:* no, as R52 kept repeat saves. They work, logs hold them, and
-  rewriting them adds no behaviour. `TriggerEvent` leaves out turn edges
-  until a row (not a badge) needs one ("A Frightened creature starts its
-  turn within 60 feet", which is REMIND anyway).
 - **Q47. Generated monsters' riders: read at runtime, or generated?**
   `monsters.py` can't be hand-edited, so Tree Club's rider can't be
   written as a `combat_effects` row there. *Suggestion:* read it from the
   text in `monster_actions.py` (6.4), which also covers fight logs saved
   before. Teach `generate_monsters.py` to emit structured rows only if the
   reading proves fragile.
-- **Q48. A true "off" for what hits trigger?** `ask_triggers` is one
-  checkbox (R71): on asks in a pop-up, off leaves turn-column buttons. The
-  Settings dialog only has checkboxes, and no room for a second one in a
-  600-high window. *Suggestion:* if buttons turn out noisy too, let
-  `SettingInfo` offer choices (a combo box) in `dialogs_mixin.py`, and make
-  `ask_triggers` "pop-up / buttons / off"; until then, off-as-buttons loses
-  nothing (a button can be ignored).
-
-- **Q49. Riders that say more than a condition.** About 15 charge riders
-  ("If the target is a Large or smaller creature and the boar moved 20+
-  feet straight toward it immediately before the hit, the target takes an
-  extra 3 (1d6) Piercing damage and has the Prone condition") add damage,
-  and a few move the target (the balor's pull) or give another attack (the
-  allosaurus). They stay text, as they were. *Suggestion:* read the extra
-  damage into the rider row too (an ASK row, as it has a `when`), once a
-  fired row's damage is doubled on a Critical Hit like the hit's own
-  (`AttackOutcome.critical` is there to pass on); the moves and attacks
-  stay the GM's.
-- **Q50. A typed hit asks about every rider of the attacker.** A Hill Giant
-  hit typed into the main window asks "Tree Club: Prone? ... if it was Tree
-  Club" and "Trash Lob: Poisoned? ... if it was Trash Lob", since nothing
-  says which attack it was. *Suggestion:* keep it while the GM mostly uses
-  the action buttons (which know). If it turns out noisy, put the
-  attacker's riders in the pop-up as one choice ("Which attack hit? Tree
-  Club / Trash Lob / neither").
 
 - **Q51** built as suggested (R79). **Is the stored AC a base or a total?** A player's `char["ac"]`
   is the sheet's total (armor, shield, Unarmored Defense), and a monster's
@@ -2088,23 +2092,9 @@ setting is one checkbox, off meaning turn-column buttons (R71, Q48). Q47 is
   *Suggestion:* the same as everywhere (principle 8): a `when` on the
   modifier, counted by default and shown in the card's tooltip, so the
   GM takes the badge off when it doesn't hold.
-- **Q53. Hit Point maximum changes on monsters' hits** ("its Hit Point
-  maximum is reduced by an amount equal to the damage taken", a Wight's
-  Life Drain) last until a Long Rest, not while a badge is on.
-  *Suggestion:* a badge with `HitPointMaximum(-amount)` and no timer,
-  given by a Phase 6 rider row; the amount is the damage the hit dealt,
-  so it needs the `AttackOutcome.damage_dealt` the rider already sees.
-  Since 7.4 a negative `HitPointMaximum` already works on a badge (the
-  maximum drops, current HP is capped); what's left is the rider row and
-  "until a Long Rest" (no timer, a rest takes it off).
 - **Q54** decided as suggested (R93). **Should a shown stat change go in the log?** *Suggestion:* no
   line of its own: the log already says the badge was given and ended.
   The card's "AC 17 (15 +2 Shield of Faith)" is the reminder.
-- **Q55. What happens as a badge ends** (Haste's lethargy, R98) is the
-  GM's pick of a second row. *Suggestion:* an `AtEnd(effect)` modifier
-  beside `AtTurnStart` / `AtTurnEnd`, used as the record goes (by hand,
-  timer, Concentration, R54), inside that step's undo; Haste's badge would
-  then give its lethargy row itself.
 
 ## Discovered issues
 
