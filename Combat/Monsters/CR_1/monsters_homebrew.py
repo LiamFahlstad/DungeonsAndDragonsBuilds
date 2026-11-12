@@ -587,7 +587,7 @@ class GreypawCR1(ExtendedCombatantData):
 
 
 class GoblinKingCR1(ExtendedCombatantData):
-    """The Goblin King's first tier (CR 1), before he grows into GoblinKingCR3.
+    """The Goblin King's first tier (CR 1), before he grows into GoblinKingCR4.
     The official Goblin Boss (CR 1) stat block -- Scimitar/Shortbow
     Multiattack and Redirect Attack -- with Royal Command (one goblin) in
     place of Nimble Escape."""

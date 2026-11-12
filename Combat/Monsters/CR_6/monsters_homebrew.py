@@ -7,10 +7,24 @@ from Model.Creatures.Combatants import (
 )
 from Model.Creatures.MonsterAbilities import (
     DcMonsterAbility,
+    DiceType,
     LegendaryResistance,
+    MeleeOrRangedAttack,
     MonsterAbility,
+    Multiattack,
+    NamedAttackAction,
+    SavingThrowEffect,
 )
 from Core.Definitions import Ability
+from Model.Content.CombatEffect import (
+    CombatCondition,
+    CombatDamage,
+    CombatEffect,
+    CombatHitPoints,
+    EffectRoll,
+)
+from Model.Content.CombatModifiers import AttackKind
+from Model.Content.CombatTriggers import CombatTrigger, TriggerEvent
 
 
 class TheMouthThatWalks(ExtendedCombatantData):
@@ -179,6 +193,213 @@ class TheHunter(ExtendedCombatantData):
                 ),
             ],
             legendary_actions=[],
+            legendary_resistances=0,
+            lair_actions=[],
+            mythic_actions=[],
+        )
+
+
+class ManifestationOfDurmor(ExtendedCombatantData):
+    """Molten avatar of the mountain Durmor: a Huge figure rooted in the
+    mountainside that doesn't move, striking with a 15-foot reach and hurling
+    lava instead. Built on the official Earth Elemental -- tremorsense, a
+    Slam -- scaled to Huge and CR 6 and given the Fire Elemental's fire
+    immunity and water weakness, with a Molten Body retaliation trait and an
+    Eruption recharge in place of the Fire Elemental's always-on Fiery Aura.
+
+    Fights alongside GoblinKingCR4 (Wrath of Durmor), the two of them alone.
+    It makes two Molten Strikes a turn; the King's Royal Command spends its
+    Reaction on a third. Its Slams knock foes Prone for the King's Durmor's
+    Chosen bonus damage, and its Lava Lobs and Eruption leave lava the King
+    walks on unharmed and fights from behind a heat shimmer. Its three
+    legendary actions a round go to itself (a Molten Strike, costing all 3)
+    or to the King (Lava Path moves him and puts lava under him; Rally the
+    King gives him Temporary Hit Points and an attack).
+
+    Tuned as a pair against official CR 6 + CR 4 pairings (the same 3400 XP):
+    its stats sit a little under a plain CR 6 so that the synergy (the
+    commanded Strike, legendary actions, Prone for the King) brings the
+    fight to the hard end of High instead of beyond it."""
+
+    def __init__(self):
+        super().__init__(
+            combatant_type="Manifestation of Durmor",
+            hp=105,
+            ac=16,
+            temp_hp=0,
+            conditions=[],
+            ability_scores={
+                Ability.STRENGTH: 18,
+                Ability.DEXTERITY: 8,
+                Ability.CONSTITUTION: 20,
+                Ability.INTELLIGENCE: 5,
+                Ability.WISDOM: 12,
+                Ability.CHARISMA: 8,
+            },
+            saving_throws={
+                Ability.STRENGTH: 7,
+                Ability.CONSTITUTION: 8,
+                Ability.WISDOM: 4,
+            },
+            spell_slots={},
+            cr="6",
+            monster_type=MonsterType.ELEMENTAL,
+            monster_type_note="",
+            alignment=Alignment.NEUTRAL,
+            size=CreatureSize.HUGE,
+            ac_note="cooling stone crust",
+            hp_formula="10d12 + 40",
+            speed_ground_ft=0,
+            speed_fly_ft=None,
+            speed_climb_ft=None,
+            speed_special_rules="rooted in the mountainside; it can't move or be moved",
+            skills={},
+            damage_vulnerabilities=[],
+            damage_resistances=[],
+            damage_immunities=[
+                DamageTypeEntry(damage_types=[DamageType.FIRE], note=""),
+                DamageTypeEntry(damage_types=[DamageType.POISON], note=""),
+            ],
+            condition_immunities=[
+                Condition.EXHAUSTION,
+                Condition.GRAPPLED,
+                Condition.PARALYZED,
+                Condition.PETRIFIED,
+                Condition.POISONED,
+                Condition.PRONE,
+                Condition.RESTRAINED,
+                Condition.UNCONSCIOUS,
+            ],
+            senses="Darkvision 60 ft., Tremorsense 60 ft., Passive Perception 11",
+            languages="Primordial (Ignan, Terran)",
+            traits=[
+                MonsterAbility(
+                    name="Molten Body",
+                    description="A creature that touches the manifestation or hits it with a melee attack while within 5 feet of it takes 3 (1d6) Fire damage. The lava the manifestation leaves is Difficult Terrain, and a creature takes 5 (1d10) Fire damage when it enters lava for the first time on a turn or ends its turn there. Water cracks its crust: for every gallon splashed on it, the manifestation takes 3 (1d6) Cold damage and its AC drops by 2 until the end of its next turn.",
+                    combat_effects=(
+                        CombatEffect(
+                            name="Molten Body",
+                            damage=(CombatDamage("1d6", DamageType.FIRE),),
+                            trigger=CombatTrigger(
+                                TriggerEvent.HIT_BY,
+                                optional=False,
+                                attacks=AttackKind.MELEE,
+                                when="the attacker is within 5 feet of the manifestation",
+                            ),
+                            notes=("To the creature that hit it in melee.",),
+                        ),
+                        CombatEffect(
+                            name="Lava",
+                            damage=(CombatDamage("1d10", DamageType.FIRE),),
+                            notes=(
+                                "A creature that enters lava for the first time on"
+                                " a turn or ends its turn there.",
+                                "The Goblin King walks on lava unharmed.",
+                            ),
+                        ),
+                    ),
+                ),
+            ],
+            actions=[
+                Multiattack(
+                    creature_name="manifestation",
+                    attacks_text="two Molten Strike attacks",
+                ),
+                MeleeOrRangedAttack(
+                    name="Molten Strike",
+                    attack_bonus=7,
+                    reach_ft=15,
+                    range_ft=120,
+                    dice_count=2,
+                    dice_type=DiceType.D6,
+                    damage_bonus=4,
+                    damage_type=DamageType.BLUDGEONING,
+                    additional_ruling="The target also takes 3 (1d6) Fire damage. Slam (melee): if the target is a Large or smaller creature, it has the Prone condition. Lava Lob (ranged): hit or miss, the ground within 5 feet of the target becomes lava until the end of the manifestation's next turn.",
+                    combat_effects=(
+                        CombatEffect(
+                            name="Molten Strike: Slam",
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=7,
+                            damage=(
+                                CombatDamage("2d6 + 4", DamageType.BLUDGEONING),
+                                CombatDamage("1d6", DamageType.FIRE),
+                            ),
+                            conditions=(CombatCondition(Condition.PRONE),),
+                            notes=(
+                                "Melee, reach 15 ft. Prone only if the target is"
+                                " Large or smaller.",
+                            ),
+                        ),
+                        CombatEffect(
+                            name="Molten Strike: Lava Lob",
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=7,
+                            damage=(
+                                CombatDamage("2d6 + 4", DamageType.BLUDGEONING),
+                                CombatDamage("1d6", DamageType.FIRE),
+                            ),
+                            notes=(
+                                "Ranged, 120 ft. Hit or miss, the ground within 5"
+                                " feet of the target becomes lava until the end of"
+                                " the manifestation's next turn.",
+                            ),
+                        ),
+                    ),
+                ),
+                SavingThrowEffect(
+                    name="Eruption (Recharge 6)",
+                    ability=Ability.DEXTERITY,
+                    dc=16,
+                    target="each creature in a 20-foot Emanation originating from the manifestation, except Goblins",
+                    dice_count=5,
+                    dice_type=DiceType.D10,
+                    damage_type=DamageType.FIRE,
+                    success_effect="Half damage.",
+                    extra_ruling="The ground in the Emanation becomes lava until the end of the manifestation's next turn.",
+                    combat_effects=(
+                        CombatEffect(
+                            name="Eruption",
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.DEXTERITY,
+                            dc=16,
+                            half_on_success=True,
+                            damage=(CombatDamage("5d10", DamageType.FIRE),),
+                            notes=(
+                                "Each creature in a 20-foot Emanation except Goblins.",
+                                "The ground there becomes lava until the end of"
+                                " the manifestation's next turn.",
+                            ),
+                        ),
+                    ),
+                ),
+            ],
+            bonus_actions=[],
+            reactions=[],
+            legendary_actions=[
+                MonsterAbility(
+                    name="Lava Path (Costs 1 Action)",
+                    description="Lava wells up from the ground in a 10-foot-radius circle centered on a point the manifestation can see within 60 feet of it, and lasts until the end of the manifestation's next turn. If the Goblin King is within 60 feet of the manifestation, he can then move up to half his Speed without provoking Opportunity Attacks.",
+                ),
+                NamedAttackAction(
+                    name="Molten Strike (Costs 3 Actions)",
+                    creature_name="manifestation",
+                    attack_name="Molten Strike",
+                ),
+                MonsterAbility(
+                    name="Rally the King (Costs 2 Actions)",
+                    description="Molten rock armors the Goblin King if he is within 60 feet of the manifestation: he gains 10 Temporary Hit Points and can make one Scimitar attack.",
+                    combat_effects=(
+                        CombatEffect(
+                            name="Rally the King",
+                            temp_hp=CombatHitPoints("10"),
+                            notes=(
+                                "On the Goblin King. He then makes one Scimitar"
+                                " attack: roll it from his Scimitar row.",
+                            ),
+                        ),
+                    ),
+                ),
+            ],
             legendary_resistances=0,
             lair_actions=[],
             mythic_actions=[],

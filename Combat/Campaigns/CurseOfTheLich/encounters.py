@@ -39,6 +39,7 @@ from Combat.Monsters.CR_1.monsters_homebrew import (
     AccursedGroupOf3,
     CommonCultist,
     GreypawCR1,
+    HaratCR1,
 )
 from Combat.Monsters.CR_2.monsters_homebrew import (
     AccursedGroupOf5,
@@ -48,11 +49,13 @@ from Combat.Monsters.CR_3.monsters import GoblinHexer
 from Combat.Monsters.CR_3.monsters_homebrew import (
     CantorOfTheBlackChoir,
     GarronTheKindly,
-    GoblinKingCR3,
     SerCaldusTheVowOfSilence,
 )
-from Combat.Monsters.CR_4.monsters_homebrew import ManifestationOfDurmor, MarshalVirel
-from Combat.Monsters.CR_6.monsters_homebrew import TheMouthThatWalks
+from Combat.Monsters.CR_4.monsters_homebrew import GoblinKingCR4, MarshalVirel
+from Combat.Monsters.CR_6.monsters_homebrew import (
+    ManifestationOfDurmor,
+    TheMouthThatWalks,
+)
 
 CONFIG = CampaignSpec(
     name="curse_of_the_lich",
@@ -173,19 +176,16 @@ CONFIG = CampaignSpec(
         EncounterSpec(
             id="wrath_of_durmor",
             title="Wrath of Durmor",
-            description="The Manifestation of Durmor and the Goblin King with their goblins; Greypaw fights alongside the party.",
-            difficulty="High for the full party (6x level 4): 3200 XP, 3000 net of Greypaw.",
+            description="The Manifestation of Durmor and the Goblin King fight side by side; Greypaw and Harat fight alongside the party.",
+            difficulty="High for the full party (6x level 4): 3400 XP, 3000 net of Greypaw and Harat.",
             monsters=[
                 CombatantSpec(ManifestationOfDurmor, "Manifestation of Durmor"),
-                CombatantSpec(GoblinKingCR3, "Goblin King"),
-                CombatantSpec(GoblinHexer, "Goblin Hexer"),
-                CombatantSpec(GoblinBoss, "Goblin Boss", count=2),
-                CombatantSpec(GoblinWarrior, "Goblin Warrior", count=6),
+                CombatantSpec(GoblinKingCR4, "Goblin King"),
             ],
             allies=[
                 CombatantSpec(GreypawCR1, "Greypaw (Ally)"),
+                CombatantSpec(HaratCR1, "Harat (Ally)"),
             ],
-            combatants_per_column=5,
         ),
         EncounterSpec(
             id="black_tongues_skirmish",

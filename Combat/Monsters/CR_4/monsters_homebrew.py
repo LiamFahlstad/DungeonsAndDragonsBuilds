@@ -1,21 +1,23 @@
-from Core.Definitions import Ability, Condition, CreatureSize, DamageType, Skill
+from Core.Definitions import Ability, CreatureSize, DamageType, Skill
 from Model.Creatures.Combatants import (
     Alignment,
-    DamageTypeEntry,
     ExtendedCombatantData,
     MonsterType,
 )
 from Model.Creatures.MonsterAbilities import (
     DcMonsterAbility,
     DiceType,
-    Illumination,
     MeleeAttack,
     MonsterAbility,
     Multiattack,
-    RangedAttack,
-    SavingThrowEffect,
-    SiegeMonster,
 )
+from Model.Content.CombatEffect import (
+    CombatCondition,
+    CombatDamage,
+    CombatEffect,
+)
+from Model.Content.CombatModifiers import ArmorClass
+from Model.Content.CombatTriggers import CombatTrigger, TriggerEvent
 
 
 class MarshalVirel(ExtendedCombatantData):
@@ -111,119 +113,108 @@ class MarshalVirel(ExtendedCombatantData):
         )
 
 
-class ManifestationOfDurmor(ExtendedCombatantData):
-    """Molten avatar of the mountain Durmor. Built on the official Earth
-    Elemental (CR 5) -- Earth Glide, Siege Monster, tremorsense, Slam plus a
-    ranged rock attack -- scaled down to CR 4 and
-    given the Fire Elemental's fire immunity, Illumination and Water
-    Susceptibility, with a Molten Body retaliation trait and an Eruption
-    recharge in place of the Fire Elemental's always-on Fiery Aura."""
+class GoblinKingCR4(ExtendedCombatantData):
+    """The Goblin King's second tier (CR 4), grown from GoblinKingCR1.
+    Scaled-up take on the official Goblin Boss (CR 1): Scimitar kit pushed to
+    CR 4 with a third attack, more HP, and a Royal Command bonus action (in
+    place of Nimble Escape) that spends his allies' Reactions.
+
+    Fights alongside ManifestationOfDurmor (Wrath of Durmor), the two of them
+    alone: Durmor's Chosen lets him walk the lava it leaves, shields him in a
+    heat shimmer while he stands in it, and punishes the creatures its Slams
+    knock Prone; Royal Command spends the manifestation's Reaction on a
+    Molten Strike."""
 
     def __init__(self):
         super().__init__(
-            combatant_type="Manifestation of Durmor",
-            hp=110,
+            combatant_type="Goblin King",
+            hp=71,
             ac=16,
             temp_hp=0,
             conditions=[],
             ability_scores={
-                Ability.STRENGTH: 19,
-                Ability.DEXTERITY: 8,
-                Ability.CONSTITUTION: 17,
-                Ability.INTELLIGENCE: 5,
+                Ability.STRENGTH: 12,
+                Ability.DEXTERITY: 16,
+                Ability.CONSTITUTION: 16,
+                Ability.INTELLIGENCE: 11,
                 Ability.WISDOM: 10,
-                Ability.CHARISMA: 8,
+                Ability.CHARISMA: 14,
             },
             saving_throws={},
             spell_slots={},
             cr="4",
-            monster_type=MonsterType.ELEMENTAL,
-            monster_type_note="",
-            alignment=Alignment.NEUTRAL,
-            size=CreatureSize.LARGE,
-            ac_note="cooling stone crust",
-            hp_formula="13d10 + 39",
+            monster_type=MonsterType.FEY,
+            monster_type_note="Goblinoid",
+            alignment=Alignment.CHAOTIC_NEUTRAL,
+            size=CreatureSize.SMALL,
+            ac_note="leather armor, shield",
+            hp_formula="11d6 + 33",
             speed_ground_ft=30,
             speed_fly_ft=None,
             speed_climb_ft=None,
-            speed_special_rules="burrow 20 ft.",
-            skills={},
+            speed_special_rules="",
+            skills={Skill.INTIMIDATION: 4, Skill.STEALTH: 7},
             damage_vulnerabilities=[],
             damage_resistances=[],
-            damage_immunities=[
-                DamageTypeEntry(damage_types=[DamageType.FIRE], note=""),
-                DamageTypeEntry(damage_types=[DamageType.POISON], note=""),
-            ],
-            condition_immunities=[
-                Condition.EXHAUSTION,
-                Condition.PARALYZED,
-                Condition.PETRIFIED,
-                Condition.POISONED,
-                Condition.UNCONSCIOUS,
-            ],
-            senses="Darkvision 60 ft., Tremorsense 60 ft., Passive Perception 10",
-            languages="Primordial (Ignan, Terran)",
+            damage_immunities=[],
+            condition_immunities=[],
+            senses="Darkvision 60 ft., Passive Perception 10",
+            languages="Common, Goblin",
             traits=[
                 MonsterAbility(
-                    name="Earth Glide",
-                    description="The manifestation can burrow through nonmagical, unworked earth and stone, leaving a glowing seam of cooling rock behind it.",
-                ),
-                Illumination(
-                    creature_name="manifestation", radius_ft=20, dim_radius_ft=20
-                ),
-                MonsterAbility(
-                    name="Molten Body",
-                    description="A creature that touches the manifestation or hits it with a melee attack while within 5 feet of it takes 4 (1d8) Fire damage.",
-                ),
-                SiegeMonster(creature_name="manifestation"),
-                MonsterAbility(
-                    name="Water Susceptibility",
-                    description="The manifestation takes 3 (1d6) Cold damage for every 5 feet it moves in water or for every gallon of water splashed on it, and its AC drops by 2 until the end of its next turn as its crust cracks.",
+                    name="Durmor's Chosen",
+                    description="Durmor's blessing lets the goblin walk on lava and molten rock as if it were solid ground: it isn't Difficult Terrain for the goblin, and the goblin takes no damage from it. While the goblin stands in lava, its shimmering heat gives the goblin a +2 bonus to AC. Once per turn, when the goblin hits a creature that has the Prone condition, the target takes an extra 7 (2d6) damage of the weapon's type.",
+                    combat_effects=(
+                        CombatEffect(
+                            name="Durmor's Chosen: Strike the Fallen",
+                            damage=(CombatDamage("2d6", DamageType.SLASHING),),
+                            trigger=CombatTrigger(
+                                TriggerEvent.HIT,
+                                optional=False,
+                                once_per_turn=True,
+                                when="the target has the Prone condition",
+                            ),
+                            notes=(
+                                "Once per turn, on a hit against a Prone creature.",
+                            ),
+                        ),
+                        CombatEffect(
+                            name="Durmor's Chosen: Heat Shimmer",
+                            targets_self=True,
+                            conditions=(
+                                CombatCondition(
+                                    "Heat Shimmer", modifiers=(ArmorClass(2),)
+                                ),
+                            ),
+                            notes=(
+                                "While the goblin stands in lava: take the badge"
+                                " off when it leaves the lava or the lava cools.",
+                            ),
+                        ),
+                    ),
                 ),
             ],
             actions=[
                 Multiattack(
-                    creature_name="manifestation",
-                    attacks_text="two attacks, using Molten Slam or Lava Lob in any combination",
+                    creature_name="goblin",
+                    attacks_text="three Scimitar attacks",
                 ),
                 MeleeAttack(
-                    name="Molten Slam",
-                    attack_bonus=6,
-                    reach_ft=10,
-                    dice_count=2,
-                    dice_type=DiceType.D6,
-                    damage_bonus=4,
-                    damage_type=DamageType.BLUDGEONING,
-                    secondary_dice_count=1,
-                    secondary_dice_type=DiceType.D6,
-                    secondary_damage_type=DamageType.FIRE,
-                ),
-                RangedAttack(
-                    name="Lava Lob",
-                    attack_bonus=6,
-                    range_ft=60,
+                    name="Scimitar",
+                    attack_bonus=5,
+                    reach_ft=5,
                     dice_count=1,
                     dice_type=DiceType.D6,
-                    damage_bonus=4,
-                    damage_type=DamageType.BLUDGEONING,
-                    secondary_dice_count=1,
-                    secondary_dice_type=DiceType.D6,
-                    secondary_damage_type=DamageType.FIRE,
-                    additional_ruling="If the target is a Large or smaller creature, it has the Prone condition.",
-                ),
-                SavingThrowEffect(
-                    name="Eruption (Recharge 5-6)",
-                    ability=Ability.DEXTERITY,
-                    dc=14,
-                    target="each creature in a 15-foot Emanation originating from the manifestation",
-                    dice_count=3,
-                    dice_type=DiceType.D10,
-                    damage_type=DamageType.FIRE,
-                    success_effect="Half damage.",
-                    extra_ruling="The ground in the Emanation becomes Difficult Terrain until the end of the manifestation's next turn.",
+                    damage_bonus=3,
+                    damage_type=DamageType.SLASHING,
                 ),
             ],
-            bonus_actions=[],
+            bonus_actions=[
+                MonsterAbility(
+                    name="Royal Command",
+                    description="The goblin barks an order at up to two allies within 60 feet of it that can hear it: allied goblins or the Manifestation of Durmor. A goblin can take a Reaction to move up to half its Speed and make one weapon attack. The manifestation can take a Reaction to make one Molten Strike attack, melee or ranged.",
+                ),
+            ],
             reactions=[],
             legendary_actions=[],
             legendary_resistances=0,
