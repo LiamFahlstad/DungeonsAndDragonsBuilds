@@ -302,6 +302,9 @@ class CombatWindowState:
     def _refresh_turn_prompts(self):
         raise NotImplementedError("TurnPanelMixin._refresh_turn_prompts")
 
+    def _before_attack_roll(self, attacker: dict | None, target: dict | None):
+        raise NotImplementedError("TurnPanelMixin._before_attack_roll")
+
     def _before_hit(self, outcome: AttackOutcome) -> tuple[bool, int]:
         raise NotImplementedError("TurnPanelMixin._before_hit")
 

@@ -815,6 +815,10 @@ class ConditionsMixin(CombatWindowState):
                 # The attacker's and the target's conditions count in a roll
                 # made here; one typed in gets what it couldn't count.
                 typed = effect.typed_attacks.get(id(target))
+                if typed is None:
+                    # What others answer it with before it's rolled (Warding
+                    # Flare's Disadvantage), counted in the roll.
+                    self._before_attack_roll(source, target)
                 plan = attack_plan(source, target, effect.mode, typed is not None)
                 if typed is not None:
                     roll, notes = typed, plan.notes

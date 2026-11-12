@@ -1,9 +1,14 @@
 from Core.Definitions import Ability, CharacterClass, DamageType
 from Model.Content.CombatEffect import (
+    CombatCondition,
     CombatDamage,
     CombatEffect,
     EffectRoll,
+    TurnEdge,
+    TurnOf,
 )
+from Model.Content.CombatModifiers import D20Mode, D20Test, RollMode
+from Model.Content.CombatTriggers import CombatTrigger, TriggerEvent
 from Model.Content.Feature import (
     Feature,
     FeatureUses,
@@ -110,8 +115,6 @@ class RadianceOfTheDawn(Feature):
 
 
 class WardingFlare(Feature):
-    untriggered = "It answers an attack roll before it's rolled, which no hit path stops to ask about: use it by hand, giving that roll Disadvantage."
-
     def __init__(self):
         super().__init__(
             name="Warding Flare",
@@ -164,13 +167,33 @@ class WardingFlare(Feature):
         return max(1, character.get_wisdom_modifier())
 
     def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # Asked as an enemy's attack roll is about to be rolled; its badge on
+        # the attacker is that one roll's Disadvantage, used up by it.
         return [
             CombatEffect(
+                conditions=(
+                    CombatCondition(
+                        self.name,
+                        until=(TurnEdge.END, TurnOf.TARGET),
+                        modifiers=(
+                            D20Mode(
+                                (D20Test.ATTACK_ROLL,),
+                                RollMode.DISADVANTAGE,
+                                once=True,
+                            ),
+                        ),
+                    ),
+                ),
+                trigger=CombatTrigger(
+                    TriggerEvent.ATTACKS,
+                    enemy_only=True,
+                    when="you can see it within 30 feet of you",
+                ),
                 notes=(
-                    "A creature you can see within 30 feet makes an attack roll:"
-                    " it has Disadvantage on it. Pick that creature's attack"
-                    " next and roll with Disadvantage.",
-                )
+                    "Picked by hand, pick the attacker before its roll: the"
+                    " badge gives that roll Disadvantage. A roll typed in"
+                    " isn't asked about; roll it with Disadvantage.",
+                ),
             )
         ]
 

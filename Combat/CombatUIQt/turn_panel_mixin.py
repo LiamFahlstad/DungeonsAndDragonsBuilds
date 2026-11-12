@@ -30,6 +30,7 @@ from Combat.Effects.modifiers import attack_plan, hit_notes, hit_plan, hit_point
 from Combat.Effects.triggers import (
     AttackOutcome,
     DropOutcome,
+    attack_roll_firings,
     Firing,
     HitFiring,
     Outcome,
@@ -380,7 +381,10 @@ class TurnPanelMixin(CombatWindowState):
             target = (
                 self.target_characters[0] if len(self.target_characters) == 1 else None
             )
-            # With no target or several, the attacker's own still count.
+            # What others answer the roll with before it's made (Warding
+            # Flare), then, with no target or several, the attacker's own
+            # still count.
+            self._before_attack_roll(char, target)
             plan = attack_plan(char, target, mode)
             d20 = self._roll_d20_for_attack(plan.mode)
             # What its modifiers add (Bless's 1d4), rolled after the d20.
@@ -786,6 +790,31 @@ class TurnPanelMixin(CombatWindowState):
         for firing in choice.edit:
             self._edit_trigger(firing)
         return applied
+
+    def _before_attack_roll(self, attacker: dict | None, target: dict | None):
+        """What the others in the fight answer attacker's attack roll against
+        target with before it's rolled (ATTACKS: Warding Flare), asked now in
+        a pop-up of its own, as the roll is about to be made here (the Custom
+        Effect dialog's, a monster's action button's; one typed in is rolled
+        already). What it applies (Warding Flare's badge of Disadvantage on
+        that one roll) goes through _apply_row, inside the roll's undo step,
+        and the roll then counts it. With the setting ask_triggers off
+        nothing is asked: a turn-column button would come after the roll."""
+        if attacker is None or target is None or not self.settings.ask_triggers:
+            return
+        found = attack_roll_firings(
+            attacker,
+            target,
+            self.characters,
+            triggered_rows,
+            is_dead=lambda char: self._char_death_state(char) == "dead",
+        )
+        if not found:
+            return
+        status = self._status_label.text()
+        notes: list[str] = []
+        self._answer_firings(found, notes)
+        self._show_status("; ".join(part for part in (status, *notes) if part))
 
     def _before_hit(self, outcome: AttackOutcome) -> tuple[bool, int]:
         """What the creature hit answers the hit with before its damage is

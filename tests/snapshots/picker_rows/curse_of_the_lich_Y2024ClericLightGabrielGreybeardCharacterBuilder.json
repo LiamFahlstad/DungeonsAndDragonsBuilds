@@ -238,9 +238,21 @@
    "ability": null,
    "action_cost": "Reaction",
    "amount_kind": "Damage",
+   "badge_modifiers": {
+    "Warding Flare": [
+     {
+      "mode": "Disadvantage",
+      "once": true,
+      "tests": [
+       "attack roll"
+      ],
+      "type": "D20Mode"
+     }
+    ]
+   },
    "bonus": null,
    "concentration": false,
-   "condition": "",
+   "condition": "Warding Flare",
    "counts_uses": true,
    "damage": "",
    "dc": null,
@@ -249,7 +261,7 @@
    "half_on_save": false,
    "is_described": true,
    "is_unavailable": false,
-   "note": "A creature you can see within 30 feet makes an attack roll: it has Disadvantage on it. Pick that creature's attack next and roll with Disadvantage.",
+   "note": "Picked by hand, pick the attacker before its roll: the badge gives that roll Disadvantage. A roll typed in isn't asked about; roll it with Disadvantage.",
    "repeat_save": false,
    "roll": "Saving throw",
    "row_name": "",
@@ -257,7 +269,15 @@
    "spell_level": 0,
    "spell_name": "",
    "summary": "4/4",
-   "until": null,
+   "trigger": {
+    "enemy_only": true,
+    "event": "attacks",
+    "when": "you can see it within 30 feet of you"
+   },
+   "until": [
+    "end",
+    "target"
+   ],
    "upcast": []
   },
   "Gabriel Greybeard's Spells | Bless": {

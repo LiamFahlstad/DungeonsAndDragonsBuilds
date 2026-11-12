@@ -39,8 +39,11 @@ class TriggerEvent(StrEnum):
     a fight starts, ROLLS_INITIATIVE on everyone in it (Uncanny Metabolism).
     USES after a row of the same source is picked and applied in the Custom
     Effect dialog, on each of its targets (Ice Knife's explosion after its
-    shard). FAILS_SAVE as a save the dialog rolls fails (Indomitable). The
-    others are data until a step needs them."""
+    shard). FAILS_SAVE as a save the dialog rolls fails (Indomitable).
+    ATTACKS on everyone else in the fight as a creature makes an attack roll
+    the simulator rolls, before it's rolled (Warding Flare: the answer is a
+    badge the roll then counts). The others are data until a step needs
+    them."""
 
     HIT = "hit"  # the owner hits
     MISS = "miss"  # the owner misses
@@ -53,6 +56,7 @@ class TriggerEvent(StrEnum):
     ROLLS_INITIATIVE = "rolls initiative"
     CASTS_SPELL = "casts a spell"
     USES = "uses"  # the owner uses another row of the same source (`after`)
+    ATTACKS = "attacks"  # another creature makes an attack roll, before it
 
 
 # The events made by an attack roll, which know its kind and whether it was
@@ -60,9 +64,10 @@ class TriggerEvent(StrEnum):
 ATTACK_EVENTS = (TriggerEvent.HIT, TriggerEvent.MISS, TriggerEvent.HIT_BY)
 # The events with another creature in them: the one hit, the attacker, the
 # creature that dealt the damage, the one reduced to 0, the target of the row
-# it comes after.
+# it comes after, the attacker about to roll.
 TARGET_EVENTS = (
     *ATTACK_EVENTS,
+    TriggerEvent.ATTACKS,
     TriggerEvent.TAKES_DAMAGE,
     TriggerEvent.REDUCES_TO_ZERO,
     TriggerEvent.USES,

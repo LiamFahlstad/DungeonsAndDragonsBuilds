@@ -172,6 +172,18 @@ class AttackOutcome:
 
 
 @dataclass(frozen=True)
+class AttackRollOutcome:
+    """`attacker` is about to make an attack roll against `target`, and
+    `owner` (anyone else in the fight) can answer it before it's rolled
+    (ATTACKS: Warding Flare, against the attacker). One per creature that
+    could, made by attack_roll_firings."""
+
+    attacker: dict
+    target: dict
+    owner: dict
+
+
+@dataclass(frozen=True)
 class DamageOutcome:
     """Damage `source` dealt `target`, as the window dealt it: `taken`
     after Resistance and Immunity (TAKES_DAMAGE: Hellish Rebuke)."""
@@ -383,6 +395,13 @@ class HitFiring:
             head = f"{whose} leaves {owner} Bloodied"
         elif event is TriggerEvent.HIT_BY:
             head = f"{target} hits {owner}"
+        elif event is TriggerEvent.ATTACKS:
+            attacked = (
+                outcome.target["name"]
+                if isinstance(outcome, AttackRollOutcome)
+                else "a creature"
+            )
+            head = f"{target} makes an attack roll against {attacked}"
         elif event is TriggerEvent.TAKES_DAMAGE:
             taken = outcome.taken if isinstance(outcome, DamageOutcome) else None
             amount = f" {taken}" if taken is not None else ""
@@ -462,6 +481,11 @@ class HitFiring:
             how = "hit by" if event is TriggerEvent.HIT_BY else "damaged by"
             return (
                 f"{self.caster}: {self.row.name}" f" ({how} {self.target['name']}{why})"
+            )
+        if event is TriggerEvent.ATTACKS:
+            return (
+                f"{self.target['name']}: {self.caster}'s {self.row.name}"
+                f" (before its attack roll{why})"
             )
         on = "a miss" if event is TriggerEvent.MISS else "a hit"
         return f"{self.target['name']}: {self.caster}'s {self.row.name} (on {on}{why})"
@@ -561,6 +585,7 @@ Outcome = (
     | InitiativeOutcome
     | UsesOutcome
     | FailedSaveOutcome
+    | AttackRollOutcome
 )
 # The outcomes whose rows are the owner's own and fire on itself.
 _OWN = (BloodiedOutcome, InitiativeOutcome, FailedSaveOutcome)
@@ -582,6 +607,8 @@ def _owner_of(outcome: Outcome) -> dict:
         return outcome.owner
     if isinstance(outcome, FailedSaveOutcome):
         return outcome.char
+    if isinstance(outcome, AttackRollOutcome):
+        return outcome.owner
     return outcome.attacker
 
 
@@ -672,6 +699,39 @@ def hit_by_firings(
     return found, spent
 
 
+def attack_roll_firings(
+    attacker: dict,
+    target: dict,
+    others: Iterable[dict],
+    rows_of: Callable[[dict], list[TriggerRow]],
+    *,
+    is_dead: Callable[[dict], bool] = is_down,
+) -> list[HitFiring]:
+    """What the creatures in `others` can answer attacker's attack roll
+    against target with, before it's rolled (ATTACKS: Warding Flare, "when
+    a creature ... makes an attack roll, you can take a Reaction to impose
+    Disadvantage on the roll"): their rows of that event, each firing
+    against the attacker, with the gates of outcome_firings (an enemy of
+    the owner, a Reaction it can still take, uses left). It comes with
+    every attack roll the simulator makes, so a row with no uses left is
+    left out without a word (not Q42's status line), and only creatures
+    that can still take a Reaction are looked at."""
+    found: list[HitFiring] = []
+    for owner in others:
+        if owner is attacker or reaction_lack(owner) is not None or is_dead(owner):
+            continue
+        outcome = AttackRollOutcome(attacker, target, owner)
+        for row in rows_of(owner):
+            if row.trigger.event is not TriggerEvent.ATTACKS:
+                continue
+            if row.uses is not None and row.uses[0] <= 0:
+                continue
+            firing = _firing(outcome, row, is_dead)
+            if firing is not None:
+                found.append(firing)
+    return found
+
+
 def _firing(
     outcome: Outcome,
     row: TriggerRow,
@@ -703,6 +763,10 @@ def _firing(
         if event is not TriggerEvent.FAILS_SAVE:
             return None
         owner = target = outcome.char
+    elif isinstance(outcome, AttackRollOutcome):
+        if event is not TriggerEvent.ATTACKS:
+            return None
+        owner, target = outcome.owner, outcome.attacker
     elif isinstance(outcome, InitiativeOutcome):
         if event is not TriggerEvent.ROLLS_INITIATIVE:
             return None
