@@ -871,6 +871,17 @@ _roll_concentration (monsters_roll_concentration on) rolls random.randint(1, 20)
 - 2026-11-10 combat-simulator: marked in-progress; Concentration roll through roll_save
 - 2026-11-10 combat-simulator: marked fixed; Plan step 3.3, R40 (uncommitted, worktree agent-a30cb9221e9d3c056): _roll_concentration calls roll_save(char, 'CON', dc, 'Neutral', one_die_if_straight=True), so its modifiers count (Bless's 1d4 rolled after the d20, a mode, notes) and _settle_concentration adds the note to the keeps/loses line; a straight roll still throws one d20, so fights without bonuses roll the same dice.
 
+### DI-080 · A magic weapon didn't count its kind's Weapon Mastery
+- **Status:** fixed · 2026-11-12 · uncommitted
+- **Area:** character-engine
+- **Where:** `Model/Content/Weapon.py:has_mastery`
+
+has_mastery compared exact types (type(self) is type(mastery)), so a magic weapon that subclasses its kind (Halfling's Trick, a Shortsword) wasn't mastered by a Shortsword mastery: Thum's sheet showed Vex unchecked on it. Found in combat-effects step 6.9.
+
+**History**
+- 2026-11-12 main-session: found
+- 2026-11-12 main-session: marked fixed; isinstance(self, type(mastery)): a weapon of the mastered kind, magic or not, is mastered; Thum's sheet snapshot updated (Halfling's Trick: Vex checked)
+
 ## Won't fix
 
 ### DI-015 · UPDATE_SNAPSHOTS=1 under xdist corrupts shared golden JSON files
