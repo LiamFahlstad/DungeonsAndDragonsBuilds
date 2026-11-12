@@ -405,8 +405,20 @@ class MagicInitiate(OriginFeat):
         )
 
     def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
-        # Its spells are in the picker as spells.
-        return []
+        # The free casting of its level 1 spell; the spells themselves are in
+        # the picker as spells.
+        spell = getattr(self.spell, "value", self.spell)
+        return [
+            CombatEffect(
+                name=f"{spell} (Magic Initiate)",
+                spell=spell,
+                uses_per_long_rest=1,
+                notes=(
+                    "Without a spell slot. Once it's used, cast the spell with"
+                    " a slot until a Long Rest.",
+                ),
+            )
+        ]
 
 
 def _resolve_spell_enum(value, enum_type: type) -> str:

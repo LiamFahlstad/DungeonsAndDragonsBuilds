@@ -2479,6 +2479,35 @@ def test_a_feature_with_no_uses_left_asks_first(paladin, monkeypatch):
     assert edmund["feature_uses_used"] == {"Channel Divinity": 100}
 
 
+def test_a_free_casting_is_counted_once_per_long_rest(paladin, monkeypatch):
+    # Fiendish Legacy: "You can cast each of these spells once without a
+    # spell slot, and you regain the ability to cast it in that way when you
+    # finish a Long Rest." Edmund's level 3 spell is False Life.
+    ui, edmund, _ = paladin
+    name = "False Life (Fiendish Legacy)"
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    _pick(dlg, name)
+    assert _row(dlg, name).text(1).startswith("1/1")
+    _apply(dlg)
+    assert edmund["spell_slots"] == {1: 3}  # without a slot
+    assert edmund["feature_uses_used"] == {name: 1}
+
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    _pick(dlg, name)
+    assert _row(dlg, name).text(1).startswith("0/1")
+    asked = answer_out_of_resources(monkeypatch, yes=False)
+    _apply(dlg)
+    assert f"{name}: no uses left" in asked[0]
+    assert edmund["feature_uses_used"] == {name: 1}
+
+    # The party's history counts it again as it's replayed (only since the
+    # last Long Rest: PlayerLog.since_long_rest).
+    fresh = make_ui(ui.log_file.parent, [], [Edmund().build()])
+    loaded = fresh.characters[0]
+    fresh._apply_replay_action(loaded, Action.ENABLE_FEATURE, {"feature_name": name})
+    assert loaded["feature_uses_used"] == {name: 1}
+
+
 def test_a_hand_typed_effect_still_spends_nothing_else(monster, monkeypatch):
     ui, pirate, tiger = monster
     dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)

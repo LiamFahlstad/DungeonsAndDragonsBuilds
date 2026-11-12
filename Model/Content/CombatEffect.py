@@ -355,6 +355,10 @@ class CombatEffect:
     concentration: bool = False
     # Whether it spends one of the feature's FeatureUses (if it has any).
     spends_use: bool = True
+    # Times per Long Rest it can be used, counted under its own name instead
+    # of the feature's uses (Fey Touched's free Misty Step and its level 1
+    # spell, each once per Long Rest). 0: it isn't counted on its own.
+    uses_per_long_rest: int = 0
     # The spell it casts, if any: a condition it gives is that spell's badge,
     # and shows the spell when clicked.
     spell: str | None = None
@@ -411,6 +415,20 @@ class CombatEffect:
                 raise ValueError(
                     "drops_to comes with a 'drops to 0' trigger: it's used as its"
                     " user would drop to 0 Hit Points"
+                )
+        if self.uses_per_long_rest:
+            if (
+                isinstance(self.uses_per_long_rest, bool)
+                or not isinstance(self.uses_per_long_rest, int)
+                or self.uses_per_long_rest < 0
+            ):
+                raise ValueError(
+                    "uses_per_long_rest is a number of uses, not"
+                    f" {self.uses_per_long_rest!r}"
+                )
+            if not self.name:
+                raise ValueError(
+                    "uses_per_long_rest needs a name: its uses are counted under it"
                 )
         if self.reroll_save is not None:
             if (
@@ -845,6 +863,9 @@ class _Reader:
                 data.get("concentration"), "concentration", (bool,), False
             ),
             spends_use=self.kind(data.get("spends_use"), "spends_use", (bool,), True),
+            uses_per_long_rest=self.kind(
+                data.get("uses_per_long_rest"), "uses_per_long_rest", (int,), 0
+            ),
             spell=self.kind(data.get("spell"), "spell", (str,)),
             notes=self.strings(data.get("notes"), "notes"),
             trigger=self.trigger(data.get("trigger")),

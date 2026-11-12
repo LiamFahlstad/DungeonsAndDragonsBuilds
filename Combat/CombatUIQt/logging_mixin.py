@@ -26,6 +26,7 @@ from Combat.Summons import upgrade_keys
 from Combat.WildShape import assume_form, leave_form
 from Combat.Effects.modifiers import hit_point_maximum
 
+from .effect_options import row_uses_most
 from .player_view import may_read_log_line
 from .public_log import public_log_rounds
 from .stats import (
@@ -610,7 +611,12 @@ class LoggingMixin(CombatWindowState):
             feature = {f.name: f for f in char.get("_feature_objects", [])}.get(
                 feature_name
             )
-            if feature is not None and feature.uses is not None:
+            counted = (
+                feature.uses is not None
+                if feature is not None
+                else row_uses_most(char, feature_name) is not None
+            )
+            if counted:
                 used = char.setdefault("feature_uses_used", {})
                 used[feature_name] = used.get(feature_name, 0) + 1
         elif action == Action.REGAIN_FEATURE_CHARGE:

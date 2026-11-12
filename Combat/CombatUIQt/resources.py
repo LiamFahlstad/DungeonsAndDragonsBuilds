@@ -17,7 +17,7 @@ from PyQt6.QtWidgets import QMessageBox
 
 from Core.Rules import ACTIONS_PER_TURN
 
-from .effect_options import has_slots, spell_slot_choices
+from .effect_options import has_slots, row_uses_most, spell_slot_choices
 from .monster_actions import (
     MonsterAction,
     is_spent,
@@ -41,17 +41,23 @@ def action_lack(char: dict, action_type: str | None) -> str | None:
 
 
 def feature_uses_left(char: dict, name: str) -> int | None:
-    """How many uses of char's feature `name` are left, or None for one whose
-    uses aren't counted (or that char doesn't have)."""
+    """How many uses of char's feature `name` are left, or of its feature row
+    `name` that counts its own (row_uses_most: "Misty Step (Fey Touched)"),
+    or None for one whose uses aren't counted (or that char doesn't have)."""
     feature = next(
         (f for f in char.get("_feature_objects", []) if f.name == name), None
     )
-    if feature is None or feature.uses is None:
-        return None
     sheet = char.get("_stat_block")
-    max_uses = (
-        feature.number_of_uses(sheet) if sheet is not None else feature.uses.max_uses
-    )
+    if feature is None or feature.uses is None:
+        max_uses = row_uses_most(char, name) if feature is None else None
+        if max_uses is None:
+            return None
+    else:
+        max_uses = (
+            feature.number_of_uses(sheet)
+            if sheet is not None
+            else feature.uses.max_uses
+        )
     used = (char.get("feature_uses_used") or {}).get(name, 0)
     return max(max_uses - used, 0)
 

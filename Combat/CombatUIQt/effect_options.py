@@ -1268,6 +1268,22 @@ def feature_uses(char: dict, feature, sheet) -> tuple[int, int] | None:
     return max(most - used, 0), most
 
 
+def row_uses_most(char: dict, name: str) -> int | None:
+    """How many times per Long Rest char can use its feature row `name` that
+    counts its uses on its own (CombatEffect.uses_per_long_rest: "Misty Step
+    (Fey Touched)"), or None when no row of its features does. Its uses
+    spent are char["feature_uses_used"][name]; replaying since the last Long
+    Rest (PlayerLog.since_long_rest) is what gives them back."""
+    sheet = char.get("_stat_block")
+    if sheet is None:
+        return None
+    for feature in sheet.iter_features_with_extensions():
+        for effect in feature.combat_effects(sheet) or ():
+            if effect.uses_per_long_rest and effect.name == name:
+                return effect.uses_per_long_rest
+    return None
+
+
 def _feature_duration(feature) -> int | None:
     seconds = feature.activation.duration_to_seconds() if feature.activation else None
     return seconds if isinstance(seconds, int) else None
@@ -1372,8 +1388,16 @@ def _described_feature_option(
             action_cost = casting_time_cost(spell)
         concentration = spell.is_concentration
     effect = _adjusted(char, feature.name, effect)
-    counts_uses = owner.uses is not None and effect.spends_use
-    uses = feature_uses(char, owner, sheet) if counts_uses else None
+    counted_as = owner.name
+    if effect.uses_per_long_rest:
+        # Its own count, not the feature's (Fey Touched's free castings).
+        counted_as, counts_uses = effect.name, True
+        used = char.get("feature_uses_used", {}).get(counted_as, 0)
+        most = effect.uses_per_long_rest
+        uses = (max(most - used, 0), most)
+    else:
+        counts_uses = owner.uses is not None and effect.spends_use
+        uses = feature_uses(char, owner, sheet) if counts_uses else None
     lead, lead_notes = [], []
     if uses is not None:
         lead.append(f"{uses[0]}/{uses[1]}")
@@ -1393,7 +1417,7 @@ def _described_feature_option(
         lead=lead,
         lead_notes=lead_notes,
         counts_uses=counts_uses,
-        feature_name=owner.name,
+        feature_name=counted_as,
     )
 
 
@@ -1801,7 +1825,47 @@ def triggered_rows(char: dict) -> list[TriggerRow]:
                     reroll_save=option.reroll_save,
                 )
             )
-    return rows
+    return _free_castings_first(rows)
+
+
+def _free_castings_first(rows: list[TriggerRow]) -> list[TriggerRow]:
+    """rows with one of a spell's castings where a feature's row casts it
+    too (Magic Initiate's free Shield): while the free one has a use left,
+    it's the one asked; once it's spent, the spell's own, with a slot, and
+    the spent one isn't said (Q42) since the spell is still offered. The
+    picker still has both."""
+
+    def option_of(row: TriggerRow) -> EffectOption | None:
+        return row.option if isinstance(row.option, EffectOption) else None
+
+    def key(row: TriggerRow, option: EffectOption):
+        return (option.spell_name or option.name, row.trigger.event)
+
+    def uses_left(row: TriggerRow) -> int | None:
+        """A free casting's uses left; None for any other row."""
+        option = option_of(row)
+        if option is None or option.kind != FEATURE or not option.spell_name:
+            return None
+        return row.uses[0] if row.uses is not None else None
+
+    spells, free_left = set(), set()
+    for row in rows:
+        option = option_of(row)
+        if option is not None and option.kind == SPELL:
+            spells.add(key(row, option))
+        left = uses_left(row)
+        if option is not None and left is not None and left > 0:
+            free_left.add(key(row, option))
+    kept = []
+    for row in rows:
+        option = option_of(row)
+        if option is not None:
+            if option.kind == SPELL and key(row, option) in free_left:
+                continue
+            if uses_left(row) == 0 and key(row, option) in spells:
+                continue
+        kept.append(row)
+    return kept
 
 
 def _trigger_row_what(option: EffectOption) -> str:
@@ -1877,7 +1941,13 @@ def _trigger_row_uses(char: dict, option: EffectOption) -> tuple[int, int] | Non
         if sheet is not None:
             features += list(sheet.iter_features_with_extensions())
         feature = next((f for f in features if f.name == name), None)
-        return feature_uses(char, feature, sheet) if feature is not None else None
+        if feature is not None:
+            return feature_uses(char, feature, sheet)
+        most = row_uses_most(char, name)  # its own count (Magic Initiate's Shield)
+        if most is None:
+            return None
+        used = char.get("feature_uses_used", {}).get(name, 0)
+        return max(most - used, 0), most
     action = option.monster_action
     if action is not None and action.is_limited:
         return (0, 1) if is_spent(char, action) else (1, 1)

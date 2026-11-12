@@ -152,14 +152,31 @@ def test_still_hits(critical, total, armor, hits):
 @pytest.fixture
 def party(tmp_path):
     """An Ogre (Large, AC 11), Clover (AC 18, Shield) and Kivi (AC 17,
-    Deflect Attacks), in a fight, on the Ogre's turn."""
+    Deflect Attacks), in a fight, on the Ogre's turn. Clover has cast her
+    free Shield (Magic Initiate) already, so a slot's Shield is asked."""
     ui = make_ui(tmp_path, [Ogre()], [Clover().build(), Kivi().build()])
     clover, kivi, ogre = ui.characters
     for char, value in zip(ui.characters, (5, 3, 20)):
         ui._initiative_inputs[id(char)].setText(str(value))
     ui._start_combat()
+    clover["feature_uses_used"] = {FREE_SHIELD: 1}
     ui._select_character(ogre)
     return ui, clover, kivi, ogre
+
+
+FREE_SHIELD = "Shield (Magic Initiate)"
+
+
+def test_a_free_shield_is_asked_before_a_slots(party):
+    # Magic Initiate: "you can cast it once without a spell slot, and you
+    # must finish a Long Rest before you can cast it in this way again."
+    _, clover, _, ogre = party
+    clover["feature_uses_used"] = {}
+    (firing,) = hit_by_firings(_hit(ogre, clover), triggered_rows)[0]
+    assert firing.question == (
+        "Ogre hits Clover: use Shield (Magic Initiate)? Shield."
+        " AC 18 + 5 = 23: the 20 misses. 1 of 1 uses left."
+    )
 
 
 def _hit(attacker, target, total=20, **changes) -> AttackOutcome:
@@ -306,6 +323,19 @@ def _typed_hit(ui, target, roll="20", damage="13 bludgeoning"):
     ui.attack_roll_input.setText(roll)
     ui.damage_input.setText(damage)
     ui._apply_damage_checked()
+
+
+def test_the_free_shield_spends_its_use_and_the_reaction_but_no_slot(fight):
+    ui, clover, _, _, answers = fight
+    clover["feature_uses_used"] = {}
+    hp, slots = clover["hp"], clover["spell_slots"][1]
+    _typed_hit(ui, clover)
+    assert answers.asked[0][0].startswith("Ogre hits Clover: use Shield (Magic")
+    assert "Shield" in clover["conditions"]
+    assert clover["hp"] == hp
+    assert clover["action_uses"]["Reaction"] == 1
+    assert clover["spell_slots"][1] == slots
+    assert clover["feature_uses_used"] == {FREE_SHIELD: 1}
 
 
 def test_shield_turns_a_20_into_a_miss_and_spends_the_reaction_and_a_slot(fight):

@@ -181,7 +181,7 @@ def test_every_feature_of_the_party_is_described(sheet):
 @pytest.mark.parametrize(
     "builder, rows",
     [
-        (Dessie, ["Tinker's Magic", "Jolt to Life"]),
+        (Dessie, ["Shield (Magic Initiate)", "Tinker's Magic", "Jolt to Life"]),
         (Hanna, ["Portal Step", "Hunter's Mark (Favored Enemy)"]),
         (Maggie, ["Wild Companion"]),
         (Thomas, ["Bardic Inspiration"]),
@@ -607,3 +607,44 @@ def test_sneak_attack_is_its_dice_of_the_weapons_type():
     assert row.damage == f"{dice}d6"
     assert row.action_cost is None and not row.counts_uses
     assert "Finesse or a Ranged weapon" in row.note
+
+
+# Free castings counted once per Long Rest each (Q56)
+
+
+def test_fey_touched_counts_each_free_casting_on_its_own():
+    # Fey Touched: "You can cast each of these spells without expending a
+    # spell slot. Once you cast either spell in this way, you can't cast that
+    # spell in this way again until you finish a Long Rest."
+    char = combatant_from_character(_sheet(Thum))
+    misty, detect = "Misty Step (Fey Touched)", "Detect Magic (Fey Touched)"
+    char["feature_uses_used"] = {misty: 1}
+    rows = _rows(Thum)
+    assert rows[misty].counts_uses and rows[misty].feature_name == misty
+    assert rows[detect].feature_name == detect
+    rows = {
+        option.name: option
+        for option in dict(effect_options(char, all_spells=[]))["Features"]
+    }
+    assert rows[misty].summary.startswith("0/1")
+    assert rows[detect].summary.startswith("1/1")  # the other one is still free
+
+
+def test_uses_per_long_rest_reads_back_as_it_was_written():
+    effect = CombatEffect(name="Misty Step (Fey Touched)", uses_per_long_rest=1)
+    data = effect.to_dict()
+    assert data == {"name": "Misty Step (Fey Touched)", "uses_per_long_rest": 1}
+    assert CombatEffect.from_dict(data) == effect
+
+
+@pytest.mark.parametrize(
+    "make",
+    [
+        lambda: CombatEffect(uses_per_long_rest=1),  # nothing to count it under
+        lambda: CombatEffect(name="Free", uses_per_long_rest=-1),
+        lambda: CombatEffect(name="Free", uses_per_long_rest=True),
+    ],
+)
+def test_uses_per_long_rest_is_a_count_under_a_name(make):
+    with pytest.raises(ValueError):
+        make()

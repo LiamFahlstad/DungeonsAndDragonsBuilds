@@ -122,7 +122,11 @@ class FiendishLegacy(Feature):
             CombatEffect(
                 name=f"{spell} (Fiendish Legacy)",
                 spell=spell,
-                notes=("Without a spell slot, once per Long Rest.",),
+                uses_per_long_rest=1,
+                notes=(
+                    "Without a spell slot. Once it's used, cast the spell with"
+                    " a slot until a Long Rest.",
+                ),
             )
             for spell in spells
         ]

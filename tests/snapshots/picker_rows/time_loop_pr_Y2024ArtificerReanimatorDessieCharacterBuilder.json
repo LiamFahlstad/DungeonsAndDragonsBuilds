@@ -436,6 +436,47 @@
    "until": null,
    "upcast": []
   },
+  "Features | Shield (Magic Initiate)": {
+   "ability": null,
+   "action_cost": "Reaction",
+   "amount_kind": "Damage",
+   "badge_modifiers": {
+    "Shield": [
+     {
+      "bonus": 5,
+      "type": "ArmorClass"
+     }
+    ]
+   },
+   "bonus": null,
+   "concentration": false,
+   "condition": "Shield",
+   "counts_uses": true,
+   "damage": "",
+   "dc": null,
+   "duration_seconds": 6,
+   "feature_name": "Shield (Magic Initiate)",
+   "half_on_save": false,
+   "is_described": true,
+   "is_unavailable": false,
+   "note": "It goes on its user, whoever is targeted. Without a spell slot. Once it's used, cast the spell with a slot until a Long Rest. Picked by hand after a hit, the +5 counts against that attack too: if it now misses, take the hit back. You take no damage from Magic Missile until the start of your next turn.",
+   "repeat_save": false,
+   "roll": "Saving throw",
+   "row_name": "",
+   "slot_level": "None",
+   "spell_level": 0,
+   "spell_name": "Shield",
+   "summary": "1/1  Shield",
+   "targets_self": true,
+   "trigger": {
+    "event": "hit by"
+   },
+   "until": [
+    "start",
+    "source"
+   ],
+   "upcast": []
+  },
   "Features | Tinker's Magic": {
    "ability": null,
    "action_cost": "Action",
