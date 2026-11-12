@@ -88,6 +88,8 @@ class ReanimatorSpells(Feature):
 
 
 class ReanimatorSkillSet(Feature):
+    untriggered = "Jolt to Life changes a casting of Spare the Dying: its row is picked instead of the spell."
+
     def __init__(self):
         super().__init__(
             name="Reanimator's Skill Set",

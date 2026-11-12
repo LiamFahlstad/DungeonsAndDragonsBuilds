@@ -49,6 +49,8 @@ class OathOfDevotionSpells(Feature):
 
 
 class SacredWeapon(Feature):
+    untriggered = "Taking the Attack action isn't an event the simulator sees: pick it as the action is taken."
+
     def __init__(self):
         super().__init__(
             name="Sacred Weapon",

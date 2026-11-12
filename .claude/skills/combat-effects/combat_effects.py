@@ -21,7 +21,9 @@ Usage (from the repo root):
     python .claude/skills/combat-effects/combat_effects.py features --campaign curse_of_the_lich [--member Edmund] [--all]
         # each party member's features still read from their text, and where each one's class is
     python .claude/skills/combat-effects/combat_effects.py coverage
-        # one line per campaign: its spells and features described so far
+        # one line per campaign: its spells and features described so far, and their triggers
+    python .claude/skills/combat-effects/combat_effects.py triggers --campaign curse_of_the_lich [--all]
+        # party features whose text has a Trigger fact but no row with a trigger and no reason (Feature.untriggered); exit 1 if any
     python .claude/skills/combat-effects/combat_effects.py notes [--min 3]
         # notes written for three or more spells or features: a field the model may be missing
     python .claude/skills/combat-effects/combat_effects.py stats [--campaign curse_of_the_lich]
@@ -640,6 +642,79 @@ def cmd_features(args) -> int:
     return 0
 
 
+def trigger_facts(blocks) -> list[tuple[str, str]]:
+    """The ("Trigger", ...) facts of a feature's improved description, an
+    option's under its name ("Hill's Tumble: Trigger")."""
+    found = []
+    for block in blocks or ():
+        if isinstance(block, Facts):
+            found += [
+                (key, value)
+                for key, value in block.rows
+                if key.lower().startswith("trigger")
+            ]
+        elif isinstance(block, Option):
+            found += [
+                (f"{block.name}: {key}", value)
+                for key, value in trigger_facts(block.blocks)
+            ]
+    return found
+
+
+# What a feature with a Trigger fact makes of it, for `triggers`.
+TRIGGERED = "triggered"
+REASONED = "left to the GM"
+UNTRIGGERED = "no trigger, no reason"
+
+
+def trigger_state(feature, sheet, effects) -> str | None:
+    """For a feature whose rules text has a Trigger fact: whether one of
+    its rows has a trigger, or it says why not (Feature.untriggered), or
+    neither. None for a feature without a Trigger fact."""
+    if not trigger_facts(feature.get_improved_description(sheet)):
+        return None
+    if any(effect.trigger is not None for effect in effects or ()):
+        return TRIGGERED
+    return REASONED if feature.untriggered else UNTRIGGERED
+
+
+def party_trigger_rows(campaign: str):
+    """(member, feature, state, facts) for each of the party's features
+    with a Trigger fact, each feature class once."""
+    seen: set[type] = set()
+    for combatant in campaign_party(campaign):
+        sheet = combatant["_stat_block"]
+        for feature, _, effects in walk_features(combatant):
+            if type(feature) in seen:
+                continue
+            seen.add(type(feature))
+            state = trigger_state(feature, sheet, effects)
+            if state is not None:
+                facts = trigger_facts(feature.get_improved_description(sheet))
+                yield combatant, feature, state, facts
+
+
+def cmd_triggers(args) -> int:
+    left = 0
+    for combatant, feature, state, facts in party_trigger_rows(args.campaign):
+        if state != UNTRIGGERED and not args.all:
+            continue
+        left += state == UNTRIGGERED
+        print(
+            f"{combatant['name']}: {feature.name}  [{state}]"
+            f"  {where_defined(feature)}"
+        )
+        for key, value in facts:
+            print(f"    {key}: {value}")
+        if state == REASONED:
+            print(f"    untriggered: {feature.untriggered}")
+    print(
+        f"{left} feature(s) with a Trigger fact and neither a triggered row nor"
+        " a reason (Feature.untriggered)."
+    )
+    return 1 if left else 0
+
+
 def campaign_coverage(campaign: str) -> str:
     """One line: how much of the campaign's party is described."""
     party = campaign_party(campaign)
@@ -648,15 +723,22 @@ def campaign_coverage(campaign: str) -> str:
     }
     described_spells = sum(s.combat_effects() is not None for s in spells.values())
     counts: dict[str, int] = defaultdict(int)
+    triggered_rows = 0
     for combatant in party:
         for feature, parent, effects in walk_features(combatant):
             counts[feature_state(feature, parent, effects)] += 1
+            triggered_rows += sum(e.trigger is not None for e in effects or ())
+    triggers: dict[str, int] = defaultdict(int)
+    for _, _, state, _ in party_trigger_rows(campaign):
+        triggers[state] += 1
     return (
         f"{campaign}: spells {described_spells}/{len(spells)} described;"
         f" features {counts[DESCRIBED]} described, {counts[NOTHING]} nothing to"
         f" apply, {counts[FROM_TEXT]} read from text,"
         f" {counts[EXTENSION]} extensions without effects"
-        f" ({counts[PASSIVE]} passive)"
+        f" ({counts[PASSIVE]} passive); triggers: {triggered_rows} feature"
+        f" row(s) with one, Trigger facts {triggers[TRIGGERED]} triggered,"
+        f" {triggers[REASONED]} left to the GM, {triggers[UNTRIGGERED]} to do"
     )
 
 
@@ -819,6 +901,11 @@ def main() -> int:
     features.add_argument("--member", help="part of a party member's name")
     features.add_argument("--all", action="store_true", help="every feature")
     commands.add_parser("coverage")
+    triggers = commands.add_parser("triggers")
+    triggers.add_argument("--campaign", required=True, choices=campaign_names())
+    triggers.add_argument(
+        "--all", action="store_true", help="also those triggered or left to the GM"
+    )
     notes = commands.add_parser("notes")
     notes.add_argument("--min", type=int, default=3, help="sources a note needs")
     notes.add_argument("--words", type=int, default=4, help="words that group notes")
@@ -836,6 +923,7 @@ def main() -> int:
         "compare": cmd_compare,
         "features": cmd_features,
         "coverage": cmd_coverage,
+        "triggers": cmd_triggers,
         "notes": cmd_notes,
         "stats": cmd_stats,
     }[args.command]

@@ -284,6 +284,13 @@ class Feature(Effect):
     # origin only says when it's available (see Presentation/FeatureCards.py).
     labeled_by_class_level = False
 
+    # Why a feature whose rules text has a Trigger ("Trigger": "You fall")
+    # has no row with a CombatTrigger, when it's something the combat
+    # simulator can't see or check: "falling isn't simulated". Empty for a
+    # feature without a Trigger fact, or with a triggered row
+    # (combat_effects.py triggers lists the rest; plan step 6.8).
+    untriggered = ""
+
     def __init__(
         self,
         name: str | None = None,

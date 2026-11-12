@@ -104,6 +104,8 @@ class SkillVersatility(Feature):
 
 
 class LethargyResilience(Feature):
+    untriggered = "The saves against Unconscious (Sleep's second one) are the player's own end-of-turn saves, rolled at the table."
+
     def __init__(self):
         super().__init__(
             name="Lethargy Resilience", origin="Khoravar Trait", usage_tags=["buff"]

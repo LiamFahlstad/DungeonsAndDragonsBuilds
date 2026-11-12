@@ -1,6 +1,6 @@
 ---
 name: combat-effects
-description: Combat effects - what a spell or feature does in a fight (saving throw or attack roll, which ability, damage dice and types, half on a save, a condition or badge and how long it lasts, what the badge does while it's on, upcasting, cantrip scaling, healing, Temporary Hit Points, a use that casts a spell, or nothing to apply at all), written as CombatEffect objects in the spell's class (CharacterContent/Spells/SpellClasses) or the feature's class (its combat_effects() method), and used by the combat UI's Custom Effect picker instead of reading the rules text. The same CombatEffect model monster abilities use. Holds the format, the design principles, the rubric for each field and for features, and a script that checks every spell's and party feature's effects, lists spells without them (by level, class or campaign) and a party's features still read from their text, gives a coverage line per campaign, reports notes repeated often enough to be a missing field, lists notes about a stat (AC, a defense, Speed, Hit Point maximum, size) and whether a badge's modifier counts it, drafts spells' effects from the text as Python for review, writes reviewed drafts into each spell's class and compares them with the text reading. Use when adding, reviewing or fixing a spell's or feature's combat effects, when a spell or feature fills the Custom Effect form wrongly, when a campaign's spells or features should be checked, or when someone asks why a picker row says "Read from its rules text".
+description: Combat effects - what a spell or feature does in a fight (saving throw or attack roll, which ability, damage dice and types, half on a save, a condition or badge and how long it lasts, what the badge does while it's on, upcasting, cantrip scaling, healing, Temporary Hit Points, a use that casts a spell, when it's used by itself (its trigger - on a hit, as its owner is hit, drops to 0, rolls Initiative, fails a save - or why it has none), or nothing to apply at all), written as CombatEffect objects in the spell's class (CharacterContent/Spells/SpellClasses) or the feature's class (its combat_effects() method), and used by the combat UI's Custom Effect picker instead of reading the rules text. The same CombatEffect model monster abilities use. Holds the format, the design principles, the rubric for each field and for features, and a script that checks every spell's and party feature's effects, lists spells without them (by level, class or campaign) and a party's features still read from their text, gives a coverage line per campaign, reports notes repeated often enough to be a missing field, lists notes about a stat (AC, a defense, Speed, Hit Point maximum, size) and whether a badge's modifier counts it, lists party features whose Trigger has no triggered row and no stated reason, drafts spells' effects from the text as Python for review, writes reviewed drafts into each spell's class and compares them with the text reading. Use when adding, reviewing or fixing a spell's or feature's combat effects, when a spell or feature fills the Custom Effect form wrongly, when a campaign's spells or features should be checked, or when someone asks why a picker row says "Read from its rules text".
 ---
 
 # Combat effects (spells and features)
@@ -94,7 +94,8 @@ python $S add <scratchpad>/draft.py             # check the reviewed EFFECTS, wr
 python $S compare --level 2                     # where the effects and the text reading disagree
 python $S check                                 # run before you report: exit 1 on any problem
 python $S features --campaign curse_of_the_lich [--member Kivi] [--all]   # a party's features still read from text, with file:line
-python $S coverage                              # one line per campaign: spells and features described
+python $S coverage                              # one line per campaign: spells and features described, and their triggers
+python $S triggers --campaign curse_of_the_lich [--all]  # features with a Trigger fact but no triggered row and no reason; exit 1 if any
 python $S notes [--min 3]                       # notes on 3+ spells/features: a field the model may be missing
 python $S stats [--campaign curse_of_the_lich]  # notes naming AC, a defense, Speed, HP maximum or size; NOTE ONLY = no modifier counts it
 ```
@@ -175,6 +176,68 @@ The rubric above applies; on top of it:
 - **Badges and their modifiers** work as for spells: a feature that lasts
   and marks its targets (Sacred Weapon, Rage) gives a `CombatCondition`
   named after the feature, with its `modifiers` when the model has them.
+
+## Triggers
+
+A row says *what*, its `trigger` says *when* (`Model/Content/CombatTriggers.py`,
+plan Phase 6). Every feature whose improved description has a `("Trigger",
+...)` fact gets one, or says why not: `triggers --campaign <name>` lists
+those that do neither, and a test runs it for each party.
+
+**The event** is what the "Trigger" fact names, from the owner's side:
+
+| The text says | Event | The row fires against |
+|---|---|---|
+| "you hit ... with an attack roll" | `HIT` | the creature hit |
+| "you miss" | `MISS` | the creature missed |
+| "an attack roll hits you" (before its damage: Shield, Deflect Attacks) | `HIT_BY` | the attacker |
+| "you take damage from a creature" (after it: Hellish Rebuke) | `TAKES_DAMAGE` | the one that dealt it |
+| "you are reduced to 0 Hit Points" | `DROPS_TO_ZERO` | its owner |
+| "you reduce a creature to 0 Hit Points" | `REDUCES_TO_ZERO` | the one reduced |
+| "you become Bloodied" | `BLOODIED` | its owner |
+| "you fail a saving throw" | `FAILS_SAVE` | its owner |
+| "you roll Initiative" | `ROLLS_INITIATIVE` | its owner |
+| a later step of the same casting or use ("Hit or miss, the shard explodes") | `USES` with `after=` the step before | that step's target |
+
+**The mode** follows from the text and the costs, never set by hand:
+
+- **AUTO** (applied, no pop-up): `optional=False` ("it happens", "you
+  regain", a monster's rider), no `when`, nothing spent (no uses counted,
+  no Reaction, no slot) and every gate checked. Dark One's Blessing,
+  Superior Inspiration, Tree Club's Prone.
+- **ASK** (one pop-up per Apply): "you can" (`optional=True`, the
+  default), or it spends something (a use, a slot, a Reaction: Shield,
+  Uncanny Metabolism), or it has a `when`, or a gate couldn't be checked
+  (a typed hit's row, a creature's size), or it's aimed past its target.
+  With the setting off, a turn-column button.
+
+**Gates**, from the words of the trigger, each checked by the simulator:
+"with a melee/ranged/weapon/unarmed/spell attack" `attacks=AttackKind...`;
+"a Large or smaller creature" `largest_target=`; "and deal damage to it"
+`needs_damage=True`; "a Critical Hit" `critical_only=True`; "once per
+turn" `once_per_turn=True`; "an enemy" `enemy_only=True`; a Reaction its
+action doesn't say `reaction=True`; "a different creature", "each creature
+within 5 feet of it" `aim=TriggerAim.ANOTHER` / `ALSO_OTHERS` (the GM picks
+them in the pop-up). A row that only heals or gives uses back is left out
+when it would give nothing, and one with uses is left out with none left
+(the status line says so).
+
+**A `when`** is for what only the GM can judge, written as what follows
+"if": where creatures are ("you can see it within 60 feet"), a damage type
+the dialog may have retyped, a condition the simulator doesn't track
+("your Rage is active"), a roll it doesn't make (Relentless Rage's DC 10
+Constitution save). A `when` always asks: don't add one for something a
+gate checks, or the row stops being AUTO for nothing.
+
+**Leave it untriggered, and say why** (`untriggered = "..."`, a class
+attribute on the feature) when the event is one the simulator can't see or
+doesn't make: moving or falling (Slow Fall), taking the Attack action as
+such (Sacred Weapon), before an attack is rolled (Warding Flare), a d20
+showing 1 (Luck), a save the player rolls at the table (Lethargy
+Resilience), a change to a spell's casting (Jolt to Life), or a die the
+*creature with the badge* spends (Combat Inspiration: a badge's trigger,
+not built). The row stays in the picker for use by hand; its notes say
+when. A position event never gets a trigger (principle 8).
 
 ## Rubric
 

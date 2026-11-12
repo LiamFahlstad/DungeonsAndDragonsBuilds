@@ -110,6 +110,8 @@ class RadianceOfTheDawn(Feature):
 
 
 class WardingFlare(Feature):
+    untriggered = "It answers an attack roll before it's rolled, which no hit path stops to ask about: use it by hand, giving that roll Disadvantage."
+
     def __init__(self):
         super().__init__(
             name="Warding Flare",

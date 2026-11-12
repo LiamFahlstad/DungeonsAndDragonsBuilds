@@ -14,6 +14,8 @@ from Model.Content.FeatureText import Block, Facts, Option, Paragraph
 
 
 class CombatInspiration(Feature):
+    untriggered = "The creature with the Bardic Inspiration die spends it, as it hits or is hit: a trigger on that badge (OnTrigger, Q57), not built yet."
+
     def __init__(self):
         super().__init__(
             name="Combat Inspiration",

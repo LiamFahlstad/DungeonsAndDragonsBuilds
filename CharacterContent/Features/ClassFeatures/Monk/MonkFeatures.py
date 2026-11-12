@@ -662,6 +662,8 @@ class DeflectAttacks(Feature):
 
 
 class SlowFall(Feature):
+    untriggered = "Falling isn't simulated."
+
     def __init__(self):
         super().__init__(
             name="Slow Fall",

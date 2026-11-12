@@ -34,6 +34,15 @@ def test_every_usage_tag_is_valid():
     assert result.returncode == 0, result.stdout + result.stderr
 
 
+@pytest.mark.parametrize("campaign", ["curse_of_the_lich", "time_loop_pr"])
+def test_every_party_trigger_is_triggered_or_left_to_the_gm(campaign):
+    """Plan step 6.8: a party feature whose text has a Trigger fact has a row
+    with a CombatTrigger, or says why not (Feature.untriggered)."""
+    script = SKILLS / "combat-effects" / "combat_effects.py"
+    result = run(str(script), "triggers", "--campaign", campaign)
+    assert result.returncode == 0, result.stdout + result.stderr
+
+
 def test_abilities_reference_renders_every_subclass():
     from Model.Creatures import MonsterAbilities
 

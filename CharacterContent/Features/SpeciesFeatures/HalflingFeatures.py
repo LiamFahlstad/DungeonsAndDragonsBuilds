@@ -53,6 +53,8 @@ class HalflingNimbleness(Feature):
 
 
 class Luck(Feature):
+    untriggered = "Rerolling a 1 on the d20 is done at the table: the rolls made here don't reroll it."
+
     def __init__(self):
         super().__init__(
             name="Luck", origin="Halfling Trait", passive=True, usage_tags=["buff"]

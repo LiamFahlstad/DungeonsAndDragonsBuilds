@@ -62,7 +62,7 @@ Every row comes from the agent's or skill's own frontmatter, so this can't drift
 | Skill | Preloaded by | Scripts | Use for |
 |---|---|---|---|
 | [`balance-monster`](../../skills/balance-monster/SKILL.md) | `monster-balancer`, `monster-designer` | `check_monster.py` | Balance a homebrew D&D monster so its monster_score.py "score" lands in 0.4-0.6 for its CR, and check it is done with one script |
-| [`combat-effects`](../../skills/combat-effects/SKILL.md) | `feature-combat-effects`, `spell-combat-effects` | `combat_effects.py` | Combat effects - what a spell or feature does in a fight, written as CombatEffect objects in the spell's class or the feature's… |
+| [`combat-effects`](../../skills/combat-effects/SKILL.md) | `feature-combat-effects`, `spell-combat-effects` | `combat_effects.py` | Combat effects - what a spell or feature does in a fight (saving throw or attack roll, which ability, damage dice and types, half… |
 | [`commit-plans`](../../skills/commit-plans/SKILL.md) | `git-commit` | `commit_plan.py` | Commit plans - commits written down instead of made, so committing stays safe while many agents edit, stage and commit in the… |
 | [`discovered-issues`](../../skills/discovered-issues/SKILL.md) | *main session* | `issues.py` | The shared log of bugs, rules mismatches and gaps found but not fixed and the script every agent uses to add, update, close and… |
 | [`monster-stat-blocks`](../../skills/monster-stat-blocks/SKILL.md) | `monster-ability-converter`, `monster-balancer`, `monster-designer` | `abilities.py` | How monster stat blocks work in this repo - which Combat/Monsters files are generated vs hand-maintained, the CR tier folders,… |
