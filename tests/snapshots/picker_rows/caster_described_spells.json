@@ -1192,9 +1192,18 @@
    "ability": null,
    "action_cost": "Action",
    "amount_kind": "Damage",
+   "badge_modifiers": {
+    "Guiding Bolt": [
+     {
+      "mode": "Advantage",
+      "once": true,
+      "type": "AttacksAgainst"
+     }
+    ]
+   },
    "bonus": 7,
    "concentration": false,
-   "condition": "",
+   "condition": "Guiding Bolt",
    "counts_uses": true,
    "damage": "4d6 Radiant",
    "dc": null,
@@ -1203,7 +1212,7 @@
    "half_on_save": false,
    "is_described": true,
    "is_unavailable": false,
-   "note": "On a hit, the next attack roll against the target before the end of your next turn has Advantage.",
+   "note": "",
    "repeat_save": false,
    "roll": "Attack roll",
    "row_name": "",
@@ -1211,7 +1220,10 @@
    "spell_level": 1,
    "spell_name": "Guiding Bolt",
    "summary": "+7  4d6 Radiant",
-   "until": null,
+   "until": [
+    "end",
+    "source"
+   ],
    "upcast": [
     "1d6"
    ]
@@ -2858,9 +2870,21 @@
    "ability": "WIS",
    "action_cost": "Action",
    "amount_kind": "Damage",
+   "badge_modifiers": {
+    "Vicious Mockery": [
+     {
+      "mode": "Disadvantage",
+      "once": true,
+      "tests": [
+       "attack roll"
+      ],
+      "type": "D20Mode"
+     }
+    ]
+   },
    "bonus": null,
    "concentration": false,
-   "condition": "",
+   "condition": "Vicious Mockery",
    "counts_uses": true,
    "damage": "1d6 Psychic",
    "dc": 15,
@@ -2869,7 +2893,7 @@
    "half_on_save": false,
    "is_described": true,
    "is_unavailable": false,
-   "note": "On a failed save, the target also has Disadvantage on the next attack roll it makes before the end of its next turn.",
+   "note": "",
    "repeat_save": false,
    "roll": "Saving throw",
    "row_name": "",
@@ -2877,7 +2901,10 @@
    "spell_level": 0,
    "spell_name": "Vicious Mockery",
    "summary": "DC 15 WIS  1d6 Psychic",
-   "until": null,
+   "until": [
+    "end",
+    "target"
+   ],
    "upcast": []
   },
   "All spells | Witch Bolt": {

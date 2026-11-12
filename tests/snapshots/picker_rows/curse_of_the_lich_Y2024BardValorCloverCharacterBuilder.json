@@ -508,9 +508,21 @@
    "ability": "WIS",
    "action_cost": "Action",
    "amount_kind": "Damage",
+   "badge_modifiers": {
+    "Vicious Mockery": [
+     {
+      "mode": "Disadvantage",
+      "once": true,
+      "tests": [
+       "attack roll"
+      ],
+      "type": "D20Mode"
+     }
+    ]
+   },
    "bonus": null,
    "concentration": false,
-   "condition": "",
+   "condition": "Vicious Mockery",
    "counts_uses": true,
    "damage": "1d6 Psychic",
    "dc": 14,
@@ -519,7 +531,7 @@
    "half_on_save": false,
    "is_described": true,
    "is_unavailable": false,
-   "note": "On a failed save, the target also has Disadvantage on the next attack roll it makes before the end of its next turn.",
+   "note": "",
    "repeat_save": false,
    "roll": "Saving throw",
    "row_name": "",
@@ -527,7 +539,10 @@
    "spell_level": 0,
    "spell_name": "Vicious Mockery",
    "summary": "DC 14 WIS  1d6 Psychic",
-   "until": null,
+   "until": [
+    "end",
+    "target"
+   ],
    "upcast": []
   },
   "Features | Bardic Inspiration": {

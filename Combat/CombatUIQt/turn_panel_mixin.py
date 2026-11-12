@@ -88,6 +88,20 @@ _RIDER_LENGTH = 130
 _CHOOSE_A_TYPE = "type"
 
 
+def _applies_nothing(option: EffectOption) -> bool:
+    """Whether a picker row puts nothing on a creature the simulator can show:
+    no roll, amount, condition, uses regained or condition ended (Push)."""
+    return not (
+        option.rolls
+        or option.condition
+        or option.ability
+        or option.bonus is not None
+        or option.regains
+        or option.drops_to
+        or option.ends_conditions
+    )
+
+
 class TurnPanelMixin(CombatWindowState):
     """Mixin for the turn column, monster turns and the players' screen."""
 
@@ -386,6 +400,8 @@ class TurnPanelMixin(CombatWindowState):
                 result.append("HIT" if hit else "MISS")
             if target is not None and hit is not False:
                 notes = (*notes, *hit_notes(target))
+            # The roll's made: what counted for it once is used up (Sap).
+            self._use_up_badges(char, target)
         if action.save_ability is not None:
             result.append(f"DC {action.save_dc or '?'} {action.save_ability} save")
             if action.half_on_save:
@@ -868,6 +884,13 @@ class TurnPanelMixin(CombatWindowState):
         for target in targets if targets is not None else [firing.target]:
             if self._apply_row(firing.owner, target, option):
                 used = True
+                if _applies_nothing(option):
+                    # What it does is done at the table (Push's 10 feet):
+                    # the log says it was used.
+                    self._log_event(
+                        f"{firing.caster} uses {firing.row.name} on {target['name']}",
+                        character=firing.caster,
+                    )
             else:
                 notes.append(f"{firing.row.name} not used on {target['name']}")
         if not used:

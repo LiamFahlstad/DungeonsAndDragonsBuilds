@@ -78,6 +78,51 @@
    "until": null,
    "upcast": []
   },
+  "Attacks | Handaxe: Vex": {
+   "ability": null,
+   "action_cost": null,
+   "amount_kind": "Damage",
+   "badge_modifiers": {
+    "Vex": [
+     {
+      "by_caster": true,
+      "mode": "Advantage",
+      "once": true,
+      "type": "AttacksAgainst"
+     }
+    ]
+   },
+   "bonus": null,
+   "concentration": false,
+   "condition": "Vex",
+   "counts_uses": false,
+   "damage": "",
+   "dc": null,
+   "duration_seconds": null,
+   "feature_name": "",
+   "half_on_save": false,
+   "is_described": true,
+   "is_unavailable": false,
+   "note": "",
+   "repeat_save": false,
+   "roll": "Saving throw",
+   "row_name": "",
+   "slot_level": "None",
+   "spell_level": 0,
+   "spell_name": "",
+   "summary": "Vex  on a hit, deals damage",
+   "trigger": {
+    "after": "Handaxe",
+    "event": "hit",
+    "needs_damage": true,
+    "optional": false
+   },
+   "until": [
+    "end",
+    "source"
+   ],
+   "upcast": []
+  },
   "Attacks | Longbow": {
    "ability": null,
    "action_cost": "Action",
@@ -128,6 +173,52 @@
    "spell_name": "",
    "summary": "+6  1d8 + 4 Slashing",
    "until": null,
+   "upcast": []
+  },
+  "Attacks | Longsword: Sap": {
+   "ability": null,
+   "action_cost": null,
+   "amount_kind": "Damage",
+   "badge_modifiers": {
+    "Sap": [
+     {
+      "mode": "Disadvantage",
+      "once": true,
+      "tests": [
+       "attack roll"
+      ],
+      "type": "D20Mode"
+     }
+    ]
+   },
+   "bonus": null,
+   "concentration": false,
+   "condition": "Sap",
+   "counts_uses": false,
+   "damage": "",
+   "dc": null,
+   "duration_seconds": null,
+   "feature_name": "",
+   "half_on_save": false,
+   "is_described": true,
+   "is_unavailable": false,
+   "note": "",
+   "repeat_save": false,
+   "roll": "Saving throw",
+   "row_name": "",
+   "slot_level": "None",
+   "spell_level": 0,
+   "spell_name": "",
+   "summary": "Sap  on a hit",
+   "trigger": {
+    "after": "Longsword",
+    "event": "hit",
+    "optional": false
+   },
+   "until": [
+    "start",
+    "source"
+   ],
    "upcast": []
   },
   "Attacks | Unarmed Strike": {

@@ -414,9 +414,18 @@
    "ability": null,
    "action_cost": "Action",
    "amount_kind": "Damage",
+   "badge_modifiers": {
+    "Guiding Bolt": [
+     {
+      "mode": "Advantage",
+      "once": true,
+      "type": "AttacksAgainst"
+     }
+    ]
+   },
    "bonus": 6,
    "concentration": false,
-   "condition": "",
+   "condition": "Guiding Bolt",
    "counts_uses": true,
    "damage": "4d6 Radiant",
    "dc": null,
@@ -425,7 +434,7 @@
    "half_on_save": false,
    "is_described": true,
    "is_unavailable": false,
-   "note": "On a hit, the next attack roll against the target before the end of your next turn has Advantage.",
+   "note": "",
    "repeat_save": false,
    "roll": "Attack roll",
    "row_name": "",
@@ -433,7 +442,10 @@
    "spell_level": 1,
    "spell_name": "Guiding Bolt",
    "summary": "+6  4d6 Radiant",
-   "until": null,
+   "until": [
+    "end",
+    "source"
+   ],
    "upcast": [
     "1d6"
    ]

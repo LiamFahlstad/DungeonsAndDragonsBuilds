@@ -1370,8 +1370,14 @@ class GuidingBolt(ClassSpell):
             CombatEffect(
                 roll=EffectRoll.ATTACK,
                 damage=(CombatDamage("4d6", DamageType.RADIANT, upcast="1d6"),),
-                notes=(
-                    "On a hit, the next attack roll against the target before the end of your next turn has Advantage.",
+                # "The next attack roll made against this target before the
+                # end of your next turn has Advantage."
+                conditions=(
+                    CombatCondition(
+                        "Guiding Bolt",
+                        until=(TurnEdge.END, TurnOf.SOURCE),
+                        modifiers=(AttacksAgainst(RollMode.ADVANTAGE, once=True),),
+                    ),
                 ),
             )
         ]

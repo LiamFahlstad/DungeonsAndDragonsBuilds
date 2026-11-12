@@ -297,9 +297,10 @@ class TriggerRow:
     heals: bool = False
     regains: bool = False
     regainable: int = 0
-    # A spell's row: a later step of a casting (`after`) follows only the
-    # casting picked in the dialog, never a hit typed in.
-    spell: bool = False
+    # A spell's or a weapon's row: what comes `after` a casting (its later
+    # step) or a weapon's attack (its mastery) follows only the row picked in
+    # the dialog, never a hit typed in (R137, R143).
+    picked_only: bool = False
     reroll_save: int | None = None  # the bonus it rerolls a failed save with
 
     @property
@@ -733,8 +734,8 @@ def _firing(
     if trigger.after and attack is not None:
         if attack.row and attack.row != trigger.after:
             return None
-        if not attack.row and row.spell:
-            return None  # a casting's later step follows the casting picked
+        if not attack.row and row.picked_only:
+            return None  # a casting's later step, a weapon's mastery: picked only
         if not attack.row:
             why.append(f"if it was {trigger.after}")
     if attack is not None:

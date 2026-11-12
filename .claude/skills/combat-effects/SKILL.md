@@ -176,6 +176,12 @@ The rubric above applies; on top of it:
 - **Badges and their modifiers** work as for spells: a feature that lasts
   and marks its targets (Sacred Weapon, Rage) gives a `CombatCondition`
   named after the feature, with its `modifiers` when the model has them.
+- **Weapon Mastery** isn't a feature's row: each mastery property is
+  written once, in `Model/Content/WeaponMasteryEffects.py`, and the picker
+  adds its row ("Longsword: Sap", `after=` the weapon) under each weapon
+  its wielder has the mastery of. A feature that grants masteries (Weapon
+  Mastery) gives `[]`. Nothing yet changes a mastery's row (a feature's
+  `adjust_combat_effect` doesn't reach it): say so in the feature's notes.
 
 ## Triggers
 
@@ -335,6 +341,13 @@ Names are the Python ones; `Ability`, `Condition` and `DamageType` come from
   the trigger size gates read the size in use). Never on a rules condition.
   A spell's badge keeps the spell's name even when its rows differ
   (Enlarge/Reduce's two rows both give "Enlarge/Reduce").
+  **"The next attack roll"** is `once=True` on its `D20Mode` (of attack
+  rolls only: Vicious Mockery's and Sap's Disadvantage on the bearer's
+  next roll) or `AttacksAgainst` (Guiding Bolt's Advantage on the next roll
+  against it): the badge ends once that roll is made, rolled or typed in.
+  "Your next attack roll against that creature" (Vex) adds
+  `by_caster=True`: only the creature that gave the badge gets it, or uses
+  it up. Its `until` is the "before the end of your next turn".
 - **Stat changes** (plan Phase 7). What a lasting spell or feature changes
   on its bearer is a modifier on its badge, never a note: the simulator
   works the stat out from the stored one plus the badges, so it goes back

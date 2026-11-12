@@ -15,7 +15,7 @@
    "half_on_save": false,
    "is_described": false,
    "is_unavailable": false,
-   "note": "",
+   "note": "Nick: its Light property's extra attack can be made as part of the Attack action instead of as a Bonus Action, once per turn.",
    "repeat_save": false,
    "roll": "Attack roll",
    "row_name": "",
@@ -41,7 +41,7 @@
    "half_on_save": false,
    "is_described": false,
    "is_unavailable": false,
-   "note": "",
+   "note": "Nick: its Light property's extra attack can be made as part of the Attack action instead of as a Bonus Action, once per turn.",
    "repeat_save": false,
    "roll": "Attack roll",
    "row_name": "",
@@ -75,6 +75,37 @@
    "spell_level": 0,
    "spell_name": "",
    "summary": "+5  1d8 + 3 Bludgeoning",
+   "until": null,
+   "upcast": []
+  },
+  "Attacks | Sulvesburg's Folly: Push": {
+   "ability": null,
+   "action_cost": null,
+   "amount_kind": "Damage",
+   "bonus": null,
+   "concentration": false,
+   "condition": "",
+   "counts_uses": false,
+   "damage": "",
+   "dc": null,
+   "duration_seconds": null,
+   "feature_name": "",
+   "half_on_save": false,
+   "is_described": true,
+   "is_unavailable": false,
+   "note": "It's pushed up to 10 feet straight away from its attacker: move it at the table.",
+   "repeat_save": false,
+   "roll": "Saving throw",
+   "row_name": "",
+   "slot_level": "None",
+   "spell_level": 0,
+   "spell_name": "",
+   "summary": "on a hit, Large or smaller",
+   "trigger": {
+    "after": "Sulvesburg's Folly",
+    "event": "hit",
+    "largest_target": "Large"
+   },
    "until": null,
    "upcast": []
   },
@@ -293,9 +324,18 @@
    "ability": null,
    "action_cost": "Action",
    "amount_kind": "Damage",
+   "badge_modifiers": {
+    "Guiding Bolt": [
+     {
+      "mode": "Advantage",
+      "once": true,
+      "type": "AttacksAgainst"
+     }
+    ]
+   },
    "bonus": 5,
    "concentration": false,
-   "condition": "",
+   "condition": "Guiding Bolt",
    "counts_uses": true,
    "damage": "4d6 Radiant",
    "dc": null,
@@ -304,7 +344,7 @@
    "half_on_save": false,
    "is_described": true,
    "is_unavailable": false,
-   "note": "On a hit, the next attack roll against the target before the end of your next turn has Advantage.",
+   "note": "",
    "repeat_save": false,
    "roll": "Attack roll",
    "row_name": "",
@@ -312,7 +352,10 @@
    "spell_level": 1,
    "spell_name": "Guiding Bolt",
    "summary": "+5  4d6 Radiant",
-   "until": null,
+   "until": [
+    "end",
+    "source"
+   ],
    "upcast": [
     "1d6"
    ]

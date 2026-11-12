@@ -26,7 +26,12 @@ from Model.Content.CombatEffect import (
     TurnOf,
 )
 from Model.Content.CombatModifiers import ArmorClass
-from Model.Content.CombatTriggers import CombatTrigger, TriggerEvent
+from Model.Content.CombatTriggers import CombatTrigger, TriggerAim, TriggerEvent
+from Model.Content.WeaponMasteryEffects import (
+    MASTERY_RULES,
+    mastery_effects,
+    mastery_note,
+)
 
 from .monster_actions import (
     DAMAGE,
@@ -1187,6 +1192,8 @@ def _weapon_option(char: dict, weapon, sheet) -> EffectOption:
     Opportunity Attack is a Reaction, for the GM to choose."""
     bonus = weapon.calculate_total_attack_roll_bonus_int(sheet)
     rolls, notes = _weapon_rolls(weapon, sheet)
+    if _has_mastery(char, weapon) and mastery_note(weapon):
+        notes.append(mastery_note(weapon))
     acted = char.get("action_uses", {}).get("Action", 0) > 0
     return EffectOption(
         name=weapon.name,
@@ -1202,6 +1209,53 @@ def _weapon_option(char: dict, weapon, sheet) -> EffectOption:
         # Glossary); an Unarmed Strike isn't one.
         weapon_attack=not getattr(weapon, "is_unarmed_strike", False),
     )
+
+
+def _has_mastery(char: dict, weapon) -> bool:
+    """Whether char can use the weapon's mastery property."""
+    if getattr(weapon, "mastery", None) is None:
+        return False
+    return weapon.has_mastery(char.get("_weapon_masteries") or [])
+
+
+def _weapon_options(char: dict, weapon, sheet) -> list[EffectOption]:
+    """A weapon's row, then its mastery's when char has that mastery."""
+    return [_weapon_option(char, weapon, sheet), *_mastery_options(char, weapon, sheet)]
+
+
+def _mastery_options(char: dict, weapon, sheet) -> list[EffectOption]:
+    """The row of the weapon's mastery property, if char has its mastery
+    (Model/Content/WeaponMasteryEffects.py): "Longsword: Sap", which the
+    simulator applies or asks about as the weapon hits or misses (6.9). It
+    spends nothing: the attack did. Its summary says when, as a monster's
+    rider's does ("on a hit, deals damage")."""
+    if sheet is None or not _has_mastery(char, weapon):
+        return []
+    options = []
+    for effect in mastery_effects(weapon, sheet):
+        option = _described_option(
+            char,
+            effect,
+            name=weapon.name,
+            kind=WEAPON,
+            tooltip=MASTERY_RULES[weapon.mastery],
+            weapon_attack=effect.roll == "attack" or None,
+        )
+        trigger = effect.trigger
+        assert trigger is not None
+        when = ["on a miss" if trigger.event is TriggerEvent.MISS else "on a hit"]
+        if trigger.needs_damage:
+            when.append("deals damage")
+        if trigger.largest_target is not None:
+            when.append(f"{trigger.largest_target.value} or smaller")
+        if trigger.once_per_turn:
+            when.append("once per turn")
+        if trigger.aim is TriggerAim.ANOTHER:
+            when.append("another creature")
+        options.append(
+            replace(option, summary=f"{option.summary}  {', '.join(when)}".strip())
+        )
+    return options
 
 
 def feature_uses(char: dict, feature, sheet) -> tuple[int, int] | None:
@@ -1656,7 +1710,10 @@ def effect_options(
     weapons = who.get("_weapons_objects") or []
     features = who.get("_feature_objects") or []
     categories += [
-        (ATTACKS, [_weapon_option(who, weapon, sheet) for weapon in weapons]),
+        (
+            ATTACKS,
+            [o for weapon in weapons for o in _weapon_options(who, weapon, sheet)],
+        ),
         (
             f"{who.get('name')}'s Spells",
             [o for s in own_spells for o in spell_options(s, who)],
@@ -1740,7 +1797,7 @@ def triggered_rows(char: dict) -> list[TriggerRow]:
                     heals=option.amount_kind == HEALING and bool(option.rolls),
                     regainable=sum(regained_uses(char, r) for r in option.regains),
                     regains=bool(option.regains),
-                    spell=option.kind == SPELL,
+                    picked_only=option.kind in (SPELL, WEAPON),
                     reroll_save=option.reroll_save,
                 )
             )

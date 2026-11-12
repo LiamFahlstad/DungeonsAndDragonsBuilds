@@ -185,6 +185,12 @@ class AbstractWeapon(Item, ABC):
 
         return best_ability_modifier, best_ability
 
+    def attack_ability_modifier(self, character: CharacterView) -> int:
+        """The ability modifier the wielder makes this weapon's attack rolls
+        with (the better of Strength and Dexterity for a Finesse weapon):
+        what Topple's DC and Graze's damage are made of."""
+        return self._calculate_ability_modifier_bonus(character)[0]
+
     def calculate_ability_modifier_bonus(self, character: CharacterView) -> str:
         ability_modifier, ability = self._calculate_ability_modifier_bonus(character)
         return f"{ability_modifier} (ability mod: {ability})"
@@ -211,9 +217,11 @@ class AbstractWeapon(Item, ABC):
     def has_mastery(self, weapon_masteries: "list[AbstractWeapon]") -> bool:
         """Whether the wielder can use this weapon's mastery property: an
         explicit player_has_mastery, or a chosen Weapon Mastery of the same
-        kind of weapon. Worked out on read, so the weapon is never changed."""
+        kind of weapon. A magic weapon is a weapon of its kind (Halfling's
+        Trick is a Shortsword), so a Shortsword mastery covers it. Worked out
+        on read, so the weapon is never changed."""
         return self.player_has_mastery or any(
-            type(self) is type(mastery) for mastery in weapon_masteries
+            isinstance(self, type(mastery)) for mastery in weapon_masteries
         )
 
     def attack_roll_condition(self, character: CharacterView) -> DiceRollCondition:

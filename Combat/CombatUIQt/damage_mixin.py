@@ -8,6 +8,7 @@ from Combat.Effects.modifiers import (
     hit_point_maximum,
     immune_to_damage,
     resists,
+    used_up_by_attack,
     vulnerable_to,
 )
 from Combat.Effects.triggers import (
@@ -224,6 +225,7 @@ class DamageMixin(CombatWindowState):
             f"{attacker} of {roll.text} {_VERDICTS[hit]} {name}{critical}{noted}",
             character=name,
         )
+        self._use_up_badges(source, target)
         why = f" ({'; '.join(notes)})" if notes else ""
         if armor is None:
             return hit, f"{name} has no AC to check{why}"
@@ -231,6 +233,20 @@ class DamageMixin(CombatWindowState):
         faced = f"AC {armor + bonus}{cover}"
         word = "hit" if hit else "miss"
         return hit, f"{name}: {roll.text} vs {faced}, {word}{why}"
+
+    def _use_up_badges(self, attacker: dict | None, target: dict | None):
+        """End the badges an attack roll by attacker against target has used
+        up (used_up_by_attack: Sap's Disadvantage, Vex's and Guiding Bolt's
+        Advantage, each for one roll), a log line each, in the roll's undo
+        step. Called once the roll is made, in each path that makes one."""
+        for char, name in used_up_by_attack(attacker, target):
+            if name not in char.get("conditions", []):
+                continue
+            self._log_event(
+                f"{char['name']}'s {name} is used up", character=char["name"]
+            )
+            self._remove_condition_from(char, name)
+            self._rebuild_card(char)
 
     @undoable
     def _apply_attack_roll(self):

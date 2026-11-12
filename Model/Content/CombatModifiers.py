@@ -65,26 +65,47 @@ def _check_tests(tests: tuple[D20Test, ...], abilities: tuple[Ability, ...]):
         raise ValueError("Only saving throws and ability checks have abilities")
 
 
+def _check_once(modifier):
+    if not isinstance(modifier.once, bool):
+        raise ValueError(f"once is True or False, got {modifier.once!r}")
+
+
 @dataclass(frozen=True)
 class D20Mode:
     """Its own `tests` have Advantage or Disadvantage: of these `abilities`
-    only, if any are given ("Disadvantage on Dexterity saving throws")."""
+    only, if any are given ("Disadvantage on Dexterity saving throws").
+    `once`: only its next attack roll ("Disadvantage on the next attack roll
+    it makes": Sap, Vicious Mockery); the badge ends once that roll is made."""
 
     tests: tuple[D20Test, ...]
     mode: RollMode
     abilities: tuple[Ability, ...] = ()
     when: str = ""
+    once: bool = False
 
     def __post_init__(self):
         _check_tests(self.tests, self.abilities)
+        _check_once(self)
+        if self.once and self.tests != (D20Test.ATTACK_ROLL,):
+            raise ValueError("once is for a D20Mode of attack rolls only")
 
 
 @dataclass(frozen=True)
 class AttacksAgainst:
-    """Attack rolls against it have Advantage or Disadvantage."""
+    """Attack rolls against it have Advantage or Disadvantage. `by_caster`:
+    only those made by the creature that gave it (Vex: "your next attack
+    roll against that creature"). `once`: only the next such attack roll
+    (Guiding Bolt, Vex); the badge ends once that roll is made."""
 
     mode: RollMode
     when: str = ""
+    by_caster: bool = False
+    once: bool = False
+
+    def __post_init__(self):
+        _check_once(self)
+        if not isinstance(self.by_caster, bool):
+            raise ValueError(f"by_caster is True or False, got {self.by_caster!r}")
 
 
 @dataclass(frozen=True)
@@ -506,6 +527,8 @@ _PLAIN: dict[str, type | tuple[type, ...]] = {
     "text": str,
     "effect": str,
     "per_level": bool,
+    "once": bool,
+    "by_caster": bool,
     "bonus": int,
     "base": int,
     "value": int,

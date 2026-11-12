@@ -11,7 +11,9 @@ it. A combatant is the combat UI's dict. Its modifiers come from three places:
 What a modifier says counts in a roll the simulator makes, a D20Bonus's dice
 rolled and added, and a hit's extra damage (hit_plan) rolled with its damage:
 the attacker's ExtraDamageOnHit, and the target's ExtraDamageFrom when the
-attacker is the caster of the effect it's on. One with a `when` (where the attacker is, what it can see)
+attacker is the caster of the effect it's on; an AttacksAgainst `by_caster`
+(Vex) counts only for that caster too. A `once` one counts for one attack
+roll, which uses its badge up (used_up_by_attack). One with a `when` (where the attacker is, what it can see)
 is never counted, only noted, since the simulator doesn't know positions
 (plan principle 8). A total rolled at the table counts as it is, so only the
 notes it can't have known about come with it. The roll modes are the UI's
@@ -19,7 +21,7 @@ text: "Neutral", "Advantage", "Disadvantage".
 """
 
 from collections.abc import Callable, Iterable, Mapping
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from typing import TypeVar
 
 from Core.Definitions import Ability, Condition, CreatureSize
@@ -318,9 +320,72 @@ def attack_plan(
         sources += [
             (_whose(target, c), m)
             for c, m in modifiers_on(target)
-            if isinstance(m, AttacksAgainst)
+            if isinstance(m, AttacksAgainst) and not m.by_caster
+        ]
+        sources += [
+            (_whose(target, effect["name"]), m)
+            for effect, m in _by_caster_against(target, attacker)
         ]
     return _plan(mode, sources, D20Test.ATTACK_ROLL, None, typed)
+
+
+def _by_caster_against(
+    target: dict, attacker: dict | None
+) -> list[tuple[ActiveEffect, AttacksAgainst]]:
+    """The target's AttacksAgainst that count only for the creature that
+    gave them (Vex), with their effect: those attacker gave it, or, with no
+    attacker known, each as a `when` the GM judges ("the attacker is
+    Edmund")."""
+    found = []
+    for effect, m in _effects_with_modifiers(target):
+        if not isinstance(m, AttacksAgainst) or not m.by_caster:
+            continue
+        caster = effect.get("caster")
+        if attacker is None:
+            who = caster or "the creature that gave it"
+            found.append((effect, replace(m, when=m.when or f"the attacker is {who}")))
+        elif caster == attacker.get("name"):
+            found.append((effect, m))
+    return found
+
+
+def used_up_by_attack(
+    attacker: dict | None, target: dict | None
+) -> list[tuple[dict, str]]:
+    """The badges an attack roll by attacker against target uses up, as
+    (who has it, its name): the attacker's own `once` D20Mode on attack
+    rolls (Sap: "its next attack roll", whoever it's against), and the
+    target's `once` AttacksAgainst that counted for it (Guiding Bolt; Vex,
+    only for the attacker that gave it). Rolled here or at the table, the
+    roll was made. One with a `when` is the GM's to take off, as it may not
+    have counted."""
+    used: list[tuple[dict, str]] = []
+    if attacker is not None:
+        used += [
+            (attacker, effect["name"])
+            for effect, m in _effects_with_modifiers(attacker)
+            if isinstance(m, D20Mode) and m.once and not m.when
+        ]
+    if target is not None:
+        used += [
+            (target, effect["name"])
+            for effect, m in _effects_with_modifiers(target)
+            if isinstance(m, AttacksAgainst)
+            and m.once
+            and not m.when
+            and not m.by_caster
+        ]
+        if attacker is not None:
+            used += [
+                (target, effect["name"])
+                for effect, m in _by_caster_against(target, attacker)
+                if m.once and not m.when
+            ]
+    unique: list[tuple[dict, str]] = []
+    for char, name in used:
+        if not any(char is c and name == n for c, n in unique):
+            unique.append((char, name))
+    return unique
 
 
 def hit_notes(target: dict) -> list[str]:

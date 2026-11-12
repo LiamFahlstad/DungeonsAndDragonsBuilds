@@ -26,6 +26,51 @@
    "until": null,
    "upcast": []
   },
+  "Attacks | Halfling's Trick: Vex": {
+   "ability": null,
+   "action_cost": null,
+   "amount_kind": "Damage",
+   "badge_modifiers": {
+    "Vex": [
+     {
+      "by_caster": true,
+      "mode": "Advantage",
+      "once": true,
+      "type": "AttacksAgainst"
+     }
+    ]
+   },
+   "bonus": null,
+   "concentration": false,
+   "condition": "Vex",
+   "counts_uses": false,
+   "damage": "",
+   "dc": null,
+   "duration_seconds": null,
+   "feature_name": "",
+   "half_on_save": false,
+   "is_described": true,
+   "is_unavailable": false,
+   "note": "",
+   "repeat_save": false,
+   "roll": "Saving throw",
+   "row_name": "",
+   "slot_level": "None",
+   "spell_level": 0,
+   "spell_name": "",
+   "summary": "Vex  on a hit, deals damage",
+   "trigger": {
+    "after": "Halfling's Trick",
+    "event": "hit",
+    "needs_damage": true,
+    "optional": false
+   },
+   "until": [
+    "end",
+    "source"
+   ],
+   "upcast": []
+  },
   "Attacks | Hand Crossbow": {
    "ability": null,
    "action_cost": "Action",
@@ -93,7 +138,7 @@
    "half_on_save": false,
    "is_described": false,
    "is_unavailable": false,
-   "note": "",
+   "note": "Nick: its Light property's extra attack can be made as part of the Attack action instead of as a Bonus Action, once per turn.",
    "repeat_save": false,
    "roll": "Attack roll",
    "row_name": "",
@@ -128,6 +173,51 @@
    "spell_name": "",
    "summary": "+5  1d6 + 3 Piercing",
    "until": null,
+   "upcast": []
+  },
+  "Attacks | Shortsword: Vex": {
+   "ability": null,
+   "action_cost": null,
+   "amount_kind": "Damage",
+   "badge_modifiers": {
+    "Vex": [
+     {
+      "by_caster": true,
+      "mode": "Advantage",
+      "once": true,
+      "type": "AttacksAgainst"
+     }
+    ]
+   },
+   "bonus": null,
+   "concentration": false,
+   "condition": "Vex",
+   "counts_uses": false,
+   "damage": "",
+   "dc": null,
+   "duration_seconds": null,
+   "feature_name": "",
+   "half_on_save": false,
+   "is_described": true,
+   "is_unavailable": false,
+   "note": "",
+   "repeat_save": false,
+   "roll": "Saving throw",
+   "row_name": "",
+   "slot_level": "None",
+   "spell_level": 0,
+   "spell_name": "",
+   "summary": "Vex  on a hit, deals damage",
+   "trigger": {
+    "after": "Shortsword",
+    "event": "hit",
+    "needs_damage": true,
+    "optional": false
+   },
+   "until": [
+    "end",
+    "source"
+   ],
    "upcast": []
   },
   "Attacks | Unarmed Strike": {

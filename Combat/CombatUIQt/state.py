@@ -323,6 +323,9 @@ class CombatWindowState:
     ) -> tuple[bool | None, str]:
         raise NotImplementedError("DamageMixin._resolve_attack_roll")
 
+    def _use_up_badges(self, attacker: dict | None, target: dict | None):
+        raise NotImplementedError("DamageMixin._use_up_badges")
+
     def _use_legendary_resistance(self, char: dict, *, ask: bool = False):
         raise NotImplementedError("TurnPanelMixin._use_legendary_resistance")
 

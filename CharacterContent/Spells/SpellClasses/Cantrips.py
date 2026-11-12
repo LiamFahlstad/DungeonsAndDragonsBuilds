@@ -32,6 +32,7 @@ from Model.Content.CombatEffect import (
     TurnEdge,
     TurnOf,
 )
+from Model.Content.CombatModifiers import D20Mode, D20Test, RollMode
 from Model.Content.CombatTriggers import CombatTrigger, TriggerAim, TriggerEvent
 from Model.Content.Feature import FeatureTarget
 from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table
@@ -1089,8 +1090,20 @@ class ViciousMockery(ClassSpell):
                         cantrip=((5, "2d6"), (11, "3d6"), (17, "4d6")),
                     ),
                 ),
-                notes=(
-                    "On a failed save, the target also has Disadvantage on the next attack roll it makes before the end of its next turn.",
+                # "Disadvantage on the next attack roll it makes before the
+                # end of its next turn."
+                conditions=(
+                    CombatCondition(
+                        "Vicious Mockery",
+                        until=(TurnEdge.END, TurnOf.TARGET),
+                        modifiers=(
+                            D20Mode(
+                                (D20Test.ATTACK_ROLL,),
+                                RollMode.DISADVANTAGE,
+                                once=True,
+                            ),
+                        ),
+                    ),
                 ),
             )
         ]
