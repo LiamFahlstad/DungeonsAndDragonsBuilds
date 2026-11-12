@@ -197,6 +197,7 @@ those that do neither, and a test runs it for each party.
 | "you hit ... with an attack roll" | `HIT` | the creature hit |
 | "you miss" | `MISS` | the creature missed |
 | "an attack roll hits you" (before its damage: Shield, Deflect Attacks) | `HIT_BY` | the attacker |
+| "a creature makes an attack roll" (before it's rolled: Warding Flare) | `ATTACKS` | the attacker |
 | "you take damage from a creature" (after it: Hellish Rebuke) | `TAKES_DAMAGE` | the one that dealt it |
 | "you are reduced to 0 Hit Points" | `DROPS_TO_ZERO` | its owner |
 | "you reduce a creature to 0 Hit Points" | `REDUCES_TO_ZERO` | the one reduced |
@@ -238,7 +239,7 @@ gate checks, or the row stops being AUTO for nothing.
 **Leave it untriggered, and say why** (`untriggered = "..."`, a class
 attribute on the feature) when the event is one the simulator can't see or
 doesn't make: moving or falling (Slow Fall), taking the Attack action as
-such (Sacred Weapon), before an attack is rolled (Warding Flare), a d20
+such (Sacred Weapon), a d20
 showing 1 (Luck), a save the player rolls at the table (Lethargy
 Resilience), a change to a spell's casting (Jolt to Life), or a die the
 *creature with the badge* spends (Combat Inspiration: a badge's trigger,
@@ -405,6 +406,13 @@ Names are the Python ones; `Ability`, `Condition` and `DamageType` come from
   missing (`Notes/combat-effects-plan.md`, principle 7).
 - **`spends_use=False`** only on a later step of one casting (Ice Knife's
   explosion): that row spends no slot, no action and counts no cast.
+- **`uses_per_long_rest=N`** (a named row): a feature's free casting of a
+  spell, "once per Long Rest without a spell slot" each (Fey Touched's
+  Misty Step and its level 1 spell, Fiendish Legacy's, Magic Initiate's),
+  counted under the row's own name, not the feature's uses: `name=f"{spell}
+  (Fey Touched)", spell=spell, uses_per_long_rest=1`. It spends no slot;
+  with none left the GM casts the spell's own row. A triggered spell's free
+  row (Magic Initiate's Shield) is the one asked while it has a use left.
 - **`trigger`** (`Model/Content/CombatTriggers.py`, plan Phase 6): when a
   row is used, in place of a "Right after you hit ..." note (a row says
   what, a trigger says when). `CombatTrigger(TriggerEvent.HIT,
@@ -446,7 +454,13 @@ Names are the Python ones; `Ability`, `Condition` and `DamageType` come from
   `TriggerAim.TARGET` (the other creature of the event), `ANOTHER` (one
   other creature near it the GM picks in the pop-up: Green-Flame Blade's
   leaping fire) or `ALSO_OTHERS` (it and those the GM adds: Ice Knife's
-  explosion); any but `TARGET` asks. `CASTS_SPELL` is still data.
+  explosion); any but `TARGET` asks. `ATTACKS` is asked of everyone else
+  in the fight as a creature is about to make an attack roll the dialog or
+  a monster's button rolls (not one typed in): Warding Flare,
+  `enemy_only=True, when="you can see it within 30 feet of you"`, gives the
+  attacker a badge with `D20Mode((D20Test.ATTACK_ROLL,), DISADVANTAGE,
+  once=True)`, which the roll then counts and uses up. `CASTS_SPELL` is
+  still data.
 - **An extension's uses are its parent's**: a row of an extension with no
   uses of its own spends its parent's (Radiance of the Dawn spends Channel
   Divinity). A row that costs nothing (Superior Inspiration, Ever-Ready

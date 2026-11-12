@@ -51,7 +51,7 @@ change and move on; the full suite can run later.
 | 3 | Lasting effects (3.1-3.6) | 3.1 **done** (R28-R34): `char["active_effects"]`, one plain dict per badge, in the new Qt-free `Combat/Effects/active_effects.py`; the seven old keys are read only by its `upgrade_old_keys`, where a log is read; an old fight log replays the same (`tests/test_active_effects.py`). 3.2 **done** (R27), ahead of 3.1: the rules conditions are data, and saves, attack rolls (all three paths), AC, damage Resistance and condition immunity read them. 3.3 **done** (R35-R40): a badge's `CombatCondition` says its `modifiers`, the record keeps them as JSON, and `modifiers_on` reads them beside the conditions and cover; Bless's 1d4 is rolled into the saves (a monster's Concentration save too, R40) and attack rolls the simulator makes, Shield of Faith's +2 counts in AC, cover's +2/+5 in Dexterity saves (DI-066); a typed total stays as typed, with the bonus as a reminder in the dialog. 3.4 **done** (R41-R47): `ExtraDamageFrom` (on the target, from its effect's caster) and `ExtraDamageOnHit` (on the attacker); Hunter's Mark's 1d6 Force on its caster's hits and Divine Favor's 1d4 Radiant on its caster's weapon hits are rolled into the hits the dialog and a monster's action buttons deal, doubled on a Critical Hit, each type resisted on its own; a typed damage total stays as typed, with the extra as a reminder in the dialog. 3.5 **done** (R48-R53): `AtTurnStart` / `AtTurnEnd` are modifiers on a badge that name a row of their spell; Heroism's Temporary Hit Points are given as its target's turn starts, and Spirit Guardians asks, as each enemy of its caster ends its turn, with a button that opens the Custom Effect dialog with its damage row picked. 3.6 **done** (R54-R56): ending a concentration also ends every record linked to it (`held_by_concentration`), a creature leaving the fight ends its concentration first, and a badge another running effect still holds is relinked to that effect's caster. Added after (Decision 17, R125, 2026-11-11): a picked spell that gives a rules condition gives a badge of its own name beside it ("Charmed" and "Friends"), with its card, and taking either off takes the other off; a picked feature too (R126: "Turn Undead" beside Frightened and Incapacitated, "Hill's Tumble" beside Prone), not a weapon or a monster's action |
 | 4 | One `combat-effects` skill; feature agent; content rollout | 4.1 **done** (R57-R60): the `combat-effects` skill and `combat_effects.py` (renamed from spell-mechanics), with the principles, a Features section, `features`, `coverage` and `notes`, and features in `check`; `is_curated` is `is_described`. 4.2 **done**: the `feature-combat-effects` agent (opus); the spell agent is `spell-combat-effects`. 4.4 **done**: `coverage`. 4.3 (content): **Curse of the Lich done** (R61-R65, 2026-11-11): spells 44/44, features 23 described, 37 nothing to apply, none read from text; Time Loop PR was already done. Next: spells level by level and features class by class, which wait for the user's go (Decision 9) |
 | 5 | Sheet chips, monster score | Not started |
-| 6 | **Triggers** (new concept, 2026-11-11; see its section): a row or badge says *when* it's used (a hit, damage taken, dropping to 0, ...), and the simulator applies it itself (AUTO) or asks with a pop-up as it happens (ASK) | 6.1-6.3 **done** (R66-R73, 2026-11-11): `CombatTrigger` on a row (`CombatEffect.trigger`, `Model/Content/CombatTriggers.py`), `outcome_firings` with its gates and modes, and the hit hooks in all three hit paths: when Kivi hits a Large or smaller creature and deals it damage, one pop-up per Apply asks about Hill's Tumble; Apply gives Prone, spends a Giant Ancestry use and logs it, inside the hit's undo step. Only `HIT` and `MISS` fire; the other events are data. 6.4 **done** (R74-R77, 2026-11-11): a monster's hit that gives a condition in a sentence of its own ("If the target is a Large or smaller creature, it has the Prone condition", "..., and the target has the Poisoned condition until the end of its next turn", "the Grappled condition (escape DC 13)") is read as a rider row of its own ("Tree Club: Prone") with an AUTO `after=` trigger: the Hill Giant's Tree Club knocks a Large target Prone from its button and Enter and from the dialog, asks when the size isn't known, and does nothing to a Huge target or on a miss. 101 riders in the catalog. 6.5 **done** (R108-R114, 2026-11-11): as an attack roll hits, the creature hit is asked about its `HIT_BY` rows before the damage (Shield's +5 turns Clover's 20 against AC 18 into a miss and spends her Reaction and a slot; Kivi's Deflect Attacks takes its 1d10 + 8 off, `CombatEffect.damage_reduction`), and damage from a creature asks the one damaged about its `TAKES_DAMAGE` rows (Hellish Rebuke, newly described; Storm's Thunder); a Reaction used this round or an Incapacitated owner asks no more. Not built: a badge's `OnTrigger` (Armor of Agathys, Fire Shield; Q57). 6.6 **done** (R127-R131, 2026-11-12): as damage would drop a creature to 0 Hit Points, it's asked first about its `DROPS_TO_ZERO` rows (Ymira's Relentless Endurance: Apply leaves her at 1, not Unconscious, a use spent, in the hit's undo step; not when killed outright), `CombatEffect.drops_to`; a creature that reduces an enemy to 0 gets its `REDUCES_TO_ZERO` rows (Dark One's Blessing's 6 Temporary Hit Points, given at once; the trigger's new `enemy_only` gate); Relentless Rage described too; damage that leaves a creature Bloodied asks about its `BLOODIED` rows (Harvest Undead, R131). 6.7 **done** for the content the parties and examples have (R132-R139, 2026-11-12): as the fight starts, `ROLLS_INITIATIVE` rows are given or asked once (Kivi's Uncanny Metabolism gives back his Focus Points, `CombatEffect.regains`; Superior Inspiration, Perfect Focus, Evergreen Wild Shape, Ever-Ready Shot, Persistent Rage); a failed save the dialog rolls asks about `FAILS_SAVE` rows (Indomitable's reroll +Fighter level, `reroll_save`, with a box for the roll made at the table); `USES` and `CombatTrigger.aim` give spells their later steps (Ice Knife's explosion on its target and the creatures added; Green-Flame Blade's fire on the creature picked). Not built: Weapon Mastery (Q38, now its own step 6.9), `CASTS_SPELL` (no source in the parties), Diamond Soul (Q64). 6.8 **done** (R140-R142, 2026-11-12): the skill's Triggers section (event, mode, gates, `when`, and when to leave one untriggered), `combat_effects.py triggers` and the trigger counts in `coverage`, `Feature.untriggered`; both parties' features with a Trigger fact are triggered (Deflect Attacks, Uncanny Metabolism, Hill's Tumble) or say why not (8), and a test keeps it so. 6.9 **done** (R143-R148, 2026-11-12): each mastery property a wielder has is a row after its weapon's ("Longsword: Sap", `Model/Content/WeaponMasteryEffects.py`), fired only after the weapon picked in the dialog: Sap and Vex are AUTO badges that count for one attack roll (the new `once` and `by_caster` modifier fields; Guiding Bolt and Vicious Mockery written with them too), Slow a Speed -10 badge, Topple a DC 8 + modifier + PB Constitution save or Prone, Graze the modifier's damage on a miss, Push a reminder for a Large or smaller target, Cleave an attack roll on another creature once per turn; Nick a note on the weapon's row. Phase 6 is done but for Q57, Q63-Q65 |
+| 6 | **Triggers** (new concept, 2026-11-11; see its section): a row or badge says *when* it's used (a hit, damage taken, dropping to 0, ...), and the simulator applies it itself (AUTO) or asks with a pop-up as it happens (ASK) | 6.1-6.3 **done** (R66-R73, 2026-11-11): `CombatTrigger` on a row (`CombatEffect.trigger`, `Model/Content/CombatTriggers.py`), `outcome_firings` with its gates and modes, and the hit hooks in all three hit paths: when Kivi hits a Large or smaller creature and deals it damage, one pop-up per Apply asks about Hill's Tumble; Apply gives Prone, spends a Giant Ancestry use and logs it, inside the hit's undo step. Only `HIT` and `MISS` fire; the other events are data. 6.4 **done** (R74-R77, 2026-11-11): a monster's hit that gives a condition in a sentence of its own ("If the target is a Large or smaller creature, it has the Prone condition", "..., and the target has the Poisoned condition until the end of its next turn", "the Grappled condition (escape DC 13)") is read as a rider row of its own ("Tree Club: Prone") with an AUTO `after=` trigger: the Hill Giant's Tree Club knocks a Large target Prone from its button and Enter and from the dialog, asks when the size isn't known, and does nothing to a Huge target or on a miss. 101 riders in the catalog. 6.5 **done** (R108-R114, 2026-11-11): as an attack roll hits, the creature hit is asked about its `HIT_BY` rows before the damage (Shield's +5 turns Clover's 20 against AC 18 into a miss and spends her Reaction and a slot; Kivi's Deflect Attacks takes its 1d10 + 8 off, `CombatEffect.damage_reduction`), and damage from a creature asks the one damaged about its `TAKES_DAMAGE` rows (Hellish Rebuke, newly described; Storm's Thunder); a Reaction used this round or an Incapacitated owner asks no more. Not built: a badge's `OnTrigger` (Armor of Agathys, Fire Shield; Q57). 6.6 **done** (R127-R131, 2026-11-12): as damage would drop a creature to 0 Hit Points, it's asked first about its `DROPS_TO_ZERO` rows (Ymira's Relentless Endurance: Apply leaves her at 1, not Unconscious, a use spent, in the hit's undo step; not when killed outright), `CombatEffect.drops_to`; a creature that reduces an enemy to 0 gets its `REDUCES_TO_ZERO` rows (Dark One's Blessing's 6 Temporary Hit Points, given at once; the trigger's new `enemy_only` gate); Relentless Rage described too; damage that leaves a creature Bloodied asks about its `BLOODIED` rows (Harvest Undead, R131). 6.7 **done** for the content the parties and examples have (R132-R139, 2026-11-12): as the fight starts, `ROLLS_INITIATIVE` rows are given or asked once (Kivi's Uncanny Metabolism gives back his Focus Points, `CombatEffect.regains`; Superior Inspiration, Perfect Focus, Evergreen Wild Shape, Ever-Ready Shot, Persistent Rage); a failed save the dialog rolls asks about `FAILS_SAVE` rows (Indomitable's reroll +Fighter level, `reroll_save`, with a box for the roll made at the table); `USES` and `CombatTrigger.aim` give spells their later steps (Ice Knife's explosion on its target and the creatures added; Green-Flame Blade's fire on the creature picked). Not built: Weapon Mastery (Q38, now its own step 6.9), `CASTS_SPELL` (no source in the parties), Diamond Soul (Q64). 6.8 **done** (R140-R142, 2026-11-12): the skill's Triggers section (event, mode, gates, `when`, and when to leave one untriggered), `combat_effects.py triggers` and the trigger counts in `coverage`, `Feature.untriggered`; both parties' features with a Trigger fact are triggered (Deflect Attacks, Uncanny Metabolism, Hill's Tumble) or say why not (8), and a test keeps it so. 6.9 **done** (R143-R148, 2026-11-12): each mastery property a wielder has is a row after its weapon's ("Longsword: Sap", `Model/Content/WeaponMasteryEffects.py`), fired only after the weapon picked in the dialog: Sap and Vex are AUTO badges that count for one attack roll (the new `once` and `by_caster` modifier fields; Guiding Bolt and Vicious Mockery written with them too), Slow a Speed -10 badge, Topple a DC 8 + modifier + PB Constitution save or Prone, Graze the modifier's damage on a miss, Push a reminder for a Large or smaller target, Cleave an attack roll on another creature once per turn; Nick a note on the weapon's row. 6.10 **done** (R149-R151, 2026-11-12, Q65): `TriggerEvent.ATTACKS`, asked of everyone else in the fight as the dialog or a monster's button is about to roll an attack (`attack_roll_firings`); Gabriel's Warding Flare gives the attacker a one-roll Disadvantage badge, which that roll counts and uses up. Phase 6 is done but for Q57, Q63, Q64, Q66, Q67 |
 | 7 | **Stat changes while an effect is on** (new, 2026-11-11; see its section): AC formulas and floors, Immunity and Vulnerability beside the built Resistance, Speed, size, Hit Point maximum, worked out from the stored stat plus the badges, and shown on the card with their sources | 7.1-7.2 **done** (R78-R83, 2026-11-11): `ArmorClassBase` (Mage Armor) and `ArmorClassMinimum` (Barkskin) beside `ArmorClass`, worked out by `armor_class(char, stored)`, which every attack path reads through `armor_bonus`; the same effect twice adds once; `DamageImmunity` and `Vulnerability` beside `Resistance` in `_damage_type_modifier`; Mage Armor, Barkskin, Stoneskin, Protection from Energy (a row per type) and Rage described (`tests/test_stat_changes.py`). 7.4 **done** (R84-R89, 2026-11-11): `HitPointMaximum(amount, upcast)`, rolled as the badge is given; `hit_point_maximum(char)` is the stored `max_hp` plus the badges, read by every cap, bar and Bloodied check; giving it raises current HP as Hit Points regained, ending it caps current HP (`Action.LOSE_HIT_POINTS`, replayed); Aid and Heroes' Feast described. 7.5 **done** (R90-R93, 2026-11-11): the card's and More Info's AC is the AC in use with what changes it ("AC: 17 (15; Shield of Faith +2)", cover too), a "Max HP 35 (30; Aid +5)" line, and the defenses the conditions and badges give with where from ("Resist: ...; Bludgeoning, Piercing, Slashing (Rage)", "Cond. Immune: Frightened (Heroism)"); the player view's full rows show the AC in use. 7.3 **done** (R94-R98, 2026-11-11): `Speed(bonus, multiplier, set_to)` and `Size(steps, becomes)`, worked out by `speed_in_use` and `size_in_use`; the trigger size gates read the size in use (an Enlarged Large Ogre is Huge to Hill's Tumble); the card shows "Speed: 80 ft. (40 ft.; Haste ×2)" and, when changed, "Size Huge (Large; Enlarge/Reduce +1)"; Haste (and its lethargy row), Longstrider, Enlarge/Reduce and Large Form described. 7.6 **done** (R106, R107, 2026-11-11): the rubric's Stat changes table, `combat_effects.py stats` (each note naming AC, a defense, Speed, the Hit Point maximum or size, marked counted or NOTE ONLY), and both parties' rows: Shield's `ArmorClass(5)`, Absorb Elements' `Resistance` (a row per type), Silence's Thunder `DamageImmunity`, Shield of Faith's restating note gone. **Phase 7 done** |
 | 8 | **Rolled at the table** (new, 2026-11-11, Decision 15; see its section): whatever the simulator rolls, the GM can give it a number rolled at the table instead | **Done** (R115-R124, 2026-11-11). 8.1-8.3: a hit's extra damage (Hunter's Mark, Divine Favor) has a box per target in the Custom Effect dialog, added as typed, even to a typed damage total, Critical Hit or not; Deflect Attacks' and Stone's Endurance's reduction has a box in the trigger pop-up; the setting "Roll monsters' recharges and repeat saves" (`monsters_roll_turn_dice`) off turns those into turn reminders. 8.4-8.7 (Decision 16): a card's Set initiative... (a summon's roll, or anyone's); a box takes one roll per Times copy ("nat 1, nat 20"); a Hit Point maximum box for a pick whose badge rolls one (Heroes' Feast), and a player's dice Hit Points at a turn's start left to a turn-column button; `tests/test_roll_sites.py` fails on a new place that rolls until it's listed with its way to the table (`tests/test_table_rolls.py`) |
 
@@ -234,6 +234,30 @@ damage from Pirate", "Edmund's Divine Favor: +4 Radiant (1d4)" on each
 weapon hit (none on the typed total), filled the Bite button's Damage field
 with "6 Piercing + 5 Force", and the player link's hit lines read "5
 Slashing + 1 Force" and "6 Slashing + 4 Radiant".
+
+**Verified 2026-11-12 (6.10 and Q56, R149-R155), low overhead:** every
+combat test file, the picker goldens, skill-script, trigger and mastery
+files pass (3,407 picked by `-k`; not the full suite, no character-creation
+tests: no sheet changes); `combat_effects.py check` OK; `coverage` for
+Curse of the Lich now says 25 described, 35 nothing to apply, Trigger facts
+4 triggered and 3 left to the GM. 14 new tests in
+`tests/test_attack_roll_triggers.py` from Warding Flare's text (asked as an
+enemy attacks an ally or Gabriel, not an ally's roll, not with the Reaction
+used, Incapacitated or no uses left; a monster button's and the dialog's
+roll made with Disadvantage once applied, the badge used up, one undo; skip;
+the setting off; a typed roll not asked), 6 in
+`tests/test_feature_combat_effects.py` and `tests/test_combat_ui_custom_effect.py`
+from Fey Touched's and Fiendish Legacy's (each free casting counted on its
+own, no slot spent, a second one asked about, replayed), 2 in
+`tests/test_hit_by_triggers.py` from Magic Initiate's (the free Shield asked
+before a slot's, spending its use and the Reaction but no slot). Five picker
+goldens changed, each line read: Edmund's False Life (Fiendish Legacy),
+Thum's Misty Step and Detect Magic (Fey Touched) count `1/1` under their own
+names and their note changed; Clover's and Dessie's new "Shield (Magic
+Initiate)" row (`1/1`, Shield's badge and `hit by` trigger); Gabriel's
+Warding Flare gained its badge, `attacks` trigger and new note. The
+`party` fixture of `tests/test_hit_by_triggers.py` now starts with
+Clover's free Shield spent, so its older tests still test a slot's Shield.
 
 **Verified 2026-11-12 (6.9, R143-R148), low overhead:** every combat test
 file, the spell-class, skill-script and new `tests/test_weapon_mastery.py`
@@ -580,7 +604,7 @@ suggested.
       by `_deal_damage` from an attack, and a prompt when it depends on
       reach ("within 5 feet"). Step 6.5. *The rows' `TAKES_DAMAGE` is built
       (R112); the badge's `OnTrigger` isn't yet (Q57).*
-    - **Q36.** *Not buildable as written; back in Open questions as Q56.*
+    - **Q36.** *Not buildable as written; back in Open questions as Q56, built in R152 (Decision 18).*
       Every free casting gets its own use count, as Paladin's Smite
       does (Q8): `FeatureUses(1, regain_all_on="long rest")` per spell of
       Fey Touched and Fiendish Legacy. This changes their sheet cards, so
@@ -619,6 +643,14 @@ suggested.
     Features too, as Q62 suggested (the user, 2026-11-11: "do as you see
     most fit"): a class, subclass, species or feat feature picked in the
     dialog, not a weapon or a monster's action. *Built (R126).*
+18. **Q56 and Q65 as suggested** (the user, 2026-11-12: "Fix (implement)
+    questions in combat-effects-plan.md if they're related to players in
+    curse of the lich campaign and are urgent"). The two that touch the
+    party at level 4 now: Thum's and Edmund's free castings (Q56) and
+    Gabriel's Warding Flare (Q65). *Built (R149-R155).* Not urgent for the
+    party yet, so left open: Q67 (no one has Extra Attack before level 5),
+    Q66 (its own suggestion: until it comes up), Q64 (Diamond Soul is Monk
+    14), Q57 (no one has Armor of Agathys or Fire Shield), Q63 (no Warlock).
 
 ## Goal
 
@@ -1110,6 +1142,7 @@ fire).
 | 6.6 | **Done** (R127-R131). Hit Point thresholds: `BLOODIED`, `DROPS_TO_ZERO`, `REDUCES_TO_ZERO`. | Relentless Endurance (Orc) asks "drop to 1 HP instead?" as its owner drops to 0; Dark One's Blessing's temp HP are given at once; both inside the damage's undo step |
 | 6.7 | **Done** (R132-R139), but for `CASTS_SPELL` (no source needs it yet) and Booming Blade's move (position). The rest as content needs them: `FAILS_SAVE` (Indomitable), `ROLLS_INITIATIVE` (regaining uses), `USES` (chained rows), `after=` on spells' later steps (Ice Knife, Green-Flame Blade). Position events stay manual. | Per source, with a test from its rules text |
 | 6.9 | **Done** (R143-R148). Weapon Mastery (Q38, moved out of 6.7): a weapon row adds its mastery's effect as `HIT` / `MISS` triggers when its owner has that mastery (Topple: a Constitution save or Prone; Vex: Advantage on the next attack, a badge; Sap, Slow, Graze, Cleave, Nick, Push). | Each property, from the glossary text, on a party member's weapon |
+| 6.10 | **Done** (R149-R151, Q65). Before an attack roll: `ATTACKS`, asked of the others in the fight as the dialog's attack loop or a monster's button is about to roll; Warding Flare's row gives a `D20Mode(once=True)` Disadvantage badge on the attacker. | Gabriel's Warding Flare is asked as the Ogre attacks Clover, and the roll is made with Disadvantage |
 | 6.8 | **Done** (R140-R142). Tooling and content: the `combat-effects` skill's rubric gets a Triggers section (which mode, which gate, when a `when`); `combat_effects.py coverage` counts rows with triggers and lists features whose text has a `("Trigger", ...)` fact but whose rows don't; then the parties, through `feature-combat-effects`. | Curse of the Lich's party features with a Trigger fact all have a trigger or a stated reason not to |
 
 6.1-6.4 are the engine Decision 9 waits for. 6.3 is the vertical slice to
@@ -2614,12 +2647,61 @@ roll, and stays as it is.
 - **R148. A magic weapon is a weapon of its kind** (DI-080): `has_mastery`
   compared exact types, so Thum's Halfling's Trick (a Shortsword) had no
   Vex; `isinstance` now. Thum's sheet shows "Mastery: Vex ✓" on it.
+- **R149. Warding Flare's answer is a badge, not a roll mode** (6.10,
+  Q65). The suggestion had the answer "set the roll's mode". A badge on the
+  attacker with `D20Mode((ATTACK_ROLL,), DISADVANTAGE, once=True)` (Sap's,
+  R145) does it with nothing new: `attack_plan` counts it with whatever
+  else the roll has (Advantage cancels it, as the rules say), and
+  `_use_up_badges` ends it as the roll is made, inside its undo step. It
+  lasts until the end of the attacker's turn, for a roll that never comes.
+  Picked by hand on the attacker before its roll, it works the same.
+- **R150. `ATTACKS` is asked of everyone else, not of the creature
+  attacked** (`attack_roll_firings(attacker, target, others, rows_of)`):
+  Warding Flare is "a creature you can see within 30 feet of yourself", so
+  the owner is anyone, and `AttackRollOutcome` carries the owner it's made
+  for (one per creature), the attacker as the firing's target. Only owners
+  with a Reaction left are looked at, and a row with no uses left is left
+  out without a status line: Q42's line on every enemy roll would be noise.
+  `enemy_only` keeps it to the attacks of the owner's enemies. It's in
+  `TARGET_EVENTS` (the attacker is the other creature), not in
+  `ATTACK_EVENTS`: the roll isn't made, so its kind and a Critical Hit
+  aren't gates.
+- **R151. Asked only where the simulator rolls**: the dialog's attack loop
+  for a roll it makes (not one typed in its box) and a monster's action
+  button, both right before `attack_plan`. The main window's Attack roll
+  field holds a roll made already. With `ask_triggers` off nothing is
+  asked: a turn-column button would come after the roll. Every attack
+  roll now builds the picker rows of every creature with a Reaction left
+  (about 35 ms for three party members): fine at the table's pace.
+- **R152. `CombatEffect.uses_per_long_rest`** (Q56): a named row's own
+  count of free castings, in `feature_uses_used` under the row's name
+  ("Misty Step (Fey Touched)"), so Fey Touched's two castings are counted
+  one by one and the sheet's cards don't change. `row_uses_most` finds the
+  most from the character's features' rows, for the out-of-uses question
+  (`feature_uses_left`), a triggered row's uses and the party replay
+  (`ENABLE_FEATURE` counts it as it counts a feature with uses). A Long
+  Rest gives them back because the replay starts after the last one;
+  a Short Rest doesn't touch them. Picking the row spends no slot.
+- **R153. Magic Initiate's free spell too** (not in Q56, the same text):
+  "Shield (Magic Initiate)" for Clover and Dessie. Its `HIT_BY` trigger
+  comes from Shield's own effect, so it is asked as she's hit.
+- **R154. A free casting is asked before the spell's own**
+  (`_free_castings_first` in `triggered_rows`): with both rows triggered,
+  the pop-up would offer "Shield" and "Shield (Magic Initiate)" together,
+  and both could be applied. While the free one has a use left it's the
+  one asked; once it's spent the slot's Shield is, and the spent free row
+  isn't said ("no uses left") since Shield is still offered. The picker
+  keeps both.
+- **R155. Warding Flare loses its `untriggered`**, and the skill's rubric
+  its "before an attack is rolled" reason; it gains the `ATTACKS` row and
+  `uses_per_long_rest` an entry.
 
 ## Open questions (with suggestions)
 
 Q4-Q10, Q13, Q18, Q21-Q29, Q31-Q35, Q37, Q46, Q48-Q50, Q53 and Q55 are
 **decided as suggested** (Decision 13, 2026-11-11), and Q14, Q16, Q30,
-Q36, Q38 and Q39 too (Decision 14), Q58-Q61 (Decision 16) and Q62 (Decision 17); all
+Q36, Q38 and Q39 too (Decision 14), Q58-Q61 (Decision 16), Q62 (Decision 17),
+and Q56 and Q65 (Decision 18, built in R149-R155); all
 moved there. Q11 was done as suggested in S.4 (R24-R26): every spell is
 a class.
 
@@ -2635,15 +2717,6 @@ a class.
   vexes the same Ogre. *Suggestion:* leave it until it comes up at the
   table; else name the badge after the wielder ("Vex (Thum)"), as
   Hunter's Mark would need for two Rangers.
-- **Q65. Before an attack is rolled** (R142). Warding Flare ("when a
-  creature you can see within 30 feet of yourself makes an attack roll,
-  you can take a Reaction to impose Disadvantage on the roll"), Cutting
-  Words' sibling Silvery Barbs, and a monster's Parry-like answers come
-  before the roll. *Suggestion:* an `ATTACKS` event asked by the dialog's
-  attack loop and a monster button before they roll (a typed roll is
-  rolled already), with the attacker's target known, whose answer sets
-  the roll's mode; only for an owner whose Reaction is left, and only for
-  attacks on its side (`on_party_side`), so it isn't asked on every roll.
 - **Q64. A row that spends another feature's use** (R139). Diamond Soul
   ("When you fail a saving throw, you can expend 1 Focus Point to reroll
   it") and Uncanny Metabolism's opposite, many Monk and Battle Master rows,
@@ -2673,17 +2746,6 @@ a class.
   given and kept on the record, as `HitPointMaximum`'s is (R85), so the
   fired row deals what the cast's slot said. Ending it with the last
   Temporary Hit Point is the GM's (a note).
-
-- **Q56. Counting a feature's free castings one by one** (Q36 again). Fey
-  Touched (Misty Step and a level 1 spell) and Fiendish Legacy (a level 1
-  and a level 2 spell) each give two castings, once per Long Rest each,
-  but a feature has one `FeatureUses`, so Q36's "a `FeatureUses(1)` per
-  spell" can't be written. `FeatureUses(2)` would let one spell be cast
-  twice. *Suggestion:* count them in the combat UI, not on the sheet: a
-  row with `spends_use=True` and a new `CombatEffect.uses_per_long_rest=1`
-  counts under its own row name in `feature_uses_used` ("Misty Step (Fey
-  Touched)"), so `feature_lack` refuses a second casting until a Long Rest.
-  The sheet cards don't change.
 
 - **Q2** done in 4.1 (R57, R60).
 - **Q17** moved to Decisions (10, R39): no.
