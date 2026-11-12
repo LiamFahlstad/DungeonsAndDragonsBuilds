@@ -135,6 +135,9 @@ class CustomEffect:
     # A badge's Hit Point maximum rolled at the table (Heroes' Feast's 2d10,
     # its upcast in it), by the target's id(); the rest are rolled (8.6).
     typed_hit_point_maximum: dict[int, int] = field(default_factory=dict)
+    # Whether each target with a Shield wields it (the attack rows' Shield
+    # box), by its id(): it's set so before the attack, and stays so.
+    shields: dict[int, bool] = field(default_factory=dict)
 
     @property
     def conditions(self) -> list[str]:

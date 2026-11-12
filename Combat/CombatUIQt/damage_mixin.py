@@ -31,6 +31,7 @@ from .attack_rolls import (
     cover_bonus,
     note_attack_roll,
     parse_attack_roll,
+    stored_armor,
 )
 from .monster_actions import first_number
 from .player_view import _player_names, _seen, note_damage_defense, note_health
@@ -209,12 +210,18 @@ class DamageMixin(CombatWindowState):
         line. The log doesn't say the AC, as the Limited view's players read
         it too. They don't learn from a hidden attacker's roll, which they
         never saw."""
-        armor = first_number(target.get("ac"))
+        armor = stored_armor(target)
         bonus = armor_bonus(target)
         hit = roll.hits(None if armor is None else armor + bonus)
         # A player's summon is seen as its owner is, even while Invisible.
         if source is None or _seen(source, _player_names(self.characters)):
-            note_attack_roll(target, roll, hit, bonus)
+            # Noted against the stored AC's first number, so a Shield set
+            # down counts as what changed it, like cover.
+            first = first_number(target.get("ac"))
+            seen_bonus = (
+                bonus if armor is None or first is None else armor + bonus - first
+            )
+            note_attack_roll(target, roll, hit, seen_bonus)
         if hit is not False:
             notes = (*notes, *hit_notes(target))
         name = target["name"]

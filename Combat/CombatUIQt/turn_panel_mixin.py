@@ -44,13 +44,12 @@ from Combat.Effects.triggers import (
     still_hits,
 )
 
-from .attack_rolls import armor_bonus, armor_in_use
+from .attack_rolls import armor_bonus, armor_in_use, stored_armor
 from .log_feed import LogFeed
 from .monster_actions import (
     DIE,
     LEGENDARY_ACTIONS_PER_ROUND,
     MonsterAction,
-    first_number,
     is_spent,
     legendary_actions_left,
     legendary_resistances_left,
@@ -482,7 +481,7 @@ class TurnPanelMixin(CombatWindowState):
         if len(self.target_characters) != 1:
             return None
         target = self.target_characters[0]
-        armor = first_number(target["ac"])
+        armor = stored_armor(target)
         return None if armor is None else armor + armor_bonus(target)
 
     @undoable

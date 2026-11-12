@@ -81,7 +81,11 @@ from .attack_rolls import (
     armor_bonus,
     armor_in_use,
     cover_bonus,
+    has_shield,
+    is_shield_off,
     parse_attack_roll,
+    stored_armor,
+    SHIELD_OFF,
 )
 from .effect_dialog_widgets import (
     SearchKeys,
@@ -100,7 +104,7 @@ from .effect_options import (
     triggered_rows,
 )
 from .features_mixin import FEATURE_BADGE_COLOR
-from .monster_actions import first_number, legendary_resistances_left, roll_dice
+from .monster_actions import legendary_resistances_left, roll_dice
 from .player_view import note_condition_immunity
 from .resources import feature_lack, monster_action_lack, spell_slot_lack
 from .saves import (
@@ -344,10 +348,21 @@ def _who_text(source: dict | None, targets: list[dict]) -> str:
     return f"<span style='color:#c9a84c'>{who}</span> → {on}"
 
 
-def _armor_text(target: dict) -> str:
+def _with_shield(target: dict, wielding: bool | None) -> dict:
+    """Target as it is with its Shield wielded or set down (`wielding`, the
+    Custom Effect dialog's Shield box), to work its AC out by; target itself
+    for None, or one without a Shield."""
+    if wielding is None or not has_shield(target):
+        return target
+    return {**target, SHIELD_OFF: not wielding}
+
+
+def _armor_text(target: dict, wielding: bool | None = None) -> str:
     """What an attack roll against target has to meet: "AC 15", with its
-    cover in it ("AC 17 (cover)"), or "AC ?" when that isn't known."""
-    armor = first_number(target.get("ac"))
+    cover in it ("AC 17 (cover)"), or "AC ?" when that isn't known.
+    `wielding`: whether it wields its Shield, None as it is now."""
+    target = _with_shield(target, wielding)
+    armor = stored_armor(target)
     if armor is None:
         return "AC ?"
     armor += armor_bonus(target)
@@ -359,13 +374,16 @@ def _bonus_notes(plan: RollPlan) -> list[str]:
     return [f"{label}: {signed(amount)}" for label, amount in plan.bonuses]
 
 
-def _attack_text(source: dict | None, target: dict) -> str:
+def _attack_text(
+    source: dict | None, target: dict, wielding: bool | None = None
+) -> str:
     """A target's row for an attack roll: what it has to meet, the mode the
     modifiers give it and what they add to it, to roll it that way at the
     table ("AC 15, Advantage", "AC 15, +1d4 to hit"). The extra damage a hit
-    on it deals has a row of its own under it (target_roll_rows' extras)."""
+    on it deals has a row of its own under it (target_roll_rows' extras).
+    `wielding`: whether it wields its Shield (_armor_text)."""
     plan = attack_plan(source, target, "Neutral")
-    parts = [_armor_text(target)]
+    parts = [_armor_text(target, wielding)]
     if plan.mode != "Neutral":
         parts.append(plan.mode)
     flat, dice = bonus_reminder(plan)
@@ -812,6 +830,8 @@ class ConditionsMixin(CombatWindowState):
             hit: bool | None = None
             critical = False
             if effect.attack_bonus is not None:
+                # Its Shield wielded or set down first, as the dialog said.
+                self._set_shield(target, effect.shields.get(id(target)))
                 # The attacker's and the target's conditions count in a roll
                 # made here; one typed in gets what it couldn't count.
                 typed = effect.typed_attacks.get(id(target))
@@ -972,6 +992,22 @@ class ConditionsMixin(CombatWindowState):
             # hit's damage to its line, which a line between would stop.
             self._log_event(line, character=target["name"], public=False)
         return with_extra_damage(damage, extra)
+
+    def _set_shield(self, char: dict, wielding: bool | None):
+        """Have char wield its Shield or set it down (the attack rows' Shield
+        box), with a log line when that changes it. None, or a char without
+        a Shield, leaves it as it is. It stays so until changed again."""
+        if wielding is None or not has_shield(char):
+            return
+        if wielding != is_shield_off(char):
+            return
+        if wielding:
+            char.pop(SHIELD_OFF, None)
+        else:
+            char[SHIELD_OFF] = True
+        did = "takes up" if wielding else "sets down"
+        self._log_event(f"{char['name']} {did} a Shield", character=char["name"])
+        self._rebuild_card(char)
 
     @undoable
     def _apply_custom_effects(self, effects: list[CustomEffect]):
@@ -1708,7 +1744,7 @@ class ConditionsMixin(CombatWindowState):
         rolls_hint = QLabel("Rolled at the table? Type it; blank rolls.")
         rolls_hint.setObjectName("secondary")
         roll_box.addWidget(rolls_hint)
-        save_rows, typed_inputs, save_infos, _ = target_roll_rows(
+        save_rows, typed_inputs, save_infos, _, _ = target_roll_rows(
             targets,
             "typedTotal",
             "The total with the save bonus already in it, like 14 or 9+5."
@@ -1732,18 +1768,44 @@ class ConditionsMixin(CombatWindowState):
             for target in targets
             if source is not None
         }
-        attack_rows, attack_inputs, attack_infos, extra_rows = target_roll_rows(
-            targets,
-            "typedAttack",
-            "The total with the bonus already in it, like 17 or 12+5, or"
-            " nat 20 or nat 1. Blank rolls for the source.",
-            extra_boxes,
+        # A target with a Shield can be wielding it or not: a box on its row,
+        # its AC worked out by it.
+        shield_checks = {
+            id(target): (
+                "Shield",
+                f"Whether {target['name']} wields their Shield. The attack is"
+                f" against AC {stored_armor(_with_shield(target, True))} with"
+                f" it and {stored_armor(_with_shield(target, False))} without"
+                " it (before effects and cover), and it stays as set here.",
+                not is_shield_off(target),
+            )
+            for target in targets
+            if has_shield(target)
+        }
+        attack_rows, attack_inputs, attack_infos, extra_rows, shield_boxes = (
+            target_roll_rows(
+                targets,
+                "typedAttack",
+                "The total with the bonus already in it, like 17 or 12+5, or"
+                " nat 20 or nat 1. Blank rolls for the source.",
+                extra_boxes,
+                shield_checks,
+            )
         )
         roll_box.addWidget(attack_rows)
+
+        def show_attack_info(target: dict):
+            box = shield_boxes.get(id(target))
+            wielding = None if box is None else box.isChecked()
+            attack_infos[id(target)].setText(_attack_text(source, target, wielding))
+
         for target in targets:
-            info = attack_infos[id(target)]
-            info.setText(_attack_text(source, target))
-            info.setToolTip(_attack_tooltip(source, target))
+            show_attack_info(target)
+            attack_infos[id(target)].setToolTip(_attack_tooltip(source, target))
+            if id(target) in shield_boxes:
+                shield_boxes[id(target)].toggled.connect(
+                    lambda _=False, t=target: show_attack_info(t)
+                )
         roll_col.addStretch()
 
         # ── Damage, or Hit Points regained, or Temporary Hit Points
@@ -2350,6 +2412,11 @@ class ConditionsMixin(CombatWindowState):
                 repeat_save=repeat_box.isChecked(),
                 typed_totals=nth(totals, 0),
                 typed_hit_point_maximum=maximum,
+                shields=(
+                    {key: box.isChecked() for key, box in shield_boxes.items()}
+                    if is_attack
+                    else {}
+                ),
                 pick=pick,
                 weapon_attack=pick.weapon_attack if pick is not None else None,
                 # A total with no dice, not the pick's own damage, was rolled

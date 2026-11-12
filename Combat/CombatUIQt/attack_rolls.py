@@ -20,6 +20,12 @@ _NATURAL = re.compile(r"\s*nat(?:ural)?\s*(1|20)\s*", re.IGNORECASE)
 _ALWAYS_HITS = 20
 _ALWAYS_MISSES = 1
 
+# True on a combatant with a Shield while it isn't wielding it (the Custom
+# Effect dialog's Shield box): its AC is then the one its stored text gives
+# "(without Shield)". A public key, so undo and a saved fight keep it.
+SHIELD_OFF = "shield_off"
+_WITHOUT_SHIELD = re.compile(r"(\d+)\s*\(without Shield\)")
+
 
 @dataclass(frozen=True)
 class AttackRoll:
@@ -65,17 +71,45 @@ def cover_bonus(char: dict) -> int:
     return cover_armor_bonus(char)
 
 
+def armor_without_shield(char: dict) -> int | None:
+    """Char's AC without its Shield, from a player's stored "18 (with
+    Shield) and 16 (without Shield)"; None for one without a Shield."""
+    match = _WITHOUT_SHIELD.search(str(char.get("ac", "")))
+    return int(match[1]) if match else None
+
+
+def has_shield(char: dict) -> bool:
+    """Whether char has a Shield it can wield or set down (a player's AC
+    sentence says what it is without one)."""
+    return armor_without_shield(char) is not None
+
+
+def is_shield_off(char: dict) -> bool:
+    """Whether char has a Shield and isn't wielding it now (SHIELD_OFF)."""
+    return bool(char.get(SHIELD_OFF)) and has_shield(char)
+
+
+def stored_armor(char: dict) -> int | None:
+    """Char's AC before its effects and cover: its stored AC's first number,
+    or its AC without its Shield while it isn't wielding it. None with no
+    AC."""
+    if is_shield_off(char):
+        return armor_without_shield(char)
+    return first_number(char.get("ac"))
+
+
 def armor_bonus(char: dict) -> int:
     """What char's AC has added to it now: its cover, and what its lasting
     effects do to it (Shield of Faith's +2, Mage Armor's base AC, Barkskin's
-    17 at least; Combat/Effects), as a number added to its stored AC."""
-    return armor_class_bonus(char, first_number(char.get("ac")))
+    17 at least; Combat/Effects), as a number added to its stored AC
+    (stored_armor)."""
+    return armor_class_bonus(char, stored_armor(char))
 
 
 def armor_in_use(char: dict) -> int | None:
     """The AC an attack against char has to meet now: its stored AC with its
     effects and cover. None with no AC."""
-    stored = first_number(char.get("ac"))
+    stored = stored_armor(char)
     return None if stored is None else armor_class(char, stored)
 
 
@@ -83,10 +117,12 @@ def armor_text(char: dict) -> str:
     """Char's AC as its card and More Info show it: the stored text when
     nothing changes it (a player's "18 (with Shield) and 16 (without
     Shield)"), else the AC in use with what changes it, "17 (15; Shield of
-    Faith +2)"."""
-    stored = first_number(char.get("ac"))
+    Faith +2)". Without its Shield: "16 (Shield set down)"."""
+    stored = stored_armor(char)
     text = "" if stored is None else armor_class_text(char, stored)
-    return text if stored is not None and text != str(stored) else str(char["ac"])
+    if stored is not None and text != str(stored):
+        return f"{text}, Shield set down" if is_shield_off(char) else text
+    return f"{stored} (Shield set down)" if is_shield_off(char) else str(char["ac"])
 
 
 def note_attack_roll(char: dict, roll: AttackRoll, hit: bool | None, bonus: int = 0):

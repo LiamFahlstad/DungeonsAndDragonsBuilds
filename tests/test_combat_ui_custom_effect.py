@@ -1875,6 +1875,75 @@ def test_the_typed_attacks_wait_for_an_attack_roll(armored, monkeypatch):
     assert box.isVisibleTo(dlg)
 
 
+SHIELD_AC = "18 (with Shield) and 16 (without Shield)"
+
+
+def _shield_box(dlg) -> QCheckBox:
+    return dlg.findChild(QCheckBox, "targetRowCheck")
+
+
+def test_only_a_target_with_a_shield_gets_a_shield_box(armored, monkeypatch):
+    ui, _, tiger, _ = armored
+    tiger["ac"] = SHIELD_AC
+    dlg = _attack_dialog(ui, monkeypatch)
+    boxes = dlg.findChildren(QCheckBox, "targetRowCheck")
+    assert [box.accessibleName() for box in boxes] == ["Tiger: Shield"]
+    assert boxes[0].isChecked()
+
+
+def test_the_shield_box_changes_the_ac_shown(armored, monkeypatch):
+    ui, _, tiger, _ = armored
+    tiger["ac"] = SHIELD_AC
+    dlg = _attack_dialog(ui, monkeypatch)
+    infos = [label.text() for label in dlg.findChildren(QLabel, "targetRowInfo")]
+    assert any(text.startswith("AC 18") for text in infos), infos
+    _shield_box(dlg).setChecked(False)
+    infos = [label.text() for label in dlg.findChildren(QLabel, "targetRowInfo")]
+    assert any(text.startswith("AC 16") for text in infos), infos
+
+
+def test_an_attack_without_the_shield_hits_the_lower_ac(armored, monkeypatch):
+    ui, _, tiger, _ = armored
+    tiger["ac"] = SHIELD_AC
+    dlg = _attack_dialog(ui, monkeypatch)
+    dlg.findChild(QLineEdit, "effectDamage").setText("20 fire")
+    dlg.findChildren(QLineEdit, "typedAttack")[0].setText("17")
+    _shield_box(dlg).setChecked(False)
+    _d20s(monkeypatch, 1)
+    _apply(dlg)
+    assert tiger["hp"] == tiger["max_hp"] - 20
+    assert "Tiger sets down a Shield" in _log(ui)
+    # It stays set down, for the next dialog, until it's taken up again.
+    dlg = _attack_dialog(ui, monkeypatch)
+    assert not _shield_box(dlg).isChecked()
+
+
+def test_setting_the_shield_down_is_undone_with_the_attack(armored, monkeypatch):
+    ui, _, tiger, _ = armored
+    tiger["ac"] = SHIELD_AC
+    dlg = _attack_dialog(ui, monkeypatch)
+    dlg.findChild(QLineEdit, "effectDamage").setText("20 fire")
+    dlg.findChildren(QLineEdit, "typedAttack")[0].setText("17")
+    _shield_box(dlg).setChecked(False)
+    _d20s(monkeypatch, 1)
+    _apply(dlg)
+    ui._undo_last()
+    assert tiger["hp"] == tiger["max_hp"]
+    assert not tiger.get("shield_off")
+
+
+def test_an_attack_with_the_shield_misses_the_higher_ac(armored, monkeypatch):
+    ui, _, tiger, _ = armored
+    tiger["ac"] = SHIELD_AC
+    dlg = _attack_dialog(ui, monkeypatch)
+    dlg.findChild(QLineEdit, "effectDamage").setText("20 fire")
+    dlg.findChildren(QLineEdit, "typedAttack")[0].setText("17")
+    _d20s(monkeypatch, 1)
+    _apply(dlg)
+    assert tiger["hp"] == tiger["max_hp"]
+    assert "a Shield" not in _log(ui)
+
+
 def test_a_bad_typed_attack_says_so(paladin_fight, monkeypatch):
     ui, edmund, tiger = paladin_fight
     ui._select_character(edmund)

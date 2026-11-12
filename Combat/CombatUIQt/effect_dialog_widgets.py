@@ -8,6 +8,7 @@ from typing import Any, Callable, Hashable, Iterable, Mapping, Sequence
 from PyQt6.QtCore import QEvent, QObject, Qt
 from PyQt6.QtGui import QKeyEvent
 from PyQt6.QtWidgets import (
+    QCheckBox,
     QComboBox,
     QFrame,
     QGridLayout,
@@ -121,21 +122,26 @@ def target_roll_rows(
     object_name: str,
     tooltip: str,
     extras: Mapping[int, Sequence[tuple[Hashable, str, str]]] | None = None,
+    checks: Mapping[int, tuple[str, str, bool]] | None = None,
 ) -> tuple[
     QScrollArea,
     dict[int, QLineEdit],
     dict[int, QLabel],
     dict[Any, tuple[QLabel, QLineEdit]],
+    dict[int, QCheckBox],
 ]:
     """A row for each of chars: its name, what it rolls against or with (an
     "AC 15" or "DEX +3" the caller keeps up to date), and a box for what was
     rolled at the table. `extras`, by id(char): a row under its own for each
     other roll that comes with it (key, what it is, tooltip), a hit's extra
-    damage, with a box named "typedExtra" (plan principle 13). Returns (the
-    rows, scrolling past about four, so the dialog still fits the smallest
-    window), their boxes and their middle labels, by id(char), and each
-    extra row's label and box, by key."""
+    damage, with a box named "typedExtra" (plan principle 13). `checks`, by
+    id(char): a checkbox at the end of its row (text, tooltip, checked), a
+    Shield it wields or not. Returns (the rows, scrolling past about four, so
+    the dialog still fits the smallest window), their boxes and their middle
+    labels, by id(char), each extra row's label and box, by key, and the
+    checkboxes, by id(char)."""
     extras = extras or {}
+    checks = checks or {}
     rows = QWidget()
     grid = QGridLayout(rows)
     grid.setContentsMargins(0, 0, 0, 0)
@@ -145,6 +151,7 @@ def target_roll_rows(
     inputs: dict[int, QLineEdit] = {}
     infos: dict[int, QLabel] = {}
     extra_rows: dict[Any, tuple[QLabel, QLineEdit]] = {}
+    check_boxes: dict[int, QCheckBox] = {}
     line = 0
     for char in chars:
         name = QLabel(char["name"])
@@ -171,6 +178,18 @@ def target_roll_rows(
         inputs[id(char)] = box
         infos[id(char)] = info
         line += 1
+        if id(char) in checks:
+            # A line of its own, under the name, so the row's box keeps its
+            # width.
+            text, hint, checked = checks[id(char)]
+            check = QCheckBox(text)
+            check.setObjectName("targetRowCheck")
+            check.setAccessibleName(f"{char['name']}: {text}")
+            check.setToolTip(hint)
+            check.setChecked(checked)
+            grid.addWidget(check, line, 0, 1, 3)
+            check_boxes[id(char)] = check
+            line += 1
         for key, what, hint in extras.get(id(char), ()):
             label = QLabel(what)
             label.setObjectName("extraRowInfo")
@@ -192,7 +211,7 @@ def target_roll_rows(
     scroll.setFrameShape(QFrame.Shape.NoFrame)
     scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
     scroll.setFixedHeight(min(rows.sizeHint().height(), TYPED_ROWS_MAX_HEIGHT))
-    return scroll, inputs, infos, extra_rows
+    return scroll, inputs, infos, extra_rows, check_boxes
 
 
 def pickable_rows(tree: QTreeWidget) -> list[QTreeWidgetItem]:
