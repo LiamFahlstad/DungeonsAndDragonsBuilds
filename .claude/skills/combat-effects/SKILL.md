@@ -394,6 +394,16 @@ Names are the Python ones; `Ability`, `Condition` and `DamageType` come from
   or a trigger with a `when` (where creatures are), is a prompt the GM
   answers. Damage on later turns that isn't tied to a turn (moving through
   Spike Growth) stays a note.
+- **A badge that answers a hit** is a `WhenHit(effect, attacks, when)`
+  modifier: as a creature hits the bearer with an attack roll of `attacks`
+  (`AttackKind.MELEE` by default), the bearer uses `effect`, a
+  `spends_use=False` row of the same spell, on the attacker, once the hit's
+  damage is dealt. Armor of Agathys: `WhenHit("Armor of Agathys: Cold
+  damage")` with that row's `CombatDamage("5", DamageType.COLD,
+  upcast="5")`; the slot it was cast with is kept on the badge, so its
+  upcast counts. Fire Shield adds `when="it's within 5 feet of you"`, so it
+  asks. Never a note "a creature that hits you takes ...". Ending the spell
+  with its last Temporary Hit Point is a note.
 - **`[]`.** Use it only when the spell has nothing the form could put on a
   creature in a fight (Alarm, Message, Minor Illusion, Thaumaturgy, Disguise
   Self, Speak with Animals, Fog Cloud). The spell is hidden from "All spells"

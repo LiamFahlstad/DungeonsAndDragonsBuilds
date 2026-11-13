@@ -10,6 +10,7 @@ from dataclasses import dataclass, field
 
 from Core.Definitions import Condition, CreatureSize, DamageType
 from Model.Content.CombatEffect import CombatEffect
+from Model.Content.CombatModifiers import AttackKind
 
 # The stat blocks don't record this; nearly every legendary creature has 3.
 LEGENDARY_ACTIONS_PER_ROUND = 3
@@ -217,6 +218,22 @@ class MonsterAction:
     @property
     def is_limited(self) -> bool:
         return self.recharge_on is not None or self.per_day is not None
+
+    @property
+    def attack_kind(self) -> AttackKind | None:
+        """Whether its attack is melee or ranged, as its text starts ("Melee
+        Attack Roll: +6", the 2014 "Ranged Weapon Attack: +4"); None when it
+        isn't an attack or could be either ("Melee or Ranged Attack Roll")."""
+        if self.to_hit is None:
+            return None
+        text = self.description.lstrip().lower()
+        if text.startswith("melee or ranged"):
+            return None
+        if text.startswith("melee"):
+            return AttackKind.MELEE
+        if text.startswith("ranged"):
+            return AttackKind.RANGED
+        return None
 
     @property
     def is_rollable(self) -> bool:

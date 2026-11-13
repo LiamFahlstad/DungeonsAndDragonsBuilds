@@ -32,6 +32,7 @@ from Model.Content.CombatModifiers import (
     AtTurnEnd,
     AtTurnStart,
     Trigger,
+    WhenHit,
     WhoseTurn,
 )
 from Model.Content.CombatTriggers import (
@@ -42,6 +43,7 @@ from Model.Content.CombatTriggers import (
 )
 from Model.Content.RulesConditions import conditions_with
 
+from .active_effects import ActiveEffect
 from .modifiers import (
     _effects_with_modifiers,
     hit_point_maximum,
@@ -729,6 +731,49 @@ def attack_roll_firings(
             firing = _firing(outcome, row, is_dead)
             if firing is not None:
                 found.append(firing)
+    return found
+
+
+def badge_hit_firings(
+    outcome: AttackOutcome,
+    row_of: Callable[[dict, ActiveEffect, WhenHit], TriggerRow | None],
+    *,
+    is_dead: Callable[[dict], bool] = is_down,
+) -> list[HitFiring]:
+    """What the badges of the creature `outcome` hits answer the hit with,
+    once its damage is dealt (WhenHit, plan Q57: Armor of Agathys' Cold
+    damage, Fire Shield's): one firing per WhenHit, its bearer the owner and
+    the attacker the target. `row_of(bearer, record, modifier)` is the row
+    the modifier names, as its caster has it (None: there's no such row).
+    Left out on a miss, against a dead attacker, or for an attack surely
+    not of the modifier's kind. AUTO when the kind is surely the modifier's
+    and there's no `when`; otherwise ASK, saying why."""
+    bearer, attacker = outcome.target, outcome.attacker
+    if not outcome.hit or attacker is bearer or is_dead(attacker):
+        return []
+    found: list[HitFiring] = []
+    for record, modifier in _effects_with_modifiers(bearer):
+        if not isinstance(modifier, WhenHit):
+            continue
+        fits = kind_fits(modifier.attacks, outcome.kind)
+        if fits is False:
+            continue
+        row = row_of(bearer, record, modifier)
+        if row is None:
+            continue
+        why = [f"if {modifier.when}"] if modifier.when else []
+        if fits is None:
+            why.append(f"if it was {_a(modifier.attacks.value)}")
+        found.append(
+            HitFiring(
+                owner=bearer,
+                target=attacker,
+                row=row,
+                mode=TriggerMode.ASK if why else TriggerMode.AUTO,
+                why="; ".join(why),
+                outcome=outcome,
+            )
+        )
     return found
 
 

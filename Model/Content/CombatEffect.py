@@ -151,8 +151,11 @@ class CombatDamage:
             raise ValueError("A damage type to choose needs two or more choices")
         if self.damage_type is not None and self.choices:
             raise ValueError("Choices are only for a damage type of None")
-        if self.upcast and not _UPCAST_DICE.fullmatch(self.upcast):
-            raise ValueError(f"upcast {self.upcast!r} is not dice like '1d6'")
+        # Dice, or a number (Armor of Agathys' 5 more Cold damage per level).
+        if self.upcast and not _UPCAST_DICE_OR_NUMBER.fullmatch(self.upcast):
+            raise ValueError(
+                f"upcast {self.upcast!r} is not dice like '1d6' or a number like '5'"
+            )
         _check_cantrip(self.cantrip)
 
 

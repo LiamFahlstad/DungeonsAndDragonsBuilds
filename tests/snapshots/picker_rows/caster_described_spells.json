@@ -239,6 +239,71 @@
    "until": null,
    "upcast": []
   },
+  "All spells | Armor of Agathys": {
+   "ability": null,
+   "action_cost": "Bonus Action",
+   "amount_kind": "Temp HP",
+   "badge_modifiers": {
+    "Armor of Agathys": [
+     {
+      "effect": "Armor of Agathys: Cold damage",
+      "type": "WhenHit"
+     }
+    ]
+   },
+   "bonus": null,
+   "concentration": false,
+   "condition": "Armor of Agathys",
+   "counts_uses": true,
+   "damage": "5",
+   "dc": null,
+   "duration_seconds": 3600,
+   "feature_name": "",
+   "half_on_save": false,
+   "is_described": true,
+   "is_unavailable": false,
+   "note": "It goes on its user, whoever is targeted. It ends early once you have no Temporary Hit Points: take its badge off then.",
+   "repeat_save": false,
+   "roll": "Saving throw",
+   "row_name": "",
+   "slot_level": "None",
+   "spell_level": 1,
+   "spell_name": "Armor of Agathys",
+   "summary": "5 temp HP",
+   "targets_self": true,
+   "until": null,
+   "upcast": [
+    "5"
+   ]
+  },
+  "All spells | Armor of Agathys: Cold damage": {
+   "ability": null,
+   "action_cost": null,
+   "amount_kind": "Damage",
+   "bonus": null,
+   "concentration": false,
+   "condition": "",
+   "counts_uses": false,
+   "damage": "5 Cold",
+   "dc": null,
+   "duration_seconds": 3600,
+   "feature_name": "",
+   "half_on_save": false,
+   "is_described": true,
+   "is_unavailable": false,
+   "note": "A creature that hits you with a melee attack roll takes it; the simulator deals it as the hit lands.",
+   "repeat_save": false,
+   "roll": "Saving throw",
+   "row_name": "",
+   "slot_level": "None",
+   "spell_level": 1,
+   "spell_name": "Armor of Agathys",
+   "summary": "5 Cold",
+   "until": null,
+   "upcast": [
+    "5"
+   ]
+  },
   "All spells | Barkskin": {
    "ability": null,
    "action_cost": "Bonus Action",
@@ -1021,6 +1086,142 @@
    "spell_level": 1,
    "spell_name": "Feather Fall",
    "summary": "",
+   "until": null,
+   "upcast": []
+  },
+  "All spells | Fire Shield: chill": {
+   "ability": null,
+   "action_cost": "Action",
+   "amount_kind": "Damage",
+   "badge_modifiers": {
+    "Fire Shield": [
+     {
+      "damage_types": [
+       "Fire"
+      ],
+      "type": "Resistance"
+     },
+     {
+      "effect": "Fire Shield: chill flames",
+      "type": "WhenHit",
+      "when": "it's within 5 feet of you"
+     }
+    ]
+   },
+   "bonus": null,
+   "concentration": false,
+   "condition": "Fire Shield",
+   "counts_uses": true,
+   "damage": "",
+   "dc": null,
+   "duration_seconds": 600,
+   "feature_name": "",
+   "half_on_save": false,
+   "is_described": true,
+   "is_unavailable": false,
+   "note": "It goes on its user, whoever is targeted. Bright Light in a 10-foot radius and Dim Light for 10 feet more.",
+   "repeat_save": false,
+   "roll": "Saving throw",
+   "row_name": "",
+   "slot_level": "None",
+   "spell_level": 4,
+   "spell_name": "Fire Shield",
+   "summary": "",
+   "targets_self": true,
+   "until": null,
+   "upcast": []
+  },
+  "All spells | Fire Shield: chill flames": {
+   "ability": null,
+   "action_cost": null,
+   "amount_kind": "Damage",
+   "bonus": null,
+   "concentration": false,
+   "condition": "",
+   "counts_uses": false,
+   "damage": "2d8 Cold",
+   "dc": null,
+   "duration_seconds": 600,
+   "feature_name": "",
+   "half_on_save": false,
+   "is_described": true,
+   "is_unavailable": false,
+   "note": "A creature within 5 feet that hits you with a melee attack roll takes it; the simulator asks as the hit lands.",
+   "repeat_save": false,
+   "roll": "Saving throw",
+   "row_name": "",
+   "slot_level": "None",
+   "spell_level": 4,
+   "spell_name": "Fire Shield",
+   "summary": "2d8 Cold",
+   "until": null,
+   "upcast": []
+  },
+  "All spells | Fire Shield: warm": {
+   "ability": null,
+   "action_cost": "Action",
+   "amount_kind": "Damage",
+   "badge_modifiers": {
+    "Fire Shield": [
+     {
+      "damage_types": [
+       "Cold"
+      ],
+      "type": "Resistance"
+     },
+     {
+      "effect": "Fire Shield: warm flames",
+      "type": "WhenHit",
+      "when": "it's within 5 feet of you"
+     }
+    ]
+   },
+   "bonus": null,
+   "concentration": false,
+   "condition": "Fire Shield",
+   "counts_uses": true,
+   "damage": "",
+   "dc": null,
+   "duration_seconds": 600,
+   "feature_name": "",
+   "half_on_save": false,
+   "is_described": true,
+   "is_unavailable": false,
+   "note": "It goes on its user, whoever is targeted. Bright Light in a 10-foot radius and Dim Light for 10 feet more.",
+   "repeat_save": false,
+   "roll": "Saving throw",
+   "row_name": "",
+   "slot_level": "None",
+   "spell_level": 4,
+   "spell_name": "Fire Shield",
+   "summary": "",
+   "targets_self": true,
+   "until": null,
+   "upcast": []
+  },
+  "All spells | Fire Shield: warm flames": {
+   "ability": null,
+   "action_cost": null,
+   "amount_kind": "Damage",
+   "bonus": null,
+   "concentration": false,
+   "condition": "",
+   "counts_uses": false,
+   "damage": "2d8 Fire",
+   "dc": null,
+   "duration_seconds": 600,
+   "feature_name": "",
+   "half_on_save": false,
+   "is_described": true,
+   "is_unavailable": false,
+   "note": "A creature within 5 feet that hits you with a melee attack roll takes it; the simulator asks as the hit lands.",
+   "repeat_save": false,
+   "roll": "Saving throw",
+   "row_name": "",
+   "slot_level": "None",
+   "spell_level": 4,
+   "spell_name": "Fire Shield",
+   "summary": "2d8 Fire",
    "until": null,
    "upcast": []
   },

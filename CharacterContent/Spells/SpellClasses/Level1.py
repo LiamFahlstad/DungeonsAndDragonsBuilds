@@ -47,6 +47,7 @@ from Model.Content.CombatModifiers import (
     ExtraDamageOnHit,
     Resistance,
     RollMode,
+    WhenHit,
     Speed,
 )
 from Model.Content.CombatTriggers import CombatTrigger, TriggerAim, TriggerEvent
@@ -2315,6 +2316,33 @@ class ArmorOfAgathys(ClassSpell):
                             ),
                         )
                     ),
+                ),
+            ),
+        ]
+
+    def combat_effects(
+        self, character: CharacterView | None = None
+    ) -> list[CombatEffect]:
+        return [
+            CombatEffect(
+                temp_hp=CombatHitPoints(dice="5", upcast="5"),
+                conditions=(
+                    CombatCondition(
+                        "Armor of Agathys",
+                        modifiers=(WhenHit("Armor of Agathys: Cold damage"),),
+                    ),
+                ),
+                targets_self=True,
+                notes=(
+                    "It ends early once you have no Temporary Hit Points: take its badge off then.",
+                ),
+            ),
+            CombatEffect(
+                name="Armor of Agathys: Cold damage",
+                damage=(CombatDamage("5", DamageType.COLD, upcast="5"),),
+                spends_use=False,
+                notes=(
+                    "A creature that hits you with a melee attack roll takes it; the simulator deals it as the hit lands.",
                 ),
             ),
         ]

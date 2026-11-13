@@ -452,6 +452,41 @@ class AtTurnEnd:
         _check_trigger(self)
 
 
+@dataclass(frozen=True)
+class WhenHit:
+    """As a creature hits its bearer with an attack roll of the `attacks`
+    kind, once the hit's damage is dealt, the bearer uses `effect` (the name
+    of another of the badge's source's combat effects, one that spends no
+    use) on that creature: Armor of Agathys' "If a creature hits you with a
+    melee attack roll ..., the creature takes 5 Cold damage", Fire Shield's
+    2d8. Applied by itself when the attack is surely of that kind and there's
+    no `when` ("it's within 5 feet of you"); otherwise the GM is asked.
+    `levels_up` is kept as the badge is given: the slot levels the spell was
+    cast with above its own, which the effect's upcast counts (Armor of
+    Agathys' 5 more Cold damage per level)."""
+
+    effect: str
+    attacks: AttackKind = AttackKind.MELEE
+    when: str = ""
+    levels_up: int = 0
+
+    def __post_init__(self):
+        if not isinstance(self.effect, str) or not self.effect.strip():
+            raise ValueError("A WhenHit needs the name of the effect it uses")
+        if not isinstance(self.attacks, AttackKind):
+            raise ValueError(
+                f"A WhenHit's attacks is an AttackKind, got {self.attacks!r}"
+            )
+        if (
+            isinstance(self.levels_up, bool)
+            or not isinstance(self.levels_up, int)
+            or self.levels_up < 0
+        ):
+            raise ValueError(
+                f"A WhenHit's levels_up is 0 or more, got {self.levels_up!r}"
+            )
+
+
 Trigger = AtTurnStart | AtTurnEnd
 TRIGGER_CLASSES = (AtTurnStart, AtTurnEnd)
 
@@ -477,6 +512,7 @@ Modifier = (
     | Note
     | AtTurnStart
     | AtTurnEnd
+    | WhenHit
 )
 MODIFIER_TYPES: dict[str, type] = {
     cls.__name__: cls
@@ -502,6 +538,7 @@ MODIFIER_TYPES: dict[str, type] = {
         Note,
         AtTurnStart,
         AtTurnEnd,
+        WhenHit,
     )
 }
 MODIFIER_CLASSES = tuple(MODIFIER_TYPES.values())
@@ -536,6 +573,7 @@ _PLAIN: dict[str, type | tuple[type, ...]] = {
     "multiplier": (int, float),
     "set_to": int,
     "steps": int,
+    "levels_up": int,
 }
 
 

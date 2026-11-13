@@ -25,18 +25,22 @@ from PyQt6.QtWidgets import (
 )
 
 import Combat.PlayerLog as PlayerLog
+from Model.Content.CombatModifiers import WhenHit
 from Model.Content.CombatTriggers import TriggerAim
+from Combat.Effects.active_effects import ActiveEffect
 from Combat.Effects.modifiers import attack_plan, hit_notes, hit_plan, hit_point_maximum
 from Combat.Effects.triggers import (
     AttackOutcome,
     DropOutcome,
     attack_roll_firings,
+    badge_hit_firings,
     Firing,
     HitFiring,
     Outcome,
     PendingAttack,
     TriggerChoice,
     TriggerMode,
+    TriggerRow,
     drop_firings,
     firings,
     hit_by_firings,
@@ -59,7 +63,7 @@ from .monster_actions import (
 )
 from .player_server import PLAYER_PORT
 from .resources import legendary_resistance_lack, monster_action_lack
-from .effect_options import trigger_option, triggered_rows
+from .effect_options import badge_trigger_row, trigger_option, triggered_rows
 from .saves import (
     ATTACK_ROLL,
     HEALING,
@@ -433,7 +437,13 @@ class TurnPanelMixin(CombatWindowState):
         self._rolled_attack = None
         if hit is False and char is not None and len(self.target_characters) == 1:
             self._after_attack(
-                AttackOutcome(char, self.target_characters[0], False, row=action.name)
+                AttackOutcome(
+                    char,
+                    self.target_characters[0],
+                    False,
+                    kind=action.attack_kind,
+                    row=action.name,
+                )
             )
         if hit is False or not action.damage:
             return
@@ -441,7 +451,11 @@ class TurnPanelMixin(CombatWindowState):
             # Enter in the Damage field deals it as this action's hit, so
             # what the hit triggers knows which row hit (`after=`).
             self._rolled_attack = PendingAttack(
-                char, critical, row=action.name, total=None if critical else total
+                char,
+                critical,
+                row=action.name,
+                kind=action.attack_kind,
+                total=None if critical else total,
             )
         rolled = " + ".join(
             f"{roll_dice(roll.dice, critical)} {roll.damage_type or _CHOOSE_A_TYPE}"
@@ -743,12 +757,7 @@ class TurnPanelMixin(CombatWindowState):
         knocked Prone twice; a once-per-turn row is used once). They're
         applied as at the end: what they trigger in turn is resolved by
         itself, not collected with the Apply's."""
-        found, _ = outcome_firings(
-            [outcome],
-            triggered_rows,
-            is_dead=lambda char: self._char_death_state(char) == "dead",
-            used_this_turn=self._triggers_used_this_turn(),
-        )
+        found, _ = self._hit_firings([outcome])
         autos = [f for f in found if f.mode is TriggerMode.AUTO]
         if not autos:
             return
@@ -765,6 +774,46 @@ class TurnPanelMixin(CombatWindowState):
         # Logging cleared the hit's own status line; it comes back first.
         self._show_status("; ".join(part for part in (status, *notes) if part))
 
+    def _hit_firings(
+        self, outcomes: list[Outcome]
+    ) -> tuple[list[HitFiring], list[str]]:
+        """What `outcomes` trigger (outcome_firings: the rows of whoever each
+        is about), and for each hit, what the badges of the creature hit
+        answer it with once its damage is dealt (badge_hit_firings: Armor of
+        Agathys' Cold damage, Q57), each once per (owner, target, row), as
+        the rows are (Q41). With the rows with no uses left, for the status
+        line."""
+
+        def is_dead(char: dict) -> bool:
+            return self._char_death_state(char) == "dead"
+
+        found, spent = outcome_firings(
+            outcomes,
+            triggered_rows,
+            is_dead=is_dead,
+            used_this_turn=self._triggers_used_this_turn(),
+        )
+        seen = {_firing_key(f) for f in found}
+        for outcome in outcomes:
+            if not isinstance(outcome, AttackOutcome):
+                continue
+            for firing in badge_hit_firings(
+                outcome, self._badge_trigger_row, is_dead=is_dead
+            ):
+                if _firing_key(firing) not in seen:
+                    seen.add(_firing_key(firing))
+                    found.append(firing)
+        return found, spent
+
+    def _badge_trigger_row(
+        self, bearer: dict, record: ActiveEffect, modifier: WhenHit
+    ) -> TriggerRow | None:
+        """The row a badge's WhenHit uses, as its caster has it (the bearer,
+        if the caster isn't in the fight any more)."""
+        name = record.get("caster")
+        caster = self._find_character_by_name(name) if name else None
+        return badge_trigger_row(caster or bearer, record.get("source"), modifier)
+
     def _resolve_attack_triggers(
         self,
         outcomes: list[Outcome],
@@ -779,12 +828,7 @@ class TurnPanelMixin(CombatWindowState):
         firings applied already, as their hit came (Q67)."""
         if not outcomes:
             return
-        found, spent = outcome_firings(
-            outcomes,
-            triggered_rows,
-            is_dead=lambda char: self._char_death_state(char) == "dead",
-            used_this_turn=self._triggers_used_this_turn(),
-        )
+        found, spent = self._hit_firings(outcomes)
         found = [f for f in found if _firing_key(f) not in done]
         status = self._status_label.text()
         notes = list(spent)

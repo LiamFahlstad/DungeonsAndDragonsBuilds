@@ -48,6 +48,7 @@ from Model.Content.CombatModifiers import (
     Size,
     Speed,
     Vulnerability,
+    WhenHit,
     modifier_from_dict,
 )
 from Model.Content.RulesConditions import CONDITION_RULES, conditions_given_by
@@ -741,10 +742,14 @@ def rolled_modifiers(
 ) -> tuple[Modifier, ...]:
     """`modifiers` as a badge keeps them once given: a HitPointMaximum's
     dice rolled with `roll` and its upcast added for each of `levels_up`
-    slot levels above the spell's (Aid at level 3: 5 + 5). The rest as
-    they are."""
+    slot levels above the spell's (Aid at level 3: 5 + 5), and a WhenHit
+    keeps `levels_up` for the effect it uses (Armor of Agathys' Cold damage).
+    The rest as they are."""
     kept: list[Modifier] = []
     for modifier in modifiers:
+        if isinstance(modifier, WhenHit):
+            kept.append(replace(modifier, levels_up=levels_up))
+            continue
         if not isinstance(modifier, HitPointMaximum) or modifier.rolled:
             kept.append(modifier)
             continue

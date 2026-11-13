@@ -27,7 +27,7 @@ from Model.Content.CombatEffect import (
     CombatEffect,
     EffectRoll,
 )
-from Model.Content.CombatModifiers import Resistance
+from Model.Content.CombatModifiers import Resistance, WhenHit
 from Model.Content.Feature import FeatureTarget
 from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table
 from Model.View import CharacterView
@@ -1518,6 +1518,66 @@ class FireShield(ClassSpell):
                         "Fire damage",
                         "The shield erupts with flame; the attacker takes 2d8 Cold damage",
                     ),
+                ),
+            ),
+        ]
+
+    def combat_effects(
+        self, character: CharacterView | None = None
+    ) -> list[CombatEffect]:
+        return [
+            CombatEffect(
+                name="Fire Shield: warm",
+                conditions=(
+                    CombatCondition(
+                        "Fire Shield",
+                        modifiers=(
+                            Resistance((DamageType.COLD,)),
+                            WhenHit(
+                                "Fire Shield: warm flames",
+                                when="it's within 5 feet of you",
+                            ),
+                        ),
+                    ),
+                ),
+                targets_self=True,
+                notes=(
+                    "Bright Light in a 10-foot radius and Dim Light for 10 feet more.",
+                ),
+            ),
+            CombatEffect(
+                name="Fire Shield: chill",
+                conditions=(
+                    CombatCondition(
+                        "Fire Shield",
+                        modifiers=(
+                            Resistance((DamageType.FIRE,)),
+                            WhenHit(
+                                "Fire Shield: chill flames",
+                                when="it's within 5 feet of you",
+                            ),
+                        ),
+                    ),
+                ),
+                targets_self=True,
+                notes=(
+                    "Bright Light in a 10-foot radius and Dim Light for 10 feet more.",
+                ),
+            ),
+            CombatEffect(
+                name="Fire Shield: warm flames",
+                damage=(CombatDamage("2d8", DamageType.FIRE),),
+                spends_use=False,
+                notes=(
+                    "A creature within 5 feet that hits you with a melee attack roll takes it; the simulator asks as the hit lands.",
+                ),
+            ),
+            CombatEffect(
+                name="Fire Shield: chill flames",
+                damage=(CombatDamage("2d8", DamageType.COLD),),
+                spends_use=False,
+                notes=(
+                    "A creature within 5 feet that hits you with a melee attack roll takes it; the simulator asks as the hit lands.",
                 ),
             ),
         ]

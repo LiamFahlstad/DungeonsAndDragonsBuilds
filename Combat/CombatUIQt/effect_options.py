@@ -25,7 +25,7 @@ from Model.Content.CombatEffect import (
     TurnEdge,
     TurnOf,
 )
-from Model.Content.CombatModifiers import ArmorClass
+from Model.Content.CombatModifiers import ArmorClass, WhenHit
 from Model.Content.CombatTriggers import CombatTrigger, TriggerAim, TriggerEvent
 from Model.Content.WeaponMasteryEffects import (
     MASTERY_RULES,
@@ -1788,6 +1788,33 @@ def trigger_option(
         return found
     return next(
         (o for _, rows in effect_options(who) for o in rows if o.name == name), None
+    )
+
+
+def badge_trigger_row(
+    caster: dict | None, source: str | None, modifier: WhenHit
+) -> TriggerRow | None:
+    """The row a badge's WhenHit uses (Armor of Agathys' "Armor of Agathys:
+    Cold damage"), as `caster` has it among the rows of `source`
+    (trigger_option), cast with the slot the badge was given with
+    (`levels_up` above the spell's level, so its upcast counts). None when
+    there's no row of that name. It costs nothing: the casting paid."""
+    option = trigger_option(caster, source, modifier.effect)
+    if option is None:
+        return None
+    if modifier.levels_up and option.kind == SPELL:
+        option = replace(option, slot_level=option.spell_level + modifier.levels_up)
+    return TriggerRow(
+        name=option.name,
+        trigger=CombatTrigger(
+            TriggerEvent.HIT_BY,
+            optional=False,
+            attacks=modifier.attacks,
+            when=modifier.when,
+        ),
+        conditions=tuple(condition_names(option.condition)),
+        what=_trigger_row_what(option),
+        option=option,
     )
 
 
