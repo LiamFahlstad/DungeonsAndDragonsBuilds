@@ -504,6 +504,46 @@ A target with a Bless badge typed by hand (Custom Condition) that is then Blesse
 **History**
 - 2026-11-10 claude (combat effects 3.6): found
 
+### DI-081 · Legendary action named after the attack it makes has nothing to roll in the Custom Effect picker
+- **Status:** open
+- **Area:** combat-simulator
+- **Where:** `Combat/CombatUIQt/effect_options.py:1718`
+
+effect_options builds by_name keyed by the name with '(Costs N Actions)' stripped, so a legendary NamedAttackAction like 'Molten Strike (Costs 3 Actions)' (Manifestation of Durmor) or 'Chain Lash (Costs 1 Action)' (The Bell Saint) overwrites the action it makes in by_name. _action_it_uses then finds itself (other.name == action.name) and returns None, so the picker row is a plain 'Saving throw' row with no attack or damage: Apply only spends the legendary actions. Fix: build by_name from non-legendary sections first, or skip keys already present. Workaround at the table: spend with the turn-panel legendary button, then pick the attack's own row.
+
+**History**
+- 2026-11-12 main-session: found
+
+### DI-082 · Turn-panel button of a monster action with combat_effects drops the effect's condition and notes
+- **Status:** open
+- **Area:** combat-simulator
+- **Where:** `Combat/CombatUIQt/monster_actions.py:290`
+
+parse_action's combat_effects path builds the MonsterAction from effects[0] (to_hit, damage) but sets no rider/riders, so the button's hit neither applies nor mentions the effect's conditions or notes. Manifestation of Durmor's Molten Strike button rolls the Slam numbers, but a hit gives no Prone and no 'Also:' reminder (Prone / lava), while the picker's 'Molten Strike: Slam' row applies Prone. GMs using the button lose the rider silently.
+
+**History**
+- 2026-11-12 main-session: found
+
+### DI-083 · An encounter's own allies (EncounterSpec.allies) count as enemies for enemy_only triggers
+- **Status:** open
+- **Area:** combat-simulator
+- **Where:** `Combat/EncounterLogs.py:145`
+
+prepared_log marks only the campaign's party allies (PartyAllies.mark); an encounter's allies= (Greypaw and Harat in Wrath of Durmor and Goblin Scouting Party) are logged exactly like its monsters, so Combat/Effects/triggers.py on_party_side() is False for them. enemy_only triggers then treat them as enemies: Gabriel's Warding Flare is offered every time Greypaw or Harat makes an attack roll against the Goblin King or Durmor (seen in a headless run of wrath_of_durmor). Fix: mark encounter allies too (a key on_party_side reads), or have on_party_side read it.
+
+**History**
+- 2026-11-12 main-session: found
+
+### DI-085 · Combat UI doesn't know where anyone is: rules that depend on distance are noted, never counted
+- **Status:** open
+- **Area:** combat-simulator
+- **Where:** `Combat/Effects/modifiers.py:17, Combat/Effects/modifiers.py:392, Model/Content/RulesConditions.py:31`
+
+With no positions, every modifier with a distance in its 'when' is only a note for the GM: Paralyzed's and Unconscious's automatic Critical Hits and Prone's Advantage 'within 5 feet' (Disadvantage farther), triggers whose 'when' names a distance (Fire Shield 'within 5 feet', Dark One's Blessing's '10 feet', plan Q63), auras (Spirit Guardians), a spell's range and Opportunity Attacks. A gap, not a bug: the arena (Notes/combat-arena-plan.md, 'Later: using distance in the rules') is what gives the simulator positions; until a rule reads them, nothing changes.
+
+**History**
+- 2026-11-13 main-session: found
+
 ## Fixed
 
 ### DI-001 · Temporary Hit Points stack instead of keeping one amount
@@ -881,6 +921,17 @@ has_mastery compared exact types (type(self) is type(mastery)), so a magic weapo
 **History**
 - 2026-11-12 main-session: found
 - 2026-11-12 main-session: marked fixed; isinstance(self, type(mastery)): a weapon of the mastered kind, magic or not, is mastered; Thum's sheet snapshot updated (Halfling's Trick: Vex checked)
+
+### DI-084 · speed_in_use ignores the conditions' Speed 0 (Grappled, Restrained, Paralyzed, Petrified, Unconscious)
+- **Status:** fixed · 2026-11-13 · uncommitted
+- **Area:** combat-simulator
+- **Where:** `Model/Content/RulesConditions.py:30, Combat/Effects/modifiers.py:655`
+
+The rules conditions give Speed 0 as a Note (_SPEED_0 = Note('Speed 0: its Speed is 0 and can't increase.')), not as the Speed(set_to=0) modifier Phase 7.3 added, so speed_in_use and _speed_text never see it: speed_in_use({'conditions': ['Grappled']}, 30) is 30, and a Grappled or Restrained creature's card and More Info show its full Speed. 'can't increase' also means a Speed bonus (Longstrider, Haste) must not lift it, which _speed_steps already does for a set_to (the lowest set_to wins and no other step counts). Fix: Speed(set_to=0) beside (or in place of) the Note in RulesConditions for the five conditions. Found while planning the arena (Notes/combat-arena-plan.md), whose movement reach reads speed_in_use.
+
+**History**
+- 2026-11-13 main-session: found
+- 2026-11-13 main-session: marked fixed; RulesConditions gives the five conditions Speed(set_to=0) beside their Speed 0 note; speed_in_use and the arena's reach read it (arena plan step 2).
 
 ## Won't fix
 

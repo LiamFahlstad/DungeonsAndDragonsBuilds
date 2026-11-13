@@ -18,6 +18,7 @@ from Model.Content.CombatModifiers import (
     Note,
     Resistance,
     RollMode,
+    Speed,
 )
 
 ADVANTAGE = RollMode.ADVANTAGE
@@ -27,7 +28,9 @@ SAVING_THROW = D20Test.SAVING_THROW
 ABILITY_CHECK = D20Test.ABILITY_CHECK
 INITIATIVE = D20Test.INITIATIVE
 
-_SPEED_0 = Note("Speed 0: its Speed is 0 and can't increase.")
+# Speed 0 counts (speed_in_use reads it; a set_to also stops any bonus, so
+# it "can't increase"), and the sentence stays as the rules say it.
+_SPEED_0 = (Speed(set_to=0), Note("Speed 0: its Speed is 0 and can't increase."))
 _WITHIN_5_FEET = "the attacker is within 5 feet of it"
 _STRENGTH_AND_DEXTERITY = (Ability.STRENGTH, Ability.DEXTERITY)
 _FAILS_STRENGTH_AND_DEXTERITY_SAVES = AutoFail((SAVING_THROW,), _STRENGTH_AND_DEXTERITY)
@@ -71,7 +74,7 @@ CONDITION_RULES: dict[Condition, tuple[Modifier, ...]] = {
         Note("Can't Approach: it can't willingly move closer to the source of fear."),
     ),
     Condition.GRAPPLED: (
-        _SPEED_0,
+        *_SPEED_0,
         D20Mode((ATTACK_ROLL,), DISADVANTAGE, when="the target isn't the grappler"),
         Note(
             "Movable: the grappler can drag or carry it, each foot costing 1"
@@ -96,7 +99,7 @@ CONDITION_RULES: dict[Condition, tuple[Modifier, ...]] = {
     ),
     Condition.PARALYZED: (
         HasConditions((Condition.INCAPACITATED,)),
-        _SPEED_0,
+        *_SPEED_0,
         _FAILS_STRENGTH_AND_DEXTERITY_SAVES,
         AttacksAgainst(ADVANTAGE),
         CriticalHitsAgainst(when=_WITHIN_5_FEET),
@@ -107,7 +110,7 @@ CONDITION_RULES: dict[Condition, tuple[Modifier, ...]] = {
             " stone (usually); its weight is ten times more and it stops aging."
         ),
         HasConditions((Condition.INCAPACITATED,)),
-        _SPEED_0,
+        *_SPEED_0,
         AttacksAgainst(ADVANTAGE),
         _FAILS_STRENGTH_AND_DEXTERITY_SAVES,
         Resistance(),
@@ -124,7 +127,7 @@ CONDITION_RULES: dict[Condition, tuple[Modifier, ...]] = {
         AttacksAgainst(DISADVANTAGE, when="the attacker is farther than 5 feet"),
     ),
     Condition.RESTRAINED: (
-        _SPEED_0,
+        *_SPEED_0,
         AttacksAgainst(ADVANTAGE),
         D20Mode((ATTACK_ROLL,), DISADVANTAGE),
         D20Mode((SAVING_THROW,), DISADVANTAGE, (Ability.DEXTERITY,)),
@@ -140,7 +143,7 @@ CONDITION_RULES: dict[Condition, tuple[Modifier, ...]] = {
             "Inert: it drops whatever it's holding, and stays Prone when the"
             " condition ends."
         ),
-        _SPEED_0,
+        *_SPEED_0,
         AttacksAgainst(ADVANTAGE),
         _FAILS_STRENGTH_AND_DEXTERITY_SAVES,
         CriticalHitsAgainst(when=_WITHIN_5_FEET),
