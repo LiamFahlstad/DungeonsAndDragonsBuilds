@@ -497,3 +497,46 @@ def test_cleave_attacks_another_creature_once_per_turn(fight, monkeypatch):
     # Once per turn: a second Greataxe hit asks nothing.
     _attack_with(ui, edmund, "Greataxe", first)
     assert len(answers.asked) == 1
+
+
+def _attacks_with(ui, char, row_name, target, rolls):
+    """One Apply of char's weapon row with Times len(rolls) (Extra Attack),
+    each copy with its own roll typed in, as the dialog's Times box does."""
+    ui._select_character(char)
+    ui._set_targets([target])
+    effect = _picked_effect(_row(char, row_name), {})
+    assert effect is not None
+    copies = []
+    for index, roll in enumerate(rolls):
+        attack = parse_attack_roll(roll)
+        assert attack is not None
+        each = replace(effect, typed_attacks={id(target): attack})
+        if index:
+            each = replace(each, action_cost=None, slot_level=None)
+        copies.append(each)
+    ui._apply_custom_effects(copies)
+
+
+def test_vex_from_the_first_attack_counts_in_the_second_of_one_apply(fight):
+    """Q67: what a hit gives by itself (AUTO) is given as the hit lands, not
+    as the Apply ends, so Extra Attack's second roll has the first's Vex."""
+    ui, party, ogres, _, answers = fight
+    thum, ogre = party["Thum"], ogres[0]
+    _attacks_with(ui, thum, "Shortsword", ogre, ["18", "18"])
+    assert answers.asked == []
+    # The second roll used up the first hit's Vex, and its hit gave a new one.
+    assert _lines(ui).count("Ogre's Vex is used up") == 1
+    assert "Vex" in ogre["conditions"]
+    record = find_effect(ogre, "Vex")
+    assert record is not None and record["caster"] == thum["name"]
+
+
+def test_an_auto_row_is_given_once_when_it_is_still_on(fight):
+    """Sap from the first of two hits is still on the Ogre at the second:
+    the second gives it no second badge, and one undo takes both back."""
+    ui, party, ogres, _, _ = fight
+    edmund, ogre = party["Edmund"], ogres[0]
+    _attacks_with(ui, edmund, "Longsword", ogre, ["18", "18"])
+    assert ogre["conditions"].count("Sap") == 1
+    ui._undo_last()
+    assert "Sap" not in ogre["conditions"]

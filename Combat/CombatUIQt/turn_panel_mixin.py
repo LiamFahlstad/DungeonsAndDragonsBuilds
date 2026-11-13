@@ -88,6 +88,11 @@ _RIDER_LENGTH = 130
 _CHOOSE_A_TYPE = "type"
 
 
+def _firing_key(firing: HitFiring) -> tuple[int, int, str]:
+    """A firing as one Apply counts it: its owner, its target and its row."""
+    return (id(firing.owner), id(firing.target), firing.row.name)
+
+
 def _applies_nothing(option: EffectOption) -> bool:
     """Whether a picker row puts nothing on a creature the simulator can show:
     no roll, amount, condition, uses regained or condition ended (Push)."""
@@ -119,6 +124,10 @@ class TurnPanelMixin(CombatWindowState):
         None,
         frozenset(),
     )
+    # While an Apply collects its outcomes (_one_trigger_prompt): the AUTO
+    # firings already applied as their hit came, as (owner, target, row)
+    # keys, so the pass at its end asks only about the rest (Q67).
+    _auto_fired: frozenset[tuple[int, int, str]] = frozenset()
 
     # ── Building and refreshing ─────────────────────────────────────────────
 
@@ -693,39 +702,81 @@ class TurnPanelMixin(CombatWindowState):
     def _one_trigger_prompt(self) -> Iterator[None]:
         """Collect the attack outcomes of everything inside (an Apply's
         Times copies, its targets), and ask about what they trigger once, at
-        the end (Q41). Nested, only the outermost asks."""
+        the end (Q41). What happens by itself (AUTO) is applied as each
+        outcome comes instead, so the Vex the first of two attacks gives
+        counts in the second's roll (Q67). Nested, only the outermost asks."""
         if self._attack_outcomes is not None:
             yield
             return
         self._attack_outcomes = ()
+        self._auto_fired = frozenset()
         try:
             yield
             outcomes: list[Outcome] = [*(self._attack_outcomes or ())]
+            done = self._auto_fired
         finally:
             self._attack_outcomes = None
-        self._resolve_attack_triggers(outcomes)
+            self._auto_fired = frozenset()
+        self._resolve_attack_triggers(outcomes, done=done)
 
     def _after_attack(self, outcome: Outcome):
         """What an attack roll's outcome triggers: asked about now, or with
-        the rest of its Apply's (_one_trigger_prompt). Every hit path calls
-        it: the Custom Effect dialog, the main window's Attack roll and
-        Damage fields, a monster's action button. Damage a creature dealt
-        another comes this way too (DamageMixin._deal_damage), for what the
-        one damaged answers it with (TAKES_DAMAGE: Hellish Rebuke), and a
-        creature reduced to 0 Hit Points, for what the one that did it gets
-        (REDUCES_TO_ZERO: Dark One's Blessing)."""
+        the rest of its Apply's (_one_trigger_prompt), its AUTO rows applied
+        now either way (Q67). Every hit path calls it: the Custom Effect
+        dialog, the main window's Attack roll and Damage fields, a monster's
+        action button. Damage a creature dealt another comes this way too
+        (DamageMixin._deal_damage), for what the one damaged answers it with
+        (TAKES_DAMAGE: Hellish Rebuke), and a creature reduced to 0 Hit
+        Points, for what the one that did it gets (REDUCES_TO_ZERO: Dark
+        One's Blessing)."""
         if self._attack_outcomes is not None:
             self._attack_outcomes = (*self._attack_outcomes, outcome)
+            self._apply_auto_firings_now(outcome)
             return
         self._resolve_attack_triggers([outcome])
 
-    def _resolve_attack_triggers(self, outcomes: list[Outcome]):
+    def _apply_auto_firings_now(self, outcome: Outcome):
+        """Apply the AUTO rows `outcome` triggers while its Apply is still
+        collecting (Q67), and remember them so its end doesn't apply them
+        again. A second hit's row is applied again when its gates let it (the
+        Vex the second roll used up is given anew; a Prone target isn't
+        knocked Prone twice; a once-per-turn row is used once). They're
+        applied as at the end: what they trigger in turn is resolved by
+        itself, not collected with the Apply's."""
+        found, _ = outcome_firings(
+            [outcome],
+            triggered_rows,
+            is_dead=lambda char: self._char_death_state(char) == "dead",
+            used_this_turn=self._triggers_used_this_turn(),
+        )
+        autos = [f for f in found if f.mode is TriggerMode.AUTO]
+        if not autos:
+            return
+        collecting, done = self._attack_outcomes, self._auto_fired
+        done = done | {_firing_key(f) for f in autos}
+        status = self._status_label.text()
+        notes: list[str] = []
+        self._attack_outcomes = None
+        try:
+            for firing in autos:
+                self._use_trigger(firing, notes)
+        finally:
+            self._attack_outcomes, self._auto_fired = collecting, done
+        # Logging cleared the hit's own status line; it comes back first.
+        self._show_status("; ".join(part for part in (status, *notes) if part))
+
+    def _resolve_attack_triggers(
+        self,
+        outcomes: list[Outcome],
+        done: frozenset[tuple[int, int, str]] = frozenset(),
+    ):
         """Apply what `outcomes` trigger that happens by itself (AUTO), then
         ask about the rest in one pop-up (with the setting ask_triggers off,
         as turn-column buttons instead). What's applied goes through the Custom Effect
         dialog's path (_apply_row), inside the hit's undo step; a declined
         one logs a line for the GM only (Q45). Rows with no uses left are
-        left out and said in the status line (Q42)."""
+        left out and said in the status line (Q42). `done`: the AUTO
+        firings applied already, as their hit came (Q67)."""
         if not outcomes:
             return
         found, spent = outcome_firings(
@@ -734,6 +785,7 @@ class TurnPanelMixin(CombatWindowState):
             is_dead=lambda char: self._char_death_state(char) == "dead",
             used_this_turn=self._triggers_used_this_turn(),
         )
+        found = [f for f in found if _firing_key(f) not in done]
         status = self._status_label.text()
         notes = list(spent)
         for firing in found:
