@@ -1670,7 +1670,9 @@ def test_a_settled_save_doesnt_come_back(tmp_path):
     obmar["conditions"].append("Concentrating")
     _damage_field(ui, "4 fi")
     ui._settle_concentration(obmar, 10, kept=True)
-    assert PLAYER_FIGHT_STATE_KEY not in ui._read_log()
+    # The player's fight state keeps where Obmar is on the map, not the save.
+    kept = ui._read_log().get(PLAYER_FIGHT_STATE_KEY, {}).get(obmar["name"], {})
+    assert "concentration_checks" not in kept
 
 
 def test_a_new_concentration_spell_clears_the_old_save(fight, monkeypatch):

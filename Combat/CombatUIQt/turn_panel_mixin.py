@@ -142,6 +142,7 @@ class TurnPanelMixin(CombatWindowState):
         layout.setContentsMargins(10, 10, 10, 10)
         layout.setSpacing(6)
 
+        layout.addWidget(self._build_view_toggle())
         self._turn_now_label = QLabel("")
         self._turn_now_label.setObjectName("turnNowLabel")
         self._turn_now_label.setWordWrap(True)
@@ -227,6 +228,7 @@ class TurnPanelMixin(CombatWindowState):
             self._refresh_between_encounters_labels()
             self._refresh_action_buttons()
             self._log_feed.show_log(self._read_log())
+        self._refresh_arena()
         self._refresh_player_view()
 
     def _refresh_between_encounters_labels(self):

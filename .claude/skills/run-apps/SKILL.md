@@ -13,6 +13,7 @@ Tests prove behaviour. They don't show a squashed layout, an unreadable colour o
 python .claude/skills/run-apps/screenshot.py combat [--scenario ashelm_church] [--size 1600x1000]
 python .claude/skills/run-apps/screenshot.py combat --scenario time_loop_pr_square --summon "Drake Companion" [--choice Cold] [--start]
 python .claude/skills/run-apps/screenshot.py combat --scenario time_loop_pr_square --summon "Drake Companion" --player-screen [--limited]
+python .claude/skills/run-apps/screenshot.py combat --scenario ashelm_church --arena   # the battle map (implies --start)
 python .claude/skills/run-apps/screenshot.py creator [--load-build Builds/Characters/<File>.py] [--tab Equipment]
 python .claude/skills/run-apps/screenshot.py sheet <part of build name> [--feature-tags]
 python .claude/skills/run-apps/screenshot.py --out <dir> combat   # --out goes before the subcommand

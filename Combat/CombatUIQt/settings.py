@@ -45,6 +45,12 @@ class CombatSettings:
             store.setValue(f.name, getattr(self, f.name))
 
 
+# Whether combat shows the battle map in place of the cards (ArenaMixin): the
+# view last used, kept in the same store but not a setting of the dialog (G
+# and the turn column's button switch it).
+ARENA_VIEW_KEY = "view/arena"
+
+
 def open_settings_store() -> QSettings:
     """Where the combat UI keeps its settings between runs (the registry on
     Windows)."""

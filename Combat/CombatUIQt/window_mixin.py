@@ -277,7 +277,8 @@ class WindowMixin(CombatWindowState):
             self._initiative_widget = self._build_initiative_widget()
             self._scroll_area.setWidget(self._initiative_widget)
 
-        root_layout.addWidget(self._scroll_area, stretch=1)
+        # The cards, or the battle map in their place (ArenaMixin).
+        root_layout.addWidget(self._build_view_stack(self._scroll_area), stretch=1)
 
         # The turn column and the players' views, one refresh however many
         # cards changed (TurnPanelMixin._refresh_views).
@@ -892,6 +893,10 @@ class WindowMixin(CombatWindowState):
         ]
 
         # Ctrl+N: open the Add Combatant dialog
+        # G: the Cards / Arena switch, during combat (ArenaMixin._toggle_view).
+        self._toggle_view_shortcut = QShortcut(QKeySequence("G"), self._window)
+        self._toggle_view_shortcut.activated.connect(self._toggle_view)
+        self._combo_sensitive_shortcuts.append(self._toggle_view_shortcut)
         self._add_combatant_shortcut = QShortcut(QKeySequence("Ctrl+N"), self._window)
         self._add_combatant_shortcut.activated.connect(self._show_add_combatant_dialog)
         self._combo_sensitive_shortcuts.append(self._add_combatant_shortcut)

@@ -27,6 +27,7 @@ from PyQt6.QtWidgets import (
     QPushButton,
     QScrollArea,
     QSplitter,
+    QStackedWidget,
     QWidget,
 )
 
@@ -110,6 +111,9 @@ class CombatWindowState:
     round_number: int
     # The fight's battle map (Combat/Arena/), saved in the encounter log.
     arena_settings: ArenaSettings
+    # Whether combat shows the map in place of the cards (ArenaMixin), the
+    # view last used.
+    arena_view_on: bool
     # Undo steps, oldest first, and the one being recorded (undo.py).
     history: list[UndoPoint]
     _open_undo_point: UndoPoint | None
@@ -464,6 +468,24 @@ class CombatWindowState:
 
     def _refresh_views(self):
         raise NotImplementedError("TurnPanelMixin._refresh_views")
+
+    def _build_view_stack(self, cards: QWidget) -> QStackedWidget:
+        raise NotImplementedError("ArenaMixin._build_view_stack")
+
+    def _build_view_toggle(self) -> QPushButton:
+        raise NotImplementedError("ArenaMixin._build_view_toggle")
+
+    def _toggle_view(self):
+        raise NotImplementedError("ArenaMixin._toggle_view")
+
+    def _show_view(self):
+        raise NotImplementedError("ArenaMixin._show_view")
+
+    def _place_on_arena(self):
+        raise NotImplementedError("ArenaMixin._place_on_arena")
+
+    def _refresh_arena(self):
+        raise NotImplementedError("ArenaMixin._refresh_arena")
 
     def _roll_concentration(self, char: dict, dc: int):
         raise NotImplementedError("DamageMixin._roll_concentration")

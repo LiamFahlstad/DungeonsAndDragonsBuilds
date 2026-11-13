@@ -6,6 +6,7 @@ Usage (from the repo root):
     python .claude/skills/run-apps/screenshot.py combat --scenario ashelm_church --size 1800x1100
     python .claude/skills/run-apps/screenshot.py combat --scenario time_loop_pr_square --summon "Drake Companion" --choice Cold --start
     python .claude/skills/run-apps/screenshot.py combat --scenario time_loop_pr_square --summon "Drake Companion" --player-screen [--limited]
+    python .claude/skills/run-apps/screenshot.py combat --scenario ashelm_church --arena   # the battle map in combat
     python .claude/skills/run-apps/screenshot.py creator                              # every tab of the Character Creator
     python .claude/skills/run-apps/screenshot.py creator --load-build Builds/Characters/Y2024_Fighter_BardValor_Clover.py --tab Equipment
     python .claude/skills/run-apps/screenshot.py sheet Obmar                          # render a registered build's sheet pages
@@ -126,7 +127,7 @@ def combat(args, out: Path) -> None:
     ui._build_window()
     ui._open_encounter_log(path, restart=False)
     wanted = [find_summon(ui, label) for label in args.summon or []]
-    if args.start or args.player_screen:
+    if args.start or args.player_screen or args.arena:
         start_fight(ui, first=wanted[0][0] if wanted else None)
     for owner, feature, spec in wanted:
         choices = spec.choices(owner["_stat_block"])
@@ -142,8 +143,12 @@ def combat(args, out: Path) -> None:
         if not made:
             sys.exit(ui._status_label.text() or f"{spec.name} wasn't summoned")
         print(f"  summoned {', '.join(made)}")
+    if args.arena:
+        ui.arena_view_on = True  # this run only: no settings store
+        ui._show_view()
     if not args.player_screen:
-        grab(app, ui._window, out / f"combat_{name}.png", args.size)
+        suffix = "_arena" if args.arena else ""
+        grab(app, ui._window, out / f"combat_{name}{suffix}.png", args.size)
         return
     from Combat.CombatUIQt.player_view import PlayerViewWindow
 
@@ -296,6 +301,11 @@ def main() -> None:
         "--player-screen",
         action="store_true",
         help="shoot the Player Screen window instead of the GM's (implies --start)",
+    )
+    p.add_argument(
+        "--arena",
+        action="store_true",
+        help="the battle map in place of the cards (implies --start)",
     )
     p.add_argument(
         "--limited",

@@ -270,6 +270,7 @@ class EncountersMixin(CombatWindowState):
         self._prev_turn_btn.hide()
         self._next_turn_btn.hide()
         self._initiative_widget = None
+        self._show_view()
         self._start_between_encounters()
         if self.log_file is None:
             self._cards_container.hide()

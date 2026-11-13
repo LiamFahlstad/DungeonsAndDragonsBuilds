@@ -14,6 +14,7 @@ from Combat.PlayerCombatant import combatant_from_character, combatant_from_stat
 from Combat.Scenario import CombatScenario
 from Model.Creatures.Combatants import BasicCombatantData, Visibility
 
+from .arena_mixin import ArenaMixin
 from .cards_mixin import CardsMixin
 from .conditions_mixin import ConditionsMixin
 from .damage_mixin import DamageMixin
@@ -25,7 +26,7 @@ from .features_mixin import FeaturesMixin
 from .logging_mixin import LoggingMixin
 from .player_server import PlayerServer
 from .rolls_mixin import RollsMixin
-from .settings import CombatSettings, open_settings_store
+from .settings import ARENA_VIEW_KEY, CombatSettings, open_settings_store
 from .spells_mixin import SpellsMixin
 from .stats import _default_stats
 from .saves import DEFAULT_ATTACK_BONUS, DEFAULT_SAVE_DC, SAVING_THROW
@@ -47,6 +48,7 @@ class CombatAppQt(
     SummonsMixin,
     TurnsMixin,
     TurnPanelMixin,
+    ArenaMixin,
     CardsMixin,
     LoggingMixin,
     DialogsMixin,
@@ -145,6 +147,7 @@ class CombatAppQt(
         self._settings_store: QSettings | None = None
         self.round_number = 1
         self.arena_settings = ArenaSettings()
+        self.arena_view_on = False  # run() reads the view last used
         self.history = []
         self._open_undo_point = None
 
@@ -206,6 +209,9 @@ class CombatAppQt(
 
         self._settings_store = open_settings_store()
         self.settings.load(self._settings_store)
+        self.arena_view_on = bool(
+            self._settings_store.value(ARENA_VIEW_KEY, False, type=bool)
+        )
 
         self._build_window()
         sys.excepthook = self._report_uncaught_error

@@ -795,6 +795,8 @@ class TurnsMixin(CombatWindowState):
         self._next_turn_btn.show()
         self._turn_panel.show()
 
+        self._place_on_arena()
+        self._show_view()
         self._rebuild_cards()
         self._refresh_turn()
         self._refresh_rest_buttons()
@@ -817,6 +819,7 @@ class TurnsMixin(CombatWindowState):
 
         self._initiative_widget = self._build_initiative_widget()
         self._scroll_area.setWidget(self._initiative_widget)
+        self._show_view()
         self._refresh_rest_buttons()
         self._focus_next_initiative_field()
 

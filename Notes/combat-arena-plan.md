@@ -11,8 +11,8 @@ rule separate from the grid, so hexagons, Euclidean distance and the
 Player's Handbook's own 5-foot diagonals can be added later without changing
 the view or the fight state.
 
-Written 2026-11-13. Steps 1-3 (the Qt-free map and its saving) built the same
-day; nothing is drawn yet.
+Written 2026-11-13. Steps 1-5 (the Qt-free map, its saving, the view and the
+Cards/Arena switch) built the same day; tokens can't be moved yet (step 6).
 
 ## How to use this document
 
@@ -64,8 +64,8 @@ verification passes per step unless asked.
 | 1 | Geometry: cells, the square grid, the Manhattan rule, the rule registry (Qt-free) | Done 2026-11-13 (R1) |
 | 2 | Arena state: map settings, positions, footprints by size, distances between creatures, reachable cells, placing tokens (Qt-free). Fix DI-084 first: the reach reads `speed_in_use` | Done 2026-11-13 (R2); DI-084 fixed |
 | 3 | Saving: positions and map settings in the encounter log, undo | Done 2026-11-13 (R3) |
-| 4 | The view: the grid and tokens drawn, click to select and target | Not started |
-| 5 | Switching views: the Cards/Arena toggle and its shortcut | Not started |
+| 4 | The view: the grid and tokens drawn, click to select and target | Done 2026-11-13 (R4) |
+| 5 | Switching views: the Cards/Arena toggle and its shortcut | Done 2026-11-13 (R5) |
 | 6 | Moving: drag or click to move, reach shown, feet moved this turn | Not started |
 | 7 | Distances in the UI: hover and the target label in feet | Not started |
 | 8 | Docs: KEYBOARD_SHORTCUTS.md, HOWTO.md, Combat/CHEATSHEET.md | Not started |
@@ -210,19 +210,28 @@ positions back from the saved fight state.
 
 ```text
 Combat/CombatUIQt/arena_view.py         ArenaView(QGraphicsView): draws, no rules
-  the cells, from shape.polygon         a light grid; coordinates on the edges
+  the cells, from shape.polygon         a light grid; coordinates on the edges; the whole map
+                                        fits the view until the GM zooms (R4)
   a token per placed combatant          a circle (a square covering its footprint when Large+)
-                                        with its first letters, coloured by side (Q5),
+                                        with its letters (token_label: "G2", "A1", "HD"),
+                                        coloured by side (Q5), its name as a tooltip,
                                         its HP as a thin bar, a gold ring on whose turn it is,
-                                        the source and target outlines the cards use,
-                                        greyed at 0 HP (Q9), dashed while hidden (Visibility)
-  "Not on the map" strip                the combatants without a position, to drag on
+                                        the source and target outlines the cards use (white,
+                                        red; both: white with a red ring inside),
+                                        greyed at 0 HP (Q9), dashed while the players can't see it
+  "Not on the map" strip                the combatants without a position, to drag on (step 6)
   zoom with Ctrl+wheel, pan by dragging empty space
+  token_rows(chars, settings, turn, source, targets) -> [TokenRow]
+                                        the rows, from the combatant dicts (Decision 6)
 Combat/CombatUIQt/arena_mixin.py        ArenaMixin: the glue
-  _build_arena_page()                   the view, wired to _select_character / _select_target_character
-  _toggle_view()                        Cards <-> Arena
-  _move_combatant(char, cell)           @undoable: sets position and moved_ft, saves the fight state
-  _refresh_arena()                      called from _refresh_cards
+  _build_view_stack(cards)              the stack, and the view wired to _select_character /
+                                        _select_target_character by name
+  _build_view_toggle()                  the turn column's Arena / Cards button
+  _toggle_view()                        Cards <-> Arena, during combat only (G)
+  _show_view()                          the page the phase and the view last used call for
+  _place_on_arena()                     place_new as combat starts or is continued
+  _move_combatant(char, cell)           @undoable: sets position and moved_ft, saves the fight state (step 6)
+  _refresh_arena()                      called from _refresh_views (R4)
 ```
 
 The view gets what it draws as a list of plain token rows (name, cells,
@@ -235,9 +244,10 @@ second reader of the same rows.
 `QStackedWidget` and the `ArenaView` page 1, in the same place in the row. A
 button at the top of the turn column, "Arena" / "Cards", and the **G** key
 switch between them. **G** is free: neither KEYBOARD_SHORTCUTS.md nor the
-code binds it. The view picked is kept in the settings, so the window opens
-on the one last used. The initiative screen and the party view between
-encounters stay cards-only.
+code binds it. The view picked is kept in the settings store (`view/arena`,
+Decision 10), so the window opens on the one last used. The initiative
+screen and the party view between encounters stay cards-only, and the
+button hides with them.
 
 **Moving.** Drag a token to a cell, or with a source selected, click an
 empty cell. While a token is picked up, the cells it can reach this turn
@@ -300,12 +310,24 @@ puts a token back with its `moved_ft`, or takes it off the map again;
 ### Step 4: the view (`arena_view.py`, `arena_mixin.py`, new)
 
 The grid and tokens drawn, the token rows function, clicks wired to selection.
-Look at it with the `run-apps` skill's offscreen screenshot.
+Look at it with the `run-apps` skill's offscreen screenshot (`combat --arena`,
+added for this).
+
+Tests (`tests/test_combat_ui_arena.py`): starting the fight puts everyone on
+the map, the sides apart and nobody overlapping; token letters; token rows
+carry the turn, the selection, 0 HP, hidden and Large footprints, and leave
+out whoever isn't on the map; left and right clicks (with Ctrl) select and
+target as the cards do and the rows show it; a click finds the token under
+it.
 
 ### Step 5: switching views
 
-The `QStackedWidget`, the toggle button, **G**, the setting that remembers
-the view. The toggle hides outside combat.
+The `QStackedWidget`, the toggle button, **G**, the settings store's
+`view/arena` that remembers the view. The toggle hides outside combat.
+
+Tests: G does nothing on the initiative screen, switches both ways in combat
+and remembers it, the button says which view it goes to, and a fight opens
+on the view last used.
 
 ### Step 6: moving
 
@@ -377,7 +399,15 @@ Taken in the plan (2026-11-13), for the user to overrule:
    Large creature is 5 ft. from anything next to any of its four cells, as
    on a printed map.
 9. **The toggle exists only during combat, on G and a turn-column button**,
-   and the view picked is remembered in the settings.
+   and the view picked is remembered in the settings. (Where it's kept:
+   replaced by 10.)
+
+Taken while building (2026-11-13), for the user to overrule:
+
+10. **The view last used is window state, not a setting** (R5): it's kept in
+    the settings store under `view/arena`, and the Settings dialog doesn't
+    list it. G and the button are how it's changed. Replaces the "in the
+    settings" of Decision 9.
 
 ## Open questions
 
@@ -388,8 +418,8 @@ Each has a *Suggestion*: what gets built if nobody says otherwise.
   party's side along the left edge and everyone else along the right as
   combat starts, moved by hand from there. Per-encounter maps and starting
   positions in `EncounterSpec` come later. *Built so in step 2
-  (`ArenaSettings`'s defaults, `place_new`); nothing calls `place_new` until
-  the view (step 4).*
+  (`ArenaSettings`'s defaults, `place_new`); step 4 calls `place_new` as
+  combat starts or is continued.*
 - **Q2. Is speed enforced?** *Blocks step 6.* *Suggestion:* no. Show the
   reach and warn in the status line when a move goes past it ("Goblin moved
   40 ft., Speed 30 ft."), but allow it: Dash, being shoved, teleporting and
@@ -413,7 +443,7 @@ Each has a *Suggestion*: what gets built if nobody says otherwise.
 - **Q5. Which colours?** *Blocks step 4.* *Suggestion:* the party's side
   (players, party allies, players' summons: `on_party_side`) blue, everyone
   else red, whoever's turn it is with a gold ring. A monster charmed into
-  helping stays red.
+  helping stays red. *Built so in step 4.*
 - **Q6. Is changing the map's settings an undo step?** *Blocks nothing yet.*
   *Suggestion:* not until there's a map settings dialog (Q1, Later); it joins
   `UndoPoint` then.
@@ -434,7 +464,7 @@ Each has a *Suggestion*: what gets built if nobody says otherwise.
   Incapacitated, Q4), and it leaves the map only when it leaves the fight. A
   player making death saves keeps their colour, greyed. *Not blocking is
   built in step 2 (`can_pass_through` counts 0 HP too, for a monster with
-  no Unconscious badge); the greying is step 4.*
+  no Unconscious badge); the greying too, in step 4.*
 
 ## Revisions
 
@@ -464,6 +494,26 @@ Each has a *Suggestion*: what gets built if nobody says otherwise.
   placed in `_join_fight` through the Qt-free `place_summons`; it does
   nothing until tokens are placed, which `place_new` will do when the view
   comes (step 4).
+- **R4** (step 4). *Plan:* `_build_arena_page()`, and the map refreshed from
+  `_refresh_cards`. *Done:* `_build_view_stack` and `_build_view_toggle`
+  (the window builds the stack and the turn column the button), and
+  `_refresh_arena` runs from `_refresh_views`, which every change reaches
+  (the cards' refresh starts its timer) and which comes after the turn
+  order is settled. `place_new` runs in `_switch_to_combat`, so a fight
+  starting or continued puts whoever isn't on the map yet on it; someone
+  added mid-fight stays off it until step 6's "Not on the map" strip. The
+  map fits the view until the GM zooms, as 24 cells don't fit the cards'
+  area at 40 px. Token letters skip a "Group of 3"'s count and read a
+  "(1) ..." prefix, as the Ashelm encounters name their groups. A token
+  that is both source and target is white with a red ring inside, the
+  view's version of the cards' split border.
+- **R5** (step 5). *Plan:* the view picked kept in the settings
+  (`CombatSettings`). *Done:* kept in the same settings store, under
+  `view/arena`, but not a `CombatSettings` field (Decision 10). *Why:* every
+  setting is in the Settings dialog (a test holds it to that), and one more
+  row made the dialog taller than the smallest window
+  (`test_the_settings_dialog_fits_the_smallest_window`); and which view is
+  up is window state, switched with G, like a panel left open.
 
 ## Discovered issues
 
