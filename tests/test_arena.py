@@ -278,3 +278,18 @@ def test_summons_come_out_beside_owners_on_the_map():
     spirit = _monster("Spirit", summon_of="Cleric")
     place_summons([spirit], [off], SETTINGS)
     assert "position" not in spirit, "its owner isn't on the map"
+
+
+def test_a_move_costs_the_cheapest_walk():
+    from Combat.Arena.arena import move_cost, remaining_ft, straight_ft
+
+    corridor = ArenaSettings(width=10, height=3)
+    fighter = _player("Fighter", (0, 1))
+    wall = [_monster(f"Goblin {r}", (2, r)) for r in range(3)]
+    everyone = [fighter, *wall]
+    assert move_cost(fighter, everyone, corridor, Cell(1, 1)) == 5
+    assert move_cost(fighter, everyone, corridor, Cell(4, 1)) is None, "walled off"
+    assert straight_ft(fighter, Cell(4, 1), corridor) == 20
+    fighter["moved_ft"] = 10
+    assert remaining_ft(fighter) == 20
+    assert remaining_ft({"name": "Statue"}) == 0

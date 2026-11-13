@@ -11,8 +11,9 @@ rule separate from the grid, so hexagons, Euclidean distance and the
 Player's Handbook's own 5-foot diagonals can be added later without changing
 the view or the fight state.
 
-Written 2026-11-13. Steps 1-5 (the Qt-free map, its saving, the view and the
-Cards/Arena switch) built the same day; tokens can't be moved yet (step 6).
+Written 2026-11-13. Steps 1-6 (the Qt-free map, its saving, the view, the
+Cards/Arena switch and moving) built the same day; distances in the UI
+(step 7) and the docs (step 8) are left.
 
 ## How to use this document
 
@@ -66,7 +67,7 @@ verification passes per step unless asked.
 | 3 | Saving: positions and map settings in the encounter log, undo | Done 2026-11-13 (R3) |
 | 4 | The view: the grid and tokens drawn, click to select and target | Done 2026-11-13 (R4) |
 | 5 | Switching views: the Cards/Arena toggle and its shortcut | Done 2026-11-13 (R5) |
-| 6 | Moving: drag or click to move, reach shown, feet moved this turn | Not started |
+| 6 | Moving: drag or click to move, reach shown, feet moved this turn | Done 2026-11-13 (R6) |
 | 7 | Distances in the UI: hover and the target label in feet | Not started |
 | 8 | Docs: KEYBOARD_SHORTCUTS.md, HOWTO.md, Combat/CHEATSHEET.md | Not started |
 
@@ -219,7 +220,10 @@ Combat/CombatUIQt/arena_view.py         ArenaView(QGraphicsView): draws, no rule
                                         the source and target outlines the cards use (white,
                                         red; both: white with a red ring inside),
                                         greyed at 0 HP (Q9), dashed while the players can't see it
-  "Not on the map" strip                the combatants without a position, to drag on (step 6)
+  "Not on the map" strip                a button per combatant without a position: it becomes
+                                        the source, and a cell clicked puts it there (R6)
+  pick_up(row, held) / drop(cell)       a drag: the reach shaded with its costs, then on_move
+                                        with the anchor that puts the held cell on `cell`
   zoom with Ctrl+wheel, pan by dragging empty space
   token_rows(chars, settings, turn, source, targets) -> [TokenRow]
                                         the rows, from the combatant dicts (Decision 6)
@@ -230,7 +234,11 @@ Combat/CombatUIQt/arena_mixin.py        ArenaMixin: the glue
   _toggle_view()                        Cards <-> Arena, during combat only (G)
   _show_view()                          the page the phase and the view last used call for
   _place_on_arena()                     place_new as combat starts or is continued
-  _move_combatant(char, cell)           @undoable: sets position and moved_ft, saves the fight state (step 6)
+  _arena_reach(name)                    reachable with remaining_ft: what a picked-up token shades
+  _arena_cell(cell)                     an empty cell clicked: the source goes there
+  _move_combatant(char, cell)           @undoable: places one off the map, or walks one on it
+                                        (move_cost, else straight_ft), adds to moved_ft, logs
+                                        a GM-only line (which saves the fight), warns (Q2, Q8)
   _refresh_arena()                      called from _refresh_views (R4)
 ```
 
@@ -253,7 +261,14 @@ button hides with them.
 empty cell. While a token is picked up, the cells it can reach this turn
 (its walking speed in use, less `moved_ft`) are shaded with what each costs.
 Going past the reach is warned about, not refused (Q2). Ending on another
-creature is refused (Q4). Each move is one undo step.
+creature is refused (Q4). Each move is one undo step. A move counts the
+cheapest walk there (`move_cost`); when no walk gets there (walled in by
+enemies) it counts the straight distance and the log line says so, as the
+GM moved it some other way. A creature with no Speed as a number (a plain
+combatant like the Pirate) reaches only its own cell but can still be
+moved. Someone without a place is put on the map from the strip, or with
+a source selected by clicking a cell; placing moves nothing and logs
+nothing.
 
 **Distances.** With a source selected, hovering a cell or token shows the
 distance from the source in feet next to the cursor, and the target label
@@ -334,6 +349,18 @@ on the view last used.
 Drag and click-to-move through `_move_combatant`; the shaded reach; the
 over-speed warning (Q2); the move's log line, if any (Q3); the "Not on the
 map" strip.
+
+Tests (`tests/test_combat_ui_arena.py`, `tests/test_arena.py`): a drag
+shades the reach with its costs and moves the token, logs a GM-only line
+with no action and leaves less reach for the next; a move is one undo step;
+a click on an empty cell moves the source (and asks for one without);
+ending on someone is refused with nothing to undo; past the Speed is warned
+about and allowed; Prone crawls at half the reach with a reminder; the strip
+lists whoever has no place and puts them on the map, which undo takes back;
+a token put on someone goes to the nearest free cell; a Large token moves by
+the cell it's held by; no Speed, no reach; the real mouse (press, move past
+the drag distance, release) drags a token; `move_cost`, `straight_ft` and
+`remaining_ft` on plain dicts.
 
 ### Step 7: distances in the UI
 
@@ -424,11 +451,12 @@ Each has a *Suggestion*: what gets built if nobody says otherwise.
   reach and warn in the status line when a move goes past it ("Goblin moved
   40 ft., Speed 30 ft."), but allow it: Dash, being shoved, teleporting and
   Misty Step all move a creature further than its speed, and the GM knows
-  which happened.
+  which happened. *Built so in step 6.*
 - **Q3. Are moves logged?** *Blocks step 6.* *Suggestion:* a GM-only line
   with no action ("Goblin moves 15 ft."), so the log tells the fight's story
   but nothing replays from it and the player link never shows it. The other
-  choice is no line at all, if that's too chatty.
+  choice is no line at all, if that's too chatty. *Built so in step 6
+  ("Goblin moves 15 ft."; placing a token logs nothing).*
 - **Q4. Whose space can a creature move through?** *Blocks step 2.* The
   2024 Player's Handbook (Playing the Game, "Moving Around Other Creatures";
   not in the local Rules Glossary): you can move through the space of an
@@ -439,7 +467,8 @@ Each has a *Suggestion*: what gets built if nobody says otherwise.
   start (it's a few lines once `step_cost` exists), and refuse a drop onto a
   creature. A token dragged from the "Not on the map" strip onto another goes
   to the nearest free cell. *Built so in step 2 (`can_pass_through`,
-  `is_difficult_for`, `nearest_free`); refusing the drop is step 6.*
+  `is_difficult_for`, `nearest_free`); refusing the drop too, in step 6,
+  where the strip places by a click rather than a drag (R6).*
 - **Q5. Which colours?** *Blocks step 4.* *Suggestion:* the party's side
   (players, party allies, players' summons: `on_party_side`) blue, everyone
   else red, whoever's turn it is with a gold ring. A monster charmed into
@@ -451,14 +480,15 @@ Each has a *Suggestion*: what gets built if nobody says otherwise.
   walking speed in use. A creature with only a Fly or Swim Speed uses its
   highest one. Picking a speed for a move, and switching speeds part-way
   (Rules Glossary, Speed: "subtract the distance already moved from the new
-  speed"), is Later.
+  speed"), is Later. *Built so (`walking_speed_ft`, step 2; the reach,
+  step 6), with Fly or Climb as the fallback: there is no swim field.*
 - **Q8. Does Prone change the reach?** *Blocks step 2.* Rules Glossary,
   Crawling: "each foot of movement costs 1 extra foot". *Suggestion:* yes, a
   Prone creature's steps cost double, so its reach is halved, with a status
   line reminder that standing up costs half its Speed. Standing up isn't
   done by the map; the GM removes Prone as now. *The halved reach is built
   in step 2 (crawling and Difficult Terrain add up: 3 ft. a foot through an
-  enemy's space, Rules Glossary, Crawling); the reminder is step 6.*
+  enemy's space, Rules Glossary, Crawling); the reminder too, in step 6.*
 - **Q9. What happens to a token at 0 HP?** *Blocks step 4.* *Suggestion:*
   it stays where it fell, greyed. It doesn't block anyone (it's
   Incapacitated, Q4), and it leaves the map only when it leaves the fight. A
@@ -514,6 +544,16 @@ Each has a *Suggestion*: what gets built if nobody says otherwise.
   row made the dialog taller than the smallest window
   (`test_the_settings_dialog_fits_the_smallest_window`); and which view is
   up is window state, switched with G, like a panel left open.
+- **R6** (step 6). *Plan:* tokens dragged from the "Not on the map" strip.
+  *Done:* a strip button makes that combatant the source, and a click on a
+  cell puts it there, the same path as click-to-move. *Why:* dragging from
+  a widget into the map needs Qt drag-and-drop, and the click is one path
+  for both. Also: a move with no walk there (walled in by enemies) counts
+  the straight distance and says so in its line, rather than being refused,
+  as Q2's reasoning (the GM knows how it got there) covers it; a Large
+  token is moved by the cell it's held by, not its top-left; the reach
+  shaded is of the anchor cell, so a Large creature's shading is its
+  top-left cell's.
 
 ## Discovered issues
 

@@ -329,3 +329,34 @@ def place_summons(new: Iterable[dict], chars: Iterable[dict], settings: ArenaSet
         if cell is not None:
             char[POSITION_KEY] = cell.to_list()
             chars.append(char)
+
+
+def remaining_ft(char: dict) -> int:
+    """How far char can still move this turn: its walking speed in use less
+    what it has moved (0 with no speed)."""
+    speed = walking_speed_ft(char)
+    return max((speed or 0) - int(char.get(MOVED_KEY, 0)), 0)
+
+
+# A walk no map is long enough to need: reachable's limit when it's a cost
+# that's wanted, not a reach.
+_ANY_DISTANCE = 1_000_000
+
+
+def move_cost(
+    char: dict, chars: Iterable[dict], settings: ArenaSettings, to: Cell
+) -> int | None:
+    """What walking char to anchor `to` costs, in feet, by the cheapest way
+    it can go (around whoever it can't pass, crawling while Prone); None
+    when no walk gets there, or char isn't on the map."""
+    return reachable(char, chars, settings, _ANY_DISTANCE).get(to)
+
+
+def straight_ft(char: dict, to: Cell, settings: ArenaSettings) -> int | None:
+    """How far anchor `to` is from char's anchor by the rule, ignoring
+    whoever is in the way (a teleport, or a walk that can't be made); None
+    when char isn't on the map."""
+    start = position(char)
+    if start is None:
+        return None
+    return settings.distance_rule.feet(start, to, settings.cell_ft)

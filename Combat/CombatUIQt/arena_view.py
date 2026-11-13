@@ -4,7 +4,9 @@ combatant dict (the plan's Decision 6), and has no rules in it: the cells
 come from Combat/Arena's grid shape, the rows from token_rows.
 
 Left click a token: the source. Right click: the target (Ctrl adds one,
-Shift a range), as on the cards. Ctrl+wheel zooms; dragging empty space
+Shift a range), as on the cards. Drag a token to move it, with the cells it
+can reach this turn shaded and what each costs; or click an empty cell to
+move the source there (step 6). Ctrl+wheel zooms; dragging empty space
 pans."""
 
 from __future__ import annotations
@@ -54,6 +56,10 @@ _TURN = QColor("#c9a84c")
 _TARGET = QColor("#e74c3c")
 _HP_BAR = QColor("#5ec269")
 _HP_BAR_LOW = QColor("#e0a030")
+_REACH = QColor(94, 194, 105, 60)
+_REACH_TEXT = QColor("#b8e6be")
+# How far the mouse goes before a press on a token is a drag, not a click.
+_DRAG_PX = 6
 
 
 @dataclass(frozen=True)
@@ -135,12 +141,17 @@ def token_rows(
 
 class ArenaView(QGraphicsView):
     """The map: the grid of `settings` and a token per row. Clicks go to
-    `on_select(name)` and `on_target(name, ctrl, shift)`."""
+    `on_select(name)` and `on_target(name, ctrl, shift)`, a token dropped on
+    a cell to `on_move(name, anchor)`, a click on an empty cell to
+    `on_cell(cell)`; `reach_of(name)` is what a picked-up token shades."""
 
     def __init__(
         self,
         on_select: Callable[[str], None],
         on_target: Callable[[str, bool, bool], None],
+        on_move: Callable[[str, Cell], None] = lambda name, cell: None,
+        on_cell: Callable[[Cell], None] = lambda cell: None,
+        reach_of: Callable[[str], dict[Cell, int]] = lambda name: {},
     ):
         super().__init__()
         self.setObjectName("arenaView")
@@ -152,6 +163,16 @@ class ArenaView(QGraphicsView):
         self.setTransformationAnchor(QGraphicsView.ViewportAnchor.AnchorUnderMouse)
         self._on_select = on_select
         self._on_target = on_target
+        self._on_move = on_move
+        self._on_cell = on_cell
+        self._reach_of = reach_of
+        # A press: where, and on which token (None: empty space).
+        self._press: QPointF | None = None
+        self._press_row: TokenRow | None = None
+        self._grabbed: Cell | None = None
+        # While a token is picked up: the cells it can reach, and costs.
+        self._dragging: str | None = None
+        self._reach: dict[Cell, int] = {}
         self._settings = ArenaSettings()
         self._rows: list[TokenRow] = []
         self._drawn: tuple | None = None
@@ -172,6 +193,8 @@ class ArenaView(QGraphicsView):
         self._settings, self._rows = settings, list(rows)
         self._scene.clear()
         self._draw_grid()
+        if self._dragging is not None:
+            self._draw_reach()
         for row in rows:
             self._draw_token(row)
         margin = CELL_PX
@@ -192,6 +215,31 @@ class ArenaView(QGraphicsView):
     def showEvent(self, event):
         super().showEvent(event)
         self._fit()
+
+    def _draw_reach(self):
+        """Shade the cells the picked-up token can reach, with their costs."""
+        shape = self._settings.distance_rule.shape
+        font = QFont("Segoe UI", 7)
+        for cell, feet in self._reach.items():
+            points = [QPointF(x, y) for x, y in shape.polygon(cell, CELL_PX)]
+            self._scene.addPolygon(
+                QPolygonF(points), QPen(Qt.PenStyle.NoPen), QBrush(_REACH)
+            )
+            if feet:
+                label = QGraphicsSimpleTextItem(str(feet))
+                label.setFont(font)
+                label.setBrush(QBrush(_REACH_TEXT))
+                self._scene.addItem(label)
+                x, y = shape.polygon(cell, CELL_PX)[0]
+                label.setPos(x + 2, y + 1)
+
+    def reach_shown(self) -> dict[Cell, int]:
+        """The cells shaded now (tests)."""
+        return dict(self._reach) if self._dragging is not None else {}
+
+    def _redraw(self):
+        self._drawn = None
+        self.show_rows(self._settings, self._rows)
 
     def _draw_grid(self):
         settings = self._settings
@@ -307,19 +355,97 @@ class ArenaView(QGraphicsView):
                 bool(modifiers & Qt.KeyboardModifier.ShiftModifier),
             )
 
+    def pick_up(self, row: TokenRow, grabbed: Cell | None = None):
+        """Start dragging `row`'s token, held by its cell `grabbed` (its
+        anchor when not given): shade where it can go."""
+        self._dragging = row.name
+        self._grabbed = grabbed if grabbed is not None else row.cells[0]
+        self._reach = self._reach_of(row.name)
+        self._redraw()
+
+    def drop(self, cell: Cell):
+        """Put the picked-up token down with its held cell on `cell`."""
+        name, row = self._dragging, self._row_named(self._dragging)
+        self._dragging, self._reach = None, {}
+        if name is None or row is None:
+            return
+        anchor = self._anchor_for(row, cell)
+        if anchor is not None and anchor != row.cells[0]:
+            self._on_move(name, anchor)
+        self._redraw()
+
+    def _row_named(self, name: str | None) -> TokenRow | None:
+        return next((r for r in self._rows if r.name == name), None)
+
+    def _anchor_for(self, row: TokenRow, cell: Cell) -> Cell | None:
+        """The anchor that puts row's held cell on `cell`: for one cell, the
+        cell itself; for a Large token held by another cell, the anchor whose
+        footprint has that cell where the held one is in it now."""
+        shape = self._settings.distance_rule.shape
+        across = round(len(row.cells) ** 0.5)
+        held = row.cells.index(self._grabbed) if self._grabbed in row.cells else 0
+        corner = shape.offset(cell, 1 - across, 1 - across)
+        for anchor in shape.footprint(corner, across):
+            if shape.footprint(anchor, across)[held] == cell:
+                return anchor
+        return None
+
     def mousePressEvent(self, event: QMouseEvent | None):
         if event is None:
             return
         point = self.mapToScene(event.position().toPoint())
         row = self.token_at(point.x(), point.y())
+        self._press = event.position()
+        self._press_row = None
         if row is not None and event.button() in (
             Qt.MouseButton.LeftButton,
             Qt.MouseButton.RightButton,
         ):
+            if event.button() == Qt.MouseButton.LeftButton:
+                shape = self._settings.distance_rule.shape
+                self._press_row = row
+                self._grabbed = shape.cell_at(point.x(), point.y(), CELL_PX)
             self.click(row, event.button(), event.modifiers())
             event.accept()
             return
         super().mousePressEvent(event)
+
+    def mouseMoveEvent(self, event: QMouseEvent | None):
+        if event is None:
+            return
+        row = self._press_row
+        if row is not None and self._dragging is None and self._press is not None:
+            if (event.position() - self._press).manhattanLength() >= _DRAG_PX:
+                self.pick_up(self._row_named(row.name) or row, self._grabbed)
+        if self._dragging is not None:
+            event.accept()
+            return
+        super().mouseMoveEvent(event)
+
+    def mouseReleaseEvent(self, event: QMouseEvent | None):
+        if event is None:
+            return
+        point = self.mapToScene(event.position().toPoint())
+        shape = self._settings.distance_rule.shape
+        cell = shape.cell_at(point.x(), point.y(), CELL_PX)
+        pressed, self._press = self._press, None
+        self._press_row = None
+        if self._dragging is not None:
+            self.drop(cell)
+            event.accept()
+            return
+        super().mouseReleaseEvent(event)
+        clicked = (
+            pressed is not None
+            and (event.position() - pressed).manhattanLength() < _DRAG_PX
+        )
+        if (
+            clicked
+            and event.button() == Qt.MouseButton.LeftButton
+            and self.token_at(point.x(), point.y()) is None
+            and self._settings.on_map(cell)
+        ):
+            self._on_cell(cell)
 
     def wheelEvent(self, event: QWheelEvent | None):
         if event is None:

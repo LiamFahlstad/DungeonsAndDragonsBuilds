@@ -3,11 +3,16 @@
 come back when it's continued, players' too, undo puts a token back, and the
 feet moved reset as a combatant's turn starts; tokens start on the map as the
 fight does, are drawn from token rows, select and target as cards do, and G
-switches between the cards and the map during combat only."""
+switches between the cards and the map during combat only; tokens move by
+dragging or by a click on a cell, one undo step each, with the reach shaded,
+a GM-only log line, a warning past the Speed, and the "Not on the map"
+strip for whoever has no place (step 6)."""
 
 from functools import cache
 
-from PyQt6.QtCore import Qt
+from PyQt6.QtCore import QPoint, Qt
+from PyQt6.QtTest import QTest
+from PyQt6.QtWidgets import QPushButton
 
 from Combat.Arena.arena import MOVED_KEY, POSITION_KEY, ArenaSettings, footprint
 from Combat.Arena.geometry import Cell
@@ -17,6 +22,7 @@ from Combat.Combatants import Pirate
 from Combat.CombatUIQt.undo import UndoPoint
 from Combat.EncounterLogs import ARENA_KEY
 from Combat.LogFiles import read_json, write_json
+from Combat.PlayerLog import is_round_key
 from Combat.Monsters.CR_1.monsters import Tiger
 from tests._combat_ui import make_ui
 from tests._snapshot_helpers import build
@@ -221,3 +227,196 @@ def test_a_click_finds_the_token_under_it(tmp_path):
     x, y = shape.center(row.cells[0], 40.0)
     assert ui._arena_view.token_at(x, y) == row
     assert ui._arena_view.token_at(x - 5 * 40.0, y) is None
+
+
+# ---------------------------------------------------------------------------
+# Step 6: moving
+
+
+def _arena_fight(tmp_path):
+    """_fight on the Arena view, nobody selected."""
+    ui = _fight(tmp_path)
+    ui._toggle_view()
+    ui.selected_character = None
+    return ui
+
+
+def _events(ui) -> list[dict]:
+    data = read_json(ui.log_file)
+    keys = sorted((k for k in data if is_round_key(k)), key=lambda k: int(k[6:]))
+    return [e for k in keys for e in data[k]]
+
+
+def _at(char) -> Cell:
+    return Cell.of(char[POSITION_KEY])
+
+
+def _shifted(ui, cell: Cell, cols: int, rows: int = 0) -> Cell:
+    return ui.arena_settings.distance_rule.shape.offset(cell, cols, rows)
+
+
+def _row(ui, name: str) -> TokenRow:
+    ui._refresh_views()
+    return next(r for r in ui._arena_view.rows if r.name == name)
+
+
+def test_dragging_a_token_shades_its_reach_and_moves_it(tmp_path):
+    ui = _arena_fight(tmp_path)
+    tiger = _named(ui, "Tiger")  # Speed 40 ft.
+    start = _at(tiger)
+    ui._arena_view.pick_up(_row(ui, "Tiger"))
+    reach = ui._arena_view.reach_shown()
+    assert reach[start] == 0
+    assert reach[_shifted(ui, start, -2)] == 10
+    assert max(reach.values()) == 40
+    ui._arena_view.drop(_shifted(ui, start, -2))
+    assert _at(tiger) == _shifted(ui, start, -2)
+    assert tiger[MOVED_KEY] == 10
+    assert ui._arena_view.reach_shown() == {}, "put down"
+    (line,) = [e for e in _events(ui) if "moves" in e["text"]]
+    assert line["text"].endswith("Tiger moves 10 ft.")
+    assert "action" not in line, "nothing replays from it"
+    assert not line.get("public"), "GM-only"
+    # Less is left of its Speed for the next one.
+    ui._arena_view.pick_up(_row(ui, "Tiger"))
+    assert max(ui._arena_view.reach_shown().values()) == 30
+
+
+def test_no_speed_no_reach(tmp_path):
+    """The Pirate is a plain combatant with no Speed: it reaches nothing,
+    but the GM can still move it."""
+    ui = _arena_fight(tmp_path)
+    pirate = _named(ui, "Pirate")
+    start = _at(pirate)
+    ui._arena_view.pick_up(_row(ui, "Pirate"))
+    assert ui._arena_view.reach_shown() == {start: 0}
+    ui._arena_view.drop(_shifted(ui, start, -2))
+    assert pirate[MOVED_KEY] == 10
+
+
+def test_a_move_is_one_undo_step(tmp_path):
+    ui = _arena_fight(tmp_path)
+    pirate = _named(ui, "Pirate")
+    start = _at(pirate)
+    ui._move_combatant(pirate, _shifted(ui, start, -3))
+    ui._undo_last()
+    assert _at(pirate) == start
+    assert MOVED_KEY not in pirate
+    assert not [e for e in _events(ui) if "moves" in e["text"]]
+
+
+def test_a_click_on_an_empty_cell_moves_the_source(tmp_path):
+    ui = _arena_fight(tmp_path)
+    ui._arena_cell(Cell(5, 5))
+    assert "Select a combatant" in ui._status_label.text()
+    draven = next(c for c in ui.characters if c.get("_is_player"))
+    ui._select_character(draven)
+    start = _at(draven)
+    ui._arena_cell(_shifted(ui, start, 4))
+    assert _at(draven) == _shifted(ui, start, 4)
+    assert draven[MOVED_KEY] == 20
+
+
+def test_a_move_cant_end_on_someone_else(tmp_path):
+    ui = _arena_fight(tmp_path)
+    pirate, tiger = _named(ui, "Pirate"), _named(ui, "Tiger")
+    start = _at(pirate)
+    ui._move_combatant(pirate, _at(tiger))
+    assert _at(pirate) == start
+    assert "can't end a move there" in ui._status_label.text()
+    assert not ui.history, "nothing to undo"
+
+
+def test_going_past_the_speed_is_warned_about_not_refused(tmp_path):
+    """Dash, a shove or Misty Step move a creature further (the plan's Q2)."""
+    ui = _arena_fight(tmp_path)
+    tiger = _named(ui, "Tiger")
+    start = _at(tiger)
+    ui._move_combatant(tiger, _shifted(ui, start, -9))
+    assert _at(tiger) == _shifted(ui, start, -9)
+    assert tiger[MOVED_KEY] == 45
+    assert "Tiger moved 45 ft., Speed 40 ft." in ui._status_label.text()
+
+
+def test_a_prone_creature_crawls(tmp_path):
+    ui = _arena_fight(tmp_path)
+    tiger = _named(ui, "Tiger")
+    tiger["conditions"].append("Prone")
+    start = _at(tiger)
+    ui._arena_view.pick_up(_row(ui, "Tiger"))
+    reach = ui._arena_view.reach_shown()
+    assert reach[_shifted(ui, start, -4)] == 40
+    assert _shifted(ui, start, -5) not in reach, "half as far"
+    ui._arena_view.drop(_shifted(ui, start, -2))
+    assert tiger[MOVED_KEY] == 20
+    assert "crawls" in ui._status_label.text()
+
+
+def test_whoever_has_no_place_is_put_on_the_map_from_the_strip(tmp_path):
+    ui = _arena_fight(tmp_path)
+    tiger = _named(ui, "Tiger")
+    del tiger[POSITION_KEY]
+    ui._refresh_views()
+    buttons = ui._off_map_strip.findChildren(QPushButton)
+    assert [b.text() for b in buttons] == ["Tiger"]
+    assert not ui._off_map_strip.isHidden()
+    buttons[0].click()
+    assert ui.selected_character is tiger
+    ui._arena_cell(Cell(10, 4))
+    assert _at(tiger) == Cell(10, 4)
+    assert MOVED_KEY not in tiger, "placing isn't moving"
+    ui._refresh_views()
+    assert ui._off_map_strip.isHidden()
+    ui._undo_last()
+    assert POSITION_KEY not in tiger
+
+
+def test_a_token_put_on_someone_goes_to_the_nearest_free_cell(tmp_path):
+    ui = _arena_fight(tmp_path)
+    pirate, tiger = _named(ui, "Pirate"), _named(ui, "Tiger")
+    del pirate[POSITION_KEY]
+    ui._move_combatant(pirate, _at(tiger))
+    rule = ui.arena_settings.distance_rule
+    assert not set(footprint(pirate, rule)) & set(footprint(tiger, rule))
+    assert ui.arena_settings.on_map(_at(pirate))
+
+
+def test_a_large_token_moves_by_the_cell_its_held_by(tmp_path):
+    ui = _arena_fight(tmp_path)
+    tiger = _named(ui, "Tiger")  # Large: 2 x 2
+    start = _at(tiger)
+    row = _row(ui, "Tiger")
+    corner = _shifted(ui, start, 1, 1)  # its bottom-right cell
+    assert corner in row.cells
+    ui._arena_view.pick_up(row, corner)
+    ui._arena_view.drop(_shifted(ui, corner, -3))
+    assert _at(tiger) == _shifted(ui, start, -3)
+
+
+def test_the_mouse_drags_a_token(tmp_path):
+    """The view's own mouse handling: press on a token, move past the drag
+    distance, release on a cell."""
+    ui = _arena_fight(tmp_path)
+    view = ui._arena_view
+    view.resize(1000, 700)
+    view.show()
+    ui._refresh_views()
+    pirate = _named(ui, "Pirate")
+    start = _at(pirate)
+    target = _shifted(ui, start, -3)
+    viewport = view.viewport()
+    assert viewport is not None
+    begin = view.cell_center(start).toPoint()
+    end = view.cell_center(target).toPoint()
+    QTest.mousePress(
+        viewport, Qt.MouseButton.LeftButton, Qt.KeyboardModifier.NoModifier, begin
+    )
+    assert ui.selected_character is pirate, "a press selects, as a click does"
+    QTest.mouseMove(viewport, begin + QPoint(10, 0))
+    QTest.mouseMove(viewport, end)
+    QTest.mouseRelease(
+        viewport, Qt.MouseButton.LeftButton, Qt.KeyboardModifier.NoModifier, end
+    )
+    assert _at(pirate) == target
+    assert pirate[MOVED_KEY] == 15
+    view.hide()
