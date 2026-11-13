@@ -178,6 +178,9 @@ class EffectOption:
     is_unavailable: bool = False
     # Whether using it counts against the feature's uses.
     counts_uses: bool = False
+    # How many of those uses one use spends (Elemental Burst's 2 Focus
+    # Points; CombatEffect.uses_spent).
+    uses_spent: int = 1
     # The feature whose uses and stats it counts against, when one of its
     # uses has a name of its own (Jolt to Life, of Reanimator's Skill Set).
     feature_name: str = ""

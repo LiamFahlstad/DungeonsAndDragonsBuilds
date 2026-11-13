@@ -319,22 +319,30 @@ class FeaturesMixin(CombatWindowState):
 
         dlg.exec()
 
-    def _count_feature_use(self, source: dict, name: str, counts_uses: bool):
-        """Count a use of the feature `name` in source's stats, and of its
-        uses if it has any (counts_uses), and log it so the party's replay
-        counts it too. Enable Feature and the Custom Effect dialog share it."""
+    def _count_feature_use(
+        self, source: dict, name: str, counts_uses: bool, count: int = 1
+    ):
+        """Count a use of the feature `name` in source's stats, and `count` of
+        its uses if it has any (counts_uses; Elemental Burst spends 2 of Monk's
+        Focus), and log it so the party's replay counts it too. Enable Feature
+        and the Custom Effect dialog share it."""
         stats = source.setdefault("stats", _default_stats())
         stats["features_enabled"] = stats.get("features_enabled", 0) + 1
         increment_named_stat(stats, "features_enabled_by_name", name)
+        value: dict = {"feature_name": name}
+        text = f"{source['name']} uses {name}"
+        if count != 1:
+            value["count"] = count
+            text += f" ({count} uses)"
         self._log_event(
-            f"{source['name']} uses {name}",
+            text,
             character=source["name"],
             action=Action.ENABLE_FEATURE,
-            value={"feature_name": name},
+            value=value,
         )
         if counts_uses:
             used = source.setdefault("feature_uses_used", {})
-            used[name] = used.get(name, 0) + 1
+            used[name] = used.get(name, 0) + count
 
     @undoable
     def _apply_feature(self, feature):

@@ -1398,11 +1398,14 @@ def _described_feature_option(
     else:
         counts_uses = owner.uses is not None and effect.spends_use
         uses = feature_uses(char, owner, sheet) if counts_uses else None
+    spent = effect.uses_spent if counts_uses else 1
     lead, lead_notes = [], []
     if uses is not None:
-        lead.append(f"{uses[0]}/{uses[1]}")
-        if uses[0] == 0:
-            lead_notes.append("No uses left.")
+        lead.append(f"{uses[0]}/{uses[1]}" + (f", {spent} a use" if spent > 1 else ""))
+        if uses[0] < spent:
+            lead_notes.append(
+                "No uses left." if uses[0] == 0 else f"{spent} needed, {uses[0]} left."
+            )
     return _described_option(
         char,
         effect,
@@ -1417,6 +1420,7 @@ def _described_feature_option(
         lead=lead,
         lead_notes=lead_notes,
         counts_uses=counts_uses,
+        uses_spent=spent,
         feature_name=counted_as,
     )
 
@@ -1942,7 +1946,11 @@ def _trigger_row_uses(char: dict, option: EffectOption) -> tuple[int, int] | Non
             features += list(sheet.iter_features_with_extensions())
         feature = next((f for f in features if f.name == name), None)
         if feature is not None:
-            return feature_uses(char, feature, sheet)
+            uses = feature_uses(char, feature, sheet)
+            if uses is None or option.uses_spent == 1:
+                return uses
+            # As many uses of the row as its cost allows (2 Focus Points each).
+            return uses[0] // option.uses_spent, uses[1] // option.uses_spent
         most = row_uses_most(char, name)  # its own count (Magic Initiate's Shield)
         if most is None:
             return None

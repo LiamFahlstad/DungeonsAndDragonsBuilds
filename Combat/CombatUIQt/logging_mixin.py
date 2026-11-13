@@ -617,8 +617,10 @@ class LoggingMixin(CombatWindowState):
                 else row_uses_most(char, feature_name) is not None
             )
             if counted:
+                # A use that spends several (Elemental Burst's 2 Focus Points).
+                count = value.get("count", 1) if isinstance(value, dict) else 1
                 used = char.setdefault("feature_uses_used", {})
-                used[feature_name] = used.get(feature_name, 0) + 1
+                used[feature_name] = used.get(feature_name, 0) + count
         elif action == Action.REGAIN_FEATURE_CHARGE:
             used = char.setdefault("feature_uses_used", {})
             used[value] = max(used.get(value, 0) - 1, 0)

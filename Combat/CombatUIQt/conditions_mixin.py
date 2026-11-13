@@ -1077,7 +1077,10 @@ class ConditionsMixin(CombatWindowState):
             return True
         if option.kind == FEATURE:
             self._count_feature_use(
-                caster, option.feature_name or option.name, option.counts_uses
+                caster,
+                option.feature_name or option.name,
+                option.counts_uses,
+                count=option.uses_spent,
             )
             return True
         if option.monster_action is not None:
@@ -1097,7 +1100,12 @@ class ConditionsMixin(CombatWindowState):
                 0, spell_slot_lack(caster, option.spell_level, effect.slot_level)
             )
         elif option.kind == FEATURE and option.counts_uses:
-            lacks.insert(0, feature_lack(caster, option.feature_name or option.name))
+            lacks.insert(
+                0,
+                feature_lack(
+                    caster, option.feature_name or option.name, option.uses_spent
+                ),
+            )
         elif option.monster_action is not None:
             lacks.insert(0, monster_action_lack(caster, option.monster_action))
         return lacks

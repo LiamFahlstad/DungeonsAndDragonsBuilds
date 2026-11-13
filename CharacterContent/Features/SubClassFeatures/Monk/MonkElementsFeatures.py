@@ -1,13 +1,20 @@
 from Core.Definitions import (
     Ability,
+    DamageType,
 )
 from Model.Content.Feature import Feature, FeatureActivation, ActionType, FeatureTarget
 from CharacterContent.Items.Weapons import WeaponDamageRolls
+from CharacterContent.Features.ClassFeatures.Monk.MonkFeatures import MARTIAL_ARTS_DIE
 from CharacterContent.Spells.SpellLists import DruidLevel0Spells
 from Model.Spells import FeatureSpell
 from Model.View import CharacterView
 from Model.Content.FeatureText import Block, Facts, Option, Paragraph, dc_formula
-from Model.Content.CombatEffect import CombatCondition, CombatEffect, EffectRoll
+from Model.Content.CombatEffect import (
+    CombatCondition,
+    CombatDamage,
+    CombatEffect,
+    EffectRoll,
+)
 
 LEVEL_TO_MARTIAL_ARTS_DIE = {
     1: WeaponDamageRolls.D6,
@@ -208,6 +215,31 @@ class ElementalBurst(Feature):
             "Each creature in the Sphere must make a Dexterity saving throw. On a failed save, a creature takes damage of the chosen type equal to three rolls of your Martial Arts die. On a successful save, a creature takes half as much damage."
         )
         return description
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # Two of Monk's Focus's Focus Points (its parent), its Focus save DC.
+        die = MARTIAL_ARTS_DIE.at(character)  # "1d8": three rolls are 3d8
+        return [
+            CombatEffect(
+                roll=EffectRoll.SAVE,
+                save_ability=Ability.DEXTERITY,
+                half_on_success=True,
+                damage=(
+                    CombatDamage(
+                        f"3d{die.split('d')[1]}",
+                        None,
+                        (
+                            DamageType.ACID,
+                            DamageType.COLD,
+                            DamageType.FIRE,
+                            DamageType.LIGHTNING,
+                            DamageType.THUNDER,
+                        ),
+                    ),
+                ),
+                uses_spent=2,
+            )
+        ]
 
 
 class StrideOfTheElements(Feature):

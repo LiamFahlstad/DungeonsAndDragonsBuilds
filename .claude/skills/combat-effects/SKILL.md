@@ -413,6 +413,13 @@ Names are the Python ones; `Ability`, `Condition` and `DamageType` come from
   (Fey Touched)", spell=spell, uses_per_long_rest=1`. It spends no slot;
   with none left the GM casts the spell's own row. A triggered spell's free
   row (Magic Initiate's Shield) is the one asked while it has a use left.
+- **`uses_spent=N`**: a use that spends N of its feature's uses, or of its
+  parent's for an extension without uses of its own ("expend 2 Focus
+  Points": Elemental Burst, an extension of Monk's Focus, says
+  `uses_spent=2`; Superior Defense 3, Quivering Palm 4). Never a note "Costs
+  2 Focus Points". A row that spends another feature's pool is wired as an
+  extension of it (`data.add_feature(Child(), extends=Parent)`), not given a
+  field naming that feature.
 - **`trigger`** (`Model/Content/CombatTriggers.py`, plan Phase 6): when a
   row is used, in place of a "Right after you hit ..." note (a row says
   what, a trigger says when). `CombatTrigger(TriggerEvent.HIT,

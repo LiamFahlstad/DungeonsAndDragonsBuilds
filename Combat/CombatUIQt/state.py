@@ -348,7 +348,9 @@ class CombatWindowState:
     ):
         raise NotImplementedError("SpellsMixin._count_spell_cast")
 
-    def _count_feature_use(self, source: dict, name: str, counts_uses: bool):
+    def _count_feature_use(
+        self, source: dict, name: str, counts_uses: bool, count: int = 1
+    ):
         raise NotImplementedError("FeaturesMixin._count_feature_use")
 
     def _give_temp_hp(self, target: dict, amount: int, source: dict | None):

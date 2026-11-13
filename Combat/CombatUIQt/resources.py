@@ -62,10 +62,14 @@ def feature_uses_left(char: dict, name: str) -> int | None:
     return max(max_uses - used, 0)
 
 
-def feature_lack(char: dict, name: str) -> str | None:
-    """char has no uses of its feature `name` left."""
-    if feature_uses_left(char, name) == 0:
+def feature_lack(char: dict, name: str, needed: int = 1) -> str | None:
+    """char has fewer than `needed` uses of its feature `name` left (none,
+    for one use; Elemental Burst needs 2 of Monk's Focus)."""
+    left = feature_uses_left(char, name)
+    if left == 0:
         return f"{name}: no uses left"
+    if left is not None and left < needed:
+        return f"{name}: {left} left, {needed} needed"
     return None
 
 

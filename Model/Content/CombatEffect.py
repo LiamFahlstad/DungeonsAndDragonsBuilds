@@ -355,6 +355,9 @@ class CombatEffect:
     concentration: bool = False
     # Whether it spends one of the feature's FeatureUses (if it has any).
     spends_use: bool = True
+    # How many of those uses one use spends: Elemental Burst's 2 Focus
+    # Points of Monk's Focus, whose extension it is (Q64).
+    uses_spent: int = 1
     # Times per Long Rest it can be used, counted under its own name instead
     # of the feature's uses (Fey Touched's free Misty Step and its level 1
     # spell, each once per Long Rest). 0: it isn't counted on its own.
@@ -416,6 +419,19 @@ class CombatEffect:
                     "drops_to comes with a 'drops to 0' trigger: it's used as its"
                     " user would drop to 0 Hit Points"
                 )
+        if (
+            isinstance(self.uses_spent, bool)
+            or not isinstance(self.uses_spent, int)
+            or self.uses_spent < 1
+        ):
+            raise ValueError(
+                f"uses_spent is a number of uses, 1 or more, not {self.uses_spent!r}"
+            )
+        if self.uses_spent != 1 and (not self.spends_use or self.uses_per_long_rest):
+            raise ValueError(
+                "uses_spent counts the feature's uses: not with spends_use=False"
+                " or uses_per_long_rest"
+            )
         if self.uses_per_long_rest:
             if (
                 isinstance(self.uses_per_long_rest, bool)
@@ -863,6 +879,7 @@ class _Reader:
                 data.get("concentration"), "concentration", (bool,), False
             ),
             spends_use=self.kind(data.get("spends_use"), "spends_use", (bool,), True),
+            uses_spent=self.kind(data.get("uses_spent"), "uses_spent", (int,), 1),
             uses_per_long_rest=self.kind(
                 data.get("uses_per_long_rest"), "uses_per_long_rest", (int,), 0
             ),
