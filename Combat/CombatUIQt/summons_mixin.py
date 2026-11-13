@@ -36,6 +36,7 @@ from PyQt6.QtGui import QCursor
 from PyQt6.QtWidgets import QMenu
 
 import Combat.PlayerLog as PlayerLog
+from Combat.Arena.arena import place_summons
 from Combat.Definitions import Action, CombatStatus
 from Combat.Effects.active_effects import held_by_concentration
 from Combat.LogFiles import read_json
@@ -358,6 +359,8 @@ class SummonsMixin(CombatWindowState):
         Returns each roll, by name."""
         for char in new:
             char["stats"] = _default_stats()
+        # On the battle map, beside their owners (when they're on it).
+        place_summons(new, self.characters, self.arena_settings)
         own = [c for c in new if not follows_owner(c)]
         follow = [c for c in new if follows_owner(c)]
         rolls: dict[str, int] = {}

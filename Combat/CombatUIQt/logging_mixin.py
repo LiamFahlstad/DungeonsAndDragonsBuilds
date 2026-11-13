@@ -8,7 +8,9 @@ import Combat.PartyAllies as PartyAllies
 import Combat.PlayerLog as PlayerLog
 from Combat.Definitions import Action
 from Combat.Effects.active_effects import upgrade_old_keys
+from Combat.Arena.arena import ArenaSettings
 from Combat.EncounterLogs import (
+    ARENA_KEY,
     ORDER_KEY,
     PLAYER_FIGHT_KEYS,
     PLAYER_FIGHT_STATE_KEY,
@@ -72,6 +74,7 @@ class LoggingMixin(CombatWindowState):
             # rebuilt when the fight is continued (_load_log_from_path).
             data[ORDER_KEY] = [c["name"] for c in self.initiative_order]
             data[TURN_KEY] = self.initiative_order[self.current_turn_idx]["name"]
+            data[ARENA_KEY] = self.arena_settings.to_dict()
         data["combatants"] = [
             {k: v for k, v in c.items() if not k.startswith("_")}
             for c in self.characters
@@ -245,6 +248,7 @@ class LoggingMixin(CombatWindowState):
         data = read_json(path)
         self._take_combatants_from(data)
         self.round_number = data.get("round_number", 1)
+        self.arena_settings = ArenaSettings.from_dict(data.get(ARENA_KEY))
         self.history = []
         self.selected_character = None
         self.target_characters = []

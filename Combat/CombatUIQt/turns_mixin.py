@@ -17,6 +17,7 @@ from PyQt6.QtWidgets import (
     QWidget,
 )
 
+from Combat.Arena.arena import MOVED_KEY
 from Combat.PlayerLog import has_round_events
 from Model.Content.CombatModifiers import AtTurnEnd, AtTurnStart
 
@@ -176,6 +177,7 @@ class TurnsMixin(CombatWindowState):
         # turn is now starting — other combatants keep their tallies until theirs does.
         for new_active in self._current_turn_group():
             new_active["action_uses"] = {}
+            new_active.pop(MOVED_KEY, None)  # its feet moved on the map
             if self._char_death_state(new_active) != "dead":
                 self._start_monster_turn(new_active)
             self._rebuild_card(new_active)

@@ -30,6 +30,7 @@ from PyQt6.QtWidgets import (
     QWidget,
 )
 
+from Combat.Arena.arena import ArenaSettings
 from Combat.Effects.triggers import (
     AttackOutcome,
     DropOutcome,
@@ -107,6 +108,8 @@ class CombatWindowState:
     settings: CombatSettings
     _settings_store: QSettings | None
     round_number: int
+    # The fight's battle map (Combat/Arena/), saved in the encounter log.
+    arena_settings: ArenaSettings
     # Undo steps, oldest first, and the one being recorded (undo.py).
     history: list[UndoPoint]
     _open_undo_point: UndoPoint | None

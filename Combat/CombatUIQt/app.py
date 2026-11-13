@@ -6,6 +6,7 @@ from pathlib import Path
 from PyQt6.QtCore import QSettings
 from PyQt6.QtWidgets import QApplication
 
+from Combat.Arena.arena import ArenaSettings
 from Combat.Definitions import tracked_condition_names
 from Combat.EncounterConfig import CombatantSpec
 from Combat.Effects.triggers import Firing
@@ -143,6 +144,7 @@ class CombatAppQt(
         self.settings = CombatSettings()
         self._settings_store: QSettings | None = None
         self.round_number = 1
+        self.arena_settings = ArenaSettings()
         self.history = []
         self._open_undo_point = None
 

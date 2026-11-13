@@ -58,7 +58,13 @@ PLAYER_FIGHT_KEYS = (
     "active_spells",
     "concentration_checks",
     ACTIVE_EFFECTS_KEY,
+    # Where a player is on the battle map and how far they moved this turn
+    # (Combat/Arena/arena.py's POSITION_KEY and MOVED_KEY).
+    "position",
+    "moved_ft",
 )
+# The fight's battle map settings (Combat/Arena/arena.py, ArenaSettings).
+ARENA_KEY = "arena"
 HEADER_KEYS = ("encounter", "title", "players")
 # Marks an event players may read (player_view.may_read_log_line).
 PUBLIC_KEY = "public"
