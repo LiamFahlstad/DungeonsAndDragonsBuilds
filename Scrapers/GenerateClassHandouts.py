@@ -218,6 +218,19 @@ SUBCLASS_SUMMARIES: dict[str, str] = {
         "later features let you ignore death saves and deal extra damage on crits. Best pick for a "
         "Barbarian that wants to be the party's unkillable front line."
     ),
+    "BarbarianPathOfTheElements": (
+        "An elemental-storm path: each Rage (and a Bonus Action after) unleashes a Raging "
+        "Elements option of flame, frost or lightning, Echo of the Elements adds Elementalism and "
+        "Rage-fueled Daylight, Water Walk and Wind Wall (Wisdom), and Primordial Bond gives Cold, "
+        "Fire and Lightning resistance while raging. Elemental Overload later empowers every "
+        "option."
+    ),
+    "BarbarianPathOfTheSpiritualGuardian": (
+        "A protector path: while raging, your hits call spirits that add an effect of your choice "
+        "to the target, Spirit Shield spends your Reaction to reduce damage to an ally within 30 "
+        "feet, and Consult the Spirits casts Augury or Clairvoyance for free. Spirits' Fury later "
+        "grants an extra attack on a high roll."
+    ),
     # --- Bard ---
     "BardDance": (
         "Trades some spellcasting for a martial-adjacent bonus-action dance stance (Dazzling/Tempo "
@@ -285,6 +298,18 @@ SUBCLASS_SUMMARIES: dict[str, str] = {
         "A melee-Domain: War Priest lets you make a bonus-action weapon attack a few times per "
         "rest, and Channel Divinity grants a big attack-roll bonus. Best pick for a Cleric who "
         "wants to fight in melee with a weapon rather than lean on spells alone."
+    ),
+    "ClericDiscipline": (
+        "A Light-and-Void Domain that heals by harming: Holy Bolt spends Channel Divinity on a "
+        "ranged Radiant spell attack, Atonement blesses creatures you heal so your damaging "
+        "spells also heal them, and Luminous Barrier turns that blessing into Temporary Hit "
+        "Points. Ultimate Penitence later empowers Holy Bolt."
+    ),
+    "ClericShadow": (
+        "A Void Domain of attrition: Shadowform spends Channel Divinity on a shadowy form, "
+        "Devouring Plague drains 1d10 Necrotic from a creature that fails a save and heals you by "
+        "as much, and Dispersion is a Reaction that grants Resistance to all damage. Vampiric "
+        "Embrace later heals allies from Shadowform's extra damage."
     ),
     # --- Druid ---
     "DruidLand": (
@@ -364,6 +389,12 @@ SUBCLASS_SUMMARIES: dict[str, str] = {
         "unarmed strike reach and let you use Wisdom for attacks, plus later features add flight "
         "and radiant/necrotic damage riders. A Focus-Point-fueled boost to your own melee output."
     ),
+    "MonkMysticBrews": (
+        "A drunken-fighting Monk: Drunken Technique adds Speed and a free Unarmed Strike to "
+        "Patient Defense, Tipsy Sway adds evasive tricks, and Mystic Brew uses Brewer's Supplies "
+        "to make a magical beverage after each rest (Cinnamon Dragon's fire breath and others), "
+        "with more and combined brews at levels 11 and 17."
+    ),
     "MonkOpenHand": (
         "The default combat subclass: Open Hand Technique adds a rider (knock prone, push, or "
         "deny reactions) to your Flurry of Blows hits, plus later defensive and mobility bonuses. "
@@ -385,10 +416,22 @@ SUBCLASS_SUMMARIES: dict[str, str] = {
         "effect, and Aura of Devotion grants charm/fear immunity to you and nearby allies. "
         "Straightforward, reliable melee/support Paladin with no unusual mechanics."
     ),
+    "PaladinEbonBlade": (
+        "A death-knight Oath that swaps the Paladin's healing kit for runes: Death Coil replaces "
+        "Lay On Hands, Runic Smite replaces Paladin's Smite, Runeforging inscribes a rune on your "
+        "weapon whose Runic Power rides on Rune Strike, and the aura grants Cold, Necrotic and "
+        "Psychic resistance. Your oath spells depend on the chosen rune."
+    ),
     "PaladinGenies": (
         "A wish-granting-patron Oath: Channel Divinity lets you banish a creature briefly or "
         "teleport yourself, and later features grant an elemental damage rider and a genie-themed "
         "vessel item. Adds battlefield removal/mobility on top of the standard Smite engine."
+    ),
+    "PaladinHoly": (
+        "A healer Oath: Beacon of Light spends Channel Divinity so an ally also regains half of "
+        "every heal you give others, Lightbringer's Aura adds 1d6 healing for Bloodied allies in "
+        "your aura, and Infusion of Light refills Lay On Hands from your Radiant spell damage. "
+        "Holy Deliverance later empowers the aura."
     ),
     "PaladinGlory": (
         "A competitive/heroic Oath: Channel Divinity boosts your speed and jump distance, and "
@@ -406,6 +449,12 @@ SUBCLASS_SUMMARIES: dict[str, str] = {
         "Gets Primal Companion, a full second combat unit (a beast that acts on your turn) whose "
         "attacks scale with your proficiency bonus. Plays like a pet class — most of the "
         "subclass's power sits in the companion, not in extra features for you."
+    ),
+    "RangerDemonHunter": (
+        "A fel-magic Ranger: Soul Fragments (Wisdom-based crystals regained each Long Rest) fuel "
+        "special powers such as Soul Cleave, Spectral Sight grants Blindsight and later "
+        "Truesight, and Torment makes your Hunter's Mark target attack only you. Picks one Demon "
+        "Hunter spell column (Devourer, Havoc or Vengeance)."
     ),
     "RangerFeyWanderer": (
         "A charm/illusion-flavored half-caster: bonus Enchantment/Illusion spells, a "
@@ -455,6 +504,12 @@ SUBCLASS_SUMMARIES: dict[str, str] = {
         "A patron-bound subclass granting a small at-will spell-like boon and a scaling combat "
         "rider tied to your chosen patron (fiend, fey, etc.), functioning like a mini-Warlock "
         "bolted onto Sneak Attack."
+    ),
+    "RogueSwashbuckler": (
+        "The duelist Rogue (2024 version): Fancy Footwork stops opportunity attacks from "
+        "creatures you attacked, Rakish Audacity adds Charisma to Initiative and Sneak Attack "
+        "when alone with a foe, and Panache and Dashing Strikes add Goad, Awe, Invigorate and "
+        "Parrying Stance to Cunning Strike. Master Duelist adds a follow-up attack."
     ),
     "RogueSoulKnife": (
         "A psionics-flavored subclass: manifests psychic dice used for ranged 'psychic blade' "
@@ -780,11 +835,6 @@ SUBCLASS_SUMMARIES_2014: dict[str, str] = {
         "reaction, plus Ambush lets you roll initiative with advantage in a surprise round. A mobile "
         "skirmisher Archetype excelling in tactical positioning."
     ),
-    "RogueSwashbuckler": (
-        "Fancy Footwork lets you move away from enemies without triggering opportunity attacks when you hit "
-        "them, plus Rakish Audacity adds Charisma to initiative. A duelist/acrobat Archetype for a Rogue who "
-        "wants to swagger and swashbuckle."
-    ),
     # --- Sorcerer ---
     "SorcererDivineSoul": (
         "Bonus cleric-flavored spells and Channel Divinity options (healing burst, turning undead), plus "
@@ -910,6 +960,16 @@ _SUBCLASS_RAW: dict[str, list[tuple[str, str, tuple[Path, str, str]]]] = {
             _s2024("path_of_the_berserker"),
         ),
         (
+            "BarbarianPathOfTheElements",
+            "Path of the Elements",
+            _s2024("path_of_the_elements"),
+        ),
+        (
+            "BarbarianPathOfTheSpiritualGuardian",
+            "Path of the Spiritual Guardian",
+            _s2024("path_of_the_spiritual_guardian"),
+        ),
+        (
             "BarbarianPathOfTheWildHeart",
             "Path of the Wild Heart",
             _s2024("path_of_the_wild_heart"),
@@ -935,10 +995,12 @@ _SUBCLASS_RAW: dict[str, list[tuple[str, str, tuple[Path, str, str]]]] = {
     ],
     "Cleric": [
         ("ClericArcana", "Arcana Domain", _s2024("arcana_domain")),
+        ("ClericDiscipline", "Discipline Domain", _s2024("discipline_domain")),
         ("ClericGrave", "Grave Domain", _s2014("grave")),
         ("ClericKnowledge", "Knowledge Domain", _s2024("knowledge_domain")),
         ("ClericLife", "Life Domain", _s2024("life_domain")),
         ("ClericLight", "Light Domain", _s2024("light_domain")),
+        ("ClericShadow", "Shadow Domain", _s2024("shadow_domain")),
         ("ClericTrickery", "Trickery Domain", _s2024("trickery_domain")),
         ("ClericWar", "War Domain", _s2024("war_domain")),
     ],
@@ -966,6 +1028,11 @@ _SUBCLASS_RAW: dict[str, list[tuple[str, str, tuple[Path, str, str]]]] = {
             _s2024("warrior_of_the_mystic_arts"),
         ),
         (
+            "MonkMysticBrews",
+            "Warrior of Mystic Brews",
+            _s2024("warrior_of_mystic_brews"),
+        ),
+        (
             "MonkOpenHand",
             "Warrior of the Open Hand",
             _s2024("warrior_of_the_open_hand"),
@@ -976,15 +1043,22 @@ _SUBCLASS_RAW: dict[str, list[tuple[str, str, tuple[Path, str, str]]]] = {
         ("PaladinAncients", "Oath of the Ancients", _s2024("oath_of_the_ancients")),
         ("PaladinDevotion", "Oath of Devotion", _s2024("oath_of_devotion")),
         (
+            "PaladinEbonBlade",
+            "Oath of the Ebon Blade",
+            _s2024("oath_of_the_ebon_blade"),
+        ),
+        (
             "PaladinGenies",
             "Oath of the Noble Genie",
             _s2024("oath_of_the_noble_genies"),
         ),
         ("PaladinGlory", "Oath of Glory", _s2024("oath_of_glory")),
+        ("PaladinHoly", "Oath of the Holy", _s2024("oath_of_the_holy")),
         ("PaladinVengeance", "Oath of Vengeance", _s2024("oath_of_vengeance")),
     ],
     "Ranger": [
         ("RangerBeastMaster", "Beast Master", _s2024("beast_master")),
+        ("RangerDemonHunter", "Demon Hunter", _s2024("demon_hunter")),
         ("RangerFeyWanderer", "Fey Wanderer", _s2024("fey_wanderer")),
         ("RangerGloomStalker", "Gloom Stalker", _s2024("gloom_stalker")),
         ("RangerHollowWarden", "Hollow Warden", _s2024("hollow_warden")),
@@ -997,6 +1071,7 @@ _SUBCLASS_RAW: dict[str, list[tuple[str, str, tuple[Path, str, str]]]] = {
         ("RoguePhantom", "Phantom", _s2014("phantom")),
         ("RogueScionOfTheThree", "Scion of the Three", _s2024("scion_of_the_three")),
         ("RogueSoulKnife", "Soul Knife", _s2024("soulknife")),
+        ("RogueSwashbuckler", "Swashbuckler", _s2024("swashbuckler")),
         ("RogueThief", "Thief", _s2024("thief")),
     ],
     "Sorcerer": [
@@ -1113,7 +1188,6 @@ LEGACY_2014_SUBCLASSES: dict[str, list[SubclassInfo]] = {
     "Rogue": [
         _legacy2014("RogueMastermind", "Mastermind", "mastermind"),
         _legacy2014("RogueScout", "Scout", "scout"),
-        _legacy2014("RogueSwashbuckler", "Swashbuckler", "swashbuckler"),
     ],
     "Sorcerer": [
         _legacy2014("SorcererDivineSoul", "Divine Soul", "divine_soul"),

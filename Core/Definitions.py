@@ -247,6 +247,8 @@ class PaladinSubclass(str, Enum):
     OATH_OF_CONQUEST = "Oath of Conquest"
     OATH_OF_REDEMPTION = "Oath of Redemption"
     OATH_OF_GENIES = "Oath of Genies"
+    OATH_OF_THE_EBON_BLADE = "Oath of the Ebon Blade"
+    OATH_OF_THE_HOLY = "Oath of the Holy"
 
 
 class PaladinSubclass2014(str, Enum):
@@ -268,6 +270,8 @@ class ClericSubclass(str, Enum):
     DEATH = "Death"
     GRAVE = "Grave"
     ARCANA = "Arcana"
+    DISCIPLINE = "Discipline"
+    SHADOW = "Shadow"
 
 
 class ClericSubclass2014(str, Enum):
@@ -287,6 +291,7 @@ class RogueSubclass(str, Enum):
     SOUL_KNIFE = "Soul Knife"
     SCION_OF_THE_THREE = "Scion of the Three"
     PHANTOM = "Phantom"
+    SWASHBUCKLER = "Swashbuckler"
 
 
 class RogueSubclass2014(str, Enum):
@@ -430,6 +435,7 @@ class RangerSubclass(str, Enum):
     GLOOM_STALKER = "Gloom Stalker"
     HOLLOW_WARDEN = "Hollow Warden"
     WINTER_WALKER = "Winter Walker"
+    DEMON_HUNTER = "Demon Hunter"
 
 
 class RangerSubclass2014(str, Enum):
@@ -445,6 +451,7 @@ class MonkSubclass(str, Enum):
     MERCY = "Mercy"
     ELEMENTS = "the Elements"
     OPEN_HAND = "Open Hand"
+    MYSTIC_BREWS = "Mystic Brews"
 
 
 class MonkSubclass2014(str, Enum):
@@ -460,6 +467,8 @@ class BarbarianSubclass(str, Enum):
     PATH_OF_THE_ZEALOT = "Path of the Zealot"
     PATH_OF_THE_WORLD_TREE = "Path of the World Tree"
     PATH_OF_THE_WILD_HEART = "Path of the Wild Heart"
+    PATH_OF_THE_ELEMENTS = "Path of the Elements"
+    PATH_OF_THE_SPIRITUAL_GUARDIAN = "Path of the Spiritual Guardian"
 
 
 class BarbarianSubclass2014(str, Enum):

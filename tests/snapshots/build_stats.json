@@ -9784,6 +9784,321 @@
    ]
   ]
  },
+ "Y2024BarbarianElementsKorgaEmberfrostCharacterBuilder": {
+  "ac": 15,
+  "carry": 7,
+  "expertise": [
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false
+  ],
+  "hp": 187,
+  "immune": [],
+  "init": 1,
+  "init_roll": "DiceRollCondition.ADVANTAGE",
+  "pact": [],
+  "resist": [],
+  "save_prof": [
+   true,
+   false,
+   true,
+   false,
+   false,
+   false
+  ],
+  "saves": [
+   9,
+   1,
+   9,
+   -1,
+   1,
+   0
+  ],
+  "scores": [
+   19,
+   13,
+   18,
+   8,
+   12,
+   10
+  ],
+  "senses": [
+   [
+    "Sense.DARKVISION",
+    120
+   ]
+  ],
+  "skill_abilities": [
+   "Ability.DEXTERITY",
+   "Ability.WISDOM",
+   "Ability.INTELLIGENCE",
+   "Ability.STRENGTH",
+   "Ability.CHARISMA",
+   "Ability.INTELLIGENCE",
+   "Ability.WISDOM",
+   "Ability.CHARISMA",
+   "Ability.INTELLIGENCE",
+   "Ability.WISDOM",
+   "Ability.INTELLIGENCE",
+   "Ability.WISDOM",
+   "Ability.CHARISMA",
+   "Ability.CHARISMA",
+   "Ability.INTELLIGENCE",
+   "Ability.DEXTERITY",
+   "Ability.DEXTERITY",
+   "Ability.WISDOM"
+  ],
+  "skill_rolls": [
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]"
+  ],
+  "skill_sources": [
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   []
+  ],
+  "skills": [
+   1,
+   1,
+   -1,
+   9,
+   0,
+   -1,
+   1,
+   5,
+   -1,
+   1,
+   4,
+   6,
+   0,
+   0,
+   -1,
+   1,
+   1,
+   6
+  ],
+  "slots": [],
+  "speed": 40,
+  "weapons": [
+   [
+    "Greataxe",
+    9,
+    4
+   ],
+   [
+    "Javelin",
+    9,
+    4
+   ]
+  ]
+ },
+ "Y2024BarbarianSpiritualGuardianHildaSpiritwardCharacterBuilder": {
+  "ac": 13,
+  "carry": 8,
+  "expertise": [
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false
+  ],
+  "hp": 145,
+  "immune": [],
+  "init": 6,
+  "init_roll": "DiceRollCondition.ADVANTAGE",
+  "pact": [],
+  "resist": [
+   [
+    "DamageType.POISON",
+    [
+     "Dwarven Resilience"
+    ]
+   ]
+  ],
+  "save_prof": [
+   true,
+   false,
+   true,
+   false,
+   false,
+   false
+  ],
+  "saves": [
+   10,
+   1,
+   7,
+   -1,
+   1,
+   0
+  ],
+  "scores": [
+   20,
+   13,
+   15,
+   8,
+   13,
+   10
+  ],
+  "senses": [
+   [
+    "Sense.DARKVISION",
+    120
+   ]
+  ],
+  "skill_abilities": [
+   "Ability.DEXTERITY",
+   "Ability.WISDOM",
+   "Ability.INTELLIGENCE",
+   "Ability.STRENGTH",
+   "Ability.CHARISMA",
+   "Ability.INTELLIGENCE",
+   "Ability.WISDOM",
+   "Ability.CHARISMA",
+   "Ability.INTELLIGENCE",
+   "Ability.WISDOM",
+   "Ability.INTELLIGENCE",
+   "Ability.WISDOM",
+   "Ability.CHARISMA",
+   "Ability.CHARISMA",
+   "Ability.INTELLIGENCE",
+   "Ability.DEXTERITY",
+   "Ability.DEXTERITY",
+   "Ability.WISDOM"
+  ],
+  "skill_rolls": [
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]"
+  ],
+  "skill_sources": [
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   []
+  ],
+  "skills": [
+   1,
+   1,
+   -1,
+   10,
+   0,
+   -1,
+   6,
+   0,
+   -1,
+   1,
+   -1,
+   6,
+   0,
+   0,
+   4,
+   1,
+   1,
+   6
+  ],
+  "slots": [],
+  "speed": 40,
+  "weapons": [
+   [
+    "Maul",
+    10,
+    5
+   ],
+   [
+    "Handaxe",
+    10,
+    5
+   ]
+  ]
+ },
  "Y2024BarbarianWorldTreeBrannaRootshieldCharacterBuilder": {
   "ac": 14,
   "carry": 7,
@@ -10953,6 +11268,197 @@
    ]
   ]
  },
+ "Y2024ClericDisciplineSeraphineLightmendCharacterBuilder": {
+  "ac": 16,
+  "carry": 10,
+  "expertise": [
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false
+  ],
+  "hp": 223,
+  "immune": [],
+  "init": 1,
+  "init_roll": "DiceRollCondition.NEUTRAL",
+  "pact": [],
+  "resist": [],
+  "save_prof": [
+   false,
+   false,
+   false,
+   false,
+   true,
+   true
+  ],
+  "saves": [
+   -1,
+   1,
+   4,
+   0,
+   11,
+   7
+  ],
+  "scores": [
+   8,
+   13,
+   19,
+   10,
+   20,
+   12
+  ],
+  "senses": [
+   [
+    "Sense.DARKVISION",
+    60
+   ]
+  ],
+  "skill_abilities": [
+   "Ability.DEXTERITY",
+   "Ability.WISDOM",
+   "Ability.INTELLIGENCE",
+   "Ability.STRENGTH",
+   "Ability.CHARISMA",
+   "Ability.INTELLIGENCE",
+   "Ability.WISDOM",
+   "Ability.CHARISMA",
+   "Ability.INTELLIGENCE",
+   "Ability.WISDOM",
+   "Ability.INTELLIGENCE",
+   "Ability.WISDOM",
+   "Ability.CHARISMA",
+   "Ability.CHARISMA",
+   "Ability.INTELLIGENCE",
+   "Ability.DEXTERITY",
+   "Ability.DEXTERITY",
+   "Ability.WISDOM"
+  ],
+  "skill_rolls": [
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]"
+  ],
+  "skill_sources": [
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   []
+  ],
+  "skills": [
+   1,
+   11,
+   0,
+   -1,
+   1,
+   0,
+   11,
+   1,
+   0,
+   11,
+   0,
+   11,
+   1,
+   7,
+   0,
+   1,
+   1,
+   5
+  ],
+  "slots": [
+   [
+    1,
+    4
+   ],
+   [
+    2,
+    3
+   ],
+   [
+    3,
+    3
+   ],
+   [
+    4,
+    3
+   ],
+   [
+    5,
+    3
+   ],
+   [
+    6,
+    2
+   ],
+   [
+    7,
+    2
+   ],
+   [
+    8,
+    1
+   ],
+   [
+    9,
+    1
+   ]
+  ],
+  "speed": 35,
+  "weapons": [
+   [
+    "Unarmed Strike",
+    5,
+    -1
+   ],
+   [
+    "Mace",
+    5,
+    -1
+   ]
+  ]
+ },
  "Y2024ClericGraveAnselDuskvaleCharacterBuilder": {
   "ac": 16,
   "carry": 10,
@@ -11450,6 +11956,201 @@
    [
     "Mace",
     1,
+    -1
+   ]
+  ]
+ },
+ "Y2024ClericShadowMorvaneDuskwhisperCharacterBuilder": {
+  "ac": 16,
+  "carry": 10,
+  "expertise": [
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false
+  ],
+  "hp": 223,
+  "immune": [],
+  "init": 1,
+  "init_roll": "DiceRollCondition.NEUTRAL",
+  "pact": [],
+  "resist": [],
+  "save_prof": [
+   false,
+   false,
+   false,
+   false,
+   true,
+   true
+  ],
+  "saves": [
+   -1,
+   1,
+   4,
+   0,
+   11,
+   7
+  ],
+  "scores": [
+   8,
+   13,
+   19,
+   10,
+   20,
+   12
+  ],
+  "senses": [
+   [
+    "Sense.DARKVISION",
+    120
+   ]
+  ],
+  "skill_abilities": [
+   "Ability.DEXTERITY",
+   "Ability.WISDOM",
+   "Ability.INTELLIGENCE",
+   "Ability.STRENGTH",
+   "Ability.CHARISMA",
+   "Ability.INTELLIGENCE",
+   "Ability.WISDOM",
+   "Ability.CHARISMA",
+   "Ability.INTELLIGENCE",
+   "Ability.WISDOM",
+   "Ability.INTELLIGENCE",
+   "Ability.WISDOM",
+   "Ability.CHARISMA",
+   "Ability.CHARISMA",
+   "Ability.INTELLIGENCE",
+   "Ability.DEXTERITY",
+   "Ability.DEXTERITY",
+   "Ability.WISDOM"
+  ],
+  "skill_rolls": [
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]"
+  ],
+  "skill_sources": [
+   [],
+   [],
+   [
+    "5:Divine Order: Thaumaturge"
+   ],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [
+    "5:Divine Order: Thaumaturge"
+   ],
+   [],
+   [],
+   []
+  ],
+  "skills": [
+   1,
+   5,
+   5,
+   -1,
+   7,
+   0,
+   11,
+   1,
+   0,
+   5,
+   0,
+   11,
+   1,
+   1,
+   11,
+   1,
+   7,
+   5
+  ],
+  "slots": [
+   [
+    1,
+    4
+   ],
+   [
+    2,
+    3
+   ],
+   [
+    3,
+    3
+   ],
+   [
+    4,
+    3
+   ],
+   [
+    5,
+    3
+   ],
+   [
+    6,
+    2
+   ],
+   [
+    7,
+    2
+   ],
+   [
+    8,
+    1
+   ],
+   [
+    9,
+    1
+   ]
+  ],
+  "speed": 30,
+  "weapons": [
+   [
+    "Unarmed Strike",
+    5,
+    -1
+   ],
+   [
+    "Mace",
+    5,
     -1
    ]
   ]
@@ -14172,6 +14873,160 @@
    ]
   ]
  },
+ "Y2024MonkMysticBrewsBarleyStoutfistCharacterBuilder": {
+  "ac": 20,
+  "carry": 11,
+  "expertise": [
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false
+  ],
+  "hp": 105,
+  "immune": [],
+  "init": 11,
+  "init_roll": "DiceRollCondition.NEUTRAL",
+  "pact": [],
+  "resist": [],
+  "save_prof": [
+   true,
+   true,
+   true,
+   true,
+   true,
+   true
+  ],
+  "saves": [
+   6,
+   11,
+   7,
+   5,
+   11,
+   7
+  ],
+  "scores": [
+   10,
+   20,
+   13,
+   8,
+   20,
+   12
+  ],
+  "senses": [],
+  "skill_abilities": [
+   "Ability.DEXTERITY",
+   "Ability.WISDOM",
+   "Ability.INTELLIGENCE",
+   "Ability.STRENGTH",
+   "Ability.CHARISMA",
+   "Ability.INTELLIGENCE",
+   "Ability.WISDOM",
+   "Ability.CHARISMA",
+   "Ability.INTELLIGENCE",
+   "Ability.WISDOM",
+   "Ability.INTELLIGENCE",
+   "Ability.WISDOM",
+   "Ability.CHARISMA",
+   "Ability.CHARISMA",
+   "Ability.INTELLIGENCE",
+   "Ability.DEXTERITY",
+   "Ability.DEXTERITY",
+   "Ability.WISDOM"
+  ],
+  "skill_rolls": [
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]"
+  ],
+  "skill_sources": [
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   []
+  ],
+  "skills": [
+   11,
+   11,
+   -1,
+   0,
+   1,
+   5,
+   11,
+   1,
+   -1,
+   11,
+   -1,
+   11,
+   7,
+   1,
+   -1,
+   11,
+   11,
+   5
+  ],
+  "slots": [],
+  "speed": 55,
+  "weapons": [
+   [
+    "Unarmed Strike",
+    11,
+    5
+   ],
+   [
+    "Spear",
+    6,
+    0
+   ],
+   [
+    "Dagger",
+    11,
+    5
+   ]
+  ]
+ },
  "Y2024MonkOpenHandWeiStonefistCharacterBuilder": {
   "ac": 20,
   "carry": 10,
@@ -14823,6 +15678,200 @@
    ]
   ]
  },
+ "Y2024PaladinEbonBladeMordricEbonhandCharacterBuilder": {
+  "ac": 18,
+  "carry": 15,
+  "expertise": [
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false
+  ],
+  "hp": 224,
+  "immune": [],
+  "init": 0,
+  "init_roll": "DiceRollCondition.NEUTRAL",
+  "pact": [],
+  "resist": [
+   [
+    "DamageType.COLD",
+    [
+     "Aura of Deathly Endurance"
+    ]
+   ],
+   [
+    "DamageType.NECROTIC",
+    [
+     "Aura of Deathly Endurance"
+    ]
+   ],
+   [
+    "DamageType.PSYCHIC",
+    [
+     "Aura of Deathly Endurance"
+    ]
+   ]
+  ],
+  "save_prof": [
+   false,
+   false,
+   false,
+   false,
+   true,
+   true
+  ],
+  "saves": [
+   8,
+   4,
+   7,
+   3,
+   11,
+   14
+  ],
+  "scores": [
+   19,
+   10,
+   16,
+   8,
+   12,
+   18
+  ],
+  "senses": [],
+  "skill_abilities": [
+   "Ability.DEXTERITY",
+   "Ability.WISDOM",
+   "Ability.INTELLIGENCE",
+   "Ability.STRENGTH",
+   "Ability.CHARISMA",
+   "Ability.INTELLIGENCE",
+   "Ability.WISDOM",
+   "Ability.CHARISMA",
+   "Ability.INTELLIGENCE",
+   "Ability.WISDOM",
+   "Ability.INTELLIGENCE",
+   "Ability.WISDOM",
+   "Ability.CHARISMA",
+   "Ability.CHARISMA",
+   "Ability.INTELLIGENCE",
+   "Ability.DEXTERITY",
+   "Ability.DEXTERITY",
+   "Ability.WISDOM"
+  ],
+  "skill_rolls": [
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.DISADVANTAGE['Chain Mail Armor']",
+   "DiceRollCondition.NEUTRAL[]"
+  ],
+  "skill_sources": [
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   []
+  ],
+  "skills": [
+   0,
+   1,
+   -1,
+   10,
+   4,
+   5,
+   7,
+   10,
+   -1,
+   1,
+   -1,
+   7,
+   4,
+   4,
+   5,
+   0,
+   6,
+   7
+  ],
+  "slots": [
+   [
+    1,
+    4
+   ],
+   [
+    2,
+    3
+   ],
+   [
+    3,
+    3
+   ],
+   [
+    4,
+    3
+   ],
+   [
+    5,
+    2
+   ]
+  ],
+  "speed": 30,
+  "weapons": [
+   [
+    "Unarmed Strike",
+    10,
+    4
+   ],
+   [
+    "Longsword",
+    10,
+    4
+   ],
+   [
+    "Javelin",
+    10,
+    4
+   ]
+  ]
+ },
  "Y2024PaladinGenieJasmindraWindboundCharacterBuilder": {
   "ac": 19,
   "carry": 12,
@@ -15166,6 +16215,181 @@
     "Javelin",
     8,
     2
+   ]
+  ]
+ },
+ "Y2024PaladinHolyLioraDawnmendCharacterBuilder": {
+  "ac": 18,
+  "carry": 14,
+  "expertise": [
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false
+  ],
+  "hp": 184,
+  "immune": [],
+  "init": -1,
+  "init_roll": "DiceRollCondition.NEUTRAL",
+  "pact": [],
+  "resist": [],
+  "save_prof": [
+   false,
+   false,
+   false,
+   false,
+   true,
+   true
+  ],
+  "saves": [
+   7,
+   3,
+   7,
+   4,
+   12,
+   14
+  ],
+  "scores": [
+   16,
+   8,
+   16,
+   10,
+   14,
+   19
+  ],
+  "senses": [],
+  "skill_abilities": [
+   "Ability.DEXTERITY",
+   "Ability.WISDOM",
+   "Ability.INTELLIGENCE",
+   "Ability.STRENGTH",
+   "Ability.CHARISMA",
+   "Ability.INTELLIGENCE",
+   "Ability.WISDOM",
+   "Ability.CHARISMA",
+   "Ability.INTELLIGENCE",
+   "Ability.WISDOM",
+   "Ability.INTELLIGENCE",
+   "Ability.WISDOM",
+   "Ability.CHARISMA",
+   "Ability.CHARISMA",
+   "Ability.INTELLIGENCE",
+   "Ability.DEXTERITY",
+   "Ability.DEXTERITY",
+   "Ability.WISDOM"
+  ],
+  "skill_rolls": [
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.DISADVANTAGE['Chain Mail Armor']",
+   "DiceRollCondition.NEUTRAL[]"
+  ],
+  "skill_sources": [
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   []
+  ],
+  "skills": [
+   -1,
+   2,
+   6,
+   9,
+   4,
+   6,
+   8,
+   4,
+   0,
+   8,
+   0,
+   8,
+   4,
+   10,
+   6,
+   -1,
+   -1,
+   2
+  ],
+  "slots": [
+   [
+    1,
+    4
+   ],
+   [
+    2,
+    3
+   ],
+   [
+    3,
+    3
+   ],
+   [
+    4,
+    3
+   ],
+   [
+    5,
+    2
+   ]
+  ],
+  "speed": 30,
+  "weapons": [
+   [
+    "Unarmed Strike",
+    9,
+    3
+   ],
+   [
+    "Longsword",
+    9,
+    3
+   ],
+   [
+    "Javelin",
+    9,
+    3
    ]
   ]
  },
@@ -15519,6 +16743,199 @@
     "Longbow",
     12,
     4
+   ]
+  ]
+ },
+ "Y2024RangerDemonHunterVaelinFelbrandCharacterBuilder": {
+  "ac": 17,
+  "carry": 11,
+  "expertise": [
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   true,
+   false,
+   false,
+   false,
+   false,
+   true,
+   true
+  ],
+  "hp": 164,
+  "immune": [],
+  "init": 11,
+  "init_roll": "DiceRollCondition.NEUTRAL",
+  "pact": [],
+  "resist": [],
+  "save_prof": [
+   true,
+   true,
+   false,
+   false,
+   false,
+   false
+  ],
+  "saves": [
+   6,
+   11,
+   2,
+   -1,
+   4,
+   1
+  ],
+  "scores": [
+   10,
+   20,
+   14,
+   8,
+   18,
+   12
+  ],
+  "senses": [
+   [
+    "Sense.BLINDSIGHT",
+    30
+   ],
+   [
+    "Sense.DARKVISION",
+    60
+   ],
+   [
+    "Sense.TRUESIGHT",
+    30
+   ]
+  ],
+  "skill_abilities": [
+   "Ability.DEXTERITY",
+   "Ability.WISDOM",
+   "Ability.INTELLIGENCE",
+   "Ability.STRENGTH",
+   "Ability.CHARISMA",
+   "Ability.INTELLIGENCE",
+   "Ability.WISDOM",
+   "Ability.CHARISMA",
+   "Ability.INTELLIGENCE",
+   "Ability.WISDOM",
+   "Ability.INTELLIGENCE",
+   "Ability.WISDOM",
+   "Ability.CHARISMA",
+   "Ability.CHARISMA",
+   "Ability.INTELLIGENCE",
+   "Ability.DEXTERITY",
+   "Ability.DEXTERITY",
+   "Ability.WISDOM"
+  ],
+  "skill_rolls": [
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]"
+  ],
+  "skill_sources": [
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   []
+  ],
+  "skills": [
+   5,
+   4,
+   -1,
+   6,
+   1,
+   -1,
+   10,
+   7,
+   -1,
+   4,
+   -1,
+   16,
+   1,
+   1,
+   -1,
+   5,
+   17,
+   16
+  ],
+  "slots": [
+   [
+    1,
+    4
+   ],
+   [
+    2,
+    3
+   ],
+   [
+    3,
+    3
+   ],
+   [
+    4,
+    3
+   ],
+   [
+    5,
+    2
+   ]
+  ],
+  "speed": 40,
+  "weapons": [
+   [
+    "Unarmed Strike",
+    6,
+    0
+   ],
+   [
+    "Scimitar",
+    11,
+    5
+   ],
+   [
+    "Shortsword",
+    11,
+    5
+   ],
+   [
+    "Longbow",
+    11,
+    5
    ]
   ]
  },
@@ -16698,6 +18115,165 @@
    ],
    [
     "Shortsword",
+    11,
+    5
+   ],
+   [
+    "Dagger",
+    11,
+    5
+   ]
+  ]
+ },
+ "Y2024RogueSwashbucklerIsabeauQuickbladeCharacterBuilder": {
+  "ac": 17,
+  "carry": 2,
+  "expertise": [
+   true,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   false,
+   true,
+   false,
+   true,
+   false,
+   false,
+   true,
+   false
+  ],
+  "hp": 122,
+  "immune": [],
+  "init": 15,
+  "init_roll": "DiceRollCondition.NEUTRAL",
+  "pact": [],
+  "resist": [],
+  "save_prof": [
+   false,
+   true,
+   false,
+   true,
+   true,
+   true
+  ],
+  "saves": [
+   -1,
+   11,
+   2,
+   6,
+   7,
+   10
+  ],
+  "scores": [
+   8,
+   20,
+   15,
+   10,
+   12,
+   19
+  ],
+  "senses": [
+   [
+    "Sense.DARKVISION",
+    60
+   ]
+  ],
+  "skill_abilities": [
+   "Ability.DEXTERITY",
+   "Ability.WISDOM",
+   "Ability.INTELLIGENCE",
+   "Ability.STRENGTH",
+   "Ability.CHARISMA",
+   "Ability.INTELLIGENCE",
+   "Ability.WISDOM",
+   "Ability.CHARISMA",
+   "Ability.INTELLIGENCE",
+   "Ability.WISDOM",
+   "Ability.INTELLIGENCE",
+   "Ability.WISDOM",
+   "Ability.CHARISMA",
+   "Ability.CHARISMA",
+   "Ability.INTELLIGENCE",
+   "Ability.DEXTERITY",
+   "Ability.DEXTERITY",
+   "Ability.WISDOM"
+  ],
+  "skill_rolls": [
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]",
+   "DiceRollCondition.NEUTRAL[]"
+  ],
+  "skill_sources": [
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   [],
+   []
+  ],
+  "skills": [
+   17,
+   1,
+   0,
+   5,
+   4,
+   0,
+   7,
+   4,
+   0,
+   1,
+   0,
+   13,
+   10,
+   16,
+   0,
+   5,
+   17,
+   1
+  ],
+  "slots": [],
+  "speed": 35,
+  "weapons": [
+   [
+    "Unarmed Strike",
+    5,
+    -1
+   ],
+   [
+    "Rapier",
     11,
     5
    ],

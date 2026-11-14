@@ -8780,6 +8780,190 @@
    "Maul  1d20+5  dmg 2d6 +3"
   ]
  },
+ "Y2024BarbarianElementsKorgaEmberfrostCharacterBuilder": {
+  "Ability Scores": {
+   "CHA": 10,
+   "CON": 18,
+   "DEX": 13,
+   "INT": 8,
+   "STR": 19,
+   "WIS": 12
+  },
+  "Saving Throws": {
+   "CHA": 0,
+   "CON": 9,
+   "DEX": 1,
+   "INT": -1,
+   "STR": 9,
+   "WIS": 1
+  },
+  "ac": "15 (no Shield)",
+  "class_levels": {
+   "Barbarian": 14
+  },
+  "conditions": [],
+  "create_name": "Korga Emberfrost",
+  "damage_immunities": [],
+  "damage_resistances": [],
+  "death_saves_fail": 0,
+  "death_saves_success": 0,
+  "features": [
+   "Free Background Ability Bonus",
+   "Free Background Skill Proficiency",
+   "Tough",
+   "Barbarian Proficiencies",
+   "Class Skill Proficiencies",
+   "Rage",
+   "Unarmored Defense",
+   "Unarmored Defense",
+   "Weapon Mastery",
+   "Danger Sense",
+   "DangerSense",
+   "Reckless Attack",
+   "Primal Knowledge",
+   "Primal Knowledge",
+   "Ability Score Improvement",
+   "FastMovementBonus",
+   "Extra Attack",
+   "Feral Instinct",
+   "Great Weapon Master",
+   "Ability Score Improvement",
+   "Raging Elements",
+   "Echo of the Elements",
+   "Primordial Bond",
+   "Darkvision",
+   "Adrenaline Rush",
+   "Relentless Endurance"
+  ],
+  "hp": 187,
+  "invocations": [],
+  "max_hp": 187,
+  "name": "Korga Emberfrost",
+  "pact_slots": {},
+  "proficiency_bonus": 5,
+  "size": "Medium",
+  "speed": 40,
+  "spell_slots": {},
+  "spells_with_level": [
+   [
+    "Daylight",
+    3,
+    "Wisdom"
+   ],
+   [
+    "Elementalism",
+    0,
+    "Wisdom"
+   ],
+   [
+    "Water Walk",
+    3,
+    "Wisdom"
+   ],
+   [
+    "Wind Wall",
+    3,
+    "Wisdom"
+   ]
+  ],
+  "subclass": "Path of the Elements",
+  "temp_hp": 0,
+  "visibility_states": [],
+  "weapons": [
+   "Greataxe  1d20+9  dmg 1d12 +4",
+   "Javelin  1d20+9  dmg 1d6 +4"
+  ]
+ },
+ "Y2024BarbarianSpiritualGuardianHildaSpiritwardCharacterBuilder": {
+  "Ability Scores": {
+   "CHA": 10,
+   "CON": 15,
+   "DEX": 13,
+   "INT": 8,
+   "STR": 20,
+   "WIS": 13
+  },
+  "Saving Throws": {
+   "CHA": 0,
+   "CON": 7,
+   "DEX": 1,
+   "INT": -1,
+   "STR": 10,
+   "WIS": 1
+  },
+  "ac": "13 (no Shield)",
+  "class_levels": {
+   "Barbarian": 14
+  },
+  "conditions": [],
+  "create_name": "Hilda Spiritward",
+  "damage_immunities": [],
+  "damage_resistances": [
+   {
+    "damage_types": [
+     "Poison"
+    ]
+   }
+  ],
+  "death_saves_fail": 0,
+  "death_saves_success": 0,
+  "features": [
+   "Free Background Ability Bonus",
+   "Free Background Skill Proficiency",
+   "Alert",
+   "Barbarian Proficiencies",
+   "Class Skill Proficiencies",
+   "Rage",
+   "Unarmored Defense",
+   "Unarmored Defense",
+   "Weapon Mastery",
+   "Danger Sense",
+   "DangerSense",
+   "Reckless Attack",
+   "Primal Knowledge",
+   "Primal Knowledge",
+   "Ability Score Improvement",
+   "FastMovementBonus",
+   "Extra Attack",
+   "Feral Instinct",
+   "Great Weapon Master",
+   "Durable",
+   "Consult the Spirits",
+   "Spirits' Fury",
+   "Darkvision",
+   "Dwarven Resilience",
+   "Dwarven Toughness",
+   "Stonecunning"
+  ],
+  "hp": 145,
+  "invocations": [],
+  "max_hp": 145,
+  "name": "Hilda Spiritward",
+  "pact_slots": {},
+  "proficiency_bonus": 5,
+  "size": "Medium",
+  "speed": 40,
+  "spell_slots": {},
+  "spells_with_level": [
+   [
+    "Augury",
+    2,
+    "Wisdom"
+   ],
+   [
+    "Clairvoyance",
+    3,
+    "Wisdom"
+   ]
+  ],
+  "subclass": "Path of the Spiritual Guardian",
+  "temp_hp": 0,
+  "visibility_states": [],
+  "weapons": [
+   "Maul  1d20+10  dmg 2d6 +5",
+   "Handaxe  1d20+10  dmg 1d6 +5"
+  ]
+ },
  "Y2024BarbarianWorldTreeBrannaRootshieldCharacterBuilder": {
   "Ability Scores": {
    "CHA": 10,
@@ -9795,6 +9979,282 @@
    "Maul  1d20+8  dmg 2d6 +2"
   ]
  },
+ "Y2024ClericDisciplineSeraphineLightmendCharacterBuilder": {
+  "Ability Scores": {
+   "CHA": 12,
+   "CON": 19,
+   "DEX": 13,
+   "INT": 10,
+   "STR": 8,
+   "WIS": 20
+  },
+  "Saving Throws": {
+   "CHA": 7,
+   "CON": 4,
+   "DEX": 1,
+   "INT": 0,
+   "STR": -1,
+   "WIS": 11
+  },
+  "ac": "16 (with Shield) and 14 (without Shield)",
+  "class_levels": {
+   "Cleric": 20
+  },
+  "conditions": [],
+  "create_name": "Seraphine Lightmend",
+  "damage_immunities": [],
+  "damage_resistances": [],
+  "death_saves_fail": 0,
+  "death_saves_success": 0,
+  "features": [
+   "Free Background Ability Bonus",
+   "Free Background Skill Proficiency",
+   "Tough",
+   "Spell Slots",
+   "Cleric Proficiencies",
+   "Class Skill Proficiencies",
+   "Spellcasting",
+   "Divine Order: Protector",
+   "Channel Divinity",
+   "Ability Score Improvement",
+   "Divine Strike",
+   "Ability Score Improvement",
+   "Divine Intervention",
+   "Ability Score Improvement",
+   "War Caster",
+   "Epic Boon",
+   "Discipline Domain Spells",
+   "Atonement",
+   "Ultimate Penitence",
+   "Fey Ancestry",
+   "Keen Senses",
+   "Trance",
+   "Darkvision"
+  ],
+  "hp": 223,
+  "invocations": [],
+  "max_hp": 223,
+  "name": "Seraphine Lightmend",
+  "pact_slots": {},
+  "proficiency_bonus": 6,
+  "size": "Medium",
+  "speed": 35,
+  "spell_slots": {
+   "1": 4,
+   "2": 3,
+   "3": 3,
+   "4": 3,
+   "5": 3,
+   "6": 2,
+   "7": 2,
+   "8": 1,
+   "9": 1
+  },
+  "spells_with_level": [
+   [
+    "Bane",
+    1,
+    "Wisdom"
+   ],
+   [
+    "Create or Destroy Water",
+    1,
+    "Wisdom"
+   ],
+   [
+    "Cure Wounds",
+    1,
+    "Wisdom"
+   ],
+   [
+    "Druidcraft",
+    0,
+    "Wisdom"
+   ],
+   [
+    "Guidance",
+    0,
+    "Wisdom"
+   ],
+   [
+    "Healing Word",
+    1,
+    "Wisdom"
+   ],
+   [
+    "Longstrider",
+    1,
+    "Wisdom"
+   ],
+   [
+    "Pass without Trace",
+    2,
+    "Wisdom"
+   ],
+   [
+    "Sacred Flame",
+    0,
+    "Wisdom"
+   ],
+   [
+    "Toll the Dead",
+    0,
+    "Wisdom"
+   ],
+   [
+    "Bless",
+    1,
+    "Wisdom"
+   ],
+   [
+    "Arcane Vigor",
+    2,
+    "Wisdom"
+   ],
+   [
+    "Enhance Ability",
+    2,
+    "Wisdom"
+   ],
+   [
+    "Guiding Bolt",
+    1,
+    "Wisdom"
+   ],
+   [
+    "Magic Weapon",
+    2,
+    "Wisdom"
+   ],
+   [
+    "Shield of Faith",
+    1,
+    "Wisdom"
+   ],
+   [
+    "Aid",
+    2,
+    "Wisdom"
+   ],
+   [
+    "Spare the Dying",
+    0,
+    "Wisdom"
+   ],
+   [
+    "Aura of Vitality",
+    3,
+    "Wisdom"
+   ],
+   [
+    "Bestow Curse",
+    3,
+    "Wisdom"
+   ],
+   [
+    "Protection from Energy",
+    3,
+    "Wisdom"
+   ],
+   [
+    "Dispel Magic",
+    3,
+    "Wisdom"
+   ],
+   [
+    "Guardian of Faith",
+    4,
+    "Wisdom"
+   ],
+   [
+    "Lesser Restoration",
+    2,
+    "Wisdom"
+   ],
+   [
+    "Stoneskin",
+    4,
+    "Wisdom"
+   ],
+   [
+    "Freedom of Movement",
+    4,
+    "Wisdom"
+   ],
+   [
+    "Circle of Power",
+    5,
+    "Wisdom"
+   ],
+   [
+    "Destructive Wave",
+    5,
+    "Wisdom"
+   ],
+   [
+    "Flame Strike",
+    5,
+    "Wisdom"
+   ],
+   [
+    "Geas",
+    5,
+    "Wisdom"
+   ],
+   [
+    "Greater Restoration",
+    5,
+    "Wisdom"
+   ],
+   [
+    "Mending",
+    0,
+    "Wisdom"
+   ],
+   [
+    "True Seeing",
+    6,
+    "Wisdom"
+   ],
+   [
+    "Conjure Celestial",
+    7,
+    "Wisdom"
+   ],
+   [
+    "Regenerate",
+    7,
+    "Wisdom"
+   ],
+   [
+    "Gate",
+    9,
+    "Wisdom"
+   ],
+   [
+    "Power Word Heal",
+    9,
+    "Wisdom"
+   ],
+   [
+    "Mass Heal",
+    9,
+    "Wisdom"
+   ],
+   [
+    "Astral Projection",
+    9,
+    "Wisdom"
+   ]
+  ],
+  "subclass": "Discipline",
+  "temp_hp": 0,
+  "visibility_states": [],
+  "weapons": [
+   "Unarmed Strike  1d20+5  dmg 1d1 -1",
+   "Mace  1d20+5  dmg 1d6 -1"
+  ]
+ },
  "Y2024ClericGraveAnselDuskvaleCharacterBuilder": {
   "Ability Scores": {
    "CHA": 12,
@@ -10238,6 +10698,278 @@
   "weapons": [
    "Unarmed Strike  1d20+1  dmg 1d1 -1",
    "Mace  1d20+1  dmg 1d6 -1"
+  ]
+ },
+ "Y2024ClericShadowMorvaneDuskwhisperCharacterBuilder": {
+  "Ability Scores": {
+   "CHA": 12,
+   "CON": 19,
+   "DEX": 13,
+   "INT": 10,
+   "STR": 8,
+   "WIS": 20
+  },
+  "Saving Throws": {
+   "CHA": 7,
+   "CON": 4,
+   "DEX": 1,
+   "INT": 0,
+   "STR": -1,
+   "WIS": 11
+  },
+  "ac": "16 (with Shield) and 14 (without Shield)",
+  "class_levels": {
+   "Cleric": 20
+  },
+  "conditions": [],
+  "create_name": "Morvane Duskwhisper",
+  "damage_immunities": [],
+  "damage_resistances": [],
+  "death_saves_fail": 0,
+  "death_saves_success": 0,
+  "features": [
+   "Free Background Ability Bonus",
+   "Free Background Skill Proficiency",
+   "Tough",
+   "Spell Slots",
+   "Cleric Proficiencies",
+   "Class Skill Proficiencies",
+   "Spellcasting",
+   "Divine Order: Thaumaturge",
+   "Channel Divinity",
+   "Ability Score Improvement",
+   "Potent Spellcasting",
+   "Ability Score Improvement",
+   "Divine Intervention",
+   "Ability Score Improvement",
+   "War Caster",
+   "Epic Boon",
+   "Shadow Domain Spells",
+   "Devouring Plague",
+   "Dispersion",
+   "Vampiric Embrace",
+   "Fey Ancestry",
+   "Keen Senses",
+   "Trance",
+   "Darkvision"
+  ],
+  "hp": 223,
+  "invocations": [],
+  "max_hp": 223,
+  "name": "Morvane Duskwhisper",
+  "pact_slots": {},
+  "proficiency_bonus": 6,
+  "size": "Medium",
+  "speed": 30,
+  "spell_slots": {
+   "1": 4,
+   "2": 3,
+   "3": 3,
+   "4": 3,
+   "5": 3,
+   "6": 2,
+   "7": 2,
+   "8": 1,
+   "9": 1
+  },
+  "spells_with_level": [
+   [
+    "Bane",
+    1,
+    "Wisdom"
+   ],
+   [
+    "Create or Destroy Water",
+    1,
+    "Wisdom"
+   ],
+   [
+    "Dancing Lights",
+    0,
+    "Wisdom"
+   ],
+   [
+    "Darkness",
+    2,
+    "Wisdom"
+   ],
+   [
+    "Faerie Fire",
+    1,
+    "Wisdom"
+   ],
+   [
+    "Guidance",
+    0,
+    "Wisdom"
+   ],
+   [
+    "Healing Word",
+    1,
+    "Wisdom"
+   ],
+   [
+    "Inflict Wounds",
+    1,
+    "Wisdom"
+   ],
+   [
+    "Sacred Flame",
+    0,
+    "Wisdom"
+   ],
+   [
+    "Thaumaturgy",
+    0,
+    "Wisdom"
+   ],
+   [
+    "Toll the Dead",
+    0,
+    "Wisdom"
+   ],
+   [
+    "Bless",
+    1,
+    "Wisdom"
+   ],
+   [
+    "Crown of Madness",
+    2,
+    "Wisdom"
+   ],
+   [
+    "Dissonant Whispers",
+    1,
+    "Wisdom"
+   ],
+   [
+    "Enhance Ability",
+    2,
+    "Wisdom"
+   ],
+   [
+    "Mind Spike",
+    2,
+    "Wisdom"
+   ],
+   [
+    "Aid",
+    2,
+    "Wisdom"
+   ],
+   [
+    "Spare the Dying",
+    0,
+    "Wisdom"
+   ],
+   [
+    "Aura of Vitality",
+    3,
+    "Wisdom"
+   ],
+   [
+    "Bestow Curse",
+    3,
+    "Wisdom"
+   ],
+   [
+    "Summon Undead",
+    3,
+    "Wisdom"
+   ],
+   [
+    "Vampiric Touch",
+    3,
+    "Wisdom"
+   ],
+   [
+    "Spirit Guardians",
+    3,
+    "Wisdom"
+   ],
+   [
+    "Evard's Black Tentacles",
+    4,
+    "Wisdom"
+   ],
+   [
+    "Lesser Restoration",
+    2,
+    "Wisdom"
+   ],
+   [
+    "Freedom of Movement",
+    4,
+    "Wisdom"
+   ],
+   [
+    "Contagion",
+    5,
+    "Wisdom"
+   ],
+   [
+    "Dominate Person",
+    5,
+    "Wisdom"
+   ],
+   [
+    "Geas",
+    5,
+    "Wisdom"
+   ],
+   [
+    "Circle of Power",
+    5,
+    "Wisdom"
+   ],
+   [
+    "Mending",
+    0,
+    "Wisdom"
+   ],
+   [
+    "True Seeing",
+    6,
+    "Wisdom"
+   ],
+   [
+    "Conjure Celestial",
+    7,
+    "Wisdom"
+   ],
+   [
+    "Regenerate",
+    7,
+    "Wisdom"
+   ],
+   [
+    "Gate",
+    9,
+    "Wisdom"
+   ],
+   [
+    "Power Word Heal",
+    9,
+    "Wisdom"
+   ],
+   [
+    "Mass Heal",
+    9,
+    "Wisdom"
+   ],
+   [
+    "Astral Projection",
+    9,
+    "Wisdom"
+   ]
+  ],
+  "subclass": "Shadow",
+  "temp_hp": 0,
+  "visibility_states": [],
+  "weapons": [
+   "Unarmed Strike  1d20+5  dmg 1d1 -1",
+   "Mace  1d20+5  dmg 1d6 -1"
   ]
  },
  "Y2024DruidLandRowanThistledownCharacterBuilder": {
@@ -11911,6 +12643,83 @@
    "Dagger  1d20+11  dmg 1d4 +5"
   ]
  },
+ "Y2024MonkMysticBrewsBarleyStoutfistCharacterBuilder": {
+  "Ability Scores": {
+   "CHA": 12,
+   "CON": 13,
+   "DEX": 20,
+   "INT": 8,
+   "STR": 10,
+   "WIS": 20
+  },
+  "Saving Throws": {
+   "CHA": 7,
+   "CON": 7,
+   "DEX": 11,
+   "INT": 5,
+   "STR": 6,
+   "WIS": 11
+  },
+  "ac": "20 (no Shield)",
+  "class_levels": {
+   "Monk": 17
+  },
+  "conditions": [],
+  "create_name": "Barley Stoutfist",
+  "damage_immunities": [],
+  "damage_resistances": [],
+  "death_saves_fail": 0,
+  "death_saves_success": 0,
+  "features": [
+   "Free Background Ability Bonus",
+   "Free Background Skill Proficiency",
+   "Alert",
+   "Monk Proficiencies",
+   "Class Skill Proficiencies",
+   "Martial Arts",
+   "UnarmoredDefense",
+   "Monk's Focus",
+   "Unarmored Movement",
+   "Uncanny Metabolism",
+   "Ability Score Improvement",
+   "Slow Fall",
+   "Extra Attack",
+   "Empowered Strikes",
+   "Evasion",
+   "Ability Score Improvement",
+   "Acrobatic Movement",
+   "Self-Restoration",
+   "Ability Score Improvement",
+   "Disciplined Survivor",
+   "Perfect Focus",
+   "Ability Score Improvement",
+   "Bonus Proficiencies",
+   "Tipsy Sway",
+   "Mystic Brew",
+   "Resourceful",
+   "Skillful",
+   "Versatile",
+   "Skilled"
+  ],
+  "hp": 105,
+  "invocations": [],
+  "max_hp": 105,
+  "name": "Barley Stoutfist",
+  "pact_slots": {},
+  "proficiency_bonus": 6,
+  "size": "Medium",
+  "speed": 55,
+  "spell_slots": {},
+  "spells_with_level": [],
+  "subclass": "Mystic Brews",
+  "temp_hp": 0,
+  "visibility_states": [],
+  "weapons": [
+   "Unarmed Strike  1d20+11  dmg 1d12 +5",
+   "Spear  1d20+6  dmg 1d6 +0",
+   "Dagger  1d20+11  dmg 1d4 +5"
+  ]
+ },
  "Y2024MonkOpenHandWeiStonefistCharacterBuilder": {
   "Ability Scores": {
    "CHA": 12,
@@ -12300,6 +13109,207 @@
    "Longsword  1d20+4  dmg 1d8 +2"
   ]
  },
+ "Y2024PaladinEbonBladeMordricEbonhandCharacterBuilder": {
+  "Ability Scores": {
+   "CHA": 18,
+   "CON": 16,
+   "DEX": 10,
+   "INT": 8,
+   "STR": 19,
+   "WIS": 12
+  },
+  "Saving Throws": {
+   "CHA": 14,
+   "CON": 7,
+   "DEX": 4,
+   "INT": 3,
+   "STR": 8,
+   "WIS": 11
+  },
+  "ac": "18 (with Shield) and 16 (without Shield)",
+  "class_levels": {
+   "Paladin": 20
+  },
+  "conditions": [],
+  "create_name": "Mordric Ebonhand",
+  "damage_immunities": [],
+  "damage_resistances": [
+   {
+    "damage_types": [
+     "Cold"
+    ]
+   },
+   {
+    "damage_types": [
+     "Necrotic"
+    ]
+   },
+   {
+    "damage_types": [
+     "Psychic"
+    ]
+   }
+  ],
+  "death_saves_fail": 0,
+  "death_saves_success": 0,
+  "features": [
+   "Free Background Ability Bonus",
+   "Free Background Skill Proficiency",
+   "Tough",
+   "Spell Slots",
+   "Paladin Proficiencies",
+   "Class Skill Proficiencies",
+   "Weapon Mastery",
+   "Lay on Hands",
+   "Paladin's Smite",
+   "Channel Divinity",
+   "Ability Score Improvement",
+   "Extra Attack",
+   "Faithful Steed",
+   "Aura of Protection",
+   "Ability Score Improvement",
+   "Radiant Strikes",
+   "Ability Score Improvement",
+   "Ability Score Improvement",
+   "Epic Boon",
+   "Death Coil",
+   "Runic Smite",
+   "Oath of the Ebon Blade Spells",
+   "Runeforging",
+   "Runic Strikes",
+   "Runic Mastery",
+   "Aspect of the Horsemen",
+   "Resourceful",
+   "Skillful",
+   "Versatile",
+   "Skilled"
+  ],
+  "hp": 224,
+  "invocations": [],
+  "max_hp": 224,
+  "name": "Mordric Ebonhand",
+  "pact_slots": {},
+  "proficiency_bonus": 6,
+  "size": "Medium",
+  "speed": 30,
+  "spell_slots": {
+   "1": 4,
+   "2": 3,
+   "3": 3,
+   "4": 3,
+   "5": 2
+  },
+  "spells_with_level": [
+   [
+    "Command",
+    1,
+    "Charisma"
+   ],
+   [
+    "Divine Favor",
+    1,
+    "Charisma"
+   ],
+   [
+    "Divine Smite",
+    1,
+    "Charisma"
+   ],
+   [
+    "Wrathful Smite",
+    1,
+    "Charisma"
+   ],
+   [
+    "Shield of Faith",
+    1,
+    "Charisma"
+   ],
+   [
+    "Searing Smite",
+    1,
+    "Charisma"
+   ],
+   [
+    "Find Steed",
+    2,
+    "Charisma"
+   ],
+   [
+    "Magic Weapon",
+    2,
+    "Charisma"
+   ],
+   [
+    "Branding Smite",
+    2,
+    "Charisma"
+   ],
+   [
+    "Remove Curse",
+    3,
+    "Charisma"
+   ],
+   [
+    "Spirit Shroud",
+    3,
+    "Charisma"
+   ],
+   [
+    "Summon Undead",
+    3,
+    "Charisma"
+   ],
+   [
+    "Blinding Smite",
+    3,
+    "Charisma"
+   ],
+   [
+    "Freedom of Movement",
+    4,
+    "Charisma"
+   ],
+   [
+    "Staggering Smite",
+    4,
+    "Charisma"
+   ],
+   [
+    "Banishment",
+    4,
+    "Charisma"
+   ],
+   [
+    "Banishing Smite",
+    5,
+    "Charisma"
+   ],
+   [
+    "Circle of Power",
+    5,
+    "Charisma"
+   ],
+   [
+    "Destructive Wave",
+    5,
+    "Charisma"
+   ],
+   [
+    "Holy Weapon",
+    5,
+    "Charisma"
+   ]
+  ],
+  "subclass": "Oath of the Ebon Blade",
+  "temp_hp": 0,
+  "visibility_states": [],
+  "weapons": [
+   "Unarmed Strike  1d20+10  dmg 1d1 +4",
+   "Longsword  1d20+10  dmg 1d8 +4",
+   "Javelin  1d20+10  dmg 1d6 +4"
+  ]
+ },
  "Y2024PaladinGenieJasmindraWindboundCharacterBuilder": {
   "Ability Scores": {
    "CHA": 16,
@@ -12642,6 +13652,220 @@
    "Javelin  1d20+8  dmg 1d6 +2"
   ]
  },
+ "Y2024PaladinHolyLioraDawnmendCharacterBuilder": {
+  "Ability Scores": {
+   "CHA": 19,
+   "CON": 16,
+   "DEX": 8,
+   "INT": 10,
+   "STR": 16,
+   "WIS": 14
+  },
+  "Saving Throws": {
+   "CHA": 14,
+   "CON": 7,
+   "DEX": 3,
+   "INT": 4,
+   "STR": 7,
+   "WIS": 12
+  },
+  "ac": "18 (with Shield) and 16 (without Shield)",
+  "class_levels": {
+   "Paladin": 20
+  },
+  "conditions": [],
+  "create_name": "Liora Dawnmend",
+  "damage_immunities": [],
+  "damage_resistances": [],
+  "death_saves_fail": 0,
+  "death_saves_success": 0,
+  "features": [
+   "Free Background Ability Bonus",
+   "Free Background Skill Proficiency",
+   "Healer",
+   "Spell Slots",
+   "Paladin Proficiencies",
+   "Class Skill Proficiencies",
+   "Weapon Mastery",
+   "Lay on Hands",
+   "Paladin's Smite",
+   "Channel Divinity",
+   "Ability Score Improvement",
+   "Extra Attack",
+   "Faithful Steed",
+   "Aura of Protection",
+   "Ability Score Improvement",
+   "Radiant Strikes",
+   "Ability Score Improvement",
+   "Ability Score Improvement",
+   "Epic Boon",
+   "Holy Deliverance",
+   "Resourceful",
+   "Skillful",
+   "Versatile",
+   "Skilled"
+  ],
+  "hp": 184,
+  "invocations": [],
+  "max_hp": 184,
+  "name": "Liora Dawnmend",
+  "pact_slots": {},
+  "proficiency_bonus": 6,
+  "size": "Medium",
+  "speed": 30,
+  "spell_slots": {
+   "1": 4,
+   "2": 3,
+   "3": 3,
+   "4": 3,
+   "5": 2
+  },
+  "spells_with_level": [
+   [
+    "Bless",
+    1,
+    "Charisma"
+   ],
+   [
+    "Shield of Faith",
+    1,
+    "Charisma"
+   ],
+   [
+    "Divine Favor",
+    1,
+    "Charisma"
+   ],
+   [
+    "Divine Smite",
+    1,
+    "Charisma"
+   ],
+   [
+    "Cure Wounds",
+    1,
+    "Charisma"
+   ],
+   [
+    "Healing Word",
+    1,
+    "Charisma"
+   ],
+   [
+    "Protection from Evil and Good",
+    1,
+    "Charisma"
+   ],
+   [
+    "Heroism",
+    1,
+    "Charisma"
+   ],
+   [
+    "Aid",
+    2,
+    "Charisma"
+   ],
+   [
+    "Find Steed",
+    2,
+    "Charisma"
+   ],
+   [
+    "Lesser Restoration",
+    2,
+    "Charisma"
+   ],
+   [
+    "Prayer of Healing",
+    2,
+    "Charisma"
+   ],
+   [
+    "Warding Bond",
+    2,
+    "Charisma"
+   ],
+   [
+    "Aura of Vitality",
+    3,
+    "Charisma"
+   ],
+   [
+    "Dispel Magic",
+    3,
+    "Charisma"
+   ],
+   [
+    "Mass Healing Word",
+    3,
+    "Charisma"
+   ],
+   [
+    "Revivify",
+    3,
+    "Charisma"
+   ],
+   [
+    "Daylight",
+    3,
+    "Charisma"
+   ],
+   [
+    "Aura of Life",
+    4,
+    "Charisma"
+   ],
+   [
+    "Aura of Purity",
+    4,
+    "Charisma"
+   ],
+   [
+    "Death Ward",
+    4,
+    "Charisma"
+   ],
+   [
+    "Banishment",
+    4,
+    "Charisma"
+   ],
+   [
+    "Circle of Power",
+    5,
+    "Charisma"
+   ],
+   [
+    "Greater Restoration",
+    5,
+    "Charisma"
+   ],
+   [
+    "Mass Cure Wounds",
+    5,
+    "Charisma"
+   ],
+   [
+    "Raise Dead",
+    5,
+    "Charisma"
+   ],
+   [
+    "Holy Weapon",
+    5,
+    "Charisma"
+   ]
+  ],
+  "subclass": "Oath of the Holy",
+  "temp_hp": 0,
+  "visibility_states": [],
+  "weapons": [
+   "Unarmed Strike  1d20+9  dmg 1d1 +3",
+   "Longsword  1d20+9  dmg 1d8 +3",
+   "Javelin  1d20+9  dmg 1d6 +3"
+  ]
+ },
  "Y2024PaladinVengeanceSeraphineWrathboundCharacterBuilder": {
   "Ability Scores": {
    "CHA": 16,
@@ -12929,6 +14153,223 @@
    "Scimitar  1d20+10  dmg 1d6 +4",
    "Shortsword  1d20+10  dmg 1d6 +4",
    "Longbow  1d20+12  dmg 1d8 +4"
+  ]
+ },
+ "Y2024RangerDemonHunterVaelinFelbrandCharacterBuilder": {
+  "Ability Scores": {
+   "CHA": 12,
+   "CON": 14,
+   "DEX": 20,
+   "INT": 8,
+   "STR": 10,
+   "WIS": 18
+  },
+  "Saving Throws": {
+   "CHA": 1,
+   "CON": 2,
+   "DEX": 11,
+   "INT": -1,
+   "STR": 6,
+   "WIS": 4
+  },
+  "ac": "17 (no Shield)",
+  "class_levels": {
+   "Ranger": 20
+  },
+  "conditions": [],
+  "create_name": "Vaelin Felbrand",
+  "damage_immunities": [],
+  "damage_resistances": [],
+  "death_saves_fail": 0,
+  "death_saves_success": 0,
+  "features": [
+   "Free Background Ability Bonus",
+   "Free Background Skill Proficiency",
+   "Alert",
+   "Spell Slots",
+   "Ranger Proficiencies",
+   "Class Skill Proficiencies",
+   "Spell Casting",
+   "Replacing Weapon Masteries",
+   "Favored Enemy",
+   "Deft Explorer",
+   "Deft Explorer Expertise",
+   "Dual Wielder",
+   "Extra Attack",
+   "Roving",
+   "Ability Score Improvement",
+   "Expertise",
+   "Tireless",
+   "Ability Score Improvement",
+   "Nature's Veil",
+   "Ability Score Improvement",
+   "Feral Senses",
+   "Epic Boon",
+   "Void Warrior",
+   "Demon Hunter Spells",
+   "Soul Fragments",
+   "Spectral Sight",
+   "Improved Spectral Sight",
+   "Fey Ancestry",
+   "Keen Senses",
+   "Trance",
+   "Darkvision"
+  ],
+  "hp": 164,
+  "invocations": [],
+  "max_hp": 164,
+  "name": "Vaelin Felbrand",
+  "pact_slots": {},
+  "proficiency_bonus": 6,
+  "size": "Medium",
+  "speed": 40,
+  "spell_slots": {
+   "1": 4,
+   "2": 3,
+   "3": 3,
+   "4": 3,
+   "5": 2
+  },
+  "spells_with_level": [
+   [
+    "Cure Wounds",
+    1,
+    "Wisdom"
+   ],
+   [
+    "Detect Magic",
+    1,
+    "Wisdom"
+   ],
+   [
+    "Ensnaring Strike",
+    1,
+    "Wisdom"
+   ],
+   [
+    "Hunter's Mark",
+    1,
+    "Wisdom"
+   ],
+   [
+    "Misty Step",
+    2,
+    "Wisdom"
+   ],
+   [
+    "Prestidigitation",
+    0,
+    "Wisdom"
+   ],
+   [
+    "Fog Cloud",
+    1,
+    "Wisdom"
+   ],
+   [
+    "Entangle",
+    1,
+    "Wisdom"
+   ],
+   [
+    "Feather Fall",
+    1,
+    "Wisdom"
+   ],
+   [
+    "Jump",
+    1,
+    "Wisdom"
+   ],
+   [
+    "Goodberry",
+    1,
+    "Wisdom"
+   ],
+   [
+    "Pass without Trace",
+    2,
+    "Wisdom"
+   ],
+   [
+    "Spike Growth",
+    2,
+    "Wisdom"
+   ],
+   [
+    "Blink",
+    3,
+    "Wisdom"
+   ],
+   [
+    "Conjure Animals",
+    3,
+    "Wisdom"
+   ],
+   [
+    "Lesser Restoration",
+    2,
+    "Wisdom"
+   ],
+   [
+    "Counterspell",
+    3,
+    "Wisdom"
+   ],
+   [
+    "Dispel Magic",
+    3,
+    "Wisdom"
+   ],
+   [
+    "Fire Shield",
+    4,
+    "Wisdom"
+   ],
+   [
+    "Freedom of Movement",
+    4,
+    "Wisdom"
+   ],
+   [
+    "Conjure Woodland Beings",
+    4,
+    "Wisdom"
+   ],
+   [
+    "Conjure Volley",
+    5,
+    "Wisdom"
+   ],
+   [
+    "Destructive Wave",
+    5,
+    "Wisdom"
+   ],
+   [
+    "Greater Restoration",
+    5,
+    "Wisdom"
+   ],
+   [
+    "Swift Quiver",
+    5,
+    "Wisdom"
+   ],
+   [
+    "Tree Stride",
+    5,
+    "Wisdom"
+   ]
+  ],
+  "subclass": "Demon Hunter",
+  "temp_hp": 0,
+  "visibility_states": [],
+  "weapons": [
+   "Unarmed Strike  1d20+6  dmg 1d1 +0",
+   "Scimitar  1d20+11  dmg 1d6 +5",
+   "Shortsword  1d20+11  dmg 1d6 +5",
+   "Longbow  1d20+11  dmg 1d8 +5"
   ]
  },
  "Y2024RangerFeyWandererAlderMistwalkerCharacterBuilder": {
@@ -13617,6 +15058,98 @@
   "weapons": [
    "Unarmed Strike  1d20+5  dmg 1d1 -1",
    "Shortsword  1d20+11  dmg 1d6 +5",
+   "Dagger  1d20+11  dmg 1d4 +5"
+  ]
+ },
+ "Y2024RogueSwashbucklerIsabeauQuickbladeCharacterBuilder": {
+  "Ability Scores": {
+   "CHA": 19,
+   "CON": 15,
+   "DEX": 20,
+   "INT": 10,
+   "STR": 8,
+   "WIS": 12
+  },
+  "Saving Throws": {
+   "CHA": 10,
+   "CON": 2,
+   "DEX": 11,
+   "INT": 6,
+   "STR": -1,
+   "WIS": 7
+  },
+  "ac": "17 (no Shield)",
+  "class_levels": {
+   "Rogue": 17
+  },
+  "conditions": [],
+  "create_name": "Isabeau Quickblade",
+  "damage_immunities": [],
+  "damage_resistances": [],
+  "death_saves_fail": 0,
+  "death_saves_success": 0,
+  "features": [
+   "Free Background Ability Bonus",
+   "Free Background Skill Proficiency",
+   "Alert",
+   "Rogue Proficiencies",
+   "Class Skill Proficiencies",
+   "Expertise",
+   "Sneak Attack",
+   "Thieves' Cant",
+   "Weapon Mastery",
+   "Cunning Action",
+   "Steady Aim",
+   "Dual Wielder",
+   "Uncanny Dodge",
+   "Expertise",
+   "Evasion",
+   "Reliable Talent",
+   "Ability Score Improvement",
+   "Ability Score Improvement",
+   "Ability Score Improvement",
+   "Slippery Mind",
+   "Ability Score Improvement",
+   "Fancy Footwork",
+   "Rakish Audacity",
+   "Master Duelist",
+   "Fey Ancestry",
+   "Keen Senses",
+   "Trance",
+   "Darkvision"
+  ],
+  "hp": 122,
+  "invocations": [],
+  "max_hp": 122,
+  "name": "Isabeau Quickblade",
+  "pact_slots": {},
+  "proficiency_bonus": 6,
+  "size": "Medium",
+  "speed": 35,
+  "spell_slots": {},
+  "spells_with_level": [
+   [
+    "Druidcraft",
+    0,
+    "Charisma"
+   ],
+   [
+    "Longstrider",
+    1,
+    "Charisma"
+   ],
+   [
+    "Pass without Trace",
+    2,
+    "Charisma"
+   ]
+  ],
+  "subclass": "Swashbuckler",
+  "temp_hp": 0,
+  "visibility_states": [],
+  "weapons": [
+   "Unarmed Strike  1d20+5  dmg 1d1 -1",
+   "Rapier  1d20+11  dmg 1d8 +5",
    "Dagger  1d20+11  dmg 1d4 +5"
   ]
  },

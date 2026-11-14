@@ -544,6 +544,49 @@ With no positions, every modifier with a distance in its 'when' is only a note f
 **History**
 - 2026-11-13 main-session: found
 
+### DI-086 · new-content-check marks Demon Hunter (Ranger) as implemented via RangerHunter.py
+- **Status:** open
+- **Area:** new-content-check
+- **Where:** `.claude/skills/new-content-check/check_new_content.py:303`
+
+subclass_code() matches when the file's significant words are a substring of the subclass name: 'hunter' (RangerHunter.py) is in 'demonhunter', so ranger:demon-hunter gets status have with code RangerHunter.py. Substring matching should compare whole words (or require equality after filler removal) so a shorter subclass name can't claim a longer one.
+
+**History**
+- 2026-11-14 main-session: found
+
+### DI-087 · Assassin 2024 re-grants base Cunning Strike at Rogue subclass levels 13 and 17
+- **Status:** open
+- **Area:** subclass-implementer
+- **Where:** `CharacterContent/Classes/SubClasses2024/RogueAssassin.py:44`, `CharacterContent/Classes/SubClasses2024/RogueAssassin.py:59`
+
+RogueAssassinLevel13 and RogueAssassinLevel17 each add RogueFeatures.CunningStrike() (extends SneakAttack) again, although the 2024 Assassin grants only Envenom Weapons (13) and Death Strike (17). The base class already grants Cunning Strike at Rogue 5, so a level-17 Assassin likely shows three Cunning Strike cards. Probably drop those two add_feature calls (check the Assassin snapshot diff), unless the duplicate is intentional.
+
+**History**
+- 2026-11-14 subclass-implementer: found
+
+### DI-088 · World of Warcraft spells (Prayer of Mending, Shadow Word: Pain, Psychic Horror, Void Eruption, ...) aren't in the spell data, so domain spell grants omit them
+- **Status:** open
+- **Area:** spell-scraper
+- **Where:** `CharacterContent/Classes/SubClasses2024/ClericDiscipline.py`, `CharacterContent/Classes/SubClasses2024/ClericShadow.py`
+
+The World of Warcraft source (dnd2024.wikidot.com) adds new spells that aren't scraped into spells_dnd2024.json / SpellLists. Discipline Domain lacks Prayer of Mending (Cleric 5); Shadow Domain lacks Shadow Word: Pain (3), Psychic Horror (7), Void Eruption (9). Their builders leave them out with a comment; the DomainSpells feature card still lists them. Fix: scrape the WoW spells, add SpellLists enum members, then add the data.add_spell(...) lines where the comments are. Other WoW subclasses (e.g. Holy Nova) may be affected too.
+
+**History**
+- 2026-11-14 subclass-implementer: found
+- 2026-11-14 subclass-implementer: Oath of the Ebon Blade (CharacterContent/Classes/SubClasses2024/PaladinEbonBlade.py) also lacks Rune Strike (Runic Smite's always-prepared spell, so RunicSmite has no granted_spells), Death Grip (Paladin 3) and Death and Decay (Paladin 5); its rune-column spells Vampiric Blood, Chains of Ice, Scourge Strike, Frostscythe, Leeching Strike, Remorseless Winter and Bonestorm are missing too. Comments mark where the grants go.
+- 2026-11-14 subclass-implementer: Ranger Demon Hunter (RangerDemonHunter.py) also omits 13: Throw Glaive (Ranger 3, also Illidari Knowledge's Warglaive Mastery), Sigil of Flame, Metamorphosis, Chaos Nova, Consume Soul, Soul Reap, Collapsing Star, Fel Rush, Eye Beam, Infernal Strike, Fiery Brand, Demon Spikes, Sigil of Chains
+
+### DI-089 · A subclass can't replace a base-class feature or the level-2 Fighting Style choice (Demon Hunter: Improved Spectral Sight vs Feral Senses, Void Warrior)
+- **Status:** open
+- **Area:** character-engine-dev
+- **Where:** `CharacterContent/Classes/SubClasses2024/RangerDemonHunter.py`, `CharacterContent/Classes/BaseClasses/RangerBase.py`
+
+Ranger Demon Hunter's Improved Spectral Sight (level 18) says 'This feature replaces the Ranger's Feral Senses feature', but RangerLevel18 always grants FeralSenses and Grants has no way to remove or suppress a base-class feature, so the sheet shows Blindsight 30 (Feral Senses) next to Truesight 30. Likewise the Demon Hunter's Void Warrior (two Warlock cantrips, Wisdom) is an alternative to the level-2 Fighting Style feat, but RangerLevel2.fighting_style is a required FightingStyle, so Void Warrior is only a description card (same for Paladin Blessed Warrior / Ranger Druidic Warrior). Fix: a declared 'replaces=' on subclass grants (or a suppression list the base level checks), and an optional cantrip-pair alternative for the level-2 Fighting Style.
+
+**History**
+- 2026-11-14 subclass-implementer: found
+- 2026-11-14 subclass-implementer: Oath of the Ebon Blade (CharacterContent/Classes/SubClasses2024/PaladinEbonBlade.py) hits this four times: Death Coil replaces Lay On Hands, Runic Smite replaces Paladin's Smite, Runic Strikes replaces Radiant Strikes, Improved Death Coil replaces Restoring Touch. The base features stay on the sheet beside them; each replacing card says what it replaces. Holy's Infusion of Light/Beacon of Light still reference Lay On Hands, which is fine.
+
 ## Fixed
 
 ### DI-001 · Temporary Hit Points stack instead of keeping one amount
