@@ -191,7 +191,9 @@ class TestSpellListDataIntegrity:
                 record = data.get(e.value)
                 if record is None or record.get("classes") is None:
                     continue
-                if cls_name not in record["classes"]:
+                # "Wizard (Dunamancy)" is a Wizard spell with a note (DI-063).
+                classes = [c.split(" (")[0] for c in record["classes"]]
+                if cls_name not in classes:
                     mismatches.append((name, e.value, record["classes"]))
         assert mismatches == []
 

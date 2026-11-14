@@ -749,6 +749,30 @@ class RealityBreak(ClassSpell):
     converted_from = RecordStamp("spells_dnd5e.json", "bf4e7c9cefd9654e")
 
 
+class TreeOfLife(ClassSpell):
+    rules = SpellRules(
+        name="Tree of Life",
+        level=8,
+        school=School.TRANSMUTATION,
+        classes=(CharacterClass.DRUID,),
+        casting_time=CastingTime(CastingTimeType.BONUS_ACTION),
+        range=Range(RangeType.SELF),
+        components=Components(verbal=True, somatic=True),
+        duration=Duration(DurationType.MINUTE, 1),
+        source="World of Warcraft",
+        description=(
+            "You shape-shift into a Tree of Life form that resembles a treant. In this form, you gain the following benefits.\n"
+            "Tree Form. You become Large. Your Speed becomes 10 feet and can’t be reduced, and Difficult Terrain doesn’t cost you extra movement.\n"
+            "Bark Skin. You gain a +2 bonus to Armor Class and 10 Temporary Hit Points.\n"
+            "Condition Immunity. You gain Immunity to the Paralyzed and Restrained conditions. You can’t be shape-shifted against your will.\n"
+            "Source of Life. When a spell you cast with a spell slot restores Hit Points to a creature, that creature regains an additional 1d8 Hit Points on the turn you cast the spell.\n"
+            "Spells Enhanced. The spell save DC of your Druid spells increases by 1, and you have Advantage on the attack rolls of Druid spells you cast."
+        ),
+        usage_tags=("buff", "heal"),
+    )
+    converted_from = RecordStamp("spells_dnd2024.json", "ae4a3e7b39173b99")
+
+
 SPELLS = [
     AbiDalzimsHorridWilting,
     AnimalShapes,
@@ -779,5 +803,6 @@ SPELLS = [
     RealityBreak,
     Sunburst,
     Telepathy,
+    TreeOfLife,
     Tsunami,
 ]

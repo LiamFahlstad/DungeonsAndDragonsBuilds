@@ -5217,6 +5217,295 @@ class PulseWave(ClassSpell):
         ]
 
 
+class BlisteringScales(ClassSpell):
+    rules = SpellRules(
+        name="Blistering Scales",
+        level=3,
+        school=School.TRANSMUTATION,
+        classes=(CharacterClass.SORCERER,),
+        casting_time=CastingTime(CastingTimeType.BONUS_ACTION),
+        range=Range(RangeType.FOOT, 30),
+        components=Components(
+            verbal=True, somatic=True, material="a scale of a Dragon"
+        ),
+        duration=Duration(DurationType.MINUTE, 1, concentration=True),
+        source="World of Warcraft",
+        description=(
+            "Choose a willing creature you can see within range. Five explosive scales form on the target, granting it a +1 bonus to AC for the duration. If a creature hits the target with a melee attack roll before the spell ends, a scale explodes, and the attacking creature takes 1d8 Fire damage. The spell ends early if the target has no explosive scales.\n"
+            "Using a Higher-Level Spell Slot. The number of explosive scales that form on the target increases by one for each spell slot level above 3."
+        ),
+        usage_tags=("buff", "damage"),
+    )
+    converted_from = RecordStamp("spells_dnd2024.json", "8b9e03826b0f85cb")
+
+
+class DemonSpikes(ClassSpell):
+    rules = SpellRules(
+        name="Demon Spikes",
+        level=3,
+        school=School.TRANSMUTATION,
+        classes=(),
+        casting_time=CastingTime(CastingTimeType.BONUS_ACTION),
+        range=Range(RangeType.SELF),
+        components=Components(verbal=True),
+        duration=Duration(DurationType.MINUTE, 1),
+        source="World of Warcraft",
+        description="You surge with fel power and sprout hard, jagged spikes. You gain a +2 bonus to AC for the duration, and when a creature within 5 feet of you hits you with a melee attack roll, it takes 10 Piercing damage.",
+        usage_tags=("buff", "damage"),
+    )
+    converted_from = RecordStamp("spells_dnd2024.json", "6766d8203243447a")
+
+
+class EmeraldBlossom(ClassSpell):
+    rules = SpellRules(
+        name="Emerald Blossom",
+        level=3,
+        school=School.CONJURATION,
+        classes=(CharacterClass.SORCERER,),
+        casting_time=CastingTime(CastingTimeType.BONUS_ACTION),
+        range=Range(RangeType.FOOT, 60),
+        components=Components(verbal=True, somatic=True),
+        duration=Duration(DurationType.MINUTE, 1, concentration=True),
+        source="World of Warcraft",
+        description=(
+            "You conjure a spectral bulb that sprouts from the ground in an unoccupied space that you can see within range. The bulb lasts for the duration.\n"
+            "The bulb emits healing magic in a 10-foot Emanation at the end of each of your turns. Allies of your choice in the Emanation regain 5 Hit Points. The bulb vanishes when it restores a total of 20 Hit Points.\n"
+            "Using a Higher-Level Spell Slot. The total Hit Points the bulb can restore increases by 5 for each spell slot level above 3."
+        ),
+        usage_tags=("heal",),
+    )
+    converted_from = RecordStamp("spells_dnd2024.json", "7f19f4958e02b930")
+
+
+class Flurry(ClassSpell):
+    rules = SpellRules(
+        name="Flurry",
+        level=3,
+        school=School.EVOCATION,
+        classes=(CharacterClass.WIZARD,),
+        casting_time=CastingTime(CastingTimeType.ACTION),
+        range=Range(RangeType.FOOT, 120),
+        components=Components(verbal=True, somatic=True),
+        duration=Duration(DurationType.INSTANTANEOUS),
+        source="World of Warcraft",
+        description=(
+            "You hurl three shards of ice at one target within range or at several. Make a ranged spell attack for each shard. On a hit, the target takes 3d6 Cold damage. On a Critical Hit, the target has the Restrained condition until the end of your next turn.\n"
+            "Using a Higher-Level Spell Slot. You create one additional shard of ice for each spell slot level above 3."
+        ),
+        usage_tags=("control", "damage"),
+    )
+    converted_from = RecordStamp("spells_dnd2024.json", "6ebfbcb5f5339585")
+
+
+class GuidedPrayer(ClassSpell):
+    rules = SpellRules(
+        name="Guided Prayer",
+        level=3,
+        school=School.EVOCATION,
+        classes=(CharacterClass.PALADIN,),
+        casting_time=CastingTime(
+            CastingTimeType.REACTION,
+            trigger="which you take when you become Bloodied or take damage while you are Bloodied",
+        ),
+        range=Range(RangeType.SELF),
+        components=Components(verbal=True),
+        duration=Duration(DurationType.INSTANTANEOUS),
+        source="World of Warcraft",
+        description="You regain Hit Points equal to 8d4 plus your spellcasting ability modifier. You have Advantage on the next attack roll you make before the end of your next turn.",
+        usage_tags=("buff", "heal"),
+    )
+    converted_from = RecordStamp("spells_dnd2024.json", "b5fae8914b0a3095")
+
+
+class HandOfGuldan(ClassSpell):
+    rules = SpellRules(
+        name="Hand of Gul'dan",
+        level=3,
+        school=School.CONJURATION,
+        classes=(CharacterClass.WARLOCK,),
+        casting_time=CastingTime(CastingTimeType.ACTION),
+        range=Range(RangeType.FOOT, 120),
+        components=Components(verbal=True, somatic=True),
+        duration=Duration(DurationType.MINUTE, 1, concentration=True),
+        source="World of Warcraft",
+        description=(
+            "A demonic meteor hurtles from you to a point you choose within range and then erupts. Each creature in a 20-foot-radius Sphere centered on that point makes a Dexterity saving throw, taking 2d8 Fire damage plus 2d8 Necrotic damage on a failed save or half as much damage on a successful one.\n"
+            "Demonic spirits resembling fel imps flit about the Sphere for the duration. A creature that enters the Sphere or ends its turn there makes a Dexterity saving throw, taking 1d8 Fire damage plus 1d8 Necrotic damage on a failed save or half as much damage on a successful one. A creature can be affected by this spell only once per turn."
+        ),
+        usage_tags=("damage",),
+    )
+    converted_from = RecordStamp("spells_dnd2024.json", "9ea60ff2f5db043f")
+
+
+class LeechingStrike(ClassSpell):
+    rules = SpellRules(
+        name="Leeching Strike",
+        level=3,
+        school=School.NECROMANCY,
+        classes=(),
+        casting_time=CastingTime(
+            CastingTimeType.BONUS_ACTION,
+            trigger="which you take immediately after hitting a target with a Melee weapon or an Unarmed Strike",
+        ),
+        range=Range(RangeType.SELF),
+        components=Components(verbal=True),
+        duration=Duration(DurationType.INSTANTANEOUS),
+        source="World of Warcraft",
+        description=(
+            "The target hit by the strike takes an extra 3d8 Necrotic damage from the attack, and you regain 3d4 Hit Points.\n"
+            "Using a Higher-Level Spell Slot. The damage increases by 1d8, and the Hit Points you regain increase by 1d4, for each spell slot level above 3."
+        ),
+        usage_tags=("damage", "heal"),
+    )
+    converted_from = RecordStamp("spells_dnd2024.json", "1ddaa8765dae83ee")
+
+
+class Metamorphosis(ClassSpell):
+    rules = SpellRules(
+        name="Metamorphosis",
+        level=3,
+        school=School.TRANSMUTATION,
+        classes=(),
+        casting_time=CastingTime(CastingTimeType.BONUS_ACTION),
+        range=Range(RangeType.SELF),
+        components=Components(
+            verbal=True,
+            somatic=True,
+            material="one soul fragment, which the spell consumes",
+        ),
+        duration=Duration(DurationType.MINUTE, 1),
+        source="World of Warcraft",
+        description=(
+            "Uttering an incantation, you draw on fel or Void magic to transform yourself, taking on demonic features. You gain one of the following benefits of your choice until the spell ends:\n"
+            "Devourer. When you roll damage for a spell, weapon, or feature that deals Force damage, you can treat any 1 or 2 on a damage die as a 3.\n"
+            "Havoc. Whenever you hit a creature with an attack roll using a Melee weapon, the target takes an extra 1d6 Fire damage.\n"
+            "Vengeance. You have a +2 bonus to AC, and your Hit Point maximum and your current Hit Points increase by 5 for the spell’s duration."
+        ),
+        usage_tags=("buff", "damage", "heal"),
+    )
+    converted_from = RecordStamp("spells_dnd2024.json", "49fc8a3067205528")
+
+
+class PrayerOfMending(ClassSpell):
+    rules = SpellRules(
+        name="Prayer of Mending",
+        level=3,
+        school=School.ABJURATION,
+        classes=(CharacterClass.CLERIC,),
+        casting_time=CastingTime(CastingTimeType.ACTION),
+        range=Range(RangeType.FOOT, 60),
+        components=Components(verbal=True, material="a pinch of powdered silver"),
+        duration=Duration(DurationType.MINUTE, 1),
+        source="World of Warcraft",
+        description=(
+            "You place a holy ward on one willing creature in range. The next time that creature takes damage, the ward activates, and the creature regains Hit Points equal to 1d8 plus your spellcasting ability modifier. The ward then jumps to another ally of your choice within 30 feet of the warded creature, with the same effect. If no ally is in range, the spell ends, and it ends after the ward has healed five times.\n"
+            "Using a Higher-Level Spell Slot. The spell can heal one additional time for each spell slot level above 3."
+        ),
+        usage_tags=("heal",),
+    )
+    converted_from = RecordStamp("spells_dnd2024.json", "dafb8bf0c91fa16d")
+
+
+class RainOfFire(ClassSpell):
+    rules = SpellRules(
+        name="Rain of Fire",
+        level=3,
+        school=School.EVOCATION,
+        classes=(CharacterClass.WARLOCK,),
+        casting_time=CastingTime(CastingTimeType.ACTION),
+        range=Range(RangeType.FOOT, 120),
+        components=Components(verbal=True, somatic=True),
+        duration=Duration(DurationType.MINUTE, 1, concentration=True),
+        source="World of Warcraft",
+        description=(
+            "Hellfire rains down in a 20-foot-radius, 40-foot-high Cylinder centered on a point within range. Until the spell ends, you can take a Magic action on later turns to move the Cylinder up to 60 feet.\n"
+            "When the Cylinder appears, each creature in it makes a Dexterity saving throw, taking 3d8 Fire damage on a failed save or half as much damage on a successful one. A creature also makes this save when the spell’s area moves into its space and when it enters the spell’s area or ends its turn there. A creature makes this save only once per turn.\n"
+            "You have Advantage on spell attack rolls against a creature in the Cylinder, and you deal an extra 1d6 Necrotic damage to the target if you hit.\n"
+            "Using a Higher-Level Spell Slot. The Fire damage increases by 1d8 for each spell slot level above 3."
+        ),
+        usage_tags=("buff", "damage"),
+    )
+    converted_from = RecordStamp("spells_dnd2024.json", "6f8797a4bb42ebdd")
+
+
+class Regrowth(ClassSpell):
+    rules = SpellRules(
+        name="Regrowth",
+        level=3,
+        school=School.ABJURATION,
+        classes=(CharacterClass.DRUID,),
+        casting_time=CastingTime(CastingTimeType.ACTION),
+        range=Range(RangeType.FOOT, 120),
+        components=Components(verbal=True),
+        duration=Duration(DurationType.MINUTE, 1, concentration=True),
+        source="World of Warcraft",
+        description="One creature you can see within range regains 3d8 Hit Points. For the duration, the target regains 1d8 Hit Points at the start of each of your turns. The spell ends early once it restores at least 24 Hit Points.",
+        usage_tags=("heal",),
+    )
+    converted_from = RecordStamp("spells_dnd2024.json", "dd90726a86b69316")
+
+
+class RemorselessWinter(ClassSpell):
+    rules = SpellRules(
+        name="Remorseless Winter",
+        level=3,
+        school=School.EVOCATION,
+        classes=(),
+        casting_time=CastingTime(CastingTimeType.ACTION),
+        range=Range(RangeType.SELF),
+        components=Components(verbal=True),
+        duration=Duration(DurationType.INSTANTANEOUS),
+        source="World of Warcraft",
+        description=(
+            "You drain the warmth from nearby creatures. Each creature of your choice in a 30-foot Emanation originating from you makes a Constitution saving throw, taking 6d6 Cold damage on a failed save or half as much damage on a successful one. Whether or not a creature succeeds on its saving throw, its Speed is reduced to 10 feet until the end of its next turn as clinging frost hinders its movement.\n"
+            "Using a Higher-Level Spell Slot. The damage increases by 1d6 for each spell slot level above 3."
+        ),
+        usage_tags=("control", "damage"),
+    )
+    converted_from = RecordStamp("spells_dnd2024.json", "c9b942788bf593a7")
+
+
+class SerpentSting(ClassSpell):
+    rules = SpellRules(
+        name="Serpent Sting",
+        level=3,
+        school=School.NECROMANCY,
+        classes=(CharacterClass.RANGER,),
+        casting_time=CastingTime(
+            CastingTimeType.BONUS_ACTION,
+            trigger="which you take immediately after hitting a creature with a weapon",
+        ),
+        range=Range(RangeType.SELF),
+        components=Components(verbal=True),
+        duration=Duration(DurationType.MINUTE, 1),
+        source="World of Warcraft",
+        description="The target takes an extra 4d6 Poison damage from the attack, and the target has the Poisoned condition until the spell ends. At the end of each of its turns, the Poisoned target makes a Constitution saving throw. On a failed save, the creature takes 2d6 Poison damage. On a successful save, the spell ends.",
+        usage_tags=("control", "damage"),
+    )
+    converted_from = RecordStamp("spells_dnd2024.json", "41d2f2d3ace868c1")
+
+
+class SoulReap(ClassSpell):
+    rules = SpellRules(
+        name="Soul Reap",
+        level=3,
+        school=School.NECROMANCY,
+        classes=(),
+        casting_time=CastingTime(CastingTimeType.ACTION),
+        range=Range(RangeType.FOOT, 60),
+        components=Components(verbal=True, somatic=True),
+        duration=Duration(DurationType.INSTANTANEOUS),
+        source="World of Warcraft",
+        description=(
+            "You cut a hole in the fabric of reality, sending a bolt of cosmic matter toward a creature in range. Make a ranged spell attack against the target, which gains no benefit from Half Cover or Three-Quarters Cover. On a hit, you deal 6d6 Force damage.\n"
+            "If you roll a 6 on a d6 for this spell, you can roll another d6 and add it to the damage. When you cast this spell, the maximum number of these d6s you can add to the spell’s damage equals your spellcasting ability modifier.\n"
+            "Using a Higher-Level Spell Slot. The damage increases by 1d6 for each spell slot level above 3."
+        ),
+        usage_tags=("damage",),
+    )
+    converted_from = RecordStamp("spells_dnd2024.json", "8531d568e6c83e04")
+
+
 SPELLS = [
     AnimateDead,
     Antagonize,
@@ -5227,6 +5516,7 @@ SPELLS = [
     BestowCurse,
     BlindingSmite,
     Blink,
+    BlisteringScales,
     CacophonicShield,
     CallLightning,
     Catnap,
@@ -5238,8 +5528,10 @@ SPELLS = [
     CreateFoodAndWater,
     CrusadersMantle,
     Daylight,
+    DemonSpikes,
     DispelMagic,
     ElementalWeapon,
+    EmeraldBlossom,
     EnemiesAbound,
     EruptingEarth,
     FastFriends,
@@ -5247,10 +5539,13 @@ SPELLS = [
     FeignDeath,
     Fireball,
     FlameArrows,
+    Flurry,
     Fly,
     GaldersTower,
     GaseousForm,
     GlyphOfWarding,
+    GuidedPrayer,
+    HandOfGuldan,
     Haste,
     HungerOfHadar,
     HypnoticPattern,
@@ -5258,6 +5553,7 @@ SPELLS = [
     InflictDoubt,
     IntellectFortress,
     LaeralsSilverLance,
+    LeechingStrike,
     LeomundsTinyHut,
     LifeTransference,
     LightningArrow,
@@ -5267,17 +5563,24 @@ SPELLS = [
     MassHealingWord,
     MeldIntoStone,
     MelfsMinuteMeteors,
+    Metamorphosis,
     MotivationalSpeech,
     Nondetection,
     PhantomSteed,
     PlantGrowth,
+    PrayerOfMending,
     ProtectionFromEnergy,
     PulseWave,
+    RainOfFire,
+    Regrowth,
+    RemorselessWinter,
     RemoveCurse,
     Revivify,
     Sending,
+    SerpentSting,
     SleetStorm,
     Slow,
+    SoulReap,
     SpeakWithDead,
     SpeakWithPlants,
     SpiritGuardians,

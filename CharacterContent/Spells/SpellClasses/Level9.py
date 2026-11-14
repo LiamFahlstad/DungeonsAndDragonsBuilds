@@ -668,7 +668,30 @@ class TimeRavage(ClassSpell):
     converted_from = RecordStamp("spells_dnd5e.json", "70ccd38babd3f058")
 
 
+class Apotheosis(ClassSpell):
+    rules = SpellRules(
+        name="Apotheosis",
+        level=9,
+        school=School.TRANSMUTATION,
+        classes=(CharacterClass.CLERIC,),
+        casting_time=CastingTime(CastingTimeType.BONUS_ACTION),
+        range=Range(RangeType.SELF),
+        components=Components(verbal=True),
+        duration=Duration(DurationType.MINUTE, 1),
+        source="World of Warcraft",
+        description=(
+            "You transform into a spectral, angelic form that grants you the following benefits.\n"
+            "Angelic Wings. You have a Fly Speed of 90 feet.\n"
+            "Spectral Form. You have Resistance to Bludgeoning, Piercing, Radiant, and Slashing damage.\n"
+            "Holy Empowerment. Whenever you cast a spell using a spell slot that restores Hit Points to one or more creatures or deals Radiant damage, determine the spell’s effects as if you had used a spell slot 2 levels higher than the spell slot you used to cast it (maximum of level 9)."
+        ),
+        usage_tags=("buff",),
+    )
+    converted_from = RecordStamp("spells_dnd2024.json", "304c125da325d86f")
+
+
 SPELLS = [
+    Apotheosis,
     AstralProjection,
     BladeOfDisaster,
     Detonate,

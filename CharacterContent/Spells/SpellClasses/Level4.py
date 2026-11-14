@@ -4168,6 +4168,204 @@ class GateSeal(ClassSpell):
         ]
 
 
+class BreathOfEons(ClassSpell):
+    rules = SpellRules(
+        name="Breath of Eons",
+        level=4,
+        school=School.ABJURATION,
+        classes=(CharacterClass.SORCERER,),
+        casting_time=CastingTime(CastingTimeType.ACTION),
+        range=Range(RangeType.SELF),
+        components=Components(verbal=True, somatic=True),
+        duration=Duration(DurationType.MINUTE, 1, concentration=True),
+        source="World of Warcraft",
+        description=(
+            "You draw on the magic of the bronze dragonflight. For the duration, you gain the following benefits.\n"
+            "Temporal Wounds. When you move within 5 feet of a creature, you can curse it until the start of your next turn. While a creature is cursed, the next time it takes damage, it takes an extra 1d10 Force damage, and the curse ends. A creature can be cursed this way only once per turn.\n"
+            "Wings. You sprout spectral wings from your back if you don’t already have wings. You have a Fly Speed of 60 feet and can hover. In addition, your movement doesn’t provoke Opportunity Attacks."
+        ),
+        usage_tags=("buff", "damage"),
+    )
+    converted_from = RecordStamp("spells_dnd2024.json", "8cebb52c5b13836e")
+
+
+class ChaosNova(ClassSpell):
+    rules = SpellRules(
+        name="Chaos Nova",
+        level=4,
+        school=School.EVOCATION,
+        classes=(),
+        casting_time=CastingTime(CastingTimeType.ACTION),
+        range=Range(RangeType.SELF),
+        components=Components(verbal=True),
+        duration=Duration(DurationType.INSTANTANEOUS),
+        source="World of Warcraft",
+        description="Chaos energy bursts out in a 20-foot Emanation originating from you. Each creature of your choice in the Emanation takes 2d6 Force damage and must succeed on a Wisdom saving throw or have the Stunned condition until the end of your next turn.",
+        usage_tags=("control", "damage"),
+    )
+    converted_from = RecordStamp("spells_dnd2024.json", "be5aea51bd1805c9")
+
+
+class CollapsingStar(ClassSpell):
+    rules = SpellRules(
+        name="Collapsing Star",
+        level=4,
+        school=School.EVOCATION,
+        classes=(),
+        casting_time=CastingTime(CastingTimeType.ACTION),
+        range=Range(RangeType.FOOT, 60),
+        components=Components(verbal=True),
+        duration=Duration(DurationType.INSTANTANEOUS),
+        source="World of Warcraft",
+        description="You channel Void energy into a cataclysmic blast that fills a 20-foot-radius Sphere centered on a point you can see within range. Each creature of your choice within the Sphere makes a Constitution saving throw, taking 4d12 Force damage on a failed save or half as much damage on a successful one.",
+        usage_tags=("damage",),
+    )
+    converted_from = RecordStamp("spells_dnd2024.json", "78ac6457441ee672")
+
+
+class DivineShield(ClassSpell):
+    rules = SpellRules(
+        name="Divine Shield",
+        level=4,
+        school=School.ABJURATION,
+        classes=(CharacterClass.PALADIN,),
+        casting_time=CastingTime(
+            CastingTimeType.REACTION, trigger="which you take when you take damage"
+        ),
+        range=Range(RangeType.SELF),
+        components=Components(verbal=True),
+        duration=Duration(DurationType.ROUND, 1),
+        source="World of Warcraft",
+        description="You have Immunity to all damage until the start of your next turn, including the triggering damage. For the duration, your Speed can’t be reduced, any current reductions to your Speed are suspended, and no effect can move you against your will.",
+        usage_tags=("buff",),
+    )
+    converted_from = RecordStamp("spells_dnd2024.json", "7249be7c818d36b1")
+
+
+class Emberstorm(ClassSpell):
+    rules = SpellRules(
+        name="Emberstorm",
+        level=4,
+        school=School.EVOCATION,
+        classes=(CharacterClass.SORCERER,),
+        casting_time=CastingTime(CastingTimeType.ACTION),
+        range=Range(RangeType.FOOT, 60),
+        components=Components(verbal=True, somatic=True),
+        duration=Duration(DurationType.INSTANTANEOUS),
+        source="World of Warcraft",
+        description=(
+            "White-hot embers fill a 20-foot-radius Sphere centered on a point you choose within range. Each creature in the Sphere makes a Constitution saving throw, taking 6d8 Fire damage on a failed save or half as much damage on a successful one.\n"
+            "Creatures and flammable objects in the Sphere that aren’t being worn or carried start burning, taking 1d8 Fire damage at the start of each of their turns instead of the normal burning damage.\n"
+            "Using a Higher-Level Spell Slot. The damage increases by 1d8 for each spell slot level above 4."
+        ),
+        usage_tags=("damage",),
+    )
+    converted_from = RecordStamp("spells_dnd2024.json", "fc61dc1d554aed22")
+
+
+class HolyNova(ClassSpell):
+    rules = SpellRules(
+        name="Holy Nova",
+        level=4,
+        school=School.EVOCATION,
+        classes=(CharacterClass.CLERIC,),
+        casting_time=CastingTime(CastingTimeType.ACTION),
+        range=Range(RangeType.SELF),
+        components=Components(verbal=True),
+        duration=Duration(DurationType.INSTANTANEOUS),
+        source="World of Warcraft",
+        description=(
+            "An explosion of holy light surrounds you in a 30-foot Emanation, harming your enemies and healing your allies. Each creature of your choice in the Emanation makes a Constitution saving throw, taking 5d6 Radiant damage on a failed save or half as much damage on a successful one. Each other creature in the Emanation regains 3d6 Hit Points.\n"
+            "Using a Higher-Level Spell Slot. The damage and healing each increase by 1d6 for each spell slot level above 4."
+        ),
+        usage_tags=("damage", "heal"),
+    )
+    converted_from = RecordStamp("spells_dnd2024.json", "fe9f042e9ad25f21")
+
+
+class PsychicHorror(ClassSpell):
+    rules = SpellRules(
+        name="Psychic Horror",
+        level=4,
+        school=School.ENCHANTMENT,
+        classes=(CharacterClass.CLERIC,),
+        casting_time=CastingTime(CastingTimeType.ACTION),
+        range=Range(RangeType.FOOT, 30),
+        components=Components(verbal=True, material=""),
+        duration=Duration(DurationType.INSTANTANEOUS),
+        source="World of Warcraft",
+        description=(
+            "A creature within range is overwhelmed with mental visions of the Void and makes a Wisdom saving throw. On a failed save, the target takes 2d10 Psychic damage and has the Frightened condition for 1 minute. A Frightened creature also has the Stunned condition until the end of your next turn. At the end of each of its turns, the target repeats the save, ending the effect on itself on a success. On a successful save, the creature takes half as much damage only.\n"
+            "Using a Higher-Level Spell Slot. The damage increases by 1d10 for each spell slot level above 4."
+        ),
+        usage_tags=("control", "damage"),
+    )
+    converted_from = RecordStamp("spells_dnd2024.json", "1c3b615aaa8da42f")
+
+
+class Starfall(ClassSpell):
+    rules = SpellRules(
+        name="Starfall",
+        level=4,
+        school=School.EVOCATION,
+        classes=(CharacterClass.DRUID,),
+        casting_time=CastingTime(CastingTimeType.ACTION),
+        range=Range(RangeType.FOOT, 120),
+        components=Components(
+            verbal=True, somatic=True, material="a pinch of stardust"
+        ),
+        duration=Duration(DurationType.ROUND, 1),
+        source="World of Warcraft",
+        description=(
+            "You call down falling stars on creatures in a 30-foot-radius, 40-foot-high Cylinder within range. Each creature in the Cylinder makes a Dexterity saving throw, taking 7d8 Radiant damage on a failed save or half as much damage on a successful one.\n"
+            "Until the start of your next turn, a creature that enters the Cylinder for the first time on a turn or ends its turn there takes Radiant damage equal to your Druid level. A creature takes this damage only once per turn."
+        ),
+        usage_tags=("damage",),
+    )
+    converted_from = RecordStamp("spells_dnd2024.json", "ecd4c76f1e80a352")
+
+
+class TimeDilation(ClassSpell):
+    rules = SpellRules(
+        name="Time Dilation",
+        level=4,
+        school=School.ABJURATION,
+        classes=(CharacterClass.SORCERER,),
+        casting_time=CastingTime(
+            CastingTimeType.REACTION,
+            trigger="which you take in response to you or a creature you can see within 60 feet of you taking damage",
+        ),
+        range=Range(RangeType.FOOT, 60),
+        components=Components(verbal=True, somatic=True),
+        duration=Duration(DurationType.INSTANTANEOUS),
+        source="World of Warcraft",
+        description="The target reduces the damage taken by 4d8. At the end of each of the target’s turns, the target loses 1d8 Hit Points until it has lost a total of 4d8 Hit Points (roll these 4d8 separately from the damage reduction).",
+        usage_tags=("buff",),
+    )
+    converted_from = RecordStamp("spells_dnd2024.json", "db95a8f58e461336")
+
+
+class Upheaval(ClassSpell):
+    rules = SpellRules(
+        name="Upheaval",
+        level=4,
+        school=School.EVOCATION,
+        classes=(CharacterClass.SORCERER,),
+        casting_time=CastingTime(CastingTimeType.ACTION),
+        range=Range(RangeType.FOOT, 90),
+        components=Components(verbal=True, somatic=True),
+        duration=Duration(DurationType.INSTANTANEOUS),
+        source="World of Warcraft",
+        description=(
+            "Fiery stones erupt, filling a 20-foot-radius, 10-foot-tall Cylinder originating from a point on the ground you can see within range. Each creature in the Cylinder makes a Dexterity saving throw. On a failed save, a creature takes 1d12 Bludgeoning damage plus 3d8 Fire damage and is pushed vertically to the top of the cylinder, at which point the creature falls. On a successful save, a creature takes half as much damage only.\n"
+            "Smoldering stones turn the ground in the Cylinder into Difficult Terrain until the end of your next turn.\n"
+            "Using a Higher-Level Spell Slot. The Bludgeoning damage increases by 1d12 for each spell slot level above 4."
+        ),
+        usage_tags=("control", "damage"),
+    )
+    converted_from = RecordStamp("spells_dnd2024.json", "86e32b138925318d")
+
+
 SPELLS = [
     ArcaneEye,
     AuraOfLife,
@@ -4175,7 +4373,10 @@ SPELLS = [
     Backlash,
     Banishment,
     Blight,
+    BreathOfEons,
+    ChaosNova,
     CharmMonster,
+    CollapsingStar,
     Compulsion,
     Confusion,
     ConjureMinorElementals,
@@ -4185,9 +4386,11 @@ SPELLS = [
     DimensionDoor,
     DistortedDistance,
     Divination,
+    DivineShield,
     DominateBeast,
     Doomtide,
     ElementalBane,
+    Emberstorm,
     EvardsBlackTentacles,
     Fabricate,
     FesteringBlast,
@@ -4204,6 +4407,7 @@ SPELLS = [
     GuardianOfFaith,
     GuardianOfNature,
     HallucinatoryTerrain,
+    HolyNova,
     IceStorm,
     LeomundsSecretChest,
     LocateCreature,
@@ -4212,12 +4416,14 @@ SPELLS = [
     OtilukesResilientSphere,
     PhantasmalKiller,
     Polymorph,
+    PsychicHorror,
     RaulothimsPsychicLance,
     ShadowOfMoil,
     SickeningRadiance,
     SpellfireStorm,
     SpiritOfDeath,
     StaggeringSmite,
+    Starfall,
     SticksToSnakes,
     StoneShape,
     Stoneskin,
@@ -4226,6 +4432,8 @@ SPELLS = [
     SummonConstruct,
     SummonElemental,
     SummonGreaterDemon,
+    TimeDilation,
+    Upheaval,
     VitriolicSphere,
     WallOfFire,
     WaterySphere,

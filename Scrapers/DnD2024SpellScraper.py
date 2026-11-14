@@ -170,16 +170,36 @@ class DnD2024SpellParser:
                 return text.split(" ")[0]
             return text.split(" ")[2]
 
-        def get_base_classes():
+        def get_lists():
             local_text = text[:-1]  # Remove trailing parenthesis
             local_text = local_text.split("(")[-1]
             return [c.strip() for c in local_text.split(",")]
 
+        # The parenthetical lists more than classes on some pages (World of
+        # Warcraft): "Paladin [Death Knight]" is on one subclass's list only,
+        # and a species ("Nightborne Elf", a /species: link) can be listed
+        # too. Neither is a class spell list, so both are left out: a
+        # subclass-only spell mustn't land on the whole class's list. The
+        # subclass or species grants the spell itself. Anything else is
+        # kept, so an unknown class name still fails loudly downstream.
+        species = {
+            a.get_text(strip=True)
+            for a in self.col1.find_all("a", href=re.compile(r"^/species:"))
+        }
+        classes = [
+            entry
+            for entry in get_lists()
+            if not self._SUBCLASS_ENTRY.match(entry) and entry not in species
+        ]
+
         return {
             "level": get_level(),
             "school": get_school(),
-            "classes": get_base_classes(),
+            "classes": classes,
         }
+
+    # "Paladin [Death Knight]": a class and, in brackets, the subclass.
+    _SUBCLASS_ENTRY = re.compile(r"^\w+\s*\[[^\]]+\]$")
 
     def get_casting_time(self):
         label = self.col1.find("strong", string="Casting Time:")

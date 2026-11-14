@@ -24,14 +24,10 @@ from CharacterContent.Spells.SpellFactory.SpellFields import (
 )
 from Core.Definitions import CharacterClass, Condition, DamageType
 from Model.Content.CombatEffect import CombatCondition, CombatEffect
-from Model.Content.CombatModifiers import (
-    ConditionImmunity,
-    HitPointMaximum,
-    Resistance,
-)
+from Model.Content.CombatModifiers import ConditionImmunity, HitPointMaximum, Resistance
 from Model.Content.Feature import FeatureTarget
-from Model.View import CharacterView
 from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table
+from Model.View import CharacterView
 
 
 class ArcaneGate(ClassSpell):
@@ -4150,12 +4146,71 @@ class GravityFissure(ClassSpell):
         ]
 
 
+class AzureSweep(ClassSpell):
+    rules = SpellRules(
+        name="Azure Sweep",
+        level=6,
+        school=School.EVOCATION,
+        classes=(CharacterClass.SORCERER,),
+        casting_time=CastingTime(CastingTimeType.ACTION),
+        range=Range(RangeType.SELF),
+        components=Components(verbal=True, somatic=True),
+        duration=Duration(DurationType.MINUTE, 1),
+        source="World of Warcraft",
+        description="Pure magic sweeps out from you in a 30-foot Emanation. Creatures of your choice in the Emanation make a Constitution saving throw. On a failed save, a creature takes 7d8 Force damage, and its Speed is reduced by 20 feet for the duration. On a successful save, the target takes half as much damage only.",
+        usage_tags=("control", "damage"),
+    )
+    converted_from = RecordStamp("spells_dnd2024.json", "026f6c515f08095a")
+
+
+class Combustion(ClassSpell):
+    rules = SpellRules(
+        name="Combustion",
+        level=6,
+        school=School.EVOCATION,
+        classes=(CharacterClass.WIZARD,),
+        casting_time=CastingTime(CastingTimeType.ACTION),
+        range=Range(RangeType.SELF),
+        components=Components(verbal=True, somatic=True),
+        duration=Duration(DurationType.MINUTE, 1),
+        source="World of Warcraft",
+        description=(
+            "You engulf yourself in flames for the duration, shedding Bright Light in a 20-foot radius and Dim Light for an additional 10 feet. These flames grant you Immunity to Fire damage. While they last, you have Advantage on spell attack rolls.\n"
+            "At the end of each of your turns, each creature of your choice in a 5-foot Emanation originating from you takes 3d8 Fire damage."
+        ),
+        usage_tags=("buff", "damage"),
+    )
+    converted_from = RecordStamp("spells_dnd2024.json", "fc7016226daeb2a9")
+
+
+class Tranquility(ClassSpell):
+    rules = SpellRules(
+        name="Tranquility",
+        level=6,
+        school=School.ABJURATION,
+        classes=(CharacterClass.DRUID,),
+        casting_time=CastingTime(CastingTimeType.ACTION),
+        range=Range(RangeType.SELF),
+        components=Components(verbal=True),
+        duration=Duration(DurationType.MINUTE, 1, concentration=True),
+        source="World of Warcraft",
+        description=(
+            "Nature’s power flows around you in a 60-foot Emanation for the duration. Creatures of your choice in the Emanation have Resistance to Bludgeoning, Piercing, and Slashing damage. As a Bonus Action, you can cause each ally in the Emanation to regain Hit Points equal to 2d8 plus your spellcasting ability modifier.\n"
+            "Using a Higher-Level Spell Slot. Creatures regain 1d8 additional Hit Points for each spell slot level above 6."
+        ),
+        usage_tags=("buff", "heal"),
+    )
+    converted_from = RecordStamp("spells_dnd2024.json", "8fc2cc3d43fe0891")
+
+
 SPELLS = [
     ArcaneGate,
+    AzureSweep,
     BladeBarrier,
     BonesOfTheEarth,
     ChainLightning,
     CircleOfDeath,
+    Combustion,
     ConjureFey,
     Contingency,
     CreateHomunculus,
@@ -4198,6 +4253,7 @@ SPELLS = [
     TashasBubblingCauldron,
     TashasOtherworldlyGuise,
     TensersTransformation,
+    Tranquility,
     TransportViaPlants,
     TrueSeeing,
     WallOfIce,

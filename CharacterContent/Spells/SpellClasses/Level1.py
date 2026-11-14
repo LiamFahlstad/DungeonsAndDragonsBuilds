@@ -37,9 +37,9 @@ from Model.Content.CombatEffect import (
 from Model.Content.CombatModifiers import (
     ArmorClass,
     ArmorClassBase,
+    AtTurnStart,
     AttackKind,
     AttacksAgainst,
-    AtTurnStart,
     ConditionImmunity,
     D20Bonus,
     D20Test,
@@ -47,8 +47,8 @@ from Model.Content.CombatModifiers import (
     ExtraDamageOnHit,
     Resistance,
     RollMode,
-    WhenHit,
     Speed,
+    WhenHit,
 )
 from Model.Content.CombatTriggers import CombatTrigger, TriggerAim, TriggerEvent
 from Model.Content.Feature import FeatureTarget
@@ -5269,12 +5269,360 @@ class MagnifyGravity(ClassSpell):
         ]
 
 
+class AzureStrike(ClassSpell):
+    rules = SpellRules(
+        name="Azure Strike",
+        level=1,
+        school=School.EVOCATION,
+        classes=(CharacterClass.SORCERER,),
+        casting_time=CastingTime(CastingTimeType.ACTION),
+        range=Range(RangeType.FOOT, 60),
+        components=Components(verbal=True, somatic=True),
+        duration=Duration(DurationType.ROUND, 1),
+        source="World of Warcraft",
+        description=(
+            "You fire rays of arcane and frigid energy at up to two targets within range that are within 30 feet of each other. Make a ranged spell attack for each target. On a hit, the target takes 2d6 Force damage, and its Speed is reduced by 10 feet until the end of its next turn.\n"
+            "Using a Higher-Level Spell Slot. The damage increases by 1d6 for each spell slot level above 1."
+        ),
+        usage_tags=("control", "damage"),
+    )
+    converted_from = RecordStamp("spells_dnd2024.json", "55f469f1c79a4740")
+
+
+class ChainsOfIce(ClassSpell):
+    rules = SpellRules(
+        name="Chains of Ice",
+        level=1,
+        school=School.EVOCATION,
+        classes=(),
+        casting_time=CastingTime(CastingTimeType.ACTION),
+        range=Range(RangeType.FOOT, 30),
+        components=Components(verbal=True),
+        duration=Duration(DurationType.INSTANTANEOUS),
+        source="World of Warcraft",
+        description=(
+            "You create chains of ice around a creature you can see within range. The target makes a Dexterity saving throw. On a failed save, the target takes 1d10 Cold damage, and its Speed is halved until the end of its next turn. On a successful save, the target takes half as much damage only.\n"
+            "Using a Higher-Level Spell Slot. The damage increases by 1d10 for each spell slot level above 1."
+        ),
+        usage_tags=("control", "damage"),
+    )
+    converted_from = RecordStamp("spells_dnd2024.json", "a56ddfd3aa40937b")
+
+
+class ConsumeSoul(ClassSpell):
+    rules = SpellRules(
+        name="Consume Soul",
+        level=1,
+        school=School.NECROMANCY,
+        classes=(),
+        casting_time=CastingTime(CastingTimeType.ACTION),
+        range=Range(RangeType.FOOT, 60),
+        components=Components(verbal=True),
+        duration=Duration(DurationType.INSTANTANEOUS),
+        source="World of Warcraft",
+        description=(
+            "You drain the essence from a creature within range, which makes a Constitution saving throw. On a failed save, it takes 4d4 Force damage, and you gain Temporary Hit Points equal to half the Force damage dealt. On a successful save, it takes half as much damage only.\n"
+            "Using a Higher-Level Spell Slot. The damage increases by 1d4 for each spell slot level above 1."
+        ),
+        usage_tags=("damage", "heal"),
+    )
+    converted_from = RecordStamp("spells_dnd2024.json", "6f2b878cca4064ff")
+
+
+class DeathGrip(ClassSpell):
+    rules = SpellRules(
+        name="Death Grip",
+        level=1,
+        school=School.ABJURATION,
+        classes=(),
+        casting_time=CastingTime(CastingTimeType.BONUS_ACTION),
+        range=Range(RangeType.FOOT, 30),
+        components=Components(verbal=True),
+        duration=Duration(DurationType.INSTANTANEOUS),
+        source="World of Warcraft",
+        description="You harness runic energies to bind a foe to you. One creature you can see within range must succeed on a Strength saving throw or be pulled straight toward you to the nearest unoccupied space within 5 feet of you.",
+        usage_tags=("control",),
+    )
+    converted_from = RecordStamp("spells_dnd2024.json", "396ca8346349a729")
+
+
+class EbonMight(ClassSpell):
+    rules = SpellRules(
+        name="Ebon Might",
+        level=1,
+        school=School.TRANSMUTATION,
+        classes=(CharacterClass.SORCERER,),
+        casting_time=CastingTime(CastingTimeType.ACTION),
+        range=Range(RangeType.SELF),
+        components=Components(verbal=True, somatic=True),
+        duration=Duration(DurationType.INSTANTANEOUS),
+        source="World of Warcraft",
+        description="As you invoke the black dragonflight, draconic might erupts from you. Each creature of your choice in a 10-foot Emanation originating from you is empowered until the end of your next turn. While a creature is empowered, when it hits a target with an attack roll, the attack deals an extra 1d4 Force damage.",
+        usage_tags=("buff", "damage"),
+    )
+    converted_from = RecordStamp("spells_dnd2024.json", "6fc5cc0e9d4289ab")
+
+
+class EntropicEmbrace(ClassSpell):
+    rules = SpellRules(
+        name="Entropic Embrace",
+        level=1,
+        school=School.NECROMANCY,
+        classes=(CharacterClass.WARLOCK,),
+        casting_time=CastingTime(
+            CastingTimeType.REACTION,
+            trigger="which you take when you make a D20 Test with Advantage or Disadvantage and roll the same number on both dice",
+        ),
+        range=Range(RangeType.SELF),
+        components=Components(verbal=True),
+        duration=Duration(DurationType.MINUTE, 1),
+        source="World of Warcraft",
+        description=(
+            "You are empowered by the essence of the Void for the duration, becoming swathed in shadow and taking on a dark-blue or purple appearance. While this effect lasts, you gain the following benefits.\n"
+            "Preternatural Calm. You automatically succeed on Constitution saving throws to maintain Concentration.\n"
+            "Shadow Shroud. You are shrouded in shadow, making your space Lightly Obscured.\n"
+            "Touch of the Void . Once on each of your turns, you can deal an extra 1d4 Necrotic damage to one creature when you deal damage to it, or you can restore an extra 1d4 Hit Points to one creature when you heal it.\n"
+            "Using a Higher-Level Spell Slot. The extra damage or healing from the Touch of the Void effect increases by 1d4 for each spell slot level above 1."
+        ),
+        usage_tags=("buff", "damage", "heal"),
+    )
+    converted_from = RecordStamp("spells_dnd2024.json", "738b2b915b72c83a")
+
+
+class FelRush(ClassSpell):
+    rules = SpellRules(
+        name="Fel Rush",
+        level=1,
+        school=School.TRANSMUTATION,
+        classes=(),
+        casting_time=CastingTime(CastingTimeType.ACTION),
+        range=Range(RangeType.SELF),
+        components=Components(verbal=True),
+        duration=Duration(DurationType.INSTANTANEOUS),
+        source="World of Warcraft",
+        description=(
+            "Fiery fel magic surrounds you and grants you explosive speed. Until the end of your turn, your Speed increases by 30 feet, and your movement doesn’t provoke Opportunity Attacks.\n"
+            "When you move within 5 feet of a creature or an object that isn’t being worn or carried, it makes a Dexterity saving throw, taking 2d6 Fire damage on a failed save or half as much damage on a successful one. A creature or object can take this damage only once per turn.\n"
+            "Using a Higher-Level Spell Slot. The damage increases by 1d6 for each spell slot level above 1."
+        ),
+        usage_tags=("buff", "damage"),
+    )
+    converted_from = RecordStamp("spells_dnd2024.json", "801c8ac60e4c6168")
+
+
+class FreezingTrap(ClassSpell):
+    rules = SpellRules(
+        name="Freezing Trap",
+        level=1,
+        school=School.EVOCATION,
+        classes=(CharacterClass.RANGER,),
+        casting_time=CastingTime(CastingTimeType.ACTION),
+        range=Range(RangeType.FOOT, 60),
+        components=Components(somatic=True),
+        duration=Duration(DurationType.MINUTE, 1, concentration=True),
+        source="World of Warcraft",
+        description="An Invisible, intangible trap appears on the ground at a point you choose within range. The first time a creature comes within 5 feet of the trap, the trap explodes in a burst of frost, the spell ends, and the triggering creature makes a Constitution saving throw. On a failed save, the target has the Restrained condition for 1 minute. If the creature takes any damage, the Restrained condition from the trap ends.",
+        usage_tags=("control",),
+    )
+    converted_from = RecordStamp("spells_dnd2024.json", "a8d8ccbc031c5bc1")
+
+
+class FrostNova(ClassSpell):
+    rules = SpellRules(
+        name="Frost Nova",
+        level=1,
+        school=School.EVOCATION,
+        classes=(CharacterClass.WIZARD,),
+        casting_time=CastingTime(CastingTimeType.ACTION),
+        range=Range(RangeType.SELF),
+        components=Components(verbal=True, somatic=True),
+        duration=Duration(DurationType.INSTANTANEOUS),
+        source="World of Warcraft",
+        description=(
+            "You unleash a burst of frost, creating a 15-foot Emanation originating from you. Each creature of your choice in the Emanation makes a Constitution saving throw. On a failed save, a creature takes 2d6 Cold damage, and it has the Restrained condition until the end of your next turn. On a successful save, the creature takes half as much damage only.\n"
+            "Using a Higher-Level Spell Slot. The damage increases by 1d6 for each spell slot level above 1."
+        ),
+        usage_tags=("control", "damage"),
+    )
+    converted_from = RecordStamp("spells_dnd2024.json", "dbe1b50a17291031")
+
+
+class InfernalStrike(ClassSpell):
+    rules = SpellRules(
+        name="Infernal Strike",
+        level=1,
+        school=School.EVOCATION,
+        classes=(),
+        casting_time=CastingTime(CastingTimeType.ACTION),
+        range=Range(RangeType.SELF),
+        components=Components(verbal=True),
+        duration=Duration(DurationType.INSTANTANEOUS),
+        source="World of Warcraft",
+        description=(
+            "You jump through the air without provoking Opportunity Attacks and land in an unoccupied space within 30 feet. Each creature in a 10-foot Emanation originating from you makes a Dexterity saving throw. On a failed save, a creature takes 2d6 Fire damage and has Disadvantage on attack rolls against creatures other than you until the start of your next turn. On a successful save, it takes half as much damage only.\n"
+            "Using a Higher-Level Spell Slot. The damage increases by 1d6 for each spell slot level above 1."
+        ),
+        usage_tags=("buff", "control", "damage"),
+    )
+    converted_from = RecordStamp("spells_dnd2024.json", "0d950aed35775b05")
+
+
+class LivingFlame(ClassSpell):
+    rules = SpellRules(
+        name="Living Flame",
+        level=1,
+        school=School.EVOCATION,
+        classes=(CharacterClass.SORCERER,),
+        casting_time=CastingTime(CastingTimeType.ACTION),
+        range=Range(RangeType.FOOT, 60),
+        components=Components(verbal=True),
+        duration=Duration(DurationType.INSTANTANEOUS),
+        source="World of Warcraft",
+        description=(
+            "Flickering flames hurtle toward a creature you choose within range. Choose one of these options:\n"
+            "Healing Flames. The target regains 2d6 Hit Points.\n"
+            "Searing Flames . Make a ranged attack roll against the target. On a hit, the target takes 2d8 Fire damage.\n"
+            "Using a Higher-Level Spell Slot. For every two spell slot levels above 1, you can choose an additional target (two targets with a level 3 or 4 slot, three targets with a level 5 or 6 slot, four targets with a level 7 or 8 slot, and five targets with a level 9 slot). You choose the flames’ effect separately for each target."
+        ),
+        usage_tags=("damage", "heal"),
+    )
+    converted_from = RecordStamp("spells_dnd2024.json", "95f8472d909cb92e")
+
+
+class Moonfire(ClassSpell):
+    rules = SpellRules(
+        name="Moonfire",
+        level=1,
+        school=School.EVOCATION,
+        classes=(CharacterClass.DRUID,),
+        casting_time=CastingTime(CastingTimeType.BONUS_ACTION),
+        range=Range(RangeType.FOOT, 60),
+        components=Components(verbal=True),
+        duration=Duration(DurationType.ROUND, 1),
+        source="World of Warcraft",
+        description=(
+            "A beam of lunar light burns a creature you can see within range. The target makes a Dexterity saving throw. On a failed save, it takes 2d8 Radiant damage, sheds Dim Light in a 10-foot radius, and can’t benefit from the Invisible condition until the end of its next turn. At the end of its next turn, it takes an extra 1d8 Radiant damage, and the spell ends. On a successful save, it takes half the initial damage only.\n"
+            "Using a Higher-Level Spell Slot. Both the initial and the later damage increase by 1d8 for each spell slot level above 1."
+        ),
+        usage_tags=("control", "damage"),
+    )
+    converted_from = RecordStamp("spells_dnd2024.json", "612ceee526542cf0")
+
+
+class RuneStrike(ClassSpell):
+    rules = SpellRules(
+        name="Rune Strike",
+        level=1,
+        school=School.EVOCATION,
+        classes=(),
+        casting_time=CastingTime(
+            CastingTimeType.BONUS_ACTION,
+            trigger="which you take immediately after hitting a target with a Melee weapon or an Unarmed Strike",
+        ),
+        range=Range(RangeType.SELF),
+        components=Components(verbal=True),
+        duration=Duration(DurationType.INSTANTANEOUS),
+        source="World of Warcraft",
+        description=(
+            "The target takes an extra 2d8 Necrotic damage. The damage increases by 1d8 if the target is a Celestial.\n"
+            "Using a Higher-Level Spell Slot. The damage increases by 1d8 for each spell slot level above 1."
+        ),
+        usage_tags=("damage",),
+    )
+    converted_from = RecordStamp("spells_dnd2024.json", "37918d5b1a8cb2d7")
+
+
+class ScourgeStrike(ClassSpell):
+    rules = SpellRules(
+        name="Scourge Strike",
+        level=1,
+        school=School.NECROMANCY,
+        classes=(),
+        casting_time=CastingTime(
+            CastingTimeType.BONUS_ACTION,
+            trigger="which you take immediately after hitting a target with a Melee weapon or an Unarmed Strike",
+        ),
+        range=Range(RangeType.SELF),
+        components=Components(verbal=True),
+        duration=Duration(DurationType.MINUTE, 1),
+        source="World of Warcraft",
+        description=(
+            "The target takes an extra 2d6 Necrotic damage from the attack, and it must succeed on a Constitution saving throw or have the Poisoned condition until the spell ends. At the end of each of its turns, the Poisoned target repeats the save, ending the spell on itself on a success.\n"
+            "Using a Higher-Level Spell Slot. The damage increases by 1d6 for each spell slot level above 1."
+        ),
+        usage_tags=("control", "damage"),
+    )
+    converted_from = RecordStamp("spells_dnd2024.json", "dc9e5ad93e3e0dea")
+
+
+class ShadowWordPain(ClassSpell):
+    rules = SpellRules(
+        name="Shadow Word: Pain",
+        level=1,
+        school=School.NECROMANCY,
+        classes=(CharacterClass.CLERIC,),
+        casting_time=CastingTime(CastingTimeType.ACTION),
+        range=Range(RangeType.FOOT, 60),
+        components=Components(verbal=True),
+        duration=Duration(DurationType.MINUTE, 1),
+        source="World of Warcraft",
+        description=(
+            "Speaking a word of Void power, you cause one creature in range to suffer agonizing pain. The target makes a Wisdom saving throw. On a failed save, the target takes Psychic damage equal to 1d10 plus your spellcasting ability modifier and is cursed for the duration. On a successful save, it takes half as much damage only.\n"
+            "Until the curse ends, the target takes 1d10 Psychic damage at the start of each of its turns. It repeats the save at the end of each of its turns, ending the curse on a success.\n"
+            "Using a Higher-Level Spell Slot. The spell’s initial damage increases by 1d10 for each spell slot level above 1."
+        ),
+        usage_tags=("damage",),
+    )
+    converted_from = RecordStamp("spells_dnd2024.json", "14d17945a471d996")
+
+
+class ThrowGlaive(ClassSpell):
+    rules = SpellRules(
+        name="Throw Glaive",
+        level=1,
+        school=School.EVOCATION,
+        classes=(),
+        casting_time=CastingTime(CastingTimeType.ACTION),
+        range=Range(RangeType.FOOT, 60),
+        components=Components(verbal=True, somatic=True),
+        duration=Duration(DurationType.INSTANTANEOUS),
+        source="World of Warcraft",
+        description=(
+            "You create a demonic warglaive and hurl it at a creature or object in range. Make a ranged spell attack against the target. On a hit, the target takes 1d8 Slashing damage plus 1d8 Fire damage, and the glaive ricochets to a different target of your choice within 30 feet of the target. Make new attack and damage rolls against the new target.\n"
+            "Using a Higher-Level Spell Slot. The Fire damage increases by 1d8 for each spell slot level above 1. The glaive ricochets a maximum number of times equal to the level of the slot expended; a creature can be targeted only once by each casting of this spell."
+        ),
+        usage_tags=("damage",),
+    )
+    converted_from = RecordStamp("spells_dnd2024.json", "5acbddf305c27819")
+
+
+class VampiricBlood(ClassSpell):
+    rules = SpellRules(
+        name="Vampiric Blood",
+        level=1,
+        school=School.NECROMANCY,
+        classes=(),
+        casting_time=CastingTime(CastingTimeType.ACTION),
+        range=Range(RangeType.SELF),
+        components=Components(verbal=True),
+        duration=Duration(DurationType.MINUTE, 1, concentration=True),
+        source="World of Warcraft",
+        description=(
+            "For the duration, your Hit Point maximum increases by 10. In addition, whenever you regain Hit Points, you regain an extra 1d6 Hit Points.\n"
+            "Using a Higher-Level Spell Slot. The additional healing increases by 1d6 for each spell slot level above 1."
+        ),
+        usage_tags=("buff", "heal"),
+    )
+    converted_from = RecordStamp("spells_dnd2024.json", "9514404b2bff5900")
+
+
 SPELLS = [
     AbsorbElements,
     Alarm,
     AnimalFriendship,
     ArmorOfAgathys,
     ArmsOfHadar,
+    AzureStrike,
     Bane,
     BeastBond,
     Bless,
@@ -5283,6 +5631,7 @@ SPELLS = [
     Catapult,
     CauseFear,
     Ceremony,
+    ChainsOfIce,
     ChaosBolt,
     CharmPerson,
     ChromaticOrb,
@@ -5290,8 +5639,10 @@ SPELLS = [
     Command,
     CompelledDuel,
     ComprehendLanguages,
+    ConsumeSoul,
     CreateOrDestroyWater,
     CureWounds,
+    DeathGrip,
     DetectEvilAndGood,
     DetectMagic,
     DetectPoisonAndDisease,
@@ -5301,16 +5652,21 @@ SPELLS = [
     DivineFavor,
     DivineSmite,
     EarthTremor,
+    EbonMight,
     EnsnaringStrike,
     Entangle,
+    EntropicEmbrace,
     ExpeditiousRetreat,
     FaerieFire,
     FalseLife,
     FeatherFall,
     FeignInterest,
+    FelRush,
     FindFamiliar,
     FogCloud,
+    FreezingTrap,
     FrostFingers,
+    FrostNova,
     GiftOfAlacrity,
     Goodberry,
     Grease,
@@ -5324,20 +5680,26 @@ SPELLS = [
     IceKnife,
     Identify,
     IllusoryScript,
+    InfernalStrike,
     InflictWounds,
     InsidiousRhythm,
     JimsMagicMissile,
     Jump,
+    LivingFlame,
     Longstrider,
     MageArmor,
     MagicMissile,
     MagnifyGravity,
+    Moonfire,
     ProtectionFromEvilAndGood,
     PurifyFoodAndDrink,
     QuickClothier,
     RayOfSickness,
+    RuneStrike,
     Sanctuary,
+    ScourgeStrike,
     SearingSmite,
+    ShadowWordPain,
     Shield,
     ShieldOfFaith,
     SilentImage,
@@ -5349,9 +5711,11 @@ SPELLS = [
     TashasCausticBrew,
     TashasHideousLaughter,
     TensersFloatingDisk,
+    ThrowGlaive,
     ThunderousSmite,
     Thunderwave,
     UnseenServant,
+    VampiricBlood,
     Wardaway,
     WitchBolt,
     WrathfulSmite,

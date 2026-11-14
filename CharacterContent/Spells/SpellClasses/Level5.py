@@ -5245,6 +5245,156 @@ class TemporalShunt(ClassSpell):
         ]
 
 
+class Bonestorm(ClassSpell):
+    rules = SpellRules(
+        name="Bonestorm",
+        level=5,
+        school=School.ABJURATION,
+        classes=(),
+        casting_time=CastingTime(CastingTimeType.ACTION),
+        range=Range(RangeType.SELF),
+        components=Components(verbal=True),
+        duration=Duration(DurationType.INSTANTANEOUS),
+        source="World of Warcraft",
+        description="You conjure a whirl of battering bone and gore around yourself. You regain 4d6 Hit Points, and each creature in a 10-foot Emanation originating from you makes a Constitution saving throw. A target takes 4d8 Necrotic damage on a failed save or half as much damage on a successful one.",
+        usage_tags=("damage", "heal"),
+    )
+    converted_from = RecordStamp("spells_dnd2024.json", "92e10b0c9332b688")
+
+
+class DreamFlight(ClassSpell):
+    rules = SpellRules(
+        name="Dream Flight",
+        level=5,
+        school=School.ABJURATION,
+        classes=(CharacterClass.SORCERER,),
+        casting_time=CastingTime(CastingTimeType.ACTION),
+        range=Range(RangeType.SELF),
+        components=Components(verbal=True, somatic=True),
+        duration=Duration(DurationType.MINUTE, 1, concentration=True),
+        source="World of Warcraft",
+        description=(
+            "You draw on the magic of the green dragonflight. For the duration, you gain the following benefits.\n"
+            "Healing Presence. When you move within 5 feet of a creature, you can restore 5d4 Hit Points to that creature. A creature can regain these Hit Points only once per turn.\n"
+            "Wings. You sprout spectral wings from your back if you don’t already have wings. You have a Fly Speed of 60 feet and can hover. In addition, your movement doesn’t provoke Opportunity Attacks."
+        ),
+        usage_tags=("buff", "heal"),
+    )
+    converted_from = RecordStamp("spells_dnd2024.json", "4c1ddaa8dfcad7b9")
+
+
+class ExplosiveTrap(ClassSpell):
+    rules = SpellRules(
+        name="Explosive Trap",
+        level=5,
+        school=School.EVOCATION,
+        classes=(CharacterClass.RANGER,),
+        casting_time=CastingTime(CastingTimeType.ACTION),
+        range=Range(RangeType.FOOT, 60),
+        components=Components(somatic=True),
+        duration=Duration(DurationType.MINUTE, 1, concentration=True),
+        source="World of Warcraft",
+        description="An Invisible, intangible trap appears on the ground at a point you choose within range. The first time a creature comes within 5 feet of the trap, the trap explodes in a fiery burst that fills a 20-foot-radius Sphere centered on the trap. The spell ends, and each creature within the Sphere makes a Dexterity saving throw. On a failed save, a creature takes 8d6 Fire damage and, if it is Huge or smaller, is pushed 20 feet straight away from the trap’s location.",
+        usage_tags=("control", "damage"),
+    )
+    converted_from = RecordStamp("spells_dnd2024.json", "5c30e2ee8617ab02")
+
+
+class Innervate(ClassSpell):
+    rules = SpellRules(
+        name="Innervate",
+        level=5,
+        school=School.TRANSMUTATION,
+        classes=(CharacterClass.DRUID,),
+        casting_time=CastingTime(CastingTimeType.ACTION),
+        range=Range(RangeType.FOOT, 30),
+        components=Components(verbal=True),
+        duration=Duration(DurationType.INSTANTANEOUS),
+        source="World of Warcraft",
+        description=(
+            "A creature of your choice within range gains a level 4 spell slot. The spell slot vanishes after it is expended or the target finishes a Long Rest. It can use this spell slot to cast any spell it has prepared.\n"
+            "In addition, you regain one expended use of Wild Shape."
+        ),
+        usage_tags=("buff",),
+    )
+    converted_from = RecordStamp("spells_dnd2024.json", "ffe482af7d05a25e")
+
+
+class Rescue(ClassSpell):
+    rules = SpellRules(
+        name="Rescue",
+        level=5,
+        school=School.CONJURATION,
+        classes=(CharacterClass.SORCERER,),
+        casting_time=CastingTime(CastingTimeType.BONUS_ACTION),
+        range=Range(RangeType.FOOT, 120),
+        components=Components(verbal=True),
+        duration=Duration(DurationType.INSTANTANEOUS),
+        source="World of Warcraft",
+        description="You teleport to an unoccupied space you can see within range. One willing creature within 60 feet of the space you left also teleports to an unoccupied space within 5 feet of your destination space.",
+        usage_tags=("buff",),
+    )
+    converted_from = RecordStamp("spells_dnd2024.json", "176ea4bef164b12f")
+
+
+class ShatteringStar(ClassSpell):
+    rules = SpellRules(
+        name="Shattering Star",
+        level=5,
+        school=School.EVOCATION,
+        classes=(CharacterClass.SORCERER,),
+        casting_time=CastingTime(CastingTimeType.ACTION),
+        range=Range(RangeType.FOOT, 90),
+        components=Components(verbal=True, somatic=True),
+        duration=Duration(DurationType.INSTANTANEOUS),
+        source="World of Warcraft",
+        description=(
+            "You exhale a bolt of concentrated power at a creature within range. Make a ranged spell attack against the target. On a hit, the target takes 10d8 Force damage, and it takes a –2 penalty to AC until the start of your next turn as clinging frost makes the target’s exterior brittle.\n"
+            "Using a Higher-Level Spell Slot. The damage increases by 1d8 for each spell slot level above 5."
+        ),
+        usage_tags=("control", "damage"),
+    )
+    converted_from = RecordStamp("spells_dnd2024.json", "37ecd7df504ee8e0")
+
+
+class SigilOfChains(ClassSpell):
+    rules = SpellRules(
+        name="Sigil of Chains",
+        level=5,
+        school=School.CONJURATION,
+        classes=(),
+        casting_time=CastingTime(CastingTimeType.ACTION),
+        range=Range(RangeType.FOOT, 90),
+        components=Components(verbal=True),
+        duration=Duration(DurationType.ROUND, 1),
+        source="World of Warcraft",
+        description="A sigil appears at a point on the ground you can see within range, then erupts in a 20-foot-radius Sphere. Each creature in the Sphere makes a Dexterity saving throw. On a failed save, a creature takes 5d6 Force damage, is pulled up to 10 feet straight toward the sigil, and has the Restrained condition until the end of your next turn. On a successful save, the creature takes half as much damage, and its Speed is reduced by 10 feet until the end of your next turn.",
+        usage_tags=("control", "damage"),
+    )
+    converted_from = RecordStamp("spells_dnd2024.json", "3c11a0cea518e1e5")
+
+
+class VoidEruption(ClassSpell):
+    rules = SpellRules(
+        name="Void Eruption",
+        level=5,
+        school=School.NECROMANCY,
+        classes=(CharacterClass.CLERIC,),
+        casting_time=CastingTime(CastingTimeType.BONUS_ACTION),
+        range=Range(RangeType.FOOT, 120),
+        components=Components(verbal=True),
+        duration=Duration(DurationType.MINUTE, 1, concentration=True),
+        source="World of Warcraft",
+        description=(
+            "Shadowy Void energy erupts in a 20-foot-radius Sphere centered on a point you choose within range. Each creature in the Sphere makes a Constitution saving throw, taking 5d6 Necrotic damage on a failed save or half as much damage on a successful one. At the same time, you take on a form of Void that grants you the following benefits for the duration.\n"
+            "Void Bolt. As a Bonus Action on your turn, you can hurl a bolt of Void energy at a creature within 60 feet of yourself. Make a ranged spell attack; on a hit, the target takes Necrotic damage equal to 2d6 plus your spellcasting ability modifier.\n"
+            "Void Stealth. While you are in an area of Dim Light or Darkness, you have the Invisible condition."
+        ),
+        usage_tags=("buff", "damage"),
+    )
+    converted_from = RecordStamp("spells_dnd2024.json", "52dad98edc37fc1c")
+
+
 SPELLS = [
     AlustrielsMooncloak,
     AnimateObjects,
@@ -5252,6 +5402,7 @@ SPELLS = [
     Awaken,
     BanishingSmite,
     BigbysHand,
+    Bonestorm,
     CircleOfPower,
     Cloudkill,
     Commune,
@@ -5270,7 +5421,9 @@ SPELLS = [
     DispelEvilAndGood,
     DominatePerson,
     Dream,
+    DreamFlight,
     Enervation,
+    ExplosiveTrap,
     FarStep,
     FlameStrike,
     Geas,
@@ -5281,6 +5434,7 @@ SPELLS = [
     HolyWeapon,
     Immolation,
     InfernalCalling,
+    Innervate,
     InsectPlague,
     JallarzisStormOfRadiance,
     LegendLore,
@@ -5295,8 +5449,11 @@ SPELLS = [
     RaiseDead,
     RarysTelepathicBond,
     Reincarnate,
+    Rescue,
     Scrying,
     Seeming,
+    ShatteringStar,
+    SigilOfChains,
     SkillEmpowerment,
     SongalsElementalSuffusion,
     SpiritLantern,
@@ -5312,6 +5469,7 @@ SPELLS = [
     TemporalShunt,
     TransmuteRock,
     TreeStride,
+    VoidEruption,
     WallOfForce,
     WallOfLight,
     WallOfStone,

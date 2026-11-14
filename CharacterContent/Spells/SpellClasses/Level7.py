@@ -2685,6 +2685,26 @@ class TetherEssence(ClassSpell):
         ]
 
 
+class LayWaste(ClassSpell):
+    rules = SpellRules(
+        name="Lay Waste",
+        level=7,
+        school=School.EVOCATION,
+        classes=(CharacterClass.SORCERER,),
+        casting_time=CastingTime(CastingTimeType.ACTION),
+        range=Range(RangeType.SELF),
+        components=Components(verbal=True),
+        duration=Duration(DurationType.INSTANTANEOUS),
+        source="World of Warcraft",
+        description=(
+            "You draw a deep breath and spew molten cinders along a 120-foot-long, 10-foot-wide Line originating from you in a direction you choose. Each creature in the Line makes a Dexterity saving throw, taking 12d6 Fire damage on a failed save or half as much damage on a successful one.\n"
+            "You then teleport to an unoccupied space within 5 feet of the end of the Line."
+        ),
+        usage_tags=("buff", "damage"),
+    )
+    converted_from = RecordStamp("spells_dnd2024.json", "2743a2935ccce2ca")
+
+
 SPELLS = [
     AuraOfEvasion,
     ConjureCelestial,
@@ -2699,6 +2719,7 @@ SPELLS = [
     FireStorm,
     Forcecage,
     FracturedAwareness,
+    LayWaste,
     MirageArcane,
     MordenkainensMagnificentMansion,
     MordenkainensSword,

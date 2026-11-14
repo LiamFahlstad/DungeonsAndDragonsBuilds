@@ -34,8 +34,8 @@ from Model.Content.CombatEffect import (
 from Model.Content.CombatModifiers import (
     ArmorClassMinimum,
     D20Mode,
-    DamageImmunity,
     D20Test,
+    DamageImmunity,
     HitPointMaximum,
     Note,
     RollMode,
@@ -5872,6 +5872,212 @@ class Wristpocket(ClassSpell):
         ]
 
 
+class Consecration(ClassSpell):
+    rules = SpellRules(
+        name="Consecration",
+        level=2,
+        school=School.EVOCATION,
+        classes=(CharacterClass.PALADIN,),
+        casting_time=CastingTime(CastingTimeType.ACTION),
+        range=Range(RangeType.SELF),
+        components=Components(verbal=True),
+        duration=Duration(DurationType.MINUTE, 1, concentration=True),
+        source="World of Warcraft",
+        description="You consecrate the area in a 15-foot Emanation originating from you. Creatures of your choice that start their turn in the Emanation take 1d8 Radiant damage. The Emanation is Difficult Terrain for Fiends and Undead.",
+        usage_tags=("control", "damage"),
+    )
+    converted_from = RecordStamp("spells_dnd2024.json", "9be47dc7e44c4440")
+
+
+class CurseOfAgony(ClassSpell):
+    rules = SpellRules(
+        name="Curse of Agony",
+        level=2,
+        school=School.NECROMANCY,
+        classes=(CharacterClass.WARLOCK,),
+        casting_time=CastingTime(CastingTimeType.ACTION),
+        range=Range(RangeType.FOOT, 30),
+        components=Components(verbal=True, somatic=True),
+        duration=Duration(DurationType.MINUTE, 1),
+        source="World of Warcraft",
+        description="You curse one creature within range with excruciating pain. The target makes a Constitution saving throw; the spell’s damage starts at 1d4 Psychic damage. On a failed save, the target takes the spell’s damage, and the spell’s damage die increases: from 1d4 to 1d6, 1d6 to 1d8, 1d8 to 1d10, or 1d10 to 1d12 (the maximum). On a successful save, the target takes the spell’s damage, and the effect ends. The target repeats the save at the end of each of its turns.",
+        usage_tags=("damage",),
+    )
+    converted_from = RecordStamp("spells_dnd2024.json", "bdb8cad1a051fec4")
+
+
+class DeathAndDecay(ClassSpell):
+    rules = SpellRules(
+        name="Death and Decay",
+        level=2,
+        school=School.NECROMANCY,
+        classes=(),
+        casting_time=CastingTime(CastingTimeType.ACTION),
+        range=Range(RangeType.FOOT, 60),
+        components=Components(verbal=True),
+        duration=Duration(DurationType.INSTANTANEOUS),
+        source="World of Warcraft",
+        description="Corruption ripples out in a 20-foot-radius Sphere from a point on the ground you can see within range. Each creature in that area makes a Wisdom saving throw. On a failed save, a target takes 2d6 Necrotic damage and is cursed until the end of your next turn. If you deal damage to a cursed target with an attack roll, the target takes an extra 1d6 Necrotic damage. On a successful save, the target takes half as much damage only.",
+        usage_tags=("damage",),
+    )
+    converted_from = RecordStamp("spells_dnd2024.json", "81430137750e2684")
+
+
+class DreamBreath(ClassSpell):
+    rules = SpellRules(
+        name="Dream Breath",
+        level=2,
+        school=School.ABJURATION,
+        classes=(CharacterClass.SORCERER,),
+        casting_time=CastingTime(CastingTimeType.ACTION),
+        range=Range(RangeType.SELF),
+        components=Components(verbal=True, somatic=True),
+        duration=Duration(DurationType.INSTANTANEOUS),
+        source="World of Warcraft",
+        description=(
+            "You exhale verdant healing magic. Each creature of your choice in a 15-foot Cone regains 2d6 Hit Points.\n"
+            "Using a Higher-Level Spell Slot. The healing increases by 2d6 for each spell slot level above 2."
+        ),
+        usage_tags=("heal",),
+    )
+    converted_from = RecordStamp("spells_dnd2024.json", "12834cef3528a4b9")
+
+
+class Eruption(ClassSpell):
+    rules = SpellRules(
+        name="Eruption",
+        level=2,
+        school=School.EVOCATION,
+        classes=(CharacterClass.SORCERER,),
+        casting_time=CastingTime(CastingTimeType.ACTION),
+        range=Range(RangeType.FOOT, 60),
+        components=Components(verbal=True, somatic=True),
+        duration=Duration(DurationType.INSTANTANEOUS),
+        source="World of Warcraft",
+        description=(
+            "The ground in a 20-foot-radius Sphere centered on a point within range erupts with flames. Each creature in the Sphere makes a Dexterity saving throw, taking 3d8 Fire damage on a failed save or half as much damage on a successful one.\n"
+            "The cracks turn the ground in the Sphere into Difficult Terrain until the end of your next turn, at which point they close.\n"
+            "Using a Higher-Level Spell Slot. The damage increases by 1d8 for each spell slot level above 2."
+        ),
+        usage_tags=("control", "damage"),
+    )
+    converted_from = RecordStamp("spells_dnd2024.json", "1d749683e74b48dc")
+
+
+class EyeBeam(ClassSpell):
+    rules = SpellRules(
+        name="Eye Beam",
+        level=2,
+        school=School.EVOCATION,
+        classes=(),
+        casting_time=CastingTime(CastingTimeType.ACTION),
+        range=Range(RangeType.SELF),
+        components=Components(verbal=True),
+        duration=Duration(DurationType.MINUTE, 1, concentration=True),
+        source="World of Warcraft",
+        description=(
+            "You concentrate your magic into your eyes. When you cast the spell, and as a Magic action on your subsequent turns for the duration, you can unleash a burst of fel magic. Each creature in a 15-foot Cone makes a Dexterity saving throw, taking 3d6 Force damage on a failed save or half as much damage on a successful one.\n"
+            "Using a Higher-Level Spell Slot. The damage increases by 1d6 for each spell slot level above 1."
+        ),
+        usage_tags=("damage",),
+    )
+    converted_from = RecordStamp("spells_dnd2024.json", "82302b52bbd0a1d0")
+
+
+class FeralProwl(ClassSpell):
+    rules = SpellRules(
+        name="Feral Prowl",
+        level=2,
+        school=School.TRANSMUTATION,
+        classes=(CharacterClass.DRUID,),
+        casting_time=CastingTime(CastingTimeType.BONUS_ACTION),
+        range=Range(RangeType.SELF),
+        components=Components(verbal=True),
+        duration=Duration(DurationType.MINUTE, 1),
+        source="World of Warcraft",
+        description="You shape-shift as if you had used Wild Shape, but you don’t expend a use of your Wild Shape. You have the Invisible condition until the spell ends. The spell ends early immediately after you make an attack roll, deal damage, cast a spell, or revert to your natural form.",
+        usage_tags=("buff",),
+    )
+    converted_from = RecordStamp("spells_dnd2024.json", "93875a044bf7697a")
+
+
+class FieryBrand(ClassSpell):
+    rules = SpellRules(
+        name="Fiery Brand",
+        level=2,
+        school=School.EVOCATION,
+        classes=(),
+        casting_time=CastingTime(CastingTimeType.ACTION),
+        range=Range(RangeType.FOOT, 30),
+        components=Components(verbal=True),
+        duration=Duration(DurationType.MINUTE, 1),
+        source="World of Warcraft",
+        description=(
+            "You magically place a fiery demonic symbol on a creature within range, which makes a Wisdom saving throw. On a failed save, the creature takes 3d10 Fire damage and is cursed. While it remains cursed, you have Resistance to all damage it deals. On a successful save, it takes half as much damage only.\n"
+            "A cursed creature repeats the save at the end of each of its turns, ending the spell on a success."
+        ),
+        usage_tags=("buff", "damage"),
+    )
+    converted_from = RecordStamp("spells_dnd2024.json", "91085f1a54effcb3")
+
+
+class Frostscythe(ClassSpell):
+    rules = SpellRules(
+        name="Frostscythe",
+        level=2,
+        school=School.EVOCATION,
+        classes=(),
+        casting_time=CastingTime(CastingTimeType.ACTION),
+        range=Range(RangeType.SELF),
+        components=Components(verbal=True),
+        duration=Duration(DurationType.INSTANTANEOUS),
+        source="World of Warcraft",
+        description=(
+            "Sweeping your weapon before you, you unleash a blast of icy cold. Each creature in a 20-foot Cone makes a Constitution saving throw. On a failed save, a creature takes 3d8 Cold damage, and its Speed is reduced by 10 feet for 1 minute. On a successful save, a creature takes half as much damage only.\n"
+            "Using a Higher-Level Spell Slot. The damage increases by 1d8 for each spell slot level above 2."
+        ),
+        usage_tags=("control", "damage"),
+    )
+    converted_from = RecordStamp("spells_dnd2024.json", "7a8a4f1ce71af28b")
+
+
+class RoarOfUrsoc(ClassSpell):
+    rules = SpellRules(
+        name="Roar of Ursoc",
+        level=2,
+        school=School.TRANSMUTATION,
+        classes=(CharacterClass.DRUID,),
+        casting_time=CastingTime(CastingTimeType.BONUS_ACTION),
+        range=Range(RangeType.SELF),
+        components=Components(verbal=True),
+        duration=Duration(DurationType.ROUND, 1),
+        source="World of Warcraft",
+        description="You shape-shift as if you had used Wild Shape, but you don’t expend a use of your Wild Shape. Until the start of your next turn, any creature that starts its turn within 5 feet of you has Disadvantage on attack rolls against any creature other than you.",
+        usage_tags=("control",),
+    )
+    converted_from = RecordStamp("spells_dnd2024.json", "9efb5d6628a32db9")
+
+
+class SigilOfFlame(ClassSpell):
+    rules = SpellRules(
+        name="Sigil of Flame",
+        level=2,
+        school=School.EVOCATION,
+        classes=(),
+        casting_time=CastingTime(CastingTimeType.ACTION),
+        range=Range(RangeType.FOOT, 90),
+        components=Components(verbal=True),
+        duration=Duration(DurationType.INSTANTANEOUS),
+        source="World of Warcraft",
+        description=(
+            "You inscribe a sigil in the air that then appears on a creature you can see within range. The target makes a Constitution saving throw, taking 2d8 Fire damage on a failed save or half as much damage on a successful one. Whether or not the target fails its saving throw, it radiates heat in a 10-foot Emanation originating from itself until the end of its next turn. At the start of the target’s next turn, the target and each creature in the Emanation must succeed on a Constitution saving throw or take 1d8 Fire damage.\n"
+            "Using a Higher-Level Spell Slot. The damage (both initial and later) increases by 1d8 for each spell slot level above 2."
+        ),
+        usage_tags=("damage",),
+    )
+    converted_from = RecordStamp("spells_dnd2024.json", "f269ef1d2564d287")
+
+
 SPELLS = [
     AganazzarsScorcher,
     Aid,
@@ -5891,16 +6097,20 @@ SPELLS = [
     CalmEmotions,
     CloudOfDaggers,
     ConjureTools,
+    Consecration,
     ContinualFlame,
     CordonOfArrows,
     CrownOfMadness,
+    CurseOfAgony,
     Darkness,
     Darkvision,
+    DeathAndDecay,
     DeathArmor,
     DeryansHelpfulHomunculi,
     DetectThoughts,
     DisruptiveTune,
     DragonsBreath,
+    DreamBreath,
     DuelingGround,
     DustDevil,
     Earthbind,
@@ -5908,12 +6118,17 @@ SPELLS = [
     EnhanceAbility,
     EnlargeReduce,
     Enthrall,
+    Eruption,
+    EyeBeam,
+    FeralProwl,
+    FieryBrand,
     FindSteed,
     FindTraps,
     FlameBlade,
     FlamingSphere,
     FlockOfFamiliars,
     FortunesFavor,
+    Frostscythe,
     GentleRepose,
     GiftOfGab,
     GustOfWind,
@@ -5948,6 +6163,7 @@ SPELLS = [
     Pyrotechnics,
     RayOfEnfeeblement,
     RimesBindingIce,
+    RoarOfUrsoc,
     RopeTrick,
     ScorchingRay,
     SearingOrb,
@@ -5955,6 +6171,7 @@ SPELLS = [
     ShadowBlade,
     Shatter,
     ShiningSmite,
+    SigilOfFlame,
     Silence,
     Skywrite,
     SnillocsSnowballSwarm,

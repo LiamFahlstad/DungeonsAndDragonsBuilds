@@ -3130,8 +3130,46 @@ class SappingSting(ClassSpell):
         ]
 
 
+class ArcanePulse(ClassSpell):
+    rules = SpellRules(
+        name="Arcane Pulse",
+        level=0,
+        school=School.EVOCATION,
+        classes=(CharacterClass.WIZARD,),
+        casting_time=CastingTime(CastingTimeType.ACTION),
+        range=Range(RangeType.SELF),
+        components=Components(verbal=True, somatic=True),
+        duration=Duration(DurationType.ROUND, 1),
+        source="World of Warcraft",
+        description="You create a pulse of arcane energy in a 10-foot Emanation originating from yourself. Each creature of your choice within this area makes a Constitution saving throw. On a failed save, it takes 1d8 Force damage, and its Speed is reduced by 10 feet (to a minimum of 0 feet) until the end of your next turn.",
+        usage_tags=("control", "damage"),
+    )
+    converted_from = RecordStamp("spells_dnd2024.json", "5d91e2becfbce623")
+
+
+class Wrath(ClassSpell):
+    rules = SpellRules(
+        name="Wrath",
+        level=0,
+        school=School.EVOCATION,
+        classes=(CharacterClass.DRUID,),
+        casting_time=CastingTime(CastingTimeType.ACTION),
+        range=Range(RangeType.FOOT, 60),
+        components=Components(verbal=True, somatic=True),
+        duration=Duration(DurationType.INSTANTANEOUS),
+        source="World of Warcraft",
+        description=(
+            "You hurl a ball of energy at a target within range. Make a ranged spell attack against the target. On a hit, the target takes 1d8 Lightning damage, and its Speed is reduced by 10 feet until the end of your next turn.\n"
+            "Cantrip Upgrade. The damage increases by 1d8 when you reach levels 5 (2d8), 11 (3d8), and 17 (4d8)."
+        ),
+        usage_tags=("control", "damage"),
+    )
+    converted_from = RecordStamp("spells_dnd2024.json", "944a2180ce8a0f7c")
+
+
 SPELLS = [
     AcidSplash,
+    ArcanePulse,
     BladeWard,
     BoomingBlade,
     ChillTouch,
@@ -3180,4 +3218,5 @@ SPELLS = [
     TrueStrike,
     ViciousMockery,
     WordOfRadiance,
+    Wrath,
 ]
