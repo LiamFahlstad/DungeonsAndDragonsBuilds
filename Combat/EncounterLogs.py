@@ -132,9 +132,10 @@ def prepared_log(scenario, players: list[str], sheets: dict | None = None) -> di
     round 1, and its allies and monsters at full HP. `players` are the
     character names of the party members taking part. The party's allies
     taking part come first, marked as such (Combat/PartyAllies.py), so
-    opening the encounter can bring them to how they are now. Players' summons
-    aren't in it: they join when they're summoned, or when one is still out
-    from an earlier encounter (Combat/Summons.py). `sheets` (the party's
+    opening the encounter can bring them to how they are now; the
+    encounter's own allies are marked too, as on the party's side. Players'
+    summons aren't in it: they join when they're summoned, or when one is
+    still out from an earlier encounter (Combat/Summons.py). `sheets` (the party's
     Characters by name) is accepted for the callers that pass it; older logs
     were prepared with a hidden companion for each player from them."""
     return {
@@ -147,10 +148,17 @@ def prepared_log(scenario, players: list[str], sheets: dict | None = None) -> di
             for c in scenario.build_party_allies()
         ]
         + [
-            combatant_from_stat_block(c)
-            for c in scenario.allies() + scenario.build_combatants()
-        ],
+            PartyAllies.mark_encounter_ally(combatant_from_stat_block(c))
+            for c in scenario.allies()
+        ]
+        + [combatant_from_stat_block(c) for c in scenario.build_combatants()],
     }
+
+
+def encounter_ally_names(scenario) -> list[str]:
+    """The names the combatants of `scenario`'s own allies (a CombatScenario's
+    `allies`) have in its log."""
+    return [combatant_from_stat_block(c)["name"] for c in scenario.allies()]
 
 
 def is_prepared(path: str | Path) -> bool:

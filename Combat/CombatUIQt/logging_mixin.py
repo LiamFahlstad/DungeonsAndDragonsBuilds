@@ -17,6 +17,7 @@ from Combat.EncounterLogs import (
     PUBLIC_KEY,
     TURN_KEY,
     LogJSONEncoder,
+    encounter_ally_names,
     event_text,
     read_log_status,
     write_log,
@@ -247,6 +248,15 @@ class LoggingMixin(CombatWindowState):
         hasn't started, or straight into combat to continue one."""
         data = read_json(path)
         self._take_combatants_from(data)
+        # A log prepared before encounter allies were marked: they're on the
+        # party's side all the same (the arena plan's R9).
+        scenario = next(
+            (s for s in self._scenarios if s.name == data.get("encounter")), None
+        )
+        if scenario is not None:
+            PartyAllies.mark_encounter_allies(
+                self.characters, encounter_ally_names(scenario)
+            )
         self.round_number = data.get("round_number", 1)
         self.arena_settings = ArenaSettings.from_dict(data.get(ARENA_KEY))
         self.history = []

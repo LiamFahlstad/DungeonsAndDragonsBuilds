@@ -24,7 +24,7 @@ from collections.abc import Callable, Collection, Iterable
 from dataclasses import dataclass, field
 from enum import StrEnum
 
-from Combat.PartyAllies import is_party_ally
+from Combat.PartyAllies import is_encounter_ally, is_party_ally
 from Combat.Summons import owner_name
 from Core.Definitions import Condition
 from Model.Content.CombatModifiers import (
@@ -85,10 +85,13 @@ class Firing:
 
 
 def on_party_side(char: dict) -> bool:
-    """Whether char fights on the party's side: a player, a party ally, or a
-    player's summon."""
+    """Whether char fights on the party's side: a player, a party ally, an
+    ally of this encounter, or a player's summon."""
     return bool(
-        char.get("_is_player") or is_party_ally(char) or owner_name(char) is not None
+        char.get("_is_player")
+        or is_party_ally(char)
+        or is_encounter_ally(char)
+        or owner_name(char) is not None
     )
 
 

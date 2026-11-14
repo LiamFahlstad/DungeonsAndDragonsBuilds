@@ -54,6 +54,30 @@ def is_party_ally(char: dict) -> bool:
     return bool(char.get(PARTY_ALLY_KEY))
 
 
+# Marks an encounter's own ally (EncounterSpec.allies, such as Greypaw in a
+# goblin fight) in its log's combatants: on the party's side for that fight,
+# but not tracked from fight to fight as a party ally is.
+ENCOUNTER_ALLY_KEY = "encounter_ally"
+
+
+def mark_encounter_ally(char: dict) -> dict:
+    char[ENCOUNTER_ALLY_KEY] = True
+    return char
+
+
+def is_encounter_ally(char: dict) -> bool:
+    return bool(char.get(ENCOUNTER_ALLY_KEY))
+
+
+def mark_encounter_allies(chars: list[dict], ally_names: list[str]):
+    """Mark those of `chars` named in `ally_names` as encounter allies: for
+    a log prepared before the mark existed, from its encounter's config."""
+    names = set(ally_names)
+    for char in chars:
+        if char.get("name") in names and not is_party_ally(char):
+            mark_encounter_ally(char)
+
+
 def _left_fight_as(char: dict) -> dict:
     """What of char, as an encounter log's combatants left it, carries into
     the next fight, with its "max_hp" to cap healing at."""
