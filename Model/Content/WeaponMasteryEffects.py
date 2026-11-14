@@ -20,10 +20,9 @@ picker adds them under the weapon's row when its wielder has its mastery
 The rules text is the 2024 Player's Handbook's (Weapons, Mastery Properties):
 the Rules Glossary has no entry for them. Nothing here imports Combat."""
 
-from typing import TYPE_CHECKING
-
 from Core.Definitions import Ability, Condition, CreatureSize, DamageType
 from Core.Weapons import WeaponMastery
+from Model.Content.Weapon import AbstractWeapon
 from Model.Content.CombatEffect import (
     CombatCondition,
     CombatDamage,
@@ -42,10 +41,6 @@ from Model.Content.CombatModifiers import (
 )
 from Model.Content.CombatTriggers import CombatTrigger, TriggerAim, TriggerEvent
 from Model.View import CharacterView
-
-if TYPE_CHECKING:
-    from Model.Content.Weapon import AbstractWeapon
-
 
 MASTERY_RULES: dict[WeaponMastery, str] = {
     WeaponMastery.CLEAVE: (
@@ -100,13 +95,13 @@ _START_OF_WIELDERS_TURN = (TurnEdge.START, TurnOf.SOURCE)
 _END_OF_WIELDERS_TURN = (TurnEdge.END, TurnOf.SOURCE)
 
 
-def mastery_row_name(weapon: "AbstractWeapon") -> str:
+def mastery_row_name(weapon: AbstractWeapon) -> str:
     """The name of a weapon's mastery row: "Longsword: Sap"."""
     assert weapon.mastery is not None
     return f"{weapon.name}: {weapon.mastery.value}"
 
 
-def mastery_note(weapon: "AbstractWeapon") -> str:
+def mastery_note(weapon: AbstractWeapon) -> str:
     """What the weapon's row says about a mastery that has no row of its own
     (Nick, which changes when the Light property's extra attack is made),
     or "" for one that has a row."""
@@ -119,7 +114,7 @@ def mastery_note(weapon: "AbstractWeapon") -> str:
 
 
 def mastery_effects(
-    weapon: "AbstractWeapon", character: CharacterView
+    weapon: AbstractWeapon, character: CharacterView
 ) -> list[CombatEffect]:
     """The rows the weapon's mastery property gives its wielder, `character`,
     who has that mastery (the caller checks): one, or none for Nick, or for
