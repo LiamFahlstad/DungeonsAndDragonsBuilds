@@ -564,18 +564,6 @@ RogueAssassinLevel13 and RogueAssassinLevel17 each add RogueFeatures.CunningStri
 **History**
 - 2026-11-14 subclass-implementer: found
 
-### DI-088 · World of Warcraft spells (Prayer of Mending, Shadow Word: Pain, Psychic Horror, Void Eruption, ...) aren't in the spell data, so domain spell grants omit them
-- **Status:** open
-- **Area:** spell-scraper
-- **Where:** `CharacterContent/Classes/SubClasses2024/ClericDiscipline.py`, `CharacterContent/Classes/SubClasses2024/ClericShadow.py`
-
-The World of Warcraft source (dnd2024.wikidot.com) adds new spells that aren't scraped into spells_dnd2024.json / SpellLists. Discipline Domain lacks Prayer of Mending (Cleric 5); Shadow Domain lacks Shadow Word: Pain (3), Psychic Horror (7), Void Eruption (9). Their builders leave them out with a comment; the DomainSpells feature card still lists them. Fix: scrape the WoW spells, add SpellLists enum members, then add the data.add_spell(...) lines where the comments are. Other WoW subclasses (e.g. Holy Nova) may be affected too.
-
-**History**
-- 2026-11-14 subclass-implementer: found
-- 2026-11-14 subclass-implementer: Oath of the Ebon Blade (CharacterContent/Classes/SubClasses2024/PaladinEbonBlade.py) also lacks Rune Strike (Runic Smite's always-prepared spell, so RunicSmite has no granted_spells), Death Grip (Paladin 3) and Death and Decay (Paladin 5); its rune-column spells Vampiric Blood, Chains of Ice, Scourge Strike, Frostscythe, Leeching Strike, Remorseless Winter and Bonestorm are missing too. Comments mark where the grants go.
-- 2026-11-14 subclass-implementer: Ranger Demon Hunter (RangerDemonHunter.py) also omits 13: Throw Glaive (Ranger 3, also Illidari Knowledge's Warglaive Mastery), Sigil of Flame, Metamorphosis, Chaos Nova, Consume Soul, Soul Reap, Collapsing Star, Fel Rush, Eye Beam, Infernal Strike, Fiery Brand, Demon Spikes, Sigil of Chains
-
 ### DI-089 · A subclass can't replace a base-class feature or the level-2 Fighting Style choice (Demon Hunter: Improved Spectral Sight vs Feral Senses, Void Warrior)
 - **Status:** open
 - **Area:** character-engine-dev
@@ -975,6 +963,32 @@ The rules conditions give Speed 0 as a Note (_SPEED_0 = Note('Speed 0: its Speed
 **History**
 - 2026-11-13 main-session: found
 - 2026-11-13 main-session: marked fixed; RulesConditions gives the five conditions Speed(set_to=0) beside their Speed 0 note; speed_in_use and the arena's reach read it (arena plan step 2).
+
+### DI-088 · World of Warcraft spells (Prayer of Mending, Shadow Word: Pain, Psychic Horror, Void Eruption, ...) aren't in the spell data, so domain spell grants omit them
+- **Status:** fixed · 2026-11-14 · uncommitted
+- **Area:** spell-scraper
+- **Where:** `CharacterContent/Classes/SubClasses2024/ClericDiscipline.py`, `CharacterContent/Classes/SubClasses2024/ClericShadow.py`
+
+The World of Warcraft source (dnd2024.wikidot.com) adds new spells that aren't scraped into spells_dnd2024.json / SpellLists. Discipline Domain lacks Prayer of Mending (Cleric 5); Shadow Domain lacks Shadow Word: Pain (3), Psychic Horror (7), Void Eruption (9). Their builders leave them out with a comment; the DomainSpells feature card still lists them. Fix: scrape the WoW spells, add SpellLists enum members, then add the data.add_spell(...) lines where the comments are. Other WoW subclasses (e.g. Holy Nova) may be affected too.
+
+**History**
+- 2026-11-14 subclass-implementer: found
+- 2026-11-14 subclass-implementer: Oath of the Ebon Blade (CharacterContent/Classes/SubClasses2024/PaladinEbonBlade.py) also lacks Rune Strike (Runic Smite's always-prepared spell, so RunicSmite has no granted_spells), Death Grip (Paladin 3) and Death and Decay (Paladin 5); its rune-column spells Vampiric Blood, Chains of Ice, Scourge Strike, Frostscythe, Leeching Strike, Remorseless Winter and Bonestorm are missing too. Comments mark where the grants go.
+- 2026-11-14 subclass-implementer: Ranger Demon Hunter (RangerDemonHunter.py) also omits 13: Throw Glaive (Ranger 3, also Illidari Knowledge's Warglaive Mastery), Sigil of Flame, Metamorphosis, Chaos Nova, Consume Soul, Soul Reap, Collapsing Star, Fel Rush, Eye Beam, Infernal Strike, Fiery Brand, Demon Spikes, Sigil of Chains
+- 2026-11-14 content-scraper: 68 of the 69 World of Warcraft spells are now in spells_dnd2024.json, SpellLists.py and SpellClasses (tagged), so the grants can be wired. Mass Polymorph is held out: its name is the XGE spell's existing class, see the content-scraper report. Subclass-only spells ('Paladin [Death Knight]', 'Ranger [Demon Hunter]') have classes [] and are on no class list.
+- 2026-11-14 subclass-implementer: marked in-progress; Wiring the scraped spells into Discipline, Shadow, Ebon Blade and Demon Hunter
+- 2026-11-14 subclass-implementer: marked fixed; All WoW spells now granted: Discipline (Prayer of Mending), Shadow (Shadow Word: Pain, Psychic Horror, Void Eruption), Ebon Blade (Rune Strike via RunicSmite.granted_spells, Death Grip, Death and Decay, and the rune columns through a new PaladinEbonBladeRune parameter on levels 3/5/9/13/17), Demon Hunter (all 13). Warglaive Mastery doesn't re-grant Throw Glaive: the table grants it at Ranger 3 and resolve_spells forbids a second grant by the same class. Uncommitted.
+
+### DI-090 · Regenerating SpellLists.py adds 6 'Wizard (Dunamancy)' spells to the Wizard enums, which test_class_spell_list_membership_matches_spell_json_classes rejects
+- **Status:** fixed · 2026-11-14 · uncommitted
+- **Area:** character-engine-dev
+- **Where:** `CharacterContent/Spells/SpellGenerator.py`, `tests/test_spell_lists_invocations.py:196`
+
+The committed SpellLists.py predates the DI-063 fix: since then the Dunamancy classes read 'Wizard (Dunamancy)' as CharacterClass.WIZARD, so SpellFactory.all_spells() gives them classes ['Wizard'] and any 'python -m CharacterContent.Spells.SpellGenerator' run adds Sapping Sting (WizardLevel0), Gift of Alacrity, Magnify Gravity (L1), Fortune's Favor, Immovable Object, Wristpocket (L2) to the Wizard enums. TestSpellListDataIntegrity::test_class_spell_list_membership_matches_spell_json_classes compares against the raw JSON 'classes' text ('Wizard (Dunamancy)' != 'Wizard') and fails. Decide whether Dunamancy spells belong on the Wizard list (Wildemount: yes, optionally) and either strip the note in the test's comparison or have the generator skip noted classes. Hit while adding the World of Warcraft spells (2026-11-14); no snapshot changed.
+
+**History**
+- 2026-11-14 content-scraper: found
+- 2026-11-14 main-session: marked fixed; The test now reads 'Wizard (Dunamancy)' as Wizard, as DI-063 decided; the 6 Dunamancy spells belong on the Wizard lists.
 
 ## Won't fix
 

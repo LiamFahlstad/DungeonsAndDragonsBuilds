@@ -10152,6 +10152,11 @@
     "Wisdom"
    ],
    [
+    "Prayer of Mending",
+    3,
+    "Wisdom"
+   ],
+   [
     "Protection from Energy",
     3,
     "Wisdom"
@@ -10854,6 +10859,11 @@
     "Wisdom"
    ],
    [
+    "Shadow Word: Pain",
+    1,
+    "Wisdom"
+   ],
+   [
     "Aid",
     2,
     "Wisdom"
@@ -10899,6 +10909,11 @@
     "Wisdom"
    ],
    [
+    "Psychic Horror",
+    4,
+    "Wisdom"
+   ],
+   [
     "Freedom of Movement",
     4,
     "Wisdom"
@@ -10915,6 +10930,11 @@
    ],
    [
     "Geas",
+    5,
+    "Wisdom"
+   ],
+   [
+    "Void Eruption",
     5,
     "Wisdom"
    ],
@@ -13221,6 +13241,21 @@
     "Charisma"
    ],
    [
+    "Death Grip",
+    1,
+    "Charisma"
+   ],
+   [
+    "Rune Strike",
+    1,
+    "Charisma"
+   ],
+   [
+    "Scourge Strike",
+    1,
+    "Charisma"
+   ],
+   [
     "Shield of Faith",
     1,
     "Charisma"
@@ -13228,6 +13263,11 @@
    [
     "Searing Smite",
     1,
+    "Charisma"
+   ],
+   [
+    "Death and Decay",
+    2,
     "Charisma"
    ],
    [
@@ -13241,8 +13281,18 @@
     "Charisma"
    ],
    [
+    "Ray of Enfeeblement",
+    2,
+    "Charisma"
+   ],
+   [
     "Branding Smite",
     2,
+    "Charisma"
+   ],
+   [
+    "Bestow Curse",
+    3,
     "Charisma"
    ],
    [
@@ -13263,6 +13313,11 @@
    [
     "Blinding Smite",
     3,
+    "Charisma"
+   ],
+   [
+    "Blight",
+    4,
     "Charisma"
    ],
    [
@@ -13287,6 +13342,11 @@
    ],
    [
     "Circle of Power",
+    5,
+    "Charisma"
+   ],
+   [
+    "Contagion",
     5,
     "Charisma"
    ],
@@ -14277,7 +14337,17 @@
     "Wisdom"
    ],
    [
+    "Fel Rush",
+    1,
+    "Wisdom"
+   ],
+   [
     "Jump",
+    1,
+    "Wisdom"
+   ],
+   [
+    "Throw Glaive",
     1,
     "Wisdom"
    ],
@@ -14287,7 +14357,17 @@
     "Wisdom"
    ],
    [
+    "Eye Beam",
+    2,
+    "Wisdom"
+   ],
+   [
     "Pass without Trace",
+    2,
+    "Wisdom"
+   ],
+   [
+    "Sigil of Flame",
     2,
     "Wisdom"
    ],
@@ -14312,6 +14392,11 @@
     "Wisdom"
    ],
    [
+    "Metamorphosis",
+    3,
+    "Wisdom"
+   ],
+   [
     "Counterspell",
     3,
     "Wisdom"
@@ -14319,6 +14404,11 @@
    [
     "Dispel Magic",
     3,
+    "Wisdom"
+   ],
+   [
+    "Chaos Nova",
+    4,
     "Wisdom"
    ],
    [

@@ -12,6 +12,8 @@ from Model.Content.Improvements import DamageResistance
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.View import CharacterView
 from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table
+from Model.Spells import FeatureSpell
+from CharacterContent.Spells.SpellLists import EvocationLevel1Spells
 
 # The source text grants Death Coil at Paladin level 1 and Runic Smite at
 # level 2; subclasses start at level 3 here, so both come with the level-3
@@ -84,8 +86,6 @@ class DeathCoil(Feature):
 
 
 class RunicSmite(Feature):
-    # Rune Strike is a World of Warcraft spell that isn't in the spell data
-    # yet, so this doesn't declare it in granted_spells().
     def __init__(self):
         super().__init__(
             name="Runic Smite",
@@ -95,6 +95,14 @@ class RunicSmite(Feature):
 
     def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
+
+    def granted_spells(self) -> list[FeatureSpell]:
+        return [
+            FeatureSpell(
+                EvocationLevel1Spells.RUNE_STRIKE,
+                ruling="Always prepared. Cast it once without a spell slot (regained on a Long Rest), or with your spell slots.",
+            )
+        ]
 
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         return [

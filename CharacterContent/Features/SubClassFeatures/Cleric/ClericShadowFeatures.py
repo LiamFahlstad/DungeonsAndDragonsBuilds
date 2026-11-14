@@ -18,9 +18,7 @@ class ShadowDomainSpells(Feature):
         )
 
     def get_improved_description(self, character: CharacterView) -> list[Block]:
-        # The spells ClericShadow.py grants at each Cleric level (Shadow Word:
-        # Pain, Psychic Horror and Void Eruption aren't in the spell data yet,
-        # so they aren't granted).
+        # The spells ClericShadow.py grants at each Cleric level.
         return [
             Paragraph(
                 "From the Cleric level shown, you always have these spells prepared."

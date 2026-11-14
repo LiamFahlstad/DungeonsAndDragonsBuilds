@@ -18,6 +18,9 @@ from CharacterContent.Spells.SpellLists import (
     EnchantmentLevel5Spells,
     NecromancyLevel3Spells,
     WizardLevel2Spells,
+    ClericLevel1Spells,
+    ClericLevel4Spells,
+    ClericLevel5Spells,
 )
 
 
@@ -31,7 +34,7 @@ class ClericShadowLevel3(ClassBuilder.SubclassLevel3):
         data.add_spell(WizardLevel2Spells.CROWN_OF_MADNESS)
         data.add_spell(EnchantmentLevel1Spells.DISSONANT_WHISPERS)
         data.add_spell(DivinationLevel2Spells.MIND_SPIKE)
-        # Shadow Word: Pain (World of Warcraft) isn't in the spell data yet.
+        data.add_spell(ClericLevel1Spells.SHADOW_WORD_PAIN)
         data.add_feature(ClericShadowFeatures.ShadowDomainSpells())
         data.add_feature(
             ClericShadowFeatures.Shadowform(),
@@ -69,7 +72,7 @@ class ClericShadowLevel7(ClassBuilder.SubclassLevel7):
         data: Grants,
     ) -> None:
         data.add_spell(ConjurationLevel4Spells.EVARDS_BLACK_TENTACLES)
-        # Psychic Horror (World of Warcraft) isn't in the spell data yet.
+        data.add_spell(ClericLevel4Spells.PSYCHIC_HORROR)
 
 
 @attr.dataclass
@@ -80,7 +83,7 @@ class ClericShadowLevel9(ClassBuilder.SubclassLevel9):
         data: Grants,
     ) -> None:
         data.add_spell(EnchantmentLevel5Spells.DOMINATE_PERSON)
-        # Void Eruption (World of Warcraft) isn't in the spell data yet.
+        data.add_spell(ClericLevel5Spells.VOID_ERUPTION)
 
 
 @attr.dataclass

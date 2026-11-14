@@ -393,8 +393,9 @@ class IllidariKnowledge(Feature):
         )
 
     def granted_spells(self) -> list[FeatureSpell]:
-        # Warglaive Mastery's Throw Glaive is a World of Warcraft spell that
-        # isn't in the spell data yet, so only Disrupt's Counterspell is granted.
+        # Warglaive Mastery's Throw Glaive isn't declared here: the Demon
+        # Hunter Spells table already grants it at Ranger level 3, and a spell
+        # can't be granted twice by the same class.
         return [
             FeatureSpell(
                 AbjurationLevel3Spells.COUNTERSPELL,

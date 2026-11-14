@@ -18,32 +18,39 @@ from CharacterContent.Spells.SpellLists import (
     AbjurationLevel4Spells,
     ConjurationLevel2Spells,
     ConjurationLevel5Spells,
+    EvocationLevel1Spells,
+    EvocationLevel2Spells,
     EvocationLevel4Spells,
     EvocationLevel5Spells,
+    NecromancyLevel1Spells,
+    NecromancyLevel3Spells,
+    TransmutationLevel1Spells,
     TransmutationLevel3Spells,
 )
 
-# Demon Hunter Spells table. The World of Warcraft spells (Throw Glaive, Sigil
-# of Flame, Metamorphosis, Chaos Nova, Consume Soul, Soul Reap, Collapsing
-# Star, Fel Rush, Eye Beam, Infernal Strike, Fiery Brand, Demon Spikes, Sigil
-# of Chains) aren't in the spell data yet, so they're left out of the grants
-# below; the Demon Hunter Spells feature still lists them.
+# Demon Hunter Spells table, the specialization columns: (column, Ranger
+# level) -> spell.
 _SPECIALIZATION_SPELLS: dict[DemonHunterSpecialization, dict[int, str]] = {
     DemonHunterSpecialization.DEVOURER: {
-        # 3: Consume Soul, 9: Soul Reap, 13: Collapsing Star - not scraped yet.
+        3: NecromancyLevel1Spells.CONSUME_SOUL,
         5: ConjurationLevel2Spells.MISTY_STEP,
+        9: NecromancyLevel3Spells.SOUL_REAP,
+        13: EvocationLevel4Spells.COLLAPSING_STAR,
         17: ConjurationLevel5Spells.STEEL_WIND_STRIKE,
     },
     DemonHunterSpecialization.HAVOC: {
-        # 3: Fel Rush, 5: Eye Beam - not scraped yet.
+        3: TransmutationLevel1Spells.FEL_RUSH,
+        5: EvocationLevel2Spells.EYE_BEAM,
         9: TransmutationLevel3Spells.BLINK,
         13: EvocationLevel4Spells.FIRE_SHIELD,
         17: ConjurationLevel5Spells.CONJURE_VOLLEY,
     },
     DemonHunterSpecialization.VENGEANCE: {
-        # 3: Infernal Strike, 5: Fiery Brand, 9: Demon Spikes, 17: Sigil of
-        # Chains - not scraped yet.
+        3: EvocationLevel1Spells.INFERNAL_STRIKE,
+        5: EvocationLevel2Spells.FIERY_BRAND,
+        9: TransmutationLevel3Spells.DEMON_SPIKES,
         13: AbjurationLevel4Spells.BANISHMENT,
+        17: ConjurationLevel5Spells.SIGIL_OF_CHAINS,
     },
 }
 
@@ -51,9 +58,7 @@ _SPECIALIZATION_SPELLS: dict[DemonHunterSpecialization, dict[int, str]] = {
 def _add_specialization_spell(
     data: Grants, specialization: DemonHunterSpecialization, ranger_level: int
 ) -> None:
-    spell = _SPECIALIZATION_SPELLS[specialization].get(ranger_level)
-    if spell is not None:
-        data.add_spell(spell)
+    data.add_spell(_SPECIALIZATION_SPELLS[specialization][ranger_level])
 
 
 @attr.dataclass
@@ -82,7 +87,7 @@ class RangerDemonHunterLevel3(ClassBuilder.SubclassLevel3):
         )
         data.add_feature(RangerDemonHunterFeatures.SoulFragments())
         data.add_feature(RangerDemonHunterFeatures.SpectralSight())
-        # Spells (All) 3: Throw Glaive - not scraped yet.
+        data.add_spell(EvocationLevel1Spells.THROW_GLAIVE)
         _add_specialization_spell(data, self.specialization, 3)
 
 
@@ -94,7 +99,7 @@ class RangerDemonHunterLevel5(ClassBuilder.SubclassLevel5):
         self,
         data: Grants,
     ) -> None:
-        # Spells (All) 5: Sigil of Flame - not scraped yet.
+        data.add_spell(EvocationLevel2Spells.SIGIL_OF_FLAME)
         _add_specialization_spell(data, self.specialization, 5)
 
 
@@ -118,7 +123,7 @@ class RangerDemonHunterLevel9(ClassBuilder.SubclassLevel9):
         self,
         data: Grants,
     ) -> None:
-        # Spells (All) 9: Metamorphosis - not scraped yet.
+        data.add_spell(TransmutationLevel3Spells.METAMORPHOSIS)
         _add_specialization_spell(data, self.specialization, 9)
 
 
@@ -143,7 +148,7 @@ class RangerDemonHunterLevel13(ClassBuilder.SubclassLevel13):
         self,
         data: Grants,
     ) -> None:
-        # Spells (All) 13: Chaos Nova - not scraped yet.
+        data.add_spell(EvocationLevel4Spells.CHAOS_NOVA)
         _add_specialization_spell(data, self.specialization, 13)
 
 

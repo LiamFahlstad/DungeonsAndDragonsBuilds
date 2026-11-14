@@ -17,8 +17,7 @@ class DisciplineDomainSpells(Feature):
         )
 
     def get_improved_description(self, character: CharacterView) -> list[Block]:
-        # The spells ClericDiscipline.py grants at each Cleric level (Prayer of
-        # Mending isn't in the spell data yet, so it isn't granted).
+        # The spells ClericDiscipline.py grants at each Cleric level.
         return [
             Paragraph(
                 "From the Cleric level shown, you always have these spells prepared."

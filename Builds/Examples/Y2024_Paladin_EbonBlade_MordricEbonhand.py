@@ -38,7 +38,7 @@ from CharacterContent.Classes.SubClasses2024.PaladinEbonBlade import (
     PaladinEbonBladeLevel17,
     PaladinEbonBladeLevel20,
 )
-from Core.Definitions import Ability, Skill
+from Core.Definitions import Ability, PaladinEbonBladeRune, Skill
 from CharacterContent.Features.CharacterFeats import (
     Backgrounds,
     EpicBoon,
@@ -170,15 +170,15 @@ def get_starter_class_builder():
                 20: PaladinLevel20(),
             },
             subclass_features_by_level={
-                3: PaladinEbonBladeLevel3(),
-                5: PaladinEbonBladeLevel5(),
+                3: PaladinEbonBladeLevel3(rune=PaladinEbonBladeRune.UNHOLY),
+                5: PaladinEbonBladeLevel5(rune=PaladinEbonBladeRune.UNHOLY),
                 7: PaladinEbonBladeLevel7(),
-                9: PaladinEbonBladeLevel9(),
+                9: PaladinEbonBladeLevel9(rune=PaladinEbonBladeRune.UNHOLY),
                 11: PaladinEbonBladeLevel11(),
-                13: PaladinEbonBladeLevel13(),
+                13: PaladinEbonBladeLevel13(rune=PaladinEbonBladeRune.UNHOLY),
                 14: PaladinEbonBladeLevel14(),
                 15: PaladinEbonBladeLevel15(),
-                17: PaladinEbonBladeLevel17(),
+                17: PaladinEbonBladeLevel17(rune=PaladinEbonBladeRune.UNHOLY),
                 20: PaladinEbonBladeLevel20(),
             },
         ),

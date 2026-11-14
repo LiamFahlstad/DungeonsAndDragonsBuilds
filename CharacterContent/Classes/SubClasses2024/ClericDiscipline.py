@@ -49,7 +49,7 @@ class ClericDisciplineLevel5(ClassBuilder.SubclassLevel5):
         self,
         data: Grants,
     ) -> None:
-        # Prayer of Mending (World of Warcraft) isn't in the spell data yet.
+        data.add_spell(ClericLevel3Spells.PRAYER_OF_MENDING)
         data.add_spell(ClericLevel3Spells.PROTECTION_FROM_ENERGY)
 
 

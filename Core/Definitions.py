@@ -259,6 +259,14 @@ class PaladinSubclass2014(str, Enum):
     WATCHERS = "Oath of the Watchers"
 
 
+class PaladinEbonBladeRune(str, Enum):
+    """The rune inscribed with Runeforging (Oath of the Ebon Blade)."""
+
+    BLOOD = "Blood"
+    FROST = "Frost"
+    UNHOLY = "Unholy"
+
+
 class ClericSubclass(str, Enum):
     LIGHT = "Light"
     LIFE = "Life"
