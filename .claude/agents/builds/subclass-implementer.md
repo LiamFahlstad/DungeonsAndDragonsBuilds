@@ -26,13 +26,13 @@ Which tree you write into is decided entirely by which source-text folder the ta
 
 **A 2014 subclass that was reprinted in 2024 is not implemented at all — the 2024 version overrides it.** This includes renamed reprints (School of Evocation → Evoker, Path of the Totem Warrior → Path of the Wild Heart, The Celestial → Celestial Patron, Aberrant Mind → Aberrant Sorcery). Before creating a 2014 subclass, check `CharacterContent\Classes\SubClasses2024\` for a reprint; if one exists, stop and tell the user instead of writing code. The only things genuinely shared between editions are the base-class infrastructure (`CharacterContent\Classes\BaseClasses\`, `CharacterContent\Features\ClassFeatures\`) and generic helpers (`Model\Content\Improvements.py`, the rest of `Model\`) — a subclass, of either edition, attaches onto the same existing base-class progression.
 
-**Example builds always get a `2014` suffix for the 2014 edition** (`Example<Class><Subclass>2014.py`), because `Builds\Examples\` is a single flat directory not split by edition, and a same-named 2024 example may already exist there.
+**Example builds always get a `2014` suffix for the 2014 edition** (`Y2014_<Class>_<Subclass>_<Name>.py`), because `Builds\Examples\` is a single flat directory not split by edition, and a same-named 2024 example may already exist there.
 
 ## Token discipline — follow these strictly
 
 - **Never spawn subagents.** No Agent tool; do all work with Read/Grep/Glob/Edit/Write/Bash directly.
 - **Read the source text fully once.** It's the spec — don't re-read it later, extract everything you need (levels, feature names, exact rules text, tables) on the first pass.
-- **Read exactly one reference pair before writing code**: the nearest existing subclass for the *same base class and same edition* (`CharacterContent\Classes\SubClasses2024\<Class>*.py` or `CharacterContent\Classes\SubClasses2014\<Class>*.py`) and its matching `Builds\Examples\Example*.py`. If this class has no subclass yet in the edition you're adding, fall back to that class's file in the *other* edition (the builder/feature code shape — `Level3`/`Level5` attrs classes, `CustomStarterClassArgs`, `MulticlassBuilder` — is identical across editions; only the target folder/enum differs), or to the closest analog class in the same edition if neither exists. Do not read a third example "just to compare" — one is enough to match the pattern.
+- **Read exactly one reference pair before writing code**: the nearest existing subclass for the *same base class and same edition* (`CharacterContent\Classes\SubClasses2024\<Class>*.py` or `CharacterContent\Classes\SubClasses2014\<Class>*.py`) and its matching `Builds\Examples\Y20xx_<Class>_*.py`. If this class has no subclass yet in the edition you're adding, fall back to that class's file in the *other* edition (the builder/feature code shape — `Level3`/`Level5` attrs classes, `CustomStarterClassArgs`, `MulticlassBuilder` — is identical across editions; only the target folder/enum differs), or to the closest analog class in the same edition if neither exists. Do not read a third example "just to compare" — one is enough to match the pattern.
 - **Grep before Read** for anything else (enum location, helper signatures) — jump straight to the line with `offset`/`limit`.
 - **One verification pass at the end** — see Step 7. Don't run Python after every individual edit.
 
@@ -83,24 +83,28 @@ Copy the structure of the nearest existing subclass file for the same base class
 - Never change a feature after granting it (`get_features_by_type(...)[0].something(...)`) — anything a later level adds is its own grant.
 
 ### 6. Example build
-- 2024: `Builds\Examples\Example<Class><Subclass>.py`
-- 2014: `Builds\Examples\Example<Class><Subclass>2014.py` (mandatory suffix — see "Two rulebook editions" above)
+- 2024: `Builds\Examples\Y2024_<Class>_<Subclass>_<CharacterName>.py`, class `Y2024<Class><Subclass><CharacterName>CharacterBuilder`
+- 2014: `Builds\Examples\Y2014_<Class>_<Subclass>_<CharacterName>.py`, class `Y2014<Class><Subclass><CharacterName>CharacterBuilder` (the year prefix is mandatory — see "Two rulebook editions" above)
 
-Copy the structure of the closest existing `Builds\Examples\Example*.py` for the same base class. Build the character up to (at least) the highest subclass level you implemented, so the example actually exercises every feature you wrote — don't stop at level 3 if you implemented up to 17. Fill in plausible ability scores/skills/equipment for the subclass's playstyle; the exact numbers don't matter, wiring correctness does.
+Copy the structure of the closest existing `Builds\Examples\Y20xx_<Class>_*.py` for the same base class. Set `base_class_level=` to (at least) the highest subclass level you implemented, so the example actually exercises every feature you wrote — don't stop at level 3 if you implemented up to 17 (reference examples often build only level 3 or 4, so don't copy that number). `base_class_features_by_level` must list **every** base-class level from 1 up to `base_class_level` (`<Class>Level4(general_feat=...)` and so on); the engine silently builds a character with missing levels, and only the Character Creator round-trip test catches it. Keep choices inline in the level calls rather than in module-level constants: the Character Creator regenerates the file from the calls and drops module constants. Fill in plausible ability scores/skills/equipment for the subclass's playstyle; the exact numbers don't matter, wiring correctness does.
 
-Do **not** register the example in `RunCharacterCreator.py` — `Builds\Examples\` is standalone-run only (see the command in Step 7).
+Do **not** register the example in `RunCharacterCreator.py` — `Builds\Examples\` is auto-discovered by `RunCharacterCreator.py --example` and the build tests.
+
+Register a new 2024 subclass in the class handouts, `Scrapers/GenerateClassHandouts.py`: a summary in `SUBCLASS_SUMMARIES` under `# --- <Class> ---` and an entry in `_SUBCLASS_RAW` with `_s2024("<text stem>")`. If your brief marks that file off-limits, list it under Not done instead.
 
 ### 7. Verify — actually run it, not just import it
 An import-only check (`python -c "import ..."`) misses runtime errors like a bad `get_features_by_type` lookup or a missing required constructor arg, which only surface when `.build()` executes. Always run the full build:
 ```bash
 python -c "
 import Core.Definitions as Definitions
-from Builds.Examples.Example<Class><Subclass>[2014] import Example<Class><Subclass>[2014]CharacterBuilder
+from Builds.Examples.Y20xx_<Class>_<Subclass>_<Name> import Y20xx<Class><Subclass><Name>CharacterBuilder
 from Presentation.CharacterSheetWriters import HtmlCharacterSheetWriter
-HtmlCharacterSheetWriter().write_character_sheet(Example<Class><Subclass>[2014]CharacterBuilder().build(), skill_config=Definitions.SkillConfig.DEFAULT)
+HtmlCharacterSheetWriter().write_character_sheet(Y20xx<Class><Subclass><Name>CharacterBuilder().build(), skill_config=Definitions.SkillConfig.DEFAULT)
 "
 ```
 Fix any errors before finishing. Then run `python RunCharacterCreator.py` once to confirm nothing else broke.
+
+A new example has no golden snapshots, so `test_build_snapshots`, `test_combatant_snapshots` and `test_creator_roundtrip` fail for it until they're created. If `tests/snapshots/` is in your scope, create them with `UPDATE_SNAPSHOTS=1 ./run_tests.sh -q -n 0 tests/test_build_snapshots.py tests/test_combatant_snapshots.py -k <CharacterName>` (`-n 0` matters: parallel workers writing the same JSON corrupt it), then rerun those tests plus `tests/test_creator_roundtrip.py -k <CharacterName>` without the variable. Otherwise report the command under Not done.
 
 ## Directory layout
 
@@ -114,7 +118,7 @@ Fix any errors before finishing. Then run `python RunCharacterCreator.py` once t
 | `CharacterContent\Features\SubClassFeatures\<Class>\<Class><Subclass>Features.py` | 2024 subclass features, one file per subclass |
 | `CharacterContent\Features\SubClassFeatures2014\<Class>\<Class><Subclass>Features.py` | 2014 subclass features, one file per subclass |
 | `Model\Content\Improvements.py` | Reusable mechanical helpers (AC, skill/save proficiency & expertise choices, resistances, senses, bonuses), shared |
-| `Builds\Examples\` | `_TEMPLATE.py` (heavily commented) + one `Example<Build>.py` per 2024 subclass, `Example<Build>2014.py` per 2014 subclass — standalone-runnable, not wired into `RunCharacterCreator.py` |
+| `Builds\Examples\` | `_TEMPLATE.py` (heavily commented) + one `Y2024_<Class>_<Subclass>_<Name>.py` per 2024 subclass, `Y2014_...` per 2014 subclass — auto-discovered, not registered in `RunCharacterCreator.py` |
 | `CharacterContent\Features\ClassFeatures\ClassProficiencies.py` | `CLASS_SKILL_CHOICES` (per-class skill pool + pick count) and the saving-throw table, read by `ClassBuilder.StarterClassBuilder`; `CustomStarterClassArgs.skills` takes the chosen `list[Skill]` directly, shared |
 
 ## Style rules
