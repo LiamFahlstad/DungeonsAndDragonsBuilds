@@ -2545,3 +2545,181 @@ class ShadowPact(OriginFeat):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
+
+
+class UpperPlanesPact(OriginFeat):
+    """D&D Beyond Drops (November 2026)."""
+
+    def __init__(self, spell_casting_ability: Ability):
+        if spell_casting_ability not in _MENTAL_ABILITIES:
+            raise ValueError(
+                "Upper Planes Pact spellcasting ability must be Intelligence, Wisdom, or Charisma."
+            )
+        self.spell_casting_ability = spell_casting_ability
+        self._religion = SkillProficiency([Skill.RELIGION])
+        self._resistance = DamageResistance(DamageType.RADIANT)
+        super().__init__(
+            name="Upper Planes Pact",
+            origin=_PLANAR_PACT_ORIGIN,
+            usage_tags=["buff"],
+            # The free cast of Detect Evil and Good.
+            uses=FeatureUses(max_uses=1, regain_all_on="short or long rest"),
+        )
+
+    def apply(self, ledger_writer: LedgerWriter):
+        self._religion.apply(ledger_writer)
+        self._resistance.apply(ledger_writer)
+
+    def granted_spells(self) -> list[FeatureSpell]:
+        return [
+            FeatureSpell(
+                ClericLevel1Spells.DETECT_EVIL_AND_GOOD,
+                self.spell_casting_ability,
+                "Always prepared. Cast it once without a spell slot (regained on a Short or Long Rest), or with your spell slots.",
+            )
+        ]
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Celestial Lore", "Proficiency in Religion"),
+                    ("Celestial Resistance", "Resistance to Radiant damage"),
+                    (
+                        "Detect Evil and Good",
+                        f"Always prepared; {self.spell_casting_ability.value} is its spellcasting ability. Cast it once per Short or Long Rest without a slot, or with your spell slots.",
+                    ),
+                )
+            ),
+        ]
+
+    def get_description(self, character: CharacterView) -> str:
+        return (
+            _PLANAR_PACT_PREREQUISITE + "You gain the following benefits.\n"
+            "Celestial Lore. You gain Proficiency in the Religion skill.\n"
+            "Celestial Resistance. You have Resistance to Radiant damage.\n"
+            "Detect Evil and Good. You always have the Detect Evil and Good spell prepared. You can cast it once without expending a spell slot, and you regain the ability to cast it in that way when you finish a Short or Long Rest. You can also cast the spell using any spell slots you have of the appropriate level.\n"
+            f"Intelligence, Wisdom, or Charisma is your spellcasting ability for this spell (choose when you select this feat). (Chosen: {self.spell_casting_ability.value})"
+        )
+
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
+
+
+# ---------------------------------------------------------------------------
+# World of Warcraft Origin Feats
+# ---------------------------------------------------------------------------
+# Prerequisite: World of Warcraft campaign, Human species. Shown as text only:
+# there is no World of Warcraft Human species, and no feat checks a species.
+
+_WORLD_OF_WARCRAFT_HUMAN_PREREQUISITE = (
+    "Origin Feat (Prerequisite: World of Warcraft Campaign, Human Species)\n"
+)
+
+
+class ArathiHeritage(OriginFeat):
+    def __init__(self):
+        # Advantage only against the Charmed condition: the ledger's saving
+        # throw advantage is per ability, so it is on the card only.
+        super().__init__(
+            name="Arathi Heritage",
+            origin="Origin Feat",
+            usage_tags=["buff"],
+            # Lethargy Resilience.
+            uses=FeatureUses(max_uses=1, regain_all_on="1d4 long rests"),
+        )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Fey Ancestry",
+                        "Advantage on saving throws to avoid or end the Charmed condition",
+                    ),
+                    (
+                        "Lethargy Resilience",
+                        "When you fail a saving throw to avoid or end the Unconscious condition, succeed instead. Then not again until you finish 1d4 Long Rests.",
+                    ),
+                )
+            ),
+        ]
+
+    def get_description(self, character: CharacterView) -> str:
+        return (
+            _WORLD_OF_WARCRAFT_HUMAN_PREREQUISITE
+            + "As a descendant of humans from Arathor and high elves from Quel'Thalas, you gain the following benefits.\n"
+            "Fey Ancestry. You have Advantage on saving throws to avoid or end the Charmed condition.\n"
+            "Lethargy Resilience. When you fail a saving throw to avoid or end the Unconscious condition, you can succeed instead. Once you use this trait, you can't do so again until you finish 1d4 Long Rests."
+        )
+
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
+
+
+class ChildOfTheSea(OriginFeat):
+    def __init__(self):
+        # The engine has no Swim Speed, so Ocean Born is on the card only.
+        super().__init__(
+            name="Child of the Sea",
+            origin="Origin Feat",
+            passive=True,
+            usage_tags=["utility"],
+        )
+
+    @staticmethod
+    def _breath_minutes(character: CharacterView) -> int:
+        return max(1, 2 + character.get_constitution_modifier())
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "Lasting Breath",
+                        f"Hold your breath for {self._breath_minutes(character)} minutes (2 + Constitution modifier, minimum 1)",
+                    ),
+                    ("Ocean Born", "Swim Speed equal to your Speed"),
+                )
+            ),
+        ]
+
+    def get_description(self, character: CharacterView) -> str:
+        return (
+            _WORLD_OF_WARCRAFT_HUMAN_PREREQUISITE
+            + "As a Kul Tiran, you gain the following benefits.\n"
+            f"Lasting Breath. You can hold your breath for a number of minutes equal to 2 plus your Constitution modifier (minimum of 1 minute). (Currently {self._breath_minutes(character)} minutes)\n"
+            "Ocean Born. You have a Swim Speed equal to your Speed."
+        )
+
+
+class WillToSurvive(OriginFeat):
+    def __init__(self):
+        super().__init__(
+            name="Will to Survive",
+            origin="Origin Feat",
+            usage_tags=["buff"],
+        )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    (
+                        "When",
+                        "You have the Incapacitated condition but not the Unconscious condition",
+                    ),
+                    ("Effect", "Ignore the Incapacitated condition on your turn"),
+                    ("Cost", "You gain 1 Exhaustion level"),
+                )
+            ),
+        ]
+
+    def get_description(self, character: CharacterView) -> str:
+        return (
+            _WORLD_OF_WARCRAFT_HUMAN_PREREQUISITE
+            + "When you have the Incapacitated condition but not the Unconscious condition, you can draw on the proud heritage of Stormwind or Stromgarde to ignore the Incapacitated condition on your turn. If you do, you gain 1 Exhaustion level."
+        )
+
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
+        return FeatureTarget.SELF

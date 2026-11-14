@@ -4,6 +4,7 @@ from CharacterContent.Spells.SpellLists import (
     AbjurationLevel3Spells,
     AbjurationLevel4Spells,
     AbjurationLevel5Spells,
+    AbjurationLevel7Spells,
     ConjurationLevel0Spells,
     ConjurationLevel1Spells,
     ConjurationLevel2Spells,
@@ -75,16 +76,19 @@ from Model.Content.Improvements import (
     SavingThrowProficiency,
     SpeedBonus,
     GrantWeaponProficiency,
+    GrantLanguage,
 )
-from Core.Definitions import Ability, DamageType, Sense, Skill
+from Core.Definitions import Ability, DamageType, Language, Sense, Skill
 from CharacterContent.Items.Weapons import WeaponProficiency
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Core.Rules import (
     ALL_LEVELS,
+    MIN_LEVEL,
     PROFICIENCY_BONUS_GAINED_AT,
     MAX_ABILITY_MODIFIER,
     MAX_ABILITY_SCORE,
     MAX_PROFICIENCY_BONUS,
+    proficiency_bonus,
 )
 from Model.View import CharacterView
 from Utils import StringUtils
@@ -4823,3 +4827,536 @@ class ShadowWeaver(_GreaterPlanarPact):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.AREA
+
+
+# ── World of Warcraft general feats ──────────────────────────────────────────
+
+
+class _WarcraftFeat(_AbilityScoreFeat):
+    """Base class for the World of Warcraft Level 4+ general feats: an
+    _AbilityScoreFeat whose subclasses pass their own usage_tags and
+    activation.
+
+    Subclasses declare _NAME, _ABILITIES and _PREREQUISITE (what the
+    prerequisite adds after "Level 4+", or "" for nothing), and pass
+    usage_tags=[...] to super().__init__.
+
+    The ability score and tool prerequisites are shown, not enforced, like
+    every other feat's."""
+
+    _PREREQUISITE: str = ""
+
+    def __init__(
+        self,
+        character_level: int,
+        ability: Ability,
+        usage_tags=None,
+        activation: FeatureActivation | None = None,
+    ):
+        super().__init__(character_level, ability)
+        self.usage_tags = usage_tags
+        if activation is not None:
+            self.activation = activation
+
+    def _prerequisite(self) -> str:
+        extra = f", {self._PREREQUISITE}" if self._PREREQUISITE else ""
+        return f"General Feat (Prerequisite: Level 4+{extra})\n"
+
+
+_DEXTERITY_AND_WISDOM_13 = "Dexterity and Wisdom 13+"
+
+
+class Clearcasting(_WarcraftFeat):
+    _NAME = "Clearcasting"
+    _ABILITIES = (Ability.INTELLIGENCE,)
+
+    def __init__(self, character_level: int, ability: Ability):
+        super().__init__(
+            character_level,
+            ability,
+            usage_tags=["damage"],
+            activation=FeatureActivation(action_type=ActionType.REACTION),
+        )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Ability Score", f"+1 {self.ability.value}, to a maximum of 20"),
+                    (
+                        "Clearcasting",
+                        "Reaction when you score a Critical Hit with a spell's attack roll: cast a cantrip with a casting time of an action",
+                    ),
+                    (
+                        "Force Adept",
+                        "When you roll damage for a spell you cast that deals Force damage, treat any 1 on a damage die as a 2",
+                    ),
+                )
+            ),
+        ]
+
+    def get_description(self, character: CharacterView) -> str:
+        return (
+            self._prerequisite() + "You gain the following benefits.\n"
+            "Ability Score Increase. Increase your Intelligence score by 1, to a maximum of 20.\n"
+            "Clearcasting. When you score a Critical Hit with a spell's attack roll, you can take a Reaction to cast a cantrip with a casting time of an action.\n"
+            "Force Adept. When you roll damage for a spell you cast that deals Force damage, you can treat any 1 on a damage die as a 2."
+        )
+
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
+
+
+class ElusiveBrawler(_WarcraftFeat):
+    _NAME = "Elusive Brawler"
+    _ABILITIES = (Ability.DEXTERITY, Ability.WISDOM)
+    _PREREQUISITE = _DEXTERITY_AND_WISDOM_13
+
+    def __init__(self, character_level: int, ability: Ability):
+        super().__init__(
+            character_level,
+            ability,
+            usage_tags=["buff"],
+            activation=FeatureActivation(
+                action_type=ActionType.REACTION,
+                duration="Until the start of your next turn",
+                range="Self",
+            ),
+        )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Ability Score", f"+1 {self.ability.value}, to a maximum of 20"),
+                    (
+                        "Reactive Dodge",
+                        "Reaction when you take damage: take the Dodge action",
+                    ),
+                )
+            ),
+        ]
+
+    def get_description(self, character: CharacterView) -> str:
+        return (
+            self._prerequisite() + "You gain the following benefits.\n"
+            "Ability Score Increase. Increase your Dexterity or Wisdom score by 1, to a maximum of 20.\n"
+            "Reactive Dodge. When you take damage, you can take a Reaction to take the Dodge action."
+        )
+
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
+
+
+class EnvelopingMist(_WarcraftFeat):
+    _NAME = "Enveloping Mist"
+    _ABILITIES = (Ability.DEXTERITY, Ability.WISDOM)
+    _PREREQUISITE = _DEXTERITY_AND_WISDOM_13
+
+    def __init__(self, character_level: int, ability: Ability):
+        super().__init__(
+            character_level,
+            ability,
+            usage_tags=["heal", "buff"],
+            activation=FeatureActivation(
+                action_type=ActionType.REACTION,
+                duration="Until the start of the creature's next turn",
+            ),
+        )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Ability Score", f"+1 {self.ability.value}, to a maximum of 20"),
+                    (
+                        "Life Cocoon",
+                        "When a spell or feature of yours restores Hit Points to a creature, roll one of that feature's dice: that number is the creature's Life Cocoon value",
+                    ),
+                    (
+                        "Reaction",
+                        "When the creature is hit by an attack roll before the start of its next turn, reduce that attack's damage by its Life Cocoon value; the mist then disappears",
+                    ),
+                    (
+                        "Mist persists",
+                        "At the start of the creature's next turn, it gains Temporary Hit Points equal to its Life Cocoon value",
+                    ),
+                )
+            ),
+        ]
+
+    def get_description(self, character: CharacterView) -> str:
+        return (
+            self._prerequisite() + "You gain the following benefits.\n"
+            "Ability Score Increase. Increase your Dexterity or Wisdom score by 1, to a maximum of 20.\n"
+            "Enveloping Mist. When you cast a spell or use a feature to restore Hit Points to a creature, the creature is wrapped in a healing mist. Roll one of the dice from the feature that healed it, and note that number as the creature's Life Cocoon value.\n"
+            "If the creature is hit by an attack roll before the start of its next turn, you can take a Reaction to reduce the damage it takes from that attack by its Life Cocoon value. The mist then disappears.\n"
+            "At the start of the creature's next turn, if the mist persists, the creature gains Temporary Hit Points equal to its Life Cocoon value."
+        )
+
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
+        return FeatureTarget.ALLY
+
+
+class FingersOfFrost(_WarcraftFeat):
+    _NAME = "Fingers of Frost"
+    _ABILITIES = (Ability.INTELLIGENCE,)
+
+    def __init__(self, character_level: int, ability: Ability):
+        super().__init__(character_level, ability, usage_tags=["damage"])
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Ability Score", f"+1 {self.ability.value}, to a maximum of 20"),
+                    (
+                        "Cold Mastery",
+                        "Spells you cast ignore Resistance to Cold damage",
+                    ),
+                    (
+                        "Frostbite",
+                        f"When you deal Cold damage to a Restrained creature, it takes an extra {character.get_proficiency_bonus()}d4 Cold damage (Proficiency Bonus d4s)",
+                    ),
+                )
+            ),
+        ]
+
+    def get_description(self, character: CharacterView) -> str:
+        return (
+            self._prerequisite() + "You gain the following benefits.\n"
+            "Ability Score Increase. Increase your Intelligence score by 1, to a maximum of 20.\n"
+            "Cold Mastery. Spells you cast ignore Resistance to Cold damage.\n"
+            "Frostbite. When you deal Cold damage to a creature that has the Restrained condition, the creature takes extra Cold damage. To determine the extra damage, roll a number of d4s equal to your Proficiency Bonus and add them together."
+        )
+
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
+
+
+class FistsOfFury(_WarcraftFeat):
+    _NAME = "Fists of Fury"
+    _ABILITIES = (Ability.DEXTERITY, Ability.WISDOM)
+    _PREREQUISITE = _DEXTERITY_AND_WISDOM_13
+
+    def __init__(self, character_level: int, ability: Ability):
+        super().__init__(character_level, ability, usage_tags=["damage"])
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Ability Score", f"+1 {self.ability.value}, to a maximum of 20"),
+                    (
+                        "Clean Hits",
+                        "When you roll damage for an Unarmed Strike or a Light weapon attack, treat any 1 on a damage die as a 2",
+                    ),
+                    (
+                        "Combo Strikes",
+                        "An Unarmed Strike's damage gets +1 for each time you already hit that creature with a melee attack roll this turn",
+                    ),
+                )
+            ),
+        ]
+
+    def get_description(self, character: CharacterView) -> str:
+        return (
+            self._prerequisite() + "You gain the following benefits.\n"
+            "Ability Score Increase. Increase your Dexterity or Wisdom score by 1, to a maximum of 20.\n"
+            "Clean Hits. When you roll damage for an attack you make with an Unarmed Strike or a weapon that has the Light property, you can treat any 1 on a damage die as a 2.\n"
+            "Combo Strikes. When you deal damage to a creature with an Unarmed Strike, you gain a +1 bonus to the damage roll for each time you previously hit that creature with a melee attack roll in the same turn."
+        )
+
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
+
+
+class HotStreak(_WarcraftFeat):
+    _NAME = "Hot Streak"
+    _ABILITIES = (Ability.INTELLIGENCE,)
+
+    def __init__(self, character_level: int, ability: Ability):
+        super().__init__(character_level, ability, usage_tags=["damage"])
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Ability Score", f"+1 {self.ability.value}, to a maximum of 20"),
+                    (
+                        "Fire Mastery",
+                        "Spells you cast ignore Resistance to Fire damage",
+                    ),
+                    (
+                        "Ignite",
+                        "A creature your spell deals Fire damage to starts burning. Dealing Fire damage to a creature that is already burning increases its burning damage by 1d4.",
+                    ),
+                )
+            ),
+        ]
+
+    def get_description(self, character: CharacterView) -> str:
+        return (
+            self._prerequisite() + "You gain the following benefits.\n"
+            "Ability Score Increase. Increase your Intelligence score by 1, to a maximum of 20.\n"
+            "Fire Mastery. Spells you cast ignore Resistance to Fire damage.\n"
+            "Ignite. When a spell you cast deals Fire damage to a creature, the target starts burning. When you deal Fire damage to a creature that is already burning, the flames become more severe, increasing the burning damage by 1d4."
+        )
+
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
+
+
+class InscriptionAdept(_WarcraftFeat):
+    """inscription_bonus: your proficiency bonus in inscription, which unlocks
+    Glyph of Warding at Journeyman (+3) and Symbol at Artisan (+5). It
+    defaults to the Proficiency Bonus at the level the feat is taken; pass
+    the bonus reached since to grant the later spells."""
+
+    _NAME = "Inscription Adept"
+    _ABILITIES = _MENTAL_ABILITIES
+    _PREREQUISITE = "Proficiency with Calligrapher's Supplies, Cartographer's Tools, or Painter's Supplies"
+    # (inscription bonus, spell, rank) - the feat's table.
+    _SPELLS = (
+        (0, IllusionLevel1Spells.ILLUSORY_SCRIPT, None),
+        (3, AbjurationLevel3Spells.GLYPH_OF_WARDING, "Journeyman"),
+        (5, AbjurationLevel7Spells.SYMBOL, "Artisan"),
+    )
+
+    def __init__(
+        self,
+        character_level: int,
+        ability: Ability,
+        inscription_bonus: int | None = None,
+    ):
+        if inscription_bonus is None:
+            inscription_bonus = proficiency_bonus(character_level)
+        if (
+            not proficiency_bonus(MIN_LEVEL)
+            <= inscription_bonus
+            <= MAX_PROFICIENCY_BONUS
+        ):
+            raise ValueError(
+                f"Inscription Adept inscription_bonus must be {proficiency_bonus(MIN_LEVEL)} to {MAX_PROFICIENCY_BONUS}. ({inscription_bonus})"
+            )
+        self.inscription_bonus = inscription_bonus
+        # One free casting of each spell learned, regained on a Long Rest.
+        self._USES = FeatureUses(
+            max_uses=len(self._learned()), regain_all_on="long rest"
+        )
+        super().__init__(character_level, ability)
+
+    def _learned(self) -> list[str]:
+        return [
+            spell for bonus, spell, _ in self._SPELLS if self.inscription_bonus >= bonus
+        ]
+
+    def granted_spells(self) -> list[FeatureSpell]:
+        return [
+            FeatureSpell(
+                spell,
+                self.ability,
+                "Always prepared. Cast it once without a spell slot per Long Rest, or with your spell slots. Herbalism resources of the appropriate value can replace its Material component.",
+            )
+            for spell in self._learned()
+        ]
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        later = [
+            (f"{rank} (+{bonus})", f"{spell.value}, cast the same way")
+            for bonus, spell, rank in self._SPELLS
+            if rank is not None and self.inscription_bonus < bonus
+        ]
+        names = [str(spell) for spell in self._learned()]
+        spells = (
+            names[0] if len(names) == 1 else f"{', '.join(names[:-1])} and {names[-1]}"
+        )
+        casting = "cast it" if len(names) == 1 else "cast each"
+        return [
+            Facts(
+                (
+                    ("Ability Score", f"+1 {self.ability.value}, to a maximum of 20"),
+                    (
+                        "Inscription Magic",
+                        f"{spells} always prepared; {casting} once per Long Rest without a spell slot, or with your spell slots. Herbalism resources can replace the Material component. {self.ability.value} is the spellcasting ability.",
+                    ),
+                )
+                + tuple(later)
+            ),
+        ]
+
+    def get_description(self, character: CharacterView) -> str:
+        return (
+            self._prerequisite()
+            + "Your mastery of inscription allows you to duplicate the effects of certain spells with your written magic. You gain the following benefits.\n"
+            "Ability Score Increase. Increase your Intelligence, Wisdom, or Charisma score by 1, to a maximum of 20.\n"
+            "Inscription Magic. You learn the Illusory Script spell and always have it prepared. You can cast it once without a spell slot, and you regain the ability to cast it in that way when you finish a Long Rest. You can also cast the spell using any spell slots you have of the appropriate level. You can use herbalism resources of the appropriate value in place of the Material component specified for that spell. The spell's spellcasting ability is the ability increased by this feat.\n"
+            "When you reach higher levels of proficiency in inscription, you learn higher-level spells and can cast them in the same way: Glyph of Warding at Journeyman (+3) and Symbol at Artisan (+5)."
+        )
+
+
+class StaggerAndSway(_WarcraftFeat):
+    _NAME = "Stagger and Sway"
+    _ABILITIES = (Ability.DEXTERITY, Ability.WISDOM)
+    _PREREQUISITE = _DEXTERITY_AND_WISDOM_13
+
+    def __init__(self, character_level: int, ability: Ability):
+        super().__init__(
+            character_level,
+            ability,
+            usage_tags=["buff"],
+            activation=FeatureActivation(
+                action_type=ActionType.BONUS_ACTION, range="Self"
+            ),
+        )
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        reduction = max(1, character.get_dexterity_modifier())
+        purified = max(0, character.get_wisdom_modifier())
+        dice = f"{purified} {'die' if purified == 1 else 'dice'}"
+        return [
+            Facts(
+                (
+                    ("Ability Score", f"+1 {self.ability.value}, to a maximum of 20"),
+                    (
+                        "Defer Damage",
+                        f"When you take damage, reduce it by {reduction} (Dexterity modifier, minimum 1) and add a d6 to your Delayed Reaction pool",
+                    ),
+                    (
+                        "Delayed Reaction",
+                        "At the end of your turn, roll all the pool's dice and remove them; you take Force damage equal to the total",
+                    ),
+                    (
+                        "Purify",
+                        f"Bonus Action: remove {dice} (Wisdom modifier) from your Delayed Reaction pool",
+                    ),
+                )
+            ),
+        ]
+
+    def get_description(self, character: CharacterView) -> str:
+        return (
+            self._prerequisite() + "You gain the following benefits.\n"
+            "Ability Score Increase. Increase your Dexterity or Wisdom score by 1, to a maximum of 20.\n"
+            "Defer Damage. When you take damage, reduce the damage you take by your Dexterity modifier (minimum of 1). Then add a d6 to your Delayed Reaction pool. At the end of your turn, remove all the dice from your Delayed Reaction pool and roll them. You take Force damage equal to the total rolled.\n"
+            "Purify. As a Bonus Action, you can remove a number of dice equal to your Wisdom modifier from your Delayed Reaction pool."
+        )
+
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
+
+
+# ── Greater Planar Pacts: Upper Planes Pact ──────────────────────────────────
+
+
+class ElysiumDiplomat(_GreaterPlanarPact):
+    """language_1 / language_2: Celestial Communicator's two languages,
+    from the Player's Handbook language tables."""
+
+    _NAME = "Elysium Diplomat"
+    _PACT = "Upper Planes Pact"
+    _ABILITIES = _MENTAL_ABILITIES
+    # "Chosen from the language tables in the Player's Handbook" - the secret
+    # languages aren't on them.
+    VALID_LANGUAGES = tuple(
+        language
+        for language in Language
+        if language not in (Language.DRUIDIC, Language.THIEVES_CANT)
+    )
+
+    def __init__(
+        self,
+        character_level: int,
+        ability: Ability,
+        language_1: Language = Language.CELESTIAL,
+        language_2: Language = Language.SYLVAN,
+    ):
+        for language in (language_1, language_2):
+            if language not in self.VALID_LANGUAGES:
+                raise ValueError(
+                    f"Elysium Diplomat languages must come from the Player's Handbook language tables. ({language})"
+                )
+        if language_1 == language_2:
+            raise ValueError(f"Elysium Diplomat languages must differ. ({language_1})")
+        self.languages = (language_1, language_2)
+        self._languages = [GrantLanguage(language) for language in self.languages]
+        super().__init__(
+            character_level,
+            ability,
+            usage_tags=["buff"],
+            activation=FeatureActivation(action_type=ActionType.REACTION, range="Self"),
+        )
+
+    def apply(self, ledger_writer: LedgerWriter):
+        super().apply(ledger_writer)
+        for language in self._languages:
+            language.apply(ledger_writer)
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Ability Score", f"+1 {self.ability.value}, to a maximum of 20"),
+                    (
+                        "Celestial Communicator",
+                        f"Languages: {' and '.join(language.value for language in self.languages)}",
+                    ),
+                    (
+                        "Divine Calm",
+                        "A creature's Hostile attitude doesn't give you Disadvantage on Charisma (Persuasion) checks to influence it",
+                    ),
+                    (
+                        "Quick Retreat",
+                        "Reaction when an enemy ends its turn within 5 feet of you: move up to half your Speed without provoking Opportunity Attacks",
+                    ),
+                )
+            ),
+        ]
+
+    def get_description(self, character: CharacterView) -> str:
+        return (
+            self._prerequisite()
+            + "Elysium's tranquility and serenity grants you the following benefits.\n"
+            f"{self._ability_increase()}"
+            "Celestial Communicator. You learn two additional languages of your choice, chosen from the language tables in the Player's Handbook.\n"
+            "Divine Calm. A creature's Hostile attitude toward you doesn't impose Disadvantage on your Charisma (Persuasion) checks to influence that creature.\n"
+            "Quick Retreat. When an enemy ends its turn within 5 feet of you, you can take a Reaction to move up to half your Speed without provoking Opportunity Attacks."
+        )
+
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
+        return FeatureTarget.SELF
+
+
+class YsgardianWarrior(_GreaterPlanarPact):
+    _NAME = "Ysgardian Warrior"
+    _PACT = "Upper Planes Pact"
+    _ABILITIES = (Ability.STRENGTH, Ability.DEXTERITY, Ability.CONSTITUTION)
+    # Ysgardian Spirit.
+    _USES = FeatureUses(max_uses=1, regain_all_on="short or long rest")
+
+    def __init__(self, character_level: int, ability: Ability):
+        super().__init__(character_level, ability, usage_tags=["buff", "damage"])
+
+    def get_improved_description(self, character: CharacterView) -> list[Block]:
+        return [
+            Facts(
+                (
+                    ("Ability Score", f"+1 {self.ability.value}, to a maximum of 20"),
+                    (
+                        "Ysgardian Spirit",
+                        f"When you become Bloodied, you have Advantage on your next attack roll before the end of your next turn; on a hit, it can deal {character.get_proficiency_bonus()} extra damage (Proficiency Bonus) of the attack's type. Once per Short or Long Rest.",
+                    ),
+                )
+            ),
+        ]
+
+    def get_description(self, character: CharacterView) -> str:
+        return (
+            self._prerequisite()
+            + "Your commitment to your planar pact grants you the following benefits.\n"
+            f"{self._ability_increase()}"
+            "Ysgardian Spirit. When you become Bloodied, you gain Advantage on the next attack roll you make before the end of your next turn, and if you hit with the attack roll, you can deal extra damage to the target equal to your Proficiency Bonus. This extra damage is of the same type as the attack. Once you use this benefit, you can't use it again until you finish a Short or Long Rest."
+        )
+
+    def target(self, character: CharacterView) -> "FeatureTarget | None":
+        return FeatureTarget.ENEMY
