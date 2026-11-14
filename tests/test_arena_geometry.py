@@ -105,3 +105,10 @@ def test_every_rule_keeps_the_contract(rule):
             x, y = rule.shape.center(a, size)
             assert rule.shape.cell_at(x, y, size) == a
             assert len(rule.shape.polygon(a, size)) >= 3
+
+
+def test_a_cell_is_named_by_its_column_letters_and_row_number():
+    assert SQUARES.cell_name(Cell(0, 0)) == "A1"
+    assert SQUARES.cell_name(Cell(2, 6)) == "C7"
+    assert SQUARES.labels(Cell(25, 15)) == ("Z", "16")
+    assert SQUARES.cell_name(Cell(26, 0)) == "AA1", "past Z, as a spreadsheet"

@@ -3,12 +3,14 @@ with a token for every combatant on the map. It draws token rows, never a
 combatant dict (the plan's Decision 6), and has no rules in it: the cells
 come from Combat/Arena's grid shape, the rows from token_rows.
 
-Left click a token: the source. Right click: the target (Ctrl adds one,
-Shift a range), as on the cards. Drag a token to move it, with the cells it
-can reach this turn shaded and what each costs; or click an empty cell to
-move the source there (step 6). With a source selected, hovering a cell
-or a token shows how far it is (step 7). Ctrl+wheel zooms; dragging empty
-space pans."""
+Left click a token: the source, picked up to move. Right click: the target
+(Ctrl adds one, Shift a range), as on the cards. A token picked up shades
+the cells it can reach this turn with what each costs, and the next click on
+an empty cell moves it there; clicking it again puts it down where it was.
+Or drag a token to a cell (step 6). Whose turn it is stands on gold cells,
+as its card is gold. With a source selected, hovering a cell or a token
+shows how far it is (step 7). Ctrl+wheel zooms; dragging empty space
+pans. Columns are lettered and rows numbered, so a cell is "C7"."""
 
 from __future__ import annotations
 
@@ -58,6 +60,8 @@ _TARGET = QColor("#e74c3c")
 _HP_BAR = QColor("#5ec269")
 _HP_BAR_LOW = QColor("#e0a030")
 _REACH = QColor(94, 194, 105, 60)
+# Under whose turn it is: the active card's gold border on its gold tint.
+_TURN_CELL = QColor(201, 168, 76, 110)
 _REACH_TEXT = QColor("#b8e6be")
 _HOVER_TEXT = QColor("#ffffff")
 _HOVER_BACK = QColor(10, 10, 20, 200)
@@ -144,9 +148,10 @@ def token_rows(
 
 class ArenaView(QGraphicsView):
     """The map: the grid of `settings` and a token per row. Clicks go to
-    `on_select(name)` and `on_target(name, ctrl, shift)`, a token dropped on
-    a cell to `on_move(name, anchor)`, a click on an empty cell to
-    `on_cell(cell)`; `reach_of(name)` is what a picked-up token shades."""
+    `on_select(name)` and `on_target(name, ctrl, shift)`; a token picked up
+    (a left click) or dragged goes to the cell clicked or dropped on with
+    `on_move(name, anchor)`; a click on an empty cell with nothing picked up
+    to `on_cell(cell)`; `reach_of(name)` is what a picked-up token shades."""
 
     def __init__(
         self,
@@ -181,8 +186,10 @@ class ArenaView(QGraphicsView):
         self._press: QPointF | None = None
         self._press_row: TokenRow | None = None
         self._grabbed: Cell | None = None
-        # While a token is picked up: the cells it can reach, and costs.
+        # While a token is dragged, or picked up by a click to be moved by
+        # the next click on a cell: the cells it can reach, and costs.
         self._dragging: str | None = None
+        self._picked: str | None = None
         self._reach: dict[Cell, int] = {}
         self._settings = ArenaSettings()
         self._rows: list[TokenRow] = []
@@ -204,8 +211,14 @@ class ArenaView(QGraphicsView):
         self._settings, self._rows = settings, list(rows)
         self._scene.clear()
         self._draw_grid()
-        if self._dragging is not None:
+        if self._picked is not None and self._dragging is None:
+            # Whoever moved since it was picked up changes where it can go.
+            self._reach = self._reach_of(self._picked)
+        if self._dragging is not None or self._picked is not None:
             self._draw_reach()
+        for row in rows:
+            if row.turn:
+                self._draw_turn_cells(row)
         for row in rows:
             self._draw_token(row)
         self._draw_hover()
@@ -244,6 +257,23 @@ class ArenaView(QGraphicsView):
                 self._scene.addItem(label)
                 x, y = shape.polygon(cell, CELL_PX)[0]
                 label.setPos(x + 2, y + 1)
+
+    def _draw_turn_cells(self, row: TokenRow):
+        """Whose turn it is stands on gold: the cells under it tinted and
+        edged gold, as the active card is."""
+        shape = self._settings.distance_rule.shape
+        pen = QPen(_TURN)
+        pen.setWidthF(2.0)
+        for cell in row.cells:
+            points = [QPointF(x, y) for x, y in shape.polygon(cell, CELL_PX)]
+            self._scene.addPolygon(
+                QPolygonF(points), QPen(Qt.PenStyle.NoPen), QBrush(_TURN_CELL)
+            )
+        corners = [p for cell in row.cells for p in shape.polygon(cell, CELL_PX)]
+        xs, ys = [x for x, _ in corners], [y for _, y in corners]
+        self._scene.addRect(
+            QRectF(min(xs), min(ys), max(xs) - min(xs), max(ys) - min(ys)), pen
+        )
 
     def _draw_hover(self):
         if self._hover is None:
@@ -296,7 +326,8 @@ class ArenaView(QGraphicsView):
 
     def reach_shown(self) -> dict[Cell, int]:
         """The cells shaded now (tests)."""
-        return dict(self._reach) if self._dragging is not None else {}
+        moving = self._dragging is not None or self._picked is not None
+        return dict(self._reach) if moving else {}
 
     def _redraw(self):
         self._drawn = None
@@ -315,10 +346,11 @@ class ArenaView(QGraphicsView):
             first_row = not settings.on_map(shape.offset(cell, 0, -1))
             first_col = not settings.on_map(shape.offset(cell, -1, 0))
             x, y = shape.center(cell, CELL_PX)
+            column, row = shape.labels(cell)
             if first_row:
-                self._coord(str(cell.col + 1), x, y - CELL_PX, font)
+                self._coord(column, x, y - CELL_PX, font)
             if first_col:
-                self._coord(str(cell.row + 1), x - CELL_PX, y, font)
+                self._coord(row, x - CELL_PX, y, font)
 
     def _coord(self, text: str, x: float, y: float, font: QFont):
         item = QGraphicsSimpleTextItem(text)
@@ -425,14 +457,56 @@ class ArenaView(QGraphicsView):
         self._redraw()
 
     def drop(self, cell: Cell):
-        """Put the picked-up token down with its held cell on `cell`."""
+        """Put the dragged token down with its held cell on `cell`."""
         name, row = self._dragging, self._row_named(self._dragging)
-        self._dragging, self._reach = None, {}
+        self._dragging, self._picked, self._reach = None, None, {}
         if name is None or row is None:
             return
         anchor = self._anchor_for(row, cell)
         if anchor is not None and anchor != row.cells[0]:
             self._on_move(name, anchor)
+        self._redraw()
+
+    @property
+    def picked(self) -> str | None:
+        """Who a click picked up, to be moved by the next click on a cell."""
+        return self._picked
+
+    def pick(self, name: str, grabbed: Cell | None = None):
+        """Pick up `name` by a click, held by its cell `grabbed` (its anchor
+        when not given), shading where it can go; the next click on an empty
+        cell moves it there (move_picked). One not on the map yet is put on
+        the cell clicked."""
+        row = self._row_named(name)
+        self._picked = name
+        held = row.cells[0] if row is not None else None
+        self._grabbed = grabbed if grabbed is not None else held
+        self._reach = self._reach_of(name)
+        self._redraw()
+
+    def unpick(self):
+        """Put the picked-up token down where it is (no move); the map is
+        redrawn by the next show_rows or _redraw."""
+        if self._picked is None:
+            return
+        self._picked = None
+        if self._dragging is None:
+            self._reach = {}
+        self._drawn = None
+
+    def move_picked(self, cell: Cell):
+        """Move the picked-up token to `cell`, by the cell it was picked up
+        by, as a drop does."""
+        name, row = self._picked, self._row_named(self._picked)
+        self._picked, self._reach = None, {}
+        if name is None:
+            return
+        if row is None:
+            self._on_move(name, cell)  # not on the map yet: put it there
+        else:
+            anchor = self._anchor_for(row, cell)
+            if anchor is not None and anchor != row.cells[0]:
+                self._on_move(name, anchor)
         self._redraw()
 
     def _row_named(self, name: str | None) -> TokenRow | None:
@@ -471,6 +545,11 @@ class ArenaView(QGraphicsView):
             return
         super().mousePressEvent(event)
 
+    def mouseDoubleClickEvent(self, event: QMouseEvent | None):
+        """A quick second click is a click too, as on the cards (the view's
+        own double-click would only go to the scene)."""
+        self.mousePressEvent(event)
+
     def mouseMoveEvent(self, event: QMouseEvent | None):
         if event is None:
             return
@@ -497,7 +576,7 @@ class ArenaView(QGraphicsView):
         shape = self._settings.distance_rule.shape
         cell = shape.cell_at(point.x(), point.y(), CELL_PX)
         pressed, self._press = self._press, None
-        self._press_row = None
+        pressed_row, self._press_row = self._press_row, None
         if self._dragging is not None:
             self.drop(cell)
             event.accept()
@@ -507,13 +586,22 @@ class ArenaView(QGraphicsView):
             pressed is not None
             and (event.position() - pressed).manhattanLength() < _DRAG_PX
         )
-        if (
-            clicked
-            and event.button() == Qt.MouseButton.LeftButton
-            and self.token_at(point.x(), point.y()) is None
-            and self._settings.on_map(cell)
-        ):
-            self._on_cell(cell)
+        if not clicked or event.button() != Qt.MouseButton.LeftButton:
+            return
+        if pressed_row is not None:
+            # A click on a token picks it up, or puts it down again.
+            if self._picked == pressed_row.name:
+                self.unpick()
+                self._redraw()
+            else:
+                self.pick(pressed_row.name, self._grabbed)
+        elif self.token_at(point.x(), point.y()) is None:
+            if not self._settings.on_map(cell):
+                return
+            if self._picked is not None:
+                self.move_picked(cell)
+            else:
+                self._on_cell(cell)
 
     def wheelEvent(self, event: QWheelEvent | None):
         if event is None:

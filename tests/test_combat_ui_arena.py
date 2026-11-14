@@ -7,13 +7,21 @@ switches between the cards and the map during combat only; tokens move by
 dragging or by a click on a cell, one undo step each, with the reach shaded,
 a GM-only log line, a warning past the Speed, and the "Not on the map"
 strip for whoever has no place (step 6); and the target label and a hover
-say how far the source is, in either view (step 7)."""
+say how far the source is, in either view (step 7). Then the fixes after
+the user tried it (R9): an encounter's allies start on the party's side, a
+click picks a token up and a click on a cell moves it, the move's line
+says from where to where and how much movement is left, whose turn it is
+stands on gold, and real clicks and Ctrl+Z work in both views."""
 
 from functools import cache
 
 from PyQt6.QtCore import QPoint, Qt
 from PyQt6.QtTest import QTest
-from PyQt6.QtWidgets import QPushButton
+from PyQt6.QtWidgets import (
+    QAbstractGraphicsShapeItem,
+    QGraphicsRectItem,
+    QPushButton,
+)
 
 from Combat.Arena.arena import MOVED_KEY, POSITION_KEY, ArenaSettings, footprint
 from Combat.Arena.geometry import Cell
@@ -25,7 +33,7 @@ from Combat.EncounterLogs import ARENA_KEY
 from Combat.LogFiles import read_json, write_json
 from Combat.PlayerLog import is_round_key
 from Combat.Monsters.CR_1.monsters import Tiger
-from tests._combat_ui import make_ui
+from tests._combat_ui import make_ui, qapp
 from tests._snapshot_helpers import build
 
 PLAYER_BUILD = "Y2014WarlockHexbladeDravenCursebladeCharacterBuilder"
@@ -275,7 +283,11 @@ def test_dragging_a_token_shades_its_reach_and_moves_it(tmp_path):
     assert tiger[MOVED_KEY] == 10
     assert ui._arena_view.reach_shown() == {}, "put down"
     (line,) = [e for e in _events(ui) if "moves" in e["text"]]
-    assert line["text"].endswith("Tiger moves 10 ft.")
+    name = ui.arena_settings.distance_rule.shape.cell_name
+    assert line["text"].endswith(
+        f"Tiger moves from {name(start)} to {name(_shifted(ui, start, -2))}"
+        " (10 ft.; 30 of 40 ft. left this turn)."
+    )
     assert "action" not in line, "nothing replays from it"
     assert not line.get("public"), "GM-only"
     # Less is left of its Speed for the next one.
@@ -306,16 +318,29 @@ def test_a_move_is_one_undo_step(tmp_path):
     assert not [e for e in _events(ui) if "moves" in e["text"]]
 
 
-def test_a_click_on_an_empty_cell_moves_the_source(tmp_path):
+def test_a_click_on_an_empty_cell_moves_nobody_by_itself(tmp_path):
+    """Not even the source: a stray click mustn't move whoever's turn it
+    is (R9)."""
     ui = _arena_fight(tmp_path)
-    ui._arena_cell(Cell(5, 5))
-    assert "Select a combatant" in ui._status_label.text()
-    draven = next(c for c in ui.characters if c.get("_is_player"))
+    draven = _draven(ui)
     ui._select_character(draven)
     start = _at(draven)
     ui._arena_cell(_shifted(ui, start, 4))
+    assert _at(draven) == start
+    assert "Click a combatant, then the cell" in ui._status_label.text()
+
+
+def test_a_token_picked_up_moves_to_the_cell_clicked(tmp_path):
+    ui = _arena_fight(tmp_path)
+    view, draven = ui._arena_view, _draven(ui)
+    start = _at(draven)
+    ui._arena_select(draven["name"])
+    view.pick(draven["name"])
+    assert view.reach_shown()[_shifted(ui, start, 4)] == 20, "its reach shaded"
+    view.move_picked(_shifted(ui, start, 4))
     assert _at(draven) == _shifted(ui, start, 4)
     assert draven[MOVED_KEY] == 20
+    assert view.picked is None and view.reach_shown() == {}, "put down"
 
 
 def test_a_move_cant_end_on_someone_else(tmp_path):
@@ -363,7 +388,8 @@ def test_whoever_has_no_place_is_put_on_the_map_from_the_strip(tmp_path):
     assert not ui._off_map_strip.isHidden()
     buttons[0].click()
     assert ui.selected_character is tiger
-    ui._arena_cell(Cell(10, 4))
+    assert ui._arena_view.picked == "Tiger"
+    ui._arena_view.move_picked(Cell(10, 4))
     assert _at(tiger) == Cell(10, 4)
     assert MOVED_KEY not in tiger, "placing isn't moving"
     ui._refresh_views()
@@ -491,3 +517,212 @@ def test_hovering_says_how_far_from_the_source(tmp_path):
     assert view.hover_text() == "20 ft.", "the Tiger: its nearest cell, (6, 2)"
     view.hover(Cell(2, 2))
     assert view.hover_text() is None, "the source itself"
+
+
+# ---------------------------------------------------------------------------
+# After the user tried it (R9)
+
+
+def _click(ui, cell: Cell, button=Qt.MouseButton.LeftButton, modifiers=None):
+    """A real click on `cell` of the shown map."""
+    modifiers = modifiers or Qt.KeyboardModifier.NoModifier
+    view = ui._arena_view
+    viewport = view.viewport()
+    assert viewport is not None
+    QTest.mouseClick(viewport, button, modifiers, view.cell_center(cell).toPoint())
+    qapp().processEvents()
+
+
+def _shown_arena(tmp_path):
+    ui = _arena_fight(tmp_path)
+    ui._window.resize(1600, 1000)
+    ui._window.show()
+    qapp().processEvents()
+    return ui
+
+
+def test_a_click_picks_a_token_up_and_a_click_on_a_cell_moves_it(tmp_path):
+    ui = _shown_arena(tmp_path)
+    view, pirate = ui._arena_view, _named(ui, "Pirate")
+    start = _at(pirate)
+    _click(ui, start)
+    assert ui.selected_character is pirate and view.picked == "Pirate"
+    assert view.reach_shown() == {start: 0}, "no Speed: only its own cell"
+    _click(ui, _shifted(ui, start, -3))
+    assert _at(pirate) == _shifted(ui, start, -3)
+    assert view.picked is None
+    # Picked up and put down again, by a second click on it: nothing moves.
+    _click(ui, _at(pirate))
+    assert view.picked == "Pirate"
+    _click(ui, _at(pirate))
+    assert view.picked is None
+    _click(ui, _shifted(ui, _at(pirate), -2))
+    assert _at(pirate) == _shifted(ui, start, -3)
+    ui._window.hide()
+
+
+def test_another_source_or_escape_puts_the_token_down(tmp_path):
+    ui = _shown_arena(tmp_path)
+    view = ui._arena_view
+    pirate, tiger = _named(ui, "Pirate"), _named(ui, "Tiger")
+    _click(ui, _at(pirate))
+    _click(ui, _at(tiger))
+    assert view.picked == "Tiger", "the other one is picked up instead"
+    ui._select_character(pirate)  # as Next Turn's source does
+    ui._refresh_views()
+    assert view.picked is None
+    _click(ui, _at(tiger))
+    ui._escape_pressed()
+    ui._refresh_views()
+    assert view.picked is None
+    ui._window.hide()
+
+
+def test_ctrl_z_takes_back_a_move_made_by_clicks(tmp_path):
+    ui = _shown_arena(tmp_path)
+    draven = _draven(ui)
+    start = _at(draven)
+    _click(ui, start)
+    _click(ui, _shifted(ui, start, 2))
+    assert _at(draven) == _shifted(ui, start, 2)
+    QTest.keyClick(ui._window, Qt.Key.Key_Z, Qt.KeyboardModifier.ControlModifier)
+    qapp().processEvents()
+    assert _at(draven) == start
+    assert MOVED_KEY not in draven
+    assert _row(ui, draven["name"]).cells[0] == start, "the map shows it back"
+    assert not [e for e in _events(ui) if "moves" in e["text"]]
+    ui._window.hide()
+
+
+def test_real_clicks_select_and_target_in_both_views(tmp_path):
+    ui = _shown_arena(tmp_path)
+    pirate, tiger = _named(ui, "Pirate"), _named(ui, "Tiger")
+    ctrl = Qt.KeyboardModifier.ControlModifier
+    _click(ui, _at(pirate))
+    _click(ui, _at(tiger), Qt.MouseButton.RightButton)
+    assert ui.selected_character is pirate and ui.target_characters == [tiger]
+    _click(ui, _at(pirate), Qt.MouseButton.RightButton, ctrl)
+    assert ui.target_characters == [tiger, pirate]
+    # A quick second click is a double-click to Qt: it still counts.
+    view = ui._arena_view
+    viewport = view.viewport()
+    assert viewport is not None
+    QTest.mouseDClick(
+        viewport,
+        Qt.MouseButton.RightButton,
+        ctrl,
+        view.cell_center(_at(pirate)).toPoint(),
+    )
+    assert ui.target_characters == [tiger], "the second Ctrl+click took it off"
+
+    ui._toggle_view()  # the cards
+    card = ui._card_widgets[id(tiger)]
+    QTest.mouseClick(card, Qt.MouseButton.LeftButton)
+    QTest.mouseClick(ui._card_widgets[id(pirate)], Qt.MouseButton.RightButton)
+    qapp().processEvents()
+    assert ui.selected_character is tiger and ui.target_characters == [pirate]
+    ui._toggle_view()  # and the map shows the same
+    ui._refresh_views()
+    rows = {r.name: r for r in ui._arena_view.rows}
+    assert rows["Tiger"].source and rows["Pirate"].target
+    ui._window.hide()
+
+
+def test_whose_turn_it_is_stands_on_gold(tmp_path):
+    """As the active card has a gold border on a gold tint."""
+    from Combat.CombatUIQt.arena_view import _TURN, _TURN_CELL
+
+    ui = _arena_fight(tmp_path)
+    ui._refresh_views()
+    view = ui._arena_view
+    scene = view.scene()
+    assert scene is not None
+    shapes = [
+        item for item in scene.items() if isinstance(item, QAbstractGraphicsShapeItem)
+    ]
+    tinted = [item for item in shapes if item.brush().color() == _TURN_CELL]
+    (turn,) = [r for r in view.rows if r.turn]
+    assert len(tinted) == len(turn.cells) == 1, "Draven's turn: his one cell"
+    edged = [
+        item
+        for item in shapes
+        if isinstance(item, QGraphicsRectItem)
+        and item.pen().color() == _TURN
+        and item.pen().widthF() == 2.0
+    ]
+    assert edged, "edged gold"
+
+
+def test_an_encounters_allies_start_on_the_partys_side(tmp_path):
+    """Greypaw and Harat fight alongside the party in Wrath of Durmor."""
+    from Combat.Campaigns.CurseOfTheLich.encounters import CONFIG as CAMPAIGN
+    from Combat.EncounterLogs import encounter_ally_names, prepared_log
+    from Combat.Effects.triggers import on_party_side
+    from Combat.Scenario import CombatScenario
+
+    spec = next(e for e in CAMPAIGN.encounters if e.id == "wrath_of_durmor")
+    scenario = CombatScenario.from_spec(spec, CAMPAIGN.party_spec)
+    log = prepared_log(scenario, [])
+    allies = encounter_ally_names(scenario)
+    assert [n.split(" (")[0] for n in allies] == ["Greypaw", "Harat"]
+    sides = {c["name"]: on_party_side(c) for c in log["combatants"]}
+    assert all(sides[name] for name in allies)
+    assert not sides["Goblin King"]
+
+    from Combat.Arena.arena import place_new
+
+    settings = ArenaSettings()
+    place_new(log["combatants"], settings)
+    by_name = {c["name"]: c for c in log["combatants"]}
+    rule = settings.distance_rule
+    for name in allies:
+        assert min(c.col for c in footprint(by_name[name], rule)) == 0, name
+    king = footprint(by_name["Goblin King"], rule)
+    assert max(c.col for c in king) == settings.width - 1
+
+
+def test_a_log_from_before_the_mark_gets_its_allies_marked(tmp_path):
+    from Combat.Campaigns.CurseOfTheLich.encounters import CONFIG as CAMPAIGN
+    from Combat.Effects.triggers import on_party_side
+    from Combat.EncounterLogs import prepared_log, write_log
+    from Combat.PartyAllies import ENCOUNTER_ALLY_KEY
+    from Combat.Scenario import CombatScenario
+
+    spec = next(e for e in CAMPAIGN.encounters if e.id == "wrath_of_durmor")
+    scenario = CombatScenario.from_spec(spec, CAMPAIGN.party_spec)
+    log = prepared_log(scenario, [])
+    for char in log["combatants"]:
+        char.pop(ENCOUNTER_ALLY_KEY, None)
+    path = tmp_path / "old.json"
+    write_log(path, log)
+    ui = make_ui(tmp_path, [], [])
+    ui._scenarios = [scenario]
+    ui._load_log_from_path(str(path))
+    greypaw = next(c for c in ui.characters if c["name"].startswith("Greypaw"))
+    assert on_party_side(greypaw)
+    assert not on_party_side(_named(ui, "Goblin King"))
+
+
+def test_the_move_line_says_from_where_to_where_and_what_is_left():
+    from Combat.CombatUIQt.arena_mixin import move_line
+
+    settings = ArenaSettings()
+    clover = {"name": "Clover", MOVED_KEY: 10}
+    a1, b2 = Cell(0, 0), Cell(1, 1)
+    assert (
+        move_line(clover, a1, b2, 10, True, 30, settings)
+        == "Clover moves from A1 to B2 (10 ft.; 20 of 30 ft. left this turn)."
+    )
+    clover[MOVED_KEY] = 30
+    assert move_line(clover, a1, b2, 10, True, 30, settings).endswith(
+        "(10 ft.; all of its 30 ft. Speed used)."
+    )
+    clover[MOVED_KEY] = 35
+    assert move_line(clover, a1, b2, 10, True, 30, settings).endswith(
+        "(10 ft.; 5 ft. past its 30 ft. Speed)."
+    )
+    assert (
+        move_line(clover, a1, b2, 10, False, None, settings)
+        == "Clover goes from A1 to B2, with no way to walk there"
+        " (10 ft. in a straight line)."
+    )

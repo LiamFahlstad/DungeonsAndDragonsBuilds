@@ -1000,6 +1000,17 @@ The committed SpellLists.py predates the DI-063 fix: since then the Dunamancy cl
 - 2026-11-14 content-scraper: found
 - 2026-11-14 main-session: marked fixed; The test now reads 'Wizard (Dunamancy)' as Wizard, as DI-063 decided; the 6 Dunamancy spells belong on the Wizard lists.
 
+### DI-092 · An encounter's own allies (EncounterSpec.allies) counted as enemies by on_party_side
+- **Status:** fixed · 2026-11-14 · uncommitted
+- **Area:** combat-simulator
+- **Where:** `Combat/Effects/triggers.py:87 (on_party_side), Combat/EncounterLogs.py prepared_log`
+
+Allies such as Greypaw and Harat in Wrath of Durmor had no marker in their log's combatant dict, so on_party_side was False for them: the battle map started them on the enemies' edge in red, and enemy_only / enemy-turn triggers treated them as the party's enemies. Fixed by marking them encounter_ally in prepared_log (PartyAllies.ENCOUNTER_ALLY_KEY), and by name from the encounter's config when an older log is loaded.
+
+**History**
+- 2026-11-14 main session (Claude Opus 5.5): found
+- 2026-11-14 main session (Claude Opus 5.5): marked fixed; Fixed in the arena plan's R9 (not yet committed)
+
 ## Won't fix
 
 ### DI-015 · UPDATE_SNAPSHOTS=1 under xdist corrupts shared golden JSON files

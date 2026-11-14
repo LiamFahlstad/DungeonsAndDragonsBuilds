@@ -117,32 +117,37 @@ Damage, heal, temp HP and conditions apply to every target.
 ## On the battle map
 
 **G** (or the turn column's **Arena** button) shows the fight as a grid in
-the cards' place, with a token per combatant: blue the party's side, red
-everyone else, a gold ring on whose turn it is, the source's white outline
-and a target's red one, greyed at 0 HP, dashed while the players can't see
-it. A Large or bigger creature is a square over all its cells. The turn
-column, the panel, selection and Undo work as with the cards. Everyone
-starts along an edge as combat starts, the party on the left. Distances are
-counted in 5-foot squares, up, down, left and right (a diagonal step costs
-two squares), from a creature's nearest cell.
+the cards' place, with a token per combatant: blue the party's side (the
+players, their summons and allies, the encounter's own allies too), red
+everyone else; whose turn it is on gold cells with a gold ring, as its card
+is gold; the source's white outline and a target's red one; greyed at 0 HP,
+dashed while the players can't see it. A Large or bigger creature is a
+square over all its cells. The turn column, the panel, selection and Undo
+(**Ctrl+Z**) work as with the cards. Everyone starts along an edge as combat
+starts, the party's side on the left. Columns are lettered and rows
+numbered, so a cell is "C7". Distances are counted in 5-foot squares, up,
+down, left and right (a diagonal step costs two squares), from a creature's
+nearest cell.
 
 | On the map | Action |
 |-----|--------|
-| **Left click** a token | Make it the source. |
+| **Left click** a token | Make it the source and pick it up: the cells it can still reach this turn are shaded with what each costs: its Speed in use (Haste doubles it, Grappled makes it 0) less what it has moved. Allies can be walked through, an enemy's space costs double, and a Prone creature crawls at half the reach. Click it again to put it down without moving it; **Esc**, another source or the next turn puts it down too. |
+| **Left click** an empty cell | Move the picked-up token there. With nothing picked up, nothing moves. |
+| **Drag** a token | Move it in one go, with the same shading while it's held. |
 | **Right click** a token | Target it, with Ctrl and Shift as on the cards. |
-| **Drag** a token | Move it. While it's held, the cells it can still reach this turn are shaded with what each costs: its Speed in use (Haste doubles it, Grappled makes it 0) less what it has moved. Allies can be walked through, an enemy's space costs double, and a Prone creature crawls at half the reach. |
-| **Left click** an empty cell | Move the source there. |
 | **Hover** a cell or a token | With a source selected, how far it is from the source, in feet. |
 | **Ctrl+wheel** | Zoom. The whole map fits the window until you do. |
 | **Drag** empty space | Pan. |
 
-A move is one Undo step and a GM-only line in the encounter log ("Goblin
-moves 15 ft."). Going past the Speed is allowed, for a Dash or a shove, and
-said under Source/Target ("Goblin moved 40 ft., Speed 30 ft."); ending on
-someone else's space isn't. With a source and a target both on the map, the
+A move is one Undo step and a GM-only line in the encounter log saying
+from where to where and what's left: "Clover moves from A7 to C8 (15 ft.;
+15 of 30 ft. left this turn)". Going past the Speed is allowed, for a Dash
+or a shove, and said in the line ("5 ft. past its 30 ft. Speed") and under
+Source/Target ("Goblin moved 35 ft., Speed 30 ft."); ending on someone
+else's space isn't. With a source and a target both on the map, the
 target label reads "Target: Goblin (25 ft.)", on the cards too. Whoever has
 no place yet (added during the fight) is in the **Not on the map** row
-above the map: click their name, then a cell.
+above the map: click their name to pick them up, then a cell.
 
 ## The turn column
 

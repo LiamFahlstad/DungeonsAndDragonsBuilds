@@ -2,8 +2,9 @@
 4-6): the Arena page beside the cards, the Cards/Arena switch (G and the
 turn column's button, the view last used remembered in the settings
 store), the map brought up to date with the cards, and moving: a token
-dragged, or the source sent to a clicked cell, one undo step each, with
-the "Not on the map" strip for whoever has no place yet. Selection, the
+dragged, or clicked (picked up) and then a cell clicked, one undo step
+each, logged with where from and to and the movement left, with the "Not
+on the map" strip for whoever has no place yet. Selection, the
 control panel, the turn column and undo are the window's, shared by both
 views (the plan's Decision 2)."""
 
@@ -19,6 +20,7 @@ from PyQt6.QtWidgets import (
 from Combat.Arena.arena import (
     MOVED_KEY,
     POSITION_KEY,
+    ArenaSettings,
     distance_ft,
     distance_to_cell_ft,
     fits_at,
@@ -69,8 +71,8 @@ class ArenaMixin(CombatWindowState):
 
     def _build_off_map_strip(self) -> QWidget:
         """The "Not on the map" strip: a button for each combatant without a
-        place, which makes it the source; a click on a cell then puts it
-        there (_arena_cell). Hidden while everyone is on the map."""
+        place, which makes it the source and picks it up; a click on a cell
+        then puts it there. Hidden while everyone is on the map."""
         self._off_map_strip = QWidget()
         self._off_map_layout = QHBoxLayout(self._off_map_strip)
         self._off_map_layout.setContentsMargins(4, 4, 4, 0)
@@ -96,8 +98,8 @@ class ArenaMixin(CombatWindowState):
         for name in names:
             button = QPushButton(name)
             button.setObjectName("offMapBtn")
-            button.setToolTip(f"Select {name}, then click a cell to put it there")
-            button.clicked.connect(lambda _=False, n=name: self._arena_select(n))
+            button.setToolTip(f"Pick up {name}, then click a cell to put it there")
+            button.clicked.connect(lambda _=False, n=name: self._arena_pick(n))
             self._off_map_layout.addWidget(button)
         self._off_map_layout.addStretch()
         self._off_map_strip.show()
@@ -148,6 +150,11 @@ class ArenaMixin(CombatWindowState):
         if not self._arena_shown():
             return
         self._refresh_off_map_strip()
+        # A token stays picked up only while it's the source: Escape, the
+        # turn moving on or another source puts it down.
+        picked, source = self._arena_view.picked, self.selected_character
+        if picked is not None and (source is None or source["name"] != picked):
+            self._arena_view.unpick()
         group = self._current_turn_group() if self.initiative_order else []
         self._arena_view.show_rows(
             self.arena_settings,
@@ -168,6 +175,13 @@ class ArenaMixin(CombatWindowState):
         if char is not None:
             self._select_character(char)
 
+    def _arena_pick(self, name: str):
+        """Make `name` the source and pick it up: a click on a cell moves or
+        puts it there."""
+        self._arena_select(name)
+        if self.selected_character is not None:
+            self._arena_view.pick(name)
+
     def _arena_target(self, name: str, ctrl: bool, shift: bool):
         char = self._arena_char(name)
         if char is not None:
@@ -187,11 +201,9 @@ class ArenaMixin(CombatWindowState):
             self._move_combatant(char, cell)
 
     def _arena_cell(self, cell: Cell):
-        """An empty cell clicked: the source goes there."""
-        if self.selected_character is None:
-            self._show_status("Select a combatant, then click where it goes.")
-            return
-        self._move_combatant(self.selected_character, cell)
+        """An empty cell clicked with nobody picked up: nothing moves, as a
+        stray click shouldn't move whoever's turn it is."""
+        self._show_status("Click a combatant, then the cell it moves to.")
 
     @undoable
     def _move_combatant(self, char: dict, cell: Cell):
@@ -222,12 +234,15 @@ class ArenaMixin(CombatWindowState):
         walked = move_cost(char, self.characters, settings, cell)
         feet = walked if walked is not None else straight_ft(char, cell, settings)
         feet = feet or 0
+        start = position(char)
         char[POSITION_KEY] = cell.to_list()
         char[MOVED_KEY] = int(char.get(MOVED_KEY, 0)) + feet
-        how = "moves" if walked is not None else "goes (no walk gets there)"
-        self._log_event(f"{name} {how} {feet} ft.", public=False)
-        warnings = []
         speed = walking_speed_ft(char)
+        self._log_event(
+            move_line(char, start, cell, feet, walked is not None, speed, settings),
+            public=False,
+        )
+        warnings = []
         if speed is not None and char[MOVED_KEY] > speed:
             warnings.append(f"{name} moved {char[MOVED_KEY]} ft., Speed {speed} ft.")
         if has_condition(char, Condition.PRONE):
@@ -263,3 +278,37 @@ class ArenaMixin(CombatWindowState):
         else:
             feet = distance_to_cell_ft(source, cell, self.arena_settings)
         return None if feet is None else f"{feet} ft."
+
+
+def move_line(
+    char: dict,
+    start: Cell | None,
+    to: Cell,
+    feet: int,
+    walked: bool,
+    speed: int | None,
+    settings: ArenaSettings,
+) -> str:
+    """The encounter log's line for char's move from `start` to `to`, which
+    cost `feet` (char's "moved_ft" already counts it): "Clover moves from A7
+    to C8 (15 ft.; 15 of 30 ft. left this turn)." With no walk there (walled
+    in), it "goes" and the feet are the straight line's."""
+    shape = settings.distance_rule.shape
+    where = f"from {shape.cell_name(start) if start else '?'} to {shape.cell_name(to)}"
+    name = char["name"]
+    head = (
+        f"{name} moves {where}"
+        if walked
+        else f"{name} goes {where}, with no way to walk there"
+    )
+    cost = f"{feet} ft." if walked else f"{feet} ft. in a straight line"
+    if speed is None:
+        return f"{head} ({cost})."
+    moved = int(char.get(MOVED_KEY, 0))
+    if moved < speed:
+        left = f"{speed - moved} of {speed} ft. left this turn"
+    elif moved == speed:
+        left = f"all of its {speed} ft. Speed used"
+    else:
+        left = f"{moved - speed} ft. past its {speed} ft. Speed"
+    return f"{head} ({cost}; {left})."

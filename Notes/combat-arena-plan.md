@@ -13,7 +13,8 @@ the view or the fight state.
 
 Written 2026-11-13. All eight steps (the Qt-free map, its saving, the view,
 the Cards/Arena switch, moving, distances in the UI and the docs) built the
-same day. What's next is under Later.
+same day. Step 9, the fixes after the user tried it, 2026-11-14. What's
+next is under Later.
 
 ## How to use this document
 
@@ -70,6 +71,7 @@ verification passes per step unless asked.
 | 6 | Moving: drag or click to move, reach shown, feet moved this turn | Done 2026-11-13 (R6) |
 | 7 | Distances in the UI: hover and the target label in feet | Done 2026-11-13 (R7) |
 | 8 | Docs: KEYBOARD_SHORTCUTS.md, HOWTO.md, Combat/CHEATSHEET.md | Done 2026-11-13 (R8) |
+| 9 | After the user tried it: encounter allies on the party's side, click to pick up and click to move, the move's line with from, to and what's left, whose turn on gold, clicks and Ctrl+Z in both views | Done 2026-11-14 (R9); DI-092 fixed |
 
 ## How it fits the code that's there
 
@@ -98,7 +100,8 @@ What the code already gives, found while writing this:
   stored)` in [modifiers.py](../Combat/Effects/modifiers.py) (an Enlarged
   Ogre takes up Huge space, Haste doubles the reach shown), and
   `on_party_side(char)` in [triggers.py](../Combat/Effects/triggers.py) for
-  the token's colour. A walking speed is `speed_ground_ft` on a monster and
+  the token's colour and starting edge. An encounter's own allies
+  (`EncounterSpec.allies`) count since step 9 (DI-092). A walking speed is `speed_ground_ft` on a monster and
   `speed` on a player (as `_speeds_text` in `dialogs_mixin.py` reads them);
   a creature with neither shows no reach.
 - **The conditions' Speed 0** (DI-084, fixed in step 2): Grappled,
@@ -141,6 +144,7 @@ Combat/Arena/geometry.py                (Qt-free)
     in_bounds(cell, w, h), cells(w, h)  the map's edge, and every cell on it
     offset(cell, cols, rows)            a cell so far across and down (lining a token up on an edge)
     from_edge(w, h, left) -> [Cell]     from one edge inward, middle row first: where tokens start
+    labels(cell) -> (col, row)          what the edges show: ("C", "7"); cell_name(cell) "C7" (R9)
   DistanceRule (abstract)
     key, label, shape                   "manhattan", "Manhattan (diagonals cost 2)", SquareGrid
     steps(a, b) -> float                cells apart; an int for grid rules
@@ -216,7 +220,8 @@ Combat/CombatUIQt/arena_view.py         ArenaView(QGraphicsView): draws, no rule
   a token per placed combatant          a circle (a square covering its footprint when Large+)
                                         with its letters (token_label: "G2", "A1", "HD"),
                                         coloured by side (Q5), its name as a tooltip,
-                                        its HP as a thin bar, a gold ring on whose turn it is,
+                                        its HP as a thin bar, a gold ring on whose turn it is
+                                        and its cells tinted and edged gold, as its card (R9),
                                         the source and target outlines the cards use (white,
                                         red; both: white with a red ring inside),
                                         greyed at 0 HP (Q9), dashed while the players can't see it
@@ -224,6 +229,9 @@ Combat/CombatUIQt/arena_view.py         ArenaView(QGraphicsView): draws, no rule
                                         the source, and a cell clicked puts it there (R6)
   pick_up(row, held) / drop(cell)       a drag: the reach shaded with its costs, then on_move
                                         with the anchor that puts the held cell on `cell`
+  pick(name, held) / move_picked(cell)  a click on a token picks it up (the same shading), the
+                                        next click on an empty cell moves it; unpick() puts it
+                                        down; a double-click counts as a click (R9)
   zoom with Ctrl+wheel, pan by dragging empty space
   token_rows(chars, settings, turn, source, targets) -> [TokenRow]
                                         the rows, from the combatant dicts (Decision 6)
@@ -235,11 +243,16 @@ Combat/CombatUIQt/arena_mixin.py        ArenaMixin: the glue
   _show_view()                          the page the phase and the view last used call for
   _place_on_arena()                     place_new as combat starts or is continued
   _arena_reach(name)                    reachable with remaining_ft: what a picked-up token shades
-  _arena_cell(cell)                     an empty cell clicked: the source goes there
+  _arena_pick(name)                     the strip's button: the source, picked up
+  _arena_cell(cell)                     an empty cell clicked with nobody picked up: a hint,
+                                        no move (Decision 14)
   _move_combatant(char, cell)           @undoable: places one off the map, or walks one on it
                                         (move_cost, else straight_ft), adds to moved_ft, logs
                                         a GM-only line (which saves the fight), warns (Q2, Q8)
-  _refresh_arena()                      called from _refresh_views (R4)
+  move_line(char, start, to, ...)       that line: "Clover moves from A7 to C8 (15 ft.; 15 of
+                                        30 ft. left this turn)." (Decision 13)
+  _refresh_arena()                      called from _refresh_views (R4); puts a picked-up
+                                        token down once it isn't the source (R9)
 ```
 
 The view gets what it draws as a list of plain token rows (name, cells,
@@ -257,18 +270,24 @@ Decision 10), so the window opens on the one last used. The initiative
 screen and the party view between encounters stay cards-only, and the
 button hides with them.
 
-**Moving.** Drag a token to a cell, or with a source selected, click an
-empty cell. While a token is picked up, the cells it can reach this turn
-(its walking speed in use, less `moved_ft`) are shaded with what each costs.
+**Moving** (Decision 12). Click a token, which makes it the source and
+picks it up, then click an empty cell; or drag the token to a cell. A
+picked-up token is put down again by a second click on it, Escape, another
+source or the turn moving on. A click on an empty cell with nothing picked
+up moves nobody (Decision 14). While a token is picked up or dragged, the
+cells it can reach this turn (its walking speed in use, less `moved_ft`)
+are shaded with what each costs.
 Going past the reach is warned about, not refused (Q2). Ending on another
 creature is refused (Q4). Each move is one undo step. A move counts the
 cheapest walk there (`move_cost`); when no walk gets there (walled in by
 enemies) it counts the straight distance and the log line says so, as the
 GM moved it some other way. A creature with no Speed as a number (a plain
 combatant like the Pirate) reaches only its own cell but can still be
-moved. Someone without a place is put on the map from the strip, or with
-a source selected by clicking a cell; placing moves nothing and logs
-nothing.
+moved. Someone without a place is put on the map from the strip: their
+button picks them up, and a cell clicked puts them there; placing moves
+nothing and logs nothing. A move's line names the cells it went from and
+to, columns lettered and rows numbered as on the map's edges ("C7",
+Decision 15), and what's left of the Speed (Decision 13).
 
 **Distances.** With a source selected, hovering a cell or token shows the
 distance from the source in feet next to the cursor, and the target label
@@ -380,6 +399,23 @@ on plain dicts.
 the table and an "On the battle map" section), the view in HOWTO.md (a
 paragraph and the shortcut table). CHEATSHEET.md is left as it is (R8).
 
+### Step 9: after the user tried it (2026-11-14)
+
+The user's six points (R9): an encounter's allies on the party's side,
+selecting and targeting in both views, whose turn it is highlighted as on
+the cards, Ctrl+Z after a move, the move's line with where from and to and
+what's left, and moving by a click on the token and a click on a cell.
+
+Tests (`tests/test_combat_ui_arena.py`, `tests/test_arena_geometry.py`):
+Wrath of Durmor's Greypaw and Harat are on the party's side and start on
+the left, also from a log prepared before the mark; a click picks a token
+up and a click on a cell moves it, a second click puts it down, another
+source or Escape too, and a click with nothing picked up moves nobody;
+Ctrl+Z through the window's shortcut takes back a move made by clicks;
+real left, right, Ctrl+right and double clicks select and target on the
+map, and real clicks on the cards, with the map showing the same; whose
+turn it is has gold cells; the move's line; cell names.
+
 ### Later (not scheduled)
 
 - **More distance rules**, each a `DistanceRule` and a line in `RULES`:
@@ -444,6 +480,27 @@ Taken while building (2026-11-13), for the user to overrule:
     list it. G and the button are how it's changed. Replaces the "in the
     settings" of Decision 9.
 
+From the user (2026-11-14, after trying it):
+
+11. **An encounter's allies start on the party's side**, as Greypaw and
+    Harat do in Wrath of Durmor: blue, on the left (R9, DI-092).
+12. **Click a combatant, then a cell, to move it**, besides dragging. Replaces
+    "with a source selected, click an empty cell" of step 6's Moving.
+13. **A move's log line says who moved from where to where, and how much
+    movement is left**: "Clover moves from A7 to C8 (15 ft.; 15 of 30 ft.
+    left this turn)." Replaces Q3's "Goblin moves 15 ft.".
+
+Taken while building (2026-11-14), for the user to overrule:
+
+14. **A click on an empty cell with nothing picked up moves nobody**, not
+    even the source: with "Source follows the turn" on, the source is
+    whoever's turn it is, and a stray click would move them. It says
+    "Click a combatant, then the cell it moves to." instead.
+15. **Cells are named by column letters and row numbers** ("C7", past Z
+    "AA1"), as the user's example ("from A1 to B2") reads, and the map's
+    top edge is lettered to match. The names come from the grid shape
+    (`labels`, `cell_name`), so a hex grid names its own (Decision 3).
+
 ## Open questions
 
 Each has a *Suggestion*: what gets built if nobody says otherwise.
@@ -464,7 +521,8 @@ Each has a *Suggestion*: what gets built if nobody says otherwise.
   with no action ("Goblin moves 15 ft."), so the log tells the fight's story
   but nothing replays from it and the player link never shows it. The other
   choice is no line at all, if that's too chatty. *Built so in step 6
-  ("Goblin moves 15 ft."; placing a token logs nothing).*
+  ("Goblin moves 15 ft."; placing a token logs nothing). The line's text:
+  Decision 13.*
 - **Q4. Whose space can a creature move through?** *Blocks step 2.* The
   2024 Player's Handbook (Playing the Game, "Moving Around Other Creatures";
   not in the local Rules Glossary): you can move through the space of an
@@ -480,7 +538,9 @@ Each has a *Suggestion*: what gets built if nobody says otherwise.
 - **Q5. Which colours?** *Blocks step 4.* *Suggestion:* the party's side
   (players, party allies, players' summons: `on_party_side`) blue, everyone
   else red, whoever's turn it is with a gold ring. A monster charmed into
-  helping stays red. *Built so in step 4.*
+  helping stays red. *Built so in step 4. The encounter's own allies are
+  blue too since step 9 (Decision 11), and whose turn it is stands on gold
+  cells as well (R9).*
 - **Q6. Is changing the map's settings an undo step?** *Blocks nothing yet.*
   *Suggestion:* not until there's a map settings dialog (Q1, Later); it joins
   `UndoPoint` then.
@@ -575,6 +635,32 @@ Each has a *Suggestion*: what gets built if nobody says otherwise.
   command-line flags, and the map has neither; the window's controls are
   in KEYBOARD_SHORTCUTS.md and HOWTO.md, which link to each other.
 
+- **R9** (step 9, the user's six points after trying it, 2026-11-14).
+  1. *Plan:* the party's side is `on_party_side`. *Found:* an encounter's own
+     allies (`EncounterSpec.allies`) had no mark in the log, so they started
+     on the right in red (DI-092, which also made enemy-only triggers count
+     them as enemies). *Done:* `prepared_log` marks them `encounter_ally`
+     (`PartyAllies.ENCOUNTER_ALLY_KEY`), `on_party_side` reads it, and a log
+     prepared before the mark has them marked by name from its encounter's
+     config as it's loaded.
+  2. and 4. *Asked:* selecting and targeting in both views, and Ctrl+Z after
+     a move. *Found:* both worked with real clicks and keys, offscreen and
+     on Windows, for monsters and players and in a campaign's encounter;
+     but a quick second click on a token was a double-click, which the view
+     sent only to the scene, so it was lost (a Ctrl+right-click toggled
+     twice did nothing the second time). *Done:* a double-click counts as a
+     press, as on the cards; real-mouse and real-key tests cover both views.
+  3. *Plan:* a gold ring on whose turn it is. *Done:* its cells tinted and
+     edged gold too, the active card's border and tint, as the ring alone
+     was easy to miss.
+  5. *Plan:* "Goblin moves 15 ft.". *Done:* from where to where and what's
+     left (Decision 13), with cells named "C7" (Decision 15); the map's top
+     edge is lettered to match.
+  6. *Plan:* drag, or click a cell to move the source. *Done:* a click picks
+     a token up and a click on a cell moves it (Decision 12); a click with
+     nothing picked up moves nobody (Decision 14). The strip's buttons pick
+     up too, so placing goes the same way.
+
 ## Discovered issues
 
 Found while writing the plan:
@@ -589,6 +675,11 @@ Found while writing the plan:
   every rule with a distance in its `when` is noted, never counted. The arena
   is what lets those rules be counted later (Later: using distance in the
   rules); building the map alone doesn't close it.
+
+Found in step 9:
+
+- **DI-092** (fixed 2026-11-14, step 9): an encounter's own allies counted as
+  enemies (`on_party_side` False), on the map and for enemy-only triggers.
 
 Already logged, and touched by this plan:
 

@@ -84,6 +84,26 @@ class GridShape(ABC):
         column, and in each column from the middle row outward: where
         tokens start (the plan's Q1)."""
 
+    @abstractmethod
+    def labels(self, cell: Cell) -> tuple[str, str]:
+        """The cell's column and row as the map's edges label them: ("C",
+        "7")."""
+
+    def cell_name(self, cell: Cell) -> str:
+        """The cell's name in the log and on the map's edges: "C7"."""
+        column, row = self.labels(cell)
+        return f"{column}{row}"
+
+
+def _letters(index: int) -> str:
+    """0 A, 25 Z, 26 AA: a column's letters, as a spreadsheet names them."""
+    letters = ""
+    index += 1
+    while index > 0:
+        index, rest = divmod(index - 1, 26)
+        letters = chr(ord("A") + rest) + letters
+    return letters
+
 
 class SquareGrid(GridShape):
     """Square cells, `size_px` on a side, (0, 0) at the top-left."""
@@ -125,6 +145,11 @@ class SquareGrid(GridShape):
         middle = (height - 1) / 2
         rows = sorted(range(height), key=lambda r: (abs(r - middle), r))
         return [Cell(c, r) for c in columns for r in rows]
+
+    def labels(self, cell: Cell) -> tuple[str, str]:
+        """Columns lettered from A at the left, rows numbered from 1 at the
+        top."""
+        return _letters(cell.col), str(cell.row + 1)
 
 
 SQUARE_GRID = SquareGrid()
