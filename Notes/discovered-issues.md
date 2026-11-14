@@ -575,6 +575,16 @@ Ranger Demon Hunter's Improved Spectral Sight (level 18) says 'This feature repl
 - 2026-11-14 subclass-implementer: found
 - 2026-11-14 subclass-implementer: Oath of the Ebon Blade (CharacterContent/Classes/SubClasses2024/PaladinEbonBlade.py) hits this four times: Death Coil replaces Lay On Hands, Runic Smite replaces Paladin's Smite, Runic Strikes replaces Radiant Strikes, Improved Death Coil replaces Restoring Touch. The base features stay on the sheet beside them; each replacing card says what it replaces. Holy's Infusion of Light/Beacon of Light still reference Lay On Hands, which is fine.
 
+### DI-091 · No Swim/Climb/Fly Speed in the ledger: special movement modes are card text only
+- **Status:** open
+- **Area:** character-engine-dev
+- **Where:** `Model/Ledger/Ledger.py`, `CharacterContent/Features/CharacterFeats/OriginFeats.py`
+
+SpeedBonus only raises walking speed and CharacterView has no speed query besides base_speed. Features granting a Swim/Climb/Fly Speed (e.g. OriginFeats.ChildOfTheSea's 'Swim Speed equal to your Speed') can only state it on the card, so the sheet's speed block never lists them. Fix: a movement-mode grant in Speed (mode, value or 'equal to Speed' formula) read by the sheet.
+
+**History**
+- 2026-11-14 character-engine-dev: found
+
 ## Fixed
 
 ### DI-001 · Temporary Hit Points stack instead of keeping one amount
