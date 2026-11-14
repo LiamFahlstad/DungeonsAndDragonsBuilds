@@ -360,3 +360,13 @@ def straight_ft(char: dict, to: Cell, settings: ArenaSettings) -> int | None:
     if start is None:
         return None
     return settings.distance_rule.feet(start, to, settings.cell_ft)
+
+
+def distance_to_cell_ft(char: dict, cell: Cell, settings: ArenaSettings) -> int | None:
+    """How far `cell` is from char, from char's nearest cell (Decision 8);
+    None when char isn't on the map."""
+    rule = settings.distance_rule
+    cells = footprint(char, rule)
+    if not cells:
+        return None
+    return min(rule.feet(own, cell, settings.cell_ft) for own in cells)

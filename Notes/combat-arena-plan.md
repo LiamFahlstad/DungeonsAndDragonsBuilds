@@ -11,9 +11,9 @@ rule separate from the grid, so hexagons, Euclidean distance and the
 Player's Handbook's own 5-foot diagonals can be added later without changing
 the view or the fight state.
 
-Written 2026-11-13. Steps 1-6 (the Qt-free map, its saving, the view, the
-Cards/Arena switch and moving) built the same day; distances in the UI
-(step 7) and the docs (step 8) are left.
+Written 2026-11-13. All eight steps (the Qt-free map, its saving, the view,
+the Cards/Arena switch, moving, distances in the UI and the docs) built the
+same day. What's next is under Later.
 
 ## How to use this document
 
@@ -68,8 +68,8 @@ verification passes per step unless asked.
 | 4 | The view: the grid and tokens drawn, click to select and target | Done 2026-11-13 (R4) |
 | 5 | Switching views: the Cards/Arena toggle and its shortcut | Done 2026-11-13 (R5) |
 | 6 | Moving: drag or click to move, reach shown, feet moved this turn | Done 2026-11-13 (R6) |
-| 7 | Distances in the UI: hover and the target label in feet | Not started |
-| 8 | Docs: KEYBOARD_SHORTCUTS.md, HOWTO.md, Combat/CHEATSHEET.md | Not started |
+| 7 | Distances in the UI: hover and the target label in feet | Done 2026-11-13 (R7) |
+| 8 | Docs: KEYBOARD_SHORTCUTS.md, HOWTO.md, Combat/CHEATSHEET.md | Done 2026-11-13 (R8) |
 
 ## How it fits the code that's there
 
@@ -366,11 +366,19 @@ the drag distance, release) drags a token; `move_cost`, `straight_ft` and
 
 The hover distance and "(25 ft.)" in the target label.
 
+Tests: the target label gives each target's distance from the source in
+the Cards view too, and none for the source itself; it follows a move and
+its undo; none without a source or with a target off the map; a hover over
+an empty cell counts from the source's nearest cell, over a token the
+creatures' nearest cells, over the source nothing; `distance_to_cell_ft`
+on plain dicts.
+
 ### Step 8: docs
 
 **G** and the arena's mouse controls in
-[KEYBOARD_SHORTCUTS.md](../Combat/CombatUIQt/KEYBOARD_SHORTCUTS.md), the view
-in HOWTO.md and [CHEATSHEET.md](../Combat/CHEATSHEET.md).
+[KEYBOARD_SHORTCUTS.md](../Combat/CombatUIQt/KEYBOARD_SHORTCUTS.md) (a row in
+the table and an "On the battle map" section), the view in HOWTO.md (a
+paragraph and the shortcut table). CHEATSHEET.md is left as it is (R8).
 
 ### Later (not scheduled)
 
@@ -554,6 +562,18 @@ Each has a *Suggestion*: what gets built if nobody says otherwise.
   token is moved by the cell it's held by, not its top-left; the reach
   shaded is of the anchor cell, so a Large creature's shading is its
   top-left cell's.
+- **R7** (step 7). *Plan:* the hover distance and the label. *Done:* as
+  planned, plus: the target label is brought up to date from
+  `_refresh_views`, so it follows a move, a new source and undo in both
+  views without each of them calling it; a hover over a token counts
+  between the two creatures' nearest cells, over an empty cell from the
+  source's nearest cell (`distance_to_cell_ft`), and over the source says
+  nothing. The hover label follows the cursor without redrawing the map,
+  which is redrawn only when its text changes.
+- **R8** (step 8). *Plan:* the view in CHEATSHEET.md too. *Done:* not
+  there. *Why:* Combat/CHEATSHEET.md is about campaign folders and
+  command-line flags, and the map has neither; the window's controls are
+  in KEYBOARD_SHORTCUTS.md and HOWTO.md, which link to each other.
 
 ## Discovered issues
 

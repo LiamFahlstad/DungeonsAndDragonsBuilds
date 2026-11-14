@@ -6,7 +6,8 @@ fight does, are drawn from token rows, select and target as cards do, and G
 switches between the cards and the map during combat only; tokens move by
 dragging or by a click on a cell, one undo step each, with the reach shaded,
 a GM-only log line, a warning past the Speed, and the "Not on the map"
-strip for whoever has no place (step 6)."""
+strip for whoever has no place (step 6); and the target label and a hover
+say how far the source is, in either view (step 7)."""
 
 from functools import cache
 
@@ -420,3 +421,73 @@ def test_the_mouse_drags_a_token(tmp_path):
     assert _at(pirate) == target
     assert pirate[MOVED_KEY] == 15
     view.hide()
+
+
+# ---------------------------------------------------------------------------
+# Step 7: distances in the UI
+
+
+def _placed(ui, name: str, cell: Cell) -> dict:
+    char = _named(ui, name) if name != "Draven" else _draven(ui)
+    char[POSITION_KEY] = cell.to_list()
+    return char
+
+
+def _draven(ui) -> dict:
+    return next(c for c in ui.characters if c.get("_is_player"))
+
+
+def test_the_target_label_says_how_far_the_target_is(tmp_path):
+    ui = _fight(tmp_path)  # the Cards view: the label says it there too
+    draven = _placed(ui, "Draven", Cell(2, 2))
+    pirate = _placed(ui, "Pirate", Cell(5, 3))
+    tiger = _placed(ui, "Tiger", Cell(2, 6))  # Large: (2..3, 6..7)
+    ui._select_character(draven)
+    ui._select_target_character(pirate)
+    assert ui.target_label.text() == "Target: Pirate (20 ft.)"
+    ui._select_target_character(tiger, ctrl=True)
+    assert ui.target_label.text() == "Targets: Pirate (20 ft.), Tiger (20 ft.)"
+    ui._select_target_character(draven)
+    assert ui.target_label.text() == f"Target: {draven['name']}", "itself"
+
+
+def test_the_target_label_follows_a_move(tmp_path):
+    ui = _arena_fight(tmp_path)
+    draven = _placed(ui, "Draven", Cell(2, 2))
+    pirate = _placed(ui, "Pirate", Cell(8, 2))
+    ui._select_character(draven)
+    ui._select_target_character(pirate)
+    assert ui.target_label.text() == "Target: Pirate (30 ft.)"
+    ui._move_combatant(draven, Cell(6, 2))
+    assert ui.target_label.text() == "Target: Pirate (10 ft.)"
+    ui._undo_last()
+    assert ui.target_label.text() == "Target: Pirate (30 ft.)"
+
+
+def test_no_distance_without_a_source_or_off_the_map(tmp_path):
+    ui = _fight(tmp_path)
+    pirate = _named(ui, "Pirate")
+    ui._clear_selection()
+    ui._select_target_character(pirate)
+    assert ui.target_label.text() == "Target: Pirate"
+    ui._select_character(_draven(ui))
+    del pirate[POSITION_KEY]
+    ui._refresh_views()
+    assert ui.target_label.text() == "Target: Pirate"
+
+
+def test_hovering_says_how_far_from_the_source(tmp_path):
+    ui = _arena_fight(tmp_path)
+    draven = _placed(ui, "Draven", Cell(2, 2))
+    _placed(ui, "Tiger", Cell(6, 2))  # Large: (6..7, 2..3)
+    ui._refresh_views()
+    view = ui._arena_view
+    view.hover(Cell(4, 4))
+    assert view.hover_text() is None, "no source yet"
+    ui._select_character(draven)
+    view.hover(Cell(4, 4))
+    assert view.hover_text() == "20 ft."
+    view.hover(Cell(7, 3))
+    assert view.hover_text() == "20 ft.", "the Tiger: its nearest cell, (6, 2)"
+    view.hover(Cell(2, 2))
+    assert view.hover_text() is None, "the source itself"

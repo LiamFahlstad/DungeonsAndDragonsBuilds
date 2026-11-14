@@ -487,6 +487,9 @@ class CombatWindowState:
     def _refresh_arena(self):
         raise NotImplementedError("ArenaMixin._refresh_arena")
 
+    def _distance_note(self, target: dict) -> str:
+        raise NotImplementedError("ArenaMixin._distance_note")
+
     def _roll_concentration(self, char: dict, dc: int):
         raise NotImplementedError("DamageMixin._roll_concentration")
 

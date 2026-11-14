@@ -293,3 +293,12 @@ def test_a_move_costs_the_cheapest_walk():
     fighter["moved_ft"] = 10
     assert remaining_ft(fighter) == 20
     assert remaining_ft({"name": "Statue"}) == 0
+
+
+def test_a_cell_counts_from_the_nearest_cell_of_a_creature():
+    from Combat.Arena.arena import distance_to_cell_ft
+
+    ogre = _monster("Ogre", (5, 5), "Large")  # covers (5..6, 5..6)
+    assert distance_to_cell_ft(ogre, Cell(8, 6), SETTINGS) == 10
+    assert distance_to_cell_ft(ogre, Cell(6, 6), SETTINGS) == 0
+    assert distance_to_cell_ft(_monster("Ghost"), Cell(0, 0), SETTINGS) is None

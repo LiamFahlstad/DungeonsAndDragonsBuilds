@@ -122,9 +122,14 @@ class WindowMixin(CombatWindowState):
         if not self.target_characters:
             self.target_label.setText("Target: None")
         elif len(self.target_characters) == 1:
-            self.target_label.setText(f"Target: {self.target_characters[0]['name']}")
+            (target,) = self.target_characters
+            self.target_label.setText(
+                f"Target: {target['name']}{self._distance_note(target)}"
+            )
         else:
-            names = ", ".join(t["name"] for t in self.target_characters)
+            names = ", ".join(
+                f"{t['name']}{self._distance_note(t)}" for t in self.target_characters
+            )
             self.target_label.setText(f"Targets: {names}")
 
     def _clear_selection(self):

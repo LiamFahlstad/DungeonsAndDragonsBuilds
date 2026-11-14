@@ -32,6 +32,7 @@ All shortcuts listed below are global (registered on the main combat window in `
 | **I** | More Info | Open the source's More Info dialog. |
 | **Ctrl+N** | Add Combatant | Open the Add Combatant dialog (same as clicking the "+ Add Combatant" button). |
 | **Ctrl+O** | Load Encounter | Open the Load Encounter dialog (same as clicking the "Load Encounter..." button). |
+| **G** | Cards / Arena | Switch between the cards and the battle map (same as the **Arena** / **Cards** button at the top of the turn column). Only during combat; the window opens a fight on the view used last. See "On the battle map" below. |
 
 The arrow keys are plain aliases for N/P/Shift+N/Shift+P — left/right mirrors the unmodified source shortcuts, up/down mirrors the Shift target shortcuts. A focused text field keeps its own left/right cursor movement regardless (see Notes).
 
@@ -112,6 +113,36 @@ A left click on a card makes it the source; there is only ever one. A right clic
 Right-clicking the card that's already the only target opens its quick menu: Damage, Heal and Temp HP (each jumps to its amount field) and the common conditions, a click to add or remove. It isn't modal, so any click elsewhere closes it.
 
 Damage, heal, temp HP and conditions apply to every target.
+
+## On the battle map
+
+**G** (or the turn column's **Arena** button) shows the fight as a grid in
+the cards' place, with a token per combatant: blue the party's side, red
+everyone else, a gold ring on whose turn it is, the source's white outline
+and a target's red one, greyed at 0 HP, dashed while the players can't see
+it. A Large or bigger creature is a square over all its cells. The turn
+column, the panel, selection and Undo work as with the cards. Everyone
+starts along an edge as combat starts, the party on the left. Distances are
+counted in 5-foot squares, up, down, left and right (a diagonal step costs
+two squares), from a creature's nearest cell.
+
+| On the map | Action |
+|-----|--------|
+| **Left click** a token | Make it the source. |
+| **Right click** a token | Target it, with Ctrl and Shift as on the cards. |
+| **Drag** a token | Move it. While it's held, the cells it can still reach this turn are shaded with what each costs: its Speed in use (Haste doubles it, Grappled makes it 0) less what it has moved. Allies can be walked through, an enemy's space costs double, and a Prone creature crawls at half the reach. |
+| **Left click** an empty cell | Move the source there. |
+| **Hover** a cell or a token | With a source selected, how far it is from the source, in feet. |
+| **Ctrl+wheel** | Zoom. The whole map fits the window until you do. |
+| **Drag** empty space | Pan. |
+
+A move is one Undo step and a GM-only line in the encounter log ("Goblin
+moves 15 ft."). Going past the Speed is allowed, for a Dash or a shove, and
+said under Source/Target ("Goblin moved 40 ft., Speed 30 ft."); ending on
+someone else's space isn't. With a source and a target both on the map, the
+target label reads "Target: Goblin (25 ft.)", on the cards too. Whoever has
+no place yet (added during the fight) is in the **Not on the map** row
+above the map: click their name, then a cell.
 
 ## The turn column
 

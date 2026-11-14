@@ -19,9 +19,12 @@ from PyQt6.QtWidgets import (
 from Combat.Arena.arena import (
     MOVED_KEY,
     POSITION_KEY,
+    distance_ft,
+    distance_to_cell_ft,
     fits_at,
     move_cost,
     nearest_free,
+    occupied,
     place_new,
     position,
     reachable,
@@ -51,6 +54,7 @@ class ArenaMixin(CombatWindowState):
             on_move=self._arena_move,
             on_cell=self._arena_cell,
             reach_of=self._arena_reach,
+            distance_at=self._arena_distance,
         )
         page = QWidget()
         layout = QVBoxLayout(page)
@@ -233,3 +237,29 @@ class ArenaMixin(CombatWindowState):
         if warnings:
             self._show_status(" ".join(warnings))
         self._refresh_views()
+
+    def _distance_note(self, target: dict) -> str:
+        """ " (25 ft.)": how far `target` is from the source, for the target
+        label in either view; "" unless both are on the map and differ."""
+        source = self.selected_character
+        if source is None or source is target:
+            return ""
+        feet = distance_ft(source, target, self.arena_settings)
+        return "" if feet is None else f" ({feet} ft.)"
+
+    def _arena_distance(self, cell: Cell) -> str | None:
+        """What hovering `cell` shows: how far it, or the creature on it, is
+        from the source ("25 ft."); None without a source on the map, or
+        over the source itself."""
+        source = self.selected_character
+        if source is None:
+            return None
+        rule = self.arena_settings.distance_rule
+        on_it = occupied(self.characters, rule).get(cell)
+        if on_it is source:
+            return None
+        if on_it is not None:
+            feet = distance_ft(source, on_it, self.arena_settings)
+        else:
+            feet = distance_to_cell_ft(source, cell, self.arena_settings)
+        return None if feet is None else f"{feet} ft."

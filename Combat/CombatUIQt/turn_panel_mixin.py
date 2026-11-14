@@ -228,6 +228,7 @@ class TurnPanelMixin(CombatWindowState):
             self._refresh_between_encounters_labels()
             self._refresh_action_buttons()
             self._log_feed.show_log(self._read_log())
+        self._update_target_label()  # its distances follow moves (ArenaMixin)
         self._refresh_arena()
         self._refresh_player_view()
 

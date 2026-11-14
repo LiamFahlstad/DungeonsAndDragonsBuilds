@@ -6,8 +6,9 @@ come from Combat/Arena's grid shape, the rows from token_rows.
 Left click a token: the source. Right click: the target (Ctrl adds one,
 Shift a range), as on the cards. Drag a token to move it, with the cells it
 can reach this turn shaded and what each costs; or click an empty cell to
-move the source there (step 6). Ctrl+wheel zooms; dragging empty space
-pans."""
+move the source there (step 6). With a source selected, hovering a cell
+or a token shows how far it is (step 7). Ctrl+wheel zooms; dragging empty
+space pans."""
 
 from __future__ import annotations
 
@@ -58,6 +59,8 @@ _HP_BAR = QColor("#5ec269")
 _HP_BAR_LOW = QColor("#e0a030")
 _REACH = QColor(94, 194, 105, 60)
 _REACH_TEXT = QColor("#b8e6be")
+_HOVER_TEXT = QColor("#ffffff")
+_HOVER_BACK = QColor(10, 10, 20, 200)
 # How far the mouse goes before a press on a token is a drag, not a click.
 _DRAG_PX = 6
 
@@ -152,6 +155,7 @@ class ArenaView(QGraphicsView):
         on_move: Callable[[str, Cell], None] = lambda name, cell: None,
         on_cell: Callable[[Cell], None] = lambda cell: None,
         reach_of: Callable[[str], dict[Cell, int]] = lambda name: {},
+        distance_at: Callable[[Cell], str | None] = lambda cell: None,
     ):
         super().__init__()
         self.setObjectName("arenaView")
@@ -166,6 +170,13 @@ class ArenaView(QGraphicsView):
         self._on_move = on_move
         self._on_cell = on_cell
         self._reach_of = reach_of
+        self._distance_at = distance_at
+        # The hover distance by the cursor ("25 ft.", step 7): its text and
+        # where it's drawn, so a redraw keeps it.
+        self._hover: tuple[str, QPointF] | None = None
+        viewport = self.viewport()
+        if viewport is not None:
+            viewport.setMouseTracking(True)
         # A press: where, and on which token (None: empty space).
         self._press: QPointF | None = None
         self._press_row: TokenRow | None = None
@@ -197,6 +208,7 @@ class ArenaView(QGraphicsView):
             self._draw_reach()
         for row in rows:
             self._draw_token(row)
+        self._draw_hover()
         margin = CELL_PX
         width, height = settings.width * CELL_PX, settings.height * CELL_PX
         self._scene.setSceneRect(
@@ -232,6 +244,55 @@ class ArenaView(QGraphicsView):
                 self._scene.addItem(label)
                 x, y = shape.polygon(cell, CELL_PX)[0]
                 label.setPos(x + 2, y + 1)
+
+    def _draw_hover(self):
+        if self._hover is None:
+            return
+        text, at = self._hover
+        label = QGraphicsSimpleTextItem(text)
+        label.setFont(QFont("Segoe UI", 9, QFont.Weight.Bold))
+        label.setBrush(QBrush(_HOVER_TEXT))
+        box = label.boundingRect()
+        back = QGraphicsRectItem(QRectF(0, 0, box.width() + 8, box.height() + 4))
+        back.setBrush(QBrush(_HOVER_BACK))
+        back.setPen(QPen(Qt.PenStyle.NoPen))
+        back.setZValue(10)
+        label.setZValue(11)
+        self._scene.addItem(back)
+        self._scene.addItem(label)
+        self._hover_items = (back, label)
+        self._place_hover(at)
+
+    def _place_hover(self, at: QPointF):
+        back, label = self._hover_items
+        back.setPos(at.x() + 12, at.y() + 12)
+        label.setPos(at.x() + 16, at.y() + 14)
+
+    def hover(self, cell: Cell, at: QPointF | None = None):
+        """Show how far `cell` is from the source next to `at` (the cell's
+        middle when not given), or nothing when there's nothing to say. The
+        map is redrawn only when the text changes; otherwise the label just
+        follows the cursor."""
+        text = self._distance_at(cell)
+        if at is None:
+            x, y = self._settings.distance_rule.shape.center(cell, CELL_PX)
+            at = QPointF(x, y)
+        shown = self._hover[0] if self._hover is not None else None
+        self._hover = (text, at) if text is not None else None
+        if text != shown:
+            self._redraw()
+        elif text is not None:
+            self._place_hover(at)
+
+    def hover_text(self) -> str | None:
+        """The hover distance shown now (tests)."""
+        return self._hover[0] if self._hover is not None else None
+
+    def leaveEvent(self, a0):
+        super().leaveEvent(a0)
+        if self._hover is not None:
+            self._hover = None
+            self._redraw()
 
     def reach_shown(self) -> dict[Cell, int]:
         """The cells shaded now (tests)."""
@@ -413,6 +474,13 @@ class ArenaView(QGraphicsView):
     def mouseMoveEvent(self, event: QMouseEvent | None):
         if event is None:
             return
+        point = self.mapToScene(event.position().toPoint())
+        cell = self._settings.distance_rule.shape.cell_at(point.x(), point.y(), CELL_PX)
+        if self._settings.on_map(cell):
+            self.hover(cell, point)
+        elif self._hover is not None:
+            self._hover = None
+            self._redraw()
         row = self._press_row
         if row is not None and self._dragging is None and self._press is not None:
             if (event.position() - self._press).manhattanLength() >= _DRAG_PX:
