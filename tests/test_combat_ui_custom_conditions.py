@@ -3,7 +3,7 @@ its dialog): any condition typed in goes on every target, with an optional
 note and a duration that ends it by itself at the right turn boundary."""
 
 import pytest
-from PyQt6.QtWidgets import QComboBox, QDialog, QLabel, QLineEdit
+from PyQt6.QtWidgets import QComboBox, QLabel, QLineEdit
 from PyQt6.QtWidgets import QPushButton, QSpinBox
 
 from Combat.Combatants import Pirate, Tiger
@@ -237,11 +237,11 @@ def test_dialog_names_the_source_in_its_durations(fight, monkeypatch):
     assert labels[-1] == "Custom..."
 
 
-def test_dialog_needs_a_target(fight, monkeypatch):
+def test_dialog_opens_without_a_target(fight, monkeypatch):
+    """It opens anyway, and says the target is missing."""
     ui, _, _ = fight
-    ui.target_characters = []
-    monkeypatch.setattr(QDialog, "exec", lambda self: pytest.fail("opened"))
+    ui._set_targets([])
 
-    ui._show_custom_condition_dialog()
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
 
-    assert "pick a target" in ui._status_label.text()
+    assert not dlg.findChild(QLabel, "targetMissing").isHidden()

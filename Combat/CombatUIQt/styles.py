@@ -110,6 +110,16 @@ QLabel#effectWho {
     font-size: 14px;
     font-weight: bold;
 }
+/* A pick that needs a target and has none */
+QLabel#targetMissing {
+    color: #e74c3c;
+    font-weight: bold;
+}
+QLabel#targetItself {
+    color: #e74c3c;
+    font-size: 14px;
+    font-weight: bold;
+}
 /* What to check about a pick */
 QLabel#effectNote {
     color: #f0d48a;

@@ -511,8 +511,7 @@ class ArenaMixin(CombatWindowState):
         request = self._end_area_targeting()
         if request is None:
             return False
-        if self.target_characters:
-            self._reopen_custom_effect(request["pick"])
+        self._reopen_custom_effect(request["pick"])
         return True
 
     def _reopen_custom_effect(self, pick: str):

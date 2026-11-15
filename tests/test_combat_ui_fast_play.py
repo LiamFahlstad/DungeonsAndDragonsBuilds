@@ -1166,13 +1166,13 @@ def test_no_source_says_so_instead_of_nothing(fight):
     assert "pick a source" in _status(ui)
 
 
-def test_no_target_for_a_spell_or_condition_is_no_popup(fight):
+def test_no_target_for_a_spell_is_no_popup(fight):
+    """Cast Spell says so. (The Use / Cast dialog opens anyway, with its
+    target missing: test_combat_ui_custom_effect.)"""
     ui, pirate, *_ = fight
     ui._set_targets([])
     ui._apply_cast_spell(SpellFactory.create("Hold Person"))
     assert "needs a target" in _status(ui)
-    ui._show_custom_condition_dialog()
-    assert "pick a target" in _status(ui)
 
 
 def test_escape_leaves_a_field_before_it_clears_anything(fight, monkeypatch):

@@ -3303,3 +3303,117 @@ def test_a_row_that_doesnt_say_shows_no_count(paladin, monkeypatch):
     _pick(dlg, "Bless")
     _pick(dlg, "Longsword")
     assert _target_count(dlg).isHidden()
+
+
+# ---------------------------------------------------------------------------
+# The target boxes at the top: it opens without targets, a box per target
+# picks anyone, + adds one and × takes one away.
+
+
+def _target_boxes(dlg) -> list[QComboBox]:
+    return dlg.findChildren(QComboBox, "targetPick")
+
+
+def _choose_target(ui, box: QComboBox, char: dict):
+    index = next(i for i, c in enumerate(ui.characters) if c is char)
+    box.setCurrentIndex(box.findData(index))
+
+
+def _missing(dlg) -> QLabel:
+    return dlg.findChild(QLabel, "targetMissing")
+
+
+def test_it_opens_with_no_target_and_says_one_is_missing(paladin, monkeypatch):
+    ui, _, tiger = paladin
+    ui._set_targets([])
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    (box,) = _target_boxes(dlg)
+    assert box.currentData() == -1
+    assert not _missing(dlg).isHidden()
+    _combo(dlg, "conditionName").setCurrentText("Marked")
+    _apply(dlg)
+    assert dlg.findChild(QLabel, "statusLabel").text().startswith("Target missing")
+    assert "Marked" not in tiger["conditions"]
+
+
+def test_a_target_picked_in_its_box_gets_it_and_becomes_the_target(
+    paladin, monkeypatch
+):
+    ui, _, tiger = paladin
+    ui._set_targets([])
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    _choose_target(ui, _target_boxes(dlg)[0], tiger)
+    assert _missing(dlg).isHidden()
+    _combo(dlg, "conditionName").setCurrentText("Marked")
+    _apply(dlg)
+    assert "Marked" in tiger["conditions"]
+    assert ui.target_characters == [tiger]
+
+
+def test_the_boxes_start_with_the_targets_picked(paladin_fight, monkeypatch):
+    ui, edmund, tiger = paladin_fight
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    picked = [ui.characters[box.currentData()] for box in _target_boxes(dlg)]
+    assert picked == [edmund, tiger]
+    assert _missing(dlg).isHidden()
+
+
+def test_plus_adds_boxes_up_to_what_the_pick_may_target(paladin, monkeypatch):
+    """Bless: three creatures at level 1, four at level 2. Command: one."""
+    ui, edmund, _ = paladin
+    edmund["spell_slots"] = {1: 4, 2: 2}
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    plus = dlg.findChild(QPushButton, "addTarget")
+    _pick(dlg, "Command: Halt")
+    assert not plus.isEnabled()
+    _pick(dlg, "Bless")
+    assert plus.isEnabled()
+    plus.click()
+    plus.click()
+    assert len(_target_boxes(dlg)) == 3
+    assert not plus.isEnabled()
+    slots = _combo(dlg, "spellSlot")
+    slots.setCurrentIndex(slots.findData(2))
+    assert plus.isEnabled()
+
+
+def test_a_target_added_gets_its_own_roll_row(paladin, monkeypatch):
+    """What was typed for a target already there stays as it was."""
+    ui, edmund, tiger = paladin
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    _choose_roll(dlg, SAVING_THROW)
+    (tiger_total,) = dlg.findChildren(QLineEdit, "typedTotal")
+    tiger_total.setText("14")
+    dlg.findChild(QPushButton, "addTarget").click()
+    _choose_target(ui, _target_boxes(dlg)[1], edmund)
+    totals = {
+        box.accessibleName(): box.text()
+        for box in dlg.findChildren(QLineEdit, "typedTotal")
+    }
+    assert totals == {tiger["name"]: "14", edmund["name"]: ""}
+    assert "2 targets" in dlg.findChild(QLabel, "effectPreview").text()
+
+
+def test_x_takes_a_target_away_and_the_last_box_empties(paladin_fight, monkeypatch):
+    ui, edmund, tiger = paladin_fight
+    ui._select_character(edmund)
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    dlg.findChildren(QPushButton, "removeTarget")[0].click()
+    assert [ui.characters[b.currentData()] for b in _target_boxes(dlg)] == [tiger]
+    dlg.findChildren(QPushButton, "removeTarget")[0].click()
+    (box,) = _target_boxes(dlg)
+    assert box.currentData() == -1
+    assert not _missing(dlg).isHidden()
+    assert dlg.findChildren(QLineEdit, "typedTotal") == []
+
+
+def test_a_self_row_needs_no_target(paladin, monkeypatch):
+    """False Life goes on Edmund, so no target is missing."""
+    ui, edmund, _ = paladin
+    ui._set_targets([])
+    dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
+    _pick(dlg, "False Life")
+    assert _missing(dlg).isHidden()
+    assert not dlg.findChild(QLabel, "targetItself").isHidden()
+    _apply(dlg)
+    assert edmund["temp_hp"] > 0

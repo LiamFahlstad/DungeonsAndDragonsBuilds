@@ -254,7 +254,7 @@ def test_no_targets_and_no_area_to_keep_is_refused(fight, monkeypatch):
     assert ui._start_area_targeting(_spell("Moonbeam"))
     ui._area_picked(Cell(12, 2))
     qapp().processEvents()
-    assert seen["problem"].startswith("No targets")
+    assert seen["problem"].startswith("Target missing")
     assert not mephit.get("active_spells")
 
 

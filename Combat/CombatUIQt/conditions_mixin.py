@@ -10,6 +10,7 @@ from PyQt6.QtWidgets import (
     QCheckBox,
     QComboBox,
     QDialog,
+    QGridLayout,
     QHBoxLayout,
     QHeaderView,
     QLabel,
@@ -249,6 +250,10 @@ _DETAILS_MIN_HEIGHT = 90
 # to set geometry".
 _DIALOG_HEADROOM = 120
 _BUTTON_WIDTH = 110
+# The dialog's target boxes: how many to a line, and their + and × buttons.
+_TARGETS_PER_LINE = 4
+_TARGET_BUTTON_WIDTH = 28
+_NO_TARGET = "— Pick a target —"
 # The roll kind with neither a saving throw nor an attack roll.
 NO_ROLL = "No roll"
 # The amount box's title and hint, for what it holds.
@@ -345,14 +350,13 @@ def _option_details(option: EffectOption) -> str:
     return "".join(lines)
 
 
-def _who_text(source: dict | None, targets: list[dict]) -> str:
-    """The Custom Effect dialog's first line: the source, then its targets."""
-    names = ", ".join(escape(t["name"], quote=False) for t in targets)
-    on = f"<span style='color:#e74c3c'>{names}</span>"
+def _source_text(source: dict | None) -> str:
+    """The Custom Effect dialog's first line, before its target boxes: the
+    source and an arrow to them."""
     if source is None:
-        return f"<span style='color:#a0a0b0'>No source</span> → {on}"
+        return "<span style='color:#a0a0b0'>No source</span> →"
     who = escape(source["name"], quote=False)
-    return f"<span style='color:#c9a84c'>{who}</span> → {on}"
+    return f"<span style='color:#c9a84c'>{who}</span> →"
 
 
 def _with_shield(target: dict, wielding: bool | None) -> dict:
@@ -1592,17 +1596,26 @@ class ConditionsMixin(CombatWindowState):
         listed on the left, and a pick fills in the form. `pick` names a row
         to start with picked (a trigger's prompt: "Spirit Guardians:
         damage"). An area just aimed on the map for it (ArenaMixin's
-        _aimed_area) is offered to keep on the map, and one to keep lets it
-        open with no targets (Moonbeam put on empty ground)."""
+        _aimed_area) is offered to keep on the map, and kept, it can be
+        applied with no targets (Moonbeam put on empty ground).
+
+        It opens with or without targets: a box per target at the top,
+        prefilled with the targets picked on the cards or the map, picks
+        anyone, + adds a box (up to what the pick may target) and × takes one
+        away. A pick that needs a target says "Target: missing" while it has
+        none, and Apply makes the boxes' picks the targets."""
         source = self.selected_character or self._current_turn_character()
         aimed, self._aimed_area = self._aimed_area, None
         if aimed is not None and (source is None or aimed["source"] != source["name"]):
             aimed = None
-        if not self.target_characters and not (aimed and aimed["keep"]):
-            self._show_status("Nothing applied: right-click a card to pick a target.")
-            return
         caster = self.selected_character
-        targets = self.target_characters
+        # The targets as the boxes at the top pick them, changed in place.
+        targets: list[dict] = list(self.target_characters)
+        choices = list(self.characters)
+        source_name = source["name"] if source is not None else ""
+        # The pick, and the damage and search it was made with, to tell the
+        # GM's edits by.
+        picked: dict = {"option": None, "damage": "", "times": 1, "search": ""}
 
         dlg = QDialog(self._window)
         dlg.setObjectName("customEffectDialog")
@@ -1614,16 +1627,95 @@ class ConditionsMixin(CombatWindowState):
         outer.setContentsMargins(14, 12, 14, 12)
         outer.setSpacing(10)
 
-        # Who uses it on whom
-        who_lbl = QLabel(_who_text(source, targets))
+        # Who uses it on whom: the source, then a box per target.
+        who_row = QHBoxLayout()
+        who_row.setSpacing(8)
+        outer.addLayout(who_row)
+        who_lbl = QLabel(_source_text(source))
         who_lbl.setObjectName("effectWho")
         who_lbl.setTextFormat(Qt.TextFormat.RichText)
-        who_lbl.setWordWrap(True)
-        who_lbl.setToolTip(
-            "Left-click a card for the source and right-click for targets"
-            " before opening this."
-        )
-        outer.addWidget(who_lbl)
+        who_lbl.setToolTip("Left-click a card for the source before opening this.")
+        who_row.addWidget(who_lbl, alignment=Qt.AlignmentFlag.AlignTop)
+        target_boxes = QWidget()
+        target_boxes.setObjectName("effectTargets")
+        target_grid = QGridLayout(target_boxes)
+        target_grid.setContentsMargins(0, 0, 0, 0)
+        target_grid.setHorizontalSpacing(6)
+        target_grid.setVerticalSpacing(4)
+        target_grid.setColumnStretch(_TARGETS_PER_LINE + 1, 1)
+        who_row.addWidget(target_boxes, stretch=1)
+        # A pick that goes on its user (Second Wind) instead of the boxes.
+        itself_lbl = QLabel("")
+        itself_lbl.setObjectName("targetItself")
+        itself_lbl.hide()
+        who_row.addWidget(itself_lbl, stretch=1, alignment=Qt.AlignmentFlag.AlignTop)
+        add_target_btn = QPushButton("+")
+        add_target_btn.setObjectName("addTarget")
+        add_target_btn.setAutoDefault(False)
+        add_target_btn.setFixedWidth(_TARGET_BUTTON_WIDTH)
+        missing_lbl = QLabel("Target: missing")
+        missing_lbl.setObjectName("targetMissing")
+        missing_lbl.setToolTip("Pick who it's used on in a box to the left.")
+        # Each box and the row holding it with its × button, in order.
+        target_slots: list[tuple[QWidget, QComboBox]] = []
+
+        def lay_out_target_slots():
+            while target_grid.count():
+                target_grid.takeAt(0)
+            cells = [row for row, _ in target_slots] + [add_target_btn, missing_lbl]
+            for index, widget in enumerate(cells):
+                target_grid.addWidget(
+                    widget,
+                    index // (_TARGETS_PER_LINE + 1),
+                    index % (_TARGETS_PER_LINE + 1),
+                )
+
+        def add_target_slot(char: dict | None) -> QComboBox:
+            """A box picking `char` (None: nobody yet), with its × button."""
+            row, layout = row_widget()
+            layout.setSpacing(2)
+            combo = QComboBox()
+            combo.setObjectName("targetPick")
+            combo.addItem(_NO_TARGET, -1)
+            for index, choice in enumerate(choices):
+                combo.addItem(f"{choice['name']}{self._distance_note(choice)}", index)
+            if char is not None:
+                at = next((i for i, c in enumerate(choices) if c is char), -1)
+                combo.setCurrentIndex(max(combo.findData(at), 0))
+            remove = QPushButton("×")
+            remove.setObjectName("removeTarget")
+            remove.setAutoDefault(False)
+            remove.setFixedWidth(_TARGET_BUTTON_WIDTH)
+            remove.setToolTip("Take this target away")
+            layout.addWidget(combo, stretch=1)
+            layout.addWidget(remove)
+            slot = (row, combo)
+            target_slots.append(slot)
+            combo.currentIndexChanged.connect(lambda _=0: targets_changed())
+            remove.clicked.connect(lambda _=False: remove_target_slot(slot))
+            lay_out_target_slots()
+            return combo
+
+        def remove_target_slot(slot: tuple[QWidget, QComboBox]):
+            """Take a box away; the last one empties instead."""
+            if slot not in target_slots:
+                return
+            target_slots.remove(slot)
+            slot[0].setParent(None)
+            slot[0].deleteLater()
+            if not target_slots:
+                add_target_slot(None)
+            lay_out_target_slots()
+            targets_changed()
+
+        def add_empty_target_slot():
+            combo = add_target_slot(None)
+            combo.setFocus()
+            show_target_slots(picked["option"])
+
+        add_target_btn.clicked.connect(add_empty_target_slot)
+        for target in targets or [None]:
+            add_target_slot(target)
 
         body = QHBoxLayout()
         body.setSpacing(14)
@@ -1777,16 +1869,11 @@ class ConditionsMixin(CombatWindowState):
         )
         roll_box.addWidget(repeat_box)
 
-        resisters = [t for t in targets if legendary_resistances_left(t) > 0]
+        def resisters() -> list[dict]:
+            return [t for t in targets if legendary_resistances_left(t) > 0]
+
         resist_box = QCheckBox("Use Legendary Resistance on a failed save")
         resist_box.setObjectName("useLegendaryResistance")
-        resist_box.setToolTip(
-            "Left: "
-            + ", ".join(
-                f"{t['name']} {legendary_resistances_left(t)}" for t in resisters
-            )
-        )
-        can_resist = bool(resisters)
         roll_box.addWidget(resist_box)
 
         # A roll made at the table is typed in; the rest are rolled. Each target
@@ -1794,46 +1881,77 @@ class ConditionsMixin(CombatWindowState):
         rolls_hint = QLabel("Rolled at the table? Type it; blank rolls.")
         rolls_hint.setObjectName("secondary")
         roll_box.addWidget(rolls_hint)
-        save_rows, typed_inputs, save_infos, _, _ = target_roll_rows(
-            targets,
-            "typedTotal",
-            "The total with the save bonus already in it, like 14 or 9+5."
-            " Blank rolls for them.",
-        )
-        roll_box.addWidget(save_rows)
-        # A hit's extra damage (Hunter's Mark) is a roll of its own: a box
-        # more on its target's row, for what was rolled at the table.
-        extra_boxes = {
-            id(target): [
-                (
-                    (id(target), label),
-                    f"{label[len(source['name']) + 3:]}: {extra_text(extra)}",
-                    f"{label}: what was rolled at the table for its"
-                    f" {extra_text(extra)}, its dice twice over on a Critical"
-                    " Hit. Blank rolls it, unless the damage is a total typed"
-                    " in, which has it already. 0 leaves it out.",
-                )
-                for label, extra in hit_extras(source, target)
-            ]
-            for target in targets
-            if source is not None
-        }
-        # A target with a Shield can be wielding it or not: a box on its row,
-        # its AC worked out by it.
-        shield_checks = {
-            id(target): (
-                "Shield",
-                f"Whether {target['name']} wields their Shield. The attack is"
-                f" against AC {stored_armor(_with_shield(target, True))} with"
-                f" it and {stored_armor(_with_shield(target, False))} without"
-                " it (before effects and cover), and it stays as set here.",
-                not is_shield_off(target),
+        # The rows per target, built again whenever the targets change: the
+        # boxes and labels by id(target), filled in place so what reads them
+        # always has the current ones.
+        rolls_holder = QWidget()
+        rolls_layout = QVBoxLayout(rolls_holder)
+        rolls_layout.setContentsMargins(0, 0, 0, 0)
+        rolls_layout.setSpacing(6)
+        roll_box.addWidget(rolls_holder)
+        roll_rows: dict[str, QWidget] = {}
+        typed_inputs: dict[int, QLineEdit] = {}
+        save_infos: dict[int, QLabel] = {}
+        attack_inputs: dict[int, QLineEdit] = {}
+        attack_infos: dict[int, QLabel] = {}
+        extra_rows: dict = {}
+        shield_boxes: dict[int, QCheckBox] = {}
+
+        def show_attack_info(target: dict):
+            box = shield_boxes.get(id(target))
+            wielding = None if box is None else box.isChecked()
+            attack_infos[id(target)].setText(_attack_text(source, target, wielding))
+
+        def build_roll_rows():
+            """The rows for the targets now picked, keeping what was typed
+            (and each Shield box) for a target still picked."""
+            typed = {
+                **{("total", k): box.text() for k, box in typed_inputs.items()},
+                **{("attack", k): box.text() for k, box in attack_inputs.items()},
+                **{("extra", k): box.text() for k, (_, box) in extra_rows.items()},
+            }
+            wielded = {k: box.isChecked() for k, box in shield_boxes.items()}
+            for widget in roll_rows.values():
+                widget.setParent(None)
+                widget.deleteLater()
+            save_rows, totals, infos, _, _ = target_roll_rows(
+                targets,
+                "typedTotal",
+                "The total with the save bonus already in it, like 14 or 9+5."
+                " Blank rolls for them.",
             )
-            for target in targets
-            if has_shield(target)
-        }
-        attack_rows, attack_inputs, attack_infos, extra_rows, shield_boxes = (
-            target_roll_rows(
+            # A hit's extra damage (Hunter's Mark) is a roll of its own: a box
+            # more on its target's row, for what was rolled at the table.
+            extra_boxes = {
+                id(target): [
+                    (
+                        (id(target), label),
+                        f"{label[len(source['name']) + 3:]}: {extra_text(extra)}",
+                        f"{label}: what was rolled at the table for its"
+                        f" {extra_text(extra)}, its dice twice over on a Critical"
+                        " Hit. Blank rolls it, unless the damage is a total typed"
+                        " in, which has it already. 0 leaves it out.",
+                    )
+                    for label, extra in hit_extras(source, target)
+                ]
+                for target in targets
+                if source is not None
+            }
+            # A target with a Shield can be wielding it or not: a box on its
+            # row, its AC worked out by it.
+            shield_checks = {
+                id(target): (
+                    "Shield",
+                    f"Whether {target['name']} wields their Shield. The attack is"
+                    f" against AC {stored_armor(_with_shield(target, True))} with"
+                    f" it and {stored_armor(_with_shield(target, False))} without"
+                    " it (before effects and cover), and it stays as set here.",
+                    wielded.get(id(target), not is_shield_off(target)),
+                )
+                for target in targets
+                if has_shield(target)
+            }
+            attack_rows, attacks, attack_labels, extras, shields = target_roll_rows(
                 targets,
                 "typedAttack",
                 "The total with the bonus already in it, like 17 or 12+5, or"
@@ -1841,21 +1959,50 @@ class ConditionsMixin(CombatWindowState):
                 extra_boxes,
                 shield_checks,
             )
-        )
-        roll_box.addWidget(attack_rows)
-
-        def show_attack_info(target: dict):
-            box = shield_boxes.get(id(target))
-            wielding = None if box is None else box.isChecked()
-            attack_infos[id(target)].setText(_attack_text(source, target, wielding))
-
-        for target in targets:
-            show_attack_info(target)
-            attack_infos[id(target)].setToolTip(_attack_tooltip(source, target))
-            if id(target) in shield_boxes:
-                shield_boxes[id(target)].toggled.connect(
-                    lambda _=False, t=target: show_attack_info(t)
+            for kept in (
+                typed_inputs,
+                save_infos,
+                attack_inputs,
+                attack_infos,
+                extra_rows,
+                shield_boxes,
+            ):
+                kept.clear()
+            typed_inputs.update(totals)
+            save_infos.update(infos)
+            attack_inputs.update(attacks)
+            attack_infos.update(attack_labels)
+            extra_rows.update(extras)
+            shield_boxes.update(shields)
+            roll_rows.update(save=save_rows, attack=attack_rows)
+            rolls_layout.addWidget(save_rows)
+            rolls_layout.addWidget(attack_rows)
+            for kind, boxes in (("total", totals), ("attack", attacks)):
+                for key, box in boxes.items():
+                    box.setText(typed.get((kind, key), ""))
+            for key, (_, box) in extras.items():
+                box.setText(typed.get(("extra", key), ""))
+            for box in [
+                *totals.values(),
+                *attacks.values(),
+                *(box for _, box in extras.values()),
+            ]:
+                box.returnPressed.connect(lambda: do_apply())
+            for target in targets:
+                show_attack_info(target)
+                attack_infos[id(target)].setToolTip(_attack_tooltip(source, target))
+                if id(target) in shield_boxes:
+                    shield_boxes[id(target)].toggled.connect(
+                        lambda _=False, t=target: show_attack_info(t)
+                    )
+            resist_box.setToolTip(
+                "Left: "
+                + ", ".join(
+                    f"{t['name']} {legendary_resistances_left(t)}" for t in resisters()
                 )
+            )
+
+        build_roll_rows()
         roll_col.addStretch()
 
         # ── Damage, or Hit Points regained, or Temporary Hit Points
@@ -2099,11 +2246,6 @@ class ConditionsMixin(CombatWindowState):
         apply_btn.setObjectName("primaryBtn")
         apply_btn.setAutoDefault(False)
         apply_btn.setMinimumWidth(_BUTTON_WIDTH)
-        apply_btn.setToolTip(
-            f"Apply to {_count(len(targets), 'target')} (Ctrl+Enter)"
-            if targets
-            else "Put the area on the map, with no targets (Ctrl+Enter)"
-        )
         btn_row.addWidget(cancel_btn)
         btn_row.addWidget(apply_btn)
         outer.addLayout(btn_row)
@@ -2161,10 +2303,10 @@ class ConditionsMixin(CombatWindowState):
             repeat_box.setVisible(has_save)
             # Hit Points aren't halved by a save: every target gets them.
             half_box.setVisible(has_save and amount_kind() == DAMAGE_AMOUNT)
-            resist_box.setVisible(can_resist and has_save)
+            resist_box.setVisible(bool(resisters()) and has_save)
             rolls_hint.setVisible(kind != NO_ROLL)
-            save_rows.setVisible(bool(typed_inputs) and has_save)
-            attack_rows.setVisible(bool(attack_inputs) and is_attack)
+            roll_rows["save"].setVisible(bool(typed_inputs) and has_save)
+            roll_rows["attack"].setVisible(bool(attack_inputs) and is_attack)
             for row in extra_rows.values():
                 for widget in row:
                     widget.setVisible(amount_kind() == DAMAGE_AMOUNT)
@@ -2245,9 +2387,68 @@ class ConditionsMixin(CombatWindowState):
                     " healing or a condition."
                 )
                 return
-            preview_lbl.setText(
-                f"On {_count(len(targets), 'target')}: " + " · ".join(parts)
+            on = (
+                source_name
+                if on_itself(picked["option"])
+                else _count(len(targets), "target")
             )
+            preview_lbl.setText(f"On {on}: " + " · ".join(parts))
+
+        def on_itself(option: EffectOption | None) -> bool:
+            """Whether the pick goes on its user alone, whoever is targeted
+            (_apply_custom_effect: Second Wind)."""
+            return option is not None and option.targets_self and source is not None
+
+        def show_target_slots(option: EffectOption | None):
+            """The target boxes for the pick: none for one that goes on its
+            user, + only while it may target more, and "Target: missing"
+            while it needs one and has none."""
+            itself = on_itself(option)
+            target_boxes.setVisible(not itself)
+            itself_lbl.setVisible(itself)
+            name = option.name if option is not None else ""
+            if itself:
+                itself_lbl.setText(f"itself ({name} goes on its user)")
+            count = option.targets_at(slot_combo.currentData()) if option else None
+            room = count is None or len(target_slots) < count
+            add_target_btn.setEnabled(room)
+            add_target_btn.setToolTip(
+                "Add another target"
+                if count is None or room
+                else f"{name} may target {_count(count, 'creature')}"
+            )
+            keeps_area = aimed is not None and keep_area_box.isChecked()
+            missing_lbl.setVisible(not itself and not targets and not keeps_area)
+            if itself:
+                apply_btn.setToolTip(f"Apply to {source_name} (Ctrl+Enter)")
+            elif targets:
+                apply_btn.setToolTip(
+                    f"Apply to {_count(len(targets), 'target')} (Ctrl+Enter)"
+                )
+            elif keeps_area:
+                apply_btn.setToolTip(
+                    "Put the area on the map, with no targets (Ctrl+Enter)"
+                )
+            else:
+                apply_btn.setToolTip("Pick a target first")
+
+        def targets_changed():
+            """The boxes' picks, in order and once each, are the targets; the
+            rows per target follow them."""
+            chosen: list[dict] = []
+            for _, combo in target_slots:
+                index = combo.currentData()
+                if isinstance(index, int) and index >= 0:
+                    char = choices[index]
+                    if not any(char is c for c in chosen):
+                        chosen.append(char)
+            if [id(c) for c in chosen] != [id(t) for t in targets]:
+                targets[:] = chosen
+                build_roll_rows()
+                show_roll_controls()
+                show_target_count(picked["option"])
+                show_preview()
+            show_target_slots(picked["option"])
 
         duration_combo.currentIndexChanged.connect(show_custom_row)
         roll_combo.currentIndexChanged.connect(show_roll_controls)
@@ -2443,9 +2644,10 @@ class ConditionsMixin(CombatWindowState):
             spends = pick is not None and pick.is_tracked and caster is not None
             ends = pick is not None and bool(pick.ends_conditions)
             keeps_area = aimed is not None and keep_area_box.isChecked()
-            if not targets and not keeps_area:
+            if not targets and not keeps_area and not on_itself(pick):
                 problem_lbl.setText(
-                    "No targets: keep the area on the map, or right-click a card."
+                    "Target missing: pick one at the top, or keep the area on"
+                    " the map."
                 )
                 return
             if (
@@ -2525,6 +2727,9 @@ class ConditionsMixin(CombatWindowState):
                 and damage_input.text() != picked["damage"],
                 area=aimed["record"] if aimed is not None and keeps_area else None,
             )
+            # The boxes' picks become the targets, as if clicked on the cards.
+            if [id(t) for t in targets] != [id(t) for t in self.target_characters]:
+                self._set_targets(list(targets))
             times = times_input.value()
             if times == 1:
                 self._apply_custom_effect(effect)
@@ -2575,10 +2780,6 @@ class ConditionsMixin(CombatWindowState):
                     )
                 effects.append(each)
             return effects
-
-        # The pick, and the damage and search it was made with, to tell the
-        # GM's edits by.
-        picked: dict = {"option": None, "damage": "", "times": 1, "search": ""}
 
         def show_details(option: EffectOption | None):
             details.setHtml(
@@ -2704,6 +2905,7 @@ class ConditionsMixin(CombatWindowState):
             """How many creatures the pick may target at the slot chosen
             ("Targets: 4 at level 2" for Bless), and when more are targeted,
             how many too many. It warns; the GM can still apply it."""
+            show_target_slots(option)
             slot = slot_combo.currentData()
             count = option.targets_at(slot) if option is not None else None
             if option is None or count is None:
@@ -2804,12 +3006,9 @@ class ConditionsMixin(CombatWindowState):
         notes_input.returnPressed.connect(do_apply)
         damage_input.returnPressed.connect(do_apply)
         name_input.returnPressed.connect(do_apply)
-        for total_input in [
-            *typed_inputs.values(),
-            *attack_inputs.values(),
-            *(box for _, box in extra_rows.values()),
-        ]:
-            total_input.returnPressed.connect(do_apply)
+        keep_area_box.toggled.connect(
+            lambda _=False: show_target_slots(picked["option"])
+        )
         cancel_btn.clicked.connect(dlg.reject)
         for keys, action in (
             ("Ctrl+Return", do_apply),
@@ -2819,6 +3018,7 @@ class ConditionsMixin(CombatWindowState):
             QShortcut(QKeySequence(keys), dlg).activated.connect(action)
 
         show_details(None)
+        show_target_slots(None)
         search_box.setFocus()
         start = next(
             (
