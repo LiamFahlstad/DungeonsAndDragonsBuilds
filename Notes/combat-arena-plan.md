@@ -558,10 +558,13 @@ when concentration ends.
   hexagons (a `HexGrid` shape with axial cells and its rule; footprints of
   Large+ creatures on hexes need their own decision). A combo box in the map
   settings picks one.
-- **Map settings dialog**: size, cell feet, rule; per encounter in its
-  `EncounterSpec` (a default map and starting positions, Q1).
-- **Terrain**: walls and obstacles (cells nobody enters), difficult terrain
-  (a step costs 1 extra foot, which `reachable`'s costs already allow).
+- **Map settings dialog**: *built as the Map Painter*
+  ([map-painter-plan.md](map-painter-plan.md), 2026-11-15): size and
+  starting positions per encounter, in its own map file rather than its
+  `EncounterSpec`. Still later: cell feet and the distance rule in it.
+- **Terrain**: *built in the Map Painter*: walls and blocking objects nobody
+  enters, Difficult Terrain, water, the ground's height, light, objects and
+  hazards. What's left (cover, sight, doors) is that plan's Open questions.
 - **Other speeds**: flying, climbing, swimming as a choice when moving (Q7).
 - **Using distance in the rules**, which is where the map pays off (DI-085):
   the "within 5 feet" in Paralyzed's and Unconscious's automatic Critical
@@ -579,7 +582,8 @@ when concentration ends.
   on the Player Screen's map (hidden with a hidden caster).
 - **The map on the Player Screen and the player link**, from the same token
   rows, hidden monsters left out the way `player_view_rows` leaves them out.
-- **Height**: a flying creature's altitude, counted into distance.
+- **Height**: the ground's height is built in the Map Painter (counted
+  into distances and climbing); a flying creature's altitude is its Q4.
 
 ## Decisions
 
@@ -751,6 +755,13 @@ Taken while building step 12 (2026-11-15), for the user to overrule:
     alone. It's selected by a click on an empty cell of it, so a token
     standing in it is still clicked as a token.
 
+Taken with the Map Painter (2026-11-15), for the user to overrule:
+
+26. **Changing the map during a fight is an undo step**: `UndoPoint` keeps
+    the map's settings and terrain, so saving the Map Painter mid-fight is
+    one Ctrl+Z ([map-painter-plan.md](map-painter-plan.md), Decision 10).
+    Answers Q6.
+
 ## Open questions
 
 Each has a *Suggestion*: what gets built if nobody says otherwise.
@@ -791,9 +802,7 @@ Each has a *Suggestion*: what gets built if nobody says otherwise.
   helping stays red. *Built so in step 4. The encounter's own allies are
   blue too since step 9 (Decision 11), and whose turn it is stands on gold
   cells as well (R9).*
-- **Q6. Is changing the map's settings an undo step?** *Blocks nothing yet.*
-  *Suggestion:* not until there's a map settings dialog (Q1, Later); it joins
-  `UndoPoint` then.
+- Q6: Decision 26.
 - **Q7. Which speed is the reach?** *Blocks step 6.* *Suggestion:* the
   walking speed in use. A creature with only a Fly or Swim Speed uses its
   highest one. Picking a speed for a move, and switching speeds part-way

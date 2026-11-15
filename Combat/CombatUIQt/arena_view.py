@@ -20,7 +20,10 @@ moved meanwhile. The shading is the colour the area bar picked.
 Areas that stay (step 11, Combat/Arena/lasting.py): each drawn over the grid
 in its own colour, with its name, the edge dashed while its caster
 concentrates on it. A click on an empty cell of one selects it (step 12),
-edged brighter; another click there goes to the next area on that cell."""
+edged brighter; another click there goes to the next area on that cell.
+
+The terrain painted in the Map Painter (draw_terrain; Notes/
+map-painter-plan.md) is drawn over the grid, under the areas and tokens."""
 
 from __future__ import annotations
 
@@ -36,6 +39,7 @@ from PyQt6.QtGui import (
     QFont,
     QMouseEvent,
     QPainter,
+    QPainterPath,
     QPen,
     QPolygonF,
     QWheelEvent,
@@ -51,6 +55,7 @@ from PyQt6.QtWidgets import (
 from Combat.Arena.arena import ArenaSettings, footprint
 from Combat.Arena.geometry import Cell
 from Combat.Arena.lasting import DEFAULT_AREA_COLOR, LastingArea
+from Combat.Arena.terrain import BRIGHT, DARK, DIFFICULT, WALL, WATER
 from Combat.Effects.triggers import on_party_side
 
 from .player_view import _can_be_seen
@@ -85,6 +90,21 @@ _LASTING_ALPHA = 70
 _LASTING_EDGE_ALPHA = 220
 # How far the mouse goes before a press on a token is a drag, not a click.
 _DRAG_PX = 6
+# The painted terrain (draw_terrain; Notes/map-painter-plan.md).
+_WALL = QColor("#5b544c")
+_WALL_EDGE = QColor("#7a7166")
+_WATER = QColor(52, 120, 200, 120)
+_DIFFICULT = QColor("#a88c5a")
+_HIGH = QColor("#ffffff")
+_LOW = QColor("#000000")
+_HEIGHT_ALPHA_MAX = 90
+_HEIGHT_TEXT = QColor("#e8dcb0")
+_CLIFF = QColor("#e4ddcc")  # not gold: gold is whose turn it is
+_HAZARD = QColor(192, 57, 43, 200)
+_BLOCKING = QColor(125, 104, 78, 230)
+_FURNITURE = QColor(160, 138, 96, 170)
+_DIM = QColor(0, 0, 0, 80)
+_DARKNESS = QColor(0, 0, 0, 165)
 
 
 @dataclass(frozen=True)
@@ -255,7 +275,7 @@ class ArenaView(QGraphicsView):
         if lasting is not None:
             self._lasting = list(lasting)
         key = (
-            settings.to_dict().items(),
+            settings.to_dict(),
             tuple(rows),
             tuple(self._lasting),
             self._area_color.name(),
@@ -266,6 +286,7 @@ class ArenaView(QGraphicsView):
         self._settings, self._rows = settings, list(rows)
         self._scene.clear()
         self._draw_grid()
+        draw_terrain(self._scene, settings)
         for area in self._lasting:
             self._draw_lasting(area)
         if self._picked is not None and self._dragging is None:
@@ -828,6 +849,98 @@ class ArenaView(QGraphicsView):
             event.accept()
             return
         super().wheelEvent(event)
+
+
+def draw_terrain(scene: QGraphicsScene, settings: ArenaSettings):
+    """The map's painted terrain (Combat/Arena/terrain.py), over the grid
+    and under everything else: walls solid stone, Difficult Terrain dotted,
+    water blue; ground above 0 lighter and below darker, with its height in
+    the corner and a pale edge where it drops to a lower cell; objects as
+    labelled blocks (hazards red); Dim Light and Darkness shading the cells
+    last, so they dim what's on them but never the tokens drawn after."""
+    terrain = settings.terrain
+    shape = settings.distance_rule.shape
+    cells = [cell for cell in terrain.cells if settings.on_map(cell)]
+    if not cells:
+        return
+    none = QPen(Qt.PenStyle.NoPen)
+
+    def outline(cell: Cell) -> QPolygonF:
+        return QPolygonF([QPointF(x, y) for x, y in shape.polygon(cell, CELL_PX)])
+
+    small = QFont("Segoe UI", 7)
+    for cell in cells:
+        spot = terrain.at(cell)
+        tip = "\n".join([shape.cell_name(cell), *terrain.describe(cell)])
+        if spot.ground == WALL:
+            item = scene.addPolygon(outline(cell), QPen(_WALL_EDGE), QBrush(_WALL))
+        elif spot.ground == WATER:
+            item = scene.addPolygon(outline(cell), none, QBrush(_WATER))
+        elif spot.ground == DIFFICULT:
+            item = scene.addPolygon(
+                outline(cell), none, QBrush(_DIFFICULT, Qt.BrushStyle.Dense6Pattern)
+            )
+        else:
+            item = scene.addPolygon(outline(cell), none, QBrush(Qt.BrushStyle.NoBrush))
+        if item is not None:
+            item.setToolTip(tip)
+        if spot.height_ft:
+            shade = _HIGH if spot.height_ft > 0 else _LOW
+            alpha = min(_HEIGHT_ALPHA_MAX, 25 + abs(spot.height_ft) * 2)
+            scene.addPolygon(outline(cell), none, QBrush(_with_alpha(shade, alpha)))
+            label = QGraphicsSimpleTextItem(f"{spot.height_ft:+d}")
+            label.setFont(small)
+            label.setBrush(QBrush(_HEIGHT_TEXT))
+            scene.addItem(label)
+            box = label.boundingRect()
+            corners = shape.polygon(cell, CELL_PX)
+            right, bottom = max(x for x, _ in corners), max(y for _, y in corners)
+            label.setPos(right - box.width() - 2, bottom - box.height())
+    cliff = QPen(_CLIFF)
+    cliff.setWidthF(2.5)
+    for cell in cells:
+        for other, (a, b) in shape.edges(cell, CELL_PX):
+            if settings.on_map(other) and terrain.height(other) < terrain.height(cell):
+                scene.addLine(a[0], a[1], b[0], b[1], cliff)
+    for cell in cells:
+        thing = terrain.at(cell).thing
+        if thing is not None:
+            _draw_object(scene, settings, cell, thing)
+    for cell in cells:
+        light = terrain.at(cell).light
+        if light != BRIGHT:
+            scene.addPolygon(
+                outline(cell), none, QBrush(_DARKNESS if light == DARK else _DIM)
+            )
+
+
+def _draw_object(scene: QGraphicsScene, settings: ArenaSettings, cell: Cell, thing):
+    """An object on `cell`: a rounded block, its name on the first cell of a
+    run of the same object (left and above), the rest in its tooltip."""
+    shape = settings.distance_rule.shape
+    corners = shape.polygon(cell, CELL_PX)
+    xs, ys = [x for x, _ in corners], [y for _, y in corners]
+    box = QRectF(min(xs), min(ys), max(xs) - min(xs), max(ys) - min(ys))
+    fill = _HAZARD if thing.hazard else _BLOCKING if thing.blocks else _FURNITURE
+    pen = QPen(fill.lighter(150))
+    pen.setWidthF(1.5)
+    path = QPainterPath()
+    path.addRoundedRect(box.adjusted(5, 5, -5, -5), 6, 6)
+    item = scene.addPath(path, pen, QBrush(fill))
+    if item is not None:
+        item.setToolTip(f"{shape.cell_name(cell)}\n{thing.describe()}")
+    terrain = settings.terrain
+    same = [
+        terrain.at(shape.offset(cell, -1, 0)).thing,
+        terrain.at(shape.offset(cell, 0, -1)).thing,
+    ]
+    if any(other is not None and other.name == thing.name for other in same):
+        return
+    label = QGraphicsSimpleTextItem(thing.name)
+    label.setFont(QFont("Segoe UI", 7, QFont.Weight.Bold))
+    label.setBrush(QBrush(QColor("#f4ecd8")))
+    scene.addItem(label)
+    label.setPos(box.left() + 3, box.top() + 1)
 
 
 def _with_alpha(colour: QColor, alpha: int) -> QColor:

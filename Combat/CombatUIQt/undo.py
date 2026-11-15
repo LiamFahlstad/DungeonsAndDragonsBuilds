@@ -18,6 +18,8 @@ import functools
 import inspect
 from dataclasses import dataclass, field
 
+from Combat.Arena.arena import ArenaSettings
+
 
 def _plain_copy(value):
     """value with its dicts and lists copied all the way down. Anything else
@@ -62,6 +64,9 @@ class UndoPoint:
     saved_targets: list[dict] = field(default_factory=list)
     damage_text: str = ""
     attack_roll_text: str = ""
+    # The battle map's settings and terrain (ArenaSettings.to_dict), which the
+    # Map Painter can change during a fight.
+    arena: dict | None = None
 
     @classmethod
     def capture(cls, app) -> "UndoPoint":
@@ -74,6 +79,7 @@ class UndoPoint:
             saved_targets=list(app._saved_targets),
             damage_text=app.damage_input.text(),
             attack_roll_text=app.attack_roll_input.text(),
+            arena=app.arena_settings.to_dict(),
         )
 
     def changed_since(self, app) -> bool:
@@ -86,6 +92,7 @@ class UndoPoint:
             or self.current_turn_idx != now.current_turn_idx
             or self.round_number != now.round_number
             or self.combat_data != now.combat_data
+            or self.arena != now.arena
         )
 
     def restore(self, app):
@@ -100,6 +107,8 @@ class UndoPoint:
         app.initiative_order = list(self.initiative_order)
         app.current_turn_idx = self.current_turn_idx
         app.round_number = self.round_number
+        if self.arena is not None:
+            app.arena_settings = ArenaSettings.from_dict(self.arena)
         app._saved_targets = [
             s for s in self.saved_targets if any(s is t for t in app.target_characters)
         ]

@@ -25,6 +25,7 @@ from .resources import ResourcesMixin
 from .rests_mixin import RestsMixin
 from .features_mixin import FeaturesMixin
 from .logging_mixin import LoggingMixin
+from .map_painter import MapPainterMixin
 from .player_server import PlayerServer
 from .rolls_mixin import RollsMixin
 from .settings import ARENA_VIEW_KEY, CombatSettings, open_settings_store
@@ -50,6 +51,7 @@ class CombatAppQt(
     TurnsMixin,
     TurnPanelMixin,
     ArenaMixin,
+    MapPainterMixin,
     CardsMixin,
     LoggingMixin,
     DialogsMixin,
@@ -149,6 +151,7 @@ class CombatAppQt(
         self.round_number = 1
         self.arena_settings = ArenaSettings()
         self.arena_view_on = False  # run() reads the view last used
+        self._map_painter = None
         self.history = []
         self._open_undo_point = None
 

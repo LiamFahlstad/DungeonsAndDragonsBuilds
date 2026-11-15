@@ -30,6 +30,7 @@ All shortcuts listed below are global (registered on the main combat window in `
 | **I** | More Info | Open the source's More Info dialog. |
 | **Ctrl+N** | Add Combatant | Open the Add Combatant dialog (same as clicking the "+ Add Combatant" button). |
 | **Ctrl+O** | Load Encounter | Open the Load Encounter dialog (same as clicking the "Load Encounter..." button). |
+| **Ctrl+M** | Map Painter | Open the Map Painter on the encounter that's open, or the campaign's first (same as the **Map Painter** button). See "The Map Painter" below. |
 | **G** | Cards / Arena | Switch between the cards and the battle map (same as the **Arena** / **Cards** button at the top of the turn column). Only during combat; the window opens a fight on the view used last. See "On the battle map" below. |
 
 The arrow keys are plain aliases for N/P/Shift+N/Shift+P — left/right mirrors the unmodified source shortcuts, up/down mirrors the Shift target shortcuts. A focused text field keeps its own left/right cursor movement regardless (see Notes).
@@ -204,6 +205,54 @@ long it has left, with its rules text under it:
 - **Close**, **Esc** or a click on an empty cell outside it deselects it.
 
 An area is never the source: the source and targets stay as they were.
+
+**A painted map** (see "The Map Painter" below) is drawn under the tokens:
+walls as stone, Difficult Terrain dotted, water blue, higher ground lighter
+with its height in the corner and a pale edge where it drops, objects as
+labelled blocks (hazards red), Dim Light and Darkness shaded. Nobody can be
+moved onto a wall or an object that blocks movement; the shaded reach counts
+Difficult Terrain and climbing; hovering a cell names what's painted on it;
+the target label adds "Lightly Obscured" or "Heavily Obscured"; and walking
+onto a hazard, or starting a turn on one, is named like an area that stays.
+
+## The Map Painter
+
+**Ctrl+M** or the **Map Painter** button opens it on the encounter that's
+open (the list at the top switches to another). Pick a tab, then paint on
+the map:
+
+| Mouse / key | What it does |
+|---|---|
+| **Left-drag** | Paint the tab's choice on every cell dragged over. |
+| **Right-drag** | Clear what this tab paints (open ground, height 0, Bright Light, no object). |
+| **Shift+drag** | Fill the block between where the drag starts and ends (shown as it's dragged). |
+| **Ctrl+wheel** | Zoom. |
+| **Ctrl+Z** | Undo the last stroke (or size change). |
+| **Ctrl+S** | Save and close. |
+| **Esc** / **Cancel** | Close, asking first when something isn't saved. |
+
+- **Ground:** Wall (nobody enters it), Difficult Terrain, Water (Difficult
+  Terrain too).
+- **Height:** the ground's height in feet, up or down. Height counts into
+  distances, and a step up or down is a climb (each foot costs 1 extra, 2
+  in Difficult Terrain, none with a Climb Speed).
+- **Light:** Dim Light (Lightly Obscured) or Darkness (Heavily Obscured).
+- **Objects:** a preset (Table, Barrel, Pillar, Door, Campfire, ...) or your
+  own: whether it blocks movement, is Difficult Terrain, is a hazard, and
+  the cover it gives (shown on the hover, not counted into attacks).
+- **Start:** the encounter's combatants. Pick one and click the cell it
+  starts on; the next one not placed is picked for you. Click a token to
+  pick it again, right-click it to take its start away. Whoever has no
+  start is placed as before, the party on the left and the rest on the
+  right.
+- **Width** / **Height** at the top size the map, in 5-foot cells.
+
+**Save** keeps the map in `Combat/Campaigns/<Campaign>/Maps/<encounter
+id>.json`. A fight that starts plays on it, everyone where the map says.
+Saving the map of the encounter that's open changes its fight too: before
+it starts, it's the map it starts on; during it, it's one undo step, and
+anyone standing where a wall now is moves to the nearest free cell. A fight
+in progress keeps the map it has when it's continued later.
 
 ## The turn column
 

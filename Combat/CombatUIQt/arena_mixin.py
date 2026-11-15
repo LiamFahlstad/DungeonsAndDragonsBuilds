@@ -28,7 +28,13 @@ Selecting a kept area (step 12): a click on an empty cell of one brings up
 the area panel over the map: whose it is, where, how long it has left and
 its rules text, with its colour to change, Target who's in it, End spell,
 and Close (or Esc). The selection is the window's, as the source is, but an
-area is never a source."""
+area is never a source.
+
+The painted map (Notes/map-painter-plan.md): a fight starting puts whoever
+the encounter's map gives a starting cell there; the hover names what's
+painted on a cell, the target label says when a target is Lightly or
+Heavily Obscured, and walking onto a hazard (a campfire, a trap) or starting
+a turn on one is a reminder, as an area that stays is."""
 
 from dataclasses import replace
 from html import escape
@@ -56,6 +62,7 @@ from Combat.Arena.arena import (
     distance_ft,
     distance_to_cell_ft,
     fits_at,
+    footprint,
     move_cost,
     nearest_free,
     occupied,
@@ -91,6 +98,8 @@ from Combat.Arena.lasting import (
     time_left_text,
     who_is_in,
 )
+from Combat.Arena.maps import place_at_starts
+from Combat.Arena.terrain import BRIGHT, DARK, DIM, OBSCURED
 from Combat.Effects.modifiers import has_condition
 from Core.Definitions import Condition
 from Core.Rules import SECONDS_PER_ROUND
@@ -550,8 +559,13 @@ class ArenaMixin(CombatWindowState):
             self._refresh_arena()
 
     def _place_on_arena(self):
-        """Starting cells for whoever isn't on the map yet (the plan's Q1),
-        as a fight starts or is continued."""
+        """Starting cells for whoever isn't on the map yet, as a fight
+        starts or is continued: the cell the encounter's painted map gives
+        them, else the party's side on the left and the rest on the right
+        (the plan's Q1)."""
+        painted = self._encounter_map(self._scenario_name)
+        if painted is not None:
+            place_at_starts(self.characters, painted.starts, self.arena_settings)
         place_new(self.characters, self.arena_settings)
 
     def _refresh_arena(self):
@@ -803,8 +817,8 @@ class ArenaMixin(CombatWindowState):
             return
         if not fits_at(char, cell, self.characters, settings):
             self._show_status(
-                f"{name} can't end a move there: it's off the map or"
-                " someone else's space."
+                f"{name} can't end a move there: it's off the map, a wall,"
+                " an object that blocks movement or someone else's space."
             )
             return
         walked = move_cost(char, self.characters, settings, cell)
@@ -812,6 +826,7 @@ class ArenaMixin(CombatWindowState):
         feet = feet or 0
         start = position(char)
         before = who_is_in(self.characters, settings)
+        hazards_before = hazards_under(char, settings)
         char[POSITION_KEY] = cell.to_list()
         char[MOVED_KEY] = int(char.get(MOVED_KEY, 0)) + feet
         speed = walking_speed_ft(char)
@@ -833,6 +848,11 @@ class ArenaMixin(CombatWindowState):
             line = f"{who} enters {caster}'s {area}."
             self._log_event(line, character=who, public=False)
             warnings.append(line)
+        for hazard in hazards_under(char, settings):
+            if hazard not in hazards_before:
+                line = f"{name} enters a hazard: {hazard}."
+                self._log_event(line, character=name, public=False)
+                warnings.append(line)
         if warnings:
             self._show_status(" ".join(warnings))
         self._refresh_views()
@@ -841,10 +861,15 @@ class ArenaMixin(CombatWindowState):
         """ " (25 ft.)": how far `target` is from the source, for the target
         label in either view; "" unless both are on the map and differ."""
         source = self.selected_character
-        if source is None or source is target:
-            return ""
-        feet = distance_ft(source, target, self.arena_settings)
-        return "" if feet is None else f" ({feet} ft.)"
+        notes = []
+        if source is not None and source is not target:
+            feet = distance_ft(source, target, self.arena_settings)
+            if feet is not None:
+                notes.append(f"{feet} ft.")
+        obscured = obscured_text(target, self.arena_settings)
+        if obscured:
+            notes.append(obscured)
+        return f" ({', '.join(notes)})" if notes else ""
 
     def _arena_distance(self, cell: Cell) -> str | None:
         """What hovering `cell` shows: how far it, or the creature on it, is
@@ -853,6 +878,7 @@ class ArenaMixin(CombatWindowState):
         source = self.selected_character
         lasting = lasting_areas(self.characters, self.arena_settings)
         names = [area.name for area in areas_at(cell, lasting)]
+        names += self.arena_settings.terrain.describe(cell)
         inside = " · ".join(names) if names else None
         if source is None:
             return inside
@@ -933,14 +959,44 @@ class ArenaMixin(CombatWindowState):
         if self.phase != "COMBAT":
             return
         areas = lasting_areas(self.characters, self.arena_settings)
-        for char in group if areas else []:
-            holding = areas_holding(char, areas, self.arena_settings)
+        for char in group:
+            holding = [
+                area.title
+                for area in (
+                    areas_holding(char, areas, self.arena_settings) if areas else []
+                )
+            ]
+            holding += hazards_under(char, self.arena_settings)
             if not holding:
                 continue
-            names = ", ".join(area.title for area in holding)
+            names = ", ".join(holding)
             line = f"{char['name']} starts its turn in {names}."
             self._log_event(line, character=char["name"], public=False)
             self._turn_start_notes.append(line)
+
+
+def hazards_under(char: dict, settings: ArenaSettings) -> list[str]:
+    """The hazards painted under char ("Campfire at C7"), in cell order."""
+    shape = settings.distance_rule.shape
+    found = []
+    for cell in sorted(footprint(char, settings.distance_rule)):
+        hazard = settings.terrain.hazard(cell)
+        if hazard is not None:
+            found.append(f"{hazard.name} at {shape.cell_name(cell)}")
+    return found
+
+
+def obscured_text(char: dict, settings: ArenaSettings) -> str:
+    """ "Heavily Obscured" when every cell char is on is in Darkness,
+    "Lightly Obscured" when none is brighter than Dim Light, else "" (a
+    creature partly in the light can be seen there)."""
+    cells = footprint(char, settings.distance_rule)
+    if not cells:
+        return ""
+    lights = {settings.terrain.at(cell).light for cell in cells}
+    if BRIGHT in lights:
+        return ""
+    return OBSCURED[DIM] if DIM in lights else OBSCURED[DARK]
 
 
 def area_reading(option: EffectOption | None) -> tuple[AreaOfEffect | None, int | None]:

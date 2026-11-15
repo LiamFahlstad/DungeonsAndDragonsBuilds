@@ -7,6 +7,7 @@ Every campaign lives in `Combat/Campaigns/<Campaign>/`:
 | `encounters.py` | `CONFIG`: the campaign's party and every encounter it can run | You |
 | `Campaign.py` | One line that makes the campaign from `encounters.py` | Nobody (leave it) |
 | `CombatLogs/<encounter id>.json` | One log per encounter: who takes part, the monsters, every event of the fight | `{}` until the encounter is opened; then the combat window sets it up from `encounters.py` and logs the fight into it |
+| `Maps/<encounter id>.json` | The encounter's battle map: its size, terrain, heights, light, objects and where everyone starts. Optional; without one the fight is on an empty 24 x 16 map | The combat window's Map Painter (Ctrl+M) |
 | `PlayerLogs/<party id>.json` | The party's journal: where they've been (encounters, short and long rests). `main_party.json` unless the `PartySpec` says otherwise | The combat window |
 | `CHEATSHEET.md` | The commands for this campaign | You |
 

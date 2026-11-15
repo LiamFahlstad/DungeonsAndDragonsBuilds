@@ -260,7 +260,16 @@ class LoggingMixin(CombatWindowState):
                 self.characters, encounter_ally_names(scenario)
             )
         self.round_number = data.get("round_number", 1)
-        self.arena_settings = ArenaSettings.from_dict(data.get(ARENA_KEY))
+        # A fight keeps its own map from when it started; one that hasn't
+        # started yet plays on the encounter's painted map (map_painter.py),
+        # if it has one.
+        if ARENA_KEY in data:
+            self.arena_settings = ArenaSettings.from_dict(data.get(ARENA_KEY))
+        else:
+            painted = self._encounter_map(data.get("encounter") or self._scenario_name)
+            self.arena_settings = (
+                painted.settings.copy() if painted is not None else ArenaSettings()
+            )
         self.history = []
         self.selected_character = None
         self.target_characters = []

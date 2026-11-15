@@ -8,16 +8,22 @@ Decision 4): `char["position"] = [col, row]`, its footprint's anchor cell,
 and `char["moved_ft"]`, how far it has moved this turn. No "position" means
 it isn't on the map. Every count goes through geometry's GridShape and
 DistanceRule, never through the coordinates themselves.
+
+The map's terrain (Combat/Arena/terrain.py, painted in the Map Painter:
+Notes/map-painter-plan.md) is part of its settings: walls and blocking
+objects can't be entered, Difficult Terrain costs extra, a step between
+heights is a climb, and height counts into distances.
 """
 
 from __future__ import annotations
 
 import heapq
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from itertools import count
 from typing import Iterable
 
 from Combat.Arena.geometry import DEFAULT_RULE, Cell, DistanceRule, rule_named
+from Combat.Arena.terrain import Terrain
 from Combat.Effects.modifiers import has_condition, size_in_use, speed_in_use
 from Combat.Effects.triggers import on_party_side
 from Combat.Summons import owner_name
@@ -44,26 +50,32 @@ _SIZE_ORDER = list(CreatureSize)
 @dataclass
 class ArenaSettings:
     """The fight's map: `width` by `height` cells of `cell_ft` feet, counted
-    by the distance rule named `rule` (geometry.RULES). The plan's Q1
-    suggestion gives the size: 24 x 16 cells of 5 ft. for every fight."""
+    by the distance rule named `rule` (geometry.RULES), with the `terrain`
+    the Map Painter painted on it. The plan's Q1 suggestion gives the size:
+    24 x 16 cells of 5 ft. for a fight with no map painted."""
 
     width: int = 24
     height: int = 16
     cell_ft: int = 5
     rule: str = DEFAULT_RULE
+    terrain: Terrain = field(default_factory=Terrain)
 
     @property
     def distance_rule(self) -> DistanceRule:
         return rule_named(self.rule)
 
     def to_dict(self) -> dict:
-        """What the encounter log keeps under its "arena" key."""
-        return {
+        """What the encounter log keeps under its "arena" key; "terrain"
+        only when something is painted."""
+        data: dict = {
             "width": self.width,
             "height": self.height,
             "cell_ft": self.cell_ft,
             "rule": self.rule,
         }
+        if self.terrain:
+            data["terrain"] = self.terrain.to_dict()
+        return data
 
     @classmethod
     def from_dict(cls, data: dict | None) -> ArenaSettings:
@@ -76,10 +88,24 @@ class ArenaSettings:
             height=int(data.get("height", default.height)),
             cell_ft=int(data.get("cell_ft", default.cell_ft)),
             rule=str(data.get("rule", default.rule)),
+            terrain=Terrain.from_dict(data.get("terrain")),
         )
+
+    def copy(self) -> ArenaSettings:
+        """A copy whose terrain can be painted without changing this one's."""
+        return ArenaSettings.from_dict(self.to_dict())
 
     def on_map(self, cell: Cell) -> bool:
         return self.distance_rule.shape.in_bounds(cell, self.width, self.height)
+
+    def standable(self, cell: Cell) -> bool:
+        """On the map, and not a wall or a blocking object."""
+        return self.on_map(cell) and not self.terrain.blocks(cell)
+
+    def height_of(self, cells: Iterable[Cell]) -> int:
+        """The ground height, in feet, under a footprint: its highest cell's,
+        as a creature half on a ledge stands on it."""
+        return max((self.terrain.height(cell) for cell in cells), default=0)
 
 
 def position(char: dict) -> Cell | None:
@@ -114,12 +140,16 @@ def occupied(chars: Iterable[dict], rule: DistanceRule) -> dict[Cell, dict]:
 def distance_ft(a: dict, b: dict, settings: ArenaSettings) -> int | None:
     """How far apart two creatures are, in feet, between their nearest cells
     (the plan's Decision 8): a Large creature is 5 ft. from anything next to
-    any of its cells. None when either isn't on the map."""
+    any of its cells. None when either isn't on the map. The ground's
+    height under each counts too (the map-painter plan's Decision 5): a
+    goblin on a 10-foot ledge next to you is 15 ft. away."""
     rule = settings.distance_rule
     cells_a, cells_b = footprint(a, rule), footprint(b, rule)
     if not cells_a or not cells_b:
         return None
-    return min(rule.feet(x, y, settings.cell_ft) for x in cells_a for y in cells_b)
+    flat = min(rule.feet(x, y, settings.cell_ft) for x in cells_a for y in cells_b)
+    rise = abs(settings.height_of(cells_a) - settings.height_of(cells_b))
+    return rule.with_height(flat, rise)
 
 
 def walking_speed_ft(char: dict) -> int | None:
@@ -175,15 +205,24 @@ def is_difficult_for(mover: dict, other: dict) -> bool:
     return not _is_ally(mover, other) and size_in_use(other) != CreatureSize.TINY
 
 
+def has_climb_speed(char: dict) -> bool:
+    """Whether char has a Climb Speed, which climbs at no extra cost."""
+    climb = char.get("speed_climb_ft")
+    return isinstance(climb, int) and not isinstance(climb, bool) and climb > 0
+
+
 def reachable(
     char: dict, chars: Iterable[dict], settings: ArenaSettings, feet: int
 ) -> dict[Cell, int]:
     """Where char can end a move of up to `feet` feet, as its anchor cell,
     with what getting there costs: a uniform-cost search over the rule's
     steps. A step into another creature's space is Difficult Terrain unless
-    it's Tiny or an ally (1 extra foot per foot), and Prone char crawls (1
-    extra foot per foot, both together 2); it can't pass a creature it
-    can't move through, can't end on anyone, and stays on the map. Char's
+    it's Tiny or an ally, as is a step onto painted Difficult Terrain (1
+    extra foot per foot, not cumulative), and Prone char crawls (1 extra
+    foot per foot, both together 2); a step up or down a height difference
+    climbs it, each foot costing 1 extra (2 in Difficult Terrain, none with
+    a Climb Speed). It can't pass a creature it can't move through, a wall
+    or a blocking object, can't end on anyone, and stays on the map. Char's
     own cell costs 0. Empty when char isn't on the map."""
     start = position(char)
     if start is None:
@@ -194,21 +233,34 @@ def reachable(
         for cell, other in occupied((c for c in chars if c is not char), rule).items()
     }
     crawling = has_condition(char, Condition.PRONE)
+    climb_extra = 0 if has_climb_speed(char) else 1
+    terrain = settings.terrain
+    seen: dict[Cell, tuple[list[dict], bool, int] | None] = {}
 
-    def entered(anchor: Cell) -> list[dict] | None:
-        """Who the footprint at `anchor` overlaps; None when it can't go there."""
+    def entered(anchor: Cell) -> tuple[list[dict], bool, int] | None:
+        """Who the footprint at `anchor` overlaps, whether it's Difficult
+        Terrain there, and the ground's height; None when it can't go there."""
+        if anchor not in seen:
+            seen[anchor] = _entering(anchor)
+        return seen[anchor]
+
+    def _entering(anchor: Cell) -> tuple[list[dict], bool, int] | None:
         cells = footprint_at(char, anchor, rule)
-        if not all(settings.on_map(cell) for cell in cells):
+        if not all(settings.standable(cell) for cell in cells):
             return None
-        met = []
+        met: list[dict] = []
         for cell in cells:
             other = others.get(cell)
             if other is not None and not any(other is m for m in met):
                 if not can_pass_through(char, other):
                     return None
                 met.append(other)
-        return met
+        difficult = any(terrain.difficult(c) for c in cells) or any(
+            is_difficult_for(char, o) for o in met
+        )
+        return met, difficult, settings.height_of(cells)
 
+    start_height = settings.height_of(footprint_at(char, start, rule))
     best: dict[Cell, int] = {start: 0}
     ends: dict[Cell, int] = {}
     tie = count()
@@ -217,17 +269,20 @@ def reachable(
         cost, _, cell = heapq.heappop(queue)
         if cost > best.get(cell, cost):
             continue
-        met = entered(cell) if cell != start else []
-        if not met:
+        here = entered(cell) if cell != start else None
+        if cell == start or (here is not None and not here[0]):
             ends[cell] = cost
+        height = here[2] if here is not None else start_height
         for step in rule.neighbours(cell):
-            met_there = entered(step)
-            if met_there is None:
+            there = entered(step)
+            if there is None:
                 continue
-            extra = int(crawling) + int(
-                any(is_difficult_for(char, o) for o in met_there)
+            _, difficult, step_height = there
+            extra = int(crawling) + int(difficult)
+            climbed = abs(step_height - height) * (1 + climb_extra + int(difficult))
+            new_cost = (
+                cost + int(rule.step_cost(cell, step) * cell_ft * (1 + extra)) + climbed
             )
-            new_cost = cost + int(rule.step_cost(cell, step) * cell_ft * (1 + extra))
             if new_cost <= feet and new_cost < best.get(step, new_cost + 1):
                 best[step] = new_cost
                 heapq.heappush(queue, (new_cost, next(tie), step))
@@ -237,12 +292,12 @@ def reachable(
 def fits_at(
     char: dict, anchor: Cell, chars: Iterable[dict], settings: ArenaSettings
 ) -> bool:
-    """Whether char can stand with its anchor at `anchor`: on the map and on
-    nobody else's cells."""
+    """Whether char can stand with its anchor at `anchor`: on the map, on
+    no wall or blocking object, and on nobody else's cells."""
     rule = settings.distance_rule
     taken = occupied((c for c in chars if c is not char), rule)
     cells = footprint_at(char, anchor, rule)
-    return all(settings.on_map(cell) and cell not in taken for cell in cells)
+    return all(settings.standable(cell) and cell not in taken for cell in cells)
 
 
 def nearest_free(
@@ -363,10 +418,13 @@ def straight_ft(char: dict, to: Cell, settings: ArenaSettings) -> int | None:
 
 
 def distance_to_cell_ft(char: dict, cell: Cell, settings: ArenaSettings) -> int | None:
-    """How far `cell` is from char, from char's nearest cell (Decision 8);
-    None when char isn't on the map."""
+    """How far `cell` is from char, from char's nearest cell (Decision 8),
+    the ground's height under both counted in; None when char isn't on the
+    map."""
     rule = settings.distance_rule
     cells = footprint(char, rule)
     if not cells:
         return None
-    return min(rule.feet(own, cell, settings.cell_ft) for own in cells)
+    flat = min(rule.feet(own, cell, settings.cell_ft) for own in cells)
+    rise = abs(settings.height_of(cells) - settings.terrain.height(cell))
+    return rule.with_height(flat, rise)

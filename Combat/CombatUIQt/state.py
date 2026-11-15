@@ -18,6 +18,7 @@ from pathlib import Path
 from PyQt6.QtCore import QSettings, QTimer
 from PyQt6.QtWidgets import (
     QComboBox,
+    QDialog,
     QFrame,
     QGridLayout,
     QLabel,
@@ -150,6 +151,8 @@ class CombatWindowState:
     # holding their encounter logs.
     _scenarios: list[CombatScenario]
     _combat_log_dir: Path
+    # The Map Painter last opened (map_painter.py; tests read it).
+    _map_painter: QDialog | None
     _card_widgets: dict
     _initiative_inputs: dict
     _initiative_hp_inputs: dict
@@ -513,6 +516,18 @@ class CombatWindowState:
 
     def _deselect_area(self) -> bool:
         raise NotImplementedError("ArenaMixin._deselect_area")
+
+    def _show_map_painter(self):
+        raise NotImplementedError("MapPainterMixin._show_map_painter")
+
+    def _encounter_map(self, encounter_id: str | None):
+        raise NotImplementedError("MapPainterMixin._encounter_map")
+
+    def _scenario(self, name: str | None) -> CombatScenario | None:
+        raise NotImplementedError("EncountersMixin._scenario")
+
+    def _scenario_title(self, name: str) -> str:
+        raise NotImplementedError("EncountersMixin._scenario_title")
 
     def _roll_concentration(self, char: dict, dc: int):
         raise NotImplementedError("DamageMixin._roll_concentration")

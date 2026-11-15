@@ -695,6 +695,7 @@ class WindowMixin(CombatWindowState):
                 ("Player Screen", self._toggle_player_view),
                 ("Player Link", self._show_player_link_dialog),
                 ("Settings", self._show_settings_dialog),
+                ("Map Painter", self._show_map_painter),
             ]
         ):
             btn = QPushButton(text)
@@ -702,6 +703,12 @@ class WindowMixin(CombatWindowState):
             info_grid.addWidget(btn, index // 2, index % 2)
             if text == "Player Link":
                 self._player_link_btn = btn
+            if text == "Map Painter":
+                btn.setEnabled(bool(self._scenarios))
+                btn.setToolTip(
+                    "Design an encounter's battle map: walls, heights, light,"
+                    " objects and where everyone starts (Ctrl+M)"
+                )
         panel_layout.addLayout(info_grid)
 
         panel_layout.addStretch()
@@ -897,6 +904,11 @@ class WindowMixin(CombatWindowState):
         self._add_combatant_shortcut = QShortcut(QKeySequence("Ctrl+N"), self._window)
         self._add_combatant_shortcut.activated.connect(self._show_add_combatant_dialog)
         self._combo_sensitive_shortcuts.append(self._add_combatant_shortcut)
+
+        # Ctrl+M: the Map Painter (map_painter.py)
+        self._map_painter_shortcut = QShortcut(QKeySequence("Ctrl+M"), self._window)
+        self._map_painter_shortcut.activated.connect(self._show_map_painter)
+        self._combo_sensitive_shortcuts.append(self._map_painter_shortcut)
 
         # Ctrl+O: open the Load Encounter dialog
         self._load_encounter_shortcut = QShortcut(QKeySequence("Ctrl+O"), self._window)

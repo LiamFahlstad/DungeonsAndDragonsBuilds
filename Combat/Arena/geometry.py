@@ -85,6 +85,18 @@ class GridShape(ABC):
         tokens start (the plan's Q1)."""
 
     @abstractmethod
+    def between(self, a: Cell, b: Cell) -> list[Cell]:
+        """The cells of the block with a and b at opposite corners, a and b
+        included: what the Map Painter's Shift+drag fills."""
+
+    @abstractmethod
+    def edges(
+        self, cell: Cell, size_px: float
+    ) -> list[tuple[Cell, tuple[tuple[float, float], tuple[float, float]]]]:
+        """Each side of the cell's outline, with the cell on its other side:
+        where the map draws a cliff between two heights."""
+
+    @abstractmethod
     def labels(self, cell: Cell) -> tuple[str, str]:
         """The cell's column and row as the map's edges label them: ("C",
         "7")."""
@@ -146,6 +158,23 @@ class SquareGrid(GridShape):
         rows = sorted(range(height), key=lambda r: (abs(r - middle), r))
         return [Cell(c, r) for c in columns for r in rows]
 
+    def between(self, a: Cell, b: Cell) -> list[Cell]:
+        cols = range(min(a.col, b.col), max(a.col, b.col) + 1)
+        rows = range(min(a.row, b.row), max(a.row, b.row) + 1)
+        return [Cell(c, r) for r in rows for c in cols]
+
+    def edges(
+        self, cell: Cell, size_px: float
+    ) -> list[tuple[Cell, tuple[tuple[float, float], tuple[float, float]]]]:
+        top_left, top_right, bottom_right, bottom_left = self.polygon(cell, size_px)
+        up, right, down, left = self.neighbours(cell)
+        return [
+            (up, (top_left, top_right)),
+            (right, (top_right, bottom_right)),
+            (down, (bottom_right, bottom_left)),
+            (left, (bottom_left, top_left)),
+        ]
+
     def labels(self, cell: Cell) -> tuple[str, str]:
         """Columns lettered from A at the left, rows numbered from 1 at the
         top."""
@@ -178,6 +207,13 @@ class DistanceRule(ABC):
     def neighbours(self, cell: Cell) -> list[Cell]:
         """The cells a move can step to from `cell`."""
         return self.shape.neighbours(cell)
+
+    def with_height(self, flat_ft: int, rise_ft: int) -> int:
+        """How far apart two points are, `flat_ft` across the map and
+        `rise_ft` up or down (Notes/map-painter-plan.md, Decision 5): by
+        default up counts as one more direction to step in, as Manhattan
+        counts across and down, so the two add up."""
+        return flat_ft + rise_ft
 
 
 class ManhattanRule(DistanceRule):
