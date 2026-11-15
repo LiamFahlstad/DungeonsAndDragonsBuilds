@@ -249,7 +249,7 @@ The page ran in headless Chrome on this PC, but nothing has crossed a network or
 - [ ] Right-click a card, then right-click it again: the quick menu opens.
 - [ ] Menu conditions add and remove in one click.
 - [ ] Menu Damage, Heal and Temp HP jump to the right field.
-- [ ] "More: Visibility, Slots, Actions" expands and stays that way after a restart.
+- [ ] "More: Conditions, Slots..." (Conditions, Visibility, Spell Slots, Action Economy) starts collapsed, expands and stays that way after a restart.
 - [ ] The buttons don't move when a status message appears.
 - [ ] Every setting survives a restart.
 - [ ] Unchecked and checked boxes are easy to tell apart.

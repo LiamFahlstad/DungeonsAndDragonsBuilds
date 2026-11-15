@@ -1064,7 +1064,7 @@ def test_rarely_used_controls_are_collapsed(fight):
     assert not ui._more_controls.isVisibleTo(ui._window)
     ui._more_controls_btn.click()
     assert ui._more_controls.isVisibleTo(ui._window)
-    assert ui.settings.show_more_controls is True
+    assert ui.settings.show_rare_controls is True
     ui._more_controls_btn.click()
     assert not ui._more_controls.isVisibleTo(ui._window)
 
@@ -1072,7 +1072,7 @@ def test_rarely_used_controls_are_collapsed(fight):
 def test_the_settings_dialog_shows_them_too(fight, monkeypatch):
     ui, *_ = fight
     dlg = open_dialog(monkeypatch, ui._show_settings_dialog)
-    box = dlg.findChild(QCheckBox, "show_more_controls")
+    box = dlg.findChild(QCheckBox, "show_rare_controls")
     box.setChecked(True)
     assert ui._more_controls.isVisibleTo(ui._window)
 

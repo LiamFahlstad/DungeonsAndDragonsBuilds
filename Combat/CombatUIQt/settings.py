@@ -31,7 +31,9 @@ class CombatSettings:
     # Initiative (TurnsMixin._start_combat)
     ask_initiative_ties: bool = True
     # Display (WindowMixin._apply_panel_settings)
-    show_more_controls: bool = False
+    # Renamed from show_more_controls when Conditions moved in (2026-11-15),
+    # so a saved "shown" doesn't carry over: it starts collapsed.
+    show_rare_controls: bool = False
     # Off is the Informative view (TurnPanelMixin._player_view_content)
     limited_player_view: bool = False
 
@@ -162,8 +164,8 @@ SETTING_SECTIONS: list[tuple[str, list[SettingInfo]]] = [
         "Display",
         [
             SettingInfo(
-                "show_more_controls",
-                "Show Visibility, Spell Slots and Action Economy",
+                "show_rare_controls",
+                "Show Conditions, Visibility, Spell Slots and Action Economy",
                 "Their keyboard shortcuts work either way.",
             ),
             SettingInfo(

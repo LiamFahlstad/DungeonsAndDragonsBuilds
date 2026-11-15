@@ -166,12 +166,12 @@ class WindowMixin(CombatWindowState):
 
     def _apply_panel_settings(self):
         """Show the panel as the settings say."""
-        shown = self.settings.show_more_controls
+        shown = self.settings.show_rare_controls
         self._more_controls.setVisible(shown)
         self._more_controls_btn.setChecked(shown)
 
     def _toggle_more_controls(self, shown: bool):
-        self.settings.show_more_controls = shown
+        self.settings.show_rare_controls = shown
         if self._settings_store is not None:
             self.settings.save(self._settings_store)
         self._apply_panel_settings()
@@ -510,28 +510,17 @@ class WindowMixin(CombatWindowState):
 
         left_col.addStretch()
 
-        # Right column: Conditions, Visibility, Spell Slots
+        # Right column: Conditions, Visibility, Spell Slots, Action Economy.
+        # Rarely clicked (Use / Cast, the card menu and the shortcuts do the
+        # same): collapsed until asked for.
         right_col = QVBoxLayout()
         right_col.setSpacing(6)
 
-        # Conditions section
-        right_col.addWidget(self._section_header("Conditions"))
-        self.condition_combo = QComboBox()
-        self.condition_combo.addItems(self.conditions)
-        right_col.addWidget(self.condition_combo)
-        cond_row = QHBoxLayout()
-        add_cond_btn = QPushButton("Add")
-        add_cond_btn.clicked.connect(self._add_condition)
-        rm_cond_btn = QPushButton("Remove")
-        rm_cond_btn.clicked.connect(self._remove_condition)
-        cond_row.addWidget(add_cond_btn)
-        cond_row.addWidget(rm_cond_btn)
-        right_col.addLayout(cond_row)
-
-        right_col.addWidget(self._make_divider())
-
-        # Rarely clicked, having shortcuts: collapsed until asked for
-        self._more_controls_btn = QPushButton("More: Visibility, Slots, Actions")
+        self._more_controls_btn = QPushButton("More: Conditions, Slots...")
+        self._more_controls_btn.setToolTip(
+            "Show or hide the Conditions, Visibility, Spell Slots and Action"
+            " Economy controls. Their keyboard shortcuts work either way."
+        )
         self._more_controls_btn.setCheckable(True)
         self._more_controls_btn.clicked.connect(self._toggle_more_controls)
         right_col.addWidget(self._more_controls_btn)
@@ -539,6 +528,22 @@ class WindowMixin(CombatWindowState):
         more_col = QVBoxLayout(self._more_controls)
         more_col.setContentsMargins(0, 0, 0, 0)
         more_col.setSpacing(6)
+
+        # Conditions section
+        more_col.addWidget(self._section_header("Conditions"))
+        self.condition_combo = QComboBox()
+        self.condition_combo.addItems(self.conditions)
+        more_col.addWidget(self.condition_combo)
+        cond_row = QHBoxLayout()
+        add_cond_btn = QPushButton("Add")
+        add_cond_btn.clicked.connect(self._add_condition)
+        rm_cond_btn = QPushButton("Remove")
+        rm_cond_btn.clicked.connect(self._remove_condition)
+        cond_row.addWidget(add_cond_btn)
+        cond_row.addWidget(rm_cond_btn)
+        more_col.addLayout(cond_row)
+
+        more_col.addWidget(self._make_divider())
 
         # Visibility section
         more_col.addWidget(self._section_header("Visibility"))
