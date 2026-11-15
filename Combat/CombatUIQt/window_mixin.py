@@ -147,8 +147,11 @@ class WindowMixin(CombatWindowState):
         self._status_timer.start()
 
     def _escape_pressed(self):
-        """Escape leaves a text field for the keyboard shortcuts to work, and
-        otherwise clears the source and target selection."""
+        """Escape stops aiming an area on the map, leaves a text field for
+        the keyboard shortcuts to work, and otherwise clears the source and
+        target selection."""
+        if self._cancel_area_targeting():
+            return
         focused = QApplication.focusWidget()
         if isinstance(focused, QLineEdit):
             focused.clearFocus()

@@ -6,12 +6,23 @@ dragged, or clicked (picked up) and then a cell clicked, one undo step
 each, logged with where from and to and the movement left, with the "Not
 on the map" strip for whoever has no place yet. Selection, the
 control panel, the turn column and undo are the window's, shared by both
-views (the plan's Decision 2)."""
+views (the plan's Decision 2).
 
+Targets in an area (step 10): the Custom Effect dialog's "Select targets in
+area" closes it and brings up the map with the area bar, its shape and size
+read from the pick's rules text (or the last ones used) and changeable
+there. Hovering aims the area, a click makes whoever is in it the targets
+and opens the dialog again on the same pick; a right click, Esc, G or the
+bar's Cancel goes back to the dialog with the targets it had."""
+
+from PyQt6.QtCore import QTimer
 from PyQt6.QtWidgets import (
+    QCheckBox,
+    QComboBox,
     QHBoxLayout,
     QLabel,
     QPushButton,
+    QSpinBox,
     QStackedWidget,
     QVBoxLayout,
     QWidget,
@@ -34,16 +45,32 @@ from Combat.Arena.arena import (
     straight_ft,
     walking_speed_ft,
 )
+from Combat.Arena.areas import (
+    AreaOfEffect,
+    AreaShape,
+    area_cells,
+    creatures_in,
+    parse_area,
+    point_range_ft,
+    spell_range_ft,
+)
 from Combat.Arena.geometry import Cell
 from Combat.Effects.modifiers import has_condition
 from Core.Definitions import Condition
 
 from .arena_view import ArenaView, token_rows
+from .effect_options import _spell_named
+from .saves import SPELL, EffectOption
 from .settings import ARENA_VIEW_KEY
 from .state import CombatWindowState
 from .undo import undoable
 
 CARDS_PAGE, ARENA_PAGE = 0, 1
+# The area the bar starts with when the pick states none.
+DEFAULT_AREA = AreaOfEffect(AreaShape.SPHERE, 20)
+# The biggest area the bar takes, in feet (Meteor Swarm's 40-foot radius,
+# a 300-foot Line, with room).
+MAX_AREA_FT = 1000
 
 
 class ArenaMixin(CombatWindowState):
@@ -63,6 +90,7 @@ class ArenaMixin(CombatWindowState):
         layout.setContentsMargins(0, 0, 0, 0)
         layout.setSpacing(4)
         layout.addWidget(self._build_off_map_strip())
+        layout.addWidget(self._build_area_bar())
         layout.addWidget(self._arena_view, stretch=1)
         self._view_stack = QStackedWidget()
         self._view_stack.addWidget(cards)
@@ -104,6 +132,258 @@ class ArenaMixin(CombatWindowState):
         self._off_map_layout.addStretch()
         self._off_map_strip.show()
 
+    def _build_area_bar(self) -> QWidget:
+        """The bar over the map while an area is aimed: what to do and who
+        is in it, the area's shape, size, a Line's width and whether a
+        Sphere, Cylinder or Cube starts at the source, and Cancel. Hidden
+        otherwise."""
+        self._area_targeting: dict | None = None
+        self._last_area = DEFAULT_AREA
+        bar = QWidget()
+        bar.setObjectName("areaBar")
+        layout = QHBoxLayout(bar)
+        layout.setContentsMargins(4, 4, 4, 0)
+        layout.setSpacing(6)
+        self._area_label = QLabel("")
+        self._area_label.setObjectName("areaLabel")
+        self._area_label.setWordWrap(True)
+        layout.addWidget(self._area_label, stretch=1)
+        self._area_shape = QComboBox()
+        self._area_shape.setObjectName("areaShape")
+        for shape in AreaShape:
+            self._area_shape.addItem(shape.value, shape)
+        layout.addWidget(self._area_shape)
+        self._area_size = QSpinBox()
+        self._area_size.setObjectName("areaSize")
+        self._area_size.setRange(5, MAX_AREA_FT)
+        self._area_size.setSingleStep(5)
+        self._area_size.setSuffix(" ft.")
+        layout.addWidget(self._area_size)
+        self._area_width_label = QLabel("wide")
+        self._area_width = QSpinBox()
+        self._area_width.setObjectName("areaWidth")
+        self._area_width.setRange(5, MAX_AREA_FT)
+        self._area_width.setSingleStep(5)
+        self._area_width.setSuffix(" ft.")
+        self._area_width.setToolTip("How wide the Line is")
+        layout.addWidget(self._area_width_label)
+        layout.addWidget(self._area_width)
+        self._area_from_source = QCheckBox("From the source")
+        self._area_from_source.setObjectName("areaFromSource")
+        self._area_from_source.setToolTip(
+            "A Sphere or Cylinder centred on the source, which leaves it out"
+            " (Self (10-foot radius)), or a Cube against the source's side"
+            " (Thunderwave)"
+        )
+        layout.addWidget(self._area_from_source)
+        cancel = QPushButton("Cancel")
+        cancel.setObjectName("areaCancelBtn")
+        cancel.setToolTip("Back to the Custom Effect, targets as they were (Esc)")
+        cancel.clicked.connect(lambda: self._cancel_area_targeting())
+        layout.addWidget(cancel)
+        self._area_shape.currentIndexChanged.connect(self._area_changed)
+        self._area_size.valueChanged.connect(self._area_changed)
+        self._area_width.valueChanged.connect(self._area_changed)
+        self._area_from_source.toggled.connect(self._area_changed)
+        bar.hide()
+        self._area_bar = bar
+        return bar
+
+    def _area_in_bar(self) -> AreaOfEffect:
+        shape = self._area_shape.currentData()
+        return AreaOfEffect(
+            shape,
+            self._area_size.value(),
+            self._area_width.value(),
+            self._area_from_source.isChecked()
+            and shape in (AreaShape.SPHERE, AreaShape.CYLINDER, AreaShape.CUBE),
+        )
+
+    def _show_area_in_bar(self, area: AreaOfEffect):
+        for box in (
+            self._area_shape,
+            self._area_size,
+            self._area_width,
+            self._area_from_source,
+        ):
+            box.blockSignals(True)
+        self._area_shape.setCurrentIndex(self._area_shape.findData(area.shape))
+        self._area_size.setValue(area.size_ft)
+        self._area_width.setValue(area.width_ft)
+        self._area_from_source.setChecked(area.from_source)
+        for box in (
+            self._area_shape,
+            self._area_size,
+            self._area_width,
+            self._area_from_source,
+        ):
+            box.blockSignals(False)
+        self._show_area_controls()
+
+    def _show_area_controls(self):
+        """A Line's width, and From the source for the shapes it changes."""
+        shape = self._area_shape.currentData()
+        self._area_width_label.setVisible(shape is AreaShape.LINE)
+        self._area_width.setVisible(shape is AreaShape.LINE)
+        self._area_from_source.setVisible(
+            shape in (AreaShape.SPHERE, AreaShape.CYLINDER, AreaShape.CUBE)
+        )
+
+    def _area_changed(self):
+        self._show_area_controls()
+        if self._area_targeting is not None:
+            self._last_area = self._area_in_bar()
+            self._arena_view.refresh_area()
+
+    def _start_area_targeting(
+        self, option: EffectOption | None, what: str = ""
+    ) -> bool:
+        """Bring up the map to aim an area for the Custom Effect's pick
+        `option` (None for an effect typed by hand): its area and range read
+        from it (area_reading), or the last area used. `what` names it in
+        the bar. False, having said why, when the source isn't on the map."""
+        source = self.selected_character or self._current_turn_character()
+        if self.phase != "COMBAT" or source is None or position(source) is None:
+            self._show_status("Targets in an area need the source on the map.")
+            return False
+        area, range_ft = area_reading(option)
+        pick = option.name if option is not None else ""
+        self._area_targeting = {
+            "pick": pick,
+            "source": source,
+            "what": what or pick,
+            "read": area is not None,
+            "range": range_ft,
+        }
+        self._show_area_in_bar(area or self._last_area)
+        self._last_area = self._area_in_bar()
+        self._view_stack.setCurrentIndex(ARENA_PAGE)
+        self._view_toggle_btn.setText("Cards")
+        self._area_bar.show()
+        self._refresh_arena()
+        self._arena_view.start_area(
+            self._area_cells_at,
+            self._area_picked,
+            self._cancel_area_targeting,
+            self._show_area_count,
+        )
+        self._arena_view.setFocus()
+        return True
+
+    def _area_cells_at(self, aim: Cell | None) -> set[Cell]:
+        request = self._area_targeting
+        if request is None:
+            return set()
+        return area_cells(
+            self._area_in_bar(), request["source"], aim, self.arena_settings
+        )
+
+    def _show_area_count(self, cells: set[Cell]):
+        """The bar's text: the area, and who is in it where it's aimed."""
+        request = self._area_targeting
+        if request is None:
+            return
+        area = self._area_in_bar()
+        head = f"{request['what']}: " if request["what"] else ""
+        if not request["read"] and request["pick"]:
+            head += "no area in its text, so check the shape. "
+        inside = creatures_in(self.characters, cells, self.arena_settings)
+        if not cells:
+            how = (
+                "hover over the map to aim it"
+                if area.is_aimed
+                else "the source isn't on the map"
+            )
+            text = f"{head}{area.text}: {how}."
+        elif not inside:
+            text = f"{head}{area.text}: nobody in it."
+        else:
+            names = ", ".join(c["name"] for c in inside)
+            text = f"{head}{area.text}: {names}. Click to target them."
+        far = self._area_range_text()
+        self._area_label.setText(
+            text + (f" {far}" if far else "") + " Right-click or Esc cancels."
+        )
+
+    def _area_out_of_range(self) -> tuple[int, int] | None:
+        """How far the point aimed at is from the source, and the range,
+        when it's past the range; None when it isn't, or can't be told."""
+        request = self._area_targeting
+        aim = self._arena_view.area_aim
+        area = self._area_in_bar()
+        if request is None or aim is None or request["range"] is None:
+            return None
+        if area.starts_at_source:
+            return None
+        feet = distance_to_cell_ft(request["source"], aim, self.arena_settings)
+        if feet is None or feet <= request["range"]:
+            return None
+        return feet, request["range"]
+
+    def _area_range_text(self) -> str:
+        """The point aimed at against the range: "Aimed 45 ft. away, range
+        150 ft." or "Aimed 160 ft. away: past its 150 ft. range!"; "" for an
+        area that starts at the source, or without a range or an aim."""
+        request = self._area_targeting
+        aim = self._arena_view.area_aim
+        if request is None or aim is None or request["range"] is None:
+            return ""
+        if self._area_in_bar().starts_at_source:
+            return ""
+        past = self._area_out_of_range()
+        if past is not None:
+            return f"Aimed {past[0]} ft. away: past its {past[1]} ft. range!"
+        feet = distance_to_cell_ft(request["source"], aim, self.arena_settings)
+        return f"Aimed {feet} ft. away, range {request['range']} ft."
+
+    def _end_area_targeting(self) -> dict | None:
+        """Stop aiming, and put back the view the GM had."""
+        request = self._area_targeting
+        if request is None:
+            return None
+        self._area_targeting = None
+        self._arena_view.stop_area()
+        self._area_bar.hide()
+        self._show_view()
+        return request
+
+    def _area_picked(self, cell: Cell):
+        """A click while aiming: whoever is in the area becomes the targets,
+        and the Custom Effect opens again on the same pick. Nobody in it
+        changes nothing."""
+        request = self._area_targeting
+        if request is None:
+            return
+        cells = self._area_cells_at(cell)
+        inside = creatures_in(self.characters, cells, self.arena_settings)
+        if not inside:
+            self._show_status("Nobody is in that area: aim it somewhere else.")
+            return
+        past = self._area_out_of_range()
+        self._end_area_targeting()
+        self._set_targets(inside)
+        if past is not None:
+            # Allowed, as a move past the Speed is: the GM knows why.
+            self._show_status(
+                f"Aimed {past[0]} ft. away, past its {past[1]} ft. range."
+            )
+        self._reopen_custom_effect(request["pick"])
+
+    def _cancel_area_targeting(self) -> bool:
+        """Stop aiming and go back to the Custom Effect, with the targets it
+        had; False when no area was being aimed."""
+        request = self._end_area_targeting()
+        if request is None:
+            return False
+        if self.target_characters:
+            self._reopen_custom_effect(request["pick"])
+        return True
+
+    def _reopen_custom_effect(self, pick: str):
+        """Open the Custom Effect on `pick` once the click that got here is
+        over, not inside the map's mouse handler."""
+        QTimer.singleShot(0, lambda: self._show_custom_condition_dialog(pick))
+
     def _build_view_toggle(self) -> QPushButton:
         """The turn column's Arena / Cards button (hidden with the column
         outside combat)."""
@@ -120,6 +400,8 @@ class ArenaMixin(CombatWindowState):
     def _toggle_view(self):
         """Cards <-> Arena, during combat only; the choice is remembered."""
         if self.phase != "COMBAT":
+            return
+        if self._cancel_area_targeting():
             return
         self.arena_view_on = not self._arena_shown()
         if self._settings_store is not None:
@@ -166,6 +448,9 @@ class ArenaMixin(CombatWindowState):
                 self.target_characters,
             ),
         )
+        if self._area_targeting is not None:
+            # Someone moved, or was added: the area catches who's there now.
+            self._arena_view.refresh_area()
 
     def _arena_char(self, name: str) -> dict | None:
         return next((c for c in self.characters if c["name"] == name), None)
@@ -278,6 +563,28 @@ class ArenaMixin(CombatWindowState):
         else:
             feet = distance_to_cell_ft(source, cell, self.arena_settings)
         return None if feet is None else f"{feet} ft."
+
+
+def area_reading(option: EffectOption | None) -> tuple[AreaOfEffect | None, int | None]:
+    """The area a Custom Effect pick states and how far away its point may
+    be: a spell's (its own, or the one a feature or a monster's action
+    casts) from its range ("Self (15-foot cone)" is the area, "150 feet"
+    the reach) and its text; anything else from its text alone ("each
+    creature in a 20-foot-radius Sphere centered on a point within 120
+    feet"). A range of Self doesn't make the area start at the source:
+    Investiture of Wind's Cube is "centered on a point you can see within
+    60 feet". (None, None) for no pick."""
+    if option is None:
+        return None, None
+    name = option.spell_name or (option.name if option.kind == SPELL else "")
+    spell = _spell_named(name) if name else None
+    text = option.tooltip
+    range_ft = None
+    if spell is not None:
+        text = f"Range: {spell.range}. {text}"
+        range_ft = spell_range_ft(spell.range)
+    point = point_range_ft(option.tooltip)
+    return parse_area(text), point if point is not None else range_ft
 
 
 def move_line(

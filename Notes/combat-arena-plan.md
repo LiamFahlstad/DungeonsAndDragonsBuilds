@@ -13,8 +13,9 @@ the view or the fight state.
 
 Written 2026-11-13. All eight steps (the Qt-free map, its saving, the view,
 the Cards/Arena switch, moving, distances in the UI and the docs) built the
-same day. Step 9, the fixes after the user tried it, 2026-11-14. What's
-next is under Later.
+same day. Step 9, the fixes after the user tried it, 2026-11-14. Step 10,
+targets in an area from the Custom Effect dialog, the user's request the
+same day. What's next is under Later.
 
 ## How to use this document
 
@@ -55,7 +56,8 @@ Whoever works on the arena updates it **in the same change** as the code:
 
 **Keep the overhead low (the user, 2026-11-10).** Run only the arena's own
 test files after a step (`./run_tests.sh -q tests/test_arena_geometry.py
-tests/test_arena.py tests/test_combat_ui_arena.py`). No step here changes a character sheet, so the
+tests/test_arena.py tests/test_arena_areas.py tests/test_combat_ui_arena.py
+tests/test_combat_ui_arena_areas.py`). No step here changes a character sheet, so the
 character-creation tests and snapshots don't need to run. No reviewer or
 verification passes per step unless asked.
 
@@ -72,6 +74,7 @@ verification passes per step unless asked.
 | 7 | Distances in the UI: hover and the target label in feet | Done 2026-11-13 (R7) |
 | 8 | Docs: KEYBOARD_SHORTCUTS.md, HOWTO.md, Combat/CHEATSHEET.md | Done 2026-11-13 (R8) |
 | 9 | After the user tried it: encounter allies on the party's side, click to pick up and click to move, the move's line with from, to and what's left, whose turn on gold, clicks and Ctrl+Z in both views | Done 2026-11-14 (R9); DI-092 fixed |
+| 10 | Targets in an area: the Custom Effect's "Select targets in area", the area read from the pick's text and aimed on the map, whoever is in it targeted | Done 2026-11-14 (R10); Cones, Lines and range checked against Manhattan 2026-11-15 (R11) |
 
 ## How it fits the code that's there
 
@@ -416,6 +419,47 @@ real left, right, Ctrl+right and double clicks select and target on the
 map, and real clicks on the cards, with the map showing the same; whose
 turn it is has gold cells; the move's line; cell names.
 
+### Step 10: targets in an area (2026-11-14)
+
+The user: "to the custom effect in the combat ui add support for 'select
+targets in area' button when you click in you go to the area view and you
+can hover over cells to see which cells the spell/feature can hit. Those
+targets are then automatically selected if they are within area."
+
+- `Combat/Arena/areas.py` (new, Qt-free): `AreaOfEffect` (shape, size,
+  a Line's width, from the source), `parse_area(text)` (the first area a
+  rules text states: "20-foot-radius Sphere", "15-foot Cone",
+  "100-foot-long, 5-foot-wide Line", "15-foot Cube originating from you",
+  "15-foot Emanation", "20-foot square", "each creature within 5 feet of
+  you / of that point"), `area_cells(area, source, aim, settings)` and
+  `creatures_in(chars, cells, settings)`. How each shape sits on the
+  grid: Decision 16.
+- The dialog (`conditions_mixin.py`): a **Select targets in area** button
+  (Alt+R), enabled in a fight with the source on the map. It closes the
+  dialog, and the map is brought up with the area bar (Decision 17).
+- The map (`arena_view.py`): `start_area` / `aim_area` / `stop_area`, the
+  covered cells shaded orange and an orange ring on each token in them; a
+  left click picks, a right click cancels, nothing is picked up or moved
+  meanwhile.
+- The window (`arena_mixin.py`): the area bar over the map (what it is and
+  who's in it, shape, size, a Line's width, From the source, Cancel), the
+  area read from the pick's rules text (`EffectOption.tooltip`) or the last
+  one used, a click setting the targets and opening the dialog again on the
+  same pick; Esc, G, a right click or Cancel going back with the targets
+  as they were.
+
+Tests (`tests/test_arena_areas.py`, `tests/test_combat_ui_arena_areas.py`):
+the areas real spell and stat-block texts state, and none for a single
+target; each shape's cells on squares (the Manhattan Sphere's diamond, the
+Cone's 1-3-3, a Line from the source's edge, a Cube centred or against the
+source's side, a Large source's Emanation), the map's edge; who is in an
+area by any of their cells; the button bringing up the map with the Ice
+Mephit's Frost Breath read as a 15-foot Cone, aiming naming who is in it, a
+click (also a real one) targeting them and reopening the dialog on the
+pick, nobody in it changing nothing, the four ways back, the bar's shape
+and size changing the area, an Emanation shown unaimed, the button off with
+the source off the map, the last area kept for a pick without one.
+
 ### Later (not scheduled)
 
 - **More distance rules**, each a `DistanceRule` and a line in `RULES`:
@@ -435,8 +479,12 @@ turn it is has gold cells; the move's line; cell names.
   checked as it's cast, Spirit Guardians' aura, Opportunity Attacks prompted
   as a creature leaves reach. Each still asks when either creature is off the
   map.
-- **Areas of effect**: a cone, sphere or line drawn from the source, and the
-  creatures inside it made the targets.
+- **Areas of effect**: built in step 10. Still later: an area that stays on
+  the map (Spirit Guardians following its caster, a Wall of Fire, Web's
+  Cube) and a creature entering it prompting its effect; a spell's range
+  checked against where the area is aimed; walls (Wall of Fire, Wall of
+  Force), which aren't one of the six shapes; Total Cover blocking an area
+  (Rules Glossary, Area of Effect), once there's terrain.
 - **The map on the Player Screen and the player link**, from the same token
   rows, hidden monsters left out the way `player_view_rows` leaves them out.
 - **Height**: a flying creature's altitude, counted into distance.
@@ -500,6 +548,82 @@ Taken while building (2026-11-14), for the user to overrule:
     "AA1"), as the user's example ("from A1 to B2") reads, and the map's
     top edge is lettered to match. The names come from the grid shape
     (`labels`, `cell_name`), so a hex grid names its own (Decision 3).
+16. *Replaced by 18.* **How an area sits on the grid** (in the plan, for
+    the user to overrule; step 10). A cell is in an area when the area covers its
+    middle, and a creature is in it when any of its cells is. A Sphere or
+    Cylinder is centred on the cell aimed at and its radius is counted by
+    the map's distance rule, so with Manhattan it is a diamond: a creature
+    the hover calls "20 ft." away is inside a 20-foot radius, and the map
+    never disagrees with itself. Its point of origin is included (Rules
+    Glossary, Sphere), so it can catch the source. An Emanation reaches its
+    distance from the source's nearest cell and leaves the source out
+    (Emanation: "isn't included unless its creator decides otherwise"); a
+    Sphere or Cylinder "centered on you" or "Self (10-foot radius)" is one.
+    A Cone and a Line are aimed in any direction, from the middle of the
+    source's space, their length counted from its edge: a Cone is as wide
+    at each point as it is far from that middle (Cone: "width ... equal to
+    that point's distance from the point of origin"), which makes a
+    15-foot Cone 1, 3 and 3 cells wide straight ahead; a Line is as wide as
+    it says, 5 ft. by default. A Cube is centred on the cell aimed at, or,
+    from the source (Thunderwave's "originating from you"), sits against
+    the side of the source's space nearest the cell aimed at. Directions
+    use the shape's cell centres (`GridShape.center`), never a cell's
+    coordinates (Decision 3), so a hex grid gets Cones and Lines for free;
+    a Cube against the source's side walks the shape's `offset` and
+    `footprint`.
+17. **Select targets in area closes the dialog and opens it again** (in the
+    plan, for the user to overrule; step 10). The dialog is modal and its
+    target rows are built for the targets it opened with, so it can't stay
+    open while the map is clicked. It reopens on the same pick (its
+    `pick` argument, as a trigger's prompt uses), so the form is filled in
+    from the pick again: anything typed in it by hand is lost. The area's
+    creatures replace the targets; Ctrl+right-click on the map or the cards
+    adjusts them afterwards. The view the GM had comes back, and G during
+    aiming cancels rather than switching. The area is read from the pick's
+    rules text and shown in the bar to correct, not from `CombatEffect`
+    (Q10).
+18. **Every area agrees with the map's distance count** (in the plan, for
+    the user to overrule; replaces 16, after the user asked for every shape
+    and range to be checked against Manhattan, 2026-11-15; R11). Nothing in
+    a Sphere, Cylinder, Emanation, Cone or Line is further from where it
+    starts than its size, as the hover counts it, so a creature the hover
+    calls "20 ft." away is never in a 15-foot Cone. A cell is in an area
+    when the area covers its middle, and a creature when any of its cells
+    is. A Sphere or Cylinder is centred on the cell aimed at, its radius by
+    the rule (a diamond with Manhattan: 41 cells for 20 feet, where a
+    circle would be about 50); its point of origin is in it, so it can catch
+    the source. An Emanation reaches its distance from the source's nearest
+    cell and leaves the source out; a Sphere around the source ("Self
+    (10-foot radius)") is one. A Cone and a Line are aimed in any direction
+    from the middle of the source's space and reach their length by the
+    rule from its nearest cell. A Line covers the cells its path crosses,
+    as many wide as it says, with the band open on one side, so a 5-foot
+    Line is one unbroken row of cells, each a step further than the last,
+    at any angle (a 30-foot Line is 6 cells, also diagonally); a 10-foot one
+    is two rows, the second on one side. A Cone is as wide at each point as
+    it is far from the middle of the source, and also covers its 5-foot
+    spine, closed on both sides, so aimed exactly diagonally it is even and
+    never empty: a 15-foot Cone is 5 cells, straight or diagonal (4.5 is
+    its true area), a 5-foot one aimed diagonally the two cells beside the
+    source towards it. With Manhattan, wide shapes lose their corners, as
+    the diamond does: a 60-foot Cone is 44 to 56 cells, where its true area
+    is 72. A Cube is the exception, as its size is a side, not a reach: 3
+    by 3 cells for 15 feet, centred on the cell aimed at (an even one has
+    the cell aimed at as its top-left middle cell), or against the
+    source's side nearest the cell aimed at, so a corner of Thunderwave's
+    Cube is 20 or 25 ft. away on the hover. Directions use the shape's cell
+    centres (`GridShape.center`), never a cell's coordinates (Decision 3).
+19. **A point aimed past the range is warned about, not refused** (in the
+    plan, for the user to overrule; 2026-11-15), as a move past the Speed
+    is (Q2): the GM may know better (a Spell Sniper, a reading gone wrong).
+    The bar says "Aimed 45 ft. away, range 150 ft." or "Aimed 160 ft.
+    away: past its 150 ft. range!", and a click there says so under
+    Source/Target. The range is the text's "a point within 60 feet" when
+    it has one, else the spell's own range ("150 feet", "1 mile", Touch as
+    5 ft.); an area that starts at the source has none to check. A range
+    of Self doesn't make the area start at the source (Investiture of
+    Wind's Cube is "centered on a point you can see within 60 feet"), but
+    a 2014 range of "Self (15-foot cone)" is read as the area itself.
 
 ## Open questions
 
@@ -563,6 +687,19 @@ Each has a *Suggestion*: what gets built if nobody says otherwise.
   player making death saves keeps their colour, greyed. *Not blocking is
   built in step 2 (`can_pass_through` counts 0 HP too, for a monster with
   no Unconscious badge); the greying too, in step 4.*
+
+- **Q10. Should a `CombatEffect` say its area?** *Blocks nothing.* The
+  area is read from the rules text (`parse_area`), which covers 215 of the
+  662 spells and the stat blocks' "each creature in a 15-foot Cone"; the
+  bar shows what was read, to change. *Suggestion:* not until a reading
+  turns out wrong often enough; then an `area` field on `CombatEffect`,
+  filled where the text misleads.
+- **Q11. Should the Custom Effect open with no targets when the source is
+  on the map?** *Blocks nothing.* Today it needs a target first
+  (`test_dialog_needs_a_target`), so aiming an area starts with a
+  right-click on anyone. *Suggestion:* leave it for the user to decide;
+  opening without targets means an Apply with none, which the dialog
+  would then refuse with "Select targets in area, or right-click a card".
 
 ## Revisions
 
@@ -660,6 +797,29 @@ Each has a *Suggestion*: what gets built if nobody says otherwise.
      a token up and a click on a cell moves it (Decision 12); a click with
      nothing picked up moves nobody (Decision 14). The strip's buttons pick
      up too, so placing goes the same way.
+
+- **R10** (step 10, the user's request, 2026-11-14). *Plan (Later):* "a
+  cone, sphere or line drawn from the source, and the creatures inside it
+  made the targets". *Done:* all six shapes of the Rules Glossary, aimed
+  from the Custom Effect dialog rather than from the map on its own, as
+  the dialog is where the GM has the spell or action picked and its text
+  to read the area from (Decisions 16 and 17). Two questions left (Q10,
+  Q11). Escape on the window cancels aiming before it clears the
+  selection, so the targets the dialog had are still there to go back to.
+- **R11** (step 10, the user asked to check every shape and range against
+  the Manhattan grid, 2026-11-15). *Built:* Cones and Lines measured their
+  length in straight lines, so a 15-foot Cone took in creatures the hover
+  called 20 ft. away (and was 7 cells, against a true area of 4.5), a
+  diagonal 100-foot Line reached 140 ft. by the hover, a diagonal 5-foot
+  Line had cells touching only at their corners (4 cells for 30 feet), and
+  a 10-foot-wide Line was 3 rows. *Done:* Decision 18: their reach is the
+  rule's, a Line is the cells its path crosses (one unbroken row each 5
+  feet of width), and a Cone keeps its spine. Also a range check (Decision
+  19), and three readings the check turned up: "5-foot-wide, 60-foot-long
+  Line" (Sunbeam), "A Line of strong wind 60 feet long and 10 feet wide"
+  (Gust of Wind), and a 2014 range of "Self (15-foot radius)" (Lightning
+  Lure, Earth Tremor), read from the spell's range, which the dialog now
+  passes with its text.
 
 ## Discovered issues
 

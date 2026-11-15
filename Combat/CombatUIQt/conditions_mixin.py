@@ -24,6 +24,7 @@ from PyQt6.QtWidgets import (
     QWidget,
 )
 
+from Combat.Arena.arena import position
 from Combat.Definitions import Action, CombatStatus, ConditionRule
 from Combat.Effects.active_effects import (
     CUSTOM,
@@ -2012,6 +2013,31 @@ class ConditionsMixin(CombatWindowState):
         keys_lbl.setObjectName("secondary")
         footer.addWidget(keys_lbl)
         btn_row.addLayout(footer, stretch=1)
+        # Targets in an area: the map aims the pick's area, and this dialog
+        # opens again on the same pick with whoever is in it (arena step 10).
+        area_btn = QPushButton("Select targets in a&rea")
+        area_btn.setObjectName("areaTargetsBtn")
+        area_btn.setAutoDefault(False)
+        on_map = (
+            self.phase == "COMBAT"
+            and source is not None
+            and position(source) is not None
+        )
+        area_btn.setEnabled(on_map)
+        area_btn.setToolTip(
+            "Aim the area on the map: whoever is in it becomes the targets,"
+            " and this opens again on the same pick (Alt+R)"
+            if on_map
+            else "Needs a fight with the source on the map"
+        )
+        area_request: list[bool] = []
+
+        def select_in_area():
+            area_request.append(True)
+            dlg.reject()
+
+        area_btn.clicked.connect(select_in_area)
+        btn_row.addWidget(area_btn)
         cancel_btn = QPushButton("Cancel")
         cancel_btn.setAutoDefault(False)
         cancel_btn.setMinimumWidth(_BUTTON_WIDTH)
@@ -2741,6 +2767,8 @@ class ConditionsMixin(CombatWindowState):
             tree.setCurrentItem(start)
             tree.scrollToItem(start)
         dlg.exec()
+        if area_request:
+            self._start_area_targeting(picked["option"], name_input.text().strip())
 
     @undoable
     def _shortcut_add_concentration(self):

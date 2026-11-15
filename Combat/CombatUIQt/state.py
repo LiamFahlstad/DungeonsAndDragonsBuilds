@@ -490,6 +490,12 @@ class CombatWindowState:
     def _distance_note(self, target: dict) -> str:
         raise NotImplementedError("ArenaMixin._distance_note")
 
+    def _start_area_targeting(self, option, what: str = "") -> bool:
+        raise NotImplementedError("ArenaMixin._start_area_targeting")
+
+    def _cancel_area_targeting(self) -> bool:
+        raise NotImplementedError("ArenaMixin._cancel_area_targeting")
+
     def _roll_concentration(self, char: dict, dc: int):
         raise NotImplementedError("DamageMixin._roll_concentration")
 

@@ -10,7 +10,12 @@ an empty cell moves it there; clicking it again puts it down where it was.
 Or drag a token to a cell (step 6). Whose turn it is stands on gold cells,
 as its card is gold. With a source selected, hovering a cell or a token
 shows how far it is (step 7). Ctrl+wheel zooms; dragging empty space
-pans. Columns are lettered and rows numbered, so a cell is "C7"."""
+pans. Columns are lettered and rows numbered, so a cell is "C7".
+
+Picking targets in an area (step 10, start_area): the cells an area covers
+where the mouse is are shaded orange, with an orange ring on each token in
+it; a left click picks them, a right click cancels. Nothing is picked up or
+moved meanwhile."""
 
 from __future__ import annotations
 
@@ -65,6 +70,10 @@ _TURN_CELL = QColor(201, 168, 76, 110)
 _REACH_TEXT = QColor("#b8e6be")
 _HOVER_TEXT = QColor("#ffffff")
 _HOVER_BACK = QColor(10, 10, 20, 200)
+# An area of effect being aimed (step 10).
+_AREA = QColor(230, 126, 34, 110)
+_AREA_EDGE = QColor(230, 126, 34, 200)
+_AREA_RING = QColor("#e67e22")
 # How far the mouse goes before a press on a token is a drag, not a click.
 _DRAG_PX = 6
 
@@ -196,6 +205,20 @@ class ArenaView(QGraphicsView):
         self._drawn: tuple | None = None
         # The whole map fits the view until the GM zooms (Ctrl+wheel).
         self._zoomed = False
+        # An area being aimed (start_area): the cells it covers for a cell
+        # aimed at, what a click and a cancel do, what to tell as it moves;
+        # and where it's aimed now, and the cells it covers there.
+        self._area: (
+            tuple[
+                Callable[[Cell | None], set[Cell]],
+                Callable[[Cell], None],
+                Callable[[], object],
+                Callable[[set[Cell]], None],
+            ]
+            | None
+        ) = None
+        self._area_aim: Cell | None = None
+        self._area_cells: set[Cell] = set()
 
     @property
     def rows(self) -> list[TokenRow]:
@@ -216,11 +239,14 @@ class ArenaView(QGraphicsView):
             self._reach = self._reach_of(self._picked)
         if self._dragging is not None or self._picked is not None:
             self._draw_reach()
+        self._draw_area()
         for row in rows:
             if row.turn:
                 self._draw_turn_cells(row)
         for row in rows:
             self._draw_token(row)
+            if self._area_cells.intersection(row.cells):
+                self._draw_area_ring(row)
         self._draw_hover()
         margin = CELL_PX
         width, height = settings.width * CELL_PX, settings.height * CELL_PX
@@ -257,6 +283,89 @@ class ArenaView(QGraphicsView):
                 self._scene.addItem(label)
                 x, y = shape.polygon(cell, CELL_PX)[0]
                 label.setPos(x + 2, y + 1)
+
+    def _draw_area(self):
+        """Shade the cells the area being aimed covers, edged."""
+        shape = self._settings.distance_rule.shape
+        pen = QPen(_AREA_EDGE)
+        pen.setWidthF(1.0)
+        for cell in self._area_cells:
+            points = [QPointF(x, y) for x, y in shape.polygon(cell, CELL_PX)]
+            self._scene.addPolygon(QPolygonF(points), pen, QBrush(_AREA))
+
+    def _draw_area_ring(self, row: TokenRow):
+        """An orange ring around a token in the area being aimed."""
+        shape = self._settings.distance_rule.shape
+        corners = [p for cell in row.cells for p in shape.polygon(cell, CELL_PX)]
+        xs, ys = [x for x, _ in corners], [y for _, y in corners]
+        box = QRectF(min(xs), min(ys), max(xs) - min(xs), max(ys) - min(ys))
+        ring = QPen(_AREA_RING)
+        ring.setWidthF(2.5)
+        inside = box.adjusted(1.5, 1.5, -1.5, -1.5)
+        if len(row.cells) == 1:
+            self._scene.addEllipse(inside, ring)
+        else:
+            self._scene.addRect(inside, ring)
+
+    @property
+    def aiming_area(self) -> bool:
+        """Whether an area is being aimed (start_area)."""
+        return self._area is not None
+
+    @property
+    def area_aim(self) -> Cell | None:
+        """The cell the area being aimed is aimed at, if any yet."""
+        return self._area_aim if self._area is not None else None
+
+    def area_shown(self) -> set[Cell]:
+        """The cells the area being aimed covers now (tests)."""
+        return set(self._area_cells)
+
+    def start_area(
+        self,
+        cells_at: Callable[[Cell | None], set[Cell]],
+        on_pick: Callable[[Cell], None],
+        on_cancel: Callable[[], object],
+        on_aim: Callable[[set[Cell]], None] = lambda cells: None,
+    ):
+        """Aim an area: `cells_at(cell)` is what it covers aimed at the cell
+        (None: not aimed yet, which is all an Emanation needs). Hovering
+        aims it, a left click goes to `on_pick(cell)`, a right click to
+        `on_cancel()`, and each change of the cells to `on_aim(cells)`.
+        Whoever was picked up is put down."""
+        self._dragging, self._reach = None, {}
+        self._picked = None
+        self._area = (cells_at, on_pick, on_cancel, on_aim)
+        self._area_aim = None
+        self.refresh_area()
+
+    def refresh_area(self):
+        """Work the area's cells out again where it's aimed (its shape or
+        size changed, or someone moved)."""
+        if self._area is None:
+            return
+        self._area_cells = set(self._area[0](self._area_aim))
+        self._area[3](set(self._area_cells))
+        self._redraw()
+
+    def aim_area(self, cell: Cell):
+        """Aim the area at `cell`; the map is redrawn when what it covers
+        changes."""
+        if self._area is None or cell == self._area_aim:
+            return
+        self._area_aim = cell
+        cells = set(self._area[0](cell))
+        if cells != self._area_cells:
+            self._area_cells = cells
+            self._area[3](set(cells))
+            self._redraw()
+
+    def stop_area(self):
+        """Stop aiming: the shading goes."""
+        if self._area is None:
+            return
+        self._area, self._area_aim, self._area_cells = None, None, set()
+        self._redraw()
 
     def _draw_turn_cells(self, row: TokenRow):
         """Whose turn it is stands on gold: the cells under it tinted and
@@ -532,6 +641,16 @@ class ArenaView(QGraphicsView):
         row = self.token_at(point.x(), point.y())
         self._press = event.position()
         self._press_row = None
+        if self._area is not None:
+            # Aiming: a right click cancels, a left press only pans until
+            # its release picks.
+            if event.button() == Qt.MouseButton.RightButton:
+                self._press = None
+                self._area[2]()
+                event.accept()
+                return
+            super().mousePressEvent(event)
+            return
         if row is not None and event.button() in (
             Qt.MouseButton.LeftButton,
             Qt.MouseButton.RightButton,
@@ -557,6 +676,7 @@ class ArenaView(QGraphicsView):
         cell = self._settings.distance_rule.shape.cell_at(point.x(), point.y(), CELL_PX)
         if self._settings.on_map(cell):
             self.hover(cell, point)
+            self.aim_area(cell)
         elif self._hover is not None:
             self._hover = None
             self._redraw()
@@ -587,6 +707,11 @@ class ArenaView(QGraphicsView):
             and (event.position() - pressed).manhattanLength() < _DRAG_PX
         )
         if not clicked or event.button() != Qt.MouseButton.LeftButton:
+            return
+        if self._area is not None:
+            if self._settings.on_map(cell):
+                self.aim_area(cell)
+                self._area[1](cell)
             return
         if pressed_row is not None:
             # A click on a token picks it up, or puts it down again.
