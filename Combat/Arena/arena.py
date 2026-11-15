@@ -18,6 +18,7 @@ heights is a climb, and height counts into distances.
 from __future__ import annotations
 
 import heapq
+import re
 from dataclasses import dataclass, field
 from itertools import count
 from typing import Iterable
@@ -28,9 +29,12 @@ from Combat.Effects.modifiers import has_condition, size_in_use, speed_in_use
 from Combat.Effects.triggers import on_party_side
 from Combat.Summons import owner_name
 from Core.Definitions import Condition, CreatureSize
+from Core.Weapons import WeaponProperty
 
 POSITION_KEY = "position"
 MOVED_KEY = "moved_ft"
+# How many times it has taken the Dash action this turn (movement_ft).
+DASHES_KEY = "dashes"
 
 # How many cells across a creature of each size covers on a 5-foot grid
 # (Rules Glossary, Creature Size: Tiny 2.5 ft., Small and Medium 5 ft.,
@@ -386,11 +390,73 @@ def place_summons(new: Iterable[dict], chars: Iterable[dict], settings: ArenaSet
             chars.append(char)
 
 
-def remaining_ft(char: dict) -> int:
-    """How far char can still move this turn: its walking speed in use less
-    what it has moved (0 with no speed)."""
+def dashes(char: dict) -> int:
+    """How many times char has taken the Dash action this turn."""
+    return int(char.get(DASHES_KEY, 0))
+
+
+def movement_ft(char: dict) -> int | None:
+    """How far char can move this turn: its walking speed in use, and as
+    much again for each Dash it has taken (Rules Glossary, Dash: "The
+    increase equals your Speed after applying any modifiers"). None when it
+    has no speed as a number."""
     speed = walking_speed_ft(char)
-    return max((speed or 0) - int(char.get(MOVED_KEY, 0)), 0)
+    return None if speed is None else speed * (1 + dashes(char))
+
+
+def remaining_ft(char: dict) -> int:
+    """How far char can still move this turn: its movement (its walking
+    speed in use, with its Dashes) less what it has moved (0 with no speed)."""
+    return max((movement_ft(char) or 0) - int(char.get(MOVED_KEY, 0)), 0)
+
+
+_REACH = re.compile(r"\breach (\d+) ft\.", re.IGNORECASE)
+_STAT_BLOCK_SECTIONS = ("actions", "bonus_actions", "reactions", "legendary_actions")
+
+
+def reach_ft(char: dict) -> int:
+    """How far char's melee attacks reach (Rules Glossary, Reach: 5 feet,
+    10 with a Reach weapon): a monster's longest "reach 10 ft." in its stat
+    block, a player's 10 feet with a Reach weapon; else 5 feet."""
+    reaches = [5]
+    for key in _STAT_BLOCK_SECTIONS:
+        for ability in char.get(key) or ():
+            text = (
+                ability.get("description", "")
+                if isinstance(ability, dict)
+                else getattr(ability, "description", "")
+            )
+            reaches += [int(feet) for feet in _REACH.findall(str(text))]
+    for weapon in char.get("_weapons_objects") or ():
+        if WeaponProperty.REACH in (getattr(weapon, "properties", None) or ()):
+            reaches.append(10)
+    return max(reaches)
+
+
+def opportunity_attackers(
+    mover: dict, start: Cell, chars: Iterable[dict], settings: ArenaSettings
+) -> list[dict]:
+    """Who can make an Opportunity Attack as mover's walk from `start` to
+    where it stands now takes it out of their reach (Rules Glossary,
+    Opportunity Attacks): each creature not on its side, on the map, not
+    down or Incapacitated, its Reaction not used since its turn began, that
+    had mover in its reach at `start` and doesn't now. Only the walk's ends
+    are known (the GM clicks where it goes, not the way), so a walk that
+    passes through someone's reach, or leaves it and comes back, isn't
+    seen."""
+    before = dict(mover, **{POSITION_KEY: start.to_list()})
+    found = []
+    for other in chars:
+        if other is mover or _is_ally(mover, other) or _out_of_the_fight(other):
+            continue
+        if (other.get("action_uses") or {}).get("Reaction", 0) > 0:
+            continue
+        reach = reach_ft(other)
+        was = distance_ft(before, other, settings)
+        now = distance_ft(mover, other, settings)
+        if was is not None and now is not None and was <= reach < now:
+            found.append(other)
+    return found
 
 
 # A walk no map is long enough to need: reachable's limit when it's a cost

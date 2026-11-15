@@ -25,7 +25,7 @@ from PyQt6.QtWidgets import (
     QWidget,
 )
 
-from Combat.Arena.arena import position
+from Combat.Arena.arena import DASHES_KEY, dashes, movement_ft, position
 from Combat.Arena.lasting import AREA_KEY
 from Combat.Definitions import Action, CombatStatus, ConditionRule
 from Combat.Effects.active_effects import (
@@ -61,6 +61,7 @@ from Combat.Effects.modifiers import (
     hit_plan,
     hit_point_maximum,
     hit_point_maximum_notes,
+    loses_dodge,
     rolled_modifiers,
     rules_condition,
     signed,
@@ -78,6 +79,7 @@ from Core.Definitions import Condition, DamageType
 from Core.Rules import SECONDS_PER_ROUND
 from Model.Content.CombatModifiers import AttackKind, HitPointMaximum
 from Model.Content.RulesConditions import conditions_with
+from Model.Content.StandardActions import DASH, DODGE, HIDDEN
 from .amounts import AmountError, parse_amount
 from .attack_rolls import (
     AttackRoll,
@@ -123,6 +125,7 @@ from .saves import (
     ROLL_MODES,
     SAVING_THROW,
     SPELL,
+    STANDARD_ACTION,
     TEMP_HP,
     CustomEffect,
     EffectOption,
@@ -500,6 +503,10 @@ class ConditionsMixin(CombatWindowState):
         """char gets `cond` from `source`, logged. Not `counted` in the fight's
         stats: a spell's badge beside the conditions it gave (Friends beside
         Charmed), which aren't one more condition."""
+        if cond == DASH:
+            # Each Dash this turn is its Speed again on the map, a second
+            # one (Cunning Action's) too, which the badge it has can't say.
+            self._take_dash(char)
         if cond not in char["conditions"]:
             char["conditions"].append(cond)
             char.setdefault("stats", _default_stats())
@@ -546,6 +553,22 @@ class ConditionsMixin(CombatWindowState):
             # So does a Wild Shape form (which a knock-out's Unconscious ends too).
             if incapacitates(cond) and current_form(char):
                 self._leave_wild_shape(char, reason=cond)
+            # The Dodge action's benefits are lost to Incapacitated or a
+            # Speed of 0 (Grappled); they don't count from then on anyway.
+            if cond != DODGE and DODGE in char["conditions"] and loses_dodge(char):
+                self._remove_condition_from(char, DODGE)
+
+    def _take_dash(self, char: dict):
+        """char takes the Dash action (or a feature's): as much movement
+        again as its Speed, this turn, a GM-only log line."""
+        char[DASHES_KEY] = dashes(char) + 1
+        movement = movement_ft(char)
+        if movement is not None:
+            self._log_event(
+                f"{char['name']} dashes: {movement} ft. of movement this turn",
+                character=char["name"],
+                public=False,
+            )
 
     def _give_badge_modifiers(
         self,
@@ -621,6 +644,8 @@ class ConditionsMixin(CombatWindowState):
             char["conditions"].remove(cond)
             # Its tooltip, colour, timer and repeat save go with it.
             remove_effect(char, cond)
+            if cond == DASH:
+                char.pop(DASHES_KEY, None)  # and the Dash's movement
             emptied = linked_badges_left_without(char, cond)
             if hit_point_maximum(char) != maximum:
                 self._keep_hit_points_in_maximum(char, cond)
@@ -1119,6 +1144,15 @@ class ConditionsMixin(CombatWindowState):
         if option.monster_action is not None:
             # _apply_custom_effect asked already if it's spent (_effect_lacks).
             return self._spend_monster_action(caster, option.monster_action, ask=False)
+        if option.kind == STANDARD_ACTION:
+            # "Clover takes the Help action (Assist an Attack Roll)".
+            action, _, how = option.name.partition(": ")
+            how = f" ({how})" if how else ""
+            self._log_event(
+                f"{caster['name']} takes the {action} action{how}",
+                character=caster["name"],
+            )
+            return True
         return False
 
     def _effect_lacks(self, caster: dict, effect: CustomEffect) -> list[str | None]:
@@ -1262,7 +1296,10 @@ class ConditionsMixin(CombatWindowState):
                 note_condition_immunity(target, condition)
             return False
         self._describe_effect_condition(target, effect, condition)
-        self._add_custom_condition(condition, effect.duration, effect.notes, [target])
+        duration = effect.duration
+        if effect.pick is not None:
+            duration = effect.pick.duration_for(condition, duration)
+        self._add_custom_condition(condition, duration, effect.notes, [target])
         note_origin(target, condition, source=effect.name)
         if effect.pick is not None:
             # Who gave it, also on a record only its modifiers made: extra
@@ -1311,7 +1348,13 @@ class ConditionsMixin(CombatWindowState):
         option = effect.pick
         if option is None:
             return
-        if not any(ConditionRule.from_name(c) is not None for c in conditions):
+        rules = [c for c in conditions if ConditionRule.from_name(c) is not None]
+        if not rules:
+            return
+        if HIDDEN in effect.conditions and HIDDEN in target["conditions"]:
+            # The Hide action's (or Cunning Action's): Hidden stands for the
+            # Invisible it came with, so its next attack roll ends both.
+            link_badge(target, HIDDEN, rules)
             return
         source = self.selected_character or self._current_turn_character()
         # A spell's badge, for a spell or a feature's use that casts one.

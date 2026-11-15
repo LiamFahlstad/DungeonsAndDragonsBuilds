@@ -25,19 +25,20 @@ from Model.Ledger.LedgerWriter import LedgerWriter
 from Core.Rules import MAX_LEVEL
 from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table, dc_formula
 from Model.Content.CombatEffect import (
-    CombatCondition,
     CombatDamage,
     CombatEffect,
     CombatHitPoints,
     CombatInstances,
     CombatRegain,
     EffectRoll,
-    TurnEdge,
-    TurnOf,
     with_bonus,
 )
-from Model.Content.CombatModifiers import AttacksAgainst, D20Mode, D20Test, RollMode
 from Model.Content.CombatTriggers import CombatTrigger, TriggerEvent
+from Model.Content.StandardActions import (
+    dash_condition,
+    disengage_condition,
+    dodge_condition,
+)
 from Core.Definitions import DamageType
 
 LEVEL_TO_MARTIAL_ARTS_DIE = {
@@ -347,33 +348,21 @@ class PatientDefense(Feature):
         temp_hp = None
         if monk_level >= 10:
             temp_hp = CombatHitPoints(_rolls_of(MARTIAL_ARTS_DIE.at(character), 2))
+        # The Dodge and Disengage actions' own badges (StandardActions.py);
+        # Dodge first, as the form gives both its duration.
         return [
+            CombatEffect(
+                name="Patient Defense: Disengage",
+                conditions=(disengage_condition(),),
+                targets_self=True,
+                spends_use=False,
+            ),
             CombatEffect(
                 name="Patient Defense: Disengage and Dodge",
                 temp_hp=temp_hp,
-                conditions=(
-                    CombatCondition(
-                        "Dodge",
-                        until=(TurnEdge.START, TurnOf.SOURCE),
-                        modifiers=(
-                            AttacksAgainst(
-                                RollMode.DISADVANTAGE, when="it can see the attacker"
-                            ),
-                            D20Mode(
-                                (D20Test.SAVING_THROW,),
-                                RollMode.ADVANTAGE,
-                                (Ability.DEXTERITY,),
-                            ),
-                        ),
-                    ),
-                ),
+                conditions=(dodge_condition(), disengage_condition()),
                 targets_self=True,
-                notes=(
-                    "Without the Focus Point it's the Disengage action alone.",
-                    "The Dodge ends early if you have the Incapacitated condition"
-                    " or your Speed is 0.",
-                ),
-            )
+            ),
         ]
 
 
@@ -414,21 +403,27 @@ class StepOfTheWind(Feature):
 
     def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
         monk_level = character.get_class_level(Definitions.CharacterClass.MONK)
-        notes = [
-            "You take the Disengage and Dash actions, and your jump distance is"
-            " doubled this turn: nothing happens to the targets. Without the"
-            " Focus Point it's the Dash action alone.",
-        ]
+        notes = ["Your jump distance is doubled this turn."]
         if monk_level >= 10:
             notes.append(
                 "A willing Large or smaller creature within 5 feet can move with"
                 " you until the end of your turn, without provoking Opportunity"
                 " Attacks."
             )
+        # The Dash and Disengage actions' own badges (StandardActions.py).
         return [
             CombatEffect(
-                name="Step of the Wind: Disengage and Dash", notes=tuple(notes)
-            )
+                name="Step of the Wind: Dash",
+                conditions=(dash_condition(),),
+                targets_self=True,
+                spends_use=False,
+            ),
+            CombatEffect(
+                name="Step of the Wind: Disengage and Dash",
+                conditions=(disengage_condition(), dash_condition()),
+                targets_self=True,
+                notes=tuple(notes),
+            ),
         ]
 
 

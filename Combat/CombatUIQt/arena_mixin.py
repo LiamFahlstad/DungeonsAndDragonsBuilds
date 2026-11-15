@@ -63,8 +63,11 @@ from Combat.Arena.arena import (
     distance_to_cell_ft,
     fits_at,
     footprint,
+    dashes,
     move_cost,
+    movement_ft,
     nearest_free,
+    opportunity_attackers,
     occupied,
     place_new,
     position,
@@ -101,6 +104,7 @@ from Combat.Arena.lasting import (
 from Combat.Arena.maps import place_at_starts
 from Combat.Arena.terrain import BRIGHT, DARK, DIM, OBSCURED
 from Combat.Effects.modifiers import has_condition
+from Model.Content.StandardActions import DISENGAGE
 from Core.Definitions import Condition
 from Core.Rules import SECONDS_PER_ROUND
 
@@ -834,8 +838,15 @@ class ArenaMixin(CombatWindowState):
             public=False,
         )
         warnings = []
-        if speed is not None and char[MOVED_KEY] > speed:
-            warnings.append(f"{name} moved {char[MOVED_KEY]} ft., Speed {speed} ft.")
+        movement = movement_ft(char)
+        if movement is not None and char[MOVED_KEY] > movement:
+            with_dash = f" ({movement} ft. with its {_dashes_text(char)})"
+            warnings.append(
+                f"{name} moved {char[MOVED_KEY]} ft., Speed {speed} ft."
+                + (with_dash if dashes(char) else "")
+            )
+        if walked is not None and start is not None:
+            warnings += self._opportunity_attack_reminders(char, start)
         if has_condition(char, Condition.PRONE):
             warnings.append(
                 f"{name} is Prone and crawls; standing up costs half its Speed."
@@ -855,6 +866,38 @@ class ArenaMixin(CombatWindowState):
         if warnings:
             self._show_status(" ".join(warnings))
         self._refresh_views()
+
+    def _opportunity_attack_reminders(self, char: dict, start: Cell) -> list[str]:
+        """Who can make an Opportunity Attack on char, whose walk from
+        `start` on its own turn took it out of their reach
+        (opportunity_attackers), as GM-only log lines and for the status
+        line: none for a Disengaged char (Rules Glossary, Disengage), or one
+        with Flyby. A move on someone else's turn (a shove, a correction)
+        reminds of nothing: it may not be char's own movement."""
+        if not any(char is c for c in self._current_turn_group()):
+            return []
+        attackers = opportunity_attackers(
+            char, start, self.characters, self.arena_settings
+        )
+        if not attackers:
+            return []
+        name = char["name"]
+        names = _and([a["name"] for a in attackers])
+        if DISENGAGE in char["conditions"]:
+            line = f"{name} leaves {names}'s reach, Disengaged: no Opportunity Attack."
+        elif _has_trait(char, "Flyby"):
+            line = (
+                f"{name} leaves {names}'s reach: no Opportunity Attack if it"
+                " flies (Flyby)."
+            )
+        else:
+            each = " each" if len(attackers) > 1 else ""
+            line = (
+                f"{name} leaves {names}'s reach: an Opportunity Attack{each}, a"
+                " Reaction, if they can see it. Disengage would have stopped it."
+            )
+        self._log_event(line, character=name, public=False)
+        return [line]
 
     def _distance_note(self, target: dict) -> str:
         """ " (25 ft.)": how far `target` is from the source, for the target
@@ -1063,6 +1106,25 @@ def _swatch(color: str) -> QIcon:
     return QIcon(pixmap)
 
 
+def _and(names: list[str]) -> str:
+    """ "A", "A and B", "A, B and C"."""
+    return names[0] if len(names) == 1 else f"{', '.join(names[:-1])} and {names[-1]}"
+
+
+def _has_trait(char: dict, name: str) -> bool:
+    """Whether char's stat block has a trait called `name` (Flyby)."""
+    return any(
+        (t.get("name") if isinstance(t, dict) else getattr(t, "name", None)) == name
+        for t in char.get("traits") or ()
+    )
+
+
+def _dashes_text(char: dict) -> str:
+    """ "Dash", "2 Dashes": the Dash actions char took this turn."""
+    count = dashes(char)
+    return "Dash" if count == 1 else f"{count} Dashes"
+
+
 def move_line(
     char: dict,
     start: Cell | None,
@@ -1088,10 +1150,15 @@ def move_line(
     if speed is None:
         return f"{head} ({cost})."
     moved = int(char.get(MOVED_KEY, 0))
-    if moved < speed:
-        left = f"{speed - moved} of {speed} ft. left this turn"
-    elif moved == speed:
-        left = f"all of its {speed} ft. Speed used"
+    # With a Dash, as much again as its Speed (movement_ft).
+    total = speed * (1 + dashes(char))
+    of = f"its {total} ft. with its {_dashes_text(char)}" if dashes(char) else ""
+    if moved < total:
+        left = f"{total - moved} of {total} ft. left this turn"
+        if of:
+            left += f" ({_dashes_text(char)})"
+    elif moved == total:
+        left = f"all of {of} used" if of else f"all of its {speed} ft. Speed used"
     else:
-        left = f"{moved - speed} ft. past its {speed} ft. Speed"
+        left = f"{moved - total} ft. past {of or f'its {speed} ft. Speed'}"
     return f"{head} ({cost}; {left})."

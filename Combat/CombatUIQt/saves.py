@@ -62,6 +62,9 @@ MONSTER_ACTION = "monster action"
 WEAPON = "weapon"
 SPELL = "spell"
 FEATURE = "feature"
+# One of the actions every creature can take (Model/Content/StandardActions.py:
+# Dodge, Dash, Help, ...).
+STANDARD_ACTION = "standard action"
 
 # Between the conditions one effect gives, in the Condition box: "Frightened
 # + Incapacitated". Each lands on every target, and they end together.
@@ -207,6 +210,11 @@ class EffectOption:
     # What the badges it gives do while they're on, by badge: (("Bless",
     # (D20Bonus(...),)),), as its CombatCondition says.
     badge_modifiers: tuple[tuple[str, tuple[Modifier, ...]], ...] = ()
+    # Each of its conditions' own turn it lasts until, when it gives several
+    # that end at different turns (Patient Defense's Dodge and Disengage):
+    # (("Dodge", ("start", "source")), ("Disengage", ("end", "current"))).
+    # Used while the dialog's duration is still `until`, the first's.
+    condition_untils: tuple[tuple[str, tuple[str, str]], ...] = ()
     # The conditions it ends on each target its conditions would land on
     # (CombatEffect.ends_conditions: Lay on Hands' Poisoned).
     ends_conditions: tuple[str, ...] = ()
@@ -236,6 +244,17 @@ class EffectOption:
     # Rerolls the failed save it answers with this bonus (Indomitable's
     # Fighter level); None: it doesn't (CombatEffect.reroll_save).
     reroll_save: int | None = None
+
+    def duration_for(self, condition: str, duration: dict | None) -> dict | None:
+        """The duration `condition` gets when the dialog gives `duration`:
+        its own turn (condition_untils) while `duration` is still this
+        pick's own `until`, else `duration` as the GM set it."""
+        own = dict(self.condition_untils).get(condition)
+        if own is None or self.until is None:
+            return duration
+        if duration != {"until": self.until[0], "of": self.until[1]}:
+            return duration
+        return {"until": own[0], "of": own[1]}
 
     def modifiers_for(self, badge: str) -> tuple[Modifier, ...]:
         """What the badge `badge` it gives does while it's on: none for a
@@ -285,7 +304,8 @@ class EffectOption:
         if self.kind == FEATURE:
             # One used, not one that's always on, like Tough or Darkvision.
             return self.counts_uses or self.action_cost is not None
-        return self.kind == SPELL
+        # Taking an action spends it, with nothing else (Search).
+        return self.kind in (SPELL, STANDARD_ACTION)
 
 
 def damage_text(rolls: Iterable[DamageRoll]) -> str:

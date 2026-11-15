@@ -58,10 +58,12 @@ PLAYER_FIGHT_KEYS = (
     "active_spells",
     "concentration_checks",
     ACTIVE_EFFECTS_KEY,
-    # Where a player is on the battle map and how far they moved this turn
-    # (Combat/Arena/arena.py's POSITION_KEY and MOVED_KEY).
+    # Where a player is on the battle map, how far they moved this turn and
+    # how many times they took the Dash action in it (Combat/Arena/arena.py's
+    # POSITION_KEY, MOVED_KEY and DASHES_KEY).
     "position",
     "moved_ft",
+    "dashes",
     # What they've spent of their turn (an Action, their Reaction), and what
     # the attack rolls against them tell of their AC (attack_rolls.py).
     # Their in-fight "stats" aren't kept here: replaying the party's history

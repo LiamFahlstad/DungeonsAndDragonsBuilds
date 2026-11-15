@@ -346,3 +346,19 @@ def test_a_continued_fight_keeps_the_failed_death_saves(tmp_path):
 
     again = _player(_reopened(tmp_path))
     assert (again["hp"], again["death_saves_fail"]) == (0, 2)
+
+
+def test_a_continued_fight_keeps_a_players_dash(tmp_path):
+    """The Dash action's movement this turn (Combat/Arena/arena.py's
+    DASHES_KEY) and its badge come back with the fight."""
+    from Combat.Arena.arena import DASHES_KEY, movement_ft
+
+    ui = _fight(tmp_path)
+    player = _player(ui)
+    speed = movement_ft(player)
+    ui._add_condition_to(player, "Dash", player)
+    assert movement_ft(player) == 2 * speed
+    again = _player(_reopened(tmp_path))
+    assert again[DASHES_KEY] == 1
+    assert "Dash" in again["conditions"]
+    assert movement_ft(again) == 2 * speed

@@ -95,17 +95,32 @@ class AttacksAgainst:
     """Attack rolls against it have Advantage or Disadvantage. `by_caster`:
     only those made by the creature that gave it (Vex: "your next attack
     roll against that creature"). `once`: only the next such attack roll
-    (Guiding Bolt, Vex); the badge ends once that roll is made."""
+    (Guiding Bolt, Vex); the badge ends once that roll is made.
+    `seen_attacker`: only against an attacker its bearer can see (the Dodge
+    action): counted, except against an Invisible attacker or for a Blinded
+    bearer, where it's only noted, since sight is the GM's to judge then.
+    `by_allies`: only attack rolls by the giver's allies, not by the giver
+    (the Help action: "the next attack roll by one of your allies")."""
 
     mode: RollMode
     when: str = ""
     by_caster: bool = False
     once: bool = False
+    seen_attacker: bool = False
+    by_allies: bool = False
 
     def __post_init__(self):
         _check_once(self)
         if not isinstance(self.by_caster, bool):
             raise ValueError(f"by_caster is True or False, got {self.by_caster!r}")
+        if not isinstance(self.by_allies, bool):
+            raise ValueError(f"by_allies is True or False, got {self.by_allies!r}")
+        if self.by_allies and self.by_caster:
+            raise ValueError("by_caster and by_allies can't both be set")
+        if not isinstance(self.seen_attacker, bool):
+            raise ValueError(
+                f"seen_attacker is True or False, got {self.seen_attacker!r}"
+            )
 
 
 @dataclass(frozen=True)
@@ -566,6 +581,8 @@ _PLAIN: dict[str, type | tuple[type, ...]] = {
     "per_level": bool,
     "once": bool,
     "by_caster": bool,
+    "seen_attacker": bool,
+    "by_allies": bool,
     "bonus": int,
     "base": int,
     "value": int,

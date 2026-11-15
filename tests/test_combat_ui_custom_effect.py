@@ -2066,10 +2066,11 @@ def test_the_categories(paladin, monkeypatch):
         "Attacks",
         "Edmund's Spells",
         "Features",
+        "Standard Actions",
         "All spells",
     ]
     # Only All spells is long enough to start folded.
-    assert [c.isExpanded() for c in categories] == [True, True, True, False]
+    assert [c.isExpanded() for c in categories] == [True, True, True, True, False]
 
 
 def _browsable(dlg) -> list[QTreeWidgetItem]:
@@ -2102,9 +2103,9 @@ def test_down_stops_at_the_last_row_it_can_show(paladin, monkeypatch):
     rows = _browsable(dlg)
     for _ in range(len(rows) + 3):
         QTest.keyClick(_search(dlg), Qt.Key.Key_Down)
-    # The last of Edmund's features: All spells is folded.
+    # The last of the Standard Actions: All spells is folded.
     assert _tree(dlg).currentItem() is rows[-1]
-    assert rows[-1].parent().text(0) == "Features"
+    assert rows[-1].parent().text(0) == "Standard Actions"
 
 
 def test_down_goes_through_the_search_results(paladin, monkeypatch):

@@ -19,6 +19,7 @@ from CharacterContent.Spells.SpellFactory import DataSpell, SpellFactory
 from Combat.CombatUIQt.effect_options import (
     ALL_SPELLS,
     FEATURES,
+    STANDARD_ACTIONS,
     effect_options,
     read_effect_text,
     spell_option,
@@ -452,7 +453,13 @@ def test_a_features_uses_show_and_running_out_is_said():
 def test_a_players_categories():
     edmund = combatant_from_character(Edmund().build())
     titles = [title for title, _ in effect_options(edmund)]
-    assert titles == ["Attacks", "Edmund's Spells", FEATURES, ALL_SPELLS]
+    assert titles == [
+        "Attacks",
+        "Edmund's Spells",
+        FEATURES,
+        STANDARD_ACTIONS,
+        ALL_SPELLS,
+    ]
     all_spells = dict(effect_options(edmund))[ALL_SPELLS]
     assert "Bless" not in {o.name for o in all_spells}  # Edmund's own
     assert "Fireball" in {o.name for o in all_spells}
@@ -462,7 +469,7 @@ def test_a_monsters_categories_and_an_empty_one_left_out():
     titles = [
         title for title, _ in effect_options({"actions": [SLASH], "reactions": []})
     ]
-    assert titles == ["Actions", ALL_SPELLS]
+    assert titles == ["Actions", STANDARD_ACTIONS, ALL_SPELLS]
 
 
 # ---------------------------------------------------------------------------

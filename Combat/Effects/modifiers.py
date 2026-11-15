@@ -52,6 +52,7 @@ from Model.Content.CombatModifiers import (
     modifier_from_dict,
 )
 from Model.Content.RulesConditions import CONDITION_RULES, conditions_given_by
+from Model.Content.StandardActions import DODGE
 from Model.Creatures.Combatants import Visibility
 
 from .active_effects import ActiveEffect, active_effects
@@ -117,9 +118,9 @@ def cover(char: dict) -> str | None:
     return max(states, key=list(COVER_RULES).index, default=None)
 
 
-def _effects_with_modifiers(char: dict) -> list[tuple[ActiveEffect, Modifier]]:
-    """Each modifier char's lasting effects give, with the effect: an
-    effect's count while char has its badge."""
+def _badge_modifiers(char: dict) -> list[tuple[ActiveEffect, Modifier]]:
+    """Each modifier char's lasting effects give, with the effect, while
+    char has its badge."""
     badges = set(char.get("conditions", []))
     return [
         (
@@ -130,6 +131,35 @@ def _effects_with_modifiers(char: dict) -> list[tuple[ActiveEffect, Modifier]]:
         if effect["name"] in badges
         for data in effect.get("modifiers") or ()
     ]
+
+
+def _speed_is_0(char: dict, badges: list[tuple[ActiveEffect, Modifier]]) -> bool:
+    """Whether something sets char's Speed to 0: a rules condition
+    (Grappled) or a badge (Steady Aim)."""
+    setters = [m for c in held_conditions(char) for m in CONDITION_RULES[c]]
+    setters += [m for _, m in badges]
+    return any(isinstance(m, Speed) and m.set_to == 0 for m in setters)
+
+
+def loses_dodge(char: dict) -> bool:
+    """Whether char can't keep the Dodge action's benefits (Rules Glossary,
+    Dodge: "You lose these benefits if you have the Incapacitated condition
+    or if your Speed is 0")."""
+    return has_condition(char, Condition.INCAPACITATED) or _speed_is_0(
+        char, _badge_modifiers(char)
+    )
+
+
+def _effects_with_modifiers(char: dict) -> list[tuple[ActiveEffect, Modifier]]:
+    """Each modifier char's lasting effects give, with the effect: an
+    effect's count while char has its badge. The Dodge action's count only
+    while char can keep them (loses_dodge)."""
+    pairs = _badge_modifiers(char)
+    if not any(effect["name"] == DODGE for effect, _ in pairs):
+        return pairs
+    if has_condition(char, Condition.INCAPACITATED) or _speed_is_0(char, pairs):
+        return [(effect, m) for effect, m in pairs if effect["name"] != DODGE]
+    return pairs
 
 
 def effect_modifiers(char: dict) -> list[tuple[str, Modifier]]:
@@ -319,15 +349,60 @@ def attack_plan(
         ]
     if target is not None:
         sources += [
-            (_whose(target, c), m)
+            (_whose(target, c), _as_seen(m, attacker, target))
             for c, m in modifiers_on(target)
-            if isinstance(m, AttacksAgainst) and not m.by_caster
+            if isinstance(m, AttacksAgainst) and not m.by_caster and not m.by_allies
         ]
         sources += [
             (_whose(target, effect["name"]), m)
             for effect, m in _by_caster_against(target, attacker)
         ]
+        sources += [
+            (_whose(target, effect["name"]), m)
+            for effect, m in _by_allies_against(target, attacker)
+        ]
     return _plan(mode, sources, D20Test.ATTACK_ROLL, None, typed)
+
+
+def _as_seen(
+    modifier: AttacksAgainst, attacker: dict | None, target: dict
+) -> AttacksAgainst:
+    """A `seen_attacker` AttacksAgainst (Dodge's Disadvantage) counts, unless
+    the target may not see the attacker: an Invisible attacker, or a Blinded
+    target. Then it's a `when` the GM judges (See Invisibility, Blindsight)."""
+    if not modifier.seen_attacker or modifier.when or attacker is None:
+        return modifier
+    invisible = has_condition(attacker, Condition.INVISIBLE) or (
+        Visibility.INVISIBLE.value in attacker.get("visibility_states", [])
+    )
+    if invisible or has_condition(target, Condition.BLINDED):
+        return replace(modifier, when=f"{target['name']} can see the attacker")
+    return modifier
+
+
+def _by_allies_against(
+    target: dict, attacker: dict | None
+) -> list[tuple[ActiveEffect, AttacksAgainst]]:
+    """The target's AttacksAgainst that count only for the allies of the
+    creature that gave them (Help), with their effect: for an attacker that
+    isn't the giver and isn't on the target's side (the target being the
+    giver's enemy), or, with no attacker known, each as a `when` the GM
+    judges ("the attacker is one of Edmund's allies")."""
+    from .triggers import on_party_side  # it imports this module
+
+    found = []
+    for effect, m in _effects_with_modifiers(target):
+        if not isinstance(m, AttacksAgainst) or not m.by_allies:
+            continue
+        caster = effect.get("caster")
+        if attacker is None:
+            who = f"one of {caster}'s allies" if caster else "an ally of its giver"
+            found.append((effect, replace(m, when=m.when or f"the attacker is {who}")))
+        elif attacker.get("name") != caster and on_party_side(
+            attacker
+        ) != on_party_side(target):
+            found.append((effect, m))
+    return found
 
 
 def _by_caster_against(
@@ -375,11 +450,15 @@ def used_up_by_attack(
             and m.once
             and not m.when
             and not m.by_caster
+            and not m.by_allies
         ]
         if attacker is not None:
             used += [
                 (target, effect["name"])
-                for effect, m in _by_caster_against(target, attacker)
+                for effect, m in [
+                    *_by_caster_against(target, attacker),
+                    *_by_allies_against(target, attacker),
+                ]
                 if m.once and not m.when
             ]
     unique: list[tuple[dict, str]] = []

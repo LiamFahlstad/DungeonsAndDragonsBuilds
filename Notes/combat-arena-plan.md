@@ -551,6 +551,34 @@ changed and undone a step at a time; Target who's in it with nobody and
 with the Pirate; End spell ending concentration, undone; the panel going
 when concentration ends.
 
+### Step 13: Dash and Opportunity Attacks (2026-11-15)
+
+The user: "in the combat ui I want to add actions like "dodge", "dash",
+"disengage", etc." The standard actions are Use / Cast rows
+(Model/Content/StandardActions.py, combat-effects-plan R168); two of them
+are about moving, so the map counts them.
+
+- `arena.py`: `DASHES_KEY` ("dashes", how many Dash actions this turn),
+  `movement_ft` (the walking speed in use times one plus that), which
+  `remaining_ft` and so the reach shaded now use; `reach_ft` (5 ft., a
+  stat block's longest "reach N ft.", 10 ft. with a Reach weapon); and
+  `opportunity_attackers`: enemies up, not Incapacitated, with their
+  Reaction, whose reach the walk's start was in and its end isn't. Only
+  the ends are known, so running past an enemy isn't caught (the path the
+  cheapest-walk search finds may not be the one taken).
+- The window: giving the Dash badge counts a Dash (`_take_dash`, a GM-only
+  line), ending it clears them, and a turn starting clears them too; the
+  move line and the warning count them ("15 of 60 ft. left this turn
+  (Dash)"). A walk on the mover's own turn out of an enemy's reach
+  reminds of the Opportunity Attack (status and a GM-only line), or says
+  "Disengaged" with the Disengage badge, or notes Flyby. A player's
+  `dashes` is kept with a fight in progress (`PLAYER_FIGHT_KEYS`).
+
+Tests: `tests/test_combat_ui_standard_actions.py` (the Dash on the map,
+two Dashes, the reminder, Disengage, a used Reaction, a 10-foot reach, a
+Dash ending with its badge, Undo), and a continued fight keeping a
+player's Dash (`tests/test_combat_ui_reopen_state.py`).
+
 ### Later (not scheduled)
 
 - **More distance rules**, each a `DistanceRule` and a line in `RULES`:
@@ -570,9 +598,11 @@ when concentration ends.
   the "within 5 feet" in Paralyzed's and Unconscious's automatic Critical
   Hits and Prone's Advantage, triggers that ask "within 5 feet" (Fire Shield)
   or 10 feet (Dark One's Blessing, combat-effects-plan Q63), a spell's range
-  checked as it's cast, Spirit Guardians' aura, Opportunity Attacks prompted
-  as a creature leaves reach. Each still asks when either creature is off the
-  map.
+  checked as it's cast, Spirit Guardians' aura. Each still asks when either
+  creature is off the map. Opportunity Attacks are reminded of as a walk
+  leaves reach (step 13); still later: a walk that passes through a reach,
+  or leaves and comes back (the path isn't kept), Sentinel and Polearm
+  Master's entering reach.
 - **Areas of effect**: built in steps 10 and 11. Still later: a creature
   entering an area, or starting its turn in it, prompting its effect (Q12;
   a reminder now); moving an area that stays (Moonbeam's Magic action,

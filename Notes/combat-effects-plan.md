@@ -902,7 +902,7 @@ with one list, `char["active_effects"]`, of plain dicts (Decision 5).
 |---|---|
 | `D20Bonus(rolls, amount, ability=None)` | Bless (+1d4 attack and saves), Bane (-1d4), Guidance |
 | `D20Mode(rolls, mode, ability=None)` | Restrained (Disadvantage on DEX saves and attacks), Dodge |
-| `AttacksAgainst(mode)` | Faerie Fire, Restrained, Blinded, Dodge |
+| `AttacksAgainst(mode)` | Faerie Fire, Restrained, Blinded, Dodge (`seen_attacker`, R168) |
 | `ArmorClass(bonus)` | Shield (+5), Shield of Faith (+2), Haste (+2) |
 | `Resistance(types)` / `Immunity` / `Vulnerability` | Rage, Absorb Elements, Protection from Energy (only `Resistance` was built in 3.3; the rest is Phase 7) |
 | `ExtraDamageFrom(amount, damage_type, attacks, when)` | Hunter's Mark, Hex: on the target, "hits from the caster deal 1d6 more" (the record's `caster`, R42) |
@@ -2803,6 +2803,35 @@ roll, and stays as it is.
   path calls them now, but many tests use them to put a spell's or a
   feature's badge on. Where the entries above say "Cast Spell" or "Enable
   Feature", that is history.
+
+- **R168. The standard actions, in one place** (2026-11-15, the user: "add
+  actions like dodge, dash, disengage, etc. Consolidate the rules").
+  `Model/Content/StandardActions.py` has each action's Rules Glossary text
+  and its effect: Dodge, Dash and Disengage badges, Help on an enemy
+  (`AttacksAgainst(ADVANTAGE, once=True, by_allies=True)`: the new
+  `by_allies`, the reverse of `by_caster`, counts only for an attacker
+  that isn't the helper nor on the enemy's side) or an ally (an ability check's
+  Advantage, a `when`), Hide as a Hidden badge standing for Invisible
+  (linked like a spell's badge; its `once` Advantage on its next attack
+  roll ends both), Ready, and Influence, Search, Study and Utilize with
+  nothing to give. The picker lists them for everyone under "Standard
+  Actions" (a `STANDARD_ACTION` row, tracked, so one with nothing to give
+  still spends its Action and logs "takes the Search action"). Patient
+  Defense, Step of the Wind and Cunning Action give the same badges, now a
+  row per way to use them (Patient Defense: Disengage free, Disengage and
+  Dodge for a Focus Point). Dodge's "if you can see the attacker" is a new
+  `AttacksAgainst.seen_attacker`: counted, except against an Invisible
+  attacker or for a Blinded dodger, where it's the `when` it was; this
+  replaces Patient Defense's uncounted `when`. Its "you lose these benefits
+  if Incapacitated or Speed 0" is `loses_dodge`: its modifiers don't count
+  then, and the UI ends the badge when such a condition lands. A row
+  giving several conditions that each end at a turn keeps each one's own
+  (`EffectOption.condition_untils`, while the dialog's Duration is left as
+  picked): Patient Defense's Disengage ends with the turn, its Dodge at the
+  start of the next. Found in review: Help counted for the helper itself,
+  Patient Defense's Disengage outlasted its turn. The map's
+  side (Dash movement, Opportunity Attack reminders) is combat-arena-plan
+  step 13.
 
 ## Open questions (with suggestions)
 

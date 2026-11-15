@@ -1,3 +1,5 @@
+from dataclasses import replace
+
 from Model.Content.Feature import (
     ActionType,
     Feature,
@@ -24,6 +26,14 @@ from Model.View import CharacterView
 from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table, dc_formula
 from Model.Content.CombatEffect import CombatCondition, TurnEdge, TurnOf
 from Model.Content.CombatModifiers import D20Mode, D20Test, RollMode, Speed
+from Model.Content.StandardActions import (
+    DASH,
+    DISENGAGE,
+    HIDE,
+    dash,
+    disengage,
+    hide,
+)
 
 
 class Expertise(Feature):
@@ -222,9 +232,12 @@ class CunningAction(Feature):
         return FeatureTarget.SELF
 
     def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
-        # Dash, Disengage or Hide, its owner's own actions; Hide's
-        # Invisible needs its Stealth check, so it's given by hand.
-        return []
+        # The Dash, Disengage and Hide actions (StandardActions.py), as this
+        # feature's Bonus Action.
+        return [
+            replace(action(ActionType.BONUS_ACTION), name=f"Cunning Action: {name}")
+            for name, action in ((DASH, dash), (DISENGAGE, disengage), (HIDE, hide))
+        ]
 
 
 class SteadyAim(Feature):

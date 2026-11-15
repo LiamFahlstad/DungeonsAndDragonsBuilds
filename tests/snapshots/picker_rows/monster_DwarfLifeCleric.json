@@ -129,6 +129,408 @@
    "summary": "heals 2d4 + 4",
    "until": null,
    "upcast": []
+  },
+  "Standard Actions | Dash": {
+   "ability": null,
+   "action_cost": "Action",
+   "amount_kind": "Damage",
+   "badge_modifiers": {
+    "Dash": [
+     {
+      "text": "Extra movement this turn, equal to its Speed, for each Dash taken.",
+      "type": "Note"
+     }
+    ]
+   },
+   "bonus": null,
+   "concentration": false,
+   "condition": "Dash",
+   "counts_uses": false,
+   "damage": "",
+   "dc": null,
+   "duration_seconds": null,
+   "feature_name": "",
+   "half_on_save": false,
+   "is_described": true,
+   "is_unavailable": false,
+   "note": "It goes on its user, whoever is targeted.",
+   "repeat_save": false,
+   "roll": "Saving throw",
+   "row_name": "",
+   "slot_level": "None",
+   "spell_level": 0,
+   "spell_name": "",
+   "summary": "",
+   "targets_self": true,
+   "until": [
+    "end",
+    "current"
+   ],
+   "upcast": []
+  },
+  "Standard Actions | Disengage": {
+   "ability": null,
+   "action_cost": "Action",
+   "amount_kind": "Damage",
+   "badge_modifiers": {
+    "Disengage": [
+     {
+      "text": "Its movement doesn't provoke Opportunity Attacks this turn.",
+      "type": "Note"
+     }
+    ]
+   },
+   "bonus": null,
+   "concentration": false,
+   "condition": "Disengage",
+   "counts_uses": false,
+   "damage": "",
+   "dc": null,
+   "duration_seconds": null,
+   "feature_name": "",
+   "half_on_save": false,
+   "is_described": true,
+   "is_unavailable": false,
+   "note": "It goes on its user, whoever is targeted.",
+   "repeat_save": false,
+   "roll": "Saving throw",
+   "row_name": "",
+   "slot_level": "None",
+   "spell_level": 0,
+   "spell_name": "",
+   "summary": "",
+   "targets_self": true,
+   "until": [
+    "end",
+    "current"
+   ],
+   "upcast": []
+  },
+  "Standard Actions | Dodge": {
+   "ability": null,
+   "action_cost": "Action",
+   "amount_kind": "Damage",
+   "badge_modifiers": {
+    "Dodge": [
+     {
+      "mode": "Disadvantage",
+      "seen_attacker": true,
+      "type": "AttacksAgainst"
+     },
+     {
+      "abilities": [
+       "Dexterity"
+      ],
+      "mode": "Advantage",
+      "tests": [
+       "saving throw"
+      ],
+      "type": "D20Mode"
+     },
+     {
+      "text": "It ends early if it has the Incapacitated condition or its Speed is 0.",
+      "type": "Note"
+     }
+    ]
+   },
+   "bonus": null,
+   "concentration": false,
+   "condition": "Dodge",
+   "counts_uses": false,
+   "damage": "",
+   "dc": null,
+   "duration_seconds": null,
+   "feature_name": "",
+   "half_on_save": false,
+   "is_described": true,
+   "is_unavailable": false,
+   "note": "It goes on its user, whoever is targeted.",
+   "repeat_save": false,
+   "roll": "Saving throw",
+   "row_name": "",
+   "slot_level": "None",
+   "spell_level": 0,
+   "spell_name": "",
+   "summary": "",
+   "targets_self": true,
+   "until": [
+    "start",
+    "source"
+   ],
+   "upcast": []
+  },
+  "Standard Actions | Help: Assist an Ability Check": {
+   "ability": null,
+   "action_cost": "Action",
+   "amount_kind": "Damage",
+   "badge_modifiers": {
+    "Help": [
+     {
+      "mode": "Advantage",
+      "tests": [
+       "ability check"
+      ],
+      "type": "D20Mode",
+      "when": "it uses the skill or tool the helper chose"
+     },
+     {
+      "text": "For its next ability check with that skill or tool.",
+      "type": "Note"
+     }
+    ]
+   },
+   "bonus": null,
+   "concentration": false,
+   "condition": "Help",
+   "counts_uses": false,
+   "damage": "",
+   "dc": null,
+   "duration_seconds": null,
+   "feature_name": "",
+   "half_on_save": false,
+   "is_described": true,
+   "is_unavailable": false,
+   "note": "Target the ally; choose one of the helper's skill or tool proficiencies.",
+   "repeat_save": false,
+   "roll": "Saving throw",
+   "row_name": "",
+   "slot_level": "None",
+   "spell_level": 0,
+   "spell_name": "",
+   "summary": "Help",
+   "until": [
+    "start",
+    "source"
+   ],
+   "upcast": []
+  },
+  "Standard Actions | Help: Assist an Attack Roll": {
+   "ability": null,
+   "action_cost": "Action",
+   "amount_kind": "Damage",
+   "badge_modifiers": {
+    "Help": [
+     {
+      "by_allies": true,
+      "mode": "Advantage",
+      "once": true,
+      "type": "AttacksAgainst"
+     }
+    ]
+   },
+   "bonus": null,
+   "concentration": false,
+   "condition": "Help",
+   "counts_uses": false,
+   "damage": "",
+   "dc": null,
+   "duration_seconds": null,
+   "feature_name": "",
+   "half_on_save": false,
+   "is_described": true,
+   "is_unavailable": false,
+   "note": "Target the enemy, within 5 feet of the helper.",
+   "repeat_save": false,
+   "roll": "Saving throw",
+   "row_name": "",
+   "slot_level": "None",
+   "spell_level": 0,
+   "spell_name": "",
+   "summary": "Help",
+   "until": [
+    "start",
+    "source"
+   ],
+   "upcast": []
+  },
+  "Standard Actions | Hide": {
+   "ability": null,
+   "action_cost": "Action",
+   "amount_kind": "Damage",
+   "badge_modifiers": {
+    "Hidden": [
+     {
+      "mode": "Advantage",
+      "once": true,
+      "tests": [
+       "attack roll"
+      ],
+      "type": "D20Mode"
+     },
+     {
+      "text": "It stops being hidden after it makes a sound louder than a whisper, an enemy finds it, it makes an attack roll, or it casts a spell with a Verbal component.",
+      "type": "Note"
+     }
+    ]
+   },
+   "bonus": null,
+   "concentration": false,
+   "condition": "Hidden + Invisible",
+   "counts_uses": false,
+   "damage": "",
+   "dc": null,
+   "duration_seconds": null,
+   "feature_name": "",
+   "half_on_save": false,
+   "is_described": true,
+   "is_unavailable": false,
+   "note": "It goes on its user, whoever is targeted. Apply it only on a DC 15 Dexterity (Stealth) check, made while Heavily Obscured or behind Three-Quarters or Total Cover and out of any enemy's line of sight. The check's total is the DC to find it (Wisdom (Perception)). On a failure, log the action spent alone.",
+   "repeat_save": false,
+   "roll": "Saving throw",
+   "row_name": "",
+   "slot_level": "None",
+   "spell_level": 0,
+   "spell_name": "",
+   "summary": "Hidden + Invisible",
+   "targets_self": true,
+   "until": null,
+   "upcast": []
+  },
+  "Standard Actions | Influence": {
+   "ability": null,
+   "action_cost": "Action",
+   "amount_kind": "Damage",
+   "bonus": null,
+   "concentration": false,
+   "condition": "",
+   "counts_uses": false,
+   "damage": "",
+   "dc": null,
+   "duration_seconds": null,
+   "feature_name": "",
+   "half_on_save": false,
+   "is_described": true,
+   "is_unavailable": false,
+   "note": "Roll the check at the table: DC 15 or the monster's Intelligence score, whichever is higher.",
+   "repeat_save": false,
+   "roll": "Saving throw",
+   "row_name": "",
+   "slot_level": "None",
+   "spell_level": 0,
+   "spell_name": "",
+   "summary": "",
+   "targets_self": true,
+   "until": null,
+   "upcast": []
+  },
+  "Standard Actions | Ready": {
+   "ability": null,
+   "action_cost": "Action",
+   "amount_kind": "Damage",
+   "badge_modifiers": {
+    "Ready": [
+     {
+      "text": "It holds its Reaction for the trigger it chose: an action, or a move up to its Speed. A readied spell is cast now and held with Concentration.",
+      "type": "Note"
+     }
+    ]
+   },
+   "bonus": null,
+   "concentration": false,
+   "condition": "Ready",
+   "counts_uses": false,
+   "damage": "",
+   "dc": null,
+   "duration_seconds": null,
+   "feature_name": "",
+   "half_on_save": false,
+   "is_described": true,
+   "is_unavailable": false,
+   "note": "It goes on its user, whoever is targeted. Name the trigger and the response in the dialog's notes. A readied spell is cast now: cast it too, holding Concentration.",
+   "repeat_save": false,
+   "roll": "Saving throw",
+   "row_name": "",
+   "slot_level": "None",
+   "spell_level": 0,
+   "spell_name": "",
+   "summary": "",
+   "targets_self": true,
+   "until": [
+    "start",
+    "source"
+   ],
+   "upcast": []
+  },
+  "Standard Actions | Search": {
+   "ability": null,
+   "action_cost": "Action",
+   "amount_kind": "Damage",
+   "bonus": null,
+   "concentration": false,
+   "condition": "",
+   "counts_uses": false,
+   "damage": "",
+   "dc": null,
+   "duration_seconds": null,
+   "feature_name": "",
+   "half_on_save": false,
+   "is_described": true,
+   "is_unavailable": false,
+   "note": "Roll the Wisdom check at the table.",
+   "repeat_save": false,
+   "roll": "Saving throw",
+   "row_name": "",
+   "slot_level": "None",
+   "spell_level": 0,
+   "spell_name": "",
+   "summary": "",
+   "targets_self": true,
+   "until": null,
+   "upcast": []
+  },
+  "Standard Actions | Study": {
+   "ability": null,
+   "action_cost": "Action",
+   "amount_kind": "Damage",
+   "bonus": null,
+   "concentration": false,
+   "condition": "",
+   "counts_uses": false,
+   "damage": "",
+   "dc": null,
+   "duration_seconds": null,
+   "feature_name": "",
+   "half_on_save": false,
+   "is_described": true,
+   "is_unavailable": false,
+   "note": "Roll the Intelligence check at the table.",
+   "repeat_save": false,
+   "roll": "Saving throw",
+   "row_name": "",
+   "slot_level": "None",
+   "spell_level": 0,
+   "spell_name": "",
+   "summary": "",
+   "targets_self": true,
+   "until": null,
+   "upcast": []
+  },
+  "Standard Actions | Utilize": {
+   "ability": null,
+   "action_cost": "Action",
+   "amount_kind": "Damage",
+   "bonus": null,
+   "concentration": false,
+   "condition": "",
+   "counts_uses": false,
+   "damage": "",
+   "dc": null,
+   "duration_seconds": null,
+   "feature_name": "",
+   "half_on_save": false,
+   "is_described": true,
+   "is_unavailable": false,
+   "note": "Using an object that takes an action.",
+   "repeat_save": false,
+   "roll": "Saving throw",
+   "row_name": "",
+   "slot_level": "None",
+   "spell_level": 0,
+   "spell_name": "",
+   "summary": "",
+   "targets_self": true,
+   "until": null,
+   "upcast": []
   }
  }
 }

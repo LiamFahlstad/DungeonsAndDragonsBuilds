@@ -27,6 +27,10 @@ from Model.Content.CombatEffect import (
 )
 from Model.Content.CombatModifiers import ArmorClass, WhenHit
 from Model.Content.CombatTriggers import CombatTrigger, TriggerAim, TriggerEvent
+from Model.Content.StandardActions import (
+    standard_action_effects,
+    standard_action_rules,
+)
 from Model.Content.WeaponMasteryEffects import (
     MASTERY_RULES,
     mastery_effects,
@@ -57,6 +61,7 @@ from .saves import (
     MONSTER_ACTION,
     SAVING_THROW,
     SPELL,
+    STANDARD_ACTION,
     TEMP_HP,
     WEAPON,
     EffectOption,
@@ -73,6 +78,7 @@ from .saves import (
 ATTACKS = "Attacks"
 FEATURES = "Features"
 TRAITS = "Traits"  # a monster's, only those with combat effects written on them
+STANDARD_ACTIONS = "Standard Actions"  # Dodge, Dash, Help, ...: everyone's
 ALL_SPELLS = "All spells"
 # The long category, which starts folded away. Features start open: passive
 # ones aren't listed, nor those with nothing to apply (Feature.combat_effects).
@@ -1581,6 +1587,11 @@ def _described_option(
             instances.upcast if instances is not None and level > 0 else 0
         ),
         badge_modifiers=tuple((c.name, c.modifiers) for c in conditions if c.modifiers),
+        condition_untils=(
+            tuple((c.name, c.until) for c in conditions if c.until is not None)
+            if len(conditions) > 1 and conditions[0].until is not None
+            else ()
+        ),
         ends_conditions=effect.ends_conditions,
         targets_self=effect.targets_self,
         target_count=effect.targets.count if effect.targets is not None else None,
@@ -1598,7 +1609,9 @@ def _described_option(
 
 def _condition_notes(conditions: tuple[CombatCondition, ...]) -> list[str]:
     """What the form can't hold about several conditions: it gives them one
-    duration, the first's."""
+    duration, the first's. One that lasts until a turn when the first does
+    too keeps its own (EffectOption.condition_untils: Patient Defense's
+    Disengage ends with the turn, its Dodge at the start of the next)."""
     first, *others = conditions or (None,)
     if first is None:
         return []
@@ -1606,6 +1619,7 @@ def _condition_notes(conditions: tuple[CombatCondition, ...]) -> list[str]:
         c.name
         for c in others
         if (c.until, c.duration_seconds) != (first.until, first.duration_seconds)
+        and (c.until is None or first.until is None)
     ]
     if not differ:
         return []
@@ -1747,6 +1761,7 @@ def effect_options(
             [o for s in own_spells for o in spell_options(s, who)],
         ),
         (FEATURES, [o for feature in features for o in feature_options(who, feature)]),
+        (STANDARD_ACTIONS, standard_action_options(who)),
         # A caster's own spell is listed even with nothing to apply: picking
         # it still spends the slot and the action, and holds Concentration.
         (
@@ -1760,6 +1775,26 @@ def effect_options(
         ),
     ]
     return [(title, options) for title, options in categories if options]
+
+
+def standard_action_options(char: dict) -> list[EffectOption]:
+    """The actions every creature can take (Model/Content/StandardActions.py),
+    each spending an Action: Dash, Disengage, Dodge, Help, Hide, ... One
+    that puts nothing on anyone (Search) needs no target and says only its
+    own notes."""
+    options = []
+    for effect in standard_action_effects():
+        option = _described_option(
+            char,
+            effect,
+            name=effect.name,
+            kind=STANDARD_ACTION,
+            tooltip=standard_action_rules(effect.name),
+        )
+        if not effect.conditions:
+            option = replace(option, note=" ".join(effect.notes))
+        options.append(option)
+    return options
 
 
 def trigger_option(
