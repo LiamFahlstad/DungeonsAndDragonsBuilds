@@ -62,6 +62,13 @@ PLAYER_FIGHT_KEYS = (
     # (Combat/Arena/arena.py's POSITION_KEY and MOVED_KEY).
     "position",
     "moved_ft",
+    # What they've spent of their turn (an Action, their Reaction), and what
+    # the attack rolls against them tell of their AC (attack_rolls.py).
+    # Their in-fight "stats" aren't kept here: replaying the party's history
+    # rebuilds them, the ones they earn as the source too.
+    "action_uses",
+    "ac_above",
+    "ac_at_most",
 )
 # The fight's battle map settings (Combat/Arena/arena.py, ArenaSettings).
 ARENA_KEY = "arena"

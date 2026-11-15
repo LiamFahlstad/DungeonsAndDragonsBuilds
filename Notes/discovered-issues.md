@@ -25,16 +25,6 @@ A 20/20 creature with 10 temp HP takes 70: it ends at 0 HP and 'dying'. 2024 rul
 **History**
 - 2026-10-28 rules-checker: found
 
-### DI-003 · Damage at 0 HP adds no failed death save and doesn't end Stable
-- **Status:** open
-- **Area:** combat-simulator
-- **Where:** `Combat/CombatUIQt/damage_mixin.py:_do_apply_damage`
-
-A dying creature at 0 HP takes 3 damage: failures stay 0. A stable creature that is hit stays stable. 2024 rule (Playing the Game > Damage at 0 Hit Points): 1 failed save, 2 on a Critical Hit, death if the damage >= HP maximum. The UI has no crit flag, so at least add 1 failure (and clear Stable) when pre_hp <= 0 and dmg > 0.
-
-**History**
-- 2026-10-28 rules-checker: found
-
 ### DI-005 · No buttons for a natural 20 or natural 1 on a death save
 - **Status:** open
 - **Area:** combat-simulator
@@ -599,6 +589,19 @@ _apply_temp_hp adds new temp HP to the old (5 + 8 = 13); replay does the same. 2
 - 2026-10-28 main-session: marked fixed; Temp HP keep max(old, new) live and on replay; log line says which amount was kept (uncommitted)
 - 2026-10-28 main-session: Committed in ff16d3a1
 
+### DI-003 · Damage at 0 HP adds no failed death save and doesn't end Stable
+- **Status:** fixed · 2026-11-15 · uncommitted
+- **Area:** combat-simulator
+- **Where:** `Combat/CombatUIQt/damage_mixin.py:_do_apply_damage`
+
+A dying creature at 0 HP takes 3 damage: failures stay 0. A stable creature that is hit stays stable. 2024 rule (Playing the Game > Damage at 0 Hit Points): 1 failed save, 2 on a Critical Hit, death if the damage >= HP maximum. The UI has no crit flag, so at least add 1 failure (and clear Stable) when pre_hp <= 0 and dmg > 0.
+
+**History**
+- 2026-10-28 rules-checker: found
+- 2026-11-15 combat-ui-tester: Still reproduces on 2026-11-15 through the UI (combat-ui-explore): ashelm_church, Thum Schtock dropped to 0 (Unconscious, death saves 0/0), then 3 bludgeoning from Accursed Group of 3 via the Damage field + _apply_damage: hp 0, death saves stay 0/0, the log has only 'takes 3 Bludgeoning damage'. A crit flag is now available on the Use / Cast path (an attack roll of 'nat 20' / AttackRoll.is_critical), so the two-failure case could be done there.
+- 2026-11-15 combat-simulator: marked in-progress; Fixing
+- 2026-11-15 combat-simulator: marked fixed; _deal_damage takes critical= (the Damage field's typed/pending attack roll, the Use / Cast roll's is_critical); damage > 0 to a dying or Stable creature that makes death saves calls DamageMixin._damage_at_zero_hp: 1 failure, 2 on a crit, 3 (dead) if the hit's damage >= hit_point_maximum; Stable ends (both counts reset, then the failures). Logged as DEATH_SAVE_FAIL with a dict value {newly_dead, failures, ends_stable, massive}; _apply_replay_action and compute_player_log_stats (stats.death_save_fail_kills) read it, old bool values unchanged. Undo is the step's snapshot.
+
 ### DI-004 · Unconscious isn't applied at 0 HP
 - **Status:** fixed · 2026-10-28 · uncommitted
 - **Area:** combat-simulator
@@ -1010,6 +1013,31 @@ Allies such as Greypaw and Harat in Wrath of Durmor had no marker in their log's
 **History**
 - 2026-11-14 main session (Claude Opus 5.5): found
 - 2026-11-14 main session (Claude Opus 5.5): marked fixed; Fixed in the arena plan's R9 (not yet committed)
+
+### DI-093 · Combat UI: continuing a fight mid-turn forgets a player's spent action and their damage-dealt stats
+- **Status:** fixed · 2026-11-15 · uncommitted
+- **Area:** combat-simulator
+- **Where:** `Combat/CombatUIQt/logging_mixin.py:245`, `Combat/EncounterLogs.py:57`
+
+Not yet triaged: may be intended. Repro (combat-ui-explore harness, temp encounter + party log): Session('ashelm_church'), start, Obmar casts Fire Bolt (use_cast) on Accursed Group of 3 and hits for 7, then replay_matches() (a fresh CombatAppQt continuing the same log, as the next launch does). The reopened Obmar has action_uses {} instead of {'Action': 1} (he can act again on the turn he already acted), and stats.damage_dealt / damage_dealt_fire 0 instead of 7. Monsters come back from the log's combatants snapshot; players from PLAYER_FIGHT_KEYS (active_spells, concentration_checks, active effects, position, moved_ft) plus the party-log replay, and neither carries action_uses or the in-fight stats. Check whether the Statistics dialog after reopening undercounts, and whether the spent action should be saved with the turn. Fix if real: add the keys to PLAYER_FIGHT_KEYS or rebuild them from the round's events.
+
+**History**
+- 2026-11-15 main session (combat-ui-explore harness): found
+- 2026-11-15 combat-ui-tester: Triaged: real bug, not intended. Players and monsters disagree: a monster's action_uses (and stats, ac_at_most/ac_above) come back from the log's combatants snapshot (_write_log keeps every non-_ key), a player's only through PLAYER_FIGHT_KEYS (EncounterLogs.py:57), which omits action_uses, ac_at_most/ac_above and stats; _take_combatants_from (logging_mixin.py:288) restores nothing else, and _replay_player_log only replays entries whose 'character' is a player, so damage a player deals to a monster never reaches the player's stats. Minimal repro (fixed dice d20=15, others max): ashelm_church, start with Obmar first, Fire Bolt on Accursed Group of 3 (hit, 10 fire), advance to the Group's turn, _add_action_use('Action', group) and _add_action_use('Reaction', obmar). Live: Obmar action_uses {'Action': 1, 'Reaction': 1}, action_lack(obmar,'Reaction') = 'Reaction: already used'; group {'Action': 1}. Reopened (fresh CombatAppQt on the same encounter + party log): group still {'Action': 1} and 'already used', Obmar action_uses None and action_lack None (Shield / an opportunity attack would go through without the 'already used' question); Obmar stats.damage_dealt 10 -> 0, damage_dealt_fire 10 -> 0; ac_at_most 19 (from a monster hit) gone. Contract broken: conditions_mixin.py _add_action_use's docstring 'Tallies reset when it becomes that combatant's turn again'. Statistics: the Encounter tabs read char['stats'] (dialogs_mixin.py _show_statistics/_stats_for), so after a reopen they show Obmar Damage Dealt 0; the Players (lifetime) tabs recompute from the logs (_compute_player_log_stats) and stay right (Obmar damage_dealt 10). Fix: add 'action_uses', 'ac_above', 'ac_at_most' to PLAYER_FIGHT_KEYS; for stats, either keep a player's in-fight stats in player_fight_state too, or rebuild a player's source-side stats (damage_dealt, healing_done, conditions_given, temp_hp_granted, knockouts) in _replay_player_log from entries whose source_name is a player even when 'character' isn't one (stats.py compute_player_log_stats already does this).
+- 2026-11-15 combat-simulator: marked in-progress; Fixing
+- 2026-11-15 combat-simulator: marked fixed; PLAYER_FIGHT_KEYS (EncounterLogs.py) now also keeps action_uses, ac_above, ac_at_most. _replay_player_log credits a player's source-side stats (damage_dealt and per type, knockouts, healing_done, temp_hp_granted, conditions_given) for every event whose source_name is a player, whoever it's on, through stats.credit_source, which compute_player_log_stats now uses too. _apply_replay_action no longer credits sources (it credited any character found by name, monsters included, whose stats already come from the combatants snapshot). Stats are not saved in player_fight_state. Tests: tests/test_combat_ui_reopen_state.py.
+
+### DI-094 · Combat UI: a spell's badge (counted=False) is counted as a condition once the log is replayed: reopened fight and lifetime stats disagree with the live count
+- **Status:** fixed · 2026-11-15 · uncommitted
+- **Area:** combat-simulator
+- **Where:** `Combat/CombatUIQt/conditions_mixin.py:514`, `Combat/CombatUIQt/conditions_mixin.py:1335`, `Combat/CombatUIQt/logging_mixin.py:538`, `Combat/CombatUIQt/stats.py:163`
+
+Repro (combat-ui-explore, fixed dice d20=2, others max): Session('ashelm_church'), start, '(1) Accursed Group of 5' Use / Cast 'Hold Person' on Clover (she fails, gets Paralyzed + the 'Hold Person' badge). Live: Clover stats conditions_received 1 {'Paralyzed': 1}; the caster's conditions_given_by_name {'Concentrating': 1, 'Paralyzed': 1}. Reopened (fresh CombatAppQt on the same logs): Clover conditions_received 2 {'Paralyzed': 1, 'Hold Person': 1}. Statistics' Players (lifetime) tab, _compute_player_log_stats: Clover 2 incl. 'Hold Person', the caster conditions_given 3 incl. 'Hold Person'. Expected (the code's contract, _add_condition_to's docstring): a spell's badge beside the conditions it gave 'aren't one more condition' and isn't counted; the replay must agree with the live count. Cause: _add_condition_to(counted=False) skips the stats but logs the same Action.ADD_CONDITION value ({'condition','source_name','target_name'}) as a counted one, and both _apply_replay_action and stats.compute_player_log_stats count every ADD_CONDITION. Fix: put 'counted': False in cond_value when not counted and skip the counting for it in both replays (old logs: no key = counted). Side note for whoever fixes it: Concentrating is counted as a condition given to and received by the caster itself (live and replayed); probably not meant as a 'condition given' either.
+
+**History**
+- 2026-11-15 combat-ui-tester: found
+- 2026-11-15 combat-simulator: marked in-progress; Fixing
+- 2026-11-15 combat-simulator: marked fixed; _add_condition_to(counted=False) logs 'counted': False; stats.is_counted_condition skips it in _apply_replay_action and compute_player_log_stats (no key = counted, old logs). Concentrating still counts as a condition the caster gives itself and receives (live and replayed): left as is, it's a live-behaviour change, not this fix.
 
 ## Won't fix
 

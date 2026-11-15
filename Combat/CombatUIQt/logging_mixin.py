@@ -37,9 +37,11 @@ from .stats import (
     STAT_KEYS,
     _default_stats,
     compute_player_log_stats,
-    damage_dealt_key,
+    credit_source,
     damage_taken_key,
+    event_source_name,
     increment_named_stat,
+    is_counted_condition,
     long_rest_archive_sessions,
     spell_slots_used_key,
 )
@@ -479,13 +481,21 @@ class LoggingMixin(CombatWindowState):
                 for entry in session[key]:
                     if not isinstance(entry, dict) or "action" not in entry:
                         continue
+                    action, value = entry["action"], entry["value"]
+                    # What a player earns as its source (the damage they
+                    # dealt), whoever it's on. A monster's own stats come
+                    # back with it from its encounter log's "combatants".
+                    source = players_by_name.get(event_source_name(action, value))
+                    if source is not None:
+                        stats = source.setdefault("stats", _default_stats())
+                        credit_source(stats, action, value)
                     char = players_by_name.get(entry.get("character"))
-                    if char is None:
-                        continue
-                    self._apply_replay_action(char, entry["action"], entry["value"])
+                    if char is not None:
+                        self._apply_replay_action(char, action, value)
 
     def _apply_replay_action(self, char: dict, action: str, value):
-        """Forward-apply one recorded player-log action to a character."""
+        """Forward-apply one recorded player-log action to the character it's
+        on. What it credits its source with is _replay_player_log's."""
         if action == Action.DAMAGE:
             char["hp"] += value["hp_delta"]
             char["temp_hp"] += value["temp_delta"]
@@ -500,22 +510,6 @@ class LoggingMixin(CombatWindowState):
                 )
             if value.get("knockout"):
                 char["stats"]["times_downed"] = char["stats"].get("times_downed", 0) + 1
-            if value.get("source_name"):
-                source = self._find_character_by_name(value["source_name"])
-                if source is not None:
-                    source.setdefault("stats", _default_stats())
-                    source["stats"]["damage_dealt"] = (
-                        source["stats"].get("damage_dealt", 0) + value["dmg"]
-                    )
-                    if value.get("damage_type"):
-                        type_key = damage_dealt_key(value["damage_type"])
-                        source["stats"][type_key] = (
-                            source["stats"].get(type_key, 0) + value["dmg"]
-                        )
-                    if value.get("knockout"):
-                        source["stats"]["knockouts"] = (
-                            source["stats"].get("knockouts", 0) + 1
-                        )
             self._apply_bloodied_condition(char)
         elif action == Action.HEAL:
             was_downed = self._char_death_state(char) != "alive"
@@ -527,13 +521,6 @@ class LoggingMixin(CombatWindowState):
             if was_downed and char["hp"] > 0:
                 char["death_saves_fail"] = 0
                 char["death_saves_success"] = 0
-            if value.get("source_name"):
-                source = self._find_character_by_name(value["source_name"])
-                if source is not None:
-                    source.setdefault("stats", _default_stats())
-                    source["stats"]["healing_done"] = (
-                        source["stats"].get("healing_done", 0) + value["heal"]
-                    )
             self._apply_bloodied_condition(char)
         elif action == Action.ADD_CONDITION:
             # Older logs stored the condition name as a plain string.
@@ -541,21 +528,11 @@ class LoggingMixin(CombatWindowState):
             if cond not in char["conditions"]:
                 char["conditions"].append(cond)
             char.setdefault("stats", _default_stats())
-            char["stats"]["conditions_received"] = (
-                char["stats"].get("conditions_received", 0) + 1
-            )
-            increment_named_stat(char["stats"], "conditions_received_by_name", cond)
-            source_name = value.get("source_name") if isinstance(value, dict) else None
-            if source_name:
-                source = self._find_character_by_name(source_name)
-                if source is not None:
-                    source.setdefault("stats", _default_stats())
-                    source["stats"]["conditions_given"] = (
-                        source["stats"].get("conditions_given", 0) + 1
-                    )
-                    increment_named_stat(
-                        source["stats"], "conditions_given_by_name", cond
-                    )
+            if is_counted_condition(value):
+                char["stats"]["conditions_received"] = (
+                    char["stats"].get("conditions_received", 0) + 1
+                )
+                increment_named_stat(char["stats"], "conditions_received_by_name", cond)
         elif action == Action.REMOVE_CONDITION:
             cond = value["condition"] if isinstance(value, dict) else value
             if cond in char["conditions"]:
@@ -580,7 +557,14 @@ class LoggingMixin(CombatWindowState):
             char["stats"]["spells_cast"] = char["stats"].get("spells_cast", 0) + 1
             increment_named_stat(char["stats"], "spells_cast_by_name", spell_name)
         elif action == Action.DEATH_SAVE_FAIL:
-            char["death_saves_fail"] = min(char.get("death_saves_fail", 0) + 1, 3)
+            if isinstance(value, dict):
+                # Damage taken at 0 Hit Points (DamageMixin._damage_at_zero_hp).
+                if value.get("ends_stable"):
+                    char["death_saves_fail"] = char["death_saves_success"] = 0
+                fails = char.get("death_saves_fail", 0) + value.get("failures", 1)
+                char["death_saves_fail"] = 3 if value.get("massive") else min(fails, 3)
+            else:
+                char["death_saves_fail"] = min(char.get("death_saves_fail", 0) + 1, 3)
             if char["death_saves_fail"] >= 3:
                 char.setdefault("stats", _default_stats())
                 char["stats"]["deaths"] = char["stats"].get("deaths", 0) + 1
@@ -595,14 +579,6 @@ class LoggingMixin(CombatWindowState):
                 char["stats"]["temp_hp_received"] = (
                     char["stats"].get("temp_hp_received", 0) + amount
                 )
-                source_name = value.get("source_name")
-                if source_name:
-                    source = self._find_character_by_name(source_name)
-                    if source is not None:
-                        source.setdefault("stats", _default_stats())
-                        source["stats"]["temp_hp_granted"] = (
-                            source["stats"].get("temp_hp_granted", 0) + amount
-                        )
             else:
                 char["temp_hp"] = max(char.get("temp_hp", 0), value)
         elif action == Action.LOSE_HIT_POINTS:

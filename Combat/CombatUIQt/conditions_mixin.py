@@ -516,6 +516,10 @@ class ConditionsMixin(CombatWindowState):
                 "source_name": source_name,
                 "target_name": char["name"],
             }
+            if not counted:
+                # So replaying it doesn't count it either (stats.py's
+                # is_counted_condition).
+                cond_value["counted"] = False
             source_suffix = (
                 f" from {source_name}"
                 if source_name and source_name != char["name"]
@@ -914,7 +918,12 @@ class ConditionsMixin(CombatWindowState):
             dealt = 0
             if damage and not avoided:
                 dealt = self._deal_damage(
-                    target, damage, source, effect.count_resistances, saved
+                    target,
+                    damage,
+                    source,
+                    effect.count_resistances,
+                    saved,
+                    critical=critical,
                 )
                 if not any(c is target for c in self.characters):
                     continue  # a summon that vanished at 0 HP

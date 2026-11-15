@@ -403,7 +403,14 @@ class DamageMixin(CombatWindowState):
                     continue
                 these = reduced_damage(parts, reduction)
             dealt = (
-                self._deal_damage(target, these, source, check_resistance, saved)
+                self._deal_damage(
+                    target,
+                    these,
+                    source,
+                    check_resistance,
+                    saved,
+                    critical=attack is not None and attack.critical,
+                )
                 if these
                 else 0
             )
@@ -452,13 +459,17 @@ class DamageMixin(CombatWindowState):
         source: dict | None,
         check_resistance: bool,
         saved: bool,
+        critical: bool = False,
     ) -> int:
         """One hit on target, of each (amount, damage type) in parts, and what
-        the hit does to it: falling Unconscious, a Concentration save.
+        the hit does to it: falling Unconscious, a Concentration save, failed
+        Death Saving Throws if it's at 0 Hit Points already (two if the hit
+        is `critical`, see _damage_at_zero_hp).
         Returns the damage it took, after Resistance and Immunity. If it
         would drop target to 0 Hit Points, target is asked first about what
         it can drop to instead (_drops_to_instead: Relentless Endurance);
         if it does, the hit leaves it there, and it isn't knocked out."""
+        death_state = self._char_death_state(target)
         drops_to, notes = self._drops_to_instead(
             target, parts, source, check_resistance, saved
         )
@@ -483,6 +494,8 @@ class DamageMixin(CombatWindowState):
                 f"{target['name']} drops to {target['hp']} {points} instead of 0",
                 character=target["name"],
             )
+        if taken > 0 and death_state in ("dying", "stabilized"):
+            self._damage_at_zero_hp(target, taken, critical)
         self._note_health(target)
         # A summon whose spec says so vanishes at 0 HP (a drake), once
         # what it was concentrating on has ended.
@@ -872,6 +885,58 @@ class DamageMixin(CombatWindowState):
         self._remove_condition_from(char, Condition.UNCONSCIOUS.value)
         self._apply_bloodied_condition(char)
         self._rebuild_card(char)
+
+    def _damage_at_zero_hp(self, char: dict, damage: int, critical: bool):
+        """Char, dying or Stable at 0 Hit Points, took `damage` (2024 rules,
+        Damage at 0 Hit Points): one failed Death Saving Throw, two from a
+        Critical Hit, and death if it's at least char's Hit Point maximum.
+        A Stable creature stops being Stable: its saves start over (they
+        were reset as it became Stable) with these failures."""
+        ends_stable = self._char_death_state(char) == "stabilized"
+        if ends_stable:
+            char["death_saves_fail"] = char["death_saves_success"] = 0
+        failures = 2 if critical else 1
+        massive = damage >= hit_point_maximum(char)
+        pre_fail = char.get("death_saves_fail", 0)
+        char["death_saves_fail"] = 3 if massive else min(pre_fail + failures, 3)
+        newly_dead = pre_fail < 3 and char["death_saves_fail"] >= 3
+        if newly_dead:
+            char.setdefault("stats", _default_stats())
+            char["stats"]["deaths"] = char["stats"].get("deaths", 0) + 1
+        name = char["name"]
+        if massive:
+            text = (
+                f"{name} dies: {damage} damage at 0 HP is at least their"
+                " Hit Point maximum"
+            )
+        else:
+            saves = "2 death saves" if failures == 2 else "a death save"
+            crit = " (Critical Hit)" if critical else ""
+            stable = ", no longer Stable" if ends_stable else ""
+            text = (
+                f"{name} fails {saves} from damage at 0 HP{crit}{stable}"
+                f" ({char['death_saves_fail']}/3 fails)"
+            )
+            if newly_dead:
+                text += " and dies"
+        self._log_event(
+            text,
+            character=name,
+            action=Action.DEATH_SAVE_FAIL,
+            # A dict, unlike a rolled save's newly_dead, for the replay
+            # (LoggingMixin._apply_replay_action) to do the same.
+            value={
+                "newly_dead": newly_dead,
+                "failures": failures,
+                "ends_stable": ends_stable,
+                "massive": massive,
+                "target_name": name,
+            },
+        )
+        if newly_dead and "Concentrating" in char.get("conditions", []):
+            self._remove_condition_from(char, "Concentrating", source=char)
+        if newly_dead:
+            self._summons_die_with(char)
 
     @undoable
     def _apply_failed_death_save(self, char: dict):

@@ -292,6 +292,7 @@ class CombatWindowState:
         source: dict | None,
         check_resistance: bool,
         saved: bool,
+        critical: bool = False,
     ) -> int:
         raise NotImplementedError("DamageMixin._deal_damage")
 

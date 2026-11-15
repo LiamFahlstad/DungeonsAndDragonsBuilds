@@ -21,3 +21,5 @@
 2026-11-11: `sed -i` turns a CRLF file into LF in the main checkout too (whole-file diff). Use the Edit tool; if it happened, rewrite b"\n" as b"\r\n" with a scratch script and check `git diff --stat`.
 2026-11-11: The Settings dialog had room for one more checkbox only (test_the_settings_dialog_fits_the_smallest_window, 600 px, only the first column had slack). Measure in the test's environment: without QT_QPA_FONTDIR the heights are larger (796 vs 652).
 2026-11-11: Black moves a trailing `# pyright: ignore[...]` off the offending line when it reflows a tuple; after Black, rerun pyright on test files and put the comment on the argument's own line.
+2026-11-15: To prove a new regression test fails on the old code, export HEAD to the scratchpad (`git archive HEAD | tar -x -C <scratch>/head`), copy the new test in and run pytest there. Never swap HEAD's files into the shared tree, not even briefly: other agents edit and test in it at the same time.
+2026-11-15: run_tests.sh with a shell glob that matches nothing (tests/test_rest*.py) prints "no tests ran" for the whole run: list the existing files first.

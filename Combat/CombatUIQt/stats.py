@@ -74,6 +74,57 @@ def increment_named_stat(stats: dict, dict_key: str, name: str):
     by_name[name] = by_name.get(name, 0) + 1
 
 
+def _add_stat(stats: dict, key: str, amount: int):
+    stats[key] = stats.get(key, 0) + amount
+
+
+def is_counted_condition(value) -> bool:
+    """Whether a logged ADD_CONDITION counts in the stats: a spell's badge
+    beside the conditions it gave (Hold Person beside Paralyzed) is logged
+    with "counted": False and doesn't. Older logs, without it, count."""
+    return not (isinstance(value, dict) and value.get("counted") is False)
+
+
+def death_save_fail_kills(value) -> bool:
+    """Whether a logged DEATH_SAVE_FAIL is the one the creature dies of: its
+    value is that bool, or, for damage taken at 0 Hit Points, a dict with
+    "newly_dead" (DamageMixin._damage_at_zero_hp)."""
+    if isinstance(value, dict):
+        return bool(value.get("newly_dead"))
+    return bool(value)
+
+
+# The logged events that credit their "source_name" with a stat.
+_SOURCE_ACTIONS = (Action.DAMAGE, Action.HEAL, Action.ADD_TEMP_HP, Action.ADD_CONDITION)
+
+
+def event_source_name(action: str, value) -> str | None:
+    """Who the logged event (action, value) credits as its source, if anyone:
+    the one who dealt the damage, healed, granted the temporary Hit Points or
+    gave the condition."""
+    if action in _SOURCE_ACTIONS and isinstance(value, dict):
+        return value.get("source_name") or None
+    return None
+
+
+def credit_source(stats: dict, action: str, value):
+    """Add to `stats`, its source's, what the logged event (action, value)
+    credits the source with, as the fight did when it happened."""
+    if action == Action.DAMAGE:
+        _add_stat(stats, "damage_dealt", value["dmg"])
+        if value.get("damage_type"):
+            _add_stat(stats, damage_dealt_key(value["damage_type"]), value["dmg"])
+        if value.get("knockout"):
+            _add_stat(stats, "knockouts", 1)
+    elif action == Action.HEAL:
+        _add_stat(stats, "healing_done", value["heal"])
+    elif action == Action.ADD_TEMP_HP:
+        _add_stat(stats, "temp_hp_granted", value["amount"])
+    elif action == Action.ADD_CONDITION and is_counted_condition(value):
+        _add_stat(stats, "conditions_given", 1)
+        increment_named_stat(stats, "conditions_given_by_name", value["condition"])
+
+
 def long_rest_archives(player_log_path: str | Path) -> list[Path]:
     """The files long rests archived this player log to, oldest first (the
     timestamp in the name sorts chronologically)."""
@@ -107,7 +158,8 @@ def compute_player_log_stats(player_log_data: dict) -> dict[str, dict]:
     """Aggregate lifetime stats per character name from every session in a
     player log dict (as loaded from a Combat/Campaigns/<Campaign>/PlayerLogs/*.json file). Mirrors
     the forward-apply logic in logging_mixin.py's _apply_replay_action, but
-    accumulates into plain stat dicts instead of mutating character objects."""
+    accumulates into plain stat dicts instead of mutating character objects.
+    What a source is credited with comes from credit_source, as there."""
     stats_by_name: dict[str, dict] = {}
 
     def stats_for(name: str) -> dict:
@@ -129,6 +181,10 @@ def compute_player_log_stats(player_log_data: dict) -> dict[str, dict]:
                 action = entry["action"]
                 value = entry["value"]
                 character = entry.get("character")
+                if character:
+                    source_name = event_source_name(action, value)
+                    if source_name:
+                        credit_source(stats_for(source_name), action, value)
                 if action == Action.DAMAGE and character:
                     s = stats_for(character)
                     s["damage_taken"] += value["dmg"]
@@ -136,46 +192,28 @@ def compute_player_log_stats(player_log_data: dict) -> dict[str, dict]:
                         s[damage_taken_key(value["damage_type"])] += value["dmg"]
                     if value.get("knockout"):
                         s["times_downed"] += 1
-                    source_name = value.get("source_name")
-                    if source_name:
-                        stats_for(source_name)["damage_dealt"] += value["dmg"]
-                        if value.get("damage_type"):
-                            type_key = damage_dealt_key(value["damage_type"])
-                            stats_for(source_name)[type_key] += value["dmg"]
-                        if value.get("knockout"):
-                            stats_for(source_name)["knockouts"] += 1
                 elif action == Action.HEAL and character:
-                    s = stats_for(character)
-                    s["healing_received"] += value["heal"]
-                    source_name = value.get("source_name")
-                    if source_name:
-                        stats_for(source_name)["healing_done"] += value["heal"]
-                elif action == Action.DEATH_SAVE_FAIL and character and value:
+                    stats_for(character)["healing_received"] += value["heal"]
+                elif (
+                    action == Action.DEATH_SAVE_FAIL
+                    and character
+                    and death_save_fail_kills(value)
+                ):
                     stats_for(character)["deaths"] += 1
                 elif action == Action.ADD_TEMP_HP and character:
                     amount = value["amount"] if isinstance(value, dict) else value
                     stats_for(character)["temp_hp_received"] += amount
-                    source_name = (
-                        value.get("source_name") if isinstance(value, dict) else None
-                    )
-                    if source_name:
-                        stats_for(source_name)["temp_hp_granted"] += amount
-                elif action == Action.ADD_CONDITION and character:
+                elif (
+                    action == Action.ADD_CONDITION
+                    and character
+                    and is_counted_condition(value)
+                ):
                     cond = value["condition"] if isinstance(value, dict) else value
                     target_stats = stats_for(character)
                     target_stats["conditions_received"] += 1
                     increment_named_stat(
                         target_stats, "conditions_received_by_name", cond
                     )
-                    source_name = (
-                        value.get("source_name") if isinstance(value, dict) else None
-                    )
-                    if source_name:
-                        source_stats = stats_for(source_name)
-                        source_stats["conditions_given"] += 1
-                        increment_named_stat(
-                            source_stats, "conditions_given_by_name", cond
-                        )
                 elif (
                     action in (Action.REMOVE_SPELL_SLOT, Action.REMOVE_PACT_SLOT)
                     and character
