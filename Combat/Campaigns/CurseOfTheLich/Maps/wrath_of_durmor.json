@@ -1,0 +1,1014 @@
+{
+  "arena": {
+    "width": 24,
+    "height": 16,
+    "cell_ft": 5,
+    "rule": "manhattan",
+    "terrain": {
+      "cells": [
+        {
+          "at": [
+            6,
+            0
+          ],
+          "height": 20
+        },
+        {
+          "at": [
+            7,
+            0
+          ],
+          "height": 20
+        },
+        {
+          "at": [
+            8,
+            0
+          ],
+          "height": 20
+        },
+        {
+          "at": [
+            9,
+            0
+          ],
+          "height": 20
+        },
+        {
+          "at": [
+            10,
+            0
+          ],
+          "height": 20
+        },
+        {
+          "at": [
+            11,
+            0
+          ],
+          "height": 20
+        },
+        {
+          "at": [
+            12,
+            0
+          ],
+          "height": 20
+        },
+        {
+          "at": [
+            13,
+            0
+          ],
+          "height": 20
+        },
+        {
+          "at": [
+            6,
+            1
+          ],
+          "height": 20
+        },
+        {
+          "at": [
+            7,
+            1
+          ],
+          "height": 20
+        },
+        {
+          "at": [
+            8,
+            1
+          ],
+          "height": 20
+        },
+        {
+          "at": [
+            9,
+            1
+          ],
+          "height": 20
+        },
+        {
+          "at": [
+            10,
+            1
+          ],
+          "height": 20
+        },
+        {
+          "at": [
+            11,
+            1
+          ],
+          "height": 20
+        },
+        {
+          "at": [
+            12,
+            1
+          ],
+          "height": 20
+        },
+        {
+          "at": [
+            13,
+            1
+          ],
+          "height": 20
+        },
+        {
+          "at": [
+            6,
+            2
+          ],
+          "height": 20
+        },
+        {
+          "at": [
+            7,
+            2
+          ],
+          "height": 20
+        },
+        {
+          "at": [
+            8,
+            2
+          ],
+          "height": 20
+        },
+        {
+          "at": [
+            9,
+            2
+          ],
+          "height": 20
+        },
+        {
+          "at": [
+            10,
+            2
+          ],
+          "height": 20
+        },
+        {
+          "at": [
+            11,
+            2
+          ],
+          "height": 20
+        },
+        {
+          "at": [
+            12,
+            2
+          ],
+          "height": 20
+        },
+        {
+          "at": [
+            13,
+            2
+          ],
+          "height": 20
+        },
+        {
+          "at": [
+            6,
+            3
+          ],
+          "height": 20
+        },
+        {
+          "at": [
+            7,
+            3
+          ],
+          "height": 20
+        },
+        {
+          "at": [
+            8,
+            3
+          ],
+          "height": 20
+        },
+        {
+          "at": [
+            9,
+            3
+          ],
+          "height": 20
+        },
+        {
+          "at": [
+            10,
+            3
+          ],
+          "height": 20
+        },
+        {
+          "at": [
+            11,
+            3
+          ],
+          "height": 20
+        },
+        {
+          "at": [
+            12,
+            3
+          ],
+          "height": 20
+        },
+        {
+          "at": [
+            13,
+            3
+          ],
+          "height": 20
+        },
+        {
+          "at": [
+            6,
+            4
+          ],
+          "height": 20
+        },
+        {
+          "at": [
+            7,
+            4
+          ],
+          "height": 20
+        },
+        {
+          "at": [
+            8,
+            4
+          ],
+          "height": 20
+        },
+        {
+          "at": [
+            9,
+            4
+          ],
+          "height": 20
+        },
+        {
+          "at": [
+            10,
+            4
+          ],
+          "height": 20
+        },
+        {
+          "at": [
+            11,
+            4
+          ],
+          "height": 20
+        },
+        {
+          "at": [
+            12,
+            4
+          ],
+          "height": 20
+        },
+        {
+          "at": [
+            13,
+            4
+          ],
+          "height": 20
+        },
+        {
+          "at": [
+            6,
+            5
+          ],
+          "height": 20
+        },
+        {
+          "at": [
+            7,
+            5
+          ],
+          "height": 20
+        },
+        {
+          "at": [
+            8,
+            5
+          ],
+          "height": 20
+        },
+        {
+          "at": [
+            9,
+            5
+          ],
+          "height": 20
+        },
+        {
+          "at": [
+            10,
+            5
+          ],
+          "height": 20
+        },
+        {
+          "at": [
+            11,
+            5
+          ],
+          "height": 20
+        },
+        {
+          "at": [
+            12,
+            5
+          ],
+          "height": 20
+        },
+        {
+          "at": [
+            13,
+            5
+          ],
+          "height": 20
+        },
+        {
+          "at": [
+            6,
+            6
+          ],
+          "ground": "water"
+        },
+        {
+          "at": [
+            7,
+            6
+          ],
+          "ground": "wall"
+        },
+        {
+          "at": [
+            8,
+            6
+          ],
+          "ground": "wall"
+        },
+        {
+          "at": [
+            9,
+            6
+          ],
+          "ground": "wall"
+        },
+        {
+          "at": [
+            10,
+            6
+          ],
+          "ground": "wall"
+        },
+        {
+          "at": [
+            11,
+            6
+          ],
+          "ground": "wall"
+        },
+        {
+          "at": [
+            12,
+            6
+          ],
+          "ground": "wall"
+        },
+        {
+          "at": [
+            13,
+            6
+          ],
+          "ground": "wall"
+        },
+        {
+          "at": [
+            6,
+            7
+          ],
+          "ground": "water"
+        },
+        {
+          "at": [
+            7,
+            7
+          ],
+          "ground": "difficult"
+        },
+        {
+          "at": [
+            8,
+            7
+          ],
+          "ground": "difficult"
+        },
+        {
+          "at": [
+            9,
+            7
+          ],
+          "ground": "difficult"
+        },
+        {
+          "at": [
+            10,
+            7
+          ],
+          "ground": "difficult"
+        },
+        {
+          "at": [
+            11,
+            7
+          ],
+          "ground": "difficult"
+        },
+        {
+          "at": [
+            12,
+            7
+          ],
+          "ground": "difficult"
+        },
+        {
+          "at": [
+            13,
+            7
+          ],
+          "ground": "wall"
+        },
+        {
+          "at": [
+            6,
+            8
+          ],
+          "ground": "water"
+        },
+        {
+          "at": [
+            7,
+            8
+          ],
+          "ground": "difficult"
+        },
+        {
+          "at": [
+            8,
+            8
+          ],
+          "ground": "difficult"
+        },
+        {
+          "at": [
+            9,
+            8
+          ],
+          "ground": "difficult"
+        },
+        {
+          "at": [
+            10,
+            8
+          ],
+          "ground": "difficult"
+        },
+        {
+          "at": [
+            11,
+            8
+          ],
+          "ground": "difficult"
+        },
+        {
+          "at": [
+            12,
+            8
+          ],
+          "ground": "difficult"
+        },
+        {
+          "at": [
+            13,
+            8
+          ],
+          "ground": "wall"
+        },
+        {
+          "at": [
+            6,
+            9
+          ],
+          "ground": "water"
+        },
+        {
+          "at": [
+            7,
+            9
+          ],
+          "ground": "difficult"
+        },
+        {
+          "at": [
+            8,
+            9
+          ],
+          "ground": "difficult"
+        },
+        {
+          "at": [
+            9,
+            9
+          ],
+          "ground": "difficult"
+        },
+        {
+          "at": [
+            10,
+            9
+          ],
+          "ground": "difficult"
+        },
+        {
+          "at": [
+            11,
+            9
+          ],
+          "ground": "difficult"
+        },
+        {
+          "at": [
+            12,
+            9
+          ],
+          "ground": "difficult"
+        },
+        {
+          "at": [
+            13,
+            9
+          ],
+          "ground": "wall"
+        },
+        {
+          "at": [
+            6,
+            10
+          ],
+          "ground": "water"
+        },
+        {
+          "at": [
+            7,
+            10
+          ],
+          "ground": "difficult"
+        },
+        {
+          "at": [
+            8,
+            10
+          ],
+          "ground": "difficult"
+        },
+        {
+          "at": [
+            9,
+            10
+          ],
+          "ground": "difficult"
+        },
+        {
+          "at": [
+            10,
+            10
+          ],
+          "ground": "difficult"
+        },
+        {
+          "at": [
+            11,
+            10
+          ],
+          "ground": "difficult"
+        },
+        {
+          "at": [
+            12,
+            10
+          ],
+          "ground": "difficult"
+        },
+        {
+          "at": [
+            13,
+            10
+          ],
+          "ground": "wall"
+        },
+        {
+          "at": [
+            6,
+            11
+          ],
+          "ground": "water"
+        },
+        {
+          "at": [
+            7,
+            11
+          ],
+          "ground": "wall"
+        },
+        {
+          "at": [
+            8,
+            11
+          ],
+          "ground": "wall"
+        },
+        {
+          "at": [
+            9,
+            11
+          ],
+          "ground": "wall"
+        },
+        {
+          "at": [
+            10,
+            11
+          ],
+          "ground": "wall"
+        },
+        {
+          "at": [
+            11,
+            11
+          ],
+          "ground": "wall"
+        },
+        {
+          "at": [
+            12,
+            11
+          ],
+          "ground": "wall"
+        },
+        {
+          "at": [
+            13,
+            11
+          ],
+          "ground": "wall"
+        },
+        {
+          "at": [
+            6,
+            12
+          ],
+          "light": "dim"
+        },
+        {
+          "at": [
+            7,
+            12
+          ],
+          "light": "dim"
+        },
+        {
+          "at": [
+            8,
+            12
+          ],
+          "light": "dim"
+        },
+        {
+          "at": [
+            9,
+            12
+          ],
+          "light": "dim"
+        },
+        {
+          "at": [
+            10,
+            12
+          ],
+          "light": "dim"
+        },
+        {
+          "at": [
+            11,
+            12
+          ],
+          "light": "dim"
+        },
+        {
+          "at": [
+            12,
+            12
+          ],
+          "light": "dim"
+        },
+        {
+          "at": [
+            13,
+            12
+          ],
+          "light": "dim"
+        },
+        {
+          "at": [
+            6,
+            13
+          ],
+          "light": "dark"
+        },
+        {
+          "at": [
+            7,
+            13
+          ],
+          "light": "dark"
+        },
+        {
+          "at": [
+            8,
+            13
+          ],
+          "light": "dark"
+        },
+        {
+          "at": [
+            9,
+            13
+          ],
+          "light": "dark"
+        },
+        {
+          "at": [
+            10,
+            13
+          ],
+          "light": "dark"
+        },
+        {
+          "at": [
+            11,
+            13
+          ],
+          "light": "dark"
+        },
+        {
+          "at": [
+            12,
+            13
+          ],
+          "light": "dark"
+        },
+        {
+          "at": [
+            13,
+            13
+          ],
+          "light": "dark"
+        },
+        {
+          "at": [
+            6,
+            14
+          ],
+          "object": {
+            "name": "Table",
+            "difficult": true,
+            "cover": "half"
+          }
+        },
+        {
+          "at": [
+            7,
+            14
+          ],
+          "object": {
+            "name": "Table",
+            "difficult": true,
+            "cover": "half"
+          }
+        },
+        {
+          "at": [
+            8,
+            14
+          ],
+          "object": {
+            "name": "Table",
+            "difficult": true,
+            "cover": "half"
+          }
+        },
+        {
+          "at": [
+            9,
+            14
+          ],
+          "object": {
+            "name": "Table",
+            "difficult": true,
+            "cover": "half"
+          }
+        },
+        {
+          "at": [
+            10,
+            14
+          ],
+          "object": {
+            "name": "Table",
+            "difficult": true,
+            "cover": "half"
+          }
+        },
+        {
+          "at": [
+            11,
+            14
+          ],
+          "object": {
+            "name": "Table",
+            "difficult": true,
+            "cover": "half"
+          }
+        },
+        {
+          "at": [
+            12,
+            14
+          ],
+          "object": {
+            "name": "Table",
+            "difficult": true,
+            "cover": "half"
+          }
+        },
+        {
+          "at": [
+            13,
+            14
+          ],
+          "object": {
+            "name": "Table",
+            "difficult": true,
+            "cover": "half"
+          }
+        },
+        {
+          "at": [
+            6,
+            15
+          ],
+          "object": {
+            "name": "Table",
+            "difficult": true,
+            "cover": "half"
+          }
+        },
+        {
+          "at": [
+            7,
+            15
+          ],
+          "object": {
+            "name": "Table",
+            "difficult": true,
+            "cover": "half"
+          }
+        },
+        {
+          "at": [
+            8,
+            15
+          ],
+          "object": {
+            "name": "Table",
+            "difficult": true,
+            "cover": "half"
+          }
+        },
+        {
+          "at": [
+            9,
+            15
+          ],
+          "object": {
+            "name": "Table",
+            "difficult": true,
+            "cover": "half"
+          }
+        },
+        {
+          "at": [
+            10,
+            15
+          ],
+          "object": {
+            "name": "Table",
+            "difficult": true,
+            "cover": "half"
+          }
+        },
+        {
+          "at": [
+            11,
+            15
+          ],
+          "object": {
+            "name": "Table",
+            "difficult": true,
+            "cover": "half"
+          }
+        },
+        {
+          "at": [
+            12,
+            15
+          ],
+          "object": {
+            "name": "Table",
+            "difficult": true,
+            "cover": "half"
+          }
+        },
+        {
+          "at": [
+            13,
+            15
+          ],
+          "object": {
+            "name": "Table",
+            "difficult": true,
+            "cover": "half"
+          }
+        }
+      ]
+    }
+  },
+  "start": {
+    "Thum Schtock": [
+      16,
+      7
+    ],
+    "Kivi J\u00e4tti": [
+      16,
+      9
+    ],
+    "Goblin King": [
+      0,
+      7
+    ],
+    "Greypaw (Ally) (Greypaw (Young))": [
+      18,
+      7
+    ],
+    "Obmar St\u00e5lsk\u00e4gg": [
+      17,
+      10
+    ],
+    "Clover": [
+      16,
+      11
+    ],
+    "Gabriel Greybeard": [
+      17,
+      11
+    ],
+    "Harat (Ally) (Harat, Shield of Stonehill)": [
+      16,
+      10
+    ],
+    "Edmund": [
+      16,
+      8
+    ],
+    "Manifestation of Durmor": [
+      1,
+      9
+    ]
+  }
+}
