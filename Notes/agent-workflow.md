@@ -76,6 +76,7 @@ Good practices this setup follows:
 | `equipment-inventory` | dnd-equipment | opus | Edits engine code (`Model/Inventory.py`, layering rules) |
 | `character-creator-gui` | character-creator | opus | PyQt6 app development (the old name sounded like it *creates characters*) |
 | `combat-simulator` | combat-sim | opus | Combat UI and pipeline engineering |
+| `combat-ui-tester` | (new, 2026-11-15) | opus | Exploratory bug hunting in the running combat UI (`combat-ui-explore` harness), judged against the Rules Glossary; read-only |
 | `monster-designer` | dnd-monster-creator | opus | Creative design of new stat blocks |
 | `feature-extension-auditor` | dnd-feature-extender | opus | Low-volume rules judgment: is feature B a rider on feature A? |
 | `test-bughunter` | dnd-test-bughunter | opus | Expected values come from the rules; haiku once wrote tests that couldn't fail |

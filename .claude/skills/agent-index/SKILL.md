@@ -11,7 +11,7 @@ Every row comes from the agent's or skill's own frontmatter, so this can't drift
 
 **Picking:** use the specialist whose *use for* matches, and check its **points to** column for the "not for this, use that" neighbours. Fall back to `character-engine-dev` or `combat-simulator` for general work. Do small edits in the main session without an agent. A skill marked *main session* is used directly rather than preloaded.
 
-## Agents (19)
+## Agents (20)
 
 ### builds/
 
@@ -27,6 +27,7 @@ Every row comes from the agent's or skill's own frontmatter, so this can't drift
 | Agent | Model | Preloads | Use for | Points to |
 |---|---|---|---|---|
 | [`combat-simulator`](../../agents/combat/combat-simulator.md) | opus | `subagent-protocol`, `run-apps` | Any combat simulator task | `monster-balancer`, `monster-designer` |
+| [`combat-ui-tester`](../../agents/combat/combat-ui-tester.md) | opus | `subagent-protocol`, `combat-ui-explore`, `rules-glossary`, `discovered-issues` | Try out the PyQt6 combat UI the way a GM uses it and hunt for bugs - combinations that break it, state that drifts, exceptions in… | `combat-simulator`, `monster-balancer`, `rules-checker`, `test-bughunter` |
 | [`monster-ability-converter`](../../agents/combat/monster-ability-converter.md) | sonnet | `subagent-protocol`, `monster-stat-blocks` | Convert a monster's freeform `MonsterAbility(name=..., description="...")` trait/action entries into the matching structured… | `monster-designer` |
 | [`monster-balancer`](../../agents/combat/monster-balancer.md) | sonnet | `subagent-protocol`, `balance-monster`, `monster-stat-blocks` | Check and rebalance homebrew D&D 5e monsters against Combat\Tools\monster_score.py's CR-relative power score | `monster-ability-converter`, `monster-designer` |
 | [`monster-designer`](../../agents/combat/monster-designer.md) | opus | `subagent-protocol`, `monster-stat-blocks`, `balance-monster` | Creating new homebrew D&D 5e monsters as ExtendedCombatantData classes | `combat-simulator`, `monster-balancer` |
@@ -57,22 +58,23 @@ Every row comes from the agent's or skill's own frontmatter, so this can't drift
 | [`rules-checker`](../../agents/tooling/rules-checker.md) | opus | `subagent-protocol`, `rules-glossary` | Check an implementation against the D&D 2024 rules as written in the local Rules Glossary - features, feats, spells, species… | `character-engine-dev`, `combat-simulator`, `code-reviewer`, `test-bughunter` |
 | [`test-bughunter`](../../agents/tooling/test-bughunter.md) | opus | `subagent-protocol` | Write pytest tests for this D&D 5e engine AND hunt for bugs while doing it | `character-engine-dev`, `combat-simulator` |
 
-## Skills (14)
+## Skills (15)
 
 | Skill | Preloaded by | Scripts | Use for |
 |---|---|---|---|
 | [`balance-monster`](../../skills/balance-monster/SKILL.md) | `monster-balancer`, `monster-designer` | `check_monster.py` | Balance a homebrew D&D monster so its monster_score.py "score" lands in 0.4-0.6 for its CR, and check it is done with one script |
 | [`combat-effects`](../../skills/combat-effects/SKILL.md) | `feature-combat-effects`, `spell-combat-effects` | `combat_effects.py` | Combat effects - what a spell or feature does in a fight (saving throw or attack roll, which ability, damage dice and types, half… |
+| [`combat-ui-explore`](../../skills/combat-ui-explore/SKILL.md) | `combat-ui-tester` | `explore.py` | Exploratory testing of the PyQt6 combat UI through the real CombatAppQt - a harness that opens an encounter on a temp log and… |
 | [`commit-plans`](../../skills/commit-plans/SKILL.md) | `git-commit` | `commit_plan.py` | Commit plans - commits written down instead of made, so committing stays safe while many agents edit, stage and commit in the… |
-| [`discovered-issues`](../../skills/discovered-issues/SKILL.md) | *main session* | `issues.py` | The shared log of bugs, rules mismatches and gaps found but not fixed and the script every agent uses to add, update, close and… |
+| [`discovered-issues`](../../skills/discovered-issues/SKILL.md) | `combat-ui-tester` | `issues.py` | The shared log of bugs, rules mismatches and gaps found but not fixed and the script every agent uses to add, update, close and… |
 | [`monster-stat-blocks`](../../skills/monster-stat-blocks/SKILL.md) | `monster-ability-converter`, `monster-balancer`, `monster-designer` | `abilities.py` | How monster stat blocks work in this repo - which Combat/Monsters files are generated vs hand-maintained, the CR tier folders,… |
 | [`multiclass-builds`](../../skills/multiclass-builds/SKILL.md) | `character-engine-dev` | `multiclass_report.py` | How to multiclass a character build in this repo - the StarterClassBuilder + <Class>MulticlassBuilder pattern, level order,… |
 | [`new-content-check`](../../skills/new-content-check/SKILL.md) | `content-scraper` | `check_new_content.py` | Check for new 2024-rules content - classes, subclasses, species, feats, spells and tools - against a baseline index of everything… |
 | [`review-house-rules`](../../skills/review-house-rules/SKILL.md) | `code-reviewer` | `check_diff.py` | Review a change against this repo's own rules that no test enforces - origin= is a category not a sourcebook, 2014 subclasses… |
-| [`rules-glossary`](../../skills/rules-glossary/SKILL.md) | `rules-checker` | `glossary_terms.py`, `scrape_rules_glossary.py` | Scrape the D&D 2024 Rules Glossary from D&D Beyond into a local tree of Markdown files under SourceTexts/RulesGlossary/ - one… |
+| [`rules-glossary`](../../skills/rules-glossary/SKILL.md) | `combat-ui-tester`, `rules-checker` | `glossary_terms.py`, `scrape_rules_glossary.py` | Scrape the D&D 2024 Rules Glossary from D&D Beyond into a local tree of Markdown files under SourceTexts/RulesGlossary/ - one… |
 | [`run-apps`](../../skills/run-apps/SKILL.md) | `character-creator-gui`, `combat-simulator` | `screenshot.py` | How to launch and look at this repo's apps - the PyQt6 combat simulator, the Character Creator GUI and a build's HTML character… |
 | [`snapshot-diffs`](../../skills/snapshot-diffs/SKILL.md) | `character-engine-dev`, `equipment-inventory`, `subclass-implementer`, `code-reviewer` | `snapshot_diff.py` | Read what actually changed when a golden snapshot test fails - a script that shows each build's changed stats by ability/skill… |
-| [`subagent-protocol`](../../skills/subagent-protocol/SKILL.md) | `character-creator-gui`, `character-engine-dev`, `equipment-inventory`, `subclass-implementer`, `combat-simulator`, `monster-ability-converter`, `monster-balancer`, `monster-designer`, `feature-card-tagger`, `feature-combat-effects`, `feature-extension-auditor`, `spell-combat-effects`, `spell-improved-descriptions`, `code-lookup`, `code-reviewer`, `content-scraper`, `git-commit`, `rules-checker`, `test-bughunter` | - | How every project subagent reports back and learns from its runs - the fixed final report sections, and when and how to record… |
+| [`subagent-protocol`](../../skills/subagent-protocol/SKILL.md) | `character-creator-gui`, `character-engine-dev`, `equipment-inventory`, `subclass-implementer`, `combat-simulator`, `combat-ui-tester`, `monster-ability-converter`, `monster-balancer`, `monster-designer`, `feature-card-tagger`, `feature-combat-effects`, `feature-extension-auditor`, `spell-combat-effects`, `spell-improved-descriptions`, `code-lookup`, `code-reviewer`, `content-scraper`, `git-commit`, `rules-checker`, `test-bughunter` | - | How every project subagent reports back and learns from its runs - the fixed final report sections, and when and how to record… |
 | [`usage-tags`](../../skills/usage-tags/SKILL.md) | `feature-card-tagger` | `tag_report.py` | The rubric and tooling for usage_tags, the role chips on D&D feature and spell cards - where they are stored, how to decide them,… |
 | [`verify-agent-work`](../../skills/verify-agent-work/SKILL.md) | *main session* | `verify.py` | Verify what subagents actually changed before trusting their reports - diff the working tree against the files it claimed, fail… |
 
