@@ -58,7 +58,7 @@ Every row comes from the agent's or skill's own frontmatter, so this can't drift
 | [`rules-checker`](../../agents/tooling/rules-checker.md) | opus | `subagent-protocol`, `rules-glossary` | Check an implementation against the D&D 2024 rules as written in the local Rules Glossary - features, feats, spells, species… | `character-engine-dev`, `combat-simulator`, `code-reviewer`, `test-bughunter` |
 | [`test-bughunter`](../../agents/tooling/test-bughunter.md) | opus | `subagent-protocol` | Write pytest tests for this D&D 5e engine AND hunt for bugs while doing it | `character-engine-dev`, `combat-simulator` |
 
-## Skills (15)
+## Skills (16)
 
 | Skill | Preloaded by | Scripts | Use for |
 |---|---|---|---|
@@ -67,6 +67,7 @@ Every row comes from the agent's or skill's own frontmatter, so this can't drift
 | [`combat-ui-explore`](../../skills/combat-ui-explore/SKILL.md) | `combat-ui-tester` | `explore.py` | Exploratory testing of the PyQt6 combat UI through the real CombatAppQt - a harness that opens an encounter on a temp log and… |
 | [`commit-plans`](../../skills/commit-plans/SKILL.md) | `git-commit` | `commit_plan.py` | Commit plans - commits written down instead of made, so committing stays safe while many agents edit, stage and commit in the… |
 | [`discovered-issues`](../../skills/discovered-issues/SKILL.md) | `combat-ui-tester` | `issues.py` | The shared log of bugs, rules mismatches and gaps found but not fixed and the script every agent uses to add, update, close and… |
+| [`map-painter`](../../skills/map-painter/SKILL.md) | *main session* | `map_tool.py` | The combat UI's Map Painter and painted battle maps - terrain, starting cells, the Maps/<encounter id>.json files, and how the… |
 | [`monster-stat-blocks`](../../skills/monster-stat-blocks/SKILL.md) | `monster-ability-converter`, `monster-balancer`, `monster-designer` | `abilities.py` | How monster stat blocks work in this repo - which Combat/Monsters files are generated vs hand-maintained, the CR tier folders,… |
 | [`multiclass-builds`](../../skills/multiclass-builds/SKILL.md) | `character-engine-dev` | `multiclass_report.py` | How to multiclass a character build in this repo - the StarterClassBuilder + <Class>MulticlassBuilder pattern, level order,… |
 | [`new-content-check`](../../skills/new-content-check/SKILL.md) | `content-scraper` | `check_new_content.py` | Check for new 2024-rules content - classes, subclasses, species, feats, spells and tools - against a baseline index of everything… |
