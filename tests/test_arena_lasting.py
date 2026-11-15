@@ -13,11 +13,14 @@ from Combat.Arena.lasting import (
     DEFAULT_AREA_COLOR,
     LastingArea,
     area_record,
+    area_key,
     areas_at,
     areas_holding,
     entered,
+    find_area,
     lasting_areas,
     record_area,
+    time_left_text,
     who_is_in,
 )
 
@@ -53,6 +56,7 @@ def test_an_aimed_area_keeps_the_cells_it_was_put_on():
         frozenset({Cell(8, 8), Cell(7, 8), Cell(9, 8), Cell(8, 7), Cell(8, 9)}),
         "#3498db",
         True,
+        record["key"],
     )
     assert area.title == "Clover's Moonbeam"
     json.dumps(cleric)  # what the fight state saves, as plain JSON
@@ -116,3 +120,38 @@ def test_entered_names_who_is_in_an_area_now_and_wasnt_before():
     after = who_is_in(chars, SETTINGS)
     assert entered(before, after) == [("Goblin", ("Clover", "Spirit Guardians"))]
     assert entered(after, after) == []
+
+
+def test_each_kept_area_has_a_key_to_find_it_by():
+    cleric = _at("Clover", 2, 2)
+    one = area_record(MOONBEAM, cleric, Cell(8, 8), SETTINGS, pick="Moonbeam")
+    two = area_record(MOONBEAM, cleric, Cell(3, 9), SETTINGS)
+    assert one["key"] != two["key"]
+    assert one["pick"] == "Moonbeam"
+    _holding(cleric, "Moonbeam", one)
+    _holding(cleric, "Grease", two, concentration=False)
+    first, second = lasting_areas([cleric], SETTINGS)
+    assert (first.key, second.key) == (one["key"], two["key"])
+    assert not first.selected
+    caster, entry = find_area([cleric], two["key"])
+    assert caster is cleric and entry["name"] == "Grease"
+    assert find_area([cleric], "gone") is None
+
+
+def test_a_kept_area_without_a_key_is_found_by_its_names():
+    cleric = _at("Clover", 2, 2)
+    record = area_record(MOONBEAM, cleric, Cell(8, 8), SETTINGS)
+    del record["key"]
+    _holding(cleric, "Moonbeam", record)
+    assert area_key(cleric, cleric["active_spells"][0]) == "Clover/Moonbeam"
+    assert find_area([cleric], "Clover/Moonbeam") is not None
+
+
+def test_time_left_reads_in_the_biggest_unit_that_fits():
+    assert time_left_text(3600) == "1 hour left"
+    assert time_left_text(600) == "10 minutes left"
+    assert time_left_text(60) == "1 minute left"
+    assert time_left_text(54) == "9 rounds left"
+    assert time_left_text(6) == "1 round left"
+    assert time_left_text(0) == ""
+    assert time_left_text(None) == ""

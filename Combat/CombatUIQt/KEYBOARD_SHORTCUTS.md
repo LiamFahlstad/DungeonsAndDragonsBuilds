@@ -194,6 +194,19 @@ source's Active Spells on its card:
   the turn column's reminders. Both are GM-only log lines. Hovering a cell
   names the areas on it. Undo takes an area back with the rest.
 
+**Selecting an area that stays:** click an empty cell of it (click again
+where areas overlap to go to the next one). It's edged brighter, and a panel
+over the map says whose it is, where, whether it's concentration and how
+long it has left, with its rules text under it:
+
+- the **colour** list changes its colour (one undo step);
+- **Target who's in it** makes whoever stands in it the targets, to apply
+  its damage when a turn starts in it, say;
+- **End spell** ends it, as the card's ✕ does, concentration on it too;
+- **Close**, **Esc** or a click on an empty cell outside it deselects it.
+
+An area is never the source: the source and targets stay as they were.
+
 ## The turn column
 
 Beside the cards during a fight: whose turn it is, who's next, what to remember this turn (a dying player's death save, what recharged, legendary actions coming back, traits that act at the start of a turn), and who has legendary actions ready.

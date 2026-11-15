@@ -15,7 +15,12 @@ with the entry, as plain JSON (the plan's Decision 4):
         "cells": [[col, row], ...],  # what it covers, fixed where it was put
         "follows": False,            # True: around its caster, wherever it goes
         "color": "#e67e22",
+        "key": "3f9a01c2",           # which area it is, to select it by
+        "pick": "Moonbeam",          # what it was picked as, and its rules text
+        "about": "A silvery beam of pale light shines down ...",
     }
+
+Clicking an area on the map selects it (step 12): its key says which.
 
 An area that isn't aimed (an Emanation, a Sphere around the source) follows
 its caster, worked out from where the caster is now; any other stays on the
@@ -25,6 +30,8 @@ doesn't swing round as the caster walks on).
 
 from __future__ import annotations
 
+import math
+import uuid
 from dataclasses import dataclass
 from typing import Iterable
 
@@ -49,6 +56,8 @@ class LastingArea:
     cells: frozenset[Cell]
     color: str = DEFAULT_AREA_COLOR
     concentration: bool = False
+    key: str = ""  # which area it is (area_key)
+    selected: bool = False  # the one clicked on the map: edged brighter
 
     @property
     def title(self) -> str:
@@ -62,9 +71,13 @@ def area_record(
     aim: Cell | None,
     settings: ArenaSettings,
     color: str = DEFAULT_AREA_COLOR,
+    pick: str = "",
+    about: str = "",
 ) -> dict:
     """The "area" an active spell keeps for `area` aimed at `aim` by
-    `source`: its cells now, unless it follows its caster."""
+    `source`: its cells now, unless it follows its caster, with a key of
+    its own, and what it was picked as and its rules text (`pick`,
+    `about`)."""
     follows = not area.is_aimed
     cells = [] if follows else sorted(area_cells(area, source, aim, settings))
     return {
@@ -76,7 +89,39 @@ def area_record(
         "cells": [cell.to_list() for cell in cells],
         "follows": follows,
         "color": color,
+        "key": uuid.uuid4().hex[:8],
+        "pick": pick,
+        "about": about,
     }
+
+
+def area_key(caster: dict, entry: dict) -> str:
+    """Which kept area entry's is: its record's key, or for one kept
+    without a key, its caster's and its own name."""
+    record = entry.get(AREA_KEY) or {}
+    return record.get("key") or f"{caster['name']}/{entry['name']}"
+
+
+def find_area(chars: Iterable[dict], key: str) -> tuple[dict, dict] | None:
+    """The caster and active spell holding the kept area `key`, if it's
+    still there."""
+    for char in chars:
+        for entry in char.get(ACTIVE_SPELLS_KEY) or []:
+            if entry.get(AREA_KEY) and area_key(char, entry) == key:
+                return char, entry
+    return None
+
+
+def time_left_text(seconds: int | None) -> str:
+    """ "8 rounds left", "10 minutes left", "1 hour left"; "" for none."""
+    if not seconds or seconds <= 0:
+        return ""
+    for unit, size in (("hour", 3600), ("minute", 60)):
+        if seconds % size == 0:
+            count = seconds // size
+            return f"{count} {unit}{'' if count == 1 else 's'} left"
+    rounds = math.ceil(seconds / 6)
+    return f"{rounds} round{'' if rounds == 1 else 's'} left"
 
 
 def record_area(record: dict) -> AreaOfEffect:
@@ -121,6 +166,7 @@ def lasting_areas(chars: Iterable[dict], settings: ArenaSettings) -> list[Lastin
                     cells=frozenset(cells),
                     color=record.get("color") or DEFAULT_AREA_COLOR,
                     concentration=bool(entry.get("concentration")),
+                    key=area_key(char, entry),
                 )
             )
     return found

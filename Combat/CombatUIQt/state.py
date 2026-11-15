@@ -510,6 +510,9 @@ class CombatWindowState:
     def _remind_lasting_areas(self, group: list[dict]):
         raise NotImplementedError("ArenaMixin._remind_lasting_areas")
 
+    def _deselect_area(self) -> bool:
+        raise NotImplementedError("ArenaMixin._deselect_area")
+
     def _roll_concentration(self, char: dict, dc: int):
         raise NotImplementedError("DamageMixin._roll_concentration")
 

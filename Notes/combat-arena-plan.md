@@ -16,8 +16,9 @@ the Cards/Arena switch, moving, distances in the UI and the docs) built the
 same day. Step 9, the fixes after the user tried it, 2026-11-14. Step 10,
 targets in an area from the Custom Effect dialog, the user's request the
 same day. Step 11, areas that stay on the map with their concentration and
-a colour picked for each, the user's request, 2026-11-15. What's next is
-under Later.
+a colour picked for each, the user's request, 2026-11-15. Step 12,
+selecting a kept area to read, recolour, target or end it, the same day.
+What's next is under Later.
 
 ## How to use this document
 
@@ -79,6 +80,7 @@ verification passes per step unless asked.
 | 9 | After the user tried it: encounter allies on the party's side, click to pick up and click to move, the move's line with from, to and what's left, whose turn on gold, clicks and Ctrl+Z in both views | Done 2026-11-14 (R9); DI-092 fixed |
 | 10 | Targets in an area: the Custom Effect's "Select targets in area", the area read from the pick's text and aimed on the map, whoever is in it targeted | Done 2026-11-14 (R10); Cones, Lines and range checked against Manhattan 2026-11-15 (R11) |
 | 11 | Areas that stay: kept on the map by an active spell, ending with its time or its caster's concentration, an Emanation following its caster, reminders on entering and at a turn's start; a colour for each area | Done 2026-11-15 (R12) |
+| 12 | Selecting a kept area: a click on it, the area panel with what it is and its rules text, its colour, Target who's in it, End spell | Done 2026-11-15 (R13) |
 
 ## How it fits the code that's there
 
@@ -517,6 +519,38 @@ nothing to keep refused; the bar's colour on the aim and the area, Other...
 and cancelling it; Spirit Guardians following its caster and naming who it
 reaches; the reminders on walking in and at the turn's start; the hover.
 
+### Step 12: selecting a kept area (2026-11-15)
+
+The user: "Once a spell is cast with a lasting area, I want it to be
+clickable / selectable as well. It doesn't count as a "source" of course
+but I want to make it clickable so I can cancel the spell, change color,
+read what it does, etc."
+
+- `lasting.py`: each record gets a `key` (`area_record`; `area_key` falls
+  back to the caster's and the spell's names for one kept without), and
+  the `pick` and `about` (its rules text) it was aimed for; `find_area`
+  finds the caster and active spell by key; `LastingArea` carries its
+  `key` and whether it's `selected`; `time_left_text` ("8 rounds left").
+- The view: a click on an empty cell with nothing picked up goes to
+  `on_area(key)` when a kept area covers it, the next one on that cell
+  when the one selected is there too (`click_cell`), else to `on_cell` as
+  before. The area selected is edged brighter.
+- The window: `_selected_area` (a key; Decision 25), and the area panel
+  over the map: its title (whose, its shape and where, Concentration, time
+  left), a colour list (`_set_area_color`, one undo step), Target who's in
+  it, End spell (`_remove_active_spell`, as the card's ✕), Close, and
+  its rules text (its record's, else the spell named so). A click on an
+  empty cell outside it, Close or Esc deselects it; an area that ends
+  takes its selection with it.
+
+Tests (`tests/test_arena_lasting.py`, `tests/test_combat_ui_arena_lasting.py`):
+keys, finding by key or by names, time left; a real click selecting
+Moonbeam with the panel's title and rules text and the source unchanged;
+the three ways to deselect; overlapping areas taking turns; the colour
+changed and undone a step at a time; Target who's in it with nobody and
+with the Pirate; End spell ending concentration, undone; the panel going
+when concentration ends.
+
 ### Later (not scheduled)
 
 - **More distance rules**, each a `DistanceRule` and a line in `RULES`:
@@ -539,7 +573,7 @@ reaches; the reminders on walking in and at the turn's start; the hover.
 - **Areas of effect**: built in steps 10 and 11. Still later: a creature
   entering an area, or starting its turn in it, prompting its effect (Q12;
   a reminder now); moving an area that stays (Moonbeam's Magic action,
-  Flaming Sphere; Q13); changing a kept area's colour; walls (Wall of Fire,
+  Flaming Sphere; Q13, which the area panel is now the place for); walls (Wall of Fire,
   Wall of Force), which aren't one of the six shapes; Total Cover blocking
   an area (Rules Glossary, Area of Effect), once there's terrain; kept areas
   on the Player Screen's map (hidden with a hidden caster).
@@ -709,6 +743,14 @@ Taken while building step 11 (2026-11-15), for the user to overrule:
     and the next area starts with the last one; it isn't chosen by damage
     type. It's kept on the area's record.
 
+Taken while building step 12 (2026-11-15), for the user to overrule:
+
+25. **A kept area is selected apart from the source and targets**: clicking
+    it changes neither (the user: "it doesn't count as a source"), Esc
+    deselects it before it clears the selection, and the panel acts on it
+    alone. It's selected by a click on an empty cell of it, so a token
+    standing in it is still clicked as a token.
+
 ## Open questions
 
 Each has a *Suggestion*: what gets built if nobody says otherwise.
@@ -791,8 +833,9 @@ Each has a *Suggestion*: what gets built if nobody says otherwise.
   Custom Effect on the pick with that creature targeted, once a kept area
   records its pick and when its rules fire (a `CombatEffect` trigger).
 - **Q13. Can a kept area be moved?** *Blocks nothing.* Moonbeam and
-  Flaming Sphere move as an action. *Suggestion:* a "Move" on the area's
-  active spell row that aims it again in the bar and keeps its time.
+  Flaming Sphere move as an action. *Suggestion:* a **Move** button on
+  the area panel (step 12) that aims it again in the bar and keeps its
+  time.
 
 ## Revisions
 
@@ -922,6 +965,14 @@ Each has a *Suggestion*: what gets built if nobody says otherwise.
   text into a column a word wide that pushed the map down, so the text has
   its own line now; and every log line clears the status line, so a turn's
   reminder goes in the turn column's reminders instead.
+
+- **R13** (step 12, the user's request, 2026-11-15). *Plan:* nothing yet
+  (Q13 suggested a button on the active spell's row). *Done:* the area is
+  selected on the map itself, with a panel of its own (Decision 25), as
+  that's where it's seen. A record needed a key, as two kept areas can
+  have the same caster and name (two Greases), and its rules text, as a
+  monster's action isn't a spell to look up. The panel's title has its own
+  line, for the reason the area bar's has (R12).
 
 ## Discovered issues
 

@@ -22,7 +22,16 @@ area on the map", and its Apply puts the area on an active spell of the
 source's (Combat/Arena/lasting.py): it ends with the spell's time, the
 caster's concentration or the card's ✕. Such an area may be put down with
 nobody in it (Moonbeam on empty ground). Whoever walks into one, or starts
-a turn in one, gets a reminder in the status line and a GM-only log line."""
+a turn in one, gets a reminder in the status line and a GM-only log line.
+
+Selecting a kept area (step 12): a click on an empty cell of one brings up
+the area panel over the map: whose it is, where, how long it has left and
+its rules text, with its colour to change, Target who's in it, End spell,
+and Close (or Esc). The selection is the window's, as the source is, but an
+area is never a source."""
+
+from dataclasses import replace
+from html import escape
 
 from PyQt6.QtCore import QTimer
 from PyQt6.QtGui import QColor, QIcon, QPixmap
@@ -35,6 +44,7 @@ from PyQt6.QtWidgets import (
     QPushButton,
     QSpinBox,
     QStackedWidget,
+    QTextBrowser,
     QVBoxLayout,
     QWidget,
 )
@@ -69,11 +79,16 @@ from Combat.Arena.geometry import Cell
 from Combat.Arena.lasting import (
     AREA_KEY,
     DEFAULT_AREA_COLOR,
+    LastingArea,
     area_record,
     areas_at,
     areas_holding,
     entered,
+    find_area,
     lasting_areas,
+    record_area,
+    record_cells,
+    time_left_text,
     who_is_in,
 )
 from Combat.Effects.modifiers import has_condition
@@ -106,6 +121,8 @@ AREA_COLORS = (
 )
 OTHER_COLOR = "other"
 _SWATCH_PX = 12
+# The area panel's rules text: tall enough for a few lines, scrolled past.
+_AREA_TEXT_HEIGHT = 96
 # How long an area kept with no time of its own lasts: an hour, for the GM
 # to end on the card (as a concentration effect with no time does).
 LONGEST_AREA = 60 * 60
@@ -122,6 +139,7 @@ class ArenaMixin(CombatWindowState):
             on_cell=self._arena_cell,
             reach_of=self._arena_reach,
             distance_at=self._arena_distance,
+            on_area=self._select_area,
         )
         page = QWidget()
         layout = QVBoxLayout(page)
@@ -129,6 +147,7 @@ class ArenaMixin(CombatWindowState):
         layout.setSpacing(4)
         layout.addWidget(self._build_off_map_strip())
         layout.addWidget(self._build_area_bar())
+        layout.addWidget(self._build_area_panel())
         layout.addWidget(self._arena_view, stretch=1)
         self._view_stack = QStackedWidget()
         self._view_stack.addWidget(cards)
@@ -219,12 +238,7 @@ class ArenaMixin(CombatWindowState):
             " (Thunderwave)"
         )
         layout.addWidget(self._area_from_source)
-        self._area_color = QComboBox()
-        self._area_color.setObjectName("areaColor")
-        self._area_color.setToolTip("The colour the area is shaded in")
-        for name, color in AREA_COLORS:
-            self._area_color.addItem(_swatch(color), name, color)
-        self._area_color.addItem("Other...", OTHER_COLOR)
+        self._area_color = _color_combo("areaColor")
         self._last_area_color = DEFAULT_AREA_COLOR
         layout.addWidget(self._area_color)
         self._area_keep = QCheckBox("Keep on the map")
@@ -302,28 +316,26 @@ class ArenaMixin(CombatWindowState):
         return color if color and color != OTHER_COLOR else self._last_area_color
 
     def _show_area_color(self, color: str):
-        """Select `color` in the bar, adding it before "Other..." when it
-        isn't one of the colours there yet."""
-        index = self._area_color.findData(color)
-        if index < 0:
-            index = self._area_color.count() - 1
-            self._area_color.insertItem(index, _swatch(color), color, color)
-        self._area_color.blockSignals(True)
-        self._area_color.setCurrentIndex(index)
-        self._area_color.blockSignals(False)
+        """Select `color` in the bar (show_color)."""
+        show_color(self._area_color, color)
         self._last_area_color = color
         self._arena_view.set_area_color(color)
 
     def _area_color_changed(self):
         """A colour picked in the bar: the area is shaded in it, and the
         next one starts with it. "Other..." asks for any colour."""
-        color = self._area_color.currentData()
-        if color == OTHER_COLOR:
-            chosen = QColorDialog.getColor(
-                QColor(self._last_area_color), self._window, "Area colour"
-            )
-            color = chosen.name() if chosen.isValid() else self._last_area_color
-        self._show_area_color(color)
+        self._show_area_color(
+            self._picked_color(self._area_color, self._last_area_color)
+        )
+
+    def _picked_color(self, combo: QComboBox, current: str) -> str:
+        """The colour picked in `combo`; for "Other...", the one asked for,
+        or `current` when that's cancelled."""
+        color = combo.currentData()
+        if color != OTHER_COLOR:
+            return color
+        chosen = QColorDialog.getColor(QColor(current), self._window, "Area colour")
+        return chosen.name() if chosen.isValid() else current
 
     def _start_area_targeting(
         self, option: EffectOption | None, what: str = ""
@@ -347,6 +359,7 @@ class ArenaMixin(CombatWindowState):
             "what": what or pick,
             "read": area is not None,
             "range": range_ft,
+            "about": option.tooltip if option is not None else "",
         }
         self._show_area_in_bar(area or self._last_area)
         self._last_area = self._area_in_bar()
@@ -459,7 +472,13 @@ class ArenaMixin(CombatWindowState):
         area, source = self._area_in_bar(), request["source"]
         aim = cell if area.is_aimed else None
         record = area_record(
-            area, source, aim, self.arena_settings, self._area_color_in_bar()
+            area,
+            source,
+            aim,
+            self.arena_settings,
+            self._area_color_in_bar(),
+            pick=request["pick"],
+            about=request["about"],
         )
         self._end_area_targeting()
         # What the dialog, opened again, offers to keep on the map.
@@ -555,11 +574,172 @@ class ArenaMixin(CombatWindowState):
                 self.selected_character,
                 self.target_characters,
             ),
-            lasting_areas(self.characters, self.arena_settings),
+            self._lasting_rows(),
         )
+        self._refresh_area_panel()
         if self._area_targeting is not None:
             # Someone moved, or was added: the area catches who's there now.
             self._arena_view.refresh_area()
+
+    def _lasting_rows(self) -> list[LastingArea]:
+        """The kept areas the map draws, the one selected marked; a
+        selection whose area has ended (or covers nothing now) is dropped."""
+        rows = lasting_areas(self.characters, self.arena_settings)
+        if self._selected_area not in {row.key for row in rows}:
+            self._selected_area = None
+        return [replace(row, selected=row.key == self._selected_area) for row in rows]
+
+    def _build_area_panel(self) -> QWidget:
+        """The panel over the map for the kept area selected: what it is,
+        its colour, Target who's in it, End spell and Close, and its rules
+        text under them. Hidden while none is selected."""
+        self._selected_area: str | None = None
+        panel = QWidget()
+        panel.setObjectName("areaPanel")
+        rows = QVBoxLayout(panel)
+        rows.setContentsMargins(4, 4, 4, 0)
+        rows.setSpacing(4)
+        self._area_panel_title = QLabel("")
+        self._area_panel_title.setObjectName("areaPanelTitle")
+        self._area_panel_title.setWordWrap(True)
+        rows.addWidget(self._area_panel_title)
+        top = QHBoxLayout()
+        top.setSpacing(6)
+        self._area_panel_color = _color_combo("areaPanelColor")
+        self._area_panel_color.currentIndexChanged.connect(
+            lambda: self._area_panel_color_changed()
+        )
+        top.addWidget(self._area_panel_color)
+        target = QPushButton("Target who's in it")
+        target.setObjectName("areaPanelTargetBtn")
+        target.setToolTip("Make whoever is in the area the targets")
+        target.clicked.connect(lambda: self._target_selected_area())
+        top.addWidget(target)
+        end = QPushButton("End spell")
+        end.setObjectName("areaPanelEndBtn")
+        end.setToolTip(
+            "End it now, as the card's ✕ does: the area goes, and what"
+            " it holds by concentration comes off"
+        )
+        end.clicked.connect(lambda: self._end_selected_area())
+        top.addWidget(end)
+        close = QPushButton("Close")
+        close.setObjectName("areaPanelCloseBtn")
+        close.setToolTip("Deselect the area (Esc)")
+        close.clicked.connect(lambda: self._deselect_area())
+        top.addWidget(close)
+        top.addStretch()
+        rows.addLayout(top)
+        self._area_panel_text = QTextBrowser()
+        self._area_panel_text.setObjectName("areaPanelText")
+        self._area_panel_text.setMaximumHeight(_AREA_TEXT_HEIGHT)
+        rows.addWidget(self._area_panel_text)
+        panel.hide()
+        self._area_panel = panel
+        return panel
+
+    def _selected_lasting(self) -> tuple[dict, dict] | None:
+        """The caster and active spell of the kept area selected, if any."""
+        if self._selected_area is None:
+            return None
+        return find_area(self.characters, self._selected_area)
+
+    def _select_area(self, key: str):
+        """A kept area clicked on the map: select it, and show the panel."""
+        self._selected_area = key
+        self._refresh_arena()
+
+    def _deselect_area(self) -> bool:
+        """Deselect the kept area; False when none was selected."""
+        if self._selected_area is None:
+            return False
+        self._selected_area = None
+        self._refresh_arena()
+        return True
+
+    def _refresh_area_panel(self):
+        """The panel for the area selected, or hidden without one."""
+        found = self._selected_lasting()
+        if found is None:
+            self._area_panel.hide()
+            return
+        caster, entry = found
+        record = entry[AREA_KEY]
+        where = self._area_where(record)
+        if record.get("follows"):
+            where = f"around {caster['name']}"
+        parts = [record_area(record).text + (f" {where}" if where else "")]
+        if entry.get("concentration"):
+            parts.append("Concentration")
+        left = time_left_text(entry.get("time_left"))
+        if left:
+            parts.append(left)
+        title = escape(f"{caster['name']}'s {entry['name']}", quote=False)
+        self._area_panel_title.setText(
+            f"<b>{title}</b> · " + " · ".join(escape(p, quote=False) for p in parts)
+        )
+        about = record.get("about") or self._rules_text_of(record, entry)
+        shown = (
+            escape(about, quote=False).replace("\n", "<br>")
+            if about
+            else ("<i>No rules text kept for it.</i>")
+        )
+        if self._area_panel_text.property("shown") != shown:
+            self._area_panel_text.setProperty("shown", shown)
+            self._area_panel_text.setHtml(shown)
+        self._area_panel_color.blockSignals(True)
+        show_color(self._area_panel_color, record.get("color") or DEFAULT_AREA_COLOR)
+        self._area_panel_color.blockSignals(False)
+        self._area_panel.show()
+
+    def _rules_text_of(self, record: dict, entry: dict) -> str:
+        """A kept area's rules text when its record has none: the spell's
+        it's named after, if it is one."""
+        spell = _spell_named(record.get("pick") or entry["name"])
+        return spell.description if spell is not None else ""
+
+    def _area_panel_color_changed(self):
+        found = self._selected_lasting()
+        if found is None:
+            return
+        record = found[1][AREA_KEY]
+        current = record.get("color") or DEFAULT_AREA_COLOR
+        color = self._picked_color(self._area_panel_color, current)
+        if color != current:
+            self._set_area_color(found[0], found[1], color)
+        else:
+            self._refresh_area_panel()
+
+    @undoable
+    def _set_area_color(self, caster: dict, entry: dict, color: str):
+        """Shade caster's kept area `entry` in `color`: one undo step."""
+        entry[AREA_KEY]["color"] = color
+        self._refresh_arena()
+
+    def _target_selected_area(self):
+        """Whoever is in the kept area selected becomes the targets (to
+        apply its damage at the start of a turn, say)."""
+        found = self._selected_lasting()
+        if found is None:
+            return
+        caster, entry = found
+        cells = record_cells(entry[AREA_KEY], caster, self.arena_settings)
+        inside = creatures_in(self.characters, cells, self.arena_settings)
+        if not inside:
+            self._show_status(f"Nobody is in {caster['name']}'s {entry['name']}.")
+            return
+        self._set_targets(inside)
+        self._refresh_views()
+
+    def _end_selected_area(self):
+        """End the kept area selected, with its active spell (one undo
+        step, as the card's ✕): concentration on it ends too."""
+        found = self._selected_lasting()
+        if found is None:
+            return
+        self._selected_area = None
+        self._remove_active_spell(*found)
+        self._refresh_views()
 
     def _arena_char(self, name: str) -> dict | None:
         return next((c for c in self.characters if c["name"] == name), None)
@@ -595,8 +775,10 @@ class ArenaMixin(CombatWindowState):
             self._move_combatant(char, cell)
 
     def _arena_cell(self, cell: Cell):
-        """An empty cell clicked with nobody picked up: nothing moves, as a
-        stray click shouldn't move whoever's turn it is."""
+        """An empty cell clicked with nobody picked up, and no kept area on
+        it: nothing moves, as a stray click shouldn't move whoever's turn it
+        is, and a kept area selected is deselected."""
+        self._deselect_area()
         self._show_status("Click a combatant, then the cell it moves to.")
 
     @undoable
@@ -794,6 +976,29 @@ def area_lasts(option: EffectOption | None) -> bool:
     if spell is not None:
         return bool(spell.duration_seconds)
     return option.concentration
+
+
+def _color_combo(object_name: str) -> QComboBox:
+    """A list of AREA_COLORS, each with its swatch, then "Other..."."""
+    combo = QComboBox()
+    combo.setObjectName(object_name)
+    combo.setToolTip("The colour the area is shaded in")
+    for name, color in AREA_COLORS:
+        combo.addItem(_swatch(color), name, color)
+    combo.addItem("Other...", OTHER_COLOR)
+    return combo
+
+
+def show_color(combo: QComboBox, color: str):
+    """Select `color` in a colour list (without its signal), adding it
+    before "Other..." when it isn't one of the colours there yet."""
+    index = combo.findData(color)
+    if index < 0:
+        index = combo.count() - 1
+        combo.insertItem(index, _swatch(color), color, color)
+    combo.blockSignals(True)
+    combo.setCurrentIndex(index)
+    combo.blockSignals(False)
 
 
 def _swatch(color: str) -> QIcon:

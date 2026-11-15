@@ -147,10 +147,13 @@ class WindowMixin(CombatWindowState):
         self._status_timer.start()
 
     def _escape_pressed(self):
-        """Escape stops aiming an area on the map, leaves a text field for
+        """Escape stops aiming an area on the map, deselects a kept area on
+        it, leaves a text field for
         the keyboard shortcuts to work, and otherwise clears the source and
         target selection."""
         if self._cancel_area_targeting():
+            return
+        if self._deselect_area():
             return
         focused = QApplication.focusWidget()
         if isinstance(focused, QLineEdit):

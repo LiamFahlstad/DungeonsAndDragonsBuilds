@@ -8,13 +8,16 @@ for whoever walks into one or starts a turn in one."""
 from functools import cache
 
 import pytest
+from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QColor
+from PyQt6.QtTest import QTest
 from PyQt6.QtWidgets import (
     QCheckBox,
     QColorDialog,
     QDialog,
     QLabel,
     QLineEdit,
+    QMessageBox,
     QPushButton,
 )
 
@@ -324,3 +327,146 @@ def test_hovering_an_area_names_it(fight, monkeypatch):
     _put_down(ui, monkeypatch, "Moonbeam", Cell(12, 2), concentrate=True)
     assert ui._arena_distance(Cell(12, 2)) == "55 ft. · Moonbeam"
     assert ui._arena_distance(Cell(14, 2)) == "65 ft."
+
+
+# ── Selecting a kept area (step 12) ──────────────────────────────────────────
+
+
+def _moonbeam_on_the_map(ui, monkeypatch) -> dict:
+    """Moonbeam put on M3 by the concentrating mephit, the map shown; its
+    active spell."""
+    _put_down(ui, monkeypatch, "Moonbeam", Cell(12, 2), concentrate=True)
+    _show_map(ui)
+    return _named(ui, "Ice Mephit")["active_spells"][0]
+
+
+def _panel_shown(ui) -> bool:
+    return not ui._area_panel.isHidden()
+
+
+def test_a_click_on_a_kept_area_selects_it_and_shows_what_it_is(fight, monkeypatch):
+    ui, mephit, *_ = fight
+    entry = _moonbeam_on_the_map(ui, monkeypatch)
+    view = ui._arena_view
+    assert not _panel_shown(ui)
+    viewport = view.viewport()
+    ui._window.resize(1600, 1000)
+    ui._window.show()
+    qapp().processEvents()
+    at = view.cell_center(Cell(12, 1)).toPoint()
+    QTest.mouseClick(
+        viewport, Qt.MouseButton.LeftButton, Qt.KeyboardModifier.NoModifier, at
+    )
+    qapp().processEvents()
+    assert ui._selected_area == entry[AREA_KEY]["key"]
+    assert _panel_shown(ui)
+    title = ui._area_panel_title.text()
+    assert "Ice Mephit's Moonbeam" in title
+    assert "5-foot-radius Cylinder at M3" in title
+    assert "Concentration" in title and "left" in title
+    assert "silvery beam" in ui._area_panel_text.toPlainText()
+    (row,) = view.lasting
+    assert row.selected
+    assert ui.selected_character is mephit, "an area is never the source"
+    ui._window.hide()
+
+
+def test_a_click_elsewhere_close_or_esc_deselects(fight, monkeypatch):
+    ui, *_ = fight
+    _moonbeam_on_the_map(ui, monkeypatch)
+    view = ui._arena_view
+    for how in ("empty cell", "close", "esc"):
+        view.click_cell(Cell(12, 2))
+        assert _panel_shown(ui)
+        if how == "empty cell":
+            view.click_cell(Cell(20, 2))
+        elif how == "close":
+            ui._area_panel.findChild(QPushButton, "areaPanelCloseBtn").click()
+        else:
+            ui._escape_pressed()
+        assert ui._selected_area is None, how
+        assert not _panel_shown(ui)
+    assert ui.selected_character is not None, "Esc deselected the area only"
+
+
+def test_clicks_on_overlapping_areas_go_from_one_to_the_next(fight, monkeypatch):
+    ui, *_ = fight
+    # The mephit's action is spent on Moonbeam: Grease anyway.
+    monkeypatch.setattr(
+        QMessageBox,
+        "question",
+        staticmethod(lambda *a, **k: QMessageBox.StandardButton.Yes),
+    )
+    _put_down(ui, monkeypatch, "Moonbeam", Cell(12, 2), concentrate=True)
+    _put_down(ui, monkeypatch, "Grease", Cell(12, 2), concentrate=False)
+    _show_map(ui)
+    view = ui._arena_view
+    names = []
+    for _ in range(3):
+        view.click_cell(Cell(12, 2))
+        caster, entry = ui._selected_lasting()
+        names.append(entry["name"])
+    assert names == ["Moonbeam", "Grease", "Moonbeam"]
+    view.click_cell(Cell(12, 1))  # Moonbeam's alone
+    assert ui._selected_lasting()[1]["name"] == "Moonbeam"
+
+
+def test_the_panel_changes_the_areas_colour_as_one_undo_step(fight, monkeypatch):
+    ui, *_ = fight
+    entry = _moonbeam_on_the_map(ui, monkeypatch)
+    ui._arena_view.click_cell(Cell(12, 2))
+    combo = ui._area_panel_color
+    assert combo.currentData() == "#e67e22"
+    combo.setCurrentIndex(combo.findData(BLUE))
+    assert entry[AREA_KEY]["color"] == BLUE
+    (row,) = ui._arena_view.lasting
+    assert row.color == BLUE
+    monkeypatch.setattr(
+        QColorDialog, "getColor", staticmethod(lambda *a, **k: QColor("#123456"))
+    )
+    combo.setCurrentIndex(combo.findData("other"))
+    assert entry[AREA_KEY]["color"] == "#123456"
+    ui._undo_last()
+    qapp().processEvents()
+    caster, entry = ui._selected_lasting()
+    assert entry[AREA_KEY]["color"] == BLUE, "undo goes one colour back"
+    assert ui._area_panel_color.currentData() == BLUE
+
+
+def test_target_whos_in_it(fight, monkeypatch):
+    ui, mephit, pirate, *_ = fight
+    _moonbeam_on_the_map(ui, monkeypatch)
+    ui._arena_view.click_cell(Cell(12, 2))
+    button = ui._area_panel.findChild(QPushButton, "areaPanelTargetBtn")
+    button.click()
+    assert "Nobody is in Ice Mephit's Moonbeam" in ui._status_label.text()
+    ui._move_combatant(pirate, Cell(12, 3))
+    button.click()
+    assert ui.target_characters == [pirate]
+    assert ui.selected_character is mephit
+
+
+def test_end_spell_ends_it_and_its_concentration_and_undo_brings_it_back(
+    fight, monkeypatch
+):
+    ui, mephit, *_ = fight
+    _moonbeam_on_the_map(ui, monkeypatch)
+    ui._arena_view.click_cell(Cell(12, 2))
+    ui._area_panel.findChild(QPushButton, "areaPanelEndBtn").click()
+    assert mephit["active_spells"] == []
+    assert CONCENTRATING not in mephit["conditions"]
+    assert _drawn(ui) == []
+    assert not _panel_shown(ui)
+    ui._undo_last()
+    assert _drawn(ui) == ["Moonbeam"]
+    assert CONCENTRATING in _named(ui, "Ice Mephit")["conditions"]
+
+
+def test_the_panel_goes_when_its_area_ends(fight, monkeypatch):
+    ui, *_ = fight
+    _moonbeam_on_the_map(ui, monkeypatch)
+    ui._arena_view.click_cell(Cell(12, 2))
+    ui._shortcut_remove_concentration()
+    _drawn(ui)
+    assert ui._selected_area is None
+    assert not _panel_shown(ui)

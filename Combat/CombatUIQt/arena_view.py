@@ -19,7 +19,8 @@ moved meanwhile. The shading is the colour the area bar picked.
 
 Areas that stay (step 11, Combat/Arena/lasting.py): each drawn over the grid
 in its own colour, with its name, the edge dashed while its caster
-concentrates on it."""
+concentrates on it. A click on an empty cell of one selects it (step 12),
+edged brighter; another click there goes to the next area on that cell."""
 
 from __future__ import annotations
 
@@ -178,6 +179,7 @@ class ArenaView(QGraphicsView):
         on_cell: Callable[[Cell], None] = lambda cell: None,
         reach_of: Callable[[str], dict[Cell, int]] = lambda name: {},
         distance_at: Callable[[Cell], str | None] = lambda cell: None,
+        on_area: Callable[[str], None] = lambda key: None,
     ):
         super().__init__()
         self.setObjectName("arenaView")
@@ -193,6 +195,7 @@ class ArenaView(QGraphicsView):
         self._on_cell = on_cell
         self._reach_of = reach_of
         self._distance_at = distance_at
+        self._on_area = on_area
         # The hover distance by the cursor ("25 ft.", step 7): its text and
         # where it's drawn, so a redraw keeps it.
         self._hover: tuple[str, QPointF] | None = None
@@ -334,6 +337,9 @@ class ArenaView(QGraphicsView):
         colour = QColor(area.color)
         pen = QPen(_with_alpha(colour, _LASTING_EDGE_ALPHA))
         pen.setWidthF(1.0)
+        if area.selected:
+            pen = QPen(colour.lighter(170))
+            pen.setWidthF(2.5)
         if area.concentration:
             pen.setStyle(Qt.PenStyle.DashLine)
         brush = QBrush(_with_alpha(colour, _LASTING_ALPHA))
@@ -797,7 +803,18 @@ class ArenaView(QGraphicsView):
             if self._picked is not None:
                 self.move_picked(cell)
             else:
-                self._on_cell(cell)
+                self.click_cell(cell)
+
+    def click_cell(self, cell: Cell):
+        """An empty cell clicked with nothing picked up: the area that stays
+        on it is selected (`on_area`), the next one on it when the one
+        selected is there too; with none, `on_cell`."""
+        here = [area for area in self._lasting if cell in area.cells]
+        if not here:
+            self._on_cell(cell)
+            return
+        chosen = next((i for i, area in enumerate(here) if area.selected), -1)
+        self._on_area(here[(chosen + 1) % len(here)].key)
 
     def wheelEvent(self, event: QWheelEvent | None):
         if event is None:
