@@ -139,8 +139,8 @@ details.
 
 - **Initiative:** it has no row of its own. It takes its turn right after its
   owner's, also when it's summoned mid-fight (whoever's turn it is keeps it).
-- **Summoning:** the owner's **Enable Feature** (Drake Companion, Reanimated
-  Companion), or **Summon ...** in its owner's (or its own) right-click menu,
+- **Summoning:** **Summon ...** in its owner's (or its own) right-click menu
+  (Drake Companion, Reanimated Companion),
   which also offers the choice made each time (the drake's Draconic Essence:
   Acid, Cold, Fire, Lightning or Poison). It spends the feature's use and its
   Action, or the owner's lowest spell slot once the use is gone, and brings it

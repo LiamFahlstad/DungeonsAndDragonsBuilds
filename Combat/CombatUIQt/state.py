@@ -707,9 +707,6 @@ class CombatWindowState:
     def _show_add_combatant_dialog(self):
         raise NotImplementedError("DialogsMixin._show_add_combatant_dialog")
 
-    def _show_cast_spell_dialog(self):
-        raise NotImplementedError("SpellsMixin._show_cast_spell_dialog")
-
     def _show_condition_info(self, condition_name: str):
         raise NotImplementedError("DialogsMixin._show_condition_info")
 
@@ -718,9 +715,6 @@ class CombatWindowState:
 
     def _show_current_log(self):
         raise NotImplementedError("LoggingMixin._show_current_log")
-
-    def _show_enable_feature_dialog(self):
-        raise NotImplementedError("FeaturesMixin._show_enable_feature_dialog")
 
     def _end_encounter(self):
         raise NotImplementedError("EncountersMixin._end_encounter")

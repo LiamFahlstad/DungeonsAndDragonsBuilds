@@ -3,20 +3,13 @@ heads off: Enter skipping resistances, a cast spell not spending its slot, an
 action that silently does nothing, and pressing Next past dead monsters."""
 
 import pytest
-from PyQt6.QtWidgets import (
-    QComboBox,
-    QDialog,
-    QLabel,
-    QMessageBox,
-    QPushButton,
-    QTreeWidget,
-)
+from PyQt6.QtWidgets import QDialog, QMessageBox, QPushButton
 
 from CharacterContent.Spells.SpellFactory import SpellFactory
 from Combat.Combatants import Pirate, Tiger
-from Combat.CombatUIQt.spells_mixin import spell_slot_choices
+from Combat.CombatUIQt.effect_options import spell_slot_choices
 from Core.Definitions import DamageType
-from tests._combat_ui import answer_out_of_resources, make_ui, open_dialog
+from tests._combat_ui import make_ui
 
 FIRE = DamageType.FIRE.value
 
@@ -99,32 +92,7 @@ def test_ignore_resist_applies_the_amount_typed(fire_resistant_tiger):
 
 
 # ---------------------------------------------------------------------------
-# 2. Cast Spell spends the slot
-
-
-def _spell_dialog(ui, monkeypatch, spell_name: str):
-    """The Cast Spell dialog for the source, with spell_name picked. It's
-    found in the caster's own list when it's there, as that comes first."""
-    dlg = open_dialog(monkeypatch, ui._show_cast_spell_dialog)
-    tree = dlg.findChild(QTreeWidget)
-    assert tree is not None
-    for i in range(tree.topLevelItemCount()):
-        category = tree.topLevelItem(i)
-        for j in range(category.childCount()):
-            if category.child(j).text(0) == spell_name:
-                tree.setCurrentItem(category.child(j))
-                return dlg
-    raise AssertionError(f"{spell_name} isn't listed")
-
-
-def _slot_combo(dlg) -> QComboBox:
-    combo = dlg.findChild(QComboBox)
-    assert combo is not None
-    return combo
-
-
-def _cast_button(dlg) -> QPushButton:
-    return next(b for b in dlg.findChildren(QPushButton) if b.text().startswith("Cast"))
+# 2. A cast spell spends its slot
 
 
 @pytest.fixture
@@ -142,101 +110,6 @@ def caster(fight):
 
 def _log_text(ui) -> str:
     return str(ui._read_log())
-
-
-def test_the_casters_own_spells_come_first(caster, monkeypatch):
-    ui, _, _ = caster
-    dlg = open_dialog(monkeypatch, ui._show_cast_spell_dialog)
-    tree = dlg.findChild(QTreeWidget)
-    own = tree.topLevelItem(0)
-    assert own.text(0) == "Pirate's Spells"
-    assert own.isExpanded()
-    assert [own.child(i).text(0) for i in range(own.childCount())] == [
-        "Fire Bolt",
-        "Hold Person",
-    ]
-    # Every other spell stays reachable, for a scroll or a surprise.
-    assert tree.topLevelItemCount() > 1
-
-
-def test_a_caster_with_no_spell_list_gets_the_plain_list(fight, monkeypatch):
-    ui, pirate, _, _ = fight
-    ui._select_character(pirate)
-    dlg = open_dialog(monkeypatch, ui._show_cast_spell_dialog)
-    assert dlg.findChild(QTreeWidget).topLevelItem(0).text(0) == "Cantrips"
-
-
-def test_casting_spends_the_lowest_slot_that_fits(caster, monkeypatch):
-    ui, pirate, tiger = caster
-    dlg = _spell_dialog(ui, monkeypatch, "Hold Person")
-    assert _slot_combo(dlg).currentData() == 2
-    _cast_button(dlg).click()
-    assert pirate["spell_slots"] == {1: 1, 2: 1, 3: 1}
-    assert "Hold Person" in tiger["conditions"]
-    assert "at level" not in _log_text(ui)
-
-
-def test_a_higher_slot_upcasts(caster, monkeypatch):
-    ui, pirate, _ = caster
-    dlg = _spell_dialog(ui, monkeypatch, "Hold Person")
-    combo = _slot_combo(dlg)
-    combo.setCurrentIndex(combo.findData(3))
-    _cast_button(dlg).click()
-    assert pirate["spell_slots"] == {1: 1, 2: 2, 3: 0}
-    assert "casts Hold Person at level 3" in _log_text(ui)
-
-
-def test_a_cantrip_spends_no_slot(caster, monkeypatch):
-    ui, pirate, _ = caster
-    dlg = _spell_dialog(ui, monkeypatch, "Fire Bolt")
-    assert not _slot_combo(dlg).isEnabled()
-    _cast_button(dlg).click()
-    assert pirate["spell_slots"] == {1: 1, 2: 2, 3: 1}
-
-
-def test_casting_free_of_a_slot_can_be_chosen(caster, monkeypatch):
-    ui, pirate, _ = caster
-    dlg = _spell_dialog(ui, monkeypatch, "Hold Person")
-    combo = _slot_combo(dlg)
-    combo.setCurrentIndex(combo.count() - 1)
-    assert combo.currentData() is None
-    _cast_button(dlg).click()
-    assert pirate["spell_slots"] == {1: 1, 2: 2, 3: 1}
-
-
-def test_out_of_slots_says_so_on_the_button(caster, monkeypatch):
-    ui, pirate, _ = caster
-    pirate["spell_slots"] = {1: 3, 2: 0, 3: 0}
-    dlg = _spell_dialog(ui, monkeypatch, "Hold Person")
-    assert _cast_button(dlg).text() == "Cast without a slot"
-    assert any(
-        label.text() == "No slot of level 2 or higher left."
-        for label in dlg.findChildren(QLabel)
-    )
-    asked = answer_out_of_resources(monkeypatch, yes=True)
-    _cast_button(dlg).click()
-    assert "Spell slots: none of level 2 or higher left" in asked[0]
-    assert pirate["spell_slots"] == {1: 3, 2: 0, 3: 0}
-    assert any("casts Hold Person" in e["text"] for e in ui._read_log()["round_1"])
-
-
-def test_out_of_slots_and_no_casts_nothing(caster, monkeypatch):
-    ui, pirate, _ = caster
-    pirate["spell_slots"] = {1: 3, 2: 0, 3: 0}
-    dlg = _spell_dialog(ui, monkeypatch, "Hold Person")
-    answer_out_of_resources(monkeypatch, yes=False)
-    _cast_button(dlg).click()
-    assert not any("casts Hold Person" in e["text"] for e in ui._read_log()["round_1"])
-    assert "out of resources" in _status(ui)
-
-
-def test_undoing_a_cast_gives_the_slot_back(caster, monkeypatch):
-    ui, pirate, tiger = caster
-    _cast_button(_spell_dialog(ui, monkeypatch, "Hold Person")).click()
-    ui._undo_last()
-    assert pirate["spell_slots"] == {1: 1, 2: 2, 3: 1}
-    assert "Hold Person" not in tiger["conditions"]
-    assert len(ui.history) == 0, "the cast and its slot are one step"
 
 
 def test_the_slot_is_spent_only_if_the_cast_happens(caster):

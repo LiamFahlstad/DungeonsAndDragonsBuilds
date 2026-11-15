@@ -405,7 +405,7 @@ class CardsMixin(CombatWindowState):
                 lambda _=False, c=char, name=cond: self._toggle_condition_on(c, name)
             )
         menu.addSeparator()
-        menu.addAction("Custom... (Shift+C)", self._show_custom_condition_dialog)
+        menu.addAction("Use / Cast... (Shift+C)", self._show_custom_condition_dialog)
         wild_shape = self._wild_shape_menu(char)
         if wild_shape is not None:
             menu.addSeparator()

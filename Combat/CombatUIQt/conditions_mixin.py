@@ -1581,7 +1581,7 @@ class ConditionsMixin(CombatWindowState):
 
         dlg = QDialog(self._window)
         dlg.setObjectName("customEffectDialog")
-        dlg.setWindowTitle("Custom Effect")
+        dlg.setWindowTitle("Use / Cast")
         dlg.setStyleSheet(QSS)
         dlg.setMinimumWidth(_CUSTOM_DIALOG_WIDTH)
         dlg.resize(_effect_dialog_width(self._window), 0)

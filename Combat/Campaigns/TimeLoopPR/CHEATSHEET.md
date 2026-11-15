@@ -26,8 +26,7 @@ python -m Combat.Tools.prepare_encounters --campaign time_loop_pr
 Dessie's Reanimated Companion and Hanna's Drake Companion join a fight when
 they're summoned, as "Dessie's Reanimated Companion" and "Hanna's Drake
 Companion". They roll no initiative: each takes its turn right after its
-owner's. To summon one, select Dessie or Hanna and use **Enable Feature**, or
-right-click the owner's card (or the summon's) and pick **Summon ...**; for
+owner's. To summon one, right-click the owner's card (or the summon's) and pick **Summon ...**; for
 the drake, pick its Draconic Essence there. That spends the feature's use (then
 a spell slot) and brings it out at full HP. **Dismiss** in the summon's menu
 sends it away. One that's out stays out into the next encounter until a long

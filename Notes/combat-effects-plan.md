@@ -2793,6 +2793,16 @@ roll, and stays as it is.
   within 5 feet of you"`. Cast Spell gives the first row's badge (warm), as
   for Protection from Energy; the dialog's pick gives the one picked. 87
   spells have combat effects.
+- **R167. Cast Spell and Enable Feature removed; the dialog is "Use / Cast"**
+  (2026-11-15, the user: the Custom Effect dialog is what's used, since its
+  picker loads attacks, spells and features). Their buttons, the S / F keys
+  and both dialogs are gone; the Custom Effect dialog is titled "Use / Cast"
+  and its button ("Use / Cast... (Shift+C)") sits beside More Info, the
+  card menu's entry renamed to match. Summons and Wild Shape stay on the
+  card menu. `_apply_cast_spell` and `_apply_feature` are kept: no window
+  path calls them now, but many tests use them to put a spell's or a
+  feature's badge on. Where the entries above say "Cast Spell" or "Enable
+  Feature", that is history.
 
 ## Open questions (with suggestions)
 

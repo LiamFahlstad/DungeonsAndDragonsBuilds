@@ -469,7 +469,7 @@ def _choose_roll(dlg, kind: str):
 def test_the_dialog_applies_all_of_it(fight, monkeypatch):
     ui, _, tiger, bandit = fight
     dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
-    assert dlg.windowTitle() == "Custom Effect"
+    assert dlg.windowTitle() == "Use / Cast"
     combo = _combo(dlg, "saveAbility")
     combo.setCurrentIndex(combo.findData("DEX"))
     dlg.findChild(QSpinBox, "saveDc").setValue(15)

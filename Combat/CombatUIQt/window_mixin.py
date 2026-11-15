@@ -53,8 +53,6 @@ class WindowMixin(CombatWindowState):
         self.selected_character = char
         self.selected_label.setText(f"Source: {char['name']}")
         self._more_info_btn.setEnabled(True)
-        self._cast_spell_btn.setEnabled(True)
-        self._enable_feature_btn.setEnabled(True)
         # Not under an amount already typed, which was meant for that type.
         if self.settings.remember_damage_type and not self.damage_input.text():
             self._show_source_damage_type(char)
@@ -136,8 +134,6 @@ class WindowMixin(CombatWindowState):
         self.selected_character = None
         self.selected_label.setText("Source: None")
         self._more_info_btn.setEnabled(False)
-        self._cast_spell_btn.setEnabled(False)
-        self._enable_feature_btn.setEnabled(False)
         self._set_targets([])
 
     def _show_status(self, text: str):
@@ -337,15 +333,17 @@ class WindowMixin(CombatWindowState):
         self._more_info_btn.clicked.connect(self._show_more_info)
         info_cast_row.addWidget(self._more_info_btn)
 
-        self._cast_spell_btn = QPushButton("Cast Spell")
-        self._cast_spell_btn.setEnabled(False)
-        self._cast_spell_btn.clicked.connect(self._show_cast_spell_dialog)
-        info_cast_row.addWidget(self._cast_spell_btn)
-
-        self._enable_feature_btn = QPushButton("Enable Feature")
-        self._enable_feature_btn.setEnabled(False)
-        self._enable_feature_btn.clicked.connect(self._show_enable_feature_dialog)
-        info_cast_row.addWidget(self._enable_feature_btn)
+        # The Use / Cast dialog (ConditionsMixin._show_custom_condition_dialog):
+        # the source's attacks, actions, spells and features, or any effect.
+        self._use_cast_btn = QPushButton("Use / Cast... (Shift+C)")
+        self._use_cast_btn.setObjectName("useCastButton")
+        self._use_cast_btn.setToolTip(
+            "Use one of the source's attacks, actions, features or spells on"
+            " the targets, or type any effect: a saving throw or attack roll,"
+            " damage or healing, a condition, and what it costs"
+        )
+        self._use_cast_btn.clicked.connect(self._show_custom_condition_dialog)
+        info_cast_row.addWidget(self._use_cast_btn, stretch=2)
         panel_layout.addLayout(info_cast_row)
 
         # Round indicator + session/player timers (compact, combined rows)
@@ -529,13 +527,6 @@ class WindowMixin(CombatWindowState):
         cond_row.addWidget(add_cond_btn)
         cond_row.addWidget(rm_cond_btn)
         right_col.addLayout(cond_row)
-        custom_cond_btn = QPushButton("Custom... (Shift+C)")
-        custom_cond_btn.setToolTip(
-            "Roll a saving throw for every target and apply damage or a"
-            " condition to each, or just give them any condition you type"
-        )
-        custom_cond_btn.clicked.connect(self._show_custom_condition_dialog)
-        right_col.addWidget(custom_cond_btn)
 
         right_col.addWidget(self._make_divider())
 
@@ -573,7 +564,7 @@ class WindowMixin(CombatWindowState):
         spell_row = QHBoxLayout()
         cast_btn = QPushButton("Spend (1-9)")
         cast_btn.setToolTip(
-            "Spend a slot of this level on its own. Cast Spell already spends"
+            "Spend a slot of this level on its own. The Use / Cast dialog already spends"
             " one, so don't press this as well."
         )
         cast_btn.clicked.connect(
@@ -888,20 +879,10 @@ class WindowMixin(CombatWindowState):
             self._focus_temp_hp_shortcut,
         ]
 
-        # S / F / I: the source's Cast Spell, Enable Feature and More Info
-        self._cast_spell_shortcut = QShortcut(QKeySequence("S"), self._window)
-        self._cast_spell_shortcut.activated.connect(self._show_cast_spell_dialog)
-        self._enable_feature_shortcut = QShortcut(QKeySequence("F"), self._window)
-        self._enable_feature_shortcut.activated.connect(
-            self._show_enable_feature_dialog
-        )
+        # I: the source's More Info
         self._more_info_shortcut = QShortcut(QKeySequence("I"), self._window)
         self._more_info_shortcut.activated.connect(self._show_more_info)
-        self._combo_sensitive_shortcuts += [
-            self._cast_spell_shortcut,
-            self._enable_feature_shortcut,
-            self._more_info_shortcut,
-        ]
+        self._combo_sensitive_shortcuts.append(self._more_info_shortcut)
 
         # Ctrl+N: open the Add Combatant dialog
         # G: the Cards / Arena switch, during combat (ArenaMixin._toggle_view).

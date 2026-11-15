@@ -15,11 +15,9 @@ from PyQt6.QtWidgets import (
     QCheckBox,
     QDialog,
     QLabel,
-    QLineEdit,
     QMessageBox,
     QProgressBar,
     QPushButton,
-    QTreeWidget,
 )
 
 from CharacterContent.Spells.SpellFactory import SpellFactory
@@ -1154,30 +1152,17 @@ def test_turn_panel_only_shows_in_combat(tmp_path):
     assert ui._turn_panel.isVisibleTo(ui._window)
 
 
-@pytest.mark.parametrize("key", ["S", "F", "I"])
-def test_the_source_dialogs_have_shortcuts(fight, key):
+def test_more_info_has_a_shortcut(fight):
     ui, *_ = fight
-    shortcut = {
-        "S": ui._cast_spell_shortcut,
-        "F": ui._enable_feature_shortcut,
-        "I": ui._more_info_shortcut,
-    }[key]
+    shortcut = ui._more_info_shortcut
     assert shortcut in ui._combo_sensitive_shortcuts
-    assert shortcut.key().toString() == key
+    assert shortcut.key().toString() == "I"
 
 
-@pytest.mark.parametrize(
-    "open_it",
-    [
-        lambda ui: ui._show_cast_spell_dialog(),
-        lambda ui: ui._show_enable_feature_dialog(),
-        lambda ui: ui._show_more_info(),
-    ],
-)
-def test_no_source_says_so_instead_of_nothing(fight, open_it):
+def test_no_source_says_so_instead_of_nothing(fight):
     ui, *_ = fight
     ui._clear_selection()
-    open_it(ui)
+    ui._show_more_info()
     assert "pick a source" in _status(ui)
 
 
@@ -1212,52 +1197,13 @@ def test_jumping_to_damage_after_a_target_is_a_setting(fight, monkeypatch):
     assert focused == [1]
 
 
-def _spell_tree(dlg):
-    return dlg.findChild(QTreeWidget)
-
-
-def _search_box(dlg):
-    return dlg.findChild(QLineEdit)
-
-
-def test_enter_in_the_spell_search_picks_then_casts(fight, monkeypatch):
-    ui, pirate, tiger, _ = fight
-    pirate["spell_slots"] = {2: 1}
-    dlg = open_dialog(monkeypatch, ui._show_cast_spell_dialog)
-    search = _search_box(dlg)
-    search.setText("hold person")
-    search.returnPressed.emit()
-    assert _spell_tree(dlg).currentItem().text(0) == "Hold Person"
-    assert "Hold Person" not in tiger["conditions"], "the first Enter only picks"
-    search.returnPressed.emit()
-    assert "Hold Person" in tiger["conditions"]
-    assert pirate["spell_slots"] == {2: 0}
-
-
-def test_double_clicking_a_spell_casts_it(fight, monkeypatch):
-    ui, _, tiger, _ = fight
-    dlg = open_dialog(monkeypatch, ui._show_cast_spell_dialog)
-    search = _search_box(dlg)
-    search.setText("hold person")
-    search.returnPressed.emit()
-    tree = _spell_tree(dlg)
-    tree.itemActivated.emit(tree.currentItem(), 0)
-    assert "Hold Person" in tiger["conditions"]
-
-
-def test_enter_isnt_the_dialogs_default_button(fight, monkeypatch):
-    ui, *_ = fight
-    dlg = open_dialog(monkeypatch, ui._show_cast_spell_dialog)
-    assert not any(b.autoDefault() for b in dlg.findChildren(QPushButton))
-
-
 # ---------------------------------------------------------------------------
 # What the review of the first round of fixes found
 
 
-def test_a_monster_reloaded_from_a_log_can_cast(tmp_path, monkeypatch):
+def test_a_monster_reloaded_from_a_log_can_cast(tmp_path):
     """A log's JSON makes spell slot levels strings: without turning them back
-    the Cast Spell dialog raised, and that ended the app."""
+    spending a slot raised, and that ended the app."""
     ui = make_ui(tmp_path, [Pirate()])
     (pirate,) = ui.characters
     pirate["spell_slots"] = {1: 3, 2: 2}
@@ -1273,11 +1219,6 @@ def test_a_monster_reloaded_from_a_log_can_cast(tmp_path, monkeypatch):
     fresh._select_character(loaded)
     fresh._cast_spell_slot_level(1)
     assert loaded["spell_slots"] == {1: 2, 2: 2}
-    dlg = open_dialog(monkeypatch, fresh._show_cast_spell_dialog)
-    search = _search_box(dlg)
-    search.setText("hold person")
-    search.returnPressed.emit()
-    assert _spell_tree(dlg).currentItem().text(0) == "Hold Person"
 
 
 def test_a_players_resistance_counts(tmp_path):

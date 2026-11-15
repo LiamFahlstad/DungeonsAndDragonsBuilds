@@ -45,22 +45,16 @@ Started 2026-10-31, after the work in commit `cedb8819`. All automated tests ran
 
 ### 4. Spells and features
 
-- [ ] Press S: Cast Spell opens with the caster's own spells first.
-- [ ] Type part of a name, press Enter: it picks the first match. Enter again casts.
-- [ ] Double-click a spell: it casts.
-- [ ] Casting spends the lowest slot that fits.
-- [ ] Picking a higher slot logs "at level N".
-- [ ] "No slot" spends nothing. A cantrip spends nothing.
-- [ ] With no slots left, the button reads "Cast without a slot".
-- [ ] Undo a cast: the slot and the spell both come back in one step.
-- [ ] Open Cast Spell on a Yellow Cape Enforcer. This used to crash the app.
-- [ ] Press F: Enable Feature opens, and Enter and double-click work the same way.
+Spells and features are used from the Use / Cast dialog (4b); the Cast
+Spell and Enable Feature buttons and their S / F keys were removed
+(2026-11-15).
+
 - [ ] Press I: More Info opens.
-- [ ] Habit check: don't press 1-9 after casting, because Cast Spell has already spent the slot.
+- [ ] Habit check: don't press 1-9 after casting, because the Use / Cast dialog has already spent the slot.
 
-### 4b. Custom Effect (saves for several targets)
+### 4b. Use / Cast (formerly Custom Effect)
 
-- [ ] Pick several targets, press Shift+C or Custom: the dialog fits your screen.
+- [ ] Pick several targets, press Shift+C or Use / Cast...: the dialog fits your screen.
 - [ ] The DC starts at the source's spell save DC.
 - [ ] A Fireball: Dexterity, `8d6 fire`, half on save, Apply: each target rolls and takes the right amount.
 - [ ] A target resistant to the damage takes half as well.
@@ -295,7 +289,7 @@ The page ran in headless Chrome on this PC, but nothing has crossed a network or
 
 - [ ] **Per-target save features.** Evasion, Magic Resistance and similar aren't counted; the dialog has one roll mode for all targets.
 - [ ] **Exhaustion levels.** Only the condition is tracked, so saves can't subtract 2 per level, and a second Exhaustion doesn't stack.
-- [ ] **Cast Spell badges as conditions.** A Hold Person badge isn't Paralyzed to the rules code; a spell-to-condition mapping would fix that.
+- [ ] **Spell-name badges as conditions.** A Hold Person badge isn't Paralyzed to the rules code; a spell-to-condition mapping would fix that.
 
 ### Player screen
 
