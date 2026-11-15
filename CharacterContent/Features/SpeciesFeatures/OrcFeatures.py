@@ -7,7 +7,8 @@ from Model.Content.Feature import (
     RegainedOn,
     FeatureTarget,
 )
-from Model.Content.CombatEffect import CombatEffect
+from Model.Content.CombatEffect import CombatEffect, CombatHitPoints
+from Model.Content.StandardActions import DASH, take_actions
 from Model.Content.CombatTriggers import CombatTrigger, TriggerEvent
 from Model.Content.Improvements import GrantSense
 from Model.Ledger.LedgerWriter import LedgerWriter
@@ -78,6 +79,16 @@ class AdrenalineRush(Feature):
 
     def number_of_uses(self, character: CharacterView) -> int:
         return character.get_proficiency_bonus()
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # The Dash action, as its Bonus Action (its activation).
+        return [
+            take_actions(
+                "Adrenaline Rush: Dash",
+                DASH,
+                temp_hp=CombatHitPoints(str(character.get_proficiency_bonus())),
+            )
+        ]
 
 
 class RelentlessEndurance(Feature):

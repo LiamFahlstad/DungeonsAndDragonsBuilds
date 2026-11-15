@@ -3,7 +3,8 @@ Actions), in one place: each one's 2024 rules text and what taking it does in
 a fight, as combat effects. The combat picker lists them for every combatant
 ("Standard Actions", Combat/CombatUIQt/effect_options.py), and features that
 let their owner take one of them (Cunning Action's Dash, Patient Defense's
-Dodge, Step of the Wind's Disengage) give the same badges, from here.
+Dodge, Step of the Wind's Disengage) give the same badges, from here:
+take_actions() is such a feature's row, for a Bonus Action or a Reaction.
 
     Dodge       a badge until the start of its next turn: attack rolls against
                 it have Disadvantage (if it can see the attacker), and it has
@@ -272,17 +273,60 @@ def dodge(action_type: ActionType = ActionType.ACTION) -> CombatEffect:
     return _action(DODGE, action_type, dodge_condition())
 
 
+_HIDE_NOTE = (
+    "Apply it only on a DC 15 Dexterity (Stealth) check, made while"
+    " Heavily Obscured or behind Three-Quarters or Total Cover and out"
+    " of any enemy's line of sight. The check's total is the DC to find"
+    " it (Wisdom (Perception)). On a failure, log the action spent alone."
+)
+
+
 def hide(action_type: ActionType = ActionType.ACTION) -> CombatEffect:
-    return _action(
-        HIDE,
-        action_type,
-        *hidden_conditions(),
-        notes=(
-            "Apply it only on a DC 15 Dexterity (Stealth) check, made while"
-            " Heavily Obscured or behind Three-Quarters or Total Cover and out"
-            " of any enemy's line of sight. The check's total is the DC to find"
-            " it (Wisdom (Perception)). On a failure, log the action spent alone.",
-        ),
+    return _action(HIDE, action_type, *hidden_conditions(), notes=(_HIDE_NOTE,))
+
+
+# The badges taking each of these actions gives its taker.
+_BADGES_OF = {
+    DASH: lambda: (dash_condition(),),
+    DISENGAGE: lambda: (disengage_condition(),),
+    DODGE: lambda: (dodge_condition(),),
+    HIDE: hidden_conditions,
+}
+
+
+def take_actions(
+    row: str,
+    *actions: str,
+    action_type: ActionType | None = None,
+    notes: tuple[str, ...] = (),
+    **fields,
+) -> CombatEffect:
+    """A feature's row for taking one or more of the Dash, Disengage, Dodge
+    and Hide actions some other way than with an Action: a Bonus Action
+    (Cunning Action, Timely Retreat), a Reaction (Elusive Brawler's Reactive
+    Dodge) or as part of something else (no action_type: the feature's own
+    cost, or none). Its user gets each action's own badges, which the fight
+    counts as if it took the action itself (a Dash's movement, a Disengage's
+    missing Opportunity Attack reminders, a Dodge's Disadvantage).
+
+    `fields` are any other CombatEffect fields (temp_hp, ends_conditions,
+    spends_use, trigger...). The badges that end with a turn come first, as
+    the form gives every badge the first's duration and lets the others
+    keep their own."""
+    unknown = [a for a in actions if a not in _BADGES_OF]
+    if unknown or not actions:
+        raise ValueError(f"take_actions takes {', '.join(_BADGES_OF)}, got {actions!r}")
+    conditions = [c for a in actions for c in _BADGES_OF[a]()]
+    conditions.sort(key=lambda c: c.until is None)  # stable: the order given
+    if HIDE in actions:
+        notes = (*notes, _HIDE_NOTE)
+    return CombatEffect(
+        name=row,
+        conditions=tuple(conditions),
+        targets_self=True,
+        action_type=action_type,
+        notes=tuple(notes),
+        **fields,
     )
 
 

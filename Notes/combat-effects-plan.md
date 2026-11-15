@@ -2833,6 +2833,29 @@ roll, and stays as it is.
   side (Dash movement, Opportunity Attack reminders) is combat-arena-plan
   step 13.
 
+- **R169. A standard action some other way than with an Action** (2026-11-15,
+  the user: "many effects, for example Patient Defense, let you disengage
+  as a bonus action. Make sure such support exists"). `take_actions(row,
+  *actions, action_type=..., **fields)` in StandardActions.py is a
+  feature's row that takes Dash, Disengage, Dodge and/or Hide as a Bonus
+  Action, a Reaction or as part of something else (no `action_type`: the
+  feature's own cost). It gives the actions' own badges, so the fight
+  treats them as the action itself (a Dash's movement, a Disengage's
+  missing Opportunity Attack reminders). Wired: Boon of Speed (Escape
+  Artist, also ends Grappled), Arcane Infiltrator (Cunning Diversion),
+  Vampire's Plaything (Timely Retreat), Adrenaline Rush (with its
+  Temporary Hit Points), Elusive Brawler (Reactive Dodge, a Reaction as its
+  owner takes damage), Spell Subterfuge (Shrouding Spells: Dash and Hide),
+  Evasive Footwork, Lunging Attack, Battlerager Charge (spends no Rage, whose
+  extension it is) and the 2014 Drunken Technique (free, with Flurry of
+  Blows). A row's badge that lasts until removed beside one that ends with
+  a turn now keeps no duration (`condition_untils` holds None for it):
+  Shrouding Spells' Hidden stays after its Dash ends. Left to the dialog's
+  action chips (a Standard Actions row with Bonus Action picked), as their
+  benefit is one option of several not described yet: Rage of the Wilds'
+  Eagle, Improved Mutable Form's Superior Stride, Wondrous Alteration's
+  Aquatic Adaptation, Exceptional Training's beast commands.
+
 ## Open questions (with suggestions)
 
 Q4-Q10, Q13, Q18, Q21-Q29, Q31-Q35, Q37, Q46, Q48-Q50, Q53 and Q55 are

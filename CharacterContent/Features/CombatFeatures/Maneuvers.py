@@ -2,6 +2,8 @@ from Model.Content.Feature import Feature, FeatureActivation, ActionType, Featur
 from Core.Definitions import CharacterClass
 from Model.View import CharacterView
 from Model.Content.FeatureText import Block, Facts
+from Model.Content.CombatEffect import CombatEffect
+from Model.Content.StandardActions import DASH, DISENGAGE, take_actions
 
 
 class Maneuver(Feature):
@@ -269,6 +271,19 @@ class EvasiveFootwork(Maneuver):
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # The Disengage action, as its Bonus Action (its activation).
+        return [
+            take_actions(
+                "Evasive Footwork: Disengage",
+                DISENGAGE,
+                notes=(
+                    "Roll the Superiority Die: it adds the number to its AC"
+                    " until the start of its next turn.",
+                ),
+            )
+        ]
+
 
 class FeintingAttack(Maneuver):
     def __init__(self):
@@ -394,6 +409,21 @@ class LungingAttack(Maneuver):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # The Dash action, as its Bonus Action (its activation).
+        return [
+            take_actions(
+                "Lunging Attack: Dash",
+                DASH,
+                notes=(
+                    "If it moves at least 5 feet in a straight line right"
+                    " before hitting with a melee attack as part of the Attack"
+                    " action this turn, add the Superiority Die to that"
+                    " attack's damage.",
+                ),
+            )
+        ]
 
 
 class ManeuveringAttack(Maneuver):

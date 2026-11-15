@@ -8,6 +8,7 @@ from Model.Content.Feature import (
     regained_on_from_uses,
 )
 from Model.Content.CombatEffect import CombatEffect
+from Model.Content.StandardActions import DASH, DISENGAGE, DODGE, take_actions
 from Model.Content.Improvements import (
     DamageResistance,
     GrantLanguage,
@@ -1228,6 +1229,16 @@ class ArcaneInfiltrator(_SpellcastingOriginFeat):
             "Cunning Diversion. You can take the Dodge action as a Bonus Action. You can use this benefit a number of times equal to your Proficiency Bonus, and you regain all expended uses when you finish a Long Rest."
         )
 
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # Cunning Diversion; Friends is in the picker as a spell.
+        return [
+            take_actions(
+                "Cunning Diversion: Dodge",
+                DODGE,
+                action_type=ActionType.BONUS_ACTION,
+            )
+        ]
+
     def number_of_uses(self, character: CharacterView) -> int:
         return character.get_proficiency_bonus()
 
@@ -1665,6 +1676,17 @@ class VampiresPlaything(OriginFeat):
             "Timely Retreat. You can take a Bonus Action to take the Dash action or the Disengage action. You can use this benefit a number of times equal to your Proficiency Bonus, and you recover all expended uses when you finish a Long Rest.\n"
             "Vampiric Connection. The DM determines the fate of your former vampire master. While you and your former vampire master are on the same plane of existence, the vampire can communicate with you telepathically, and you can choose to allow the vampire to perceive through your senses."
         )
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # Timely Retreat, a row per action; the rest isn't for a fight.
+        return [
+            take_actions(
+                f"Timely Retreat: {action}",
+                action,
+                action_type=ActionType.BONUS_ACTION,
+            )
+            for action in (DASH, DISENGAGE)
+        ]
 
     def number_of_uses(self, character: CharacterView) -> int:
         return character.get_proficiency_bonus()

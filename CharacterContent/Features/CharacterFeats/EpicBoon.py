@@ -21,6 +21,8 @@ from Model.Content.Feature import (
     RegainedOn,
     regained_on_from_uses,
 )
+from Model.Content.CombatEffect import CombatEffect
+from Model.Content.StandardActions import DISENGAGE, take_actions
 from Model.Content.Improvements import (
     AbilityScoreBonus,
     ConditionImmunity,
@@ -556,6 +558,17 @@ class BoonOfSpeed(_AbilityScoreEpicBoon):
             "Escape Artist. As a Bonus Action, you can take the Disengage action, which also ends the Grappled condition on you.\n"
             "Quickness. Your Speed increases by 30 feet."
         )
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # Escape Artist; Quickness is its Speed, on the sheet.
+        return [
+            take_actions(
+                "Escape Artist: Disengage",
+                DISENGAGE,
+                action_type=ActionType.BONUS_ACTION,
+                ends_conditions=(Condition.GRAPPLED,),
+            )
+        ]
 
 
 class BoonOfSpellRecall(_AbilityScoreEpicBoon):

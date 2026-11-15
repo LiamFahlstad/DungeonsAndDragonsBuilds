@@ -54,7 +54,30 @@ from Model.Content.StandardActions import (
     HELP,
     HIDDEN,
     STANDARD_ACTION_RULES,
+    take_actions,
 )
+from CharacterContent.Features.CharacterFeats.EpicBoon import BoonOfSpeed
+from CharacterContent.Features.CharacterFeats.GeneralFeats import (
+    ElusiveBrawler,
+    SpellSubterfuge,
+)
+from CharacterContent.Features.CharacterFeats.OriginFeats import (
+    ArcaneInfiltrator,
+    VampiresPlaything,
+)
+from CharacterContent.Features.CombatFeatures.Maneuvers import (
+    EvasiveFootwork,
+    LungingAttack,
+)
+from CharacterContent.Features.SpeciesFeatures.OrcFeatures import AdrenalineRush
+from CharacterContent.Features.SubClassFeatures2014.Barbarian.BarbarianPathOfTheBattleragerFeatures import (
+    BattleragerCharge,
+)
+from CharacterContent.Features.SubClassFeatures2014.Monk.MonkDrunkenMasterFeatures import (
+    DrunkenTechnique,
+)
+from Core.Definitions import Ability
+from Model.Content.CombatTriggers import TriggerEvent
 from tests._combat_ui import make_ui, open_dialog
 
 
@@ -429,3 +452,106 @@ def test_a_dash_ends_with_its_badge(tmp_path, monkeypatch):
     _next_turn(ui)  # the player's turn ends: so does the Tiger's Dash
     assert DASH not in tiger["conditions"]
     assert DASHES_KEY not in tiger
+
+
+# ---------------------------------------------------------------------------
+# Taking a standard action as a Bonus Action or a Reaction (take_actions)
+
+
+def _rows_of(feature, builder=Edmund):
+    return feature_options(combatant_from_character(builder().build()), feature)
+
+
+@pytest.mark.parametrize(
+    "feature, expected",
+    [
+        # "As a Bonus Action, you can take the Disengage action"
+        (
+            lambda: BoonOfSpeed(Ability.DEXTERITY),
+            [("Escape Artist: Disengage", "Bonus Action", DISENGAGE)],
+        ),
+        # "You can take the Dodge action as a Bonus Action"
+        (
+            lambda: ArcaneInfiltrator(Ability.CHARISMA),
+            [("Cunning Diversion: Dodge", "Bonus Action", DODGE)],
+        ),
+        # "a Bonus Action to take the Dash action or the Disengage action"
+        (
+            VampiresPlaything,
+            [
+                ("Timely Retreat: Dash", "Bonus Action", DASH),
+                ("Timely Retreat: Disengage", "Bonus Action", DISENGAGE),
+            ],
+        ),
+        # "You can take the Dash action as a Bonus Action"
+        (AdrenalineRush, [("Adrenaline Rush: Dash", "Bonus Action", DASH)]),
+        (BattleragerCharge, [("Battlerager Charge: Dash", "Bonus Action", DASH)]),
+        # "As a Bonus Action, you can expend one Superiority Die and take the
+        # Disengage / Dash action"
+        (EvasiveFootwork, [("Evasive Footwork: Disengage", "Bonus Action", DISENGAGE)]),
+        (LungingAttack, [("Lunging Attack: Dash", "Bonus Action", DASH)]),
+        # "you can take both the Dash and Hide actions as a Bonus Action"
+        (
+            lambda: SpellSubterfuge(4, Ability.WISDOM),
+            [
+                (
+                    "Shrouding Spells: Dash and Hide",
+                    "Bonus Action",
+                    f"{DASH} + {HIDDEN} + Invisible",
+                )
+            ],
+        ),
+        # "you can take a Reaction to take the Dodge action"
+        (
+            lambda: ElusiveBrawler(4, Ability.DEXTERITY),
+            [("Reactive Dodge", "Reaction", DODGE)],
+        ),
+        # "you gain the benefit of the Disengage action" with Flurry of Blows,
+        # whose Bonus Action it rides on
+        (
+            DrunkenTechnique,
+            [("Drunken Technique: Disengage", None, DISENGAGE)],
+        ),
+    ],
+)
+def test_features_that_take_a_standard_action_another_way(feature, expected):
+    rows = _rows_of(feature())
+    assert [(r.name, r.action_cost, r.condition) for r in rows] == expected
+
+
+def test_escape_artist_also_ends_grappled():
+    (row,) = _rows_of(BoonOfSpeed(Ability.DEXTERITY))
+    assert row.ends_conditions == ("Grappled",)
+    assert row.targets_self
+
+
+def test_reactive_dodge_is_offered_as_its_owner_takes_damage():
+    (row,) = _rows_of(ElusiveBrawler(4, Ability.DEXTERITY))
+    assert row.trigger.event is TriggerEvent.TAKES_DAMAGE
+
+
+def test_battlerager_charge_spends_no_rage():
+    """An extension of Rage: its Dash is the Bonus Action alone."""
+    (effect,) = BattleragerCharge().combat_effects(None)
+    assert effect.spends_use is False
+
+
+def test_take_actions_refuses_an_action_it_has_no_badges_for():
+    with pytest.raises(ValueError):
+        take_actions("Help as a Bonus Action", HELP)
+
+
+def test_shrouding_spells_hidden_outlasts_its_dash(tmp_path, monkeypatch):
+    """Dash is for the current turn; being hidden lasts until something ends
+    it, so the Hidden badge and its Invisible stay after the turn ends."""
+    ui, player, tiger = _fight(tmp_path)
+    player["_feature_objects"].append(SpellSubterfuge(4, Ability.WISDOM))
+    speed = movement_ft(player)
+    _take(ui, monkeypatch, "Shrouding Spells: Dash and Hide")
+    assert movement_ft(player) == 2 * speed
+    assert {DASH, HIDDEN, "Invisible"} <= set(player["conditions"])
+    assert player["action_uses"] == {"Bonus Action": 1}
+    _next_turn(ui)
+    assert DASH not in player["conditions"]
+    assert HIDDEN in player["conditions"]
+    assert "Invisible" in player["conditions"]

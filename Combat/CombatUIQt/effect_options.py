@@ -1588,7 +1588,11 @@ def _described_option(
         ),
         badge_modifiers=tuple((c.name, c.modifiers) for c in conditions if c.modifiers),
         condition_untils=(
-            tuple((c.name, c.until) for c in conditions if c.until is not None)
+            tuple(
+                (c.name, c.until)
+                for c in conditions
+                if c.until is not None or _lasts_until_removed(c)
+            )
             if len(conditions) > 1 and conditions[0].until is not None
             else ()
         ),
@@ -1607,11 +1611,19 @@ def _described_option(
     )
 
 
+def _lasts_until_removed(condition: CombatCondition) -> bool:
+    """It has no duration of its own: it lasts until something ends it (the
+    Hide action's Hidden)."""
+    return condition.until is None and condition.duration_seconds is None
+
+
 def _condition_notes(conditions: tuple[CombatCondition, ...]) -> list[str]:
     """What the form can't hold about several conditions: it gives them one
-    duration, the first's. One that lasts until a turn when the first does
-    too keeps its own (EffectOption.condition_untils: Patient Defense's
-    Disengage ends with the turn, its Dodge at the start of the next)."""
+    duration, the first's. One that lasts until a turn, or until removed,
+    when the first lasts until a turn keeps its own
+    (EffectOption.condition_untils: Patient Defense's Disengage ends with the
+    turn, its Dodge at the start of the next; Shrouding Spells' Hidden stays
+    after its Dash ends)."""
     first, *others = conditions or (None,)
     if first is None:
         return []
@@ -1620,6 +1632,7 @@ def _condition_notes(conditions: tuple[CombatCondition, ...]) -> list[str]:
         for c in others
         if (c.until, c.duration_seconds) != (first.until, first.duration_seconds)
         and (c.until is None or first.until is None)
+        and not (first.until is not None and _lasts_until_removed(c))
     ]
     if not differ:
         return []

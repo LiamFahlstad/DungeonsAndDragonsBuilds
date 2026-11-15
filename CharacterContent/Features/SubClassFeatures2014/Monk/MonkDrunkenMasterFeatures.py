@@ -1,4 +1,6 @@
 from Model.Content.Feature import Feature, FeatureActivation, ActionType, FeatureTarget
+from Model.Content.CombatEffect import CombatEffect
+from Model.Content.StandardActions import DISENGAGE, take_actions
 from Model.View import CharacterView
 from Model.Content.FeatureText import Block, Facts, Option, Paragraph
 
@@ -56,6 +58,20 @@ class DrunkenTechnique(Feature):
     def get_description(self, character: CharacterView) -> str:
         description = "You learn how to twist and turn quickly as part of your Flurry of Blows. Whenever you use Flurry of Blows, you gain the benefit of the Disengage action, and your walking speed increases by 10 feet until the end of the current turn."
         return description
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # The Disengage action's benefit, free, with Flurry of Blows.
+        return [
+            take_actions(
+                "Drunken Technique: Disengage",
+                DISENGAGE,
+                notes=(
+                    "Use it with Flurry of Blows, which spends the Bonus Action."
+                    " Its walking Speed is also 10 feet higher until the end"
+                    " of this turn.",
+                ),
+            )
+        ]
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF

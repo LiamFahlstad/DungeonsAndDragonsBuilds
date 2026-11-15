@@ -1,4 +1,6 @@
 from Model.Content.Feature import Feature, FeatureActivation, ActionType, FeatureTarget
+from Model.Content.CombatEffect import CombatEffect
+from Model.Content.StandardActions import DASH, take_actions
 from Model.View import CharacterView
 from Model.Content.FeatureText import Block, Facts
 
@@ -97,6 +99,18 @@ class BattleragerCharge(Feature):
     def get_description(self, character: CharacterView) -> str:
         description = "Beginning at 10th level, you can take the Dash action as a bonus action while you are raging."
         return description
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # The Dash action, as its Bonus Action (its activation). An extension
+        # of Rage, whose uses it doesn't spend.
+        return [
+            take_actions(
+                "Battlerager Charge: Dash",
+                DASH,
+                spends_use=False,
+                notes=("While raging.",),
+            )
+        ]
 
 
 class SpikedRetribution(Feature):

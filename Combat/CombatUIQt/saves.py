@@ -213,8 +213,10 @@ class EffectOption:
     # Each of its conditions' own turn it lasts until, when it gives several
     # that end at different turns (Patient Defense's Dodge and Disengage):
     # (("Dodge", ("start", "source")), ("Disengage", ("end", "current"))).
-    # Used while the dialog's duration is still `until`, the first's.
-    condition_untils: tuple[tuple[str, tuple[str, str]], ...] = ()
+    # None for one that lasts until removed beside one that ends with a turn
+    # (Shrouding Spells' Hidden beside its Dash). Used while the dialog's
+    # duration is still `until`, the first's.
+    condition_untils: tuple[tuple[str, tuple[str, str] | None], ...] = ()
     # The conditions it ends on each target its conditions would land on
     # (CombatEffect.ends_conditions: Lay on Hands' Poisoned).
     ends_conditions: tuple[str, ...] = ()
@@ -249,12 +251,13 @@ class EffectOption:
         """The duration `condition` gets when the dialog gives `duration`:
         its own turn (condition_untils) while `duration` is still this
         pick's own `until`, else `duration` as the GM set it."""
-        own = dict(self.condition_untils).get(condition)
-        if own is None or self.until is None:
+        untils = dict(self.condition_untils)
+        if condition not in untils or self.until is None:
             return duration
         if duration != {"until": self.until[0], "of": self.until[1]}:
             return duration
-        return {"until": own[0], "of": own[1]}
+        own = untils[condition]
+        return None if own is None else {"until": own[0], "of": own[1]}
 
     def modifiers_for(self, badge: str) -> tuple[Modifier, ...]:
         """What the badge `badge` it gives does while it's on: none for a

@@ -102,6 +102,8 @@ from Model.Content.FeatureText import (
 )
 from Model.Content.CombatEffect import CombatCondition, CombatEffect, TurnEdge, TurnOf
 from Model.Content.CombatModifiers import Speed
+from Model.Content.CombatTriggers import CombatTrigger, TriggerEvent
+from Model.Content.StandardActions import DASH, DODGE, HIDE, take_actions
 
 
 class GeneralFeat(Feature):
@@ -3603,6 +3605,21 @@ class SpellSubterfuge(_AbilityScoreFeat):
             "Sneaky Casting. If you have the Hide action's Invisible condition, casting a spell with a Verbal component or making a spell attack doesn't end that condition on you if you end the turn behind Three-Quarters Cover or Total Cover."
         )
 
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # Shrouding Spells; Sneaky Casting is the GM's, when Hidden would end.
+        return [
+            take_actions(
+                "Shrouding Spells: Dash and Hide",
+                DASH,
+                HIDE,
+                action_type=ActionType.BONUS_ACTION,
+                notes=(
+                    "Right after it casts a spell with a casting time of an"
+                    " action, using a spell slot.",
+                ),
+            )
+        ]
+
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
@@ -4943,6 +4960,16 @@ class ElusiveBrawler(_WarcraftFeat):
             "Ability Score Increase. Increase your Dexterity or Wisdom score by 1, to a maximum of 20.\n"
             "Reactive Dodge. When you take damage, you can take a Reaction to take the Dodge action."
         )
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # Reactive Dodge, its Reaction (its activation) as it takes damage.
+        return [
+            take_actions(
+                "Reactive Dodge",
+                DODGE,
+                trigger=CombatTrigger(TriggerEvent.TAKES_DAMAGE),
+            )
+        ]
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
