@@ -25,6 +25,7 @@ from PyQt6.QtWidgets import (
 )
 
 from Combat.Arena.arena import position
+from Combat.Arena.lasting import AREA_KEY
 from Combat.Definitions import Action, CombatStatus, ConditionRule
 from Combat.Effects.active_effects import (
     CUSTOM,
@@ -764,7 +765,7 @@ class ConditionsMixin(CombatWindowState):
         living = [
             t for t in self.target_characters if self._char_death_state(t) != "dead"
         ]
-        if not living:
+        if not living and effect.area is None:
             self._show_status("Nothing applied: every target is dead.")
             return
         source = self.selected_character or self._current_turn_character()
@@ -945,6 +946,8 @@ class ConditionsMixin(CombatWindowState):
                     self._after_attack(UsesOutcome(source, target, pick.name))
         if effect.concentration and caster is not None:
             self._hold_concentration(caster, label, effect, applied)
+        elif effect.area is not None and source is not None:
+            self._hold_area(source, label, effect)
         if effect.damage and source is not None:
             source["_last_damage_type"] = effect.damage[-1][1]
         self._saved_targets = []
@@ -1174,9 +1177,10 @@ class ConditionsMixin(CombatWindowState):
     def _hold_concentration(
         self, caster: dict, label: str, effect: CustomEffect, applied: list[dict]
     ):
-        """Caster's concentration on the effect, tied to what it put on whom.
-        If the effect itself just ended that concentration (the caster was
-        among its targets), it's over already."""
+        """Caster's concentration on the effect, tied to what it put on whom,
+        and the area it keeps on the map, if any (arena step 11). If the
+        effect itself just ended that concentration (the caster was among
+        its targets), it's over already."""
         duration = effect.duration or {}
         seconds = duration.get("seconds", LONGEST_CONCENTRATION)
         turn = self._current_turn_group()
@@ -1187,14 +1191,21 @@ class ConditionsMixin(CombatWindowState):
             "concentration": True,
             "applied": applied,
             "ticks_on": turn[0]["name"] if turn else None,
-            # With a turn for a duration, the conditions are what end first.
-            "ends_with_conditions": "until" in duration and bool(applied),
+            # With a turn for a duration, the conditions are what end first;
+            # not while an area on the map lasts with the concentration.
+            "ends_with_conditions": "until" in duration
+            and bool(applied)
+            and effect.area is None,
         }
+        if effect.area is not None:
+            entry[AREA_KEY] = effect.area
         if CombatStatus.CONCENTRATING.value not in caster["conditions"]:
             self._end_spell_effects(entry)
             return
         caster.setdefault("active_spells", []).append(entry)
         self._link_concentration(caster, applied)
+        if effect.area is not None:
+            self._log_area_kept(caster, label, effect.area)
         self._rebuild_card(caster)
 
     def _link_concentration(self, caster: dict, applied: list[dict]):
@@ -1555,11 +1566,16 @@ class ConditionsMixin(CombatWindowState):
         condition with its duration and a note. What the source can use is
         listed on the left, and a pick fills in the form. `pick` names a row
         to start with picked (a trigger's prompt: "Spirit Guardians:
-        damage")."""
-        if not self.target_characters:
+        damage"). An area just aimed on the map for it (ArenaMixin's
+        _aimed_area) is offered to keep on the map, and one to keep lets it
+        open with no targets (Moonbeam put on empty ground)."""
+        source = self.selected_character or self._current_turn_character()
+        aimed, self._aimed_area = self._aimed_area, None
+        if aimed is not None and (source is None or aimed["source"] != source["name"]):
+            aimed = None
+        if not self.target_characters and not (aimed and aimed["keep"]):
             self._show_status("Nothing applied: right-click a card to pick a target.")
             return
-        source = self.selected_character or self._current_turn_character()
         caster = self.selected_character
         targets = self.target_characters
 
@@ -1984,6 +2000,19 @@ class ConditionsMixin(CombatWindowState):
             " ends, the condition comes off the targets."
         )
         cost_box.addWidget(concentrate_box)
+        # The area aimed on the map, to keep there (arena step 11).
+        keep_area_box = QCheckBox(
+            f"Keep the {aimed['text']} on the map" if aimed else "Keep the area"
+        )
+        keep_area_box.setObjectName("keepArea")
+        keep_area_box.setToolTip(
+            "The area stays on the map in its colour, as one of the source's"
+            " Active Spells: for as long as the effect lasts, and with"
+            " 'Source concentrates on it', until concentration ends."
+        )
+        keep_area_box.setChecked(bool(aimed and aimed["keep"]))
+        keep_area_box.setVisible(aimed is not None)
+        cost_box.addWidget(keep_area_box)
         for widget in (slot_combo, action_combo, concentrate_box):
             widget.setEnabled(caster is not None)
         if caster is None:
@@ -2045,7 +2074,11 @@ class ConditionsMixin(CombatWindowState):
         apply_btn.setObjectName("primaryBtn")
         apply_btn.setAutoDefault(False)
         apply_btn.setMinimumWidth(_BUTTON_WIDTH)
-        apply_btn.setToolTip(f"Apply to {_count(len(targets), 'target')} (Ctrl+Enter)")
+        apply_btn.setToolTip(
+            f"Apply to {_count(len(targets), 'target')} (Ctrl+Enter)"
+            if targets
+            else "Put the area on the map, with no targets (Ctrl+Enter)"
+        )
         btn_row.addWidget(cancel_btn)
         btn_row.addWidget(apply_btn)
         outer.addLayout(btn_row)
@@ -2384,8 +2417,15 @@ class ConditionsMixin(CombatWindowState):
             # A pick the source spends (a feature with no numbers) is enough.
             spends = pick is not None and pick.is_tracked and caster is not None
             ends = pick is not None and bool(pick.ends_conditions)
+            keeps_area = aimed is not None and keep_area_box.isChecked()
+            if not targets and not keeps_area:
+                problem_lbl.setText(
+                    "No targets: keep the area on the map, or right-click a card."
+                )
+                return
             if (
-                not is_attack
+                not keeps_area
+                and not is_attack
                 and ability is None
                 and not damage
                 and not hit_points
@@ -2458,6 +2498,7 @@ class ConditionsMixin(CombatWindowState):
                 typed_damage=bool(damage)
                 and not _DICELESS.search(damage_input.text())
                 and damage_input.text() != picked["damage"],
+                area=aimed["record"] if aimed is not None and keeps_area else None,
             )
             times = times_input.value()
             if times == 1:
@@ -2500,6 +2541,7 @@ class ConditionsMixin(CombatWindowState):
                         slot_level=None,
                         action_cost=None,
                         concentration=False,
+                        area=None,
                         typed_attacks=nth(typed_rolls["attacks"], index),
                         typed_totals=nth(typed_rolls["totals"], index),
                         typed_extras=nth(typed_rolls["extras"], index),

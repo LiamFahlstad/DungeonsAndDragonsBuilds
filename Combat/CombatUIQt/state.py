@@ -114,6 +114,11 @@ class CombatWindowState:
     # Whether combat shows the map in place of the cards (ArenaMixin), the
     # view last used.
     arena_view_on: bool
+    # An area aimed on the map for the Custom Effect opened again after it
+    # (ArenaMixin._area_picked): whose it is, the "area" record an active
+    # spell keeps (Combat/Arena/lasting.py), its text, and whether to keep
+    # it on the map. None when there's none; the dialog takes it as it opens.
+    _aimed_area: dict | None
     # Undo steps, oldest first, and the one being recorded (undo.py).
     history: list[UndoPoint]
     _open_undo_point: UndoPoint | None
@@ -495,6 +500,15 @@ class CombatWindowState:
 
     def _cancel_area_targeting(self) -> bool:
         raise NotImplementedError("ArenaMixin._cancel_area_targeting")
+
+    def _hold_area(self, holder: dict, label: str, effect) -> None:
+        raise NotImplementedError("ArenaMixin._hold_area")
+
+    def _log_area_kept(self, holder: dict, label: str, record: dict):
+        raise NotImplementedError("ArenaMixin._log_area_kept")
+
+    def _remind_lasting_areas(self, group: list[dict]):
+        raise NotImplementedError("ArenaMixin._remind_lasting_areas")
 
     def _roll_concentration(self, char: dict, dc: int):
         raise NotImplementedError("DamageMixin._roll_concentration")

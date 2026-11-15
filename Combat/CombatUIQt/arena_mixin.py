@@ -13,11 +13,22 @@ area" closes it and brings up the map with the area bar, its shape and size
 read from the pick's rules text (or the last ones used) and changeable
 there. Hovering aims the area, a click makes whoever is in it the targets
 and opens the dialog again on the same pick; a right click, Esc, G or the
-bar's Cancel goes back to the dialog with the targets it had."""
+bar's Cancel goes back to the dialog with the targets it had. The bar's
+colour is what the area is shaded in.
+
+Areas that stay (step 11): with the bar's "Keep on the map" (on for a pick
+that lasts: a spell with a duration), the dialog opens again with "Keep the
+area on the map", and its Apply puts the area on an active spell of the
+source's (Combat/Arena/lasting.py): it ends with the spell's time, the
+caster's concentration or the card's ✕. Such an area may be put down with
+nobody in it (Moonbeam on empty ground). Whoever walks into one, or starts
+a turn in one, gets a reminder in the status line and a GM-only log line."""
 
 from PyQt6.QtCore import QTimer
+from PyQt6.QtGui import QColor, QIcon, QPixmap
 from PyQt6.QtWidgets import (
     QCheckBox,
+    QColorDialog,
     QComboBox,
     QHBoxLayout,
     QLabel,
@@ -55,12 +66,23 @@ from Combat.Arena.areas import (
     spell_range_ft,
 )
 from Combat.Arena.geometry import Cell
+from Combat.Arena.lasting import (
+    AREA_KEY,
+    DEFAULT_AREA_COLOR,
+    area_record,
+    areas_at,
+    areas_holding,
+    entered,
+    lasting_areas,
+    who_is_in,
+)
 from Combat.Effects.modifiers import has_condition
 from Core.Definitions import Condition
+from Core.Rules import SECONDS_PER_ROUND
 
 from .arena_view import ArenaView, token_rows
 from .effect_options import _spell_named
-from .saves import SPELL, EffectOption
+from .saves import SPELL, CustomEffect, EffectOption
 from .settings import ARENA_VIEW_KEY
 from .state import CombatWindowState
 from .undo import undoable
@@ -71,6 +93,22 @@ DEFAULT_AREA = AreaOfEffect(AreaShape.SPHERE, 20)
 # The biggest area the bar takes, in feet (Meteor Swarm's 40-foot radius,
 # a 300-foot Line, with room).
 MAX_AREA_FT = 1000
+# The colours the bar offers an area in, then "Other..." for any colour.
+AREA_COLORS = (
+    ("Orange", DEFAULT_AREA_COLOR),
+    ("Red", "#e74c3c"),
+    ("Blue", "#3498db"),
+    ("Green", "#2ecc71"),
+    ("Purple", "#9b59b6"),
+    ("Yellow", "#f1c40f"),
+    ("Teal", "#1abc9c"),
+    ("Grey", "#95a5a6"),
+)
+OTHER_COLOR = "other"
+_SWATCH_PX = 12
+# How long an area kept with no time of its own lasts: an hour, for the GM
+# to end on the card (as a concentration effect with no time does).
+LONGEST_AREA = 60 * 60
 
 
 class ArenaMixin(CombatWindowState):
@@ -139,15 +177,20 @@ class ArenaMixin(CombatWindowState):
         otherwise."""
         self._area_targeting: dict | None = None
         self._last_area = DEFAULT_AREA
+        self._aimed_area = None
         bar = QWidget()
         bar.setObjectName("areaBar")
-        layout = QHBoxLayout(bar)
-        layout.setContentsMargins(4, 4, 4, 0)
-        layout.setSpacing(6)
+        # What it is and who's in it on a line of its own, over the controls.
+        rows = QVBoxLayout(bar)
+        rows.setContentsMargins(4, 4, 4, 0)
+        rows.setSpacing(4)
         self._area_label = QLabel("")
         self._area_label.setObjectName("areaLabel")
         self._area_label.setWordWrap(True)
-        layout.addWidget(self._area_label, stretch=1)
+        rows.addWidget(self._area_label)
+        layout = QHBoxLayout()
+        layout.setSpacing(6)
+        rows.addLayout(layout)
         self._area_shape = QComboBox()
         self._area_shape.setObjectName("areaShape")
         for shape in AreaShape:
@@ -176,15 +219,34 @@ class ArenaMixin(CombatWindowState):
             " (Thunderwave)"
         )
         layout.addWidget(self._area_from_source)
+        self._area_color = QComboBox()
+        self._area_color.setObjectName("areaColor")
+        self._area_color.setToolTip("The colour the area is shaded in")
+        for name, color in AREA_COLORS:
+            self._area_color.addItem(_swatch(color), name, color)
+        self._area_color.addItem("Other...", OTHER_COLOR)
+        self._last_area_color = DEFAULT_AREA_COLOR
+        layout.addWidget(self._area_color)
+        self._area_keep = QCheckBox("Keep on the map")
+        self._area_keep.setObjectName("areaKeep")
+        self._area_keep.setToolTip(
+            "The area stays on the map after Apply, in its colour, for as"
+            " long as the effect lasts or its caster concentrates on it."
+            " It can then be put down with nobody in it."
+        )
+        layout.addWidget(self._area_keep)
         cancel = QPushButton("Cancel")
         cancel.setObjectName("areaCancelBtn")
         cancel.setToolTip("Back to the Custom Effect, targets as they were (Esc)")
         cancel.clicked.connect(lambda: self._cancel_area_targeting())
         layout.addWidget(cancel)
+        layout.addStretch()
         self._area_shape.currentIndexChanged.connect(self._area_changed)
         self._area_size.valueChanged.connect(self._area_changed)
         self._area_width.valueChanged.connect(self._area_changed)
         self._area_from_source.toggled.connect(self._area_changed)
+        self._area_color.currentIndexChanged.connect(self._area_color_changed)
+        self._area_keep.toggled.connect(self._area_changed)
         bar.hide()
         self._area_bar = bar
         return bar
@@ -235,6 +297,34 @@ class ArenaMixin(CombatWindowState):
             self._last_area = self._area_in_bar()
             self._arena_view.refresh_area()
 
+    def _area_color_in_bar(self) -> str:
+        color = self._area_color.currentData()
+        return color if color and color != OTHER_COLOR else self._last_area_color
+
+    def _show_area_color(self, color: str):
+        """Select `color` in the bar, adding it before "Other..." when it
+        isn't one of the colours there yet."""
+        index = self._area_color.findData(color)
+        if index < 0:
+            index = self._area_color.count() - 1
+            self._area_color.insertItem(index, _swatch(color), color, color)
+        self._area_color.blockSignals(True)
+        self._area_color.setCurrentIndex(index)
+        self._area_color.blockSignals(False)
+        self._last_area_color = color
+        self._arena_view.set_area_color(color)
+
+    def _area_color_changed(self):
+        """A colour picked in the bar: the area is shaded in it, and the
+        next one starts with it. "Other..." asks for any colour."""
+        color = self._area_color.currentData()
+        if color == OTHER_COLOR:
+            chosen = QColorDialog.getColor(
+                QColor(self._last_area_color), self._window, "Area colour"
+            )
+            color = chosen.name() if chosen.isValid() else self._last_area_color
+        self._show_area_color(color)
+
     def _start_area_targeting(
         self, option: EffectOption | None, what: str = ""
     ) -> bool:
@@ -248,6 +338,9 @@ class ArenaMixin(CombatWindowState):
             return False
         area, range_ft = area_reading(option)
         pick = option.name if option is not None else ""
+        self._aimed_area = None
+        self._area_keep.setChecked(area_lasts(option))
+        self._show_area_color(self._last_area_color)
         self._area_targeting = {
             "pick": pick,
             "source": source,
@@ -295,6 +388,8 @@ class ArenaMixin(CombatWindowState):
                 else "the source isn't on the map"
             )
             text = f"{head}{area.text}: {how}."
+        elif not inside and self._area_keep.isChecked():
+            text = f"{head}{area.text}: nobody in it. Click to put it there."
         elif not inside:
             text = f"{head}{area.text}: nobody in it."
         else:
@@ -356,11 +451,24 @@ class ArenaMixin(CombatWindowState):
             return
         cells = self._area_cells_at(cell)
         inside = creatures_in(self.characters, cells, self.arena_settings)
-        if not inside:
+        keep = self._area_keep.isChecked()
+        if not inside and not (keep and cells):
             self._show_status("Nobody is in that area: aim it somewhere else.")
             return
         past = self._area_out_of_range()
+        area, source = self._area_in_bar(), request["source"]
+        aim = cell if area.is_aimed else None
+        record = area_record(
+            area, source, aim, self.arena_settings, self._area_color_in_bar()
+        )
         self._end_area_targeting()
+        # What the dialog, opened again, offers to keep on the map.
+        self._aimed_area = {
+            "source": source["name"],
+            "record": record,
+            "text": area.text,
+            "keep": keep,
+        }
         self._set_targets(inside)
         if past is not None:
             # Allowed, as a move past the Speed is: the GM knows why.
@@ -447,6 +555,7 @@ class ArenaMixin(CombatWindowState):
                 self.selected_character,
                 self.target_characters,
             ),
+            lasting_areas(self.characters, self.arena_settings),
         )
         if self._area_targeting is not None:
             # Someone moved, or was added: the area catches who's there now.
@@ -520,6 +629,7 @@ class ArenaMixin(CombatWindowState):
         feet = walked if walked is not None else straight_ft(char, cell, settings)
         feet = feet or 0
         start = position(char)
+        before = who_is_in(self.characters, settings)
         char[POSITION_KEY] = cell.to_list()
         char[MOVED_KEY] = int(char.get(MOVED_KEY, 0)) + feet
         speed = walking_speed_ft(char)
@@ -534,6 +644,13 @@ class ArenaMixin(CombatWindowState):
             warnings.append(
                 f"{name} is Prone and crawls; standing up costs half its Speed."
             )
+        # Whoever is in an area now that wasn't: the mover walking in, or
+        # someone its Emanation moved onto.
+        after = who_is_in(self.characters, settings)
+        for who, (caster, area) in entered(before, after):
+            line = f"{who} enters {caster}'s {area}."
+            self._log_event(line, character=who, public=False)
+            warnings.append(line)
         if warnings:
             self._show_status(" ".join(warnings))
         self._refresh_views()
@@ -552,17 +669,96 @@ class ArenaMixin(CombatWindowState):
         from the source ("25 ft."); None without a source on the map, or
         over the source itself."""
         source = self.selected_character
+        lasting = lasting_areas(self.characters, self.arena_settings)
+        names = [area.name for area in areas_at(cell, lasting)]
+        inside = " · ".join(names) if names else None
         if source is None:
-            return None
+            return inside
         rule = self.arena_settings.distance_rule
         on_it = occupied(self.characters, rule).get(cell)
         if on_it is source:
-            return None
+            return inside
         if on_it is not None:
             feet = distance_ft(source, on_it, self.arena_settings)
         else:
             feet = distance_to_cell_ft(source, cell, self.arena_settings)
-        return None if feet is None else f"{feet} ft."
+        if feet is None:
+            return inside
+        return f"{feet} ft." + (f" · {inside}" if inside else "")
+
+    def _area_where(self, record: dict) -> str:
+        """Where a kept area is, for the log: "around its caster", or "at
+        C7" (the cell it was aimed at)."""
+        if record.get("follows"):
+            return "around its caster"
+        aim = record.get("aim")
+        if aim is None:
+            return ""
+        shape = self.arena_settings.distance_rule.shape
+        return f"at {shape.cell_name(Cell.of(aim))}"
+
+    def _log_area_kept(self, holder: dict, label: str, record: dict):
+        """The GM-only log line for an area put on the map: "Clover's
+        Moonbeam stays on the map at C7."."""
+        where = self._area_where(record)
+        self._log_event(
+            f"{holder['name']}'s {label} stays on the map"
+            + (f" {where}" if where else "")
+            + ".",
+            character=holder["name"],
+            public=False,
+        )
+
+    def _hold_area(self, holder: dict, label: str, effect: CustomEffect):
+        """Keep effect's area on the map with no concentration: an active
+        spell of holder's that lasts as long as the spell does (Grease's
+        minute, by its pick or its name), else the effect's time (a
+        turn-long one, a round; none, an hour), and holds nothing else, so
+        ending it takes only the area away (Grease's Prone stays)."""
+        record = effect.area
+        if record is None:
+            return
+        pick = effect.pick
+        name = (pick.spell_name or pick.name) if pick is not None else effect.name
+        spell = _spell_named(name) if name else None
+        seconds = spell.duration_seconds if spell is not None else None
+        if not seconds:
+            duration = effect.duration or {}
+            seconds = duration.get("seconds")
+            if seconds is None and "until" in duration:
+                seconds = SECONDS_PER_ROUND
+        seconds = seconds or LONGEST_AREA
+        turn = self._current_turn_group()
+        holder.setdefault("active_spells", []).append(
+            {
+                "name": label,
+                "time_left": seconds,
+                "duration": seconds,
+                "concentration": False,
+                "applied": [],
+                "ticks_on": turn[0]["name"] if turn else None,
+                AREA_KEY: record,
+            }
+        )
+        self._log_area_kept(holder, label, record)
+        self._rebuild_card(holder)
+
+    def _remind_lasting_areas(self, group: list[dict]):
+        """Whoever starts its turn in an area that stays: a reminder in the
+        turn column, as what starting the turn did, and a GM-only log line
+        ("Goblin starts its turn in Clover's Moonbeam."), as its rules may
+        ask something of it now."""
+        if self.phase != "COMBAT":
+            return
+        areas = lasting_areas(self.characters, self.arena_settings)
+        for char in group if areas else []:
+            holding = areas_holding(char, areas, self.arena_settings)
+            if not holding:
+                continue
+            names = ", ".join(area.title for area in holding)
+            line = f"{char['name']} starts its turn in {names}."
+            self._log_event(line, character=char["name"], public=False)
+            self._turn_start_notes.append(line)
 
 
 def area_reading(option: EffectOption | None) -> tuple[AreaOfEffect | None, int | None]:
@@ -585,6 +781,26 @@ def area_reading(option: EffectOption | None) -> tuple[AreaOfEffect | None, int 
         range_ft = spell_range_ft(spell.range)
     point = point_range_ft(option.tooltip)
     return parse_area(text), point if point is not None else range_ft
+
+
+def area_lasts(option: EffectOption | None) -> bool:
+    """Whether a pick's area stays on the map once used, as the bar's "Keep
+    on the map" starts: a spell's (or the spell a feature casts) when it
+    isn't Instantaneous, anything else when it needs Concentration."""
+    if option is None:
+        return False
+    name = option.spell_name or (option.name if option.kind == SPELL else "")
+    spell = _spell_named(name) if name else None
+    if spell is not None:
+        return bool(spell.duration_seconds)
+    return option.concentration
+
+
+def _swatch(color: str) -> QIcon:
+    """A small square of `color`, for the bar's colour list."""
+    pixmap = QPixmap(_SWATCH_PX, _SWATCH_PX)
+    pixmap.fill(QColor(color))
+    return QIcon(pixmap)
 
 
 def move_line(

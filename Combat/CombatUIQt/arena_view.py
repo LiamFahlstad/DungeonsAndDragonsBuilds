@@ -15,7 +15,11 @@ pans. Columns are lettered and rows numbered, so a cell is "C7".
 Picking targets in an area (step 10, start_area): the cells an area covers
 where the mouse is are shaded orange, with an orange ring on each token in
 it; a left click picks them, a right click cancels. Nothing is picked up or
-moved meanwhile."""
+moved meanwhile. The shading is the colour the area bar picked.
+
+Areas that stay (step 11, Combat/Arena/lasting.py): each drawn over the grid
+in its own colour, with its name, the edge dashed while its caster
+concentrates on it."""
 
 from __future__ import annotations
 
@@ -45,6 +49,7 @@ from PyQt6.QtWidgets import (
 
 from Combat.Arena.arena import ArenaSettings, footprint
 from Combat.Arena.geometry import Cell
+from Combat.Arena.lasting import DEFAULT_AREA_COLOR, LastingArea
 from Combat.Effects.triggers import on_party_side
 
 from .player_view import _can_be_seen
@@ -70,10 +75,13 @@ _TURN_CELL = QColor(201, 168, 76, 110)
 _REACH_TEXT = QColor("#b8e6be")
 _HOVER_TEXT = QColor("#ffffff")
 _HOVER_BACK = QColor(10, 10, 20, 200)
-# An area of effect being aimed (step 10).
-_AREA = QColor(230, 126, 34, 110)
-_AREA_EDGE = QColor(230, 126, 34, 200)
-_AREA_RING = QColor("#e67e22")
+# An area of effect being aimed (step 10): its fill's and edge's opacity,
+# out of 255, in the colour picked (orange unless the bar says otherwise).
+_AREA_ALPHA = 110
+_AREA_EDGE_ALPHA = 200
+# An area that stays (step 11): fainter, so what's aimed shows over it.
+_LASTING_ALPHA = 70
+_LASTING_EDGE_ALPHA = 220
 # How far the mouse goes before a press on a token is a drag, not a click.
 _DRAG_PX = 6
 
@@ -219,21 +227,44 @@ class ArenaView(QGraphicsView):
         ) = None
         self._area_aim: Cell | None = None
         self._area_cells: set[Cell] = set()
+        self._area_color = QColor(DEFAULT_AREA_COLOR)
+        # The areas that stay on the map (step 11), drawn under the tokens.
+        self._lasting: list[LastingArea] = []
 
     @property
     def rows(self) -> list[TokenRow]:
         return list(self._rows)
 
-    def show_rows(self, settings: ArenaSettings, rows: list[TokenRow]):
-        """Draw the map of `settings` with `rows`; nothing when nothing
-        changed since the last time."""
-        key = (settings.to_dict().items(), tuple(rows))
+    @property
+    def lasting(self) -> list[LastingArea]:
+        """The areas that stay, drawn now (tests)."""
+        return list(self._lasting)
+
+    def show_rows(
+        self,
+        settings: ArenaSettings,
+        rows: list[TokenRow],
+        lasting: list[LastingArea] | None = None,
+    ):
+        """Draw the map of `settings` with `rows`, and the areas that stay
+        (`lasting`; None keeps those drawn); nothing when nothing changed
+        since the last time."""
+        if lasting is not None:
+            self._lasting = list(lasting)
+        key = (
+            settings.to_dict().items(),
+            tuple(rows),
+            tuple(self._lasting),
+            self._area_color.name(),
+        )
         if key == self._drawn:
             return
         self._drawn = key
         self._settings, self._rows = settings, list(rows)
         self._scene.clear()
         self._draw_grid()
+        for area in self._lasting:
+            self._draw_lasting(area)
         if self._picked is not None and self._dragging is None:
             # Whoever moved since it was picked up changes where it can go.
             self._reach = self._reach_of(self._picked)
@@ -285,13 +316,53 @@ class ArenaView(QGraphicsView):
                 label.setPos(x + 2, y + 1)
 
     def _draw_area(self):
-        """Shade the cells the area being aimed covers, edged."""
+        """Shade the cells the area being aimed covers, edged, in the
+        colour picked."""
         shape = self._settings.distance_rule.shape
-        pen = QPen(_AREA_EDGE)
+        pen = QPen(_with_alpha(self._area_color, _AREA_EDGE_ALPHA))
         pen.setWidthF(1.0)
+        brush = QBrush(_with_alpha(self._area_color, _AREA_ALPHA))
         for cell in self._area_cells:
             points = [QPointF(x, y) for x, y in shape.polygon(cell, CELL_PX)]
-            self._scene.addPolygon(QPolygonF(points), pen, QBrush(_AREA))
+            self._scene.addPolygon(QPolygonF(points), pen, brush)
+
+    def _draw_lasting(self, area: LastingArea):
+        """An area that stays: its cells in its colour, edged (dashed while
+        its caster concentrates on it), its name in its top-left cell and
+        as the cells' tooltip."""
+        shape = self._settings.distance_rule.shape
+        colour = QColor(area.color)
+        pen = QPen(_with_alpha(colour, _LASTING_EDGE_ALPHA))
+        pen.setWidthF(1.0)
+        if area.concentration:
+            pen.setStyle(Qt.PenStyle.DashLine)
+        brush = QBrush(_with_alpha(colour, _LASTING_ALPHA))
+        tip = area.title + (" (concentration)" if area.concentration else "")
+        for cell in area.cells:
+            points = [QPointF(x, y) for x, y in shape.polygon(cell, CELL_PX)]
+            item = self._scene.addPolygon(QPolygonF(points), pen, brush)
+            if item is not None:
+                item.setToolTip(tip)
+        corner = min(area.cells, key=lambda c: (c.row, c.col))
+        label = QGraphicsSimpleTextItem(area.name)
+        label.setFont(QFont("Segoe UI", 7, QFont.Weight.Bold))
+        label.setBrush(QBrush(colour.lighter(150)))
+        self._scene.addItem(label)
+        x, y = shape.polygon(corner, CELL_PX)[0]
+        label.setPos(x + 2, y + 1)
+
+    def set_area_color(self, color: str):
+        """The colour the area being aimed is shaded in ("#e67e22")."""
+        colour = QColor(color)
+        if not colour.isValid() or colour == self._area_color:
+            return
+        self._area_color = colour
+        self._redraw()
+
+    @property
+    def area_color(self) -> str:
+        """The aiming shading's colour, as "#rrggbb" (tests)."""
+        return self._area_color.name()
 
     def _draw_area_ring(self, row: TokenRow):
         """An orange ring around a token in the area being aimed."""
@@ -299,7 +370,7 @@ class ArenaView(QGraphicsView):
         corners = [p for cell in row.cells for p in shape.polygon(cell, CELL_PX)]
         xs, ys = [x for x, _ in corners], [y for _, y in corners]
         box = QRectF(min(xs), min(ys), max(xs) - min(xs), max(ys) - min(ys))
-        ring = QPen(_AREA_RING)
+        ring = QPen(self._area_color)
         ring.setWidthF(2.5)
         inside = box.adjusted(1.5, 1.5, -1.5, -1.5)
         if len(row.cells) == 1:
@@ -740,3 +811,10 @@ class ArenaView(QGraphicsView):
             event.accept()
             return
         super().wheelEvent(event)
+
+
+def _with_alpha(colour: QColor, alpha: int) -> QColor:
+    """`colour` with its opacity set to `alpha` (0-255)."""
+    faded = QColor(colour)
+    faded.setAlpha(alpha)
+    return faded

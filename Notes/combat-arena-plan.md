@@ -15,7 +15,9 @@ Written 2026-11-13. All eight steps (the Qt-free map, its saving, the view,
 the Cards/Arena switch, moving, distances in the UI and the docs) built the
 same day. Step 9, the fixes after the user tried it, 2026-11-14. Step 10,
 targets in an area from the Custom Effect dialog, the user's request the
-same day. What's next is under Later.
+same day. Step 11, areas that stay on the map with their concentration and
+a colour picked for each, the user's request, 2026-11-15. What's next is
+under Later.
 
 ## How to use this document
 
@@ -56,8 +58,9 @@ Whoever works on the arena updates it **in the same change** as the code:
 
 **Keep the overhead low (the user, 2026-11-10).** Run only the arena's own
 test files after a step (`./run_tests.sh -q tests/test_arena_geometry.py
-tests/test_arena.py tests/test_arena_areas.py tests/test_combat_ui_arena.py
-tests/test_combat_ui_arena_areas.py`). No step here changes a character sheet, so the
+tests/test_arena.py tests/test_arena_areas.py tests/test_arena_lasting.py
+tests/test_combat_ui_arena.py tests/test_combat_ui_arena_areas.py
+tests/test_combat_ui_arena_lasting.py`). No step here changes a character sheet, so the
 character-creation tests and snapshots don't need to run. No reviewer or
 verification passes per step unless asked.
 
@@ -75,6 +78,7 @@ verification passes per step unless asked.
 | 8 | Docs: KEYBOARD_SHORTCUTS.md, HOWTO.md, Combat/CHEATSHEET.md | Done 2026-11-13 (R8) |
 | 9 | After the user tried it: encounter allies on the party's side, click to pick up and click to move, the move's line with from, to and what's left, whose turn on gold, clicks and Ctrl+Z in both views | Done 2026-11-14 (R9); DI-092 fixed |
 | 10 | Targets in an area: the Custom Effect's "Select targets in area", the area read from the pick's text and aimed on the map, whoever is in it targeted | Done 2026-11-14 (R10); Cones, Lines and range checked against Manhattan 2026-11-15 (R11) |
+| 11 | Areas that stay: kept on the map by an active spell, ending with its time or its caster's concentration, an Emanation following its caster, reminders on entering and at a turn's start; a colour for each area | Done 2026-11-15 (R12) |
 
 ## How it fits the code that's there
 
@@ -460,6 +464,59 @@ pick, nobody in it changing nothing, the four ways back, the bar's shape
 and size changing the area, an Emanation shown unaimed, the button off with
 the source off the map, the last area kept for a pick without one.
 
+### Step 11: areas that stay, and their colour (2026-11-15)
+
+The user: "Many spells/features that has area effects in the combat ui have
+lasting effects. Your task is to add support for lasting effects and
+concentration. Also make it possible to select color for the effect in the
+area view."
+
+- `Combat/Arena/lasting.py` (new, Qt-free): an area that stays is an
+  `"area"` record on an active spell of its caster's (Decision 20):
+  `area_record` (shape, size, where it was aimed, the cells it covers, or
+  `follows` for an area around the caster, its colour), `record_cells`
+  (the cells now: around the caster where it is, else the cells it was put
+  on), `lasting_areas` (every one, as `LastingArea` rows the view draws),
+  `areas_at`, `areas_holding`, and `who_is_in` / `entered` (who is in an
+  area after a move that wasn't before).
+- The area bar: a **colour** list (eight colours and Other..., the last one
+  picked remembered for the next area; Decision 24) and **Keep on the map**,
+  ticked for a pick that lasts (`area_lasts`: a spell that isn't
+  Instantaneous, or anything needing Concentration). With it ticked, a
+  click with nobody in the area still goes on (Decision 21). The bar's text
+  is on a line of its own over its controls (R12).
+- The dialog opened again (`conditions_mixin.py`): **Keep the ... on the
+  map**, from the bar; it opens with no targets when the area is kept and
+  nobody is in it, and Apply then spends the costs, starts the
+  concentration and puts the area down, with no rolls. `CustomEffect.area`
+  carries the record. With **Source concentrates on it** the area goes on
+  the concentration's active spell (`_hold_concentration`), which then
+  doesn't end with its conditions; without, on an active spell of its own
+  with no concentration and nothing applied (`_hold_area`), lasting the
+  spell's time, else the dialog's, else an hour. Only the first of a
+  Times repeat keeps it.
+- The map (`arena_view.py`): each kept area drawn over the grid in its
+  colour, its name in its top-left cell, its edge dashed while its caster
+  concentrates; the aiming shading and ring in the bar's colour.
+- Reminders (`arena_mixin.py`, Decision 23): a move after which someone is
+  in an area they weren't (walked in, or an Emanation moved onto them) says
+  "Goblin enters Clover's Spirit Guardians." in the status line; a turn
+  starting in one puts "Goblin starts its turn in Clover's Moonbeam." in
+  the turn column's reminders (`_turn_start_notes`). Both are GM-only log
+  lines. The hover names the areas on a cell ("25 ft. · Moonbeam").
+
+Tests (`tests/test_arena_lasting.py`, `tests/test_combat_ui_arena_lasting.py`):
+an aimed area keeps its cells as its caster walks off, an Emanation follows
+and leaves its caster out, nothing drawn with the caster off the map, who is
+in one by any cell, who entered; which picks are kept by default; Moonbeam
+put on empty ground lasting while the mephit concentrates, gone with Ctrl+C
+and back with undo; a new concentration ending it; Grease lasting its
+minute without concentration; an empty area refused without Keep, applied
+without the area when Keep is unticked in the dialog, and no targets with
+nothing to keep refused; the bar's colour on the aim and the area, Other...
+and cancelling it; Spirit Guardians following its caster and naming who it
+reaches; the reminders on walking in and at the turn's start; the hover.
+
 ### Later (not scheduled)
 
 - **More distance rules**, each a `DistanceRule` and a line in `RULES`:
@@ -479,12 +536,13 @@ the source off the map, the last area kept for a pick without one.
   checked as it's cast, Spirit Guardians' aura, Opportunity Attacks prompted
   as a creature leaves reach. Each still asks when either creature is off the
   map.
-- **Areas of effect**: built in step 10. Still later: an area that stays on
-  the map (Spirit Guardians following its caster, a Wall of Fire, Web's
-  Cube) and a creature entering it prompting its effect; a spell's range
-  checked against where the area is aimed; walls (Wall of Fire, Wall of
-  Force), which aren't one of the six shapes; Total Cover blocking an area
-  (Rules Glossary, Area of Effect), once there's terrain.
+- **Areas of effect**: built in steps 10 and 11. Still later: a creature
+  entering an area, or starting its turn in it, prompting its effect (Q12;
+  a reminder now); moving an area that stays (Moonbeam's Magic action,
+  Flaming Sphere; Q13); changing a kept area's colour; walls (Wall of Fire,
+  Wall of Force), which aren't one of the six shapes; Total Cover blocking
+  an area (Rules Glossary, Area of Effect), once there's terrain; kept areas
+  on the Player Screen's map (hidden with a hidden caster).
 - **The map on the Player Screen and the player link**, from the same token
   rows, hidden monsters left out the way `player_view_rows` leaves them out.
 - **Height**: a flying creature's altitude, counted into distance.
@@ -625,6 +683,32 @@ Taken while building (2026-11-14), for the user to overrule:
     Wind's Cube is "centered on a point you can see within 60 feet"), but
     a 2014 range of "Self (15-foot cone)" is read as the area itself.
 
+Taken while building step 11 (2026-11-15), for the user to overrule:
+
+20. **An area that stays is held by an active spell** (`"area"` on the
+    caster's `active_spells` entry), not kept on the app. Everything that
+    ends an active spell ends the area: its time, concentration lost by any
+    path (a failed save, Incapacitated, a new concentration, Ctrl+C), the
+    card's ✕. Undo and the saved fight state carry it with no new code
+    (Decision 4). One kept without concentration gets an active spell of
+    its own that holds nothing else, so its end takes only the area away:
+    Grease's Prone stays on whoever fell.
+21. **A kept area can be put down with nobody in it**, and the dialog then
+    opens with no targets (Moonbeam on empty ground, Spirit Guardians with
+    nobody near). Apply spends its costs and starts its concentration but
+    rolls nothing. Only for an area to keep: Q11 stays open for the rest.
+22. **An Emanation (or a Sphere around the source) follows its caster; any
+    other kept area stays on the cells it covered when put down**, a Cone
+    or Line too, so it doesn't swing round as its caster walks.
+23. **Entering an area or starting a turn in it is a reminder, not a
+    prompt**: what it asks varies by spell (Spirit Guardians on entering or
+    ending a turn, Moonbeam and Web on entering or starting one), so the GM
+    reads the line and uses the Custom Effect. "Enters" counts someone an
+    Emanation moved onto too.
+24. **The colour is picked per area in the bar**, from eight or any other,
+    and the next area starts with the last one; it isn't chosen by damage
+    type. It's kept on the area's record.
+
 ## Open questions
 
 Each has a *Suggestion*: what gets built if nobody says otherwise.
@@ -700,6 +784,15 @@ Each has a *Suggestion*: what gets built if nobody says otherwise.
   right-click on anyone. *Suggestion:* leave it for the user to decide;
   opening without targets means an Apply with none, which the dialog
   would then refuse with "Select targets in area, or right-click a card".
+  *Since step 11, a kept area opens it with no targets (Decision 21).*
+- **Q12. Should entering an area, or starting a turn in it, open its
+  effect?** *Blocks nothing.* Now it's a reminder (Decision 23).
+  *Suggestion:* a prompt in the turn column, like a trigger's, opening the
+  Custom Effect on the pick with that creature targeted, once a kept area
+  records its pick and when its rules fire (a `CombatEffect` trigger).
+- **Q13. Can a kept area be moved?** *Blocks nothing.* Moonbeam and
+  Flaming Sphere move as an action. *Suggestion:* a "Move" on the area's
+  active spell row that aims it again in the bar and keeps its time.
 
 ## Revisions
 
@@ -820,6 +913,15 @@ Each has a *Suggestion*: what gets built if nobody says otherwise.
   (Gust of Wind), and a 2014 range of "Self (15-foot radius)" (Lightning
   Lure, Earth Tremor), read from the spell's range, which the dialog now
   passes with its text.
+
+- **R12** (step 11, the user's request, 2026-11-15). *Plan (Later):* "an
+  area that stays on the map ... and a creature entering it prompting its
+  effect". *Done:* the area stays, held by an active spell (Decisions 20 to
+  22), with a reminder rather than a prompt (Decision 23, Q12), and a colour
+  per area (Decision 24). *Found:* the new bar controls squeezed the bar's
+  text into a column a word wide that pushed the map down, so the text has
+  its own line now; and every log line clears the status line, so a turn's
+  reminder goes in the turn column's reminders instead.
 
 ## Discovered issues
 

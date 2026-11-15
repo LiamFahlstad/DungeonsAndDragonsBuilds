@@ -138,6 +138,9 @@ class CustomEffect:
     # Whether each target with a Shield wields it (the attack rows' Shield
     # box), by its id(): it's set so before the attack, and stays so.
     shields: dict[int, bool] = field(default_factory=dict)
+    # An area to keep on the map, held by the source's active spell for it
+    # (Combat/Arena/lasting.py's record): it may be applied with no targets.
+    area: dict | None = None
 
     @property
     def conditions(self) -> list[str]:

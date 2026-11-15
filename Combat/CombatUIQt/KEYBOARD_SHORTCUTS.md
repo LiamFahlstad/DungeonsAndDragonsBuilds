@@ -171,6 +171,29 @@ the source nearest the mouse. For an area centred on a point (a Fireball),
 the bar says how far the point is against the spell's range, and warns
 when it's past it; it still lets you click.
 
+The bar's **colour** list (orange, red, blue, green, purple, yellow, teal,
+grey, or **Other...** for any colour) is what the area is shaded in, and the
+next area starts with the last colour picked.
+
+**Areas that stay** (Moonbeam, Spirit Guardians, Web, Grease): with the
+bar's **Keep on the map** ticked (it starts ticked for a spell that isn't
+Instantaneous, or anything needing Concentration), a click also works with
+nobody in the area, and the dialog that opens again has **Keep the ... on
+the map**. Its Apply puts the area on the map in its colour, as one of the
+source's Active Spells on its card:
+
+- With **Source concentrates on it**, the area lasts while the source
+  concentrates (its edge is dashed): a failed Concentration save, being
+  Incapacitated, a new concentration, **Ctrl+C** or the card's ✕ ends it.
+- Without, it lasts the spell's own time (Grease's minute), else the
+  dialog's duration, and takes nothing off anyone when it ends.
+- An **Emanation** (Spirit Guardians) moves with its caster; anything else
+  stays where it was put.
+- Whoever walks into one, or is reached by an Emanation as its caster
+  moves, is named in the status line; whoever starts a turn in one is in
+  the turn column's reminders. Both are GM-only log lines. Hovering a cell
+  names the areas on it. Undo takes an area back with the rest.
+
 ## The turn column
 
 Beside the cards during a fight: whose turn it is, who's next, what to remember this turn (a dying player's death save, what recharged, legendary actions coming back, traits that act at the start of a turn), and who has legendary actions ready.

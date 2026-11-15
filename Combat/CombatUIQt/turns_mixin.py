@@ -187,6 +187,7 @@ class TurnsMixin(CombatWindowState):
             self._end_of_turn_saves(char)
         self._turn_triggers(ended, AtTurnEnd)
         self._turn_triggers(self._current_turn_group(), AtTurnStart)
+        self._remind_lasting_areas(self._current_turn_group())
 
     def _is_first_turn(self) -> bool:
         """Whether it's round 1's first turn, so there is no turn before it."""
