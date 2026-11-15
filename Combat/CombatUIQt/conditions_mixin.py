@@ -243,6 +243,11 @@ _SUMMARY_COLOR = "#9fb4d0"
 # A row the source is out of (spent, too few legendary actions left).
 _UNAVAILABLE_COLOR = "#6a6a7a"
 _DETAILS_MIN_HEIGHT = 90
+# Room above the dialog's first minimum height, for what a pick shows (a note,
+# extra rows: up to ~95px more). Opened at its bare minimum, the dialog had to
+# grow while shown, and Windows printed "QWindowsWindow::setGeometry: Unable
+# to set geometry".
+_DIALOG_HEADROOM = 120
 _BUTTON_WIDTH = 110
 # The roll kind with neither a saving throw nor an attack roll.
 NO_ROLL = "No roll"
@@ -463,6 +468,17 @@ def _effect_dialog_width(window: QWidget | None) -> int:
         return _CUSTOM_DIALOG_WIDTH
     room = screen.availableGeometry().width() - _SCREEN_MARGIN
     return max(_CUSTOM_DIALOG_WIDTH, min(_PREFERRED_DIALOG_WIDTH, room))
+
+
+def _effect_dialog_height(dialog: QWidget) -> int:
+    """The Custom Effect dialog's height: its minimum plus room to grow into
+    (_DIALOG_HEADROOM), as far as its screen allows."""
+    minimum = dialog.minimumSizeHint().height()
+    screen = dialog.screen()
+    if screen is None:
+        return minimum + _DIALOG_HEADROOM
+    room = screen.availableGeometry().height() - _SCREEN_MARGIN
+    return max(minimum, min(minimum + _DIALOG_HEADROOM, room))
 
 
 class ConditionsMixin(CombatWindowState):
@@ -2808,6 +2824,7 @@ class ConditionsMixin(CombatWindowState):
         if pick and start is not None:
             tree.setCurrentItem(start)
             tree.scrollToItem(start)
+        dlg.resize(dlg.width(), _effect_dialog_height(dlg))
         dlg.exec()
         if area_request:
             self._start_area_targeting(picked["option"], name_input.text().strip())

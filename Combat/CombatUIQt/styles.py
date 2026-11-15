@@ -1,11 +1,15 @@
 """Global stylesheet — dark fantasy theme"""
 
+# The base font-size is in pt, not px: 9pt is the same 12px (Qt 6 always uses
+# 96 logical DPI), but a px base font leaves QFont.pointSize() at -1 for every
+# widget, and Qt's own popup code then prints "QFont::setPointSize: Point size
+# <= 0 (-1)". Widgets below that want a smaller or larger font may use px.
 QSS = """
 QMainWindow, QWidget {
     background-color: #1a1a2e;
     color: #eaeaea;
     font-family: "Segoe UI", Arial, sans-serif;
-    font-size: 12px;
+    font-size: 9pt;
 }
 
 /* Combatant cards */

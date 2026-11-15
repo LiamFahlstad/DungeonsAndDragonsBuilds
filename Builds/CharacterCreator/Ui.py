@@ -80,12 +80,16 @@ ABILITY_SCORE_MODES = (
 # ---------------------------------------------------------------------------
 # Global stylesheet — dark fantasy theme (matches Combat/CombatUIQt.py)
 # ---------------------------------------------------------------------------
+# The base font-size is in pt, not px: 9pt is the same 12px (Qt 6 always uses
+# 96 logical DPI), but a px base font leaves QFont.pointSize() at -1 for every
+# widget, and Qt's own popup code then prints "QFont::setPointSize: Point size
+# <= 0 (-1)". Widgets below that want a smaller or larger font may use px.
 QSS = """
 QMainWindow, QDialog, QWidget {
     background-color: #1a1a2e;
     color: #eaeaea;
     font-family: "Segoe UI", Arial, sans-serif;
-    font-size: 12px;
+    font-size: 9pt;
 }
 
 /* Section boxes */
@@ -2197,7 +2201,6 @@ class CreatorApp(QMainWindow):
                 target[level][name] = expr
 
         # Report required level params that are still empty.
-        class_info = self.registry.classes()[spec.class_key]
         class_info = self.registry.classes().get(spec.class_key)
         subclass_info = self.registry.subclasses().get(spec.subclass_key)
         if class_info is not None:
@@ -2540,6 +2543,9 @@ class EquipmentList:
 def run(load_build_path=None):
     import sys
 
+    from Utils.QtMessages import install_qt_message_handler
+
+    install_qt_message_handler()
     app = QApplication(sys.argv)
     app.setStyleSheet(build_stylesheet())
     window = CreatorApp()

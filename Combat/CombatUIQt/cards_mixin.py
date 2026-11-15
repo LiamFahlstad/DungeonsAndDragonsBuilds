@@ -583,10 +583,12 @@ def _badge_style(color: str) -> str:
 
 
 def _clickable_badge_style(color: str) -> str:
+    # No "cursor: pointer": Qt style sheets have no cursor property (Qt prints
+    # "Unknown property cursor" for every badge); callers setCursor() instead.
     return (
         f"QPushButton {{ background-color: {color}; color: #ffffff;"
         " border-radius: 3px; padding: 1px 4px; font-size: 10px;"
-        " border: none; cursor: pointer; }"
+        " border: none; }"
         f"QPushButton:hover {{ background-color: {color}cc; }}"
     )
 

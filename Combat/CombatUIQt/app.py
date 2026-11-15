@@ -13,6 +13,7 @@ from Combat.Effects.triggers import Firing
 from Combat.PlayerCombatant import combatant_from_character, combatant_from_stat_block
 from Combat.Scenario import CombatScenario
 from Model.Creatures.Combatants import BasicCombatantData, Visibility
+from Utils.QtMessages import install_qt_message_handler
 
 from .arena_mixin import ArenaMixin
 from .cards_mixin import CardsMixin
@@ -201,6 +202,7 @@ class CombatAppQt(
         self.characters.append(char)
 
     def run(self):
+        install_qt_message_handler()
         app = QApplication.instance()
         if app is None:
             app = QApplication(sys.argv)

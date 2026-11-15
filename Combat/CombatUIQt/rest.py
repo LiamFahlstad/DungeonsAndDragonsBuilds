@@ -36,6 +36,7 @@ from Combat.Definitions import Action
 from Combat.PlayerCombatant import max_pact_slots
 from Combat.Effects.modifiers import hit_point_maximum
 from Core.Definitions import Condition
+from Utils.QtMessages import install_qt_message_handler
 
 from .app import CombatAppQt
 from .styles import QSS
@@ -92,6 +93,7 @@ def run_short_rest(player_log_path: str, campaign: Campaign):
     """Open the short-rest window on its own (not the main combat window),
     for `--rest short`. Heals and regains are recorded on the short rest's
     line in the player log, once anything is applied."""
+    install_qt_message_handler()
     app = _build_party_state(player_log_path, campaign)
     qapp = QApplication.instance()
     if qapp is None:
