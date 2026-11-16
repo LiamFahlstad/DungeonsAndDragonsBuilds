@@ -400,14 +400,17 @@ def attack_plan(
     mode: str,
     typed: bool = False,
     distance_ft: int | None = None,
+    extra: Iterable[tuple[str, Modifier]] = (),
 ) -> RollPlan:
     """An attack roll by attacker against target (either None: unknown, or
     several), asked for with `mode`: the attacker's own modifiers, then the
     target's AttacksAgainst. `typed`: rolled at the table, as save_plan.
     `distance_ft`: how far apart the two are on the map, None when that
     isn't known; it settles a `when` that asks only that (Prone's "within 5
-    feet"), which otherwise stays a note."""
-    sources: list[tuple[str, Modifier]] = []
+    feet"), which otherwise stays a note. `extra`: what else counts, by
+    label, as the map's range does (Long range's Disadvantage,
+    Combat/Arena/ranges.py)."""
+    sources: list[tuple[str, Modifier]] = list(extra)
     if attacker is not None:
         sources += [
             (_whose(attacker, c), m)

@@ -18,7 +18,9 @@ targets in an area from the Custom Effect dialog, the user's request the
 same day. Step 11, areas that stay on the map with their concentration and
 a colour picked for each, the user's request, 2026-11-15. Step 12,
 selecting a kept area to read, recolour, target or end it, the same day.
-What's next is under Later.
+Steps 13 to 18, the rules of moving and "within 5 feet" counted from the
+map, 2026-11-15 and 16. Steps 19 and 20, cover and range counted from the
+map, the first two of Later, 2026-11-16. What's next is under Later.
 
 ## How to use this document
 
@@ -58,10 +60,10 @@ Whoever works on the arena updates it **in the same change** as the code:
   listed here. Mark one fixed with `issues.py update` when a step fixes it.
 
 **Keep the overhead low (the user, 2026-11-10).** Run only the arena's own
-test files after a step (`./run_tests.sh -q tests/test_arena_geometry.py
-tests/test_arena.py tests/test_arena_areas.py tests/test_arena_lasting.py
-tests/test_combat_ui_arena.py tests/test_combat_ui_arena_areas.py
-tests/test_combat_ui_arena_lasting.py`). No step here changes a character sheet, so the
+test files after a step (`./run_tests.sh -q tests/test_arena*.py
+tests/test_combat_ui_arena*.py`), and the attack and dialog tests
+(`tests/test_combat_ui_attack_roll.py tests/test_combat_ui_custom_effect.py
+tests/test_effect_modifiers.py`) when a step changes how a roll is made. No step here changes a character sheet, so the
 character-creation tests and snapshots don't need to run. No reviewer or
 verification passes per step unless asked.
 
@@ -87,6 +89,8 @@ verification passes per step unless asked.
 | 16 | Counting "within 5 feet" from the map: Prone's Advantage/Disadvantage, Paralyzed's and Unconscious's Critical Hits | Done 2026-11-16 (R15, R16); DI-085 narrowed |
 | 17 | Moves that aren't walks: Teleport and Pushed, no movement spent and no Opportunity Attack | Done 2026-11-16 (planned in R15) |
 | 18 | Distances count only once the map is in use: a token moved this fight, or a painted map's starts (Decision 29) | Done 2026-11-16 |
+| 19 | Cover from the map: walls, objects and creatures on the line give cover, counted into the AC and Dexterity saves, Total Cover warned about, areas stopped by it | Done 2026-11-16 (R17; Decision 30) |
+| 20 | Reach and range: Long range's and close combat's Disadvantage counted, past a reach or range warned about | Done 2026-11-16 (R18; Decision 31) |
 
 ## How it fits the code that's there
 
@@ -733,25 +737,86 @@ puts it in use and Undo takes it back, painted starts, the log and map
 file), `tests/test_combat_ui_map_painter.py` (a fight on a painted map is
 in use, and keeps that when continued).
 
+### Step 19: cover from the map (2026-11-16)
+
+Later's first item, the map painter plan's Q2. Rules Glossary, Cover: Half
+Cover "+2 bonus to AC and Dexterity saving throws", Three-Quarters Cover +5,
+Total Cover "can't be targeted directly", and only the most protective
+degree counts. The Player's Handbook's examples: a low wall, large
+furniture, a tree trunk, "or a creature, whether that creature is an enemy
+or a friend".
+
+*Built (R17):* how it sits on the grid is Decision 30.
+`GridShape.crossed(a, b)` (geometry.py) gives the cells a straight line
+between two cells' middles crosses, a corner's two cells as one step;
+Combat/Arena/cover.py counts cover along it (`line_cover`,
+`cover_between`, `cover_from`) as a `CoverReading` ("Half Cover from
+Barrel at C4"), and `with_cover` gives the target as a roll reads it: a
+copy with the map's cover among its visibility states, so `cover()` and
+everything that reads the AC or a save (`armor_bonus`, `armor_in_use`,
+`save_plan`) count it unchanged, and the roll's notes on the AC stay on
+the real target. The window's `_map_cover` and `_covered` (damage_mixin.py)
+give nothing before the map is in use (Decision 29), and every path uses
+them: the Use / Cast dialog's AC and save rows, its rolled attacks and
+saves (a save from an aimed area's point of origin,
+`CustomEffect.cover_origin` from `lasting.record_origin`), a monster's
+button, the Attack roll field, and the AC a Shield or Deflect Attacks is
+checked against after a hit. The target label names it, and a roll against
+Total Cover says "can't be targeted directly" in the status (warned about,
+as Decision 19's range is). A pick whose text takes cover away ("no benefit
+from Half Cover or Three-Quarters Cover": Sacred Flame) counts only the
+map's Total Cover. `area_cells` leaves out what its point of origin
+(`point_of_origin`) has no unblocked line to (`reaches`), so a Fireball
+doesn't reach round a wall; only the terrain blocks an area.
+
+- Not done: the attacker's own features that ignore cover (Sharpshooter,
+  Spell Sniper) aren't read (Q15); height isn't counted, so a creature on
+  a ledge is behind a low wall as one on the ground is; the hover doesn't
+  show cover, only the target label.
+
+Tests: `tests/test_arena_cover.py`, `tests/test_combat_ui_arena_cover.py`.
+
+### Step 20: reach and range (2026-11-16)
+
+Later's second item. The Player's Handbook: a ranged attack has
+Disadvantage past its normal range and can't reach past its long one;
+"Ranged Attacks in Close Combat", Disadvantage "if you are within 5 feet of
+an enemy who can see you and who doesn't have the Incapacitated condition";
+Rules Glossary, Reach: 5 feet, 10 with the Reach property.
+
+*Built (R18):* Combat/Arena/ranges.py: an `AttackRange` (a melee reach, a
+ranged normal and long range, or both for a thrown weapon) read from a stat
+block's text (`action_range`: "reach 10 ft.", "range 80/320 ft."), a
+player's weapon (`weapon_range`, with the Weapons table's ranges as
+`WEAPON_RANGES_FT` in Core/Weapons.py, by the weapon's class, so a magic
+Longbow has its range) or a spell attack (`spell_attack_range`: a "ranged
+spell attack" reaches the spell's range, a "melee spell attack" 5 feet);
+`pick_attack_range` (effect_options.py) finds it for a dialog pick.
+`check_attack_range` gives a `RangeCheck`: its Disadvantages, counted as
+`attack_plan`'s new `extra` sources ("Long range, 90 ft. of 80/320 ft.:
+Disadvantage", "Ranged attack within 5 ft. of Goblin"), notes for an enemy
+that may not see the attacker (Blinded, or the attacker Invisible), and
+warnings past the reach or the long range (Decision 31). The window's
+`_range_check` counts it once the map is in use, in the dialog's attack
+rows ("AC 15, Disadvantage", "AC 15; past the 5 ft. reach") and rolls, and
+a monster's button; a spell aimed at a creature from past its range says
+so on the save row (`spell_range_warning`; an area's point is still the
+bar's to check, step 10). The dialog's rows are now drawn again once a
+pick is made, so they count the pick's range.
+
+- Not done: the Attack roll field doesn't know which attack was rolled, so
+  it counts no range; Crossbow Expert's and Sharpshooter's exceptions
+  aren't read (Q15); a weapon of the repo's own with Range and no table
+  entry has no range known.
+
+Tests: `tests/test_arena_ranges.py`, `tests/test_combat_ui_arena_ranges.py`.
+
 ### Later (not scheduled)
 
 In order of relevance (R15, the user, 2026-11-16: "add your suggestions
 (in order of relevancy) to the plan"). Each is a step of its own when it's
-picked up.
+picked up. The first two, cover and range, were steps 19 and 20.
 
-1. **Cover from the painted map** (the map painter plan's Q2): the line
-   between the two creatures' nearest cells; a wall or a Total Cover object
-   on it is Total Cover (can't be targeted), else the best cover of an
-   object on it, shown on the target label ("Half Cover: +2 AC") and then
-   counted into attack rolls and Dexterity saves. Areas stop at Total Cover
-   (Rules Glossary, Area of Effect: a cell no line from the point of origin
-   reaches isn't in the area).
-2. **Range on attacks and spells**: a weapon's or a stat block's reach and
-   range on the effect, warned about on the target label: a melee target
-   past reach, a ranged attack at long range (Disadvantage) or past it, a
-   ranged attack with an enemy within 5 feet (Disadvantage, Player's
-   Handbook), a spell's target past its range (only areas are checked now,
-   step 10).
 3. **Shove's push**: the Unarmed Strike's 5-foot push (Rules Glossary,
    Unarmed Strike), and other pushes (Thunderwave, Repelling Blast), as a
    Push move (step 17) offered from the Custom Effect after a failed save.
@@ -805,7 +870,8 @@ picked up.
 
 Built from this list already: the map settings dialog and terrain, as the
 Map Painter ([map-painter-plan.md](map-painter-plan.md), 2026-11-15); the
-conditions' "within 5 feet" (step 16); moves that aren't walks (step 17).
+conditions' "within 5 feet" (step 16); moves that aren't walks (step 17);
+cover (step 19) and range (step 20), its first two items.
 
 ## Decisions
 
@@ -1005,6 +1071,35 @@ Taken in step 15 (2026-11-16), for the user to overrule:
     map gives starting cells; until then, what asks for a distance stays a
     note for the GM, as before step 16. Step 18.
 
+Taken in steps 19 and 20 (2026-11-16), for the user to overrule:
+
+30. **How cover sits on the grid** (answers the map painter plan's Q2).
+    Cover is counted along the straight line between the middles of a cell
+    of the attacker's (or of an area's point of origin) and a cell of the
+    target's, over every such pair, and the least-covered line counts: the
+    attacker takes its best line, as at a table (a Large creature shoots
+    past a pillar from its other side). What the line crosses gives cover,
+    the two creatures' own cells left out (a goblin on a table isn't behind
+    it): a wall Total Cover, an object its own, another creature Half Cover
+    whatever its side or size (the Player's Handbook's "a creature, whether
+    that creature is an enemy or a friend"), one at 0 HP none. A line
+    exactly through a corner, squeezed between two cells, is covered as the
+    less protective of them, so peeking past one wall's corner is open and
+    a gap between two walls' corners is Total Cover. The target's own Cover
+    state counts too, the most protective of the two. Total Cover adds
+    nothing to the AC: it's warned about, not refused (as Decision 19). An
+    area is stopped only by Total Cover from the terrain, never by a
+    creature. Height isn't counted.
+31. **Range counts what's sure and warns about the rest.** A ranged attack
+    past its normal range, or within 5 feet of an enemy that isn't
+    Incapacitated or down, has Disadvantage in the roll; one past its long
+    range, or a melee attack past its reach, is warned about, not refused
+    (as Decision 19). A thrown weapon is melee within its reach and thrown
+    past it. "Can see you" is counted as yes unless the enemy is Blinded or
+    the attacker Invisible, which are left as notes, as the Dodge action's
+    are. The warnings go on the dialog's target rows and in the log, not on
+    the target label, which doesn't know which attack is made (R18).
+
 ## Open questions
 
 Each has a *Suggestion*: what gets built if nobody says otherwise.
@@ -1099,6 +1194,14 @@ Each has a *Suggestion*: what gets built if nobody says otherwise.
   `Movement(through_creatures=True, through_objects=True)` when the
   feature-combat-effects work reaches it; Panther waits for the choice
   to be kept on the build.
+- **Q15. Which features change cover or range?** *Blocks nothing.* Only a
+  pick's own text is read ("no benefit from Half Cover or Three-Quarters
+  Cover": Sacred Flame). Sharpshooter (ranged weapon attacks ignore Half
+  and Three-Quarters Cover, no Disadvantage at long range), Spell Sniper
+  (spell attacks ignore it, longer range) and Crossbow Expert (no
+  Disadvantage within 5 feet with a Crossbow) are the attacker's.
+  *Suggestion:* a `Feature.attack_rules()` like `Feature.movement()`
+  (step 15), read by `check_attack_range` and `_covered`.
 
 ## Revisions
 
@@ -1268,6 +1371,28 @@ Each has a *Suggestion*: what gets built if nobody says otherwise.
   disagree on the same hit; Unconscious players at 0 HP are where it matters
   most. *Found:* tokens are placed as a fight starts, so every test that
   expected the old note now has to take the target off the map.
+
+- **R17** (step 19, 2026-11-16). *Plan (Later):* "the line between the two
+  creatures' nearest cells", walls and objects only, "shown on the target
+  label and then counted". *Done:* every pair of cells, the least-covered
+  line counting, and creatures in the way giving Half Cover (Decision 30),
+  counted at once in every attack path and the dialog's saves. *Why:* the
+  nearest cells alone gave a Large creature Total Cover from a wall that
+  hides only half of it, and the Player's Handbook names a creature as
+  cover, which is what a fight's lines cross most. The map's cover is a
+  copy of the target with a Cover state added (`with_cover`), so the AC,
+  the saves and their notes count it through the code that counts a Cover
+  state set by hand, with no new path. *Found:* the dialog's target rows
+  were drawn before a pick was stored, so they never saw the pick; they're
+  drawn again once it is (needed by step 20 too).
+- **R18** (step 20, 2026-11-16). *Plan (Later):* "warned about on the
+  target label". *Done:* on the dialog's target rows, in the roll's log
+  line and on a monster's button, with what's sure (Long range, close
+  combat) counted as Disadvantage rather than warned about (Decision 31).
+  *Why:* the label belongs to the selection, not to an attack: the same
+  target can be in reach of a sword and in long range of a bow. *Found:*
+  weapons kept no range numbers, only the Range property, so the Weapons
+  table's are in Core/Weapons.py now.
 
 ## Discovered issues
 

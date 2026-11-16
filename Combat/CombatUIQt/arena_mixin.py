@@ -967,13 +967,20 @@ class ArenaMixin(CombatWindowState):
 
     def _distance_note(self, target: dict) -> str:
         """ " (25 ft.)": how far `target` is from the source, for the target
-        label in either view; "" unless both are on the map and differ."""
+        label in either view, and its cover from the source on the map once
+        it's in use (" (25 ft., Half Cover from Barrel at C4)"); "" unless
+        both are on the map and differ."""
         source = self.selected_character
         notes = []
         if source is not None and source is not target:
             feet = distance_ft(source, target, self.arena_settings)
             if feet is not None:
                 notes.append(f"{feet} ft.")
+            reading = self._map_cover(source, target)
+            if reading.total:
+                notes.append(f"Total Cover from {reading.by}: can't be targeted")
+            elif reading:
+                notes.append(f"{reading.state} from {reading.by}")
         obscured = obscured_text(target, self.arena_settings)
         if obscured:
             notes.append(obscured)

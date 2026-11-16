@@ -36,7 +36,14 @@ from Combat.Arena.arena import (
     stand_up_ft,
     walking_speed_ft,
 )
-from Combat.Arena.lasting import AREA_KEY
+from Combat.Arena.areas import parse_area
+from Combat.Arena.cover import ignores_cover
+from Combat.Arena.ranges import (
+    NO_RANGE_CHECK,
+    RangeCheck,
+    spell_range_warning,
+)
+from Combat.Arena.lasting import AREA_KEY, record_origin
 from Combat.Definitions import Action, CombatStatus, ConditionRule
 from Combat.Effects.active_effects import (
     CUSTOM,
@@ -114,6 +121,8 @@ from .effect_options import (
     COLLAPSED_CATEGORIES,
     amount_text as _amount_text,
     effect_options,
+    pick_attack_range,
+    pick_spell_range_ft,
     regained_uses,
     spell_slot_choices,
     triggered_rows,
@@ -381,6 +390,12 @@ def _with_shield(target: dict, wielding: bool | None) -> dict:
     return {**target, SHIELD_OFF: not wielding}
 
 
+def _ignores_cover(pick: EffectOption | None) -> bool:
+    """Whether a pick's rules text takes Half and Three-Quarters Cover away
+    (Sacred Flame), so only the map's Total Cover is left."""
+    return pick is not None and ignores_cover(pick.tooltip)
+
+
 def _armor_text(target: dict, wielding: bool | None = None) -> str:
     """What an attack roll against target has to meet: "AC 15", with its
     cover in it ("AC 17 (cover)"), or "AC ?" when that isn't known.
@@ -403,6 +418,8 @@ def _attack_text(
     target: dict,
     wielding: bool | None = None,
     distance_ft: int | None = None,
+    covered: dict | None = None,
+    reach: RangeCheck = NO_RANGE_CHECK,
 ) -> str:
     """A target's row for an attack roll: what it has to meet, the mode the
     modifiers give it and what they add to it, to roll it that way at the
@@ -410,22 +427,43 @@ def _attack_text(
     on it deals has a row of its own under it (target_roll_rows' extras).
     `wielding`: whether it wields its Shield (_armor_text). `distance_ft`:
     how far the source is on the map, which settles Prone's "within 5
-    feet" (attack_plan)."""
-    plan = attack_plan(source, target, "Neutral", distance_ft=distance_ft)
-    parts = [_armor_text(target, wielding)]
+    feet" (attack_plan). `covered`: target with the map's cover from the
+    source in it (_covered), whose AC it has to meet. `reach`: what the map
+    says of its range (Long range's Disadvantage counted, past its reach
+    warned about after the rest: "AC 15; past the 5 ft. reach")."""
+    plan = attack_plan(
+        source, target, "Neutral", distance_ft=distance_ft, extra=reach.modifiers
+    )
+    parts = [_armor_text(covered or target, wielding)]
     if plan.mode != "Neutral":
         parts.append(plan.mode)
     flat, dice = bonus_reminder(plan)
     added = " ".join(p for p in (f"{flat:+d}" if flat else "", dice) if p)
     if added:
         parts.append(f"{added} to hit")
-    return ", ".join(parts)
+    return "; ".join([", ".join(parts), *_short_warnings(reach)])
+
+
+def _short_warnings(reach: RangeCheck) -> list[str]:
+    """A range warning as a row says it, without the target's name and
+    distance its row already shows: "past the 5 ft. reach"."""
+    return [w.split(" away, ", 1)[-1] for w in reach.warnings]
 
 
 def _attack_tooltip(
-    source: dict | None, target: dict, distance_ft: int | None = None
+    source: dict | None,
+    target: dict,
+    distance_ft: int | None = None,
+    cover_text: str = "",
+    reach: RangeCheck = NO_RANGE_CHECK,
 ) -> str:
-    plan = attack_plan(source, target, "Neutral", distance_ft=distance_ft)
+    """The attack row's tooltip: what changes the AC, with `cover_text`, the
+    map's cover from the source ("Half Cover from Barrel at C4: +2 AC and
+    DEX saves"), how it's rolled (`reach`: the map's range, counted) and
+    what a hit adds."""
+    plan = attack_plan(
+        source, target, "Neutral", distance_ft=distance_ft, extra=reach.modifiers
+    )
     extras = [f"{label}: {extra_text(m)}" for label, m in hit_extras(source, target)]
     if extras:
         extras.append(
@@ -436,8 +474,11 @@ def _attack_tooltip(
     return "\n".join(
         [
             "What the attack roll has to meet, cover included",
+            *([cover_text] if cover_text else []),
             *armor_class_notes(target),
             *plan.notes,
+            *reach.notes,
+            *reach.warnings,
             *_bonus_notes(plan),
             *extras,
         ]
@@ -946,12 +987,27 @@ class ConditionsMixin(CombatWindowState):
                 # Where the two are on the map settles Prone's "within 5
                 # feet" in the roll, and Paralyzed's Critical Hit.
                 feet = self._attacker_distance_ft(source, target)
-                plan = attack_plan(source, target, effect.mode, typed is not None, feet)
+                # Its range too: Long range's Disadvantage counted, past
+                # its reach or range warned about (Combat/Arena/ranges.py).
+                reach = self._range_check(
+                    source, target, pick_attack_range(effect.pick, source)
+                )
+                plan = attack_plan(
+                    source,
+                    target,
+                    effect.mode,
+                    typed is not None,
+                    feet,
+                    reach.modifiers,
+                )
                 if typed is not None:
                     roll, notes = typed, plan.notes
                 else:
                     roll, notes = roll_planned_attack(effect.attack_bonus, plan)
-                hit, attack = self._resolve_attack_roll(target, roll, source, notes)
+                notes = (*notes, *reach.notes, *reach.warnings)
+                hit, attack = self._resolve_attack_roll(
+                    target, roll, source, notes, _ignores_cover(effect.pick)
+                )
                 critical = roll.is_critical or (
                     hit is not False and self._critical_against(source, target)
                 )
@@ -968,7 +1024,11 @@ class ConditionsMixin(CombatWindowState):
                             kind=kind,
                             row=picked_row,
                             total=roll.total,
-                            armor=armor_in_use(target),
+                            armor=armor_in_use(
+                                self._covered(
+                                    source, target, None, _ignores_cover(effect.pick)
+                                )
+                            ),
                         )
                     )
                     if not still:
@@ -999,7 +1059,7 @@ class ConditionsMixin(CombatWindowState):
                 if reduction:
                     damage = reduced_damage(damage, reduction)
             if effect.ability is not None:
-                saved = self._roll_effect_save(target, effect)
+                saved = self._roll_effect_save(target, effect, source)
                 results.append(saved)
             avoided = effect.ability is not None and saved and not effect.half_on_save
             dealt = 0
@@ -1523,13 +1583,19 @@ class ConditionsMixin(CombatWindowState):
                 FEATURE,
             )
 
-    def _roll_effect_save(self, target: dict, effect: CustomEffect) -> bool:
+    def _roll_effect_save(
+        self, target: dict, effect: CustomEffect, source: dict | None = None
+    ) -> bool:
         """Target's save against the effect, logged. Legendary Resistance turns
-        a failure into a success, if the dialog said to use it."""
+        a failure into a success, if the dialog said to use it. The map's
+        cover counts in a Dexterity save: from source, or from the area's
+        point of origin (effect.cover_origin)."""
         assert effect.ability is not None  # the caller checks
         name = target["name"]
         result = roll_save(
-            target,
+            self._covered(
+                source, target, effect.cover_origin, _ignores_cover(effect.pick)
+            ),
             effect.ability,
             effect.dc,
             effect.mode,
@@ -1711,6 +1777,9 @@ class ConditionsMixin(CombatWindowState):
         aimed, self._aimed_area = self._aimed_area, None
         if aimed is not None and (source is None or aimed["source"] != source["name"]):
             aimed = None
+        # The map's cover against a save is counted from where the aimed
+        # area spreads (a Fireball's cell), else from the source.
+        cover_origin = record_origin(aimed["record"]) if aimed is not None else None
         caster = self.selected_character
         # The targets as the boxes at the top pick them, changed in place.
         targets: list[dict] = list(self.target_characters)
@@ -2000,13 +2069,52 @@ class ConditionsMixin(CombatWindowState):
         extra_rows: dict = {}
         shield_boxes: dict[int, QCheckBox] = {}
 
+        def covered(target: dict, origin=None) -> dict:
+            """Target with the map's cover against what's picked in it."""
+            ignores = _ignores_cover(picked["option"])
+            return self._covered(source, target, origin, ignores)
+
+        def spell_range_text(target: dict) -> str:
+            """ "past the spell's 60 ft. range" for a spell aimed at target
+            from too far, on the map in use; "" for one aimed as an area
+            (its point is what's checked, in the area bar)."""
+            option = picked["option"]
+            if aimed is not None or not self.arena_settings.in_use:
+                return ""
+            if option is None or parse_area(option.tooltip) is not None:
+                return ""
+            warning = spell_range_warning(
+                pick_spell_range_ft(option), source, target, self.arena_settings
+            )
+            return warning.split(" away, ", 1)[-1] if warning else ""
+
+        def reach_of(target: dict) -> RangeCheck:
+            """What the map says of the pick's range to target."""
+            attack = pick_attack_range(picked["option"], source)
+            return self._range_check(source, target, attack)
+
         def show_attack_info(target: dict):
             box = shield_boxes.get(id(target))
             wielding = None if box is None else box.isChecked()
             feet = self._attacker_distance_ft(source, target)
-            attack_infos[id(target)].setText(
-                _attack_text(source, target, wielding, feet)
+            reach = reach_of(target)
+            info = attack_infos[id(target)]
+            info.setText(
+                _attack_text(source, target, wielding, feet, covered(target), reach)
             )
+            info.setToolTip(
+                _attack_tooltip(
+                    source, target, feet, self._map_cover(source, target).text, reach
+                )
+            )
+
+        def show_pick_rows():
+            """The target rows again once a pick is made: its range and
+            whether it ignores cover count in them."""
+            for target in targets:
+                if id(target) in attack_infos:
+                    show_attack_info(target)
+            show_save_bonuses()
 
         def build_roll_rows():
             """The rows for the targets now picked, keeping what was typed
@@ -2096,11 +2204,6 @@ class ConditionsMixin(CombatWindowState):
                 box.returnPressed.connect(lambda: do_apply())
             for target in targets:
                 show_attack_info(target)
-                attack_infos[id(target)].setToolTip(
-                    _attack_tooltip(
-                        source, target, self._attacker_distance_ft(source, target)
-                    )
-                )
                 if id(target) in shield_boxes:
                     shield_boxes[id(target)].toggled.connect(
                         lambda _=False, t=target: show_attack_info(t)
@@ -2396,8 +2499,10 @@ class ConditionsMixin(CombatWindowState):
                 if ability is None:
                     info.setText("")
                     continue
-                info.setText(_save_text(target, ability))
-                info.setToolTip(_save_tooltip(target, ability))
+                seen = covered(target, cover_origin)
+                far = spell_range_text(target)
+                info.setText(_save_text(seen, ability) + (f"; {far}" if far else ""))
+                info.setToolTip(_save_tooltip(seen, ability))
 
         def show_roll_controls():
             kind = roll_kind()
@@ -2836,6 +2941,7 @@ class ConditionsMixin(CombatWindowState):
                 and not _DICELESS.search(damage_input.text())
                 and damage_input.text() != picked["damage"],
                 area=aimed["record"] if aimed is not None and keeps_area else None,
+                cover_origin=cover_origin,
             )
             # The boxes' picks become the targets, as if clicked on the cards.
             if [id(t) for t in targets] != [id(t) for t in self.target_characters]:
@@ -2979,6 +3085,7 @@ class ConditionsMixin(CombatWindowState):
             picked.update(
                 option=option, damage=damage, times=times, search=search_box.text()
             )
+            show_pick_rows()
 
         def drop_pick(name: str):
             """Typing another name makes it the GM's own effect: nothing is
@@ -2993,6 +3100,7 @@ class ConditionsMixin(CombatWindowState):
             show_details(None)
             show_target_count(None)
             show_maximum_box(None)
+            show_pick_rows()
 
         def show_maximum_box(option: EffectOption | None):
             """The Hit Point maximum box, for a pick whose badge rolls one."""

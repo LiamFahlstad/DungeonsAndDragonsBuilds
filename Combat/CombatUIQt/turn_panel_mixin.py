@@ -27,6 +27,7 @@ from PyQt6.QtWidgets import (
 import Combat.PlayerLog as PlayerLog
 from Model.Content.CombatModifiers import WhenHit
 from Model.Content.CombatTriggers import TriggerAim
+from Combat.Arena.ranges import action_range
 from Combat.Effects.active_effects import ActiveEffect
 from Combat.Effects.modifiers import attack_plan, hit_notes, hit_plan, hit_point_maximum
 from Combat.Effects.triggers import (
@@ -404,21 +405,32 @@ class TurnPanelMixin(CombatWindowState):
             # Where the two are on the map settles Prone's "within 5 feet"
             # in the roll, and Paralyzed's Critical Hit.
             feet = self._attacker_distance_ft(char, target)
-            plan = attack_plan(char, target, mode, distance_ft=feet)
+            # Its reach or range on the map: Long range's Disadvantage
+            # counted, past its reach warned about.
+            reach = self._range_check(
+                char, target, action_range(action.description, action.name)
+            )
+            plan = attack_plan(
+                char, target, mode, distance_ft=feet, extra=reach.modifiers
+            )
             d20 = self._roll_d20_for_attack(plan.mode)
             # What its modifiers add (Bless's 1d4), rolled after the d20.
             added, bonus_notes = roll_bonuses(plan)
-            notes = (*plan.notes, *bonus_notes)
+            notes = (*plan.notes, *bonus_notes, *reach.notes, *reach.warnings)
             total = d20 + action.to_hit + added
             critical = d20 == 20
             extra = f"{added:+d}" if plan.bonuses else ""
             result.append(f"rolled {total} ({d20}{action.to_hit:+d}{extra})")
-            hit = self._attack_hits(d20, total)
+            hit = self._attack_hits(d20, total, char)
             if hit is not False and self._critical_against(char, target):
                 critical = True
-            armor = self._target_armor()
+            armor = self._target_armor(char)
             if armor is not None:
                 result.append(f"vs AC {armor}")
+            if target is not None:
+                # The map's Total Cover is warned about, not refused.
+                warning = self._cover_warning(char, target)
+                notes = (*notes, warning) if warning else notes
             if critical:
                 result.append("CRITICAL HIT")
             elif hit is not None:
@@ -497,22 +509,25 @@ class TurnPanelMixin(CombatWindowState):
             return max(first, second)
         return min(first, second) if mode == "Disadvantage" else first
 
-    def _attack_hits(self, d20: int, total: int) -> bool | None:
+    def _attack_hits(
+        self, d20: int, total: int, attacker: dict | None = None
+    ) -> bool | None:
         """Whether the attack hits the one target; a 20 always does and a 1
         never. None when it can't be told: no target, or several."""
         if d20 == 20:
             return True
         if d20 == 1:
             return False
-        armor = self._target_armor()
+        armor = self._target_armor(attacker)
         return None if armor is None else total >= armor
 
-    def _target_armor(self) -> int | None:
-        """The one target's AC with its cover and modifiers in it; None with
-        no target, several, or one with no AC."""
+    def _target_armor(self, attacker: dict | None = None) -> int | None:
+        """The one target's AC with its cover and modifiers in it, the map's
+        cover from `attacker` too (_covered); None with no target, several,
+        or one with no AC."""
         if len(self.target_characters) != 1:
             return None
-        target = self.target_characters[0]
+        target = self._covered(attacker, self.target_characters[0])
         armor = stored_armor(target)
         return None if armor is None else armor + armor_bonus(target)
 
@@ -963,7 +978,9 @@ class TurnPanelMixin(CombatWindowState):
                     f" the damage ({how})",
                     character=target["name"],
                 )
-        hits = still_hits(outcome, armor_in_use(target))
+        hits = still_hits(
+            outcome, armor_in_use(self._covered(outcome.attacker, target))
+        )
         if not hits:
             self._log_event(
                 f"{outcome.attacker['name']}'s attack roll now misses"

@@ -39,6 +39,7 @@ from enum import Enum
 from typing import Iterable
 
 from Combat.Arena.arena import ArenaSettings, footprint
+from Combat.Arena.cover import reaches
 from Combat.Arena.geometry import Cell
 
 _EPSILON = 1e-9
@@ -346,6 +347,17 @@ def _cube_beside(
     return {c for c in shape.footprint(best[1], across) if settings.on_map(c)}
 
 
+def point_of_origin(
+    area: AreaOfEffect, source: dict | None, aim: Cell | None, settings: ArenaSettings
+) -> list[Cell]:
+    """Where `area` spreads from (Rules Glossary, Area of Effect): the cell
+    aimed at for one centred on a point, else the source's cells (a Cone,
+    a Line, an Emanation, Thunderwave's Cube); none without them."""
+    if area.starts_at_source:
+        return footprint(source, settings.distance_rule) if source is not None else []
+    return [aim] if aim is not None else []
+
+
 def area_cells(
     area: AreaOfEffect,
     source: dict | None,
@@ -353,7 +365,23 @@ def area_cells(
     settings: ArenaSettings,
 ) -> set[Cell]:
     """The map cells `area` covers, aimed at `aim` (None: not aimed yet) by
-    `source`; none when it needs a source or an aim it doesn't have."""
+    `source`; none when it needs a source or an aim it doesn't have. A cell
+    behind Total Cover from its point of origin isn't in it (a wall, a
+    closed door: Combat/Arena/cover.py)."""
+    cells = _shape_cells(area, source, aim, settings)
+    if not cells or not settings.terrain:
+        return cells
+    origins = point_of_origin(area, source, aim, settings)
+    return {cell for cell in cells if reaches(origins, cell, settings)}
+
+
+def _shape_cells(
+    area: AreaOfEffect,
+    source: dict | None,
+    aim: Cell | None,
+    settings: ArenaSettings,
+) -> set[Cell]:
+    """The cells of area's shape, nothing in the way counted."""
     rule = settings.distance_rule
     own = footprint(source, rule) if source is not None else []
     if area.starts_at_source and not own:

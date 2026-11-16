@@ -134,6 +134,15 @@ def record_area(record: dict) -> AreaOfEffect:
     )
 
 
+def record_origin(record: dict) -> list[Cell] | None:
+    """Where an aimed area spreads from, for the cover against it: the cell
+    a point area was aimed at (a Fireball's), or None for one that starts
+    at its source (a Cone, an Emanation), whose cover is the source's."""
+    if record_area(record).starts_at_source or record.get("aim") is None:
+        return None
+    return [Cell.of(record["aim"])]
+
+
 def record_cells(record: dict, caster: dict, settings: ArenaSettings) -> set[Cell]:
     """The cells a kept area covers now: around its caster where the caster
     is (none while it's off the map), or the cells it was put on."""

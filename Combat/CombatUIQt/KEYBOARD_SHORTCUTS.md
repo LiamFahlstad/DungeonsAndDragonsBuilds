@@ -248,6 +248,32 @@ Difficult Terrain and climbing; hovering a cell names what's painted on it;
 the target label adds "Lightly Obscured" or "Heavily Obscured"; and walking
 onto a hazard, or starting a turn on one, is named like an area that stays.
 
+**Cover from the map** (once the map is in use): what stands on the straight
+line between the source and the target gives the target cover, the best
+line counting (a Large creature shoots past a pillar from its other side).
+A wall or a closed door is Total Cover, an object its own (a barrel Half,
+a pillar Three-Quarters), and another creature, friend or foe, Half Cover;
+one at 0 HP gives none. The most protective counts, the target's own Cover
+state too. The target label names it ("Target: Goblin (25 ft., Half Cover
+from Barrel at C4)"), and it's added to the AC of every attack roll (the
+Use / Cast dialog, a monster's button, the Attack roll field) and to
+Dexterity saves in the dialog. An area's save counts it from the area's
+point of origin (a Fireball's cell), and an area never reaches behind Total
+Cover. Total Cover is warned about ("can't be targeted directly"), not
+refused. What says it ignores cover (Sacred Flame) gets none of the map's
+Half or Three-Quarters Cover. Height isn't counted.
+
+**Reach and range** (once the map is in use), for a pick whose reach or
+range is known (a weapon, a stat block's "reach 10 ft." or "range 80/320
+ft.", a spell attack): a ranged attack past its normal range has
+Disadvantage ("Long range, 90 ft. of 80/320 ft."), and so has one made
+within 5 feet of an enemy that isn't Incapacitated (one that may not see
+the attacker, Blinded or facing an Invisible attacker, is only noted). A
+melee attack past its reach, or a ranged one past its long range, is warned
+about on the target's row and in the log, not refused. A thrown weapon is
+melee within its reach and thrown past it. A spell aimed at a creature past
+its range says so on the save row.
+
 ## The Map Painter
 
 **Ctrl+M** or the **Map Painter** button opens it on the encounter that's

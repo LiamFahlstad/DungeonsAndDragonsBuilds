@@ -177,7 +177,8 @@ Taken in the plan (2026-11-15), for the user to overrule:
 9. **Objects are per cell, with what the rules need**: whether they block
    movement, are Difficult Terrain (furniture), the cover they give, and
    whether they're a hazard. A row of the same object is named once. Cover
-   is shown on the hover, not counted (Q2).
+   is shown on the hover, and counted between two creatures since the arena
+   plan's step 19 (its Decision 30; Q2).
 10. **Saving the map of the encounter that's open changes its fight**: on
     the initiative screen it's the map the fight starts on; in combat it's
     one undo step (`UndoPoint` keeps the map's settings, the arena plan's
@@ -198,12 +199,8 @@ Taken in the plan (2026-11-15), for the user to overrule:
   Player Screen's map. *Suggestion:* once the map is on the Player Screen
   (the arena plan's Later), a "Hidden from players" light layer the GM
   reveals.
-- **Q2. Should walls and objects give cover and block sight between two
-  creatures?** *Blocks nothing.* *Suggestion:* trace the line between the
-  source's and the target's nearest cells; a wall or a Total Cover object
-  on it is Total Cover, else the best cover of an object on it, shown on the
-  target label ("Half Cover: +2 AC") and later counted into the attack;
-  areas stopped by Total Cover (Rules Glossary, Area of Effect).
+- Q2 (cover): the arena plan's Decision 30, built in its step 19. Blocking
+  sight is still the arena plan's Later (light and senses).
 - **Q3. Should areas of effect count height?** *Blocks nothing.* Areas are
   flat now, so on uneven ground a creature the hover calls 20 ft. away can
   be in a 15-foot Sphere (the arena plan's Decision 18). *Suggestion:* yes,

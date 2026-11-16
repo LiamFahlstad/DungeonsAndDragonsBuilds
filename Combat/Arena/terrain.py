@@ -15,9 +15,10 @@ The rules the arena counts from it (Combat/Arena/arena.py):
   Speed), and height counts into the distance between two creatures.
 - Dim light is Lightly Obscured and Darkness Heavily Obscured (Rules
   Glossary, Dim Light and Darkness): shown, not rolled.
-- An object's cover (Rules Glossary, Cover) is shown, not counted; a hazard
-  (a campfire, a trap) is a reminder to whoever enters it or starts a turn
-  on it.
+- An object's cover (Rules Glossary, Cover) is shown on the hover, and
+  counted between two creatures (Combat/Arena/cover.py); a wall is Total
+  Cover. A hazard (a campfire, a trap) is a reminder to whoever enters it or
+  starts a turn on it.
 
 Everything is plain JSON in the encounter's map file and the fight's log
 (`Terrain.to_dict`), and only cells that differ from open, level, brightly

@@ -1,6 +1,20 @@
 """Damage/healing mixin for CombatAppQt."""
 
 from Combat.Arena.arena import distance_ft
+from Combat.Arena.cover import (
+    NO_COVER_READING,
+    CoverReading,
+    cover_between,
+    cover_from,
+    with_cover,
+)
+from Combat.Arena.geometry import Cell
+from Combat.Arena.ranges import (
+    NO_RANGE_CHECK,
+    AttackRange,
+    RangeCheck,
+    check_attack_range,
+)
 from Combat.Definitions import Action
 from Combat.Effects.modifiers import (
     extra_text,
@@ -212,6 +226,69 @@ class DamageMixin(CombatWindowState):
             return None
         return distance_ft(attacker, target, self.arena_settings)
 
+    def _map_cover(
+        self,
+        source: dict | None,
+        target: dict | None,
+        origin: list[Cell] | None = None,
+    ) -> CoverReading:
+        """The cover target has on the battle map (Combat/Arena/cover.py)
+        against source, or against an area's point of origin `origin` (a
+        Fireball's cell): what's between them. None of it before the map is
+        in use (Decision 29), as distances count only then, or with either
+        off the map."""
+        if target is None or not self.arena_settings.in_use:
+            return NO_COVER_READING
+        if origin is not None:
+            leave = [source] if source is not None else []
+            return cover_between(
+                origin, target, self.characters, self.arena_settings, leave
+            )
+        if source is None:
+            return NO_COVER_READING
+        return cover_from(source, target, self.characters, self.arena_settings)
+
+    def _covered(
+        self,
+        source: dict | None,
+        target: dict,
+        origin: list[Cell] | None = None,
+        ignores_cover: bool = False,
+    ) -> dict:
+        """Target as a roll against it from source reads it, the map's cover
+        among its own (with_cover: a copy to read, never to change).
+        `ignores_cover`: what's rolled takes Half and Three-Quarters Cover
+        away (Sacred Flame), so only Total Cover is left of the map's."""
+        reading = self._map_cover(source, target, origin)
+        if ignores_cover and not reading.total:
+            return target
+        return with_cover(target, reading)
+
+    def _range_check(
+        self, source: dict | None, target: dict | None, attack: AttackRange | None
+    ) -> RangeCheck:
+        """What the battle map says of `attack`'s reach or range from source
+        to target (Combat/Arena/ranges.py): Long range's Disadvantage, an
+        enemy within 5 feet of a ranged attacker, past its reach or range.
+        Nothing before the map is in use (Decision 29)."""
+        if not self.arena_settings.in_use:
+            return NO_RANGE_CHECK
+        return check_attack_range(
+            attack, source, target, self.characters, self.arena_settings
+        )
+
+    def _cover_warning(self, source: dict | None, target: dict) -> str:
+        """ "Goblin is behind Total Cover (Wall at D5): it can't be targeted
+        directly", for a roll made anyway (warned about, not refused, as a
+        range is: Decision 19); "" otherwise."""
+        reading = self._map_cover(source, target)
+        if not reading.total:
+            return ""
+        return (
+            f"{target['name']} is behind Total Cover ({reading.by}): it can't"
+            " be targeted directly"
+        )
+
     def _critical_against(self, attacker: dict | None, target: dict | None) -> bool:
         """Whether a hit by attacker on target is a Critical Hit by what
         target has, whatever the d20 showed: Paralyzed's or Unconscious's,
@@ -226,16 +303,20 @@ class DamageMixin(CombatWindowState):
         roll: AttackRoll,
         source: dict | None,
         notes: tuple[str, ...] = (),
+        ignores_cover: bool = False,
     ) -> tuple[bool | None, str]:
-        """Check `roll` against target's AC, with its cover and modifiers, and
-        log how it went, with `notes` on how it was rolled (attack_plan's) and
-        what the GM should check about a hit. Returns whether it hit, None
-        with no AC to check, and how it went against the AC, for the status
-        line. The log doesn't say the AC, as the Limited view's players read
+        """Check `roll` against target's AC, with its cover (its own, and the
+        map's from source: _covered) and modifiers, and log how it went, with
+        `notes` on how it was rolled (attack_plan's) and what the GM should
+        check about a hit. `ignores_cover`: the attack ignores Half and
+        Three-Quarters Cover. Returns whether it hit, None with no AC to
+        check, and how it went against the AC, for the status line (Total
+        Cover warned about there, not refused). The log doesn't say the AC, as the Limited view's players read
         it too. They don't learn from a hidden attacker's roll, which they
         never saw."""
-        armor = stored_armor(target)
-        bonus = armor_bonus(target)
+        seen = self._covered(source, target, ignores_cover=ignores_cover)
+        armor = stored_armor(seen)
+        bonus = armor_bonus(seen)
         hit = roll.hits(None if armor is None else armor + bonus)
         # A player's summon is seen as its owner is, even while Invisible.
         if source is None or _seen(source, _player_names(self.characters)):
@@ -260,10 +341,13 @@ class DamageMixin(CombatWindowState):
             character=name,
         )
         self._use_up_badges(source, target)
+        warning = self._cover_warning(source, target)
+        if warning:
+            notes = (*notes, warning)
         why = f" ({'; '.join(notes)})" if notes else ""
         if armor is None:
             return hit, f"{name} has no AC to check{why}"
-        cover = " with cover" if cover_bonus(target) else ""
+        cover = " with cover" if cover_bonus(seen) else ""
         faced = f"AC {armor + bonus}{cover}"
         word = "hit" if hit else "miss"
         return hit, f"{name}: {roll.text} vs {faced}, {word}{why}"
@@ -422,7 +506,7 @@ class DamageMixin(CombatWindowState):
                         kind=attack.kind,
                         row=attack.row,
                         total=attack.total,
-                        armor=armor_in_use(target),
+                        armor=armor_in_use(self._covered(attack.attacker, target)),
                     )
                 )
                 if not still:

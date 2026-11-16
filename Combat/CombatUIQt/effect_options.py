@@ -15,6 +15,13 @@ from dataclasses import dataclass, fields, replace
 from functools import lru_cache
 
 from CharacterContent.Spells.SpellFactory import SpellFactory
+from Combat.Arena.areas import spell_range_ft
+from Combat.Arena.ranges import (
+    AttackRange,
+    action_range,
+    spell_attack_range,
+    weapon_range,
+)
 from Combat.Effects.triggers import TriggerRow
 from Core.Definitions import Condition
 from Model.Content.CombatEffect import (
@@ -1832,6 +1839,43 @@ def opportunity_attack_row(char: dict) -> str:
             if option.roll == ATTACK_ROLL:
                 return option.name
     return ""
+
+
+def _pick_spell(option: EffectOption):
+    """The spell a pick casts (its own row, or a feature's or a monster's
+    use of one), or None."""
+    name = option.spell_name or (option.name if option.kind == SPELL else "")
+    return _spell_named(name) if name else None
+
+
+def pick_attack_range(
+    option: EffectOption | None, char: dict | None
+) -> AttackRange | None:
+    """How far a pick's attack roll reaches (Combat/Arena/ranges.py): a
+    spell's attack by its range, a monster's by its text ("reach 10 ft.",
+    "range 80/320 ft."), char's weapon by the weapon; None for a pick that
+    isn't an attack roll, or one whose reach can't be told."""
+    if option is None or option.roll != ATTACK_ROLL:
+        return None
+    spell = _pick_spell(option)
+    if spell is not None:
+        text = f"{option.tooltip} {getattr(spell, 'description', '')}"
+        return spell_attack_range(spell_range_ft(spell.range), text, spell.name)
+    if option.monster_action is not None:
+        return action_range(option.monster_action.description, option.name)
+    if option.kind == WEAPON:
+        for weapon in (char or {}).get("_weapons_objects") or []:
+            if weapon.name == option.name:
+                return weapon_range(weapon)
+        return None
+    return action_range(option.tooltip, option.name)
+
+
+def pick_spell_range_ft(option: EffectOption | None) -> int | None:
+    """How far the spell a pick casts reaches ("60 feet", Touch as 5), for a
+    target it's aimed at; None for no spell, or one of Self or Sight."""
+    spell = _pick_spell(option) if option is not None else None
+    return spell_range_ft(spell.range) if spell is not None else None
 
 
 def trigger_option(

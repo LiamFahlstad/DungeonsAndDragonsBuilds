@@ -144,6 +144,10 @@ class CustomEffect:
     # An area to keep on the map, held by the source's active spell for it
     # (Combat/Arena/lasting.py's record): it may be applied with no targets.
     area: dict | None = None
+    # Where an area aimed on the map for it spreads from, when that isn't
+    # the source (a Fireball's cell, lasting.record_origin): the map's cover
+    # against its saves is counted from there. None: from the source.
+    cover_origin: list | None = None
 
     @property
     def conditions(self) -> list[str]:

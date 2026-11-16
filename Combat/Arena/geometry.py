@@ -97,6 +97,13 @@ class GridShape(ABC):
         where the map draws a cliff between two heights."""
 
     @abstractmethod
+    def crossed(self, a: Cell, b: Cell) -> list[tuple[Cell, ...]]:
+        """The cells a straight line from a's middle to b's crosses on its
+        way, in order, a and b left out: what cover is counted along. Where
+        the line passes exactly through a corner, between two cells it only
+        touches, those two are one step together."""
+
+    @abstractmethod
     def labels(self, cell: Cell) -> tuple[str, str]:
         """The cell's column and row as the map's edges label them: ("C",
         "7")."""
@@ -174,6 +181,27 @@ class SquareGrid(GridShape):
             (down, (bottom_right, bottom_left)),
             (left, (bottom_left, top_left)),
         ]
+
+    def crossed(self, a: Cell, b: Cell) -> list[tuple[Cell, ...]]:
+        # The line crosses a column edge at t = (0.5 + i) / |dc| and a row
+        # edge at (0.5 + j) / |dr|; whichever comes first is the next step,
+        # and both at once is a corner.
+        dc, dr = b.col - a.col, b.row - a.row
+        nc, nr = abs(dc), abs(dr)
+        sc, sr = (dc > 0) - (dc < 0), (dr > 0) - (dr < 0)
+        col, row, i, j = a.col, a.row, 0, 0
+        steps: list[tuple[Cell, ...]] = []
+        while i < nc or j < nr:
+            order = (1 + 2 * i) * nr - (1 + 2 * j) * nc
+            if order == 0:
+                steps.append((Cell(col + sc, row), Cell(col, row + sr)))
+                col, row, i, j = col + sc, row + sr, i + 1, j + 1
+            elif order < 0:
+                col, i = col + sc, i + 1
+            else:
+                row, j = row + sr, j + 1
+            steps.append((Cell(col, row),))
+        return steps[:-1]
 
     def labels(self, cell: Cell) -> tuple[str, str]:
         """Columns lettered from A at the left, rows numbered from 1 at the

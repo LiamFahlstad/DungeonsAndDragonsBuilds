@@ -33,6 +33,9 @@ from PyQt6.QtWidgets import (
 )
 
 from Combat.Arena.arena import ArenaSettings
+from Combat.Arena.cover import CoverReading
+from Combat.Arena.geometry import Cell
+from Combat.Arena.ranges import AttackRange, RangeCheck
 from Combat.Effects.triggers import (
     AttackOutcome,
     DropOutcome,
@@ -341,6 +344,7 @@ class CombatWindowState:
         roll: AttackRoll,
         source: dict | None,
         notes: tuple[str, ...] = (),
+        ignores_cover: bool = False,
     ) -> tuple[bool | None, str]:
         raise NotImplementedError("DamageMixin._resolve_attack_roll")
 
@@ -348,6 +352,31 @@ class CombatWindowState:
         self, attacker: dict | None, target: dict | None
     ) -> int | None:
         raise NotImplementedError("DamageMixin._attacker_distance_ft")
+
+    def _map_cover(
+        self,
+        source: dict | None,
+        target: dict | None,
+        origin: list[Cell] | None = None,
+    ) -> CoverReading:
+        raise NotImplementedError("DamageMixin._map_cover")
+
+    def _covered(
+        self,
+        source: dict | None,
+        target: dict,
+        origin: list[Cell] | None = None,
+        ignores_cover: bool = False,
+    ) -> dict:
+        raise NotImplementedError("DamageMixin._covered")
+
+    def _cover_warning(self, source: dict | None, target: dict) -> str:
+        raise NotImplementedError("DamageMixin._cover_warning")
+
+    def _range_check(
+        self, source: dict | None, target: dict | None, attack: AttackRange | None
+    ) -> RangeCheck:
+        raise NotImplementedError("DamageMixin._range_check")
 
     def _critical_against(self, attacker: dict | None, target: dict | None) -> bool:
         raise NotImplementedError("DamageMixin._critical_against")

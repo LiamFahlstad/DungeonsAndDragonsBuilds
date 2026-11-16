@@ -169,6 +169,29 @@ class WeaponTraits:
         return self.weapon_type in (WeaponType.SIMPLE_RANGED, WeaponType.MARTIAL_RANGED)
 
 
+# Each weapon's range in feet, normal and long, from the Player's Handbook's
+# Weapons table ("Range (80/320)", "Thrown (Range 20/60)"), by its class's
+# name, so a magic weapon made from one (a Marksman's Longbow) has its range.
+WEAPON_RANGES_FT: dict[str, tuple[int, int]] = {
+    "Dagger": (20, 60),
+    "Handaxe": (20, 60),
+    "Javelin": (30, 120),
+    "LightHammer": (20, 60),
+    "Spear": (20, 60),
+    "Trident": (20, 60),
+    "Dart": (20, 60),
+    "LightCrossbow": (80, 320),
+    "Shortbow": (80, 320),
+    "Sling": (30, 120),
+    "Blowgun": (25, 100),
+    "HandCrossbow": (30, 120),
+    "HeavyCrossbow": (100, 400),
+    "Longbow": (150, 600),
+    "Musket": (40, 120),
+    "Pistol": (30, 90),
+}
+
+
 # Proficiencies that name one kind of weapon rather than a category.
 _SINGLE_WEAPON_PROFICIENCIES = (
     WeaponProficiency.SCIMITAR,
