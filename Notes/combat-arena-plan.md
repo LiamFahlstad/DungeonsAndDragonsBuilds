@@ -579,6 +579,30 @@ two Dashes, the reminder, Disengage, a used Reaction, a 10-foot reach, a
 Dash ending with its badge, Undo), and a continued fight keeping a
 player's Dash (`tests/test_combat_ui_reopen_state.py`).
 
+### Step 14: Opportunity Attacks made in the UI (2026-11-15)
+
+The user: "add support for opportunity attack in the combat ui". Step 13
+only reminded of them; now each can be made.
+
+- A walk that reminds of Opportunity Attacks (not Disengaged; with Flyby
+  the GM judges whether it flew) puts a turn-column button per enemy that
+  can react: "Tiger: Opportunity Attack on Kivi (Reaction)"
+  (`OpportunityAttack` in Combat/Effects/triggers.py, kept with the hit
+  prompts in `_hit_prompts`, so it goes as the next turn starts). One per
+  attacker and mover, however often it walks out.
+- The button opens Use / Cast with the enemy as the source, the mover as
+  the target and one melee attack picked (`opportunity_attack_row`: a
+  player's first melee weapon, else its Unarmed Strike; a monster's first
+  melee attack among its Actions, one that's melee or ranged if none; else
+  nothing, for the GM to pick). The dialog's new `cost` holds the action
+  combo on Reaction whatever row is picked, so Apply spends the Reaction,
+  not the Action.
+- Not done: the button isn't taken back by Undo of the walk (like the hit
+  prompts), and an enemy's other buttons stay after it spends its Reaction
+  on one (the dialog then says the Reaction is used).
+
+Tests: `tests/test_combat_ui_opportunity_attacks.py`.
+
 ### Later (not scheduled)
 
 - **More distance rules**, each a `DistanceRule` and a line in `RULES`:
@@ -600,7 +624,8 @@ player's Dash (`tests/test_combat_ui_reopen_state.py`).
   or 10 feet (Dark One's Blessing, combat-effects-plan Q63), a spell's range
   checked as it's cast, Spirit Guardians' aura. Each still asks when either
   creature is off the map. Opportunity Attacks are reminded of as a walk
-  leaves reach (step 13); still later: a walk that passes through a reach,
+  leaves reach (step 13) and made from a turn-column button (step 14);
+  still later: a walk that passes through a reach,
   or leaves and comes back (the path isn't kept), Sentinel and Polearm
   Master's entering reach.
 - **Areas of effect**: built in steps 10 and 11. Still later: a creature

@@ -25,7 +25,7 @@ from Model.Content.CombatEffect import (
     TurnEdge,
     TurnOf,
 )
-from Model.Content.CombatModifiers import ArmorClass, WhenHit
+from Model.Content.CombatModifiers import ArmorClass, AttackKind, WhenHit
 from Model.Content.CombatTriggers import CombatTrigger, TriggerAim, TriggerEvent
 from Model.Content.StandardActions import (
     standard_action_effects,
@@ -1808,6 +1808,30 @@ def standard_action_options(char: dict) -> list[EffectOption]:
             option = replace(option, note=" ".join(effect.notes))
         options.append(option)
     return options
+
+
+def opportunity_attack_row(char: dict) -> str:
+    """The picker row an Opportunity Attack by char starts with picked: "one
+    melee attack with a weapon or an Unarmed Strike" (Rules Glossary,
+    Opportunity Attacks). A player's first melee weapon, else its Unarmed
+    Strike; a monster's first melee attack among its Actions (one that can be
+    melee or ranged if it has none). "" when it has none: the GM picks."""
+    for weapon in char.get("_weapons_objects") or []:
+        if weapon.traits.is_melee and not weapon.is_unarmed_strike:
+            return weapon.name
+    for weapon in char.get("_weapons_objects") or []:
+        if weapon.is_unarmed_strike:
+            return weapon.name
+    actions = dict(monster_actions(char)).get("Actions", [])
+    by_name = {_NAME_ALONE.sub("", a.name).lower(): a for a in actions}
+    attacks = [a for a in actions if a.to_hit is not None]
+    for action in sorted(attacks, key=lambda a: a.attack_kind is None):
+        if action.attack_kind is AttackKind.RANGED:
+            continue
+        for option in monster_action_options(char, action, by_name):
+            if option.roll == ATTACK_ROLL:
+                return option.name
+    return ""
 
 
 def trigger_option(

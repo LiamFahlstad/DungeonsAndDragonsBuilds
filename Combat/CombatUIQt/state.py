@@ -38,6 +38,7 @@ from Combat.Effects.triggers import (
     DropOutcome,
     Firing,
     HitFiring,
+    OpportunityAttack,
     Outcome,
     PendingAttack,
 )
@@ -89,8 +90,9 @@ class CombatWindowState:
     _turn_prompts: list[Firing]
     _turn_start_prompts: list[Firing]
     # What hits triggered, asked as turn-column buttons (the setting
-    # ask_triggers off), for the rest of the turn (TurnPanelMixin).
-    _hit_prompts: tuple[HitFiring, ...] = ()
+    # ask_triggers off), and the Opportunity Attacks a walk provoked
+    # (ArenaMixin), for the rest of the turn (TurnPanelMixin).
+    _hit_prompts: tuple[HitFiring | OpportunityAttack, ...] = ()
     # One Apply's attack outcomes, while its hits are being dealt: their
     # triggers are asked about together once it's done (None: no Apply is
     # collecting them; TurnPanelMixin._one_trigger_prompt).
@@ -726,7 +728,7 @@ class CombatWindowState:
     def _show_condition_info(self, condition_name: str):
         raise NotImplementedError("DialogsMixin._show_condition_info")
 
-    def _show_custom_condition_dialog(self, pick: str = ""):
+    def _show_custom_condition_dialog(self, pick: str = "", cost: str | None = None):
         raise NotImplementedError("ConditionsMixin._show_custom_condition_dialog")
 
     def _show_current_log(self):

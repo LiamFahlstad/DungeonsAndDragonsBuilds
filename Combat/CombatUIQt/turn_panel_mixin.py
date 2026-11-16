@@ -36,6 +36,7 @@ from Combat.Effects.triggers import (
     badge_hit_firings,
     Firing,
     HitFiring,
+    OpportunityAttack,
     Outcome,
     PendingAttack,
     TriggerChoice,
@@ -671,7 +672,10 @@ class TurnPanelMixin(CombatWindowState):
             if widget is not None:
                 widget.hide()
                 widget.deleteLater()
-        prompts: list[Firing | HitFiring] = [*self._turn_prompts, *self._hit_prompts]
+        prompts: list[Firing | HitFiring | OpportunityAttack] = [
+            *self._turn_prompts,
+            *self._hit_prompts,
+        ]
         for firing in prompts:
             button = QPushButton(firing.prompt)
             button.setObjectName("turnPromptBtn")
@@ -684,10 +688,11 @@ class TurnPanelMixin(CombatWindowState):
             )
             self._turn_prompts_layout.addWidget(button)
 
-    def _use_turn_prompt(self, firing: Firing | HitFiring):
+    def _use_turn_prompt(self, firing: Firing | HitFiring | OpportunityAttack):
         """Open the Custom Effect dialog for a prompt: its caster (if still
         in the fight) as the source, its creature as the target, its effect
-        picked. The prompt goes once it's used."""
+        picked; for an Opportunity Attack, costing the Reaction whatever row
+        the GM ends up picking. The prompt goes once it's used."""
         target = self._find_character_by_name(firing.target["name"])
         if target is None:
             self._show_status(f"{firing.target['name']} is no longer in the fight.")
@@ -711,7 +716,10 @@ class TurnPanelMixin(CombatWindowState):
             self._select_character(caster)
         self._set_targets(targets)
         self._refresh_views()
-        self._show_custom_condition_dialog(pick=firing.pick)
+        if isinstance(firing, OpportunityAttack):
+            self._show_custom_condition_dialog(pick=firing.pick, cost=firing.action)
+        else:
+            self._show_custom_condition_dialog(pick=firing.pick)
 
     # ── What a hit triggers ─────────────────────────────────────────────────
 

@@ -582,6 +582,33 @@ def reaction_lack(char: dict) -> str | None:
     return None
 
 
+@dataclass(frozen=True)
+class OpportunityAttack:
+    """An Opportunity Attack `attacker` can make on `target`, whose walk took
+    it out of attacker's reach (Rules Glossary, Opportunity Attacks): a
+    turn-column prompt whose Use / Cast dialog spends attacker's Reaction
+    (`action`) on one melee attack, `pick` picked ("" for the GM to pick)."""
+
+    attacker: dict
+    target: dict
+    pick: str = ""
+    action: str = REACTION
+
+    @property
+    def caster(self) -> str:
+        """Who makes it (the prompt's source)."""
+        return self.attacker["name"]
+
+    @property
+    def prompt(self) -> str:
+        """Its button in the turn column: "Tiger: Opportunity Attack on Kivi
+        (Reaction)"."""
+        return (
+            f"{self.caster}: Opportunity Attack on {self.target['name']}"
+            f" ({self.action})"
+        )
+
+
 Outcome = (
     AttackOutcome
     | DamageOutcome

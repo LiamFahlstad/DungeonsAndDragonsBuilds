@@ -1632,15 +1632,17 @@ class ConditionsMixin(CombatWindowState):
         self._action_result_label.setText(" · ".join(words))
         self._action_result_label.setToolTip("")
 
-    def _show_custom_condition_dialog(self, pick: str = ""):
+    def _show_custom_condition_dialog(self, pick: str = "", cost: str | None = None):
         """Set up an effect on every target (see _apply_custom_effect): what
         it costs the source, a saving throw or an attack roll, damage, and a
         condition with its duration and a note. What the source can use is
         listed on the left, and a pick fills in the form. `pick` names a row
         to start with picked (a trigger's prompt: "Spirit Guardians:
-        damage"). An area just aimed on the map for it (ArenaMixin's
-        _aimed_area) is offered to keep on the map, and kept, it can be
-        applied with no targets (Moonbeam put on empty ground).
+        damage"). `cost`, if given, is what using it costs whatever row is
+        picked (an Opportunity Attack's Reaction). An area just aimed on the
+        map for it (ArenaMixin's _aimed_area) is offered to keep on the map,
+        and kept, it can be applied with no targets (Moonbeam put on empty
+        ground).
 
         It opens with or without targets: a box per target at the top,
         prefilled with the targets picked on the cards or the map, picks
@@ -2891,10 +2893,9 @@ class ConditionsMixin(CombatWindowState):
                     0,
                 )
             )
-            action_index = action_combo.findData(option.action_cost)
-            action_combo.setCurrentIndex(
-                max(action_index, 0) if option.action_cost else 0
-            )
+            spends = cost or option.action_cost
+            action_index = action_combo.findData(spends)
+            action_combo.setCurrentIndex(max(action_index, 0) if spends else 0)
             concentrate_box.setChecked(option.concentration)
             # A type left from before would disagree with the pick's damage.
             type_combo.setCurrentIndex(0)
@@ -3076,6 +3077,8 @@ class ConditionsMixin(CombatWindowState):
         if pick and start is not None:
             tree.setCurrentItem(start)
             tree.scrollToItem(start)
+        if cost:
+            action_combo.setCurrentIndex(max(action_combo.findData(cost), 0))
         dlg.resize(dlg.width(), _effect_dialog_height(dlg))
         dlg.exec()
         if area_request:

@@ -104,12 +104,13 @@ from Combat.Arena.lasting import (
 from Combat.Arena.maps import place_at_starts
 from Combat.Arena.terrain import BRIGHT, DARK, DIM, OBSCURED
 from Combat.Effects.modifiers import has_condition
+from Combat.Effects.triggers import OpportunityAttack
 from Model.Content.StandardActions import DISENGAGE
 from Core.Definitions import Condition
 from Core.Rules import SECONDS_PER_ROUND
 
 from .arena_view import ArenaView, token_rows
-from .effect_options import _spell_named
+from .effect_options import _spell_named, opportunity_attack_row
 from .saves import SPELL, CustomEffect, EffectOption
 from .settings import ARENA_VIEW_KEY
 from .state import CombatWindowState
@@ -871,9 +872,12 @@ class ArenaMixin(CombatWindowState):
         """Who can make an Opportunity Attack on char, whose walk from
         `start` on its own turn took it out of their reach
         (opportunity_attackers), as GM-only log lines and for the status
-        line: none for a Disengaged char (Rules Glossary, Disengage), or one
-        with Flyby. A move on someone else's turn (a shove, a correction)
-        reminds of nothing: it may not be char's own movement."""
+        line, and a turn-column button for each that opens Use / Cast with
+        it as the source, char as the target, its melee attack picked and its
+        Reaction as the cost: none for a Disengaged char (Rules Glossary,
+        Disengage); for one with Flyby, the GM judges whether it flew. A move
+        on someone else's turn (a shove, a correction) reminds of nothing: it
+        may not be char's own movement."""
         if not any(char is c for c in self._current_turn_group()):
             return []
         attackers = opportunity_attackers(
@@ -896,6 +900,22 @@ class ArenaMixin(CombatWindowState):
                 f"{name} leaves {names}'s reach: an Opportunity Attack{each}, a"
                 " Reaction, if they can see it. Disengage would have stopped it."
             )
+        if DISENGAGE not in char["conditions"]:
+            # One button per attacker and mover, however often it walks out.
+            pending = {
+                (id(p.attacker), id(p.target))
+                for p in self._hit_prompts
+                if isinstance(p, OpportunityAttack)
+            }
+            self._hit_prompts = (
+                *self._hit_prompts,
+                *(
+                    OpportunityAttack(a, char, opportunity_attack_row(a))
+                    for a in attackers
+                    if (id(a), id(char)) not in pending
+                ),
+            )
+            self._refresh_turn_prompts()
         self._log_event(line, character=name, public=False)
         return [line]
 
