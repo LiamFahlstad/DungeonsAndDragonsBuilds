@@ -25,9 +25,10 @@ from Model.Content.CombatEffect import (
     CombatCondition,
     CombatDamage,
     CombatEffect,
+    CombatTargets,
     EffectRoll,
 )
-from Model.Content.CombatModifiers import Resistance, WhenHit
+from Model.Content.CombatModifiers import Movement, Note, Resistance, WhenHit
 from Model.Content.Feature import FeatureTarget
 from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table
 from Model.View import CharacterView
@@ -1701,6 +1702,30 @@ class FreedomOfMovement(ClassSpell):
                     ),
                 ),
             ),
+        ]
+
+    def combat_effects(
+        self, character: CharacterView | None = None
+    ) -> list[CombatEffect]:
+        return [
+            CombatEffect(
+                conditions=(
+                    CombatCondition(
+                        "Freedom of Movement",
+                        modifiers=(
+                            Movement(ignores_difficult=True),
+                            Note(
+                                "Spells and other magical effects can't reduce its"
+                                " Speed or give it the Paralyzed or Restrained"
+                                " condition. It has a Swim Speed equal to its"
+                                " Speed, and can spend 5 feet of movement to escape"
+                                " nonmagical restraints or a grapple."
+                            ),
+                        ),
+                    ),
+                ),
+                targets=CombatTargets(1, upcast=1),
+            )
         ]
 
 

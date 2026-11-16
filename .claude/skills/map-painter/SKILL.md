@@ -27,7 +27,7 @@ python $T start wrath_of_durmor "Goblin King" A8       # "-" removes the start
 
 ## Rules counted
 
-Walls and blocking objects can't be entered. Difficult Terrain costs +1 ft./ft. and isn't cumulative with an enemy's space. A height step is a climb: +1 ft./ft., +2 in Difficult Terrain, +0 with a Climb Speed. Height adds into distances via `DistanceRule.with_height`. Obscured is shown, not rolled. Cover is shown, not counted. Hazards give reminders.
+Walls and blocking objects can't be entered. Difficult Terrain costs +1 ft./ft. and isn't cumulative with an enemy's space. A height step is a climb: +1 ft./ft., +2 in Difficult Terrain, +0 with a Climb Speed. Height adds into distances via `DistanceRule.with_height`. Obscured is shown, not rolled. Cover is shown, not counted. Hazards give reminders. What a creature has changes these (`arena.movement_rules`: a `Movement` modifier from a badge, `Feature.movement()` or a trait in `TRAIT_MOVEMENT`): passing creatures or walls, Difficult Terrain ignored, climbing free, the cost of standing up.
 
 ## Gotchas
 

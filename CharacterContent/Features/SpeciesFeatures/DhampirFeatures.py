@@ -4,6 +4,7 @@ from Core.Definitions import DamageType, Sense
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Core.Rules import PROFICIENCY_BONUS_GAINED_AT, MAX_PROFICIENCY_BONUS
 from Model.View import CharacterView
+from Model.Content.CombatModifiers import Movement
 from Model.Content.FeatureText import Block, Facts, Option, Paragraph
 
 SPEED = 35  # Given by your species
@@ -30,6 +31,9 @@ class SpiderClimb(Feature):
         super().__init__(
             name="Spider Climb", origin="Dhampir Trait", usage_tags=["buff", "utility"]
         )
+
+    def movement(self, character: CharacterView) -> Movement:
+        return Movement(climbs=True)
 
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         return [

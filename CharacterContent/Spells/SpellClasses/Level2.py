@@ -37,6 +37,7 @@ from Model.Content.CombatModifiers import (
     D20Test,
     DamageImmunity,
     HitPointMaximum,
+    Movement,
     Note,
     RollMode,
     Size,
@@ -4952,6 +4953,27 @@ class SpiderClimb(ClassSpell):
                     ),
                 ),
             ),
+        ]
+
+    def combat_effects(
+        self, character: CharacterView | None = None
+    ) -> list[CombatEffect]:
+        return [
+            CombatEffect(
+                conditions=(
+                    CombatCondition(
+                        "Spider Climb",
+                        modifiers=(
+                            Movement(climbs=True),
+                            Note(
+                                "It can move up, down and across vertical surfaces"
+                                " and along ceilings, leaving its hands free."
+                            ),
+                        ),
+                    ),
+                ),
+                targets=CombatTargets(1, upcast=1),
+            )
         ]
 
 

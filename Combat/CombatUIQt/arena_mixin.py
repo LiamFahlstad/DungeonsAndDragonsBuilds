@@ -59,13 +59,14 @@ from Combat.Arena.arena import (
     MOVED_KEY,
     POSITION_KEY,
     ArenaSettings,
+    can_end_at,
     distance_ft,
     distance_to_cell_ft,
-    fits_at,
     footprint,
     dashes,
     move_cost,
     movement_ft,
+    movement_rules,
     nearest_free,
     opportunity_attackers,
     occupied,
@@ -73,6 +74,7 @@ from Combat.Arena.arena import (
     position,
     reachable,
     remaining_ft,
+    stand_up_ft,
     straight_ft,
     walking_speed_ft,
 )
@@ -805,9 +807,10 @@ class ArenaMixin(CombatWindowState):
         is placed there, or on the nearest free cell (the plan's Q4), and
         moves nothing. One on it walks there, by the cheapest way, and its
         feet moved this turn grow by that, or by the straight distance when
-        no walk gets there (a teleport); it can't end on anyone (Q4). The
-        move is a GM-only log line (Q3), and going past its Speed is warned
-        about, not refused (Q2)."""
+        no walk gets there (a teleport); it can't end on anyone (Q4), but
+        where what it has lets it (can_end_at: a Swarm's space, inside a
+        wall with Incorporeal Movement). The move is a GM-only log line
+        (Q3), and going past its Speed is warned about, not refused (Q2)."""
         settings, name = self.arena_settings, char["name"]
         if position(char) is None:
             anchor = nearest_free(char, [cell], self.characters, settings)
@@ -819,7 +822,7 @@ class ArenaMixin(CombatWindowState):
             return
         if position(char) == cell:
             return
-        if not fits_at(char, cell, self.characters, settings):
+        if not can_end_at(char, cell, self.characters, settings):
             self._show_status(
                 f"{name} can't end a move there: it's off the map, a wall,"
                 " an object that blocks movement or someone else's space."
@@ -849,8 +852,16 @@ class ArenaMixin(CombatWindowState):
         if walked is not None and start is not None:
             warnings += self._opportunity_attack_reminders(char, start)
         if has_condition(char, Condition.PRONE):
+            stand = stand_up_ft(char)
+            costs = "half its Speed" if stand is None else f"{stand} ft."
+            warnings.append(f"{name} is Prone and crawls; standing up costs {costs}.")
+        if any(
+            settings.terrain.blocks(c) for c in footprint(char, settings.distance_rule)
+        ):
+            sources = ", ".join(movement_rules(char).sources)
             warnings.append(
-                f"{name} is Prone and crawls; standing up costs half its Speed."
+                f"{name} is inside a wall or an object ({sources}): Incorporeal"
+                " Movement deals 1d10 Force damage if its turn ends there."
             )
         # Whoever is in an area now that wasn't: the mover walking in, or
         # someone its Emanation moved onto.

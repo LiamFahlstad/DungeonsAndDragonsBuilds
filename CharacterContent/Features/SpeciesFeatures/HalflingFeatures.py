@@ -1,6 +1,7 @@
 from Core.Definitions import CreatureSize
 from Model.Content.Feature import Feature
 from Model.View import CharacterView
+from Model.Content.CombatModifiers import Movement
 from Model.Content.FeatureText import Block, Facts
 
 SPEED = 30  # Given by your species
@@ -34,6 +35,9 @@ class HalflingNimbleness(Feature):
         super().__init__(
             name="Halfling Nimbleness", origin="Halfling Trait", passive=True
         )
+
+    def movement(self, character: CharacterView) -> Movement:
+        return Movement(past_larger=True)
 
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         return [

@@ -1,5 +1,6 @@
 from Model.Content.Feature import Feature, FeatureActivation, ActionType, FeatureTarget
 from Model.View import CharacterView
+from Model.Content.CombatModifiers import Movement
 from Model.Content.FeatureText import Block, Facts, Option, Paragraph
 
 
@@ -48,6 +49,9 @@ class SecondStoryWork(Feature):
             origin="Thief Rogue Level 3",
             usage_tags=["buff", "utility"],
         )
+
+    def movement(self, character: CharacterView) -> Movement:
+        return Movement(climbs=True)
 
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         return [

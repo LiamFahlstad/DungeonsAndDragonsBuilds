@@ -81,6 +81,9 @@ verification passes per step unless asked.
 | 10 | Targets in an area: the Custom Effect's "Select targets in area", the area read from the pick's text and aimed on the map, whoever is in it targeted | Done 2026-11-14 (R10); Cones, Lines and range checked against Manhattan 2026-11-15 (R11) |
 | 11 | Areas that stay: kept on the map by an active spell, ending with its time or its caster's concentration, an Emanation following its caster, reminders on entering and at a turn's start; a colour for each area | Done 2026-11-15 (R12) |
 | 12 | Selecting a kept area: a click on it, the area panel with what it is and its rules text, its colour, Target who's in it, End spell | Done 2026-11-15 (R13) |
+| 13 | Dash and Opportunity Attacks reminded of | Done 2026-11-15 |
+| 14 | Opportunity Attacks made in the UI | Done 2026-11-15 |
+| 15 | Moving by what a creature has: Halfling Nimbleness, Incorporeal Movement, Swarm, Difficult Terrain ignored (Freedom of Movement, Speedy, Fairy Trickster), climbing at no extra cost, standing up from Prone spent from its movement | Done 2026-11-16 (R14) |
 
 ## How it fits the code that's there
 
@@ -603,6 +606,39 @@ only reminded of them; now each can be made.
 
 Tests: `tests/test_combat_ui_opportunity_attacks.py`.
 
+### Step 15: moving by what a creature has (2026-11-16)
+
+The user: "make sure rules about moving through cells occupied by
+enemies/allies are enforced, plus support for "Halfling Nimbleness" for
+example, i.e. features related to moving. Check the rules before
+implementing". The Player's Handbook's Moving Around Other Creatures (Q4)
+and the Rules Glossary's Difficult Terrain were already counted in
+`reachable` and refused on a drop (steps 2 and 6); what was missing was
+everything that changes them.
+
+- `Movement` (Model/Content/CombatModifiers.py), one modifier with a field
+  per rule: `past_larger` (Halfling Nimbleness), `through_creatures` and
+  `through_objects` (Incorporeal Movement: walls and blocking objects are
+  Difficult Terrain to it, and a move can end inside one),
+  `shares_space` (Swarm: it ends in anyone's space and anyone in its),
+  `ignores_difficult` with `after` "Dash" or "Disengage" (Freedom of
+  Movement; Speedy, Fairy Trickster's Faerie Trod Trotter), `climbs` (a
+  Climb Speed equal to its Speed) and `stands_up_ft` (Hop Up's 5).
+- Where it comes from (`movement_rules` in arena.py): a badge's modifiers
+  (Freedom of Movement and Spider Climb now have one), an always-on
+  feature's new `Feature.movement()` (Halfling Nimbleness, Athlete, Speedy,
+  Fairy Trickster, Order's Resilience, Dhampir Spider Climb, Second-Story
+  Work, both Tipsy Sways) and a stat block's trait by name
+  (`TRAIT_MOVEMENT`: Incorporeal Movement, Swarm).
+- `reachable` and `can_pass_through` count them; `can_end_at` replaces
+  `fits_at` for where a move ends (`fits_at` stays for placing tokens). A
+  move ending inside a wall reminds of Incorporeal Movement's 1d10 Force.
+- Standing up (Q8): Prone taken off a creature on its own turn, on the
+  map, spends `stand_up_ft` (half its Speed rounded down, or a feature's
+  less) as moved, a GM-only line (Decision 27).
+
+Tests: `tests/test_arena_movement.py`, `tests/test_combat_ui_arena_movement.py`.
+
 ### Later (not scheduled)
 
 - **More distance rules**, each a `DistanceRule` and a line in `RULES`:
@@ -817,6 +853,19 @@ Taken with the Map Painter (2026-11-15), for the user to overrule:
     one Ctrl+Z ([map-painter-plan.md](map-painter-plan.md), Decision 10).
     Answers Q6.
 
+Taken in step 15 (2026-11-16), for the user to overrule:
+
+27. **Taking Prone off a creature on its own turn is it standing up**, and
+    spends its movement (half its Speed, Hop Up's 5 ft.); on anyone else's
+    turn, or off the map, it's a correction or a feature and spends
+    nothing. Too little movement left, or a Speed of 0, is warned about,
+    not refused (as Q2). Undo gives the movement back with the badge.
+28. **An incorporeal creature can end a move inside a wall or an object**
+    (its rules hurt it only "if it ends its turn" there), but not on
+    another creature; only a Swarm shares a space. A move's Difficult
+    Terrain stays not cumulative, so an enemy standing in rubble is still
+    one extra foot per foot.
+
 ## Open questions
 
 Each has a *Suggestion*: what gets built if nobody says otherwise.
@@ -870,7 +919,9 @@ Each has a *Suggestion*: what gets built if nobody says otherwise.
   line reminder that standing up costs half its Speed. Standing up isn't
   done by the map; the GM removes Prone as now. *The halved reach is built
   in step 2 (crawling and Difficult Terrain add up: 3 ft. a foot through an
-  enemy's space, Rules Glossary, Crawling); the reminder too, in step 6.*
+  enemy's space, Rules Glossary, Crawling); the reminder too, in step 6.
+  Since step 15, removing Prone on its own turn spends the cost
+  (Decision 27), and the reminder says how much.*
 - **Q9. What happens to a token at 0 HP?** *Blocks step 4.* *Suggestion:*
   it stays where it fell, greyed. It doesn't block anyone (it's
   Incapacitated, Q4), and it leaves the map only when it leaves the fight. A
@@ -900,6 +951,15 @@ Each has a *Suggestion*: what gets built if nobody says otherwise.
   Flaming Sphere move as an action. *Suggestion:* a **Move** button on
   the area panel (step 12) that aims it again in the bar and keeps its
   time.
+- **Q14. Which moving features still have no `Movement`?** *Blocks
+  nothing.* The incorporeal forms are used features with no combat effect
+  yet (Ghost Walk, Umbral Form, Superior Dread's Ghostly Flight, Frozen
+  Haunt, Cloak of Shadows' Partially Incorporeal, Undead Steed's Ghostly
+  Stride), and Aspect of the Wilds doesn't keep which aspect was chosen
+  (Panther's climbing). *Suggestion:* give each form a badge with
+  `Movement(through_creatures=True, through_objects=True)` when the
+  feature-combat-effects work reaches it; Panther waits for the choice
+  to be kept on the build.
 
 ## Revisions
 
@@ -1037,6 +1097,14 @@ Each has a *Suggestion*: what gets built if nobody says otherwise.
   have the same caster and name (two Greases), and its rules text, as a
   monster's action isn't a spell to look up. The panel's title has its own
   line, for the reason the area bar's has (R12).
+
+- **R14** (step 15, the user's request, 2026-11-16). *Plan:* Q4's rules
+  only, and standing up left to the GM (Q8). *Done:* a `Movement` modifier
+  and `Feature.movement()` for whatever changes them (Decisions 27 and
+  28). *Why:* one model for badges, always-on features and stat-block
+  traits keeps the search in one place; a feature only adds a line.
+  *Found:* `fits_at` was both "a token fits" and "a move can end", which a
+  Swarm or a ghost in a wall splits, so a move now asks `can_end_at`.
 
 ## Discovered issues
 

@@ -25,7 +25,17 @@ from PyQt6.QtWidgets import (
     QWidget,
 )
 
-from Combat.Arena.arena import DASHES_KEY, dashes, movement_ft, position
+from Combat.Arena.arena import (
+    DASHES_KEY,
+    MOVED_KEY,
+    dashes,
+    movement_ft,
+    movements,
+    position,
+    remaining_ft,
+    stand_up_ft,
+    walking_speed_ft,
+)
 from Combat.Arena.lasting import AREA_KEY
 from Combat.Definitions import Action, CombatStatus, ConditionRule
 from Combat.Effects.active_effects import (
@@ -570,6 +580,40 @@ class ConditionsMixin(CombatWindowState):
                 public=False,
             )
 
+    def _stand_up(self, char: dict):
+        """char rights itself from Prone, as Prone is taken off it on its own
+        turn while it's on the map: that spends its movement (stand_up_ft:
+        half its Speed, 5 ft. with Athlete's Hop Up), counted as moved, a
+        GM-only log line. Prone ending on another's turn (the GM correcting
+        a mistake, a feature standing it up) or off the map spends nothing.
+        A Speed of 0, or too little movement left, is warned about, not
+        refused, as a move past its Speed is."""
+        if position(char) is None or not any(
+            char is c for c in self._current_turn_group()
+        ):
+            return
+        cost = stand_up_ft(char)
+        if cost is None:
+            return
+        name = char["name"]
+        given = [s for s, m in movements(char) if m.stands_up_ft == cost]
+        why = f" ({given[0]})" if given else ""
+        left = remaining_ft(char)
+        char[MOVED_KEY] = int(char.get(MOVED_KEY, 0)) + cost
+        self._log_event(
+            f"{name} stands up{why}: {cost} ft. of movement,"
+            f" {remaining_ft(char)} ft. left this turn",
+            character=name,
+            public=False,
+        )
+        if walking_speed_ft(char) == 0:
+            self._show_status(f"{name} has a Speed of 0 and can't stand up.")
+        elif cost > left:
+            self._show_status(
+                f"{name} stands up with {left} ft. of movement left; it costs"
+                f" {cost} ft."
+            )
+
     def _give_badge_modifiers(
         self,
         char: dict,
@@ -666,6 +710,8 @@ class ConditionsMixin(CombatWindowState):
                 action=Action.REMOVE_CONDITION,
                 value=cond_value,
             )
+            if cond == Condition.PRONE.value:
+                self._stand_up(char)
             self._forget_effect_on(char, cond)
             # A spell's badge and the conditions it stands for go together
             # (Friends and Charmed): those no other badge stands for, and a

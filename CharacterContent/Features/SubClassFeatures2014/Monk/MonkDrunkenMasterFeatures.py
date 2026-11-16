@@ -2,6 +2,7 @@ from Model.Content.Feature import Feature, FeatureActivation, ActionType, Featur
 from Model.Content.CombatEffect import CombatEffect
 from Model.Content.StandardActions import DISENGAGE, take_actions
 from Model.View import CharacterView
+from Model.Content.CombatModifiers import Movement
 from Model.Content.FeatureText import Block, Facts, Option, Paragraph
 
 
@@ -87,6 +88,9 @@ class TipsySway(Feature):
             ),
             usage_tags=["control"],
         )
+
+    def movement(self, character: CharacterView) -> Movement:
+        return Movement(stands_up_ft=5)
 
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         return [

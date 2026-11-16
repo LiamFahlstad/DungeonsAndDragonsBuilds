@@ -16,6 +16,7 @@ from Model.Content.Feature import Feature, FeatureActivation, ActionType, Featur
 from Model.Content.Improvements import GrantToolProficiency, SkillProficiencyChoice
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.View import CharacterView
+from Model.Content.CombatModifiers import Movement
 from Model.Content.FeatureText import Block, Facts, Option, Paragraph, dc_formula
 
 
@@ -114,6 +115,9 @@ class TipsySway(Feature):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
+
+    def movement(self, character: CharacterView) -> Movement:
+        return Movement(stands_up_ft=5)
 
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         return [

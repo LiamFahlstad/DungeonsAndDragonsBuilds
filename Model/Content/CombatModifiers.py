@@ -298,6 +298,65 @@ class Size:
             raise ValueError("A Size needs steps or a size it becomes")
 
 
+# The actions a Movement's `after` can name: taken on its turn, they turn it
+# on for the rest of that turn (Model/Content/StandardActions.py's names).
+MOVEMENT_AFTER = ("Dash", "Disengage")
+
+
+@dataclass(frozen=True)
+class Movement:
+    """How it moves among other creatures and over the ground, which the
+    combat UI's battle map counts (Combat/Arena/arena.py); each field is one
+    rule, and several Movements add up:
+
+    - `past_larger`: it can move through the space of any creature larger
+      than it (Halfling Nimbleness);
+    - `through_creatures`: through any creature's space (Incorporeal
+      Movement: "move through other creatures ... as if they were Difficult
+      Terrain"; an enemy's space is Difficult Terrain anyway);
+    - `through_objects`: through walls and objects that block movement, each
+      Difficult Terrain to it, and it can end a move inside one (Incorporeal
+      Movement: "if it ends its turn inside an object");
+    - `shares_space`: it can end a move in another creature's space, and
+      others in its (Swarm: "can occupy another creature's space and vice
+      versa");
+    - `ignores_difficult`: Difficult Terrain costs it no extra movement
+      (Freedom of Movement), or only for the rest of a turn it took the
+      action `after` names (Speedy: "When you take the Dash action on your
+      turn");
+    - `climbs`: climbing costs it no extra movement, as a Climb Speed equal
+      to its Speed (Athlete, Spider Climb);
+    - `stands_up_ft`: righting itself from Prone costs this many feet of
+      movement, not half its Speed (Athlete's Hop Up: 5)."""
+
+    past_larger: bool = False
+    through_creatures: bool = False
+    through_objects: bool = False
+    shares_space: bool = False
+    ignores_difficult: bool = False
+    after: str = ""
+    climbs: bool = False
+    stands_up_ft: int | None = None
+
+    def __post_init__(self):
+        if self.after and self.after not in MOVEMENT_AFTER:
+            raise ValueError(
+                f"A Movement's after is one of {MOVEMENT_AFTER}, got {self.after!r}"
+            )
+        if self.after and not self.ignores_difficult:
+            raise ValueError("A Movement's after is when it ignores_difficult")
+        if self.stands_up_ft is not None:
+            _check_whole_number(self, "stands_up_ft")
+            if self.stands_up_ft < 0:
+                raise ValueError(
+                    f"A Movement's stands_up_ft is 0 or more, got {self.stands_up_ft}"
+                )
+        if not any(
+            getattr(self, field.name) != field.default for field in fields(self)
+        ):
+            raise ValueError("A Movement needs at least one rule")
+
+
 @dataclass(frozen=True)
 class Resistance:
     """Resistance to damage of these types; to all damage if none are given."""
@@ -517,6 +576,7 @@ Modifier = (
     | HitPointMaximum
     | Speed
     | Size
+    | Movement
     | Resistance
     | DamageImmunity
     | Vulnerability
@@ -543,6 +603,7 @@ MODIFIER_TYPES: dict[str, type] = {
         HitPointMaximum,
         Speed,
         Size,
+        Movement,
         Resistance,
         DamageImmunity,
         Vulnerability,
@@ -591,6 +652,14 @@ _PLAIN: dict[str, type | tuple[type, ...]] = {
     "set_to": int,
     "steps": int,
     "levels_up": int,
+    "past_larger": bool,
+    "through_creatures": bool,
+    "through_objects": bool,
+    "shares_space": bool,
+    "ignores_difficult": bool,
+    "after": str,
+    "climbs": bool,
+    "stands_up_ft": int,
 }
 
 

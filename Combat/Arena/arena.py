@@ -13,6 +13,11 @@ The map's terrain (Combat/Arena/terrain.py, painted in the Map Painter:
 Notes/map-painter-plan.md) is part of its settings: walls and blocking
 objects can't be entered, Difficult Terrain costs extra, a step between
 heights is a climb, and height counts into distances.
+
+How a creature moves past others and over the ground can change by what it
+has (movement_rules): a Movement on a badge (Freedom of Movement), from an
+always-on feature (Halfling Nimbleness, Feature.movement) or a stat block's
+trait (Incorporeal Movement, Swarm).
 """
 
 from __future__ import annotations
@@ -25,11 +30,18 @@ from typing import Iterable
 
 from Combat.Arena.geometry import DEFAULT_RULE, Cell, DistanceRule, rule_named
 from Combat.Arena.terrain import Terrain
-from Combat.Effects.modifiers import has_condition, size_in_use, speed_in_use
+from Combat.Effects.modifiers import (
+    has_condition,
+    modifiers_on,
+    size_in_use,
+    speed_in_use,
+)
 from Combat.Effects.triggers import on_party_side
 from Combat.Summons import owner_name
 from Core.Definitions import Condition, CreatureSize
 from Core.Weapons import WeaponProperty
+from Model.Content.CombatModifiers import Movement
+from Model.Content.StandardActions import DISENGAGE
 
 POSITION_KEY = "position"
 MOVED_KEY = "moved_ft"
@@ -49,6 +61,15 @@ SIZE_CELLS = {
     CreatureSize.GARGANTUAN: 4,
 }
 _SIZE_ORDER = list(CreatureSize)
+
+# Stat-block traits that are rules for moving, by name: every monster's
+# Incorporeal Movement reads "can move through other creatures and objects
+# as if they were Difficult Terrain", every Swarm "can occupy another
+# creature's space and vice versa".
+TRAIT_MOVEMENT = {
+    "Incorporeal Movement": Movement(through_creatures=True, through_objects=True),
+    "Swarm": Movement(shares_space=True),
+}
 
 
 @dataclass
@@ -190,17 +211,109 @@ def _out_of_the_fight(char: dict) -> bool:
     )
 
 
-def can_pass_through(mover: dict, other: dict) -> bool:
+def _trait_names(char: dict) -> list[str]:
+    return [
+        str(t.get("name") if isinstance(t, dict) else getattr(t, "name", ""))
+        for t in char.get("traits") or ()
+    ]
+
+
+def movements(char: dict) -> list[tuple[str, Movement]]:
+    """Each Movement char has, with what gives it: its badges' (Freedom of
+    Movement), its always-on features' (a player's Halfling Nimbleness) and
+    its stat block's traits (TRAIT_MOVEMENT)."""
+    found = [
+        (str(source), modifier)
+        for source, modifier in modifiers_on(char)
+        if isinstance(modifier, Movement)
+    ]
+    sheet = char.get("_stat_block")
+    for feature in char.get("_feature_objects") or ():
+        given = feature.movement(sheet)
+        if given is not None:
+            found.append((feature.name, given))
+    found += [
+        (name, TRAIT_MOVEMENT[name])
+        for name in _trait_names(char)
+        if name in TRAIT_MOVEMENT
+    ]
+    return found
+
+
+def _in_force(char: dict, movement: Movement) -> bool:
+    """Whether `movement` counts now: always, or one `after` an action only
+    once char took it this turn (its Dash counted, its Disengage badge)."""
+    if movement.after == "Dash":
+        return dashes(char) > 0
+    if movement.after == DISENGAGE:
+        return DISENGAGE in (char.get("conditions") or ())
+    return True
+
+
+@dataclass(frozen=True)
+class MovementRules:
+    """What char's Movements in force add up to (movement_rules): each rule
+    as Movement says it; the cheapest way to stand up when several give
+    one."""
+
+    past_larger: bool = False
+    through_creatures: bool = False
+    through_objects: bool = False
+    shares_space: bool = False
+    ignores_difficult: bool = False
+    climbs: bool = False
+    stands_up_ft: int | None = None
+    sources: tuple[str, ...] = ()
+
+
+def movement_rules(char: dict) -> MovementRules:
+    """The rules for how char moves now, from every Movement it has that's
+    in force (movements)."""
+    found = [(source, m) for source, m in movements(char) if _in_force(char, m)]
+    moves = [m for _, m in found]
+    stands = [m.stands_up_ft for m in moves if m.stands_up_ft is not None]
+    return MovementRules(
+        past_larger=any(m.past_larger for m in moves),
+        through_creatures=any(m.through_creatures for m in moves),
+        through_objects=any(m.through_objects for m in moves),
+        shares_space=any(m.shares_space for m in moves),
+        ignores_difficult=any(m.ignores_difficult for m in moves),
+        climbs=any(m.climbs for m in moves),
+        stands_up_ft=min(stands) if stands else None,
+        sources=tuple(dict.fromkeys(source for source, _ in found)),
+    )
+
+
+def can_pass_through(
+    mover: dict, other: dict, rules: MovementRules | None = None
+) -> bool:
     """Whether `mover` can move through `other`'s space (Player's Handbook,
     Moving Around Other Creatures): an ally's, an Incapacitated creature's,
     a Tiny creature's, or that of a creature two or more sizes larger or
-    smaller."""
+    smaller. Or by what mover has (`rules`, its movement_rules): anyone's
+    with Incorporeal Movement, a larger creature's with Halfling
+    Nimbleness; and anyone can pass a Swarm, which others can occupy."""
+    rules = rules if rules is not None else movement_rules(mover)
     return (
         _is_ally(mover, other)
         or _out_of_the_fight(other)
         or size_in_use(other) == CreatureSize.TINY
         or abs(_size_index(mover) - _size_index(other)) >= 2
+        or rules.through_creatures
+        or (rules.past_larger and _size_index(other) > _size_index(mover))
+        or rules.shares_space
+        or movement_rules(other).shares_space
     )
+
+
+def can_share_space(
+    mover: dict, other: dict, rules: MovementRules | None = None
+) -> bool:
+    """Whether `mover` can end a move in `other`'s space, which nobody
+    willingly can (Moving Around Other Creatures) but a Swarm, in anyone's
+    and anyone in its."""
+    rules = rules if rules is not None else movement_rules(mover)
+    return rules.shares_space or movement_rules(other).shares_space
 
 
 def is_difficult_for(mover: dict, other: dict) -> bool:
@@ -227,42 +340,56 @@ def reachable(
     climbs it, each foot costing 1 extra (2 in Difficult Terrain, none with
     a Climb Speed). It can't pass a creature it can't move through, a wall
     or a blocking object, can't end on anyone, and stays on the map. Char's
-    own cell costs 0. Empty when char isn't on the map."""
+    own cell costs 0. Empty when char isn't on the map.
+
+    What char has changes that (movement_rules): it passes whoever
+    can_pass_through says, and ends where can_end_at would let it; walls and
+    blocking objects are Difficult Terrain to it with `through_objects`;
+    Difficult Terrain costs it nothing extra with `ignores_difficult`, and
+    climbing nothing with `climbs`."""
     start = position(char)
     if start is None:
         return {}
     rule, cell_ft = settings.distance_rule, settings.cell_ft
+    rules = movement_rules(char)
     others = {
         cell: other
         for cell, other in occupied((c for c in chars if c is not char), rule).items()
     }
     crawling = has_condition(char, Condition.PRONE)
-    climb_extra = 0 if has_climb_speed(char) else 1
+    climb_extra = 0 if has_climb_speed(char) or rules.climbs else 1
     terrain = settings.terrain
-    seen: dict[Cell, tuple[list[dict], bool, int] | None] = {}
+    seen: dict[Cell, tuple[bool, bool, int] | None] = {}
 
-    def entered(anchor: Cell) -> tuple[list[dict], bool, int] | None:
-        """Who the footprint at `anchor` overlaps, whether it's Difficult
-        Terrain there, and the ground's height; None when it can't go there."""
+    def entered(anchor: Cell) -> tuple[bool, bool, int] | None:
+        """Whether char's footprint at `anchor` can end a move there,
+        whether it's Difficult Terrain there, and the ground's height; None
+        when it can't go there."""
         if anchor not in seen:
             seen[anchor] = _entering(anchor)
         return seen[anchor]
 
-    def _entering(anchor: Cell) -> tuple[list[dict], bool, int] | None:
+    def _entering(anchor: Cell) -> tuple[bool, bool, int] | None:
         cells = footprint_at(char, anchor, rule)
-        if not all(settings.standable(cell) for cell in cells):
+        if not all(settings.on_map(cell) for cell in cells):
+            return None
+        inside = [cell for cell in cells if terrain.blocks(cell)]
+        if inside and not rules.through_objects:
             return None
         met: list[dict] = []
         for cell in cells:
             other = others.get(cell)
             if other is not None and not any(other is m for m in met):
-                if not can_pass_through(char, other):
+                if not can_pass_through(char, other, rules):
                     return None
                 met.append(other)
-        difficult = any(terrain.difficult(c) for c in cells) or any(
-            is_difficult_for(char, o) for o in met
-        )
-        return met, difficult, settings.height_of(cells)
+        difficult = (
+            bool(inside)
+            or any(terrain.difficult(c) for c in cells)
+            or any(is_difficult_for(char, o) for o in met)
+        ) and not rules.ignores_difficult
+        can_end = all(can_share_space(char, o, rules) for o in met)
+        return can_end, difficult, settings.height_of(cells)
 
     start_height = settings.height_of(footprint_at(char, start, rule))
     best: dict[Cell, int] = {start: 0}
@@ -274,7 +401,7 @@ def reachable(
         if cost > best.get(cell, cost):
             continue
         here = entered(cell) if cell != start else None
-        if cell == start or (here is not None and not here[0]):
+        if cell == start or (here is not None and here[0]):
             ends[cell] = cost
         height = here[2] if here is not None else start_height
         for step in rule.neighbours(cell):
@@ -297,11 +424,46 @@ def fits_at(
     char: dict, anchor: Cell, chars: Iterable[dict], settings: ArenaSettings
 ) -> bool:
     """Whether char can stand with its anchor at `anchor`: on the map, on
-    no wall or blocking object, and on nobody else's cells."""
+    no wall or blocking object, and on nobody else's cells. Where a token
+    is put; can_end_at says where a move can end."""
     rule = settings.distance_rule
     taken = occupied((c for c in chars if c is not char), rule)
     cells = footprint_at(char, anchor, rule)
     return all(settings.standable(cell) and cell not in taken for cell in cells)
+
+
+def can_end_at(
+    char: dict, anchor: Cell, chars: Iterable[dict], settings: ArenaSettings
+) -> bool:
+    """Whether a move of char's can end with its anchor at `anchor`: where
+    it fits (fits_at), or where what it has lets it stay
+    (movement_rules): inside a wall or an object with `through_objects`
+    (Incorporeal Movement, which hurts as its turn ends there), in another
+    creature's space when either is a Swarm."""
+    rule = settings.distance_rule
+    rules = movement_rules(char)
+    taken = occupied((c for c in chars if c is not char), rule)
+    for cell in footprint_at(char, anchor, rule):
+        if not settings.on_map(cell):
+            return False
+        if settings.terrain.blocks(cell) and not rules.through_objects:
+            return False
+        other = taken.get(cell)
+        if other is not None and not can_share_space(char, other, rules):
+            return False
+    return True
+
+
+def stand_up_ft(char: dict) -> int | None:
+    """What righting itself from Prone costs char, in feet of movement
+    (Rules Glossary, Prone: "half your Speed (round down)"), or a feature's
+    less (Athlete's Hop Up: 5 feet); None when it has no speed as a number.
+    A Speed of 0 can't right itself, which is the caller's to say."""
+    speed = walking_speed_ft(char)
+    own = movement_rules(char).stands_up_ft
+    if speed is None:
+        return own
+    return speed // 2 if own is None else min(speed // 2, own)
 
 
 def nearest_free(

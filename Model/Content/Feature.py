@@ -7,6 +7,7 @@ from Core.Definitions import CharacterClass
 from Core.Rules import MAX_LEVEL, MIN_LEVEL
 from Model.Content.ActionType import ActionType
 from Model.Content.CombatEffect import CombatEffect
+from Model.Content.CombatModifiers import Movement
 from Model.Content.Effect import Effect
 from Model.Content.FeatureText import Block
 from Model.Creatures.Combatants import ExtendedCombatantData
@@ -402,6 +403,17 @@ class Feature(Effect):
         read what another feature added. Returns `effect` unchanged (default)
         for features that change no other effect."""
         return effect
+
+    def movement(self, character: CharacterView) -> Movement | None:
+        """Override when this feature, always on, changes how `character`
+        moves among other creatures or over the ground, which the combat
+        UI's battle map counts (Halfling Nimbleness:
+        Movement(past_larger=True); Model/Content/CombatModifiers.py's
+        Movement has the rules it can say). A feature that does it only
+        while it's used (a form, a Bonus Action) gives the Movement on its
+        badge in combat_effects() instead. Return None (default) for
+        features that don't."""
+        return None
 
     def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         """Override to return when this feature's expended resource (uses, hit

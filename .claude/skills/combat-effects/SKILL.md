@@ -365,6 +365,7 @@ Names are the Python ones; `Ability`, `Condition` and `DamageType` come from
   | "Speed increases by 10 feet" / "doubled" / "is 0" | `Speed(bonus=10)` / `Speed(multiplier=2)` / `Speed(set_to=0)` | Longstrider, Haste, Steady Aim |
   | "size increases by one category" / "becomes Large" | `Size(steps=1)` / `Size(becomes=CreatureSize.LARGE)` | Enlarge/Reduce, Large Form |
   | "Hit Point maximum increases by 5" | `HitPointMaximum("5", upcast="5")` | Aid, Heroes' Feast's `"2d10"` |
+  | "move through creatures and objects as if they were Difficult Terrain" / "unaffected by Difficult Terrain" / "a Climb Speed equal to its Speed" / "stand up by spending 5 feet" | `Movement(through_creatures=True, through_objects=True)` / `Movement(ignores_difficult=True)` / `Movement(climbs=True)` / `Movement(stands_up_ft=5)` | Incorporeal forms (Ghost Walk), Freedom of Movement, Spider Climb, Hop Up. The battle map counts it. An always-on feature returns it from `movement()` instead of a badge (Halfling Nimbleness `past_larger=True`; Speedy `ignores_difficult=True, after="Dash"`) |
 
   A badge that lasts "until the start of your next turn" says so with
   `until=(TurnEdge.START, TurnOf.SOURCE)` (Shield, Absorb Elements). Write

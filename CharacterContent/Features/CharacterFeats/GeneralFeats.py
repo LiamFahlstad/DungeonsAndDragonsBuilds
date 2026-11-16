@@ -101,7 +101,7 @@ from Model.Content.FeatureText import (
     dc_formula,
 )
 from Model.Content.CombatEffect import CombatCondition, CombatEffect, TurnEdge, TurnOf
-from Model.Content.CombatModifiers import Speed
+from Model.Content.CombatModifiers import Movement, Speed
 from Model.Content.CombatTriggers import CombatTrigger, TriggerEvent
 from Model.Content.StandardActions import DASH, DODGE, HIDE, take_actions
 
@@ -270,6 +270,9 @@ class Athlete(_AbilityScoreFeat):
 
     def apply(self, ledger_writer: LedgerWriter):
         self._bonus.apply(ledger_writer)
+
+    def movement(self, character: CharacterView) -> Movement:
+        return Movement(climbs=True, stands_up_ft=5)
 
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         return [
@@ -1608,6 +1611,9 @@ class Speedy(_AbilityScoreFeat):
         # "Speed Increase. Your Speed increases by 10 feet."
         SpeedBonus(10).apply(ledger_writer)
 
+    def movement(self, character: CharacterView) -> Movement:
+        return Movement(ignores_difficult=True, after="Dash")
+
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         return [
             Facts(
@@ -1972,6 +1978,9 @@ class FairyTrickster(_AbilityScoreFeat):
         gained_at=PROFICIENCY_BONUS_GAINED_AT,
     )
 
+    def movement(self, character: CharacterView) -> Movement:
+        return Movement(ignores_difficult=True, after="Disengage")
+
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         # Flustering Strike's uses are in the panel below.
         return [
@@ -2243,6 +2252,9 @@ class OrdersResilience(_AbilityScoreFeat):
     _NAME = "Order's Resilience"
     _ORIGIN = "General Feat Level 4+ (Faerun)"
     _ABILITIES = (Ability.STRENGTH, Ability.WISDOM, Ability.CHARISMA)
+
+    def movement(self, character: CharacterView) -> Movement:
+        return Movement(stands_up_ft=5)
 
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         return [
