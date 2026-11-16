@@ -8,6 +8,8 @@ moves whoever stands in a new wall; and the fight's map reading the paint:
 the hover, the target label's Obscured, hazard reminders and walls that
 refuse a move."""
 
+from dataclasses import replace
+
 import pytest
 from PyQt6.QtCore import Qt
 from PyQt6.QtTest import QTest
@@ -294,7 +296,9 @@ def test_saving_puts_the_map_beside_the_logs(tmp_path, monkeypatch):
 def test_a_fight_starts_on_its_painted_map(tmp_path):
     design = _cave_map(tmp_path)
     ui = _fight(tmp_path)
-    assert ui.arena_settings == design.settings
+    # Its starting cells put the map in use (the arena plan's Decision 29).
+    assert ui.arena_settings.in_use
+    assert replace(ui.arena_settings, in_use=False) == design.settings
     assert position(_named(ui, "Pirate")) == Cell(3, 4)
     assert position(_named(ui, "Tiger")) == Cell(8, 2)
     ui._log_event("Something happens")
@@ -306,7 +310,7 @@ def test_a_fight_starts_on_its_painted_map(tmp_path):
     again = _window(tmp_path)
     again._load_encounter(CAVE, restart=False)
     assert again.phase == "COMBAT"
-    assert again.arena_settings == design.settings
+    assert again.arena_settings == ui.arena_settings  # in use too
 
 
 def test_starts_painted_before_the_fight_are_where_it_starts(tmp_path, monkeypatch):

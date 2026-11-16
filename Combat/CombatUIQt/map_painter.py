@@ -900,6 +900,8 @@ class MapPainterMixin(CombatWindowState):
         nearest free cell (off the map when there's none), and a GM-only
         line says the map changed."""
         settings = design.settings.copy()
+        # The fight keeps whether it's played on the map (Decision 29).
+        settings.in_use = self.arena_settings.in_use
         self.arena_settings = settings
         if self.phase != "COMBAT":
             return

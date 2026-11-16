@@ -16,6 +16,7 @@ from pathlib import Path
 from typing import Iterable
 
 from Combat.Arena.arena import (
+    IN_USE_KEY,
     POSITION_KEY,
     ArenaSettings,
     fits_at,
@@ -39,8 +40,11 @@ class MapDesign:
     starts: dict[str, Cell] = field(default_factory=dict)
 
     def to_dict(self) -> dict:
+        # Whether a fight is played on the map is the fight's, not the map's.
+        settings = self.settings.to_dict()
+        settings.pop(IN_USE_KEY, None)
         return {
-            ARENA_KEY: self.settings.to_dict(),
+            ARENA_KEY: settings,
             START_KEY: {name: cell.to_list() for name, cell in self.starts.items()},
         }
 

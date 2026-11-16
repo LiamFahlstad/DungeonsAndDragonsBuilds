@@ -39,7 +39,7 @@ Enter in the Damage field applies the damage with each target's resistance, vuln
 
 ## The Attack roll field
 
-Optional, beside Damage. Type the roll someone made and press Enter: it's checked against each target's AC, with Half or Three-Quarters Cover added, the hit or miss goes in the encounter log, and a hit moves on to the Damage field, with only the targets it hit left selected. It takes a total or a sum (`17`, `12+5`), or `nat 20` or `nat 1`, which hit or miss whatever the AC. Those two don't narrow down the AC on the Limited player view, since the AC played no part in them. The roll was made at the table, so conditions don't change it; a hit on a Paralyzed or Unconscious target says to check for a Critical Hit, which it is from within 5 feet.
+Optional, beside Damage. Type the roll someone made and press Enter: it's checked against each target's AC, with Half or Three-Quarters Cover added, the hit or miss goes in the encounter log, and a hit moves on to the Damage field, with only the targets it hit left selected. It takes a total or a sum (`17`, `12+5`), or `nat 20` or `nat 1`, which hit or miss whatever the AC. Those two don't narrow down the AC on the Limited player view, since the AC played no part in them. The roll was made at the table, so conditions don't change it. A hit on a Paralyzed or Unconscious target is a Critical Hit from within 5 feet: with both on the battle map and the map in use (see below), the distance decides it ("Tiger is Paralyzed, attacker 5 ft. away: a Critical Hit"); otherwise the log says to check.
 
 With the roll and the damage both typed, Apply does both: only the targets it hit take the damage. If it missed them all, nothing is applied and the amount stays in the field, so applying again deals it anyway, for damage that lands on a miss, like the Graze mastery's. A roll left in the field is cleared when the turn changes or a monster's action rolls its own.
 
@@ -71,6 +71,7 @@ The first line says who uses it on whom ("Edmund → Goblin Boss 1, Goblin Boss 
 | Typing with the list focused | Types into the search box. |
 | **Ctrl+F** | Back to the search box, its text selected. |
 | **Ctrl+Enter** | Apply, from any field. |
+| **Enter** in the Name, Notes or Damage field, or in a target's typed roll | Apply. |
 | **Alt+N** / **Alt+S** / **Alt+A** | No roll / Saving throw / Attack roll. |
 | **Alt+R** | Select targets in area: aim the pick's area on the battle map (see below). |
 
@@ -82,7 +83,7 @@ The first line says who uses it on whom ("Edmund → Goblin Boss 1, Goblin Boss 
 - **Name:** optional, for the log and the turn column ("Fireball").
 - **Roll:** one click on **No roll**, **Saving throw** or **Attack roll** (Alt+N, Alt+S, Alt+A). No roll hides the roll's controls: everyone takes the damage and the condition. The dialog remembers which you used last. **Neutral**, **Advantage** and **Disadvantage** are a click each too, for every target.
 - **Saving throw:** pick the ability from the **STR** to **CHA** chips (clicking one with No roll makes it a saving throw; Saving throw after No roll goes back to the last ability, or Dexterity); each target's row shows its bonus for that save ("DEX +3"); the DC starts at the source's spell save DC when that's known, and stays as you set it until the source changes. Each target rolls with its own save bonus. Every target has a row for a save rolled at the table: type the total with the save bonus in it (`14`, `9+5`), or leave it blank to roll for them. A natural 20 or 1 is nothing special on a save, so `nat 20` is refused: type the total. A typed total still fails automatically when a condition says so, and Legendary Resistance can still turn a typed failure into a success. With many targets, the rows scroll.
-- **Attack roll:** the source rolls once against each target's AC, cover included; each target's row shows that AC ("AC 17 (cover)"). The bonus starts at the source's spell attack bonus when that's known, or a monster's first attack, and stays as you set it until the source changes. Each target has a row for a roll made at the table: type the total with the bonus already in it (`17`, `12+5`) or `nat 20`, or leave it blank to roll for the source. A hit takes all the damage and the condition, and a miss takes nothing. A natural 20 always hits and rolls the damage dice twice over (a flat amount stays the same), and a natural 1 always misses. A rolled attack counts the conditions, per target, with the Advantage or Disadvantage you set: Advantage against a Blinded, Paralyzed, Petrified, Restrained, Stunned or Unconscious target, Disadvantage for a Blinded, Poisoned, Prone or Restrained source, and one of each cancels out. The log says why ("Tiger is Restrained: Advantage"), and each target's row shows it for a roll made at the table ("AC 15, Advantage"; its tooltip says why). What depends on distance or sight isn't counted, since the dialog doesn't know it, only noted: a Prone target (Advantage within 5 feet, Disadvantage farther), Invisible, Frightened and Grappled, and the Critical Hit on a Paralyzed or Unconscious target from within 5 feet. A typed roll is used as it is. The players learn what the roll showed of the AC, as with any attack roll.
+- **Attack roll:** the source rolls once against each target's AC, cover included; each target's row shows that AC ("AC 17 (cover)"). The bonus starts at the source's spell attack bonus when that's known, or a monster's first attack, and stays as you set it until the source changes. Each target has a row for a roll made at the table: type the total with the bonus already in it (`17`, `12+5`) or `nat 20`, or leave it blank to roll for the source. A hit takes all the damage and the condition, and a miss takes nothing. A natural 20 always hits and rolls the damage dice twice over (a flat amount stays the same), and a natural 1 always misses. A rolled attack counts the conditions, per target, with the Advantage or Disadvantage you set: Advantage against a Blinded, Paralyzed, Petrified, Restrained, Stunned or Unconscious target, Disadvantage for a Blinded, Poisoned, Prone or Restrained source, and one of each cancels out. The log says why ("Tiger is Restrained: Advantage"), and each target's row shows it for a roll made at the table ("AC 15, Advantage"; its tooltip says why). A Prone target (Advantage within 5 feet, Disadvantage farther) and the Critical Hit on a Paralyzed or Unconscious target from within 5 feet are counted when the source and the target are both on the battle map, by the distance between them ("Tiger is Prone, attacker 5 ft. away: Advantage"), and only noted when either isn't. That is once the map is in use: someone has been moved on it this fight, or the encounter's painted map gave the starting cells. Before then everyone only stands along the edges where the fight put them, so a fight played on the cards alone keeps the notes. What depends on sight isn't counted, only noted: Invisible, Frightened and Grappled. A typed roll is used as it is. The players learn what the roll showed of the AC, as with any attack roll.
 - **The rules it counts:** Paralyzed, Petrified, Stunned and Unconscious fail Strength and Dexterity saves (a target's row says "DEX fails"), Restrained gives Disadvantage on Dexterity saves ("DEX +3, Disadvantage"), the attack roll modes above, and a creature immune to the condition doesn't get it. A condition that gives another counts as both (Unconscious is Incapacitated and Prone too). A longer custom name counts too ("Restrained by vines"). The conditions' rules are data, in `Model/Content/RulesConditions.py`.
 - **What it doesn't count:** Exhaustion (its level isn't tracked, so the log flags it), Evasion, Magic Resistance and similar features (set Advantage yourself, or adjust by hand), and a badge that is only a spell's name and not a condition (one a spell with nothing else to show gets, such as Bless): it isn't a rules condition to this dialog.
 - **Damage:** dice are rolled once, for everyone. Type the type (`8d6 fire`) or pick it from the dropdown, which starts on the source's last type. Each target's resistances count unless you untick that, and a save halves the damage, or avoids it with "Half damage on a save" off.
@@ -136,6 +137,8 @@ nearest cell.
 | **Left click** a token | Make it the source and pick it up: the cells it can still reach this turn are shaded with what each costs: its Speed in use (Haste doubles it, Grappled makes it 0) less what it has moved. Allies can be walked through, an enemy's space costs double, and a Prone creature crawls at half the reach. Click it again to put it down without moving it; **Esc**, another source or the next turn puts it down too. |
 | **Left click** an empty cell | Move the picked-up token there. With nothing picked up, nothing moves. |
 | **Drag** a token | Move it in one go, with the same shading while it's held. |
+| **Shift** held as you drop a token (the drag's release, or the click on the cell) | Teleport it there (Misty Step, Thunder Step): no movement spent and no Opportunity Attack. |
+| **Alt** held as you drop a token | Push it there (a Shove, Thunderwave, Repelling Blast): no movement spent and no Opportunity Attack, as it isn't the creature's own movement. |
 | **Right click** a token | Target it, with Ctrl and Shift as on the cards. |
 | **Hover** a cell or a token | With a source selected, how far it is from the source, in feet. |
 | **Ctrl+wheel** | Zoom. The whole map fits the window until you do. |
@@ -145,10 +148,23 @@ A move is one Undo step and a GM-only line in the encounter log saying
 from where to where and what's left: "Clover moves from A7 to C8 (15 ft.;
 15 of 30 ft. left this turn)". After a Dash (Use / Cast's Standard
 Actions, or Cunning Action's), the reach shaded and what's left count its
-Speed again ("15 of 60 ft. left this turn (Dash)"). Going past it is
-allowed, for a shove or a teleport, and said in the line ("5 ft. past its
-30 ft. Speed") and under Source/Target ("Goblin moved 35 ft., Speed 30
-ft."); ending on someone else's space isn't.
+Speed again ("15 of 60 ft. left this turn (Dash)"). Walking past it is
+allowed (for whatever lets a creature move further) and said in the line
+("5 ft. past its 30 ft. Speed") and under Source/Target ("Goblin moved 35
+ft., Speed 30 ft."); ending on someone else's space isn't.
+
+A teleport (**Shift**) or a push (**Alt**) isn't the creature's own
+movement (Rules Glossary, Teleportation: it "doesn't expend movement ...
+and never provokes Opportunity Attacks"): its feet moved this turn stay as
+they were, no Opportunity Attack is reminded of or offered, and its line
+says which, with the straight distance: "Kivi teleports from A7 to D7 (15
+ft.; no movement spent)", "Goblin is pushed from C4 to C5 (5 ft.; no
+movement spent)". It's one Undo step too, and an area or a hazard it lands
+in is reminded of as for a walk. It still can't end on a wall, a blocking
+object or someone else's space: a teleport there "appears in the nearest
+unoccupied space of your choice" instead, so drop it on that one. A walk
+with no way there (walled in) still counts the straight distance as moved;
+hold Shift for a teleport.
 
 A walk on the mover's own turn that starts in an enemy's reach and ends out
 of it reminds you of that enemy's Opportunity Attack, under Source/Target
@@ -160,8 +176,9 @@ Reach weapon. A Disengaged mover gets "Disengaged: no Opportunity Attack"
 instead, and one with Flyby a note that it has none if it flies. Nothing is
 rolled: use Use / Cast for the attack. Only where a walk starts and ends is
 known, so running past an enemy (into its reach and out again) isn't
-caught, nor is a walk that leaves a reach and comes back, nor a move on
-someone else's turn (a shove, a correction): remind yourself of those. With a source and a target both on the map, the
+caught, nor is a walk that leaves a reach and comes back, nor a walk on
+someone else's turn (a correction, or a Reaction's move): remind yourself
+of those. With a source and a target both on the map, the
 target label reads "Target: Goblin (25 ft.)", on the cards too. Whoever has
 no place yet (added during the fight) is in the **Not on the map** row
 above the map: click their name to pick them up, then a cell.
@@ -245,6 +262,7 @@ the map:
 | **Ctrl+wheel** | Zoom. |
 | **Ctrl+Z** | Undo the last stroke (or size change). |
 | **Ctrl+S** | Save and close. |
+| **Enter** | Save and close too (Save is the default button), also from the Width / Height boxes. |
 | **Esc** / **Cancel** | Close, asking first when something isn't saved. |
 
 - **Ground:** Wall (nobody enters it), Difficult Terrain, Water (Difficult
@@ -284,13 +302,24 @@ The bottom of the column is the encounter log, always open, with the newest line
 
 **Roll for Monsters** rolls everyone without a player's dice, leaving what's already typed. **Enter** in a field jumps to the next one that needs a number, and starts combat once they're all filled in.
 
+## Other dialogs
+
+Every dialog closes with **Esc**, as Cancel does.
+
+| Dialog | Key | What it does |
+|---|---|---|
+| Add Combatant (**Ctrl+N**) | **Enter** in the name field | Add the combatant. |
+| Load Encounter (**Ctrl+O**) | **Enter**, or **double-click** an encounter | Start the encounter picked (Start Encounter is the default button). |
+| What a hit triggers (the pop-up after an Apply) | **Enter** / **Esc** | Apply the checked rows / Skip them all. |
+| Player Link | **Enter** | Close. |
+
 ## The players' screen
 
 **Player Screen** opens the turn order for a second monitor or TV (full screen there, a window if there's only one screen): whose turn it is, who's next, conditions, everyone's Hit Points as a bar colored like the cards (a bar for each member of an initiative group), each combatant's size and speed, and monsters' AC. A monster that's Invisible (or under Invisibility), Hidden, Heavily Obscured, in Darkness or behind Total Cover isn't listed, and spell badges and custom conditions on a monster stay private. **Esc** closes it.
 
 ## Notes
 
-- **Text field protection**: Typing into the Damage/Heal/Temp HP amount fields naturally blocks these shortcuts. Qt lets a focused text field consume its own keystrokes, so typing amounts like "15" (or moving the cursor with the left/right arrows) won't accidentally trigger number/letter/arrow shortcuts.
+- **Text field protection**: Typing into the Damage/Heal/Temp HP amount fields naturally blocks these shortcuts. Qt lets a focused text field consume its own keystrokes, so typing amounts like "15" (or moving the cursor with the left/right arrows) won't accidentally trigger number/letter/arrow shortcuts. **Ctrl+Z** is the exception: in the Attack roll, Damage, Heal and Temp HP fields it is still the window's Undo, not the field's own text undo, so undoing a monster's action that left the cursor there works.
 
 - **Combo box handling**: Combo boxes (Roll Mode, Damage Type, Conditions, Visibility, Spell Slots, Action Economy) don't reserve their own keys the way a text field does, so a matching `QShortcut` would otherwise swallow the keystroke before the combo box ever sees it — silently breaking its native type-ahead search *and* its arrow-key item cycling, even though the shortcut's own handler correctly declines to act. Every shortcut above except Ctrl+Z and Escape is fully disabled (not just made into a no-op) for as long as a combo box has focus, via `QApplication.focusChanged`, and re-enabled the instant focus moves elsewhere — so both the combo box's normal keyboard behavior and the global shortcuts work correctly depending on what's actually focused.
 

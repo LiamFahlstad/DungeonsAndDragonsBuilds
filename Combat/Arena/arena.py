@@ -72,18 +72,29 @@ TRAIT_MOVEMENT = {
 }
 
 
+# ArenaSettings.to_dict's key for `in_use`, there only when it's True.
+IN_USE_KEY = "in_use"
+
+
 @dataclass
 class ArenaSettings:
     """The fight's map: `width` by `height` cells of `cell_ft` feet, counted
     by the distance rule named `rule` (geometry.RULES), with the `terrain`
     the Map Painter painted on it. The plan's Q1 suggestion gives the size:
-    24 x 16 cells of 5 ft. for a fight with no map painted."""
+    24 x 16 cells of 5 ft. for a fight with no map painted.
+
+    `in_use`: the fight is being played on the map (a token was moved, or
+    the painted map's starting cells placed someone), so its distances
+    count in the rules that ask for one (Decision 29). Until then the
+    tokens stand where place_new put them, which says nothing about the
+    fight, and those rules stay notes for the GM."""
 
     width: int = 24
     height: int = 16
     cell_ft: int = 5
     rule: str = DEFAULT_RULE
     terrain: Terrain = field(default_factory=Terrain)
+    in_use: bool = False
 
     @property
     def distance_rule(self) -> DistanceRule:
@@ -91,7 +102,7 @@ class ArenaSettings:
 
     def to_dict(self) -> dict:
         """What the encounter log keeps under its "arena" key; "terrain"
-        only when something is painted."""
+        only when something is painted, "in_use" only when it is."""
         data: dict = {
             "width": self.width,
             "height": self.height,
@@ -100,6 +111,8 @@ class ArenaSettings:
         }
         if self.terrain:
             data["terrain"] = self.terrain.to_dict()
+        if self.in_use:
+            data[IN_USE_KEY] = True
         return data
 
     @classmethod
@@ -114,6 +127,7 @@ class ArenaSettings:
             cell_ft=int(data.get("cell_ft", default.cell_ft)),
             rule=str(data.get("rule", default.rule)),
             terrain=Terrain.from_dict(data.get("terrain")),
+            in_use=bool(data.get(IN_USE_KEY, False)),
         )
 
     def copy(self) -> ArenaSettings:

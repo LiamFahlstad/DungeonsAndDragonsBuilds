@@ -3,7 +3,9 @@
 turn column's button, the view last used remembered in the settings
 store), the map brought up to date with the cards, and moving: a token
 dragged, or clicked (picked up) and then a cell clicked, one undo step
-each, logged with where from and to and the movement left, with the "Not
+each, logged with where from and to and the movement left (Shift held as
+it's dropped teleports it, Alt pushes it: no movement spent and no
+Opportunity Attack, step 17), with the "Not
 on the map" strip for whoever has no place yet. Selection, the
 control panel, the turn column and undo are the window's, shared by both
 views (the plan's Decision 2).
@@ -111,7 +113,7 @@ from Model.Content.StandardActions import DISENGAGE
 from Core.Definitions import Condition
 from Core.Rules import SECONDS_PER_ROUND
 
-from .arena_view import ArenaView, token_rows
+from .arena_view import ArenaView, MoveKind, token_rows
 from .effect_options import _spell_named, opportunity_attack_row
 from .saves import SPELL, CustomEffect, EffectOption
 from .settings import ARENA_VIEW_KEY
@@ -568,10 +570,13 @@ class ArenaMixin(CombatWindowState):
         """Starting cells for whoever isn't on the map yet, as a fight
         starts or is continued: the cell the encounter's painted map gives
         them, else the party's side on the left and the rest on the right
-        (the plan's Q1)."""
+        (the plan's Q1). Someone put on a painted start puts the map in use
+        (Decision 29): the fight was set up on it."""
         painted = self._encounter_map(self._scenario_name)
-        if painted is not None:
-            place_at_starts(self.characters, painted.starts, self.arena_settings)
+        if painted is not None and place_at_starts(
+            self.characters, painted.starts, self.arena_settings
+        ):
+            self.arena_settings.in_use = True
         place_new(self.characters, self.arena_settings)
 
     def _refresh_arena(self):
@@ -789,10 +794,10 @@ class ArenaMixin(CombatWindowState):
             return {}
         return reachable(char, self.characters, self.arena_settings, remaining_ft(char))
 
-    def _arena_move(self, name: str, cell: Cell):
+    def _arena_move(self, name: str, cell: Cell, kind: MoveKind = MoveKind.WALK):
         char = self._arena_char(name)
         if char is not None:
-            self._move_combatant(char, cell)
+            self._move_combatant(char, cell, kind)
 
     def _arena_cell(self, cell: Cell):
         """An empty cell clicked with nobody picked up, and no kept area on
@@ -802,15 +807,23 @@ class ArenaMixin(CombatWindowState):
         self._show_status("Click a combatant, then the cell it moves to.")
 
     @undoable
-    def _move_combatant(self, char: dict, cell: Cell):
+    def _move_combatant(self, char: dict, cell: Cell, kind: MoveKind = MoveKind.WALK):
         """Put char's anchor on `cell`: one undo step. One not on the map yet
         is placed there, or on the nearest free cell (the plan's Q4), and
         moves nothing. One on it walks there, by the cheapest way, and its
         feet moved this turn grow by that, or by the straight distance when
-        no walk gets there (a teleport); it can't end on anyone (Q4), but
+        no walk gets there (walled in); it can't end on anyone (Q4), but
         where what it has lets it (can_end_at: a Swarm's space, inside a
         wall with Incorporeal Movement). The move is a GM-only log line
-        (Q3), and going past its Speed is warned about, not refused (Q2)."""
+        (Q3), and going past its Speed is warned about, not refused (Q2).
+
+        A teleport or a push (`kind`, step 17) isn't char's own movement:
+        it spends none (Rules Glossary, Teleportation: it "doesn't expend
+        movement"), reminds of no Opportunity Attack ("never provokes"), and
+        its line says which, with the straight distance. It ends only where
+        a walk could (a teleport onto someone appears "in the nearest
+        unoccupied space of your choice": the GM clicks that one), and
+        areas and hazards entered are reminded of as for a walk."""
         settings, name = self.arena_settings, char["name"]
         if position(char) is None:
             anchor = nearest_free(char, [cell], self.characters, settings)
@@ -818,40 +831,62 @@ class ArenaMixin(CombatWindowState):
                 self._show_status(f"No room on the map for {name}.")
                 return
             char[POSITION_KEY] = anchor.to_list()
+            self.arena_settings.in_use = True
             self._refresh_views()
             return
         if position(char) == cell:
             return
         if not can_end_at(char, cell, self.characters, settings):
+            what = {
+                MoveKind.WALK: "end a move",
+                MoveKind.TELEPORT: "teleport",
+                MoveKind.PUSH: "be pushed",
+            }[kind]
+            nearest = (
+                " A teleport there appears in the nearest unoccupied space of"
+                " your choice instead (Teleportation): click that one."
+                if kind is MoveKind.TELEPORT
+                else ""
+            )
             self._show_status(
-                f"{name} can't end a move there: it's off the map, a wall,"
-                " an object that blocks movement or someone else's space."
+                f"{name} can't {what} there: it's off the map, a wall,"
+                " an object that blocks movement or someone else's space." + nearest
             )
             return
-        walked = move_cost(char, self.characters, settings, cell)
-        feet = walked if walked is not None else straight_ft(char, cell, settings)
-        feet = feet or 0
         start = position(char)
         before = who_is_in(self.characters, settings)
         hazards_before = hazards_under(char, settings)
-        char[POSITION_KEY] = cell.to_list()
-        char[MOVED_KEY] = int(char.get(MOVED_KEY, 0)) + feet
-        speed = walking_speed_ft(char)
-        self._log_event(
-            move_line(char, start, cell, feet, walked is not None, speed, settings),
-            public=False,
-        )
+        # Someone moved on the map: it's in use, and its distances count
+        # from now on (Decision 29).
+        settings.in_use = True
         warnings = []
-        movement = movement_ft(char)
-        if movement is not None and char[MOVED_KEY] > movement:
-            with_dash = f" ({movement} ft. with its {_dashes_text(char)})"
-            warnings.append(
-                f"{name} moved {char[MOVED_KEY]} ft., Speed {speed} ft."
-                + (with_dash if dashes(char) else "")
+        if kind is not MoveKind.WALK:
+            feet = straight_ft(char, cell, settings) or 0
+            char[POSITION_KEY] = cell.to_list()
+            line = forced_move_line(char, start, cell, feet, kind, settings)
+            self._log_event(line, public=False)
+            warnings.append(line)
+        else:
+            walked = move_cost(char, self.characters, settings, cell)
+            feet = walked if walked is not None else straight_ft(char, cell, settings)
+            feet = feet or 0
+            char[POSITION_KEY] = cell.to_list()
+            char[MOVED_KEY] = int(char.get(MOVED_KEY, 0)) + feet
+            speed = walking_speed_ft(char)
+            self._log_event(
+                move_line(char, start, cell, feet, walked is not None, speed, settings),
+                public=False,
             )
-        if walked is not None and start is not None:
-            warnings += self._opportunity_attack_reminders(char, start)
-        if has_condition(char, Condition.PRONE):
+            movement = movement_ft(char)
+            if movement is not None and char[MOVED_KEY] > movement:
+                with_dash = f" ({movement} ft. with its {_dashes_text(char)})"
+                warnings.append(
+                    f"{name} moved {char[MOVED_KEY]} ft., Speed {speed} ft."
+                    + (with_dash if dashes(char) else "")
+                )
+            if walked is not None and start is not None:
+                warnings += self._opportunity_attack_reminders(char, start)
+        if kind is MoveKind.WALK and has_condition(char, Condition.PRONE):
             stand = stand_up_ft(char)
             costs = "half its Speed" if stand is None else f"{stand} ft."
             warnings.append(f"{name} is Prone and crawls; standing up costs {costs}.")
@@ -1193,3 +1228,21 @@ def move_line(
     else:
         left = f"{moved - total} ft. past {of or f'its {speed} ft. Speed'}"
     return f"{head} ({cost}; {left})."
+
+
+def forced_move_line(
+    char: dict,
+    start: Cell | None,
+    to: Cell,
+    feet: int,
+    kind: MoveKind,
+    settings: ArenaSettings,
+) -> str:
+    """The encounter log's line for a move that isn't char's own (step 17),
+    `feet` the straight distance: "Kivi teleports from A7 to D7 (15 ft.;
+    no movement spent)." or "Goblin is pushed from C4 to C5 (5 ft.; no
+    movement spent)." for a push."""
+    shape = settings.distance_rule.shape
+    where = f"from {shape.cell_name(start) if start else '?'} to {shape.cell_name(to)}"
+    verb = "teleports" if kind is MoveKind.TELEPORT else "is pushed"
+    return f"{char['name']} {verb} {where} ({feet} ft.; no movement spent)."

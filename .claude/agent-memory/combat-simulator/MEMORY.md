@@ -23,3 +23,5 @@
 2026-11-11: Black moves a trailing `# pyright: ignore[...]` off the offending line when it reflows a tuple; after Black, rerun pyright on test files and put the comment on the argument's own line.
 2026-11-15: To prove a new regression test fails on the old code, export HEAD to the scratchpad (`git archive HEAD | tar -x -C <scratch>/head`), copy the new test in and run pytest there. Never swap HEAD's files into the shared tree, not even briefly: other agents edit and test in it at the same time.
 2026-11-15: run_tests.sh with a shell glob that matches nothing (tests/test_rest*.py) prints "no tests ran" for the whole run: list the existing files first.
+2026-11-16: _start_combat puts every token on the map (place_new), so in UI tests attacks now see a real distance (two monsters start 5 ft. apart). A test of the "GM judges it" note must del char[POSITION_KEY]; one of a distance rule must set both positions.
+2026-11-16: In a QTest drag on the arena view (its window is hidden in tests), view.cell_center(...) shifts after the first mouseMove picks the token up: work out the drop point after that move, or the release lands off the map (a refused move, no error).

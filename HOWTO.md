@@ -118,7 +118,9 @@ The page shows what the Player Screen shows (`Combat/CombatUIQt/player_view.py` 
 | `Ctrl+Shift+C` | Clear target conditions | `Ctrl+N` | Add combatant |
 | `Ctrl+Z` | Undo | `Esc` | Clear selection |
 | `Ctrl+O` | Load encounter | `G` | Cards / battle map |
-| `Ctrl+M` | Map Painter | | |
+| `Ctrl+M` | Map Painter | `Shift+Enter` | Previous turn |
+| `Shift+C` | Use / Cast dialog | `Shift+A` | Focus Attack roll |
+| `I` | More Info | | |
 
 **Statistics**
 

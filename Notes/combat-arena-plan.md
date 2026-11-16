@@ -84,6 +84,9 @@ verification passes per step unless asked.
 | 13 | Dash and Opportunity Attacks reminded of | Done 2026-11-15 |
 | 14 | Opportunity Attacks made in the UI | Done 2026-11-15 |
 | 15 | Moving by what a creature has: Halfling Nimbleness, Incorporeal Movement, Swarm, Difficult Terrain ignored (Freedom of Movement, Speedy, Fairy Trickster), climbing at no extra cost, standing up from Prone spent from its movement | Done 2026-11-16 (R14) |
+| 16 | Counting "within 5 feet" from the map: Prone's Advantage/Disadvantage, Paralyzed's and Unconscious's Critical Hits | Done 2026-11-16 (R15, R16); DI-085 narrowed |
+| 17 | Moves that aren't walks: Teleport and Pushed, no movement spent and no Opportunity Attack | Done 2026-11-16 (planned in R15) |
+| 18 | Distances count only once the map is in use: a token moved this fight, or a painted map's starts (Decision 29) | Done 2026-11-16 |
 
 ## How it fits the code that's there
 
@@ -639,42 +642,170 @@ everything that changes them.
 
 Tests: `tests/test_arena_movement.py`, `tests/test_combat_ui_arena_movement.py`.
 
+### Step 16: "within 5 feet" counted from the map (2026-11-16)
+
+The user asked what the arena still misses against the rules (R15); this
+is the first of DI-085's rules to count. Prone (Rules Glossary): "An attack
+roll against you has Advantage if the attacker is within 5 feet of you.
+Otherwise, that attack roll has Disadvantage." Paralyzed and Unconscious:
+a hit is a Critical Hit if the attacker is within 5 feet. Today these are
+`when` notes ("not counted", `hit_notes` and `_uncounted` in
+Combat/Effects/modifiers.py).
+
+- When the attacker and the target are both on the map, `distance_ft`
+  settles the `when`: the modifier counts (or doesn't), and the note says
+  which ("Tiger is Prone, attacker 5 ft. away: Advantage", "Tiger is
+  Paralyzed, attacker 35 ft. away: not a Critical Hit").
+- When either is off the map, or there's no attacker, it stays a note, as
+  now.
+
+*Built (R16):* the window passes the distance in (`_attacker_distance_ft`,
+damage_mixin.py) and Combat/Effects stays Qt-free: `attack_plan(...,
+distance_ft=)`, `hit_notes(target, distance_ft)` and `makes_critical_hit`
+(modifiers.py). `settled_by_distance` reads a `when` that asks only how far
+the attacker is ("the attacker is within N feet of it", "... farther than N
+feet") and says whether it holds; any other `when` stays the GM's. All three
+attack paths count it: the Custom Effect / Use / Cast dialog (its rows and
+its roll), a monster's action button (one target) and the Attack roll field
+(the log's "(critical hit)", and a Critical Hit's two death save failures at
+0 HP). A counted Critical Hit doubles the dice as a natural 20 does.
+
+Tests: `tests/test_combat_ui_arena_within_5_feet.py`, and the distance cases
+in `tests/test_combat_modifiers.py`.
+
+### Step 17: Teleport and Pushed moves (2026-11-16)
+
+Rules Glossary, Teleportation: it "doesn't expend movement unless a rule
+tells you otherwise, and teleportation never provokes Opportunity Attacks".
+A push (Shove, Thunderwave, Repelling Blast) isn't the creature's own
+movement either, so it provokes nothing and spends none (Player's Handbook,
+Opportunity Attacks). Today every move on the mover's own turn that could
+be walked counts as a walk (`_move_combatant`): its feet and an Opportunity
+Attack button.
+
+- A move is a Walk (as now), a Teleport or a Push. A Teleport or a Push
+  spends no movement, reminds of no Opportunity Attack and puts up no
+  button; it still can't end on a wall or in someone's space (Teleportation:
+  "the nearest unoccupied space of your choice"), and still reminds of
+  areas and hazards entered.
+- The move's GM-only line says which ("Kivi teleports from A7 to D7
+  (15 ft.)", "Goblin is pushed from ... ").
+
+*Built:* the keys held as a token is dropped pick the move (`MoveKind` and
+`move_kind` in arena_view.py): **Shift** a teleport, **Alt** a push, Shift
+winning when both are held; nothing else is a walk. They're read from the
+release (a drag's, or the click on the cell for a token picked up), so they
+don't clash with Shift and Ctrl on a right click (targeting) or Ctrl+wheel
+(zoom), and a left press's modifiers still do nothing. `drop`,
+`move_picked` and `on_move` carry the kind; `_move_combatant(char, cell,
+kind)` (arena_mixin.py) is still one undo step. A teleport or a push:
+the straight distance (`straight_ft`), `moved_ft` untouched, no Speed
+warning, no Opportunity Attack line or button, no Prone crawl note; its
+line, shown in the status too, is "Kivi teleports from A7 to D7 (15 ft.;
+no movement spent)." / "Goblin is pushed from C4 to C5 (5 ft.; no movement
+spent)."; areas and hazards entered and Incorporeal Movement's in-a-wall
+note as for a walk. One that can't end there (`can_end_at`) is refused, as
+a walk is; for a teleport the status says it "appears in the nearest
+unoccupied space of your choice" instead, for the GM to drop it on (the
+choice is the creature's, so the window doesn't pick one). A walk with no
+way there still counts the straight distance as moved (its line unchanged):
+it may be a creature squeezing through what the map doesn't know, and a
+teleport is now one key away. The reach shaded while a token is held is
+still the walk's.
+
+Tests: `tests/test_combat_ui_arena_forced_moves.py` (a walk still provoking
+and spending, a teleport and a push spending nothing and provoking nothing,
+no Speed warning, one undo step each, refused on someone and on a wall, a
+hazard reminded of, the keys, and real Shift-drag and Alt-click).
+
+### Step 18: distances count once the map is in use (2026-11-16)
+
+Decision 29. `ArenaSettings.in_use` (kept in the log's "arena" and in
+undo, as "in_use" only when True, so older logs read the same; never in a
+map file, `MapDesign.to_dict`) is set by any move or placement on the map
+(`_move_combatant`, a walk, a teleport or a push) and by a painted map's
+starting cells placing someone (`_place_on_arena`). Saving a map mid-fight
+keeps it (`_use_painted_map`). `_attacker_distance_ft` gives None until it's
+set, so the rules step 16 counts stay notes on a fight played on the cards.
+
+Tests: `tests/test_combat_ui_arena_within_5_feet.py` (before use, a move
+puts it in use and Undo takes it back, painted starts, the log and map
+file), `tests/test_combat_ui_map_painter.py` (a fight on a painted map is
+in use, and keeps that when continued).
+
 ### Later (not scheduled)
 
-- **More distance rules**, each a `DistanceRule` and a line in `RULES`:
-  Chebyshev and 5-10-5 on squares, Euclidean (rounded to the nearest 5 ft.),
-  hexagons (a `HexGrid` shape with axial cells and its rule; footprints of
-  Large+ creatures on hexes need their own decision). A combo box in the map
-  settings picks one.
-- **Map settings dialog**: *built as the Map Painter*
-  ([map-painter-plan.md](map-painter-plan.md), 2026-11-15): size and
-  starting positions per encounter, in its own map file rather than its
-  `EncounterSpec`. Still later: cell feet and the distance rule in it.
-- **Terrain**: *built in the Map Painter*: walls and blocking objects nobody
-  enters, Difficult Terrain, water, the ground's height, light, objects and
-  hazards. What's left (cover, sight, doors) is that plan's Open questions.
-- **Other speeds**: flying, climbing, swimming as a choice when moving (Q7).
-- **Using distance in the rules**, which is where the map pays off (DI-085):
-  the "within 5 feet" in Paralyzed's and Unconscious's automatic Critical
-  Hits and Prone's Advantage, triggers that ask "within 5 feet" (Fire Shield)
-  or 10 feet (Dark One's Blessing, combat-effects-plan Q63), a spell's range
-  checked as it's cast, Spirit Guardians' aura. Each still asks when either
-  creature is off the map. Opportunity Attacks are reminded of as a walk
-  leaves reach (step 13) and made from a turn-column button (step 14);
-  still later: a walk that passes through a reach,
-  or leaves and comes back (the path isn't kept), Sentinel and Polearm
-  Master's entering reach.
-- **Areas of effect**: built in steps 10 and 11. Still later: a creature
-  entering an area, or starting its turn in it, prompting its effect (Q12;
-  a reminder now); moving an area that stays (Moonbeam's Magic action,
-  Flaming Sphere; Q13, which the area panel is now the place for); walls (Wall of Fire,
-  Wall of Force), which aren't one of the six shapes; Total Cover blocking
-  an area (Rules Glossary, Area of Effect), once there's terrain; kept areas
-  on the Player Screen's map (hidden with a hidden caster).
-- **The map on the Player Screen and the player link**, from the same token
-  rows, hidden monsters left out the way `player_view_rows` leaves them out.
-- **Height**: the ground's height is built in the Map Painter (counted
-  into distances and climbing); a flying creature's altitude is its Q4.
+In order of relevance (R15, the user, 2026-11-16: "add your suggestions
+(in order of relevancy) to the plan"). Each is a step of its own when it's
+picked up.
+
+1. **Cover from the painted map** (the map painter plan's Q2): the line
+   between the two creatures' nearest cells; a wall or a Total Cover object
+   on it is Total Cover (can't be targeted), else the best cover of an
+   object on it, shown on the target label ("Half Cover: +2 AC") and then
+   counted into attack rolls and Dexterity saves. Areas stop at Total Cover
+   (Rules Glossary, Area of Effect: a cell no line from the point of origin
+   reaches isn't in the area).
+2. **Range on attacks and spells**: a weapon's or a stat block's reach and
+   range on the effect, warned about on the target label: a melee target
+   past reach, a ranged attack at long range (Disadvantage) or past it, a
+   ranged attack with an enemy within 5 feet (Disadvantage, Player's
+   Handbook), a spell's target past its range (only areas are checked now,
+   step 10).
+3. **Shove's push**: the Unarmed Strike's 5-foot push (Rules Glossary,
+   Unarmed Strike), and other pushes (Thunderwave, Repelling Blast), as a
+   Push move (step 17) offered from the Custom Effect after a failed save.
+4. **Grappling moves the Grappled creature** (Rules Glossary, Grappled): the
+   grappler drags it, each foot costing 1 extra foot unless it's Tiny or two
+   or more sizes smaller; the grapple ends when they're further apart than
+   its range (Rules Glossary, Grappling).
+5. **The path walked kept**, so an Opportunity Attack catches a walk that
+   passes through a reach, or leaves and comes back (only the walk's ends
+   are known now, step 13); Sentinel and Polearm Master's entering reach.
+   With it: Undo of the walk takes its Opportunity Attack buttons back, and
+   an enemy's other buttons go once it spends its Reaction (step 14's Not
+   done).
+6. **Areas that stay, acting** (Q12, Q13): a creature entering one, or
+   starting its turn in it, prompts its effect (a turn-column button, as a
+   trigger's) instead of a reminder; a **Move** button on the area panel for
+   Moonbeam and Flaming Sphere; walls (Wall of Fire, Wall of Force), which
+   aren't one of the six shapes.
+7. **Other speeds** (Q7, the map painter plan's Q4): Fly, Swim, Climb or
+   Burrow Speed chosen for a move, switching part-way (Rules Glossary,
+   Speed: "subtract the distance already moved from the new speed"); a
+   flying creature's altitude added into distances; falling when it's Prone
+   or Incapacitated or its Fly Speed is 0, unless it hovers (Rules
+   Glossary, Flying).
+8. **Water is swimming, not Difficult Terrain** (Rules Glossary, Swimming):
+   1 extra foot a foot, 2 extra in Difficult Terrain, none with a Swim Speed
+   (which the combatants don't have a field for yet, with 7).
+9. **Distance in triggers and auras** (DI-085; the conditions' "within 5
+   feet" counts since step 16, through `settled_by_distance`): triggers
+   that ask "within 5 feet" (Fire Shield) or 10 feet (Dark One's Blessing,
+   combat-effects-plan Q63), Spirit Guardians' aura. Each still asks when
+   either creature is off the map.
+10. **Light and senses counted** (the map painter plan's Q5): Heavily
+    Obscured as Blinded for sight there, Darkvision, Blindsight, Truesight,
+    each from the viewer's senses; needs DI-068 (Invisible as a condition).
+11. **The map on the Player Screen and the player link**, from the same
+    token rows, hidden monsters left out the way `player_view_rows` leaves
+    them out; kept areas on it (hidden with a hidden caster); later a fog
+    of war (the map painter plan's Q1).
+12. **Areas count height** (the map painter plan's Q3): each cell's height
+    into an area's reach, as distances already count it (Decision 18).
+13. **Doors and jumps** (the map painter plan's Q6 and Q8): a door opened or
+    closed in a fight; a Long or High Jump (Rules Glossary, Jumping) over a
+    gap or down a drop instead of climbing; falling damage stays the Custom
+    Effect's.
+14. **More distance rules**, each a `DistanceRule` and a line in `RULES`:
+    Chebyshev and 5-10-5 on squares, Euclidean (rounded to the nearest 5
+    ft.), hexagons (a `HexGrid` shape with axial cells and its rule;
+    footprints of Large+ creatures on hexes need their own decision). A
+    combo box in the map settings picks one, with the cell's feet.
+
+Built from this list already: the map settings dialog and terrain, as the
+Map Painter ([map-painter-plan.md](map-painter-plan.md), 2026-11-15); the
+conditions' "within 5 feet" (step 16); moves that aren't walks (step 17).
 
 ## Decisions
 
@@ -865,6 +996,14 @@ Taken in step 15 (2026-11-16), for the user to overrule:
     another creature; only a Swarm shares a space. A move's Difficult
     Terrain stays not cumulative, so an enemy standing in rubble is still
     one extra foot per foot.
+29. **Distances count only once the map is in use** (the user, 2026-11-16,
+    after step 16). Every fight places its tokens as it starts, the party
+    along one edge and the rest along the other, so a fight played on the
+    cards alone would have the map's made-up distances decide Prone's
+    Advantage or Disadvantage and the Critical Hits. The map is in use once
+    a token has been moved in this fight, or when the encounter's painted
+    map gives starting cells; until then, what asks for a distance stays a
+    note for the GM, as before step 16. Step 18.
 
 ## Open questions
 
@@ -1106,6 +1245,30 @@ Each has a *Suggestion*: what gets built if nobody says otherwise.
   *Found:* `fits_at` was both "a token fits" and "a move can end", which a
   Swarm or a ghost in a wall splits, so a move now asks `can_end_at`.
 
+- **R15** (after step 15, the user asked what the arena misses against the
+  rules, 2026-11-16). *Plan (Later):* "using distance in the rules" as one
+  item, terrain and speeds after it. *Done:* a review against the Rules
+  Glossary found movement well covered and the rolls hardly using the map.
+  The "within 5 feet" rules became step 16. Moves on the mover's own turn all
+  counting as walks, so a Misty Step provoked Opportunity Attacks, became
+  step 17. The rest of Later was ordered by value: cover, range, swimming,
+  grapple dragging, the path walked, light and senses, Shove's push.
+
+- **R16** (step 16, 2026-11-16). *Plan:* the Custom Effect's roll and hit
+  notes settled by the distance. *Done:* the same input reaches every attack
+  path (the dialog, a monster's button, the Attack roll field), and a counted
+  Critical Hit counts everywhere a natural 20 does (doubled dice, the log's
+  "(critical hit)", the two death save failures, what a hit triggers). The
+  `when` is recognised by its text (`settled_by_distance`'s two patterns),
+  not a new field on the modifier, so RulesConditions.py and the modifiers'
+  saved form are unchanged, and any content saying "the attacker is within N
+  feet of it" counts too. A CriticalHitsAgainst without a `when` (none in
+  content yet) now counts as well, rather than being only a note. *Why:*
+  one Critical Hit per path would have the Attack roll field and the dialog
+  disagree on the same hit; Unconscious players at 0 HP are where it matters
+  most. *Found:* tokens are placed as a fight starts, so every test that
+  expected the old note now has to take the target off the map.
+
 ## Discovered issues
 
 Found while writing the plan:
@@ -1119,7 +1282,9 @@ Found while writing the plan:
 - **DI-085** (open, a gap): the simulator doesn't know where anyone is, so
   every rule with a distance in its `when` is noted, never counted. The arena
   is what lets those rules be counted later (Later: using distance in the
-  rules); building the map alone doesn't close it.
+  rules); building the map alone doesn't close it. Step 16 counts the
+  conditions' "within 5 feet" (Prone, Paralyzed, Unconscious); the rest
+  are still notes.
 
 Found in step 9:
 
