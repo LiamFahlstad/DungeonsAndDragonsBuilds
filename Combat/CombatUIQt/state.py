@@ -344,6 +344,14 @@ class CombatWindowState:
     ) -> tuple[bool | None, str]:
         raise NotImplementedError("DamageMixin._resolve_attack_roll")
 
+    def _attacker_distance_ft(
+        self, attacker: dict | None, target: dict | None
+    ) -> int | None:
+        raise NotImplementedError("DamageMixin._attacker_distance_ft")
+
+    def _critical_against(self, attacker: dict | None, target: dict | None) -> bool:
+        raise NotImplementedError("DamageMixin._critical_against")
+
     def _use_up_badges(self, attacker: dict | None, target: dict | None):
         raise NotImplementedError("DamageMixin._use_up_badges")
 

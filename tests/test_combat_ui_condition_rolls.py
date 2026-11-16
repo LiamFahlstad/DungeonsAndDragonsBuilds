@@ -10,6 +10,7 @@ import random
 import pytest
 from PyQt6.QtWidgets import QDialog, QLabel, QMessageBox, QPushButton, QWidget
 
+from Combat.Arena.arena import POSITION_KEY
 from Combat.Combatants import Pirate, Tiger
 from Combat.CombatUIQt.monster_actions import MonsterAction
 from Combat.CombatUIQt.public_log import _ATTACK
@@ -99,9 +100,11 @@ def test_a_hit_on_a_paralyzed_target_says_to_check_for_a_critical_hit(
     fight, monkeypatch
 ):
     """ "Any attack roll that hits you is a Critical Hit if the attacker is
-    within 5 feet of you": the simulator doesn't know, so the GM is told."""
+    within 5 feet of you": with the Tiger off the map the simulator doesn't
+    know, so the GM is told (on it, tests/test_combat_ui_arena_within_5_feet.py)."""
     ui, _, tiger = fight
     tiger["conditions"].append("Paralyzed")
+    del tiger[POSITION_KEY]
     _d20s(monkeypatch, (12, 4))
     ui._apply_custom_effect(CustomEffect(**BOLT))
     assert "Tiger is Paralyzed: a Critical Hit if the attacker is within 5" in _log(ui)
@@ -110,6 +113,7 @@ def test_a_hit_on_a_paralyzed_target_says_to_check_for_a_critical_hit(
 def test_a_typed_attack_roll_is_used_as_it_is_and_only_gets_the_hit_note(fight):
     ui, _, tiger = fight
     tiger["conditions"].append("Paralyzed")
+    del tiger[POSITION_KEY]  # off the map: the Critical Hit is the GM's
     ui.attack_roll_input.setText("15")
     ui._apply_attack_roll()
     lines = [line for line in _log(ui).split("', '") if "attack roll of 15" in line]
@@ -121,6 +125,7 @@ def test_a_typed_attack_roll_is_used_as_it_is_and_only_gets_the_hit_note(fight):
 def test_a_prone_target_changes_nothing_and_says_why(fight, monkeypatch):
     ui, _, tiger = fight
     tiger["conditions"].append("Prone")
+    del tiger[POSITION_KEY]  # off the map: where the attacker is isn't known
     _d20s(monkeypatch, (12, 4))
     ui._apply_custom_effect(CustomEffect(**BOLT))
     assert tiger["hp"] == tiger["max_hp"] - 20  # the first d20, 12

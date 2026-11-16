@@ -1,5 +1,6 @@
 """Damage/healing mixin for CombatAppQt."""
 
+from Combat.Arena.arena import distance_ft
 from Combat.Definitions import Action
 from Combat.Effects.modifiers import (
     extra_text,
@@ -7,6 +8,7 @@ from Combat.Effects.modifiers import (
     hit_notes,
     hit_point_maximum,
     immune_to_damage,
+    makes_critical_hit,
     resists,
     used_up_by_attack,
     vulnerable_to,
@@ -187,7 +189,8 @@ class DamageMixin(CombatWindowState):
                 hit_targets.append(target)
                 # A typed total gets none of a hit's extra damage (Decision 4),
                 # so say what to add at the table (Q27).
-                twice = ", its dice twice" if roll.is_critical else ""
+                critical = roll.is_critical or self._critical_against(source, target)
+                twice = ", its dice twice" if critical else ""
                 result += "".join(
                     f"; {extra_text(extra)} ({label}){twice}"
                     for label, extra in hit_extras(source, target)
@@ -195,6 +198,27 @@ class DamageMixin(CombatWindowState):
             results.append(result)
         self.attack_roll_input.clear()
         return hit_targets, "; ".join(results)
+
+    def _attacker_distance_ft(
+        self, attacker: dict | None, target: dict | None
+    ) -> int | None:
+        """How far attacker is from target on the battle map, for the rules
+        that ask (Prone's and Paralyzed's "within 5 feet"). None without
+        either, with either off the map, or before the map is in use (only
+        place_new's starting edges, Decision 29): then those stay notes."""
+        if attacker is None or target is None or attacker is target:
+            return None
+        if not self.arena_settings.in_use:
+            return None
+        return distance_ft(attacker, target, self.arena_settings)
+
+    def _critical_against(self, attacker: dict | None, target: dict | None) -> bool:
+        """Whether a hit by attacker on target is a Critical Hit by what
+        target has, whatever the d20 showed: Paralyzed's or Unconscious's,
+        with attacker within 5 feet on the map."""
+        if target is None:
+            return False
+        return makes_critical_hit(target, self._attacker_distance_ft(attacker, target))
 
     def _resolve_attack_roll(
         self,
@@ -222,11 +246,14 @@ class DamageMixin(CombatWindowState):
                 bonus if armor is None or first is None else armor + bonus - first
             )
             note_attack_roll(target, roll, hit, seen_bonus)
+        is_critical = roll.is_critical
         if hit is not False:
-            notes = (*notes, *hit_notes(target))
+            feet = self._attacker_distance_ft(source, target)
+            notes = (*notes, *hit_notes(target, feet))
+            is_critical = is_critical or makes_critical_hit(target, feet)
         name = target["name"]
         attacker = f"{source['name']}'s attack roll" if source else "Attack roll"
-        critical = " (critical hit)" if roll.is_critical else ""
+        critical = " (critical hit)" if is_critical else ""
         noted = f", {', '.join(notes)}" if notes else ""
         self._log_event(
             f"{attacker} of {roll.text} {_VERDICTS[hit]} {name}{critical}{noted}",
@@ -376,17 +403,22 @@ class DamageMixin(CombatWindowState):
         attack's hit, each target first answers it (_before_hit: Shield may
         make it a miss, Deflect Attacks takes some off), and what the hit
         triggers comes after."""
-        hits: list[tuple[dict, int]] = []
+        hits: list[tuple[dict, int, bool]] = []
         for target in targets:
             saved = any(target is s for s in self._saved_targets)
             these = parts
+            # A Critical Hit by the roll, or by what the target has
+            # (Paralyzed's, from within 5 feet on the map).
+            critical = attack is not None and (
+                attack.critical or self._critical_against(attack.attacker, target)
+            )
             if attack is not None:
                 still, reduction = self._before_hit(
                     AttackOutcome(
                         attack.attacker,
                         target,
                         True,
-                        critical=attack.critical,
+                        critical=critical,
                         kind=attack.kind,
                         row=attack.row,
                         total=attack.total,
@@ -409,12 +441,12 @@ class DamageMixin(CombatWindowState):
                     source,
                     check_resistance,
                     saved,
-                    critical=attack is not None and attack.critical,
+                    critical=critical,
                 )
                 if these
                 else 0
             )
-            hits.append((target, dealt))
+            hits.append((target, dealt, critical))
 
         if source is not None:
             source["_last_damage_type"] = parts[-1][1]
@@ -429,14 +461,14 @@ class DamageMixin(CombatWindowState):
             self._show_status(results)
         if attack is not None:
             self._after_misses(attack, misses)
-            for target, damage in hits:
+            for target, damage, critical in hits:
                 if any(target is c for c in self.characters):
                     self._after_attack(
                         AttackOutcome(
                             attack.attacker,
                             target,
                             True,
-                            critical=attack.critical,
+                            critical=critical,
                             kind=attack.kind,
                             row=attack.row,
                             damage_dealt=damage,

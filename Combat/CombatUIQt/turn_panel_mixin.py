@@ -401,7 +401,10 @@ class TurnPanelMixin(CombatWindowState):
             # Flare), then, with no target or several, the attacker's own
             # still count.
             self._before_attack_roll(char, target)
-            plan = attack_plan(char, target, mode)
+            # Where the two are on the map settles Prone's "within 5 feet"
+            # in the roll, and Paralyzed's Critical Hit.
+            feet = self._attacker_distance_ft(char, target)
+            plan = attack_plan(char, target, mode, distance_ft=feet)
             d20 = self._roll_d20_for_attack(plan.mode)
             # What its modifiers add (Bless's 1d4), rolled after the d20.
             added, bonus_notes = roll_bonuses(plan)
@@ -411,6 +414,8 @@ class TurnPanelMixin(CombatWindowState):
             extra = f"{added:+d}" if plan.bonuses else ""
             result.append(f"rolled {total} ({d20}{action.to_hit:+d}{extra})")
             hit = self._attack_hits(d20, total)
+            if hit is not False and self._critical_against(char, target):
+                critical = True
             armor = self._target_armor()
             if armor is not None:
                 result.append(f"vs AC {armor}")
@@ -419,7 +424,7 @@ class TurnPanelMixin(CombatWindowState):
             elif hit is not None:
                 result.append("HIT" if hit else "MISS")
             if target is not None and hit is not False:
-                notes = (*notes, *hit_notes(target))
+                notes = (*notes, *hit_notes(target, feet))
             # The roll's made: what counted for it once is used up (Sap).
             self._use_up_badges(char, target)
         if action.save_ability is not None:

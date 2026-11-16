@@ -533,6 +533,7 @@ With no positions, every modifier with a distance in its 'when' is only a note f
 
 **History**
 - 2026-11-13 main-session: found
+- 2026-11-16 combat-simulator: Arena step 16 (2026-11-16): Prone's Advantage/Disadvantage and Paralyzed's and Unconscious's Critical Hits now count from the map's distance when both creatures are on it (modifiers.settled_by_distance); other distance rules (Fire Shield, Dark One's Blessing, spell range, auras) are still notes, so it stays open.
 
 ### DI-086 · new-content-check marks Demon Hunter (Ranger) as implemented via RangerHunter.py
 - **Status:** open

@@ -9,7 +9,10 @@ starts or ends) are in the same list, as they are what it does too.
 Each modifier is what one sentence of the rules says. One the simulator can't
 decide by itself, because it depends on where creatures are or what they can
 see, has a `when`, said as what follows "if" ("the attacker is within 5
-feet"): it is never counted, only shown to the GM next to the roll. Anything
+feet"): it is shown to the GM next to the roll, not counted, except one
+that asks only how far the attacker is, which the battle map's distance
+settles when both creatures are on it (Combat/Effects/modifiers.py,
+settled_by_distance). Anything
 that changes no roll, AC, Hit Point maximum, Speed, size or damage is a Note.
 
 modifier_to_dict() and modifier_from_dict() are a modifier as plain data, the

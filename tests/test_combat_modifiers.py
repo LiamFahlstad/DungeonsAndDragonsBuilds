@@ -14,6 +14,7 @@ from Combat.Effects.modifiers import (
     held_conditions,
     hit_notes,
     immune_to_condition,
+    makes_critical_hit,
     resists,
     resists_all_damage,
     rules_condition,
@@ -196,6 +197,43 @@ def test_prone_depends_on_where_the_attacker_is():
 
 
 @pytest.mark.parametrize(
+    "feet, mode",
+    [
+        (5, ADVANTAGE),  # "within 5 feet of you"
+        (0, ADVANTAGE),
+        (10, DISADVANTAGE),  # "Otherwise, that attack roll has Disadvantage."
+        (60, DISADVANTAGE),
+    ],
+)
+def test_prone_counts_with_the_attackers_distance(feet, mode):
+    """On the battle map the distance settles it (arena plan step 16), and
+    the note says why."""
+    plan = attack_plan(_with(name="Pirate"), _with("Prone"), NEUTRAL, distance_ft=feet)
+    assert plan.mode == mode
+    assert plan.notes == (f"Tiger is Prone, attacker {feet} ft. away: {mode}",)
+
+
+def test_prone_without_an_attacker_or_a_distance_stays_a_note():
+    for attacker, feet in ((None, 5), (_with(name="Pirate"), None)):
+        plan = attack_plan(attacker, _with("Prone"), NEUTRAL, distance_ft=feet)
+        assert plan.mode == NEUTRAL
+        (note,) = plan.notes
+        assert note.startswith("Tiger is Prone (not counted): Advantage if")
+
+
+@pytest.mark.parametrize("feet, mode", [(5, ADVANTAGE), (30, NEUTRAL)])
+def test_an_unconscious_target_with_the_attackers_distance(feet, mode):
+    """Unconscious: "Attack rolls against you have Advantage", and it's
+    Prone too: beside it that's Advantage again, from farther off Prone's
+    Disadvantage cancels it."""
+    plan = attack_plan(
+        _with(name="Pirate"), _with("Unconscious"), NEUTRAL, distance_ft=feet
+    )
+    assert plan.mode == mode
+    assert not any("not counted" in note for note in plan.notes)
+
+
+@pytest.mark.parametrize(
     "attacker, target, says",
     [
         # "Attack rolls against you have Disadvantage, and your attack rolls
@@ -226,6 +264,20 @@ def test_a_hit_from_within_5_feet_is_a_critical_hit(condition):
     (note,) = hit_notes(_with(condition))
     assert f"Tiger is {condition}: a Critical Hit if the attacker is within 5" in note
     assert hit_notes(_with("Stunned")) == []
+    assert not makes_critical_hit(_with(condition))
+
+
+@pytest.mark.parametrize("condition", ["Paralyzed", "Unconscious"])
+@pytest.mark.parametrize("feet, critical", [(5, True), (0, True), (10, False)])
+def test_the_attackers_distance_settles_the_critical_hit(condition, feet, critical):
+    """With the distance from the battle map (arena plan step 16)."""
+    target = _with(condition)
+    assert makes_critical_hit(target, feet) is critical
+    said = "a Critical Hit" if critical else "not a Critical Hit"
+    assert hit_notes(target, feet) == [
+        f"Tiger is {condition}, attacker {feet} ft. away: {said}"
+    ]
+    assert not makes_critical_hit(_with("Stunned"), 5)
 
 
 def test_exhaustion_is_noted_on_every_d20_test():

@@ -14,12 +14,16 @@ the attacker's ExtraDamageOnHit, and the target's ExtraDamageFrom when the
 attacker is the caster of the effect it's on; an AttacksAgainst `by_caster`
 (Vex) counts only for that caster too. A `once` one counts for one attack
 roll, which uses its badge up (used_up_by_attack). One with a `when` (where the attacker is, what it can see)
-is never counted, only noted, since the simulator doesn't know positions
-(plan principle 8). A total rolled at the table counts as it is, so only the
+is never counted, only noted (plan principle 8), except one that asks only
+how far the attacker is ("the attacker is within 5 feet of it"): with the
+distance the battle map gives (`distance_ft`, None when either creature is
+off it), that one counts or doesn't, and its note says which (arena plan,
+step 16). A total rolled at the table counts as it is, so only the
 notes it can't have known about come with it. The roll modes are the UI's
 text: "Neutral", "Advantage", "Disadvantage".
 """
 
+import re
 from collections.abc import Callable, Iterable, Mapping
 from dataclasses import dataclass, replace
 from typing import TypeVar
@@ -260,6 +264,62 @@ def _uncounted(modifier) -> str:
     return f"{modifier.mode}{when}"
 
 
+# The `when`s that ask only how far the attacker is from the creature the
+# modifier is on, which a distance settles: Prone's, Paralyzed's and
+# Unconscious's "the attacker is within 5 feet of it", and Prone's
+# "Otherwise" ("the attacker is farther than 5 feet").
+_WITHIN_FEET = re.compile(r"the attacker is within (\d+) feet(?: of (?:it|you))?")
+_FARTHER_THAN_FEET = re.compile(
+    r"the attacker is farther than (\d+) feet(?: away)?(?: from (?:it|you))?"
+)
+
+
+def settled_by_distance(when: str, distance_ft: int | None) -> bool | None:
+    """Whether `when` holds for an attacker `distance_ft` feet from the
+    creature the modifier is on: True or False for a `when` that asks only
+    how far the attacker is ("the attacker is within 5 feet of it"), with
+    the distance known. None for any other `when`, or with no distance
+    (either creature off the map, or no attacker known): the GM's to judge."""
+    if distance_ft is None:
+        return None
+    within = _WITHIN_FEET.fullmatch(when)
+    if within:
+        return distance_ft <= int(within[1])
+    farther = _FARTHER_THAN_FEET.fullmatch(when)
+    if farther:
+        return distance_ft > int(farther[1])
+    return None
+
+
+def _at_distance(label: str, distance_ft: int | None) -> str:
+    """A label with the distance that settled its `when`: "Tiger is Prone,
+    attacker 5 ft. away"."""
+    return f"{label}, attacker {distance_ft} ft. away"
+
+
+def _settled_against(
+    sources: Iterable[tuple[str, Modifier]], distance_ft: int | None
+) -> list[tuple[str, Modifier]]:
+    """The target's AttacksAgainst with the `when`s the distance settles:
+    one that holds counts, its label saying how far the attacker is ("Tiger
+    is Prone, attacker 5 ft. away"), and one that doesn't is left out. The
+    rest stay as they are."""
+    settled: list[tuple[str, Modifier]] = []
+    for label, modifier in sources:
+        holds = (
+            settled_by_distance(modifier.when, distance_ft)
+            if isinstance(modifier, AttacksAgainst) and modifier.when
+            else None
+        )
+        if holds is None:
+            settled.append((label, modifier))
+        elif holds:
+            settled.append(
+                (_at_distance(label, distance_ft), replace(modifier, when=""))
+            )
+    return settled
+
+
 def _plan(
     mode: str,
     sources: Iterable[tuple[str, Modifier]],
@@ -335,11 +395,18 @@ def _whose(char: dict | None, source: Source) -> str:
 
 
 def attack_plan(
-    attacker: dict | None, target: dict | None, mode: str, typed: bool = False
+    attacker: dict | None,
+    target: dict | None,
+    mode: str,
+    typed: bool = False,
+    distance_ft: int | None = None,
 ) -> RollPlan:
     """An attack roll by attacker against target (either None: unknown, or
     several), asked for with `mode`: the attacker's own modifiers, then the
-    target's AttacksAgainst. `typed`: rolled at the table, as save_plan."""
+    target's AttacksAgainst. `typed`: rolled at the table, as save_plan.
+    `distance_ft`: how far apart the two are on the map, None when that
+    isn't known; it settles a `when` that asks only that (Prone's "within 5
+    feet"), which otherwise stays a note."""
     sources: list[tuple[str, Modifier]] = []
     if attacker is not None:
         sources += [
@@ -348,19 +415,21 @@ def attack_plan(
             if not isinstance(m, AttacksAgainst)
         ]
     if target is not None:
-        sources += [
+        against: list[tuple[str, Modifier]] = [
             (_whose(target, c), _as_seen(m, attacker, target))
             for c, m in modifiers_on(target)
             if isinstance(m, AttacksAgainst) and not m.by_caster and not m.by_allies
         ]
-        sources += [
+        against += [
             (_whose(target, effect["name"]), m)
             for effect, m in _by_caster_against(target, attacker)
         ]
-        sources += [
+        against += [
             (_whose(target, effect["name"]), m)
             for effect, m in _by_allies_against(target, attacker)
         ]
+        known = distance_ft if attacker is not None else None
+        sources += _settled_against(against, known)
     return _plan(mode, sources, D20Test.ATTACK_ROLL, None, typed)
 
 
@@ -468,20 +537,48 @@ def used_up_by_attack(
     return unique
 
 
-def hit_notes(target: dict) -> list[str]:
-    """What the GM should check about a hit on target: a Critical Hit the
-    simulator can't tell (Paralyzed: "if the attacker is within 5 feet")."""
+def _critical_hits_against(
+    target: dict, distance_ft: int | None
+) -> list[tuple[str, CriticalHitsAgainst, bool | None]]:
+    """Each CriticalHitsAgainst on target, by what gives it, and whether it
+    makes a hit by an attacker `distance_ft` away a Critical Hit: True for
+    one without a `when`, its `when` settled by the distance (Paralyzed's
+    "within 5 feet"), or None, the GM's to judge."""
+    return [
+        (
+            _whose(target, source),
+            modifier,
+            settled_by_distance(modifier.when, distance_ft) if modifier.when else True,
+        )
+        for source, modifier in modifiers_on(target)
+        if isinstance(modifier, CriticalHitsAgainst)
+    ]
+
+
+def hit_notes(target: dict, distance_ft: int | None = None) -> list[str]:
+    """What the GM should know about a hit on target: a Critical Hit the
+    simulator can't tell (Paralyzed: "if the attacker is within 5 feet"),
+    or, with the attacker `distance_ft` away on the map, whether it is one
+    and why ("Tiger is Paralyzed, attacker 5 ft. away: a Critical Hit")."""
     notes = []
-    for source, modifier in modifiers_on(target):
-        if isinstance(modifier, CriticalHitsAgainst):
-            label = _whose(target, source)
-            if modifier.when:
-                notes.append(
-                    f"{label}: a Critical Hit if {modifier.when} (not counted)"
-                )
-            else:
-                notes.append(f"{label}: a Critical Hit")
+    for label, modifier, holds in _critical_hits_against(target, distance_ft):
+        if holds is None:
+            notes.append(f"{label}: a Critical Hit if {modifier.when} (not counted)")
+        elif not modifier.when:
+            notes.append(f"{label}: a Critical Hit")
+        elif holds:
+            notes.append(f"{_at_distance(label, distance_ft)}: a Critical Hit")
+        else:
+            notes.append(f"{_at_distance(label, distance_ft)}: not a Critical Hit")
     return notes
+
+
+def makes_critical_hit(target: dict, distance_ft: int | None = None) -> bool:
+    """Whether a hit on target is a Critical Hit by what it has, whatever
+    the d20 showed: Paralyzed's and Unconscious's, from an attacker within
+    5 feet (`distance_ft`, the attacker's distance on the map; None when
+    that isn't known, which leaves it to the GM, hit_notes)."""
+    return any(holds for _, _, holds in _critical_hits_against(target, distance_ft))
 
 
 HitExtra = ExtraDamageFrom | ExtraDamageOnHit

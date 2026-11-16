@@ -399,14 +399,19 @@ def _bonus_notes(plan: RollPlan) -> list[str]:
 
 
 def _attack_text(
-    source: dict | None, target: dict, wielding: bool | None = None
+    source: dict | None,
+    target: dict,
+    wielding: bool | None = None,
+    distance_ft: int | None = None,
 ) -> str:
     """A target's row for an attack roll: what it has to meet, the mode the
     modifiers give it and what they add to it, to roll it that way at the
     table ("AC 15, Advantage", "AC 15, +1d4 to hit"). The extra damage a hit
     on it deals has a row of its own under it (target_roll_rows' extras).
-    `wielding`: whether it wields its Shield (_armor_text)."""
-    plan = attack_plan(source, target, "Neutral")
+    `wielding`: whether it wields its Shield (_armor_text). `distance_ft`:
+    how far the source is on the map, which settles Prone's "within 5
+    feet" (attack_plan)."""
+    plan = attack_plan(source, target, "Neutral", distance_ft=distance_ft)
     parts = [_armor_text(target, wielding)]
     if plan.mode != "Neutral":
         parts.append(plan.mode)
@@ -417,8 +422,10 @@ def _attack_text(
     return ", ".join(parts)
 
 
-def _attack_tooltip(source: dict | None, target: dict) -> str:
-    plan = attack_plan(source, target, "Neutral")
+def _attack_tooltip(
+    source: dict | None, target: dict, distance_ft: int | None = None
+) -> str:
+    plan = attack_plan(source, target, "Neutral", distance_ft=distance_ft)
     extras = [f"{label}: {extra_text(m)}" for label, m in hit_extras(source, target)]
     if extras:
         extras.append(
@@ -936,12 +943,18 @@ class ConditionsMixin(CombatWindowState):
                     # What others answer it with before it's rolled (Warding
                     # Flare's Disadvantage), counted in the roll.
                     self._before_attack_roll(source, target)
-                plan = attack_plan(source, target, effect.mode, typed is not None)
+                # Where the two are on the map settles Prone's "within 5
+                # feet" in the roll, and Paralyzed's Critical Hit.
+                feet = self._attacker_distance_ft(source, target)
+                plan = attack_plan(source, target, effect.mode, typed is not None, feet)
                 if typed is not None:
                     roll, notes = typed, plan.notes
                 else:
                     roll, notes = roll_planned_attack(effect.attack_bonus, plan)
                 hit, attack = self._resolve_attack_roll(target, roll, source, notes)
+                critical = roll.is_critical or (
+                    hit is not False and self._critical_against(source, target)
+                )
                 reduction = 0
                 if hit is not False and source is not None:
                     # What the target answers the hit with (Shield, Deflect
@@ -951,7 +964,7 @@ class ConditionsMixin(CombatWindowState):
                             source,
                             target,
                             hit,
-                            critical=roll.is_critical,
+                            critical=critical,
                             kind=kind,
                             row=picked_row,
                             total=roll.total,
@@ -977,12 +990,11 @@ class ConditionsMixin(CombatWindowState):
                         )
                     continue
                 saved = False
-                critical = roll.is_critical
-                if roll.is_critical:
+                if critical:
                     damage = effect.critical_damage or damage
                 if damage:
                     damage = self._with_hit_extras(
-                        source, target, damage, effect, roll.is_critical
+                        source, target, damage, effect, critical
                     )
                 if reduction:
                     damage = reduced_damage(damage, reduction)
@@ -1991,7 +2003,10 @@ class ConditionsMixin(CombatWindowState):
         def show_attack_info(target: dict):
             box = shield_boxes.get(id(target))
             wielding = None if box is None else box.isChecked()
-            attack_infos[id(target)].setText(_attack_text(source, target, wielding))
+            feet = self._attacker_distance_ft(source, target)
+            attack_infos[id(target)].setText(
+                _attack_text(source, target, wielding, feet)
+            )
 
         def build_roll_rows():
             """The rows for the targets now picked, keeping what was typed
@@ -2081,7 +2096,11 @@ class ConditionsMixin(CombatWindowState):
                 box.returnPressed.connect(lambda: do_apply())
             for target in targets:
                 show_attack_info(target)
-                attack_infos[id(target)].setToolTip(_attack_tooltip(source, target))
+                attack_infos[id(target)].setToolTip(
+                    _attack_tooltip(
+                        source, target, self._attacker_distance_ft(source, target)
+                    )
+                )
                 if id(target) in shield_boxes:
                     shield_boxes[id(target)].toggled.connect(
                         lambda _=False, t=target: show_attack_info(t)
