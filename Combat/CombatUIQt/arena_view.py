@@ -7,7 +7,9 @@ Left click a token: the source, picked up to move. Right click: the target
 (Ctrl adds one, Shift a range), as on the cards. A token picked up shades
 the cells it can reach this turn with what each costs, and the next click on
 an empty cell moves it there; clicking it again puts it down where it was.
-Or drag a token to a cell (step 6). Whose turn it is stands on gold cells,
+Or drag a token to a cell (step 6). Shift held as the token is dropped (the
+drag's release, or the click on the cell) teleports it there, Alt pushes it
+(step 17, MoveKind): neither is the creature's own movement. Whose turn it is stands on gold cells,
 as its card is gold. With a source selected, hovering a cell or a token
 shows how far it is (step 7). Ctrl+wheel zooms; dragging empty space
 pans. Columns are lettered and rows numbered, so a cell is "C7".
@@ -30,6 +32,7 @@ from __future__ import annotations
 import re
 
 from dataclasses import dataclass
+from enum import Enum
 from typing import Callable
 
 from PyQt6.QtCore import QPointF, QRectF, Qt
@@ -105,6 +108,27 @@ _BLOCKING = QColor(125, 104, 78, 230)
 _FURNITURE = QColor(160, 138, 96, 170)
 _DIM = QColor(0, 0, 0, 80)
 _DARKNESS = QColor(0, 0, 0, 165)
+
+
+class MoveKind(Enum):
+    """How a token dropped on a cell gets there (step 17). A walk is the
+    creature's own movement. A teleport (Rules Glossary, Teleportation) and
+    a push (a Shove, Thunderwave) aren't: they spend no movement and
+    provoke no Opportunity Attack."""
+
+    WALK = "walk"
+    TELEPORT = "teleport"
+    PUSH = "push"
+
+
+def move_kind(modifiers) -> MoveKind:
+    """The move the keys held as a token is dropped ask for: Shift a
+    teleport, Alt a push (Shift wins when both are held), else a walk."""
+    if modifiers & Qt.KeyboardModifier.ShiftModifier:
+        return MoveKind.TELEPORT
+    if modifiers & Qt.KeyboardModifier.AltModifier:
+        return MoveKind.PUSH
+    return MoveKind.WALK
 
 
 @dataclass(frozen=True)
@@ -188,14 +212,15 @@ class ArenaView(QGraphicsView):
     """The map: the grid of `settings` and a token per row. Clicks go to
     `on_select(name)` and `on_target(name, ctrl, shift)`; a token picked up
     (a left click) or dragged goes to the cell clicked or dropped on with
-    `on_move(name, anchor)`; a click on an empty cell with nothing picked up
+    `on_move(name, anchor, kind)`, kind the MoveKind the keys held ask
+    for; a click on an empty cell with nothing picked up
     to `on_cell(cell)`; `reach_of(name)` is what a picked-up token shades."""
 
     def __init__(
         self,
         on_select: Callable[[str], None],
         on_target: Callable[[str, bool, bool], None],
-        on_move: Callable[[str, Cell], None] = lambda name, cell: None,
+        on_move: Callable[[str, Cell, MoveKind], None] = lambda name, cell, kind: None,
         on_cell: Callable[[Cell], None] = lambda cell: None,
         reach_of: Callable[[str], dict[Cell, int]] = lambda name: {},
         distance_at: Callable[[Cell], str | None] = lambda cell: None,
@@ -663,15 +688,16 @@ class ArenaView(QGraphicsView):
         self._reach = self._reach_of(row.name)
         self._redraw()
 
-    def drop(self, cell: Cell):
-        """Put the dragged token down with its held cell on `cell`."""
+    def drop(self, cell: Cell, kind: MoveKind = MoveKind.WALK):
+        """Put the dragged token down with its held cell on `cell`, moved
+        there as `kind`."""
         name, row = self._dragging, self._row_named(self._dragging)
         self._dragging, self._picked, self._reach = None, None, {}
         if name is None or row is None:
             return
         anchor = self._anchor_for(row, cell)
         if anchor is not None and anchor != row.cells[0]:
-            self._on_move(name, anchor)
+            self._on_move(name, anchor, kind)
         self._redraw()
 
     @property
@@ -701,19 +727,19 @@ class ArenaView(QGraphicsView):
             self._reach = {}
         self._drawn = None
 
-    def move_picked(self, cell: Cell):
+    def move_picked(self, cell: Cell, kind: MoveKind = MoveKind.WALK):
         """Move the picked-up token to `cell`, by the cell it was picked up
-        by, as a drop does."""
+        by, as `kind`, as a drop does."""
         name, row = self._picked, self._row_named(self._picked)
         self._picked, self._reach = None, {}
         if name is None:
             return
         if row is None:
-            self._on_move(name, cell)  # not on the map yet: put it there
+            self._on_move(name, cell, kind)  # not on the map yet: put it there
         else:
             anchor = self._anchor_for(row, cell)
             if anchor is not None and anchor != row.cells[0]:
-                self._on_move(name, anchor)
+                self._on_move(name, anchor, kind)
         self._redraw()
 
     def _row_named(self, name: str | None) -> TokenRow | None:
@@ -795,8 +821,9 @@ class ArenaView(QGraphicsView):
         cell = shape.cell_at(point.x(), point.y(), CELL_PX)
         pressed, self._press = self._press, None
         pressed_row, self._press_row = self._press_row, None
+        kind = move_kind(event.modifiers())
         if self._dragging is not None:
-            self.drop(cell)
+            self.drop(cell, kind)
             event.accept()
             return
         super().mouseReleaseEvent(event)
@@ -822,7 +849,7 @@ class ArenaView(QGraphicsView):
             if not self._settings.on_map(cell):
                 return
             if self._picked is not None:
-                self.move_picked(cell)
+                self.move_picked(cell, kind)
             else:
                 self.click_cell(cell)
 
