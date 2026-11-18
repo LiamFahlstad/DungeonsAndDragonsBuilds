@@ -48,6 +48,7 @@ from Combat.Effects.triggers import (
 from Combat.Rules import Rule
 from Combat.Scenario import CombatScenario
 from Combat.Summons import SummonOption
+from Model.Content.CombatEffect import CombatPush
 from Model.Content.Feature import Feature
 from Model.Creatures.Combatants import BasicCombatantData
 
@@ -383,6 +384,11 @@ class CombatWindowState:
 
     def _use_up_badges(self, attacker: dict | None, target: dict | None):
         raise NotImplementedError("DamageMixin._use_up_badges")
+
+    def _push_targets(
+        self, pusher: dict, push: CombatPush, targets: list[dict], label: str
+    ) -> list[str]:
+        raise NotImplementedError("ArenaMixin._push_targets")
 
     def _use_legendary_resistance(self, char: dict, *, ask: bool = False):
         raise NotImplementedError("TurnPanelMixin._use_legendary_resistance")

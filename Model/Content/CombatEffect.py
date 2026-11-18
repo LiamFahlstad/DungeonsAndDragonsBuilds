@@ -291,6 +291,47 @@ class CombatRegain:
 
 
 @dataclass(frozen=True)
+class CombatPush:
+    """How far each target its conditions would land on (one that fails the
+    save, is hit, or every target with no roll) is moved straight away from
+    its user: Thunderwave's `CombatPush(10)`, the Push mastery's
+    `CombatPush(10, up_to=True, largest=CreatureSize.LARGE)`, a Shove's 5.
+    `toward` pulls it toward its user instead (Thorn Whip, Lightning Lure).
+    `up_to`: the user may move it less ("up to 10 feet"), which the battle
+    map leaves to the GM (the push goes the whole way, a token moved back
+    with Alt). `largest`: a bigger target isn't moved ("if it is Large or
+    smaller"). It's a forced move: no movement spent, no Opportunity Attack
+    (Combat/Arena/pushes.py)."""
+
+    feet: int
+    up_to: bool = False
+    toward: bool = False
+    largest: CreatureSize | None = None
+
+    def __post_init__(self):
+        if (
+            isinstance(self.feet, bool)
+            or not isinstance(self.feet, int)
+            or self.feet < 5
+            or self.feet % 5
+        ):
+            raise ValueError(f"feet is 5 or more, in 5s, not {self.feet!r}")
+        if self.largest is not None:
+            if self.largest not in set(CreatureSize):
+                raise ValueError(
+                    f"largest {self.largest!r} is not one of {list(CreatureSize)}"
+                )
+            object.__setattr__(self, "largest", CreatureSize(self.largest))
+
+    @property
+    def text(self) -> str:
+        """ "pushed 10 ft.", "pushed up to 10 ft.", "pulled 10 ft.", for a
+        row and a log line."""
+        verb = "pulled" if self.toward else "pushed"
+        return f"{verb} {'up to ' if self.up_to else ''}{self.feet} ft."
+
+
+@dataclass(frozen=True)
 class CombatTargets:
     """How many creatures one use may target: Bless's three, one more per
     slot level above 1 (`upcast`). The dialog shows it beside the slot box
@@ -388,8 +429,18 @@ class CombatEffect:
     # (Indomitable's Fighter level; 0 adds nothing): only with a 'fails a
     # save' trigger. None: it doesn't.
     reroll_save: int | None = None
+    # Each target its conditions would land on is moved straight away from
+    # its user (or toward it), on the battle map: Thunderwave's 10 feet.
+    push: CombatPush | None = None
 
     def __post_init__(self):
+        if self.push is not None:
+            if not isinstance(self.push, CombatPush):
+                raise ValueError(
+                    f"push is a CombatPush, like CombatPush(10), not {self.push!r}"
+                )
+            if self.targets_self:
+                raise ValueError("A use that goes on its user pushes nobody")
         if self.trigger is not None and not isinstance(self.trigger, CombatTrigger):
             raise ValueError(
                 f"trigger is a CombatTrigger, like CombatTrigger(TriggerEvent.HIT),"
@@ -580,6 +631,7 @@ def _compact(value: Any) -> Any:
             CombatInstances,
             CombatTargets,
             CombatRegain,
+            CombatPush,
         ),
     ):
         data = {}
@@ -603,6 +655,7 @@ _CONDITION_KEYS = tuple(f.name for f in fields(CombatCondition))
 _INSTANCES_KEYS = tuple(f.name for f in fields(CombatInstances))
 _TARGETS_KEYS = tuple(f.name for f in fields(CombatTargets))
 _REGAIN_KEYS = tuple(f.name for f in fields(CombatRegain))
+_PUSH_KEYS = tuple(f.name for f in fields(CombatPush))
 # "condition": one condition, as logs before 2026-11-09 have it.
 _EFFECT_KEYS = (*(f.name for f in fields(CombatEffect)), "condition")
 
@@ -832,6 +885,20 @@ class _Reader:
             )
         return tuple(regains)
 
+    def push(self, value: Any) -> CombatPush | None:
+        """How far it moves its targets; none in data from before."""
+        if value is None:
+            return None
+        data = self.mapping(value, "push", _PUSH_KEYS)
+        return self.build(
+            "push",
+            CombatPush,
+            feet=self.kind(data.get("feet"), "push.feet", (int,), 0),
+            up_to=self.kind(data.get("up_to"), "push.up_to", (bool,), False),
+            toward=self.kind(data.get("toward"), "push.toward", (bool,), False),
+            largest=self.enum(data.get("largest"), "push.largest", CreatureSize),
+        )
+
     def targets(self, value: Any) -> CombatTargets | None:
         if value is None:
             return None
@@ -895,4 +962,5 @@ class _Reader:
             drops_to=self.kind(data.get("drops_to"), "drops_to", (int,), 0),
             regains=self.regains(data.get("regains")),
             reroll_save=self.kind(data.get("reroll_save"), "reroll_save", (int,)),
+            push=self.push(data.get("push")),
         )

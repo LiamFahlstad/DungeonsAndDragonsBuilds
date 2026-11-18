@@ -106,9 +106,11 @@ from Combat.Arena.lasting import (
     who_is_in,
 )
 from Combat.Arena.maps import place_at_starts
+from Combat.Arena.pushes import push_destination, push_order, too_big
 from Combat.Arena.terrain import BRIGHT, DARK, DIM, OBSCURED
 from Combat.Effects.modifiers import has_condition
 from Combat.Effects.triggers import OpportunityAttack
+from Model.Content.CombatEffect import CombatPush
 from Model.Content.StandardActions import DISENGAGE
 from Core.Definitions import Condition
 from Core.Rules import SECONDS_PER_ROUND
@@ -824,18 +826,32 @@ class ArenaMixin(CombatWindowState):
         a walk could (a teleport onto someone appears "in the nearest
         unoccupied space of your choice": the GM clicks that one), and
         areas and hazards entered are reminded of as for a walk."""
+        lines = self._relocate(char, cell, kind)
+        if lines:
+            self._show_status(" ".join(lines))
+        self._refresh_views()
+
+    def _relocate(
+        self,
+        char: dict,
+        cell: Cell,
+        kind: MoveKind = MoveKind.WALK,
+        pulled: bool = False,
+    ) -> list[str]:
+        """_move_combatant's move, without the status line or the redraw:
+        what it has to say (a refusal, the warnings and reminders), for the
+        caller to show. A push from the Custom Effect moves several in one
+        Apply this way (_push_targets)."""
         settings, name = self.arena_settings, char["name"]
         if position(char) is None:
             anchor = nearest_free(char, [cell], self.characters, settings)
             if anchor is None:
-                self._show_status(f"No room on the map for {name}.")
-                return
+                return [f"No room on the map for {name}."]
             char[POSITION_KEY] = anchor.to_list()
             self.arena_settings.in_use = True
-            self._refresh_views()
-            return
+            return []
         if position(char) == cell:
-            return
+            return []
         if not can_end_at(char, cell, self.characters, settings):
             what = {
                 MoveKind.WALK: "end a move",
@@ -848,11 +864,10 @@ class ArenaMixin(CombatWindowState):
                 if kind is MoveKind.TELEPORT
                 else ""
             )
-            self._show_status(
+            return [
                 f"{name} can't {what} there: it's off the map, a wall,"
                 " an object that blocks movement or someone else's space." + nearest
-            )
-            return
+            ]
         start = position(char)
         before = who_is_in(self.characters, settings)
         hazards_before = hazards_under(char, settings)
@@ -863,7 +878,7 @@ class ArenaMixin(CombatWindowState):
         if kind is not MoveKind.WALK:
             feet = straight_ft(char, cell, settings) or 0
             char[POSITION_KEY] = cell.to_list()
-            line = forced_move_line(char, start, cell, feet, kind, settings)
+            line = forced_move_line(char, start, cell, feet, kind, settings, pulled)
             self._log_event(line, public=False)
             warnings.append(line)
         else:
@@ -910,9 +925,46 @@ class ArenaMixin(CombatWindowState):
                 line = f"{name} enters a hazard: {hazard}."
                 self._log_event(line, character=name, public=False)
                 warnings.append(line)
-        if warnings:
-            self._show_status(" ".join(warnings))
-        self._refresh_views()
+        return warnings
+
+    def _push_targets(
+        self, pusher: dict, push: CombatPush, targets: list[dict], label: str
+    ) -> list[str]:
+        """Move each of `targets` (those `label` landed on) as `push` says,
+        straight away from `pusher` or toward it (Combat/Arena/pushes.py), as
+        Push moves: no movement spent, no Opportunity Attack, areas and
+        hazards entered reminded of. Only once the map is in use (Decision
+        29) and with both on it; one too big for it ("Large or smaller")
+        stays. Part of the Apply's undo step. Returns the lines to show:
+        each move's, and what stopped one short ("Goblin stops after 5 of
+        10 ft.: the map's edge.")."""
+        settings = self.arena_settings
+        if not settings.in_use or position(pusher) is None:
+            return []
+        lines = []
+        for target in push_order(targets, pusher, push, settings):
+            if not any(target is c for c in self.characters):
+                continue  # a summon that vanished
+            name = target["name"]
+            if too_big(target, push):
+                size = push.largest.value if push.largest else ""
+                line = f"{name} isn't moved by {label}: only {size} or smaller is."
+                self._log_event(line, character=name, public=False)
+                lines.append(line)
+                continue
+            result = push_destination(target, pusher, push, self.characters, settings)
+            if result is None:
+                continue
+            if result.feet:
+                lines += self._relocate(target, result.to, MoveKind.PUSH, push.toward)
+            if result.stopped_by:
+                line = (
+                    f"{name} stops after {result.feet} of {push.feet} ft.:"
+                    f" {result.stopped_by}."
+                )
+                self._log_event(line, character=name, public=False)
+                lines.append(line)
+        return lines
 
     def _opportunity_attack_reminders(self, char: dict, start: Cell) -> list[str]:
         """Who can make an Opportunity Attack on char, whose walk from
@@ -1244,12 +1296,16 @@ def forced_move_line(
     feet: int,
     kind: MoveKind,
     settings: ArenaSettings,
+    pulled: bool = False,
 ) -> str:
     """The encounter log's line for a move that isn't char's own (step 17),
     `feet` the straight distance: "Kivi teleports from A7 to D7 (15 ft.;
     no movement spent)." or "Goblin is pushed from C4 to C5 (5 ft.; no
-    movement spent)." for a push."""
+    movement spent)." for a push ("is pulled" for a pull, step 21)."""
     shape = settings.distance_rule.shape
     where = f"from {shape.cell_name(start) if start else '?'} to {shape.cell_name(to)}"
-    verb = "teleports" if kind is MoveKind.TELEPORT else "is pushed"
+    if kind is MoveKind.TELEPORT:
+        verb = "teleports"
+    else:
+        verb = "is pulled" if pulled else "is pushed"
     return f"{char['name']} {verb} {where} ({feet} ft.; no movement spent)."

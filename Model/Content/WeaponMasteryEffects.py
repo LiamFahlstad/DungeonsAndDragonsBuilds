@@ -12,7 +12,7 @@ picker adds them under the weapon's row when its wielder has its mastery
     Sap     Disadvantage on its next attack roll, a badge it uses up
     Slow    Speed -10 feet, a badge (one, however many hits)
     Graze   on a miss, damage equal to the ability modifier, "you can"
-    Push    Large or smaller: pushed 10 feet, moved at the table
+    Push    Large or smaller: pushed up to 10 feet, on the battle map
     Cleave  an attack roll against another creature near it, once per turn
     Nick    changes the Light property's extra attack: a note on the weapon,
             no row (nothing happens on a hit or a miss)
@@ -27,6 +27,7 @@ from Model.Content.CombatEffect import (
     CombatCondition,
     CombatDamage,
     CombatEffect,
+    CombatPush,
     EffectRoll,
     TurnEdge,
     TurnOf,
@@ -213,10 +214,7 @@ def mastery_effects(
             CombatEffect(
                 name=name,
                 spends_use=False,
-                notes=(
-                    "It's pushed up to 10 feet straight away from its attacker:"
-                    " move it at the table.",
-                ),
+                push=CombatPush(10, up_to=True, largest=CreatureSize.LARGE),
                 trigger=CombatTrigger(
                     TriggerEvent.HIT,
                     after=after,

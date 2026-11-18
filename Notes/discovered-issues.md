@@ -576,6 +576,16 @@ SpeedBonus only raises walking speed and CharacterView has no speed query beside
 **History**
 - 2026-11-14 character-engine-dev: found
 
+### DI-095 · Pushes and pulls still written only in text, not as CombatEffect.push
+- **Status:** open
+- **Area:** combat-simulator
+- **Where:** `Model/Content/CombatEffect.py (CombatPush)`
+
+Arena step 21 added CombatEffect.push, which the battle map moves targets by. Filled so far: Thunderwave, the Push mastery, the Unarmed Strike's Shove. Still text only, or with no combat effects at all: spells Thunderous Smite (10 + Prone), Gust (up to 5, Medium or smaller), Thorn Whip and Lightning Lure (pulls up to 10), Dust Devil and Gust of Wind (lasting areas); features Pushing Attack maneuver (up to 15, Large or smaller), Open Hand Technique's Push (up to 15), Forceful Blow (15), Marid's Surge (15 + Prone), Tavern Brawler's Push (5), Shield Bash (5 or Prone), Charger (up to 10), Force Demolisher, Force Ballista (up to 5 from the cannon, not the user), Bloated companion's Dreadful Swipe (up to 10), Wrath of the Sea (up to 15, Large or smaller), Thunderbolt Strike (up to 10, Large or smaller), Tempestuous Magic's 20, Mobile Flourish; Repelling Blast (Eldritch Invocation). For spell-combat-effects and feature-combat-effects.
+
+**History**
+- 2026-11-18 main-session: found
+
 ## Fixed
 
 ### DI-001 · Temporary Hit Points stack instead of keeping one amount

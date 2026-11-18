@@ -507,6 +507,16 @@ Names are the Python ones; `Ability`, `Condition` and `DamageType` come from
   save is rerolled with, which the owner must keep (Indomitable's Fighter
   level). The pop-up has a box for the new total rolled at the table.
   Picked by hand it does nothing.
+- **`push`.** `CombatPush(feet, up_to=False, toward=False, largest=None)`
+  when it moves each target its conditions would land on (a failed save, a
+  hit, every target with no roll) straight away from its user: Thunderwave
+  `CombatPush(10)`, the Push mastery `CombatPush(10, up_to=True,
+  largest=CreatureSize.LARGE)`, a Shove's `CombatPush(5)`; `toward=True`
+  for a pull (Thorn Whip). The battle map moves the tokens on Apply (a
+  Push move: no movement spent, no Opportunity Attack), so don't also
+  write "pushed 10 feet" in `notes`. A push from somewhere else than its
+  user (Force Ballista's cannon), a direction of the user's choice (Gust
+  of Wind's Line) or one that grows with the slot stays in `notes`.
 - **Not for spells:** `dc`, `attack_bonus` (the caster's), `action_type` and
   `concentration` (the spell's casting time and duration say them), and
   `spell` (for a feature's use that casts one).

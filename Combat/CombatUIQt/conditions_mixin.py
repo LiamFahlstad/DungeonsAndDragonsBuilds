@@ -233,6 +233,7 @@ def _picked_effect(option: EffectOption, last_save: dict) -> CustomEffect | None
         repeat_save=option.repeat_save,
         pick=option,
         weapon_attack=option.weapon_attack,
+        push=option.push,
     )
 
 
@@ -953,6 +954,8 @@ class ConditionsMixin(CombatWindowState):
         results = []
         attacks = []
         applied = []
+        # Who its push moves: those its conditions land on (arena step 21).
+        to_push = []
         # What a hit's triggers are told about the attack (Combat/Effects/
         # triggers.py): a weapon's or an Unarmed Strike's, and the row.
         kind = _ATTACK_KINDS.get(effect.weapon_attack)
@@ -1089,6 +1092,8 @@ class ConditionsMixin(CombatWindowState):
                 )
             if saved:
                 continue
+            if effect.push is not None and target is not source:
+                to_push.append(target)
             # What it ends (Lay on Hands' Poisoned) goes from the same targets
             # its conditions would land on.
             for condition in effect.pick.ends_conditions if effect.pick else ():
@@ -1122,16 +1127,21 @@ class ConditionsMixin(CombatWindowState):
             self._hold_area(source, label, effect)
         if effect.damage and source is not None:
             source["_last_damage_type"] = effect.damage[-1][1]
+        pushed = []
+        if effect.push is not None and source is not None and to_push:
+            pushed = self._push_targets(source, effect.push, to_push, label)
         self._saved_targets = []
         self._update_target_label()
         for target in self.target_characters:
             self._rebuild_card(target)
         self._save_fight_state()
         self._show_effect_summary(effect, results)
-        if logged_use and effect.pick is not None and effect.pick.monster_action:
+        if pushed:
+            self._refresh_views()  # the tokens where they were pushed to
+        elif logged_use and effect.pick is not None and effect.pick.monster_action:
             self._refresh_views()  # the turn column's button shows it spent
-        if attacks:  # last, as logging clears the status line
-            self._show_status("; ".join(attacks))
+        if attacks or pushed:  # last, as logging clears the status line
+            self._show_status(" ".join(filter(None, ["; ".join(attacks), *pushed])))
 
     def _with_hit_extras(
         self,
@@ -2398,6 +2408,40 @@ class ConditionsMixin(CombatWindowState):
         keep_area_box.setChecked(bool(aimed and aimed["keep"]))
         keep_area_box.setVisible(aimed is not None)
         cost_box.addWidget(keep_area_box)
+        # A pick that moves who it lands on (CombatEffect.push), once the map
+        # is in use with the source on it (arena step 21).
+        push_box = QCheckBox("")
+        push_box.setObjectName("pushTargets")
+        push_box.setToolTip(
+            "Moves each target that fails the save or is hit (every target with"
+            " no roll) straight away from the source on the battle map, as a"
+            " push: no movement spent, no Opportunity Attack. It stops short"
+            " of a wall, the map's edge or someone's space. 'Up to': the whole"
+            " way here; Alt-drag a token back for less."
+        )
+        push_box.setChecked(True)
+        push_box.hide()
+        cost_box.addWidget(push_box)
+        pushes_on_map = (
+            self.phase == "COMBAT"
+            and source is not None
+            and position(source) is not None
+            and self.arena_settings.in_use
+        )
+
+        def show_push(option: EffectOption | None):
+            push = option.push if option is not None else None
+            if push is None or not pushes_on_map or source is None:
+                push_box.hide()
+                return
+            way = "toward" if push.toward else "away from"
+            size = f" ({push.largest.value} or smaller)" if push.largest else ""
+            push_box.setText(
+                f"Who it lands on is {push.text} {way} {source['name']}{size}"
+            )
+            push_box.setChecked(True)
+            push_box.show()
+
         for widget in (slot_combo, action_combo, concentrate_box):
             widget.setEnabled(caster is not None)
         if caster is None:
@@ -2858,6 +2902,8 @@ class ConditionsMixin(CombatWindowState):
             # A pick the source spends (a feature with no numbers) is enough.
             spends = pick is not None and pick.is_tracked and caster is not None
             ends = pick is not None and bool(pick.ends_conditions)
+            # The Push mastery's row only moves its target.
+            ends = ends or (pick is not None and pick.push is not None)
             keeps_area = aimed is not None and keep_area_box.isChecked()
             if not targets and not keeps_area and not on_itself(pick):
                 problem_lbl.setText(
@@ -2942,6 +2988,13 @@ class ConditionsMixin(CombatWindowState):
                 and damage_input.text() != picked["damage"],
                 area=aimed["record"] if aimed is not None and keeps_area else None,
                 cover_origin=cover_origin,
+                push=(
+                    pick.push
+                    if pick is not None
+                    and not push_box.isHidden()
+                    and push_box.isChecked()
+                    else None
+                ),
             )
             # The boxes' picks become the targets, as if clicked on the cards.
             if [id(t) for t in targets] != [id(t) for t in self.target_characters]:
@@ -3082,6 +3135,7 @@ class ConditionsMixin(CombatWindowState):
             show_details(option)
             show_target_count(option)
             show_maximum_box(option)
+            show_push(option)
             picked.update(
                 option=option, damage=damage, times=times, search=search_box.text()
             )
@@ -3100,6 +3154,7 @@ class ConditionsMixin(CombatWindowState):
             show_details(None)
             show_target_count(None)
             show_maximum_box(None)
+            show_push(None)
             show_pick_rows()
 
         def show_maximum_box(option: EffectOption | None):

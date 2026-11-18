@@ -1253,6 +1253,48 @@
     "1d6"
    ]
   },
+  "All spells | Freedom of Movement": {
+   "ability": null,
+   "action_cost": "Action",
+   "amount_kind": "Damage",
+   "badge_modifiers": {
+    "Freedom of Movement": [
+     {
+      "ignores_difficult": true,
+      "type": "Movement"
+     },
+     {
+      "text": "Spells and other magical effects can't reduce its Speed or give it the Paralyzed or Restrained condition. It has a Swim Speed equal to its Speed, and can spend 5 feet of movement to escape nonmagical restraints or a grapple.",
+      "type": "Note"
+     }
+    ]
+   },
+   "bonus": null,
+   "concentration": false,
+   "condition": "Freedom of Movement",
+   "counts_uses": true,
+   "damage": "",
+   "dc": null,
+   "duration_seconds": 3600,
+   "feature_name": "",
+   "half_on_save": false,
+   "is_described": true,
+   "is_unavailable": false,
+   "note": "",
+   "repeat_save": false,
+   "roll": "Saving throw",
+   "row_name": "",
+   "slot_level": "None",
+   "spell_level": 4,
+   "spell_name": "Freedom of Movement",
+   "summary": "",
+   "targets": [
+    1,
+    1
+   ],
+   "until": null,
+   "upcast": []
+  },
   "All spells | Friends": {
    "ability": "WIS",
    "action_cost": "Action",
@@ -2723,6 +2765,48 @@
    "until": null,
    "upcast": []
   },
+  "All spells | Spider Climb": {
+   "ability": null,
+   "action_cost": "Action",
+   "amount_kind": "Damage",
+   "badge_modifiers": {
+    "Spider Climb": [
+     {
+      "climbs": true,
+      "type": "Movement"
+     },
+     {
+      "text": "It can move up, down and across vertical surfaces and along ceilings, leaving its hands free.",
+      "type": "Note"
+     }
+    ]
+   },
+   "bonus": null,
+   "concentration": true,
+   "condition": "Spider Climb",
+   "counts_uses": true,
+   "damage": "",
+   "dc": null,
+   "duration_seconds": 3600,
+   "feature_name": "",
+   "half_on_save": false,
+   "is_described": true,
+   "is_unavailable": false,
+   "note": "",
+   "repeat_save": false,
+   "roll": "Saving throw",
+   "row_name": "",
+   "slot_level": "None",
+   "spell_level": 2,
+   "spell_name": "Spider Climb",
+   "summary": "",
+   "targets": [
+    1,
+    1
+   ],
+   "until": null,
+   "upcast": []
+  },
   "All spells | Spike Growth": {
    "ability": null,
    "action_cost": "Action",
@@ -2976,14 +3060,14 @@
    "half_on_save": true,
    "is_described": true,
    "is_unavailable": false,
-   "note": "Each creature in a 15-foot Cube from you. On a failed save it's also pushed 10 feet away from you.",
+   "note": "Each creature in a 15-foot Cube from you.",
    "repeat_save": false,
    "roll": "Saving throw",
    "row_name": "",
    "slot_level": "None",
    "spell_level": 1,
    "spell_name": "Thunderwave",
-   "summary": "DC 15 CON  2d8 Thunder  half on save",
+   "summary": "DC 15 CON  2d8 Thunder  half on save  pushed 10 ft.",
    "until": null,
    "upcast": [
     "1d8"

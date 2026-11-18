@@ -14,7 +14,7 @@ from Combat.Effects.modifiers import (
     save_plan,
 )
 from Core.Rules import SPELL_SAVE_DC_BASE, ability_modifier
-from Model.Content.CombatEffect import CombatRegain
+from Model.Content.CombatEffect import CombatPush, CombatRegain
 from Model.Content.CombatModifiers import Modifier
 from Model.Content.CombatTriggers import CombatTrigger
 
@@ -148,6 +148,9 @@ class CustomEffect:
     # the source (a Fireball's cell, lasting.record_origin): the map's cover
     # against its saves is counted from there. None: from the source.
     cover_origin: list | None = None
+    # How each target its conditions land on is moved on the battle map
+    # (EffectOption.push, unless the dialog's Push box was unticked).
+    push: CombatPush | None = None
 
     @property
     def conditions(self) -> list[str]:
@@ -250,6 +253,9 @@ class EffectOption:
     # Rerolls the failed save it answers with this bonus (Indomitable's
     # Fighter level); None: it doesn't (CombatEffect.reroll_save).
     reroll_save: int | None = None
+    # How far it moves each target its conditions would land on, on the
+    # battle map (CombatEffect.push: Thunderwave's 10 feet away).
+    push: CombatPush | None = None
 
     def duration_for(self, condition: str, duration: dict | None) -> dict | None:
         """The duration `condition` gets when the dialog gives `duration`:

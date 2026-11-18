@@ -29,6 +29,7 @@ from Model.Content.CombatEffect import (
     CombatEffect,
     CombatHitPoints,
     CombatInstances,
+    CombatPush,
     CombatTargets,
     EffectRoll,
     TurnEdge,
@@ -2146,9 +2147,8 @@ class Thunderwave(ClassSpell):
                 save_ability=Ability.CONSTITUTION,
                 half_on_success=True,
                 damage=(CombatDamage("2d8", DamageType.THUNDER, upcast="1d8"),),
-                notes=(
-                    "Each creature in a 15-foot Cube from you. On a failed save it's also pushed 10 feet away from you.",
-                ),
+                push=CombatPush(10),
+                notes=("Each creature in a 15-foot Cube from you.",),
             )
         ]
 

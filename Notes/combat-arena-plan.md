@@ -20,7 +20,9 @@ a colour picked for each, the user's request, 2026-11-15. Step 12,
 selecting a kept area to read, recolour, target or end it, the same day.
 Steps 13 to 18, the rules of moving and "within 5 feet" counted from the
 map, 2026-11-15 and 16. Steps 19 and 20, cover and range counted from the
-map, the first two of Later, 2026-11-16. What's next is under Later.
+map, the first two of Later, 2026-11-16. Step 21, pushes and pulls from
+the Use / Cast dialog moved on the map, Later's third, 2026-11-18. What's
+next is under Later.
 
 ## How to use this document
 
@@ -91,6 +93,7 @@ verification passes per step unless asked.
 | 18 | Distances count only once the map is in use: a token moved this fight, or a painted map's starts (Decision 29) | Done 2026-11-16 |
 | 19 | Cover from the map: walls, objects and creatures on the line give cover, counted into the AC and Dexterity saves, Total Cover warned about, areas stopped by it | Done 2026-11-16 (R17; Decision 30) |
 | 20 | Reach and range: Long range's and close combat's Disadvantage counted, past a reach or range warned about | Done 2026-11-16 (R18; Decision 31) |
+| 21 | Pushes: a pick's `CombatPush` (Thunderwave, a Shove, the Push mastery) moves who it lands on straight away from its source as a Push move | Done 2026-11-18 (R19; Decisions 32, 33); DI-095 logged |
 
 ## How it fits the code that's there
 
@@ -811,15 +814,64 @@ pick is made, so they count the pick's range.
 
 Tests: `tests/test_arena_ranges.py`, `tests/test_combat_ui_arena_ranges.py`.
 
+### Step 21: pushes from the Use / Cast dialog (2026-11-18)
+
+Later's third item. Rules Glossary, Unarmed Strike: a Shove's target fails
+"or you either push it 5 feet away or cause it to have the Prone
+condition"; Thunderwave: "pushed 10 feet away from you"; the Push mastery
+(Player's Handbook): "push the creature up to 10 feet straight away from
+yourself if it is Large or smaller". Step 17 made a push a move of its own
+(Alt as a token is dropped); now a pick that pushes does it on Apply.
+
+*Built (R19):* `CombatPush(feet, up_to, toward, largest)` and
+`CombatEffect.push` (Model/Content/CombatEffect.py, kept by `to_dict` /
+`from_dict`), carried by `EffectOption.push` and `CustomEffect.push`; a
+row's summary says it ("DC 14 STR  pushed 5 ft."). Combat/Arena/pushes.py
+works out where each target ends (`push_destination`, Decision 32), which
+to move first (`push_order`: a push's farthest, a pull's nearest) and
+whether it's too big (`too_big`). `_apply_effect_to_targets`
+(conditions_mixin.py) gathers who the push lands on (as its conditions do:
+who fails the save, is hit, or everyone with no roll), and the window's
+`_push_targets` (arena_mixin.py) moves them through `_relocate`, the move
+`_move_combatant` makes, now without its status line so one Apply can
+move several and say it once. Each is a Push move: no movement spent, no
+Opportunity Attack, areas and hazards entered reminded of, one undo step
+with the Apply's damage. What stops one short is a GM-only line ("Tiger
+stops after 5 of 10 ft.: a wall or an object."), as is one too big
+("Tiger isn't moved by Push: only Large or smaller is."). The dialog
+shows **Who it lands on is pushed 10 ft. away from Edmund**, ticked, for a
+pick with a push once the map is in use with the source on it (Decision
+33); unticked, nobody moves. A row a trigger prompt applies (the Push
+mastery after a hit) pushes as it applies.
+
+Content: Thunderwave (`CombatPush(10)`, its note shortened), the Push
+mastery (`CombatPush(10, up_to=True, largest=Large)`, its "move it at the
+table" note gone; its row only moves, so the dialog takes that as
+something to apply), and the Unarmed Strike's Shove as two rows under
+every player's Unarmed Strike, "Unarmed Strike: Shove (push)" and "...
+(Prone)" (Model/Content/UnarmedStrikeEffects.py: a Strength save, DC 8 +
+the Unarmed Strike's ability modifier + Proficiency Bonus, so a Monk's
+Martial Arts Dexterity counts). The combat-effects skill's rubric has
+`push`.
+
+- Not done: the other pushes and pulls in content are still text (DI-095,
+  for the spell-combat-effects and feature-combat-effects agents); a
+  monster can't Shove from its picker (stat blocks don't list it); the
+  Shove's "it chooses" Strength or Dexterity is the GM's to switch; "up
+  to" pushes the whole way (Decision 33); a push off a ledge doesn't count
+  falling; Grapple isn't a row yet (Later 4).
+
+Tests: `tests/test_arena_pushes.py`, `tests/test_combat_ui_arena_pushes.py`;
+the picker rows' goldens (`tests/test_picker_rows.py`) have the Shove rows.
+
 ### Later (not scheduled)
 
 In order of relevance (R15, the user, 2026-11-16: "add your suggestions
 (in order of relevancy) to the plan"). Each is a step of its own when it's
-picked up. The first two, cover and range, were steps 19 and 20.
+picked up. The first three, cover, range and pushes, were steps 19 to 21.
 
-3. **Shove's push**: the Unarmed Strike's 5-foot push (Rules Glossary,
-   Unarmed Strike), and other pushes (Thunderwave, Repelling Blast), as a
-   Push move (step 17) offered from the Custom Effect after a failed save.
+3. *(Step 21.)* **Shove's push** and the other pushes, moved on Apply.
+   What's left is content (DI-095).
 4. **Grappling moves the Grappled creature** (Rules Glossary, Grappled): the
    grappler drags it, each foot costing 1 extra foot unless it's Tiny or two
    or more sizes smaller; the grapple ends when they're further apart than
@@ -871,7 +923,8 @@ picked up. The first two, cover and range, were steps 19 and 20.
 Built from this list already: the map settings dialog and terrain, as the
 Map Painter ([map-painter-plan.md](map-painter-plan.md), 2026-11-15); the
 conditions' "within 5 feet" (step 16); moves that aren't walks (step 17);
-cover (step 19) and range (step 20), its first two items.
+cover (step 19), range (step 20) and pushes (step 21), its first three
+items.
 
 ## Decisions
 
@@ -1099,6 +1152,27 @@ Taken in steps 19 and 20 (2026-11-16), for the user to overrule:
     the attacker Invisible, which are left as notes, as the Dodge action's
     are. The warnings go on the dialog's target rows and in the log, not on
     the target label, which doesn't know which attack is made (R18).
+
+Taken in step 21 (2026-11-18), for the user to overrule:
+
+32. **How a push sits on the grid.** Each 5 feet of a push is one step to a
+    neighbouring cell one step farther from the pusher by the map's rule
+    (one nearer for a pull), and of those the one nearest the straight
+    line from the pusher's middle through the target's middle as it
+    started: along a row it stays on the row, diagonally it's a staircase.
+    It stops short of anything the target couldn't end a move on
+    (`can_end_at`): the map's edge, a wall or a blocking object, anyone
+    else's space, an ally's too; an incorporeal creature goes into a wall,
+    a Swarm into a space. A pull stops next to its puller. Difficult
+    Terrain costs a push nothing. Two creatures sharing a space (a Swarm)
+    have no "away", so neither moves. Height isn't counted.
+33. **A push moves the tokens on Apply, once the map is in use.** It isn't
+    a prompt to answer afterwards: the dialog's Push box, ticked, is the
+    choice, and Ctrl+Z takes the push back with the damage. Before the map
+    is in use (Decision 29) nothing moves and the box isn't shown. "Up to"
+    pushes the whole way, as the common choice; for less, the GM Alt-drags
+    the token back (a push, step 17), which spends nothing. A target too
+    big for it ("Large or smaller") stays, with a GM-only line.
 
 ## Open questions
 
@@ -1393,6 +1467,18 @@ Each has a *Suggestion*: what gets built if nobody says otherwise.
   target can be in reach of a sword and in long range of a bow. *Found:*
   weapons kept no range numbers, only the Range property, so the Weapons
   table's are in Core/Weapons.py now.
+- **R19** (step 21, 2026-11-18). *Plan (Later):* "as a Push move offered
+  from the Custom Effect after a failed save". *Done:* a `push` field on
+  `CombatEffect`, so the push belongs to the effect like its damage, moved
+  on Apply with a box to untick in the dialog (Decisions 32 and 33),
+  rather than a prompt after it. *Why:* a prompt per target after a
+  Thunderwave would be a click per creature for what is nearly always
+  done, and the map already knows which way "away" is. A Shove had no row
+  at all, so the Unarmed Strike has two. *Found:* `_move_combatant` showed
+  its own status line, so it's split into `_relocate`, which returns what
+  to say; and the picker rows' golden for described spells hadn't been
+  regenerated since step 15 gave Freedom of Movement and Spider Climb
+  their `Movement` badges, so those two rows are new in it too.
 
 ## Discovered issues
 
@@ -1415,6 +1501,12 @@ Found in step 9:
 
 - **DI-092** (fixed 2026-11-14, step 9): an encounter's own allies counted as
   enemies (`on_party_side` False), on the map and for enemy-only triggers.
+
+Found in step 21:
+
+- **DI-095** (open, content): pushes and pulls written only in text (Thorn
+  Whip, Thunderous Smite, Pushing Attack, Open Hand Technique, Repelling
+  Blast and more); each needs a `CombatPush` on its effect.
 
 Already logged, and touched by this plan:
 
