@@ -79,6 +79,11 @@ class GridShape(ABC):
         lines tokens up with it without touching coordinates)."""
 
     @abstractmethod
+    def shifted(self, cell: Cell, start: Cell, end: Cell) -> Cell:
+        """`cell` moved as far and the same way as from `start` to `end`:
+        where a grappled creature keeps its place beside its grappler."""
+
+    @abstractmethod
     def from_edge(self, width: int, height: int, left: bool) -> list[Cell]:
         """Every cell, from the left (or right) edge inward column by
         column, and in each column from the middle row outward: where
@@ -158,6 +163,9 @@ class SquareGrid(GridShape):
 
     def offset(self, cell: Cell, cols: int, rows: int) -> Cell:
         return Cell(cell.col + cols, cell.row + rows)
+
+    def shifted(self, cell: Cell, start: Cell, end: Cell) -> Cell:
+        return Cell(cell.col + end.col - start.col, cell.row + end.row - start.row)
 
     def from_edge(self, width: int, height: int, left: bool) -> list[Cell]:
         columns = range(width) if left else range(width - 1, -1, -1)

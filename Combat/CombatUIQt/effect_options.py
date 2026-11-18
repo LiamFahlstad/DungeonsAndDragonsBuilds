@@ -38,7 +38,10 @@ from Model.Content.StandardActions import (
     standard_action_effects,
     standard_action_rules,
 )
-from Model.Content.UnarmedStrikeEffects import UNARMED_STRIKE_RULES, shove_effects
+from Model.Content.UnarmedStrikeEffects import (
+    UNARMED_STRIKE_RULES,
+    unarmed_strike_effects,
+)
 from Model.Content.WeaponMasteryEffects import (
     MASTERY_RULES,
     mastery_effects,
@@ -1234,7 +1237,7 @@ def _has_mastery(char: dict, weapon) -> bool:
 
 def _weapon_options(char: dict, weapon, sheet) -> list[EffectOption]:
     """A weapon's row, then its mastery's when char has that mastery, or an
-    Unarmed Strike's Shove rows."""
+    Unarmed Strike's Grapple and Shove rows."""
     return [
         _weapon_option(char, weapon, sheet),
         *_mastery_options(char, weapon, sheet),
@@ -1243,11 +1246,11 @@ def _weapon_options(char: dict, weapon, sheet) -> list[EffectOption]:
 
 
 def _shove_options(char: dict, weapon, sheet) -> list[EffectOption]:
-    """An Unarmed Strike's Shove, a row for each choice
+    """An Unarmed Strike's Grapple and Shove, a row for each choice
     (Model/Content/UnarmedStrikeEffects.py): "Unarmed Strike: Shove (push)"
-    moves its target 5 feet on the battle map (arena step 21). Each is one
-    of the Attack action's attacks, costing the Action as the weapon's row
-    does."""
+    moves its target 5 feet on the battle map (arena step 21), and the
+    Grapple's target names its grappler (step 22). Each is one of the
+    Attack action's attacks, costing the Action as the weapon's row does."""
     if sheet is None or not getattr(weapon, "is_unarmed_strike", False):
         return []
     acted = char.get("action_uses", {}).get("Action", 0) > 0
@@ -1260,7 +1263,7 @@ def _shove_options(char: dict, weapon, sheet) -> list[EffectOption]:
             tooltip=UNARMED_STRIKE_RULES,
             action_cost=None if acted else "Action",
         )
-        for effect in shove_effects(weapon, sheet)
+        for effect in unarmed_strike_effects(weapon, sheet)
     ]
 
 

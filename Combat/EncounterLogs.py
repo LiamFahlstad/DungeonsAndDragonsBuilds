@@ -64,6 +64,8 @@ PLAYER_FIGHT_KEYS = (
     "position",
     "moved_ft",
     "dashes",
+    # Who has them Grappled, by name (Combat/Arena/arena.py's GRAPPLER_KEY).
+    "grappled_by",
     # What they've spent of their turn (an Action, their Reaction), and what
     # the attack rolls against them tell of their AC (attack_rolls.py).
     # Their in-fight "stats" aren't kept here: replaying the party's history

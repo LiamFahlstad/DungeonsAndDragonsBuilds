@@ -114,11 +114,13 @@ class MoveKind(Enum):
     """How a token dropped on a cell gets there (step 17). A walk is the
     creature's own movement. A teleport (Rules Glossary, Teleportation) and
     a push (a Shove, Thunderwave) aren't: they spend no movement and
-    provoke no Opportunity Attack."""
+    provoke no Opportunity Attack. A drag (step 22) is a Grappled creature
+    taken along by its grappler's walk: no key asks for it."""
 
     WALK = "walk"
     TELEPORT = "teleport"
     PUSH = "push"
+    DRAG = "drag"
 
 
 def move_kind(modifiers) -> MoveKind:

@@ -21,8 +21,9 @@ selecting a kept area to read, recolour, target or end it, the same day.
 Steps 13 to 18, the rules of moving and "within 5 feet" counted from the
 map, 2026-11-15 and 16. Steps 19 and 20, cover and range counted from the
 map, the first two of Later, 2026-11-16. Step 21, pushes and pulls from
-the Use / Cast dialog moved on the map, Later's third, 2026-11-18. What's
-next is under Later.
+the Use / Cast dialog moved on the map, Later's third, 2026-11-18. Step 22,
+grapples on the map (the grappler drags, the grapple ends past its range),
+Later's fourth, the same day. What's next is under Later.
 
 ## How to use this document
 
@@ -94,6 +95,7 @@ verification passes per step unless asked.
 | 19 | Cover from the map: walls, objects and creatures on the line give cover, counted into the AC and Dexterity saves, Total Cover warned about, areas stopped by it | Done 2026-11-16 (R17; Decision 30) |
 | 20 | Reach and range: Long range's and close combat's Disadvantage counted, past a reach or range warned about | Done 2026-11-16 (R18; Decision 31) |
 | 21 | Pushes: a pick's `CombatPush` (Thunderwave, a Shove, the Push mastery) moves who it lands on straight away from its source as a Push move | Done 2026-11-18 (R19; Decisions 32, 33); DI-095 logged |
+| 22 | Grapples: the Grappled creature names its grappler, who drags it at 1 extra foot a foot; the grapple ends past its range or with the grappler Incapacitated; the Unarmed Strike's Grapple row | Done 2026-11-18 (R20; Decision 34) |
 
 ## How it fits the code that's there
 
@@ -859,23 +861,68 @@ Martial Arts Dexterity counts). The combat-effects skill's rubric has
   monster can't Shove from its picker (stat blocks don't list it); the
   Shove's "it chooses" Strength or Dexterity is the GM's to switch; "up
   to" pushes the whole way (Decision 33); a push off a ledge doesn't count
-  falling; Grapple isn't a row yet (Later 4).
+  falling; Grapple isn't a row yet (Later 4; step 22 added it).
 
 Tests: `tests/test_arena_pushes.py`, `tests/test_combat_ui_arena_pushes.py`;
 the picker rows' goldens (`tests/test_picker_rows.py`) have the Shove rows.
+
+### Step 22: grapples on the map (2026-11-18)
+
+Later's fourth item. Rules Glossary, Grappled: "Movable. The grappler can
+drag or carry you when it moves, but every foot of movement costs it 1
+extra foot unless you are Tiny or two or more sizes smaller than it."
+Grappling: "The condition also ends if the grappler has the Incapacitated
+condition or if the distance between the Grappled target and the grappler
+exceeds the grapple's range. In addition, the grappler can release the
+target at any time (no action required)."
+
+*Built (R20):* who grapples whom is on the grappled creature,
+`char["grappled_by"] = "Edmund"` (`GRAPPLER_KEY` in arena.py, in
+`PLAYER_FIGHT_KEYS` for a player), set by `_add_condition_to` whenever
+Grappled is given with a source (a monster's grapple rider, the dialog, the
+new row) and dropped when Grappled comes off. arena.py reads it
+(`grappler_of`, `grappled_by`, `drag_costs_extra`, `drags_at_a_cost`,
+`grapple_range_ft`), and `reachable` adds the drag's extra foot a foot to
+every step, as it adds crawling's, so the shaded reach and the walk's cost
+count it. Combat/Arena/grapples.py: `dragged_to`, where the held creature
+goes (Decision 34, with geometry's new `GridShape.shifted`), and
+`stretched`, the grapples a move has pulled apart. In the window, a walk
+(`_relocate`) drags each creature its walker holds as a new `MoveKind.DRAG`
+("Tiger is dragged from G6 to E6 (10 ft.; no movement spent).", no
+movement of its own, no Opportunity Attack), before the walk is measured
+for Opportunity Attacks so the dragged one doesn't get one on its
+grappler, and the status says "Edmund drags Tiger: each foot of the walk
+costs 1 extra foot." After any move or push, `_end_stretched_grapples`
+ends each grapple past its range ("Edmund's grapple on Tiger ends: 25 ft.
+apart, past its 5 ft. range."): a teleporting grappler, a pushed creature,
+a creature the GM moves away. A grappler given an incapacitating
+condition lets go of everyone it holds. Taking Grappled off by hand is the
+grappler releasing it. The Unarmed Strike has a third row, "Unarmed
+Strike: Grapple" (Model/Content/UnarmedStrikeEffects.py: the Shove's DC,
+Grappled, the escape DC in its note).
+
+- Not done: the Grappled creature's "Disadvantage on attack rolls against
+  any target other than the grappler" is still a note, though the
+  grappler is known now (it's the attacker's own modifier, which no
+  `when` settles yet); only the grappler's reach is a grapple's range
+  (Decision 34); a grappler can't choose to walk away without dragging
+  except by releasing first; "one grapple per hand" isn't counted; a
+  dragged creature carried up a climb costs nothing more.
+
+Tests: `tests/test_arena_grapples.py`, `tests/test_combat_ui_arena_grapples.py`;
+the picker rows' goldens have the Grapple row.
 
 ### Later (not scheduled)
 
 In order of relevance (R15, the user, 2026-11-16: "add your suggestions
 (in order of relevancy) to the plan"). Each is a step of its own when it's
-picked up. The first three, cover, range and pushes, were steps 19 to 21.
+picked up. The first four, cover, range, pushes and grapples, were steps
+19 to 22.
 
 3. *(Step 21.)* **Shove's push** and the other pushes, moved on Apply.
    What's left is content (DI-095).
-4. **Grappling moves the Grappled creature** (Rules Glossary, Grappled): the
-   grappler drags it, each foot costing 1 extra foot unless it's Tiny or two
-   or more sizes smaller; the grapple ends when they're further apart than
-   its range (Rules Glossary, Grappling).
+4. *(Step 22.)* **Grappling moves the Grappled creature**, and the grapple
+   ends past its range.
 5. **The path walked kept**, so an Opportunity Attack catches a walk that
    passes through a reach, or leaves and comes back (only the walk's ends
    are known now, step 13); Sentinel and Polearm Master's entering reach.
@@ -923,8 +970,8 @@ picked up. The first three, cover, range and pushes, were steps 19 to 21.
 Built from this list already: the map settings dialog and terrain, as the
 Map Painter ([map-painter-plan.md](map-painter-plan.md), 2026-11-15); the
 conditions' "within 5 feet" (step 16); moves that aren't walks (step 17);
-cover (step 19), range (step 20) and pushes (step 21), its first three
-items.
+cover (step 19), range (step 20), pushes (step 21) and grapples (step
+22), its first four items.
 
 ## Decisions
 
@@ -1173,6 +1220,24 @@ Taken in step 21 (2026-11-18), for the user to overrule:
     pushes the whole way, as the common choice; for less, the GM Alt-drags
     the token back (a push, step 17), which spends nothing. A target too
     big for it ("Large or smaller") stays, with a GM-only line.
+
+Taken in step 22 (2026-11-18), for the user to overrule:
+
+34. **How a grapple moves and holds on the grid.** A grappler that walks
+    drags everyone it holds who's on the map ("can drag": the GM who wants
+    it to walk off alone takes Grappled off first, the grappler's release).
+    The held creature moves as far and the same way as its grappler, so it
+    keeps its place beside it; where that won't take it (a wall, someone,
+    the edge) it goes to the nearest cell to there that does and is within
+    the grapple's range, and where none does it stays, and the range ends
+    the grapple. Several held creatures cost no more than one: each foot
+    costs 1 extra foot. A grapple's range is the grappler's reach
+    (`reach_ft`: 5 ft., a stat block's longest "reach N ft.", 10 ft. with
+    a Reach weapon), as the attack that grappled was made within it; it's
+    measured after a move, a push or a teleport, never mid-walk, and the
+    grapple ends with a GM-only line when it's exceeded. Only a grapple
+    whose source was known names a grappler: Grappled given by hand with
+    no source drags nobody and never ends by distance.
 
 ## Open questions
 
@@ -1479,6 +1544,16 @@ Each has a *Suggestion*: what gets built if nobody says otherwise.
   to say; and the picker rows' golden for described spells hadn't been
   regenerated since step 15 gave Freedom of Movement and Spider Climb
   their `Movement` badges, so those two rows are new in it too.
+- **R20** (step 22, 2026-11-18). *Plan (Later):* "the grappler drags it,
+  each foot costing 1 extra foot ...; the grapple ends when they're
+  further apart than its range". *Done:* as planned, plus who grapples
+  whom kept on the grappled creature (nothing knew it: the condition's
+  record keeps a "caster" only while it has a tooltip, and is pruned
+  without one), the grapple ending with an Incapacitated grappler, and
+  the Unarmed Strike's Grapple row, which step 21 left out. *Found:* the
+  dragged creature was measured for an Opportunity Attack on its own
+  grappler, since the walk was checked before the drag; the drag comes
+  first now.
 
 ## Discovered issues
 

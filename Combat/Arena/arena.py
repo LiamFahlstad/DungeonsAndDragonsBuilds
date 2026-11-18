@@ -18,6 +18,11 @@ How a creature moves past others and over the ground can change by what it
 has (movement_rules): a Movement on a badge (Freedom of Movement), from an
 always-on feature (Halfling Nimbleness, Feature.movement) or a stat block's
 trait (Incorporeal Movement, Swarm).
+
+A Grappled creature names its grappler, `char["grappled_by"] = "Goblin"`
+(step 22): the grappler drags it as it walks, each foot costing 1 extra
+foot unless it's Tiny or two or more sizes smaller (Rules Glossary,
+Grappled: Movable).
 """
 
 from __future__ import annotations
@@ -47,6 +52,8 @@ POSITION_KEY = "position"
 MOVED_KEY = "moved_ft"
 # How many times it has taken the Dash action this turn (movement_ft).
 DASHES_KEY = "dashes"
+# Who has a Grappled creature grappled, by name (step 22).
+GRAPPLER_KEY = "grappled_by"
 
 # How many cells across a creature of each size covers on a 5-foot grid
 # (Rules Glossary, Creature Size: Tiny 2.5 ft., Small and Medium 5 ft.,
@@ -364,6 +371,7 @@ def reachable(
     start = position(char)
     if start is None:
         return {}
+    chars = list(chars)
     rule, cell_ft = settings.distance_rule, settings.cell_ft
     rules = movement_rules(char)
     others = {
@@ -371,6 +379,8 @@ def reachable(
         for cell, other in occupied((c for c in chars if c is not char), rule).items()
     }
     crawling = has_condition(char, Condition.PRONE)
+    # Dragging a creature it grapples: 1 extra foot a foot (Grappled: Movable).
+    dragging = drags_at_a_cost(char, chars)
     climb_extra = 0 if has_climb_speed(char) or rules.climbs else 1
     terrain = settings.terrain
     seen: dict[Cell, tuple[bool, bool, int] | None] = {}
@@ -423,7 +433,7 @@ def reachable(
             if there is None:
                 continue
             _, difficult, step_height = there
-            extra = int(crawling) + int(difficult)
+            extra = int(crawling) + int(difficult) + int(dragging)
             climbed = abs(step_height - height) * (1 + climb_extra + int(difficult))
             new_cost = (
                 cost + int(rule.step_cost(cell, step) * cell_ft * (1 + extra)) + climbed
@@ -432,6 +442,49 @@ def reachable(
                 best[step] = new_cost
                 heapq.heappush(queue, (new_cost, next(tie), step))
     return ends
+
+
+def grappler_of(char: dict, chars: Iterable[dict]) -> dict | None:
+    """Who has char Grappled, among `chars`: the one it names (GRAPPLER_KEY)
+    while it's Grappled; None when it isn't, or the grappler isn't known
+    (Grappled given by hand with no source) or has left the fight."""
+    name = char.get(GRAPPLER_KEY)
+    if not name or not has_condition(char, Condition.GRAPPLED):
+        return None
+    return next((c for c in chars if c is not char and c.get("name") == name), None)
+
+
+def grappled_by(grappler: dict, chars: Iterable[dict]) -> list[dict]:
+    """The creatures among `chars` that `grappler` has Grappled."""
+    chars = list(chars)
+    return [c for c in chars if grappler_of(c, chars) is grappler]
+
+
+def drag_costs_extra(grappler: dict, grappled: dict) -> bool:
+    """Whether dragging `grappled` costs `grappler` 1 extra foot a foot
+    (Rules Glossary, Grappled: Movable): unless it's Tiny or two or more
+    sizes smaller."""
+    if size_in_use(grappled) == CreatureSize.TINY:
+        return False
+    return _size_index(grappler) - _size_index(grappled) < 2
+
+
+def drags_at_a_cost(grappler: dict, chars: Iterable[dict]) -> bool:
+    """Whether `grappler` walking now drags someone at a cost: one it has
+    Grappled, on the map, not Tiny or two sizes smaller. Several cost no
+    more than one (each foot costs 1 extra foot, whoever is dragged)."""
+    return any(
+        position(held) is not None and drag_costs_extra(grappler, held)
+        for held in grappled_by(grappler, chars)
+    )
+
+
+def grapple_range_ft(grappler: dict) -> int:
+    """How far apart a grapple holds (Rules Glossary, Grappling: it ends
+    "if the distance between the Grappled target and the grappler exceeds
+    the grapple's range"): the grappler's reach, as the attack or Unarmed
+    Strike that grappled was made within it (Decision 34)."""
+    return reach_ft(grappler)
 
 
 def fits_at(

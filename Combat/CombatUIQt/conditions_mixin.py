@@ -27,8 +27,10 @@ from PyQt6.QtWidgets import (
 
 from Combat.Arena.arena import (
     DASHES_KEY,
+    GRAPPLER_KEY,
     MOVED_KEY,
     dashes,
+    grappled_by,
     movement_ft,
     movements,
     position,
@@ -566,6 +568,13 @@ class ConditionsMixin(CombatWindowState):
             # Each Dash this turn is its Speed again on the map, a second
             # one (Cunning Action's) too, which the badge it has can't say.
             self._take_dash(char)
+        if (
+            cond == Condition.GRAPPLED.value
+            and source is not None
+            and source is not char
+        ):
+            # Who grapples it: the battle map drags it along (arena step 22).
+            char[GRAPPLER_KEY] = source["name"]
         if cond not in char["conditions"]:
             char["conditions"].append(cond)
             char.setdefault("stats", _default_stats())
@@ -612,6 +621,13 @@ class ConditionsMixin(CombatWindowState):
             # So does a Wild Shape form (which a knock-out's Unconscious ends too).
             if incapacitates(cond) and current_form(char):
                 self._leave_wild_shape(char, reason=cond)
+            # And its grapples (Rules Glossary, Grappling: "The condition also
+            # ends if the grappler has the Incapacitated condition").
+            if incapacitates(cond):
+                for held in grappled_by(char, self.characters):
+                    self._remove_condition_from(
+                        held, Condition.GRAPPLED.value, source=char
+                    )
             # The Dodge action's benefits are lost to Incapacitated or a
             # Speed of 0 (Grappled); they don't count from then on anyway.
             if cond != DODGE and DODGE in char["conditions"] and loses_dodge(char):
@@ -739,6 +755,8 @@ class ConditionsMixin(CombatWindowState):
             remove_effect(char, cond)
             if cond == DASH:
                 char.pop(DASHES_KEY, None)  # and the Dash's movement
+            if cond == Condition.GRAPPLED.value:
+                char.pop(GRAPPLER_KEY, None)  # and who grappled it
             emptied = linked_badges_left_without(char, cond)
             if hit_point_maximum(char) != maximum:
                 self._keep_hit_points_in_maximum(char, cond)

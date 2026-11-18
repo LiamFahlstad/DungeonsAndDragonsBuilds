@@ -64,7 +64,9 @@ from Combat.Arena.arena import (
     can_end_at,
     distance_ft,
     distance_to_cell_ft,
+    drag_costs_extra,
     footprint,
+    grappled_by,
     dashes,
     move_cost,
     movement_ft,
@@ -106,6 +108,7 @@ from Combat.Arena.lasting import (
     who_is_in,
 )
 from Combat.Arena.maps import place_at_starts
+from Combat.Arena.grapples import dragged_to, stretched
 from Combat.Arena.pushes import push_destination, push_order, too_big
 from Combat.Arena.terrain import BRIGHT, DARK, DIM, OBSCURED
 from Combat.Effects.modifiers import has_condition
@@ -827,6 +830,7 @@ class ArenaMixin(CombatWindowState):
         unoccupied space of your choice": the GM clicks that one), and
         areas and hazards entered are reminded of as for a walk."""
         lines = self._relocate(char, cell, kind)
+        lines += self._end_stretched_grapples()
         if lines:
             self._show_status(" ".join(lines))
         self._refresh_views()
@@ -857,6 +861,7 @@ class ArenaMixin(CombatWindowState):
                 MoveKind.WALK: "end a move",
                 MoveKind.TELEPORT: "teleport",
                 MoveKind.PUSH: "be pushed",
+                MoveKind.DRAG: "be dragged",
             }[kind]
             nearest = (
                 " A teleport there appears in the nearest unoccupied space of"
@@ -885,6 +890,8 @@ class ArenaMixin(CombatWindowState):
             walked = move_cost(char, self.characters, settings, cell)
             feet = walked if walked is not None else straight_ft(char, cell, settings)
             feet = feet or 0
+            # Whom it drags along (Rules Glossary, Grappled: Movable).
+            held = [h for h in grappled_by(char, self.characters) if position(h)]
             char[POSITION_KEY] = cell.to_list()
             char[MOVED_KEY] = int(char.get(MOVED_KEY, 0)) + feet
             speed = walking_speed_ft(char)
@@ -899,6 +906,10 @@ class ArenaMixin(CombatWindowState):
                     f"{name} moved {char[MOVED_KEY]} ft., Speed {speed} ft."
                     + (with_dash if dashes(char) else "")
                 )
+            # Dragged first: the creature it holds is still beside it when
+            # its walk is measured for Opportunity Attacks.
+            if held and start is not None:
+                warnings += self._drag(char, start, held)
             if walked is not None and start is not None:
                 warnings += self._opportunity_attack_reminders(char, start)
         if kind is MoveKind.WALK and has_condition(char, Condition.PRONE):
@@ -926,6 +937,47 @@ class ArenaMixin(CombatWindowState):
                 self._log_event(line, character=name, public=False)
                 warnings.append(line)
         return warnings
+
+    def _drag(self, grappler: dict, start: Cell, held: list[dict]) -> list[str]:
+        """Take each of `held`, Grappled by `grappler`, along on its walk
+        from `start` (grapples.dragged_to: as far and the same way, else the
+        nearest cell within the grapple's range), as a drag: no movement of
+        its own spent, no Opportunity Attack for it. Says what it cost the
+        grappler: 1 extra foot a foot unless the creature is Tiny or two
+        sizes smaller, counted in the walk already (arena.reachable). One
+        with nowhere to go stays, and the grapple's range may end it."""
+        settings = self.arena_settings
+        lines = []
+        for creature in held:
+            to = dragged_to(creature, grappler, start, self.characters, settings)
+            if to is not None and to != position(creature):
+                lines += self._relocate(creature, to, MoveKind.DRAG)
+        costly = [h["name"] for h in held if drag_costs_extra(grappler, h)]
+        if costly:
+            lines.append(
+                f"{grappler['name']} drags {_and(costly)}: each foot of the walk"
+                " costs 1 extra foot."
+            )
+        return lines
+
+    def _end_stretched_grapples(self) -> list[str]:
+        """End each grapple a move has pulled past its range (Rules
+        Glossary, Grappling: it ends "if the distance between the Grappled
+        target and the grappler exceeds the grapple's range"): Grappled
+        comes off, logged, and a line for the status."""
+        lines = []
+        for gap in stretched(self.characters, self.arena_settings):
+            name = gap.held["name"]
+            self._remove_condition_from(
+                gap.held, Condition.GRAPPLED.value, source=gap.grappler
+            )
+            line = (
+                f"{gap.grappler['name']}'s grapple on {name} ends: {gap.feet} ft."
+                f" apart, past its {gap.range_ft} ft. range."
+            )
+            self._log_event(line, character=name, public=False)
+            lines.append(line)
+        return lines
 
     def _push_targets(
         self, pusher: dict, push: CombatPush, targets: list[dict], label: str
@@ -964,7 +1016,7 @@ class ArenaMixin(CombatWindowState):
                 )
                 self._log_event(line, character=name, public=False)
                 lines.append(line)
-        return lines
+        return lines + self._end_stretched_grapples()
 
     def _opportunity_attack_reminders(self, char: dict, start: Cell) -> list[str]:
         """Who can make an Opportunity Attack on char, whose walk from
@@ -1306,6 +1358,8 @@ def forced_move_line(
     where = f"from {shape.cell_name(start) if start else '?'} to {shape.cell_name(to)}"
     if kind is MoveKind.TELEPORT:
         verb = "teleports"
+    elif kind is MoveKind.DRAG:
+        verb = "is dragged"
     else:
         verb = "is pulled" if pulled else "is pushed"
     return f"{char['name']} {verb} {where} ({feet} ft.; no movement spent)."
