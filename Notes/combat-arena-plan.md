@@ -27,7 +27,9 @@ Later's fourth, the same day. Step 23, the way a walk goes (Opportunity
 Attacks along it, Reactive Strike, Undo of the buttons), Later's fifth, the
 same day. Step 24, kept areas acting by a turn-column button and moved from
 their panel, Later's sixth, the same day. Step 25, walls (the rest of that
-sixth item) and DI-096, the same day. What's next is under Later.
+sixth item) and DI-096, the same day. Step 26, other speeds, altitude,
+falling and water swum, Later's seventh and eighth, the same day. What's
+next is under Later.
 
 ## How to use this document
 
@@ -103,6 +105,7 @@ verification passes per step unless asked.
 | 23 | The path walked: Opportunity Attacks anywhere along a walk, Polearm Master's Reactive Strike on entering a reach, Undo taking a walk's buttons back, a spent Reaction taking its attacker's other buttons away | Done 2026-11-18 (R21; Decision 35) |
 | 24 | Areas that stay, acting: a turn-column button when a creature enters a kept area, the area is moved onto it, or a turn starts or ends in it, as its text says, opening Use / Cast on its effect at no cost; the area panel's Move (Moonbeam, Flaming Sphere) | Done 2026-11-18 (R22; Decisions 36, 37); DI-096 logged |
 | 25 | Walls: a Wall shape aimed by its two ends (a ring by its middle); Wall of Force blocking movement and giving Total Cover while it lasts, through the map the rules read and never the painted one; Wall of Fire's damaging side picked by a third click and acting on who ends a turn by it; Flaming Sphere's area (DI-096) | Done 2026-11-18 (R23; Decisions 38 to 41); DI-096 fixed, DI-097 logged |
+| 26 | Other speeds: the speed bar picking a creature's Speed, Fly, Swim, Climb or Burrow Speed for its moves (switching counts what it moved), each costing as it should over the ground, a flyer's altitude (spending movement, counted into distances), falling when it can't stay aloft, water swum; the Fly spell's Fly Speed | Done 2026-11-18 (R24; Decisions 42 to 46); DI-098 logged |
 
 ## How it fits the code that's there
 
@@ -1155,13 +1158,94 @@ refused, the side kept, the panel's text and no Move, the turn-end button
 by the side and entering the wall, a ring by its middle holding the Pirate
 in).
 
+### Step 26: other speeds, and water swum (2026-11-18)
+
+Later's seventh and eighth items (Q7, the map painter plan's Q4), taken
+together: water's cost depends on the speed used. Rules Glossary, Speed:
+"If you have more than one speed, choose which one to use when you move;
+you can switch between the speeds during your move. Whenever you switch,
+subtract the distance already moved from the new speed", and every special
+speed changes as the Speed does; Flying: "you fall if you have the
+Incapacitated or Prone condition or your Fly Speed is reduced to 0. You can
+stay aloft in those circumstances if you can hover"; Falling: "1d6
+Bludgeoning damage at the end of the fall for every 10 feet it fell, to a
+maximum of 20d6", Prone "unless it avoids taking any damage from the
+fall"; Swimming: "each foot of movement costs 1 extra foot (2 extra feet in
+Difficult Terrain). You ignore this extra cost if you have a Swim Speed and
+use it to swim"; Climb Speed, Burrow Speed ("through sand, earth, mud, or
+ice", not "solid rock"); Dash: "The increase equals your Speed". Fly: "the
+target gains a Fly Speed of 60 feet and can hover. When the spell ends, the
+target falls if it is still aloft".
+
+*Built (R24):* Combat/Arena/speeds.py (new, Qt-free): `stored_speeds` and
+`speeds` (in use, through `speed_in_use`), from a stat block's Speed, Fly
+and Climb fields, its speed text ("swim 40 ft.", "burrow 20 ft.; swim 30
+ft.") and any Movement (`movements`, moved here from arena.py, which still
+exports it); `hovers` ("hover" in the speed text, or a Movement's);
+`mode_of`, the speed it moves by (`char["moving_by"]`, none for its Speed,
+a creature that only flies by its Fly Speed); `altitude_ft`
+(`char["altitude_ft"]`, while it's set to fly); `fall_reason` and
+`falling_dice`. Movement (Model/Content/CombatModifiers.py) gained
+`fly_ft`, `flies` (equal to its Speed), `swim_ft`, `swims` and `hovers`,
+and the Fly spell its badge: `Movement(fly_ft=60, hovers=True)`, one
+target and one more a slot level, its falling in a note. arena.py:
+`movement_ft` is the speed moved by plus its Speed a Dash, so
+`remaining_ft` counts what it moved against the new speed (the
+glossary's fly 10, walk 10, fly 20); `ArenaSettings.elevation` (the
+ground's height and its altitude) in `distance_ft` and
+`distance_to_cell_ft`, so the hover, reach, range and Opportunity
+Attacks count how high it is; `_walk_search` by its speed (Decision 43),
+water swum (Decision 45). terrain.py: water isn't `difficult` any more
+but `water`, "Water (swimming)".
+
+The window: the **speed bar** over the map (`_build_speed_bar`), for a
+source on the map with more than one speed, or one aloft: "Giant Eagle
+moves by: [Walk 10 ft. | Fly 80 ft.]" and, flying, **Altitude** ("30 ft.
+up"). Picking a speed (`_set_move_mode`, one undo step, a GM-only line
+"Giant Eagle moves by its Fly Speed now (80 ft.; 80 ft. left this
+turn).") is refused while it's aloft ("bring it down to 0 ft. to land
+first"); an altitude (`_set_altitude`, one undo step) spends its movement
+("Giant Eagle flies up 30 ft. (to 30 ft. up; 50 ft. left this turn).",
+warned past it). A walk's line has the speed's verb and name ("flies from
+C6 to M6 (50 ft.; 30 of 80 ft. left this turn)", "moved 90 ft., Fly Speed
+80 ft."). The token shows "↑30 ft." over it. `_land_fallers`, run as
+`_refresh_views` starts, lands whoever can't stay aloft: its altitude
+gone, back to its Speed, with the status and a GM-only line ("Giant Eagle
+falls 30 ft. (Prone): 3d6 Bludgeoning damage, and it lands Prone unless it
+takes none (Falling)."), so what made it fall and the fall are one undo
+step (Decision 46). A player keeps `moving_by` and `altitude_ft` in the
+log (`PLAYER_FIGHT_KEYS`).
+
+- Not done: a walk is by one speed (to fly part of the way and walk the
+  rest, switch between two walks); flying up or down isn't a walk, so
+  rising out of a reach reminds of no Opportunity Attack; walls and
+  objects block a flyer whatever their height (the map knows none), and
+  height isn't counted in areas or cover (Later 12); a fall's damage and
+  Prone are the GM's to apply, and falling into water isn't halved; the
+  other features and spells that give a Fly or Swim Speed are text (DI-098,
+  "twice your Speed" needs a field); swimming has no depth (a creature
+  under water is as one on it); a Climb Speed climbs free whichever speed
+  is used, as before, and climbing a wall isn't possible; rough water's
+  Athletics check is the GM's.
+
+Tests: `tests/test_arena_speeds.py` (speeds from fields, speed text and
+Movements, hover, "equal to its Speed", Grappled making each 0, the speed
+moved by, the glossary's switching example, a Dash, flying's, swimming's
+and burrowing's costs, water swum with an enemy in it, staying in the
+water, altitude in a distance, each reason to fall and hovering, Fly
+gone, the dice), `tests/test_combat_ui_arena_speeds.py` (the bar's
+speeds and none for one speed, a flight's reach, line and Undo, flying up
+spending movement and counting into the distance and the token, landing
+before walking, a Prone eagle falling once, the Fly spell's Fly Speed and
+hover, its end dropping Rowan and Undo putting it back).
+
 ### Later (not scheduled)
 
 In order of relevance (R15, the user, 2026-11-16: "add your suggestions
 (in order of relevancy) to the plan"). Each is a step of its own when it's
 picked up. The first six, cover, range, pushes, grapples, the path
 walked and areas acting, were steps 19 to 24, and the sixth's walls step
-25.
+25; the seventh and eighth, speeds and water, step 26.
 
 3. *(Step 21.)* **Shove's push** and the other pushes, moved on Apply.
    What's left is content (DI-095).
@@ -1175,15 +1259,11 @@ walked and areas acting, were steps 19 to 24, and the sixth's walls step
    **walls**, a shape of their own aimed by two clicks, Wall of Force
    blocking movement and giving Total Cover while it lasts, Wall of Fire's
    damaging side. What's left is the other walls' terrain (DI-097).
-7. **Other speeds** (Q7, the map painter plan's Q4): Fly, Swim, Climb or
-   Burrow Speed chosen for a move, switching part-way (Rules Glossary,
-   Speed: "subtract the distance already moved from the new speed"); a
-   flying creature's altitude added into distances; falling when it's Prone
-   or Incapacitated or its Fly Speed is 0, unless it hovers (Rules
-   Glossary, Flying).
-8. **Water is swimming, not Difficult Terrain** (Rules Glossary, Swimming):
-   1 extra foot a foot, 2 extra in Difficult Terrain, none with a Swim Speed
-   (which the combatants don't have a field for yet, with 7).
+7. *(Step 26.)* **Other speeds** (Q7, the map painter plan's Q4): the
+   speed chosen, switching, altitude, falling. What's left is content
+   (DI-098) and a walk by two speeds at once.
+8. *(Step 26.)* **Water is swimming, not Difficult Terrain** (Rules
+   Glossary, Swimming).
 9. **Distance in triggers and auras** (DI-085; the conditions' "within 5
    feet" counts since step 16, through `settled_by_distance`): triggers
    that ask "within 5 feet" (Fire Shield) or 10 feet (Dark One's Blessing,
@@ -1212,8 +1292,8 @@ Built from this list already: the map settings dialog and terrain, as the
 Map Painter ([map-painter-plan.md](map-painter-plan.md), 2026-11-15); the
 conditions' "within 5 feet" (step 16); moves that aren't walks (step 17);
 cover (step 19), range (step 20), pushes (step 21), grapples (step 22),
-the path walked (step 23), areas acting (step 24) and walls (step 25), its
-first six items.
+the path walked (step 23), areas acting (step 24), walls (step 25) and
+other speeds and water (step 26), its first eight items.
 
 ## Decisions
 
@@ -1575,6 +1655,47 @@ the user to overrule where marked:
     moves one, so the area panel's Move (Decision 37) isn't shown for a
     wall; a wall put in the wrong place is undone or ended and cast again.
 
+Taken in step 26 (2026-11-18), for the user to overrule:
+
+42. **The speed bar picks the speed, and it stays picked.** Answers what
+    Q7 left for Later. The speed a creature moves by is kept on it until
+    the GM picks another (a dragon that took off stays flying), not asked
+    per move; what it moved this turn counts against the new one, as the
+    glossary says, and a Dash adds its Speed whichever speed it uses. It
+    can't stop flying while aloft: it's brought down to 0 ft. first, which
+    spends movement as flying down does. A walk is by one speed, start to
+    end.
+43. **What each speed costs on the grid.** Flying: the ground's Difficult
+    Terrain (painted, furniture), water and heights cost nothing, as
+    they're the ground's; another creature's space is still Difficult
+    Terrain and still can't be passed unless Q4 lets it; walls and
+    blocking objects still block, as the map knows no heights for them.
+    Burrowing: under creatures (it ends on nobody) and Difficult Terrain,
+    no climbing, walls and blocking objects still block ("can't burrow
+    through solid rock"). Swimming: into water only, at no extra cost.
+    Climbing: as walking, its Climb Speed the limit (a Climb Speed climbs
+    free whichever speed is used, as since step 15). Prone crawling counts
+    for all but flying (a Prone flyer falls, or hovers).
+44. **Altitude is how high a flyer is over the ground under it.** It's
+    kept only while it's set to fly, set in the speed bar, and each foot
+    up or down costs a foot of movement. It counts into every distance as
+    the ground's height does (the map painter plan's Decision 5), so the
+    hover, a reach, a range and an Opportunity Attack measure it; areas and
+    cover don't yet (Later 12).
+45. **Water is swum, not Difficult Terrain.** Replaces the map painter
+    plan's water as Difficult Terrain (its Decision 7's table). A step into
+    painted water costs 1 extra foot a foot, 2 with Difficult Terrain there
+    too (an enemy's space, furniture), none swimming by a Swim Speed or
+    flying over it. Walking, it's the same 10 feet a cell as before.
+46. **A fall is landed at once; its damage is the GM's.** Whoever can't
+    stay aloft (Prone, Incapacitated, its Fly Speed 0, or no Fly Speed
+    left, as when Fly ends, and it can't hover) falls whenever the views
+    are brought up to date, so in the same undo step as what dropped it:
+    its altitude goes and it moves by its Speed again. The status and a
+    GM-only line give the dice ("3d6 Bludgeoning damage, and it lands Prone
+    unless it takes none"); the GM applies them, as a fall into water, a
+    Feather Fall or a Reaction can change what happens.
+
 ## Open questions
 
 Each has a *Suggestion*: what gets built if nobody says otherwise.
@@ -1621,7 +1742,9 @@ Each has a *Suggestion*: what gets built if nobody says otherwise.
   highest one. Picking a speed for a move, and switching speeds part-way
   (Rules Glossary, Speed: "subtract the distance already moved from the new
   speed"), is Later. *Built so (`walking_speed_ft`, step 2; the reach,
-  step 6), with Fly or Climb as the fallback: there is no swim field.*
+  step 6), with Fly or Climb as the fallback: there is no swim field.
+  Since step 26 the speed moved by is chosen in the speed bar (Decision
+  42), swim and burrow read from the stat block's speed text.*
 - **Q8. Does Prone change the reach?** *Blocks step 2.* Rules Glossary,
   Crawling: "each foot of movement costs 1 extra foot". *Suggestion:* yes, a
   Prone creature's steps cost double, so its reach is halved, with a status
@@ -1928,6 +2051,22 @@ Each has a *Suggestion*: what gets built if nobody says otherwise.
   wall reading also finds Wall of Stone, Wall of Ice, Prismatic Wall, Wind
   Wall and four more, whose terrain isn't read (DI-097).
 
+- **R24** (step 26, 2026-11-18). *Plan (Later 7 and 8):* two items,
+  "Fly, Swim, Climb or Burrow Speed chosen for a move" and water swum,
+  with "the combatants don't have a field for" a Swim Speed. *Done:* one
+  step, as water's cost depends on the speed used; the speeds are read
+  from what stat blocks already say (their Fly and Climb fields and their
+  speed text: "swim 40 ft.", "burrow 20 ft.", "hover") and from a
+  Movement, so no new stat-block field was needed (Decisions 42 to 46).
+  *Found:* a Movement could only change how a creature moves, not give it
+  a speed, so it gained `fly_ft`, `flies`, `swim_ft`, `swims` and
+  `hovers`; Fly had no combat effects at all, and every other grant is
+  text (DI-098); `movements` moved to speeds.py so arena.py can import
+  the speeds without a loop; and a flyer whose Fly Speed is gone (Fly
+  ended) would have gone back to its Speed and landed without falling,
+  so its altitude is read from what it was set to, not from the speeds it
+  has now.
+
 ## Discovered issues
 
 Found while writing the plan:
@@ -1970,6 +2109,14 @@ Found in step 25:
   Stone and Wall of Ice can be walked through and give no cover, Wall of
   Thorns' 4 feet a foot and the opaque walls' blocked sight aren't
   counted.
+
+Found in step 26:
+
+- **DI-098** (open, content): Fly and Swim Speeds from features and spells
+  other than Fly (Aasimar and Dragonborn wings, Circle of the Stars and of
+  the Sea, Zealot and Vengeance Paladin flight, the Swim Speeds of the
+  Elements Monk and the Ranger, feats, Gaseous Form, Alter Self) are text;
+  each needs a Movement (fly_ft, flies, swim_ft, swims, hovers).
 
 Already logged, and touched by this plan:
 

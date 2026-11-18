@@ -183,6 +183,23 @@ target label reads "Target: Goblin (25 ft.)", on the cards too. Whoever has
 no place yet (added during the fight) is in the **Not on the map** row
 above the map: click their name to pick them up, then a cell.
 
+**Speeds:** a source on the map with more than one speed (a Giant Eagle's
+Fly 80 ft., a dragon's Swim, a Bulette's Burrow, or a Fly Speed from the Fly
+spell) has the **speed bar** over the map: **moves by** picks the speed its
+moves use, and its reach is shaded by it. What it has moved this turn counts
+against the new speed (Speed 30 and Fly 40: fly 10, walk 10, then 20 more
+to fly). Flying, Difficult Terrain on the ground, water and heights cost
+nothing extra (an enemy's space still does), and **Altitude** sets how high
+it flies: going up or down spends its movement, the token shows "↑30 ft.",
+and its altitude counts into every distance. It can't switch to another
+speed while it's up: bring it down to 0 ft. first. Swimming, it stays in the
+water at no extra cost; burrowing, it goes under creatures (ending on
+nobody) and Difficult Terrain. A flyer that's knocked Prone, Incapacitated,
+Grappled (its Fly Speed 0) or whose Fly ends falls, unless it hovers: it
+lands, and the status says how far and what it takes ("falls 30 ft.
+(Prone): 3d6 Bludgeoning damage, and it lands Prone unless it takes none").
+Apply that damage and Prone yourself.
+
 **Targets in an area** (the Use / Cast dialog's **Select targets in area**):
 while an area is aimed, hovering moves it, a left click targets whoever is
 in it and a right click cancels; nothing is picked up or moved meanwhile.
@@ -325,8 +342,9 @@ the map:
 | **Enter** | Save and close too (Save is the default button), also from the Width / Height boxes. |
 | **Esc** / **Cancel** | Close, asking first when something isn't saved. |
 
-- **Ground:** Wall (nobody enters it), Difficult Terrain, Water (Difficult
-  Terrain too).
+- **Ground:** Wall (nobody enters it), Difficult Terrain, Water (swum: each
+  foot costs 1 extra, 2 in Difficult Terrain such as an enemy's space, none
+  swimming by a Swim Speed or flying over it).
 - **Height:** the ground's height in feet, up or down. Height counts into
   distances, and a step up or down is a climb (each foot costs 1 extra, 2
   in Difficult Terrain, none with a Climb Speed).

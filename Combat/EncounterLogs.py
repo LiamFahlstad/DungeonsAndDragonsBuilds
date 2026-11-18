@@ -66,6 +66,10 @@ PLAYER_FIGHT_KEYS = (
     "dashes",
     # Who has them Grappled, by name (Combat/Arena/arena.py's GRAPPLER_KEY).
     "grappled_by",
+    # The speed they move by and how high they fly (Combat/Arena/speeds.py's
+    # MODE_KEY and ALTITUDE_KEY).
+    "moving_by",
+    "altitude_ft",
     # What they've spent of their turn (an Action, their Reaction), and what
     # the attack rolls against them tell of their AC (attack_rolls.py).
     # Their in-fight "stats" aren't kept here: replaying the party's history

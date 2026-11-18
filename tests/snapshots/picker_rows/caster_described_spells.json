@@ -1253,6 +1253,45 @@
     "1d6"
    ]
   },
+  "All spells | Fly": {
+   "ability": null,
+   "action_cost": "Action",
+   "amount_kind": "Damage",
+   "badge_modifiers": {
+    "Fly": [
+     {
+      "fly_ft": 60,
+      "hovers": true,
+      "type": "Movement"
+     }
+    ]
+   },
+   "bonus": null,
+   "concentration": true,
+   "condition": "Fly",
+   "counts_uses": true,
+   "damage": "",
+   "dc": null,
+   "duration_seconds": 600,
+   "feature_name": "",
+   "half_on_save": false,
+   "is_described": true,
+   "is_unavailable": false,
+   "note": "When the spell ends, the target falls if it is still aloft unless it can stop the fall.",
+   "repeat_save": false,
+   "roll": "Saving throw",
+   "row_name": "",
+   "slot_level": "None",
+   "spell_level": 3,
+   "spell_name": "Fly",
+   "summary": "",
+   "targets": [
+    1,
+    1
+   ],
+   "until": null,
+   "upcast": []
+  },
   "All spells | Freedom of Movement": {
    "ability": null,
    "action_cost": "Action",

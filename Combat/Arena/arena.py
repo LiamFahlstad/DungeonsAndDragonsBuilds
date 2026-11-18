@@ -23,6 +23,14 @@ A Grappled creature names its grappler, `char["grappled_by"] = "Goblin"`
 (step 22): the grappler drags it as it walks, each foot costing 1 extra
 foot unless it's Tiny or two or more sizes smaller (Rules Glossary,
 Grappled: Movable).
+
+A creature moves by one of its speeds (step 26, Combat/Arena/speeds.py):
+its Speed, or its Fly, Swim, Climb or Burrow Speed. Flying, the ground's
+Difficult Terrain, water and heights cost nothing, and its altitude counts
+into its distances; burrowing, it passes under creatures and Difficult
+Terrain; swimming, it stays in the water. Water is swum (Rules Glossary,
+Swimming): each foot costs 1 extra foot, 2 in Difficult Terrain, none by a
+Swim Speed.
 """
 
 from __future__ import annotations
@@ -34,10 +42,19 @@ from itertools import count
 from typing import Iterable
 
 from Combat.Arena.geometry import DEFAULT_RULE, Cell, DistanceRule, rule_named
+from Combat.Arena.speeds import (  # noqa: F401 (TRAIT_MOVEMENT, movements: here too)
+    BURROW,
+    FLY,
+    SWIM,
+    TRAIT_MOVEMENT,
+    altitude_ft,
+    mode_of,
+    movements,
+    speed_of_mode,
+)
 from Combat.Arena.terrain import Terrain
 from Combat.Effects.modifiers import (
     has_condition,
-    modifiers_on,
     size_in_use,
     speed_in_use,
 )
@@ -68,16 +85,6 @@ SIZE_CELLS = {
     CreatureSize.GARGANTUAN: 4,
 }
 _SIZE_ORDER = list(CreatureSize)
-
-# Stat-block traits that are rules for moving, by name: every monster's
-# Incorporeal Movement reads "can move through other creatures and objects
-# as if they were Difficult Terrain", every Swarm "can occupy another
-# creature's space and vice versa".
-TRAIT_MOVEMENT = {
-    "Incorporeal Movement": Movement(through_creatures=True, through_objects=True),
-    "Swarm": Movement(shares_space=True),
-}
-
 
 # ArenaSettings.to_dict's key for `in_use`, there only when it's True.
 IN_USE_KEY = "in_use"
@@ -153,6 +160,11 @@ class ArenaSettings:
         as a creature half on a ledge stands on it."""
         return max((self.terrain.height(cell) for cell in cells), default=0)
 
+    def elevation(self, char: dict, cells: Iterable[Cell]) -> int:
+        """How high char is with its footprint on `cells`: the ground's
+        height there and the altitude it flies at (step 26)."""
+        return self.height_of(cells) + altitude_ft(char)
+
 
 def position(char: dict) -> Cell | None:
     """Char's anchor cell, or None when it isn't on the map."""
@@ -194,7 +206,7 @@ def distance_ft(a: dict, b: dict, settings: ArenaSettings) -> int | None:
     if not cells_a or not cells_b:
         return None
     flat = min(rule.feet(x, y, settings.cell_ft) for x in cells_a for y in cells_b)
-    rise = abs(settings.height_of(cells_a) - settings.height_of(cells_b))
+    rise = abs(settings.elevation(a, cells_a) - settings.elevation(b, cells_b))
     return rule.with_height(flat, rise)
 
 
@@ -230,35 +242,6 @@ def _out_of_the_fight(char: dict) -> bool:
     return has_condition(char, Condition.INCAPACITATED) or (
         isinstance(hp, (int, float)) and hp <= 0
     )
-
-
-def _trait_names(char: dict) -> list[str]:
-    return [
-        str(t.get("name") if isinstance(t, dict) else getattr(t, "name", ""))
-        for t in char.get("traits") or ()
-    ]
-
-
-def movements(char: dict) -> list[tuple[str, Movement]]:
-    """Each Movement char has, with what gives it: its badges' (Freedom of
-    Movement), its always-on features' (a player's Halfling Nimbleness) and
-    its stat block's traits (TRAIT_MOVEMENT)."""
-    found = [
-        (str(source), modifier)
-        for source, modifier in modifiers_on(char)
-        if isinstance(modifier, Movement)
-    ]
-    sheet = char.get("_stat_block")
-    for feature in char.get("_feature_objects") or ():
-        given = feature.movement(sheet)
-        if given is not None:
-            found.append((feature.name, given))
-    found += [
-        (name, TRAIT_MOVEMENT[name])
-        for name in _trait_names(char)
-        if name in TRAIT_MOVEMENT
-    ]
-    return found
 
 
 def _in_force(char: dict, movement: Movement) -> bool:
@@ -391,7 +374,15 @@ def _walk_search(
     can_pass_through says, and ends where can_end_at would let it; walls and
     blocking objects are Difficult Terrain to it with `through_objects`;
     Difficult Terrain costs it nothing extra with `ignores_difficult`, and
-    climbing nothing with `climbs`."""
+    climbing nothing with `climbs`.
+
+    So does the speed it moves by (mode_of, step 26): flying, the ground's
+    Difficult Terrain (painted, water, furniture) and its heights cost
+    nothing, only another creature's space is Difficult; burrowing, it
+    passes under anyone (ending on nobody) and no Difficult Terrain or
+    height costs anything; swimming, it goes only where water is. A step
+    into water is swum otherwise (Rules Glossary, Swimming): 1 extra foot a
+    foot, as well as Difficult Terrain's."""
     start = position(char)
     if start is None:
         return {}, {}
@@ -405,21 +396,26 @@ def _walk_search(
     crawling = has_condition(char, Condition.PRONE)
     # Dragging a creature it grapples: 1 extra foot a foot (Grappled: Movable).
     dragging = drags_at_a_cost(char, chars)
+    mode = mode_of(char)
+    flying, burrowing, swimming = mode == FLY, mode == BURROW, mode == SWIM
     climb_extra = 0 if has_climb_speed(char) or rules.climbs else 1
     terrain = settings.terrain
-    seen: dict[Cell, tuple[bool, bool, int] | None] = {}
+    seen: dict[Cell, tuple[bool, bool, int, bool] | None] = {}
 
-    def entered(anchor: Cell) -> tuple[bool, bool, int] | None:
+    def entered(anchor: Cell) -> tuple[bool, bool, int, bool] | None:
         """Whether char's footprint at `anchor` can end a move there,
-        whether it's Difficult Terrain there, and the ground's height; None
-        when it can't go there."""
+        whether it's Difficult Terrain there, the ground's height, and
+        whether it swims there; None when it can't go there."""
         if anchor not in seen:
             seen[anchor] = _entering(anchor)
         return seen[anchor]
 
-    def _entering(anchor: Cell) -> tuple[bool, bool, int] | None:
+    def _entering(anchor: Cell) -> tuple[bool, bool, int, bool] | None:
         cells = footprint_at(char, anchor, rule)
         if not all(settings.on_map(cell) for cell in cells):
+            return None
+        wet = any(terrain.water(cell) for cell in cells)
+        if swimming and not wet:
             return None
         inside = [cell for cell in cells if terrain.blocks(cell)]
         if inside and not rules.through_objects:
@@ -428,16 +424,20 @@ def _walk_search(
         for cell in cells:
             other = others.get(cell)
             if other is not None and not any(other is m for m in met):
-                if not can_pass_through(char, other, rules):
+                if not burrowing and not can_pass_through(char, other, rules):
                     return None
                 met.append(other)
+        ground = not flying and any(terrain.difficult(c) for c in cells)
         difficult = (
             bool(inside)
-            or any(terrain.difficult(c) for c in cells)
-            or any(is_difficult_for(char, o) for o in met)
+            or ground
+            or (not burrowing and any(is_difficult_for(char, o) for o in met))
         ) and not rules.ignores_difficult
+        if burrowing:
+            difficult = bool(inside) and not rules.ignores_difficult
         can_end = all(can_share_space(char, o, rules) for o in met)
-        return can_end, difficult, settings.height_of(cells)
+        swims = wet and not flying and not swimming and not burrowing
+        return can_end, difficult, settings.height_of(cells), swims
 
     start_height = settings.height_of(footprint_at(char, start, rule))
     best: dict[Cell, int] = {start: 0}
@@ -458,9 +458,11 @@ def _walk_search(
             there = entered(step)
             if there is None:
                 continue
-            _, difficult, step_height = there
-            extra = int(crawling) + int(difficult) + int(dragging)
+            _, difficult, step_height, swims = there
+            extra = int(crawling) + int(difficult) + int(dragging) + int(swims)
             climbed = abs(step_height - height) * (1 + climb_extra + int(difficult))
+            if flying or burrowing:
+                climbed = 0  # over the ledge, or under it
             new_cost = (
                 cost + int(rule.step_cost(cell, step) * cell_ft * (1 + extra)) + climbed
             )
@@ -652,12 +654,19 @@ def dashes(char: dict) -> int:
 
 
 def movement_ft(char: dict) -> int | None:
-    """How far char can move this turn: its walking speed in use, and as
-    much again for each Dash it has taken (Rules Glossary, Dash: "The
-    increase equals your Speed after applying any modifiers"). None when it
+    """How far char can move this turn by the speed it moves by (mode_of:
+    its Speed, or its Fly Speed, ...), and its Speed more for each Dash it
+    has taken (Rules Glossary, Dash: "The increase equals your Speed after
+    applying any modifiers"; a creature with no Speed, its speed's). What
+    it moved already counts against a new speed (Speed: "subtract the
+    distance already moved from the new speed": remaining_ft). None when it
     has no speed as a number."""
-    speed = walking_speed_ft(char)
-    return None if speed is None else speed * (1 + dashes(char))
+    speed = speed_of_mode(char)
+    if speed is None:
+        speed = walking_speed_ft(char)
+    if speed is None:
+        return None
+    return speed + dashes(char) * (walking_speed_ft(char) or speed)
 
 
 def remaining_ft(char: dict) -> int:
@@ -822,5 +831,5 @@ def distance_to_cell_ft(char: dict, cell: Cell, settings: ArenaSettings) -> int 
     if not cells:
         return None
     flat = min(rule.feet(own, cell, settings.cell_ft) for own in cells)
-    rise = abs(settings.height_of(cells) - settings.terrain.height(cell))
+    rise = abs(settings.elevation(char, cells) - settings.terrain.height(cell))
     return rule.with_height(flat, rise)

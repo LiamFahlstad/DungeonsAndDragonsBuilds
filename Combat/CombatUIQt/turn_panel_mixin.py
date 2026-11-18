@@ -219,7 +219,9 @@ class TurnPanelMixin(CombatWindowState):
 
     def _refresh_views(self):
         """Bring the turn column, the players' screen and the player link up
-        to date."""
+        to date. Whoever can't stay aloft falls first (the battle map's
+        _land_fallers), so the views show where it landed."""
+        self._land_fallers()
         between = self.phase == "PARTY" and self.log_file is not None
         self._log_box_header.setText("Log" if between else "Encounter Log")
         if self.phase == "COMBAT" and self.initiative_order:

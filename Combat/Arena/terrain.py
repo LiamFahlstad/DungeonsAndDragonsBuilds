@@ -7,9 +7,12 @@ The rules the arena counts from it (Combat/Arena/arena.py):
 
 - Nobody enters or ends a move on a wall, or on an object that blocks
   movement (a barrel, a pillar).
-- Difficult Terrain, water and furniture make a step cost 1 extra foot a
-  foot (Rules Glossary, Difficult Terrain: "isn't cumulative", so a
-  creature's space on top of it costs no more).
+- Difficult Terrain and furniture make a step cost 1 extra foot a foot
+  (Rules Glossary, Difficult Terrain: "isn't cumulative", so a creature's
+  space on top of it costs no more).
+- Water is swum (Rules Glossary, Swimming, step 26 of the arena plan): 1
+  extra foot a foot, 2 in Difficult Terrain (an enemy's space in it), none
+  for a creature swimming by its Swim Speed or flying over it.
 - A step between two heights is a climb (Rules Glossary, Climbing: each foot
   costs 1 extra foot, 2 extra in Difficult Terrain, none with a Climb
   Speed), and height counts into the distance between two creatures.
@@ -40,7 +43,7 @@ GROUNDS = {
     OPEN: "Open ground",
     WALL: "Wall",
     DIFFICULT: "Difficult Terrain",
-    WATER: "Water (Difficult Terrain)",
+    WATER: "Water (swimming)",
 }
 
 # A cell's light (Rules Glossary, Vision and Senses).
@@ -225,11 +228,16 @@ class Terrain:
         return spot.ground == WALL or (spot.thing is not None and spot.thing.blocks)
 
     def difficult(self, cell: Cell) -> bool:
-        """Difficult Terrain: its ground, water, or furniture on it."""
+        """Difficult Terrain: its ground, or furniture on it. Water isn't:
+        it's swum (water)."""
         spot = self.at(cell)
-        return spot.ground in (DIFFICULT, WATER) or (
+        return spot.ground == DIFFICULT or (
             spot.thing is not None and spot.thing.difficult
         )
+
+    def water(self, cell: Cell) -> bool:
+        """Water to swim in (Rules Glossary, Swimming)."""
+        return self.at(cell).ground == WATER
 
     def height(self, cell: Cell) -> int:
         return self.at(cell).height_ft

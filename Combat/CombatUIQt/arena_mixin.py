@@ -48,6 +48,15 @@ a painted wall is: every rule reads the map through `_map_settings`, the
 painted terrain with the kept walls laid over it, which is never saved into
 the painted map.
 
+Speeds (step 26): the speed bar over the map, for a source on it with
+more than one speed (or aloft), picks the speed it moves by (Walk, Fly,
+Swim, Climb, Burrow; Combat/Arena/speeds.py), what it has moved counting
+against the new one, and how high a flyer is: flying up or down spends its
+movement, and its altitude counts into its distances. A flyer that can't
+stay aloft (Prone, Incapacitated, its Fly Speed 0 or gone, and no hover)
+falls as the views are brought up to date: it lands, and the status and a
+GM-only line say how far and what it takes.
+
 The painted map (Notes/map-painter-plan.md): a fight starting puts whoever
 the encounter's map gives a starting cell there; the hover names what's
 painted on a cell, the target label says when a target is Lightly or
@@ -147,6 +156,23 @@ from Combat.Arena.lasting import (
 from Combat.Arena.maps import place_at_starts
 from Combat.Arena.grapples import dragged_to, stretched
 from Combat.Arena.pushes import push_destination, push_order, too_big
+from Combat.Arena.speeds import (
+    ALTITUDE_KEY,
+    FLY,
+    LABELS,
+    MAX_ALTITUDE_FT,
+    MODE_KEY,
+    SPEED_NAMES,
+    VERBS,
+    WALK,
+    altitude_ft,
+    fall_reason,
+    falling_dice,
+    hovers,
+    mode_of,
+    speed_of_mode,
+    speeds,
+)
 from Combat.Arena.terrain import BRIGHT, DARK, DIM, OBSCURED, MapObject
 from Combat.Effects.modifiers import has_condition
 from Combat.Effects.triggers import OpportunityAttack
@@ -206,6 +232,7 @@ class ArenaMixin(CombatWindowState):
         layout.setContentsMargins(0, 0, 0, 0)
         layout.setSpacing(4)
         layout.addWidget(self._build_off_map_strip())
+        layout.addWidget(self._build_speed_bar())
         layout.addWidget(self._build_area_bar())
         layout.addWidget(self._build_area_panel())
         layout.addWidget(self._arena_view, stretch=1)
@@ -248,6 +275,181 @@ class ArenaMixin(CombatWindowState):
             self._off_map_layout.addWidget(button)
         self._off_map_layout.addStretch()
         self._off_map_strip.show()
+
+    def _build_speed_bar(self) -> QWidget:
+        """The bar over the map for the source's speeds (step 26): the speed
+        it moves by, and how high it flies. Shown for a source on the map
+        in a fight with more than one speed, or one aloft."""
+        bar = QWidget()
+        bar.setObjectName("speedBar")
+        layout = QHBoxLayout(bar)
+        layout.setContentsMargins(4, 4, 4, 0)
+        layout.setSpacing(6)
+        self._speed_label = QLabel("")
+        self._speed_label.setObjectName("speedLabel")
+        layout.addWidget(self._speed_label)
+        self._move_mode = QComboBox()
+        self._move_mode.setObjectName("moveMode")
+        self._move_mode.setToolTip(
+            "The speed it moves by. Switching mid-move counts what it has"
+            " moved against the new speed (Rules Glossary, Speed)."
+        )
+        layout.addWidget(self._move_mode)
+        self._altitude_label = QLabel("Altitude")
+        layout.addWidget(self._altitude_label)
+        self._move_altitude = QSpinBox()
+        self._move_altitude.setObjectName("moveAltitude")
+        self._move_altitude.setRange(0, MAX_ALTITUDE_FT)
+        self._move_altitude.setSingleStep(5)
+        self._move_altitude.setSuffix(" ft. up")
+        self._move_altitude.setKeyboardTracking(False)
+        self._move_altitude.setToolTip(
+            "How high it flies above the ground: going up or down spends its"
+            " movement, and it counts into its distances"
+        )
+        layout.addWidget(self._move_altitude)
+        layout.addStretch()
+        self._move_mode.currentIndexChanged.connect(lambda: self._move_mode_picked())
+        self._move_altitude.valueChanged.connect(lambda: self._altitude_picked())
+        bar.hide()
+        self._speed_bar = bar
+        return bar
+
+    def _refresh_speed_bar(self):
+        """The speed bar for the source, or hidden."""
+        char = self.selected_character
+        have = speeds(char) if char is not None else {}
+        aloft = char is not None and altitude_ft(char) > 0
+        if (
+            char is None
+            or self.phase != "COMBAT"
+            or position(char) is None
+            or (len(have) < 2 and not aloft)
+        ):
+            self._speed_bar.hide()
+            return
+        mode = mode_of(char)
+        self._speed_label.setText(f"{char['name']} moves by:")
+        self._move_mode.blockSignals(True)
+        self._move_mode.clear()
+        for key, feet in have.items():
+            hover = " (hover)" if key == FLY and hovers(char) else ""
+            self._move_mode.addItem(f"{LABELS[key]} {feet} ft.{hover}", key)
+        self._move_mode.setCurrentIndex(max(0, self._move_mode.findData(mode)))
+        self._move_mode.blockSignals(False)
+        flying = mode == FLY
+        self._altitude_label.setVisible(flying)
+        self._move_altitude.setVisible(flying)
+        self._move_altitude.blockSignals(True)
+        self._move_altitude.setValue(altitude_ft(char))
+        self._move_altitude.blockSignals(False)
+        self._speed_bar.show()
+
+    def _move_mode_picked(self):
+        char = self.selected_character
+        mode = self._move_mode.currentData()
+        if char is not None and mode and mode != mode_of(char):
+            self._set_move_mode(char, mode)
+
+    def _altitude_picked(self):
+        char = self.selected_character
+        if char is not None and self._move_altitude.value() != altitude_ft(char):
+            self._set_altitude(char, self._move_altitude.value())
+
+    @undoable
+    def _set_move_mode(self, char: dict, mode: str):
+        """Char moves by `mode` from now on (one undo step): what it has
+        moved this turn counts against that speed (Rules Glossary, Speed).
+        It can't stop flying while it's aloft: it lands first. A GM-only
+        log line says what's left."""
+        name = char["name"]
+        if mode_of(char) == FLY and mode != FLY and altitude_ft(char) > 0:
+            self._show_status(
+                f"{name} is {altitude_ft(char)} ft. up: bring it down to 0 ft."
+                " to land first."
+            )
+            self._refresh_views()
+            return
+        if mode == WALK:
+            char.pop(MODE_KEY, None)
+        else:
+            char[MODE_KEY] = mode
+        if mode != FLY:
+            char.pop(ALTITUDE_KEY, None)
+        speed = speed_of_mode(char)
+        left = remaining_ft(char)
+        line = f"{name} moves by its {SPEED_NAMES[mode_of(char)]} now" + (
+            f" ({speed} ft.; {left} ft. left this turn)." if speed is not None else "."
+        )
+        self._log_event(line, character=name, public=False)
+        self._show_status(line)
+        self._refresh_views()
+
+    @undoable
+    def _set_altitude(self, char: dict, feet: int):
+        """Char flies up or down to `feet` above the ground (one undo step),
+        spending as much of its movement (a move by its Fly Speed), the map
+        put in use; going past its movement is warned about, not refused,
+        as a walk's is (Q2)."""
+        name = char["name"]
+        if mode_of(char) != FLY:
+            return
+        before = altitude_ft(char)
+        change = abs(feet - before)
+        if not change:
+            return
+        if feet:
+            char[ALTITUDE_KEY] = feet
+        else:
+            char.pop(ALTITUDE_KEY, None)
+        char[MOVED_KEY] = int(char.get(MOVED_KEY, 0)) + change
+        self.arena_settings.in_use = True
+        way = "up" if feet > before else "down"
+        where = f"to {feet} ft. up" if feet else "to the ground"
+        lines = [
+            f"{name} flies {way} {change} ft. ({where}; {remaining_ft(char)} ft."
+            " left this turn)."
+        ]
+        self._log_event(lines[0], character=name, public=False)
+        movement = movement_ft(char)
+        if movement is not None and char[MOVED_KEY] > movement:
+            lines.append(
+                f"{name} moved {char[MOVED_KEY]} ft., Fly Speed"
+                f" {speed_of_mode(char)} ft."
+            )
+        self._show_status(" ".join(lines))
+        self._refresh_views()
+
+    def _land_fallers(self):
+        """Whoever is aloft and can't stay so (speeds.fall_reason: Prone,
+        Incapacitated, its Fly Speed 0 or gone, and it can't hover) falls to
+        the ground: its altitude goes and it moves by its Speed, with a
+        GM-only line and the status saying how far it fell and what that
+        deals (Rules Glossary, Falling). Run as the views are brought up to
+        date, so whatever made it fall (a condition, a spell ending) is in
+        the same undo step."""
+        if self.phase != "COMBAT":
+            return
+        lines = []
+        for char in self.characters:
+            why = fall_reason(char)
+            if why is None:
+                continue
+            feet = altitude_ft(char)
+            char.pop(ALTITUDE_KEY, None)
+            char.pop(MODE_KEY, None)
+            dice = falling_dice(feet)
+            hurt = (
+                f" {dice} Bludgeoning damage, and it lands Prone unless it takes"
+                " none (Falling)."
+                if dice
+                else " No damage: less than 10 ft. (Falling)."
+            )
+            line = f"{char['name']} falls {feet} ft. ({why}):" + hurt
+            self._log_event(line, character=char["name"], public=False)
+            lines.append(line)
+        if lines:
+            self._show_status(" ".join(lines))
 
     def _build_area_bar(self) -> QWidget:
         """The bar over the map while an area is aimed: what to do and who
@@ -824,6 +1026,7 @@ class ArenaMixin(CombatWindowState):
         if not self._arena_shown():
             return
         self._refresh_off_map_strip()
+        self._refresh_speed_bar()
         # A token stays picked up only while it's the source: Escape, the
         # turn moving on or another source puts it down.
         picked, source = self._arena_view.picked, self.selected_character
@@ -1213,17 +1416,22 @@ class ArenaMixin(CombatWindowState):
             held = [h for h in grappled_by(char, self.characters) if position(h)]
             char[POSITION_KEY] = cell.to_list()
             char[MOVED_KEY] = int(char.get(MOVED_KEY, 0)) + feet
-            speed = walking_speed_ft(char)
+            mode = mode_of(char)
+            speed = speed_of_mode(char)
+            if speed is None:
+                speed = walking_speed_ft(char)
             self._log_event(
-                move_line(char, start, cell, feet, walked is not None, speed, settings),
+                move_line(
+                    char, start, cell, feet, walked is not None, speed, settings, mode
+                ),
                 public=False,
             )
             movement = movement_ft(char)
             if movement is not None and char[MOVED_KEY] > movement:
                 with_dash = f" ({movement} ft. with its {_dashes_text(char)})"
                 warnings.append(
-                    f"{name} moved {char[MOVED_KEY]} ft., Speed {speed} ft."
-                    + (with_dash if dashes(char) else "")
+                    f"{name} moved {char[MOVED_KEY]} ft., {SPEED_NAMES[mode]}"
+                    f" {speed} ft." + (with_dash if dashes(char) else "")
                 )
             # Dragged first: the creature it holds is still beside it when
             # its walk is measured for Opportunity Attacks.
@@ -1839,16 +2047,19 @@ def move_line(
     walked: bool,
     speed: int | None,
     settings: ArenaSettings,
+    mode: str = WALK,
 ) -> str:
     """The encounter log's line for char's move from `start` to `to`, which
     cost `feet` (char's "moved_ft" already counts it): "Clover moves from A7
     to C8 (15 ft.; 15 of 30 ft. left this turn)." With no walk there (walled
-    in), it "goes" and the feet are the straight line's."""
+    in), it "goes" and the feet are the straight line's. By another speed
+    (`mode`, step 26), its verb and that speed's name: "Wyvern flies from
+    ... (all of its 80 ft. Fly Speed used)"."""
     shape = settings.distance_rule.shape
     where = f"from {shape.cell_name(start) if start else '?'} to {shape.cell_name(to)}"
     name = char["name"]
     head = (
-        f"{name} moves {where}"
+        f"{name} {VERBS[mode]} {where}"
         if walked
         else f"{name} goes {where}, with no way to walk there"
     )
@@ -1856,17 +2067,20 @@ def move_line(
     if speed is None:
         return f"{head} ({cost})."
     moved = int(char.get(MOVED_KEY, 0))
-    # With a Dash, as much again as its Speed (movement_ft).
-    total = speed * (1 + dashes(char))
+    # With a Dash, its Speed more (movement_ft).
+    total = speed + dashes(char) * (walking_speed_ft(char) or speed)
+    speed_name = SPEED_NAMES[mode]
     of = f"its {total} ft. with its {_dashes_text(char)}" if dashes(char) else ""
     if moved < total:
         left = f"{total - moved} of {total} ft. left this turn"
         if of:
             left += f" ({_dashes_text(char)})"
     elif moved == total:
-        left = f"all of {of} used" if of else f"all of its {speed} ft. Speed used"
+        left = (
+            f"all of {of} used" if of else f"all of its {speed} ft. {speed_name} used"
+        )
     else:
-        left = f"{moved - total} ft. past {of or f'its {speed} ft. Speed'}"
+        left = f"{moved - total} ft. past {of or f'its {speed} ft. {speed_name}'}"
     return f"{head} ({cost}; {left})."
 
 

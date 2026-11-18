@@ -129,7 +129,8 @@ What the fight does with the paint:
 | Painted | On the battle map |
 |---|---|
 | Wall, blocking object | Nobody is moved, placed or starts there; the reach goes around it |
-| Difficult Terrain, water, furniture | A step onto it costs 1 extra foot per foot; not cumulative with a creature's space (Decision 7) |
+| Difficult Terrain, furniture | A step onto it costs 1 extra foot per foot; not cumulative with a creature's space (Decision 7) |
+| Water | Swum since the arena plan's step 26 (its Decision 45): 1 extra foot per foot, 2 in Difficult Terrain, none by a Swim Speed or flying |
 | Height | A step between two heights climbs the difference (Decision 6); distances add the height difference (Decision 5) |
 | Dim Light, Darkness | Shaded; the hover names it; the target label adds "Lightly Obscured" / "Heavily Obscured" (Decision 8) |
 | Object | Drawn and named; its cover on the hover (Decision 9) |

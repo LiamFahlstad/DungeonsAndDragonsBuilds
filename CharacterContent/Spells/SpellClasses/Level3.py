@@ -27,6 +27,7 @@ from Model.Content.CombatEffect import (
     CombatCondition,
     CombatDamage,
     CombatEffect,
+    CombatTargets,
     EffectRoll,
     TurnEdge,
     TurnOf,
@@ -36,6 +37,7 @@ from Model.Content.CombatModifiers import (
     AtTurnEnd,
     D20Mode,
     D20Test,
+    Movement,
     Note,
     Resistance,
     RollMode,
@@ -1942,6 +1944,25 @@ class Fly(ClassSpell):
                     ),
                 ),
             ),
+        ]
+
+    def combat_effects(
+        self, character: CharacterView | None = None
+    ) -> list[CombatEffect]:
+        return [
+            CombatEffect(
+                conditions=(
+                    CombatCondition(
+                        "Fly",
+                        modifiers=(Movement(fly_ft=60, hovers=True),),
+                    ),
+                ),
+                targets=CombatTargets(1, upcast=1),
+                notes=(
+                    "When the spell ends, the target falls if it is still aloft"
+                    " unless it can stop the fall.",
+                ),
+            )
         ]
 
 

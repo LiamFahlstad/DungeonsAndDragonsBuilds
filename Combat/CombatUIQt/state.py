@@ -573,6 +573,9 @@ class CombatWindowState:
     def _map_settings(self) -> ArenaSettings:
         raise NotImplementedError("ArenaMixin._map_settings")
 
+    def _land_fallers(self):
+        raise NotImplementedError("ArenaMixin._land_fallers")
+
     def _show_map_painter(self):
         raise NotImplementedError("MapPainterMixin._show_map_painter")
 

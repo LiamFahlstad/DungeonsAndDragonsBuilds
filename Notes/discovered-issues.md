@@ -596,6 +596,16 @@ Step 25 reads a kept wall's terrain from its text (wall_terrain): one it calls a
 **History**
 - 2026-11-18 main session (arena step 25): found
 
+### DI-098 · Fly and Swim Speeds given by features and spells other than Fly are text only, so the battle map can't move them by it
+- **Status:** open
+- **Area:** feature-combat-effects
+- **Where:** `CharacterContent/Features/SpeciesFeatures/AasimarFeatures.py`, `CharacterContent/Features/SubClassFeatures/Druid/DruidStarsFeatures.py`
+
+Step 26 lets a Movement give a speed (Model/Content/CombatModifiers.py: fly_ft, flies (equal to its Speed), swim_ft, swims, hovers), read by Combat/Arena/speeds.py, and only the Fly spell has one (Movement(fly_ft=60, hovers=True) on its badge). Every other grant is still only text, so a player using it has no Fly or Swim choice in the speed bar: Aasimar Heavenly Wings and Celestial Revelation, Dragonborn Draconic Flight, Draconic Sorcerer's wings, Path of the Wild Heart's aspects, Zealot's and Vengeance Paladin's flight, Circle of the Sea and of the Stars forms, Shadow Cleric, Genie Paladin, Psion Psykinetic, Elements Monk's and Ranger's Swim Speeds, Origin and General feats (OriginFeats.py:2714, GeneralFeats.py:4208), and spells such as Gaseous Form and Alter Self. A feature on all the time gives it from Feature.movement(); one used for a while gives it on its use's badge, as Fly does. 'A Fly Speed equal to twice your Speed' (Armorer, Psi Warrior) needs a field Movement doesn't have yet. For the spell-combat-effects and feature-combat-effects agents.
+
+**History**
+- 2026-11-18 main session (arena step 26): found
+
 ## Fixed
 
 ### DI-001 · Temporary Hit Points stack instead of keeping one amount

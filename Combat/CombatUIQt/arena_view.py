@@ -9,7 +9,8 @@ the cells it can reach this turn with what each costs, and the next click on
 an empty cell moves it there; clicking it again puts it down where it was.
 Or drag a token to a cell (step 6). Shift held as the token is dropped (the
 drag's release, or the click on the cell) teleports it there, Alt pushes it
-(step 17, MoveKind): neither is the creature's own movement. Whose turn it is stands on gold cells,
+(step 17, MoveKind): neither is the creature's own movement. A flying
+token has its altitude over it ("↑30 ft.", step 26). Whose turn it is stands on gold cells,
 as its card is gold. With a source selected, hovering a cell or a token
 shows how far it is (step 7). Ctrl+wheel zooms; dragging empty space
 pans. Columns are lettered and rows numbered, so a cell is "C7".
@@ -57,6 +58,7 @@ from PyQt6.QtWidgets import (
 )
 
 from Combat.Arena.arena import ArenaSettings, footprint
+from Combat.Arena.speeds import altitude_ft
 from Combat.Arena.geometry import Cell
 from Combat.Arena.lasting import DEFAULT_AREA_COLOR, LastingArea
 from Combat.Arena.terrain import BRIGHT, DARK, DIFFICULT, WALL, WATER
@@ -94,6 +96,8 @@ _LASTING_ALPHA = 70
 _LASTING_EDGE_ALPHA = 220
 # A wall's damaging side (step 25): fainter still.
 _LASTING_SIDE_ALPHA = 30
+# A flyer's altitude over its token (step 26).
+_ALTITUDE = QColor("#aee3ff")
 # How far the mouse goes before a press on a token is a drag, not a click.
 _DRAG_PX = 6
 # The painted terrain (draw_terrain; Notes/map-painter-plan.md).
@@ -150,6 +154,7 @@ class TokenRow:
     target: bool = False
     down: bool = False  # at 0 HP: greyed (the plan's Q9)
     hidden: bool = False  # unseen by the players: dashed
+    altitude_ft: int = 0  # how high it flies (step 26): "30 ft." over it
 
 
 def token_label(name: str) -> str:
@@ -208,6 +213,7 @@ def token_rows(
                 target=any(char is t for t in targets),
                 down=down,
                 hidden=not _can_be_seen(char),
+                altitude_ft=altitude_ft(char),
             )
         )
     return rows
@@ -656,6 +662,15 @@ class ArenaView(QGraphicsView):
         text.setPos(
             box.center().x() - rect.width() / 2, box.center().y() - rect.height() / 2
         )
+        if row.altitude_ft:
+            # How high it flies, over its top edge (step 26).
+            up = QGraphicsSimpleTextItem(f"↑{row.altitude_ft} ft.")
+            up.setFont(QFont("Segoe UI", 7, QFont.Weight.Bold))
+            up.setBrush(QBrush(_ALTITUDE))
+            self._scene.addItem(up)
+            width = up.boundingRect().width()
+            up.setPos(box.center().x() - width / 2, box.top() - 3)
+            up.setToolTip(f"{row.name} flies {row.altitude_ft} ft. up")
         if row.hp_fraction is not None:
             bar_w = box.width() * 0.8
             left = box.center().x() - bar_w / 2

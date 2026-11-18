@@ -330,7 +330,14 @@ class Movement:
     - `climbs`: climbing costs it no extra movement, as a Climb Speed equal
       to its Speed (Athlete, Spider Climb);
     - `stands_up_ft`: righting itself from Prone costs this many feet of
-      movement, not half its Speed (Athlete's Hop Up: 5)."""
+      movement, not half its Speed (Athlete's Hop Up: 5);
+    - `fly_ft`, `swim_ft`: it has a Fly Speed or a Swim Speed of that many
+      feet (Fly: "a Fly Speed of 60 feet"), and `flies`, `swims` one equal
+      to its Speed (a species' wings); the battle map lets it move by it
+      (Combat/Arena/speeds.py);
+    - `hovers`: it can hover, so it doesn't fall while flying when it's
+      Prone, Incapacitated or its Fly Speed is 0 (Rules Glossary, Flying;
+      Fly: "can hover")."""
 
     past_larger: bool = False
     through_creatures: bool = False
@@ -340,6 +347,11 @@ class Movement:
     after: str = ""
     climbs: bool = False
     stands_up_ft: int | None = None
+    fly_ft: int | None = None
+    flies: bool = False
+    swim_ft: int | None = None
+    swims: bool = False
+    hovers: bool = False
 
     def __post_init__(self):
         if self.after and self.after not in MOVEMENT_AFTER:
@@ -354,6 +366,13 @@ class Movement:
                 raise ValueError(
                     f"A Movement's stands_up_ft is 0 or more, got {self.stands_up_ft}"
                 )
+        for name in ("fly_ft", "swim_ft"):
+            if getattr(self, name) is not None:
+                _check_whole_number(self, name)
+                if getattr(self, name) <= 0:
+                    raise ValueError(
+                        f"A Movement's {name} is above 0, got {getattr(self, name)}"
+                    )
         if not any(
             getattr(self, field.name) != field.default for field in fields(self)
         ):
@@ -663,6 +682,11 @@ _PLAIN: dict[str, type | tuple[type, ...]] = {
     "after": str,
     "climbs": bool,
     "stands_up_ft": int,
+    "fly_ft": int,
+    "flies": bool,
+    "swim_ft": int,
+    "swims": bool,
+    "hovers": bool,
 }
 
 
