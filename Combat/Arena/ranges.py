@@ -17,23 +17,27 @@ On the map (Decision 31): what has Disadvantage is counted into the roll;
 an attack past its reach or range is warned about, not refused, as an area
 aimed past its range is (Decision 19). A weapon that's both (a Dagger, which
 can be thrown) is a melee attack within its reach and a thrown one past it.
-Whether the enemy close by can see the attacker is counted from what's
-known: not when the enemy is Blinded or the attacker Invisible, which are
-left for the GM to judge, as the Dodge action's are."""
+Whether the enemy close by can see the attacker is counted from the map's
+sight (Combat/Arena/senses.py, step 28): one that can't (Blinded, the
+attacker Invisible or in Darkness to it) imposes nothing, and says so.
+
+The check also carries the map's `Sight` of the two (whether each sees the
+other), which attack_plan counts (Invisible's, Heavily Obscured's)."""
 
 from __future__ import annotations
 
 import re
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from typing import Iterable
 
 from Combat.Arena.arena import ArenaSettings, distance_ft
+from Combat.Arena.senses import sees
 from Combat.Effects.modifiers import has_condition
+from Combat.Effects.sight import NO_SIGHT, Sight
 from Combat.Effects.triggers import on_party_side
 from Core.Definitions import Condition
 from Core.Weapons import WEAPON_RANGES_FT, WeaponProperty
 from Model.Content.CombatModifiers import D20Mode, D20Test, RollMode
-from Model.Creatures.Combatants import Visibility
 
 # Rules Glossary, Reach: 5 feet, 10 with a Reach weapon.
 MELEE_REACH_FT = 5
@@ -145,12 +149,14 @@ def spell_attack_range(
 class RangeCheck:
     """What the map says of an attack's range: why it has Disadvantage
     (labels, each counted as one: "Long range, 90 ft. away"), what the GM
-    should check (`notes`: an enemy close by that may not see the attacker)
-    and what it can't do (`warnings`: past its reach or range)."""
+    should know (`notes`: an enemy close by that doesn't see the attacker)
+    and what it can't do (`warnings`: past its reach or range); and whether
+    each of the two sees the other (`sight`, for attack_plan)."""
 
     disadvantages: tuple[str, ...] = ()
     notes: tuple[str, ...] = ()
     warnings: tuple[str, ...] = ()
+    sight: Sight = NO_SIGHT
 
     @property
     def modifiers(self) -> list[tuple[str, D20Mode]]:
@@ -162,22 +168,14 @@ class RangeCheck:
 NO_RANGE_CHECK = RangeCheck()
 
 
-def _sees_unknown(enemy: dict, attacker: dict) -> bool:
-    """Whether enemy may not see attacker: it's Blinded, or the attacker is
-    Invisible (by the condition or its visibility state)."""
-    return (
-        has_condition(enemy, Condition.BLINDED)
-        or has_condition(attacker, Condition.INVISIBLE)
-        or Visibility.INVISIBLE.value in (attacker.get("visibility_states") or ())
-    )
-
-
 def _close_enemies(
     attacker: dict, chars: Iterable[dict], settings: ArenaSettings
 ) -> tuple[list[str], list[str]]:
     """The enemies within 5 feet of attacker that impose Disadvantage on its
-    ranged attack, and those that may not see it (for a note)."""
-    counted, unsure = [], []
+    ranged attack, and a note for each that doesn't, as it can't see the
+    attacker (senses.sees)."""
+    chars = list(chars)
+    counted, unseen = [], []
     for other in chars:
         if other is attacker or on_party_side(other) == on_party_side(attacker):
             continue
@@ -189,8 +187,31 @@ def _close_enemies(
         feet = distance_ft(attacker, other, settings)
         if feet is None or feet > CLOSE_COMBAT_FT:
             continue
-        (unsure if _sees_unknown(other, attacker) else counted).append(other["name"])
-    return counted, unsure
+        seen = sees(other, attacker, chars, settings)
+        if seen.can is False:
+            unseen.append(
+                f"Ranged attack within 5 ft. of {other['name']}: no Disadvantage,"
+                f" it doesn't see the attacker ({seen.why})"
+            )
+        else:
+            counted.append(other["name"])
+    return counted, unseen
+
+
+def attack_sight(
+    attacker: dict | None,
+    target: dict | None,
+    chars: Iterable[dict],
+    settings: ArenaSettings,
+) -> Sight:
+    """Whether attacker sees target and target sees attacker on the map
+    (senses.sees); NO_SIGHT without either, or for the same one."""
+    if attacker is None or target is None or attacker is target:
+        return NO_SIGHT
+    chars = list(chars)
+    return Sight(
+        sees(attacker, target, chars, settings), sees(target, attacker, chars, settings)
+    )
 
 
 def check_attack_range(
@@ -201,8 +222,22 @@ def check_attack_range(
     settings: ArenaSettings,
 ) -> RangeCheck:
     """What attacker's `attack` against target has from the map (see the
-    module): nothing without an attack, an attacker or a target, or with
-    either off the map."""
+    module), with the two's sight (attack_sight): no more without an attack,
+    an attacker or a target, or with either off the map."""
+    chars = list(chars)
+    found = _range_check(attack, attacker, target, chars, settings)
+    sight = attack_sight(attacker, target, chars, settings)
+    return replace(found, sight=sight) if sight != NO_SIGHT else found
+
+
+def _range_check(
+    attack: AttackRange | None,
+    attacker: dict | None,
+    target: dict | None,
+    chars: list[dict],
+    settings: ArenaSettings,
+) -> RangeCheck:
+    """check_attack_range's reach and range."""
     if attack is None or attacker is None or target is None or attacker is target:
         return NO_RANGE_CHECK
     feet = distance_ft(attacker, target, settings)
@@ -225,15 +260,10 @@ def check_attack_range(
         )
     elif feet > attack.normal_ft:
         disadvantages.append(f"Long range, {feet} ft. of {attack.range_text}")
-    counted, unsure = _close_enemies(attacker, chars, settings)
+    counted, unseen = _close_enemies(attacker, chars, settings)
     if counted:
         disadvantages.append(f"Ranged attack within 5 ft. of {', '.join(counted)}")
-    notes = tuple(
-        f"Ranged attack within 5 ft. of {each} (not counted): Disadvantage if it"
-        " can see the attacker"
-        for each in unsure
-    )
-    return RangeCheck(tuple(disadvantages), notes, tuple(warnings))
+    return RangeCheck(tuple(disadvantages), tuple(unseen), tuple(warnings))
 
 
 def spell_range_warning(

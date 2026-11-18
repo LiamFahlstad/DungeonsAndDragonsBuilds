@@ -414,7 +414,12 @@ class TurnPanelMixin(CombatWindowState):
                 char, target, action_range(action.description, action.name)
             )
             plan = attack_plan(
-                char, target, mode, distance_ft=feet, extra=reach.modifiers
+                char,
+                target,
+                mode,
+                distance_ft=feet,
+                extra=reach.modifiers,
+                sight=reach.sight,
             )
             d20 = self._roll_d20_for_attack(plan.mode)
             # What its modifiers add (Bless's 1d4), rolled after the d20.
@@ -837,6 +842,7 @@ class TurnPanelMixin(CombatWindowState):
             # A `when`'s distance from the map (arena step 27), and Dark
             # One's Blessing's knockouts by others near its owner.
             distance_of=self._attacker_distance_ft,
+            sees_of=self._sees_of,
             others=self.characters,
         )
         seen = {_firing_key(f) for f in found}
@@ -848,6 +854,7 @@ class TurnPanelMixin(CombatWindowState):
                 self._badge_trigger_row,
                 is_dead=is_dead,
                 distance_of=self._attacker_distance_ft,
+                sees_of=self._sees_of,
             ):
                 if _firing_key(firing) not in seen:
                     seen.add(_firing_key(firing))
@@ -953,6 +960,7 @@ class TurnPanelMixin(CombatWindowState):
             triggered_rows,
             is_dead=lambda char: self._char_death_state(char) == "dead",
             distance_of=self._attacker_distance_ft,
+            sees_of=self._sees_of,
         )
         if not found:
             return
@@ -976,6 +984,7 @@ class TurnPanelMixin(CombatWindowState):
             triggered_rows,
             is_dead=lambda char: self._char_death_state(char) == "dead",
             distance_of=self._attacker_distance_ft,
+            sees_of=self._sees_of,
         )
         if not found:
             return True, 0

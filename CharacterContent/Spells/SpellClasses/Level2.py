@@ -41,6 +41,7 @@ from Model.Content.CombatModifiers import (
     Note,
     RollMode,
     Size,
+    Vision,
 )
 from Model.Content.Feature import FeatureTarget
 from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table
@@ -1786,6 +1787,19 @@ class Darkvision(ClassSpell):
                     ("Effect", "Darkvision with a range of 150 feet for the duration"),
                 )
             ),
+        ]
+
+    def combat_effects(
+        self, character: CharacterView | None = None
+    ) -> list[CombatEffect]:
+        return [
+            CombatEffect(
+                conditions=(
+                    CombatCondition(
+                        "Darkvision", modifiers=(Vision(darkvision_ft=150),)
+                    ),
+                ),
+            )
         ]
 
 
@@ -4623,11 +4637,12 @@ class SeeInvisibility(ClassSpell):
     ) -> list[CombatEffect]:
         return [
             CombatEffect(
-                conditions=(CombatCondition("See Invisibility"),),
-                targets_self=True,
-                notes=(
-                    "You see creatures and objects with the Invisible condition as if they were visible.",
+                conditions=(
+                    CombatCondition(
+                        "See Invisibility", modifiers=(Vision(sees_invisible=True),)
+                    ),
                 ),
+                targets_self=True,
             )
         ]
 

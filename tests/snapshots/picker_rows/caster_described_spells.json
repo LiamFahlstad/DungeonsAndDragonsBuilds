@@ -740,6 +740,40 @@
     "2d8"
    ]
   },
+  "All spells | Darkvision": {
+   "ability": null,
+   "action_cost": "Action",
+   "amount_kind": "Damage",
+   "badge_modifiers": {
+    "Darkvision": [
+     {
+      "darkvision_ft": 150,
+      "type": "Vision"
+     }
+    ]
+   },
+   "bonus": null,
+   "concentration": false,
+   "condition": "Darkvision",
+   "counts_uses": true,
+   "damage": "",
+   "dc": null,
+   "duration_seconds": 28800,
+   "feature_name": "",
+   "half_on_save": false,
+   "is_described": true,
+   "is_unavailable": false,
+   "note": "",
+   "repeat_save": false,
+   "roll": "Saving throw",
+   "row_name": "",
+   "slot_level": "None",
+   "spell_level": 2,
+   "spell_name": "Darkvision",
+   "summary": "",
+   "until": null,
+   "upcast": []
+  },
   "All spells | Dissonant Whispers": {
    "ability": "WIS",
    "action_cost": "Action",
@@ -1012,6 +1046,19 @@
    "ability": "DEX",
    "action_cost": "Action",
    "amount_kind": "Damage",
+   "badge_modifiers": {
+    "Faerie Fire": [
+     {
+      "outlined": true,
+      "type": "Vision"
+     },
+     {
+      "mode": "Advantage",
+      "type": "AttacksAgainst",
+      "when": "the attacker can see it"
+     }
+    ]
+   },
    "bonus": null,
    "concentration": true,
    "condition": "Faerie Fire",
@@ -1023,7 +1070,7 @@
    "half_on_save": false,
    "is_described": true,
    "is_unavailable": false,
-   "note": "An affected creature sheds Dim Light, can't benefit from the Invisible condition, and attack rolls against it have Advantage if the attacker can see it.",
+   "note": "An affected creature sheds Dim Light.",
    "repeat_save": false,
    "roll": "Saving throw",
    "row_name": "",
@@ -2587,6 +2634,14 @@
    "ability": null,
    "action_cost": "Action",
    "amount_kind": "Damage",
+   "badge_modifiers": {
+    "See Invisibility": [
+     {
+      "sees_invisible": true,
+      "type": "Vision"
+     }
+    ]
+   },
    "bonus": null,
    "concentration": false,
    "condition": "See Invisibility",
@@ -2598,7 +2653,7 @@
    "half_on_save": false,
    "is_described": true,
    "is_unavailable": false,
-   "note": "It goes on its user, whoever is targeted. You see creatures and objects with the Invisible condition as if they were visible.",
+   "note": "It goes on its user, whoever is targeted.",
    "repeat_save": false,
    "roll": "Saving throw",
    "row_name": "",

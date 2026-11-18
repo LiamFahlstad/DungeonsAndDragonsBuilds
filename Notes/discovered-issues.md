@@ -394,16 +394,6 @@ Unconscious.md: 'When this condition ends, you remain Prone.' Unconscious now gi
 **History**
 - 2026-11-09 rules-checker: found
 
-### DI-068 · Combat UI: Invisible is a visibility state, so the Invisible condition's rules never reach the attack notes
-- **Status:** open
-- **Area:** combat-simulator
-- **Where:** `Combat/Effects/modifiers.py:44 held_conditions, Model/Creatures/Combatants.py:71 Visibility.INVISIBLE`
-
-The GM marks a creature Invisible through the visibility combo (char['visibility_states']), and the spells add an 'Invisibility'/'Greater Invisibility' badge; held_conditions only reads char['conditions'] and matches 'Invisible' or 'Invisible ...'. So attack_plan never shows Invisible.md's 'Attack rolls against you have Disadvantage, and your attack rolls have Advantage. If a creature can somehow see you, you don't gain this benefit against that creature.' for the usual way a creature becomes Invisible. Fix: have held_conditions also read the Invisible visibility state (or the UI add the condition with it).
-
-**History**
-- 2026-11-09 rules-checker: found
-
 ### DI-070 · SpellClassConverter's _IMPORTS has no modifier names (D20Bonus, D20Test, ArmorClass, ...), so spell_mechanics.py add can't write a badge with modifiers into a module that doesn't import them yet
 - **Status:** open
 - **Area:** spell-mechanics
@@ -594,6 +584,46 @@ Step 26 lets a Movement give a speed (Model/Content/CombatModifiers.py: fly_ft, 
 
 **History**
 - 2026-11-18 main session (arena step 26): found
+
+### DI-099 · Battle map: light that spells and carried sources give (Light, Daylight, Flaming Sphere, Moonbeam, a torch) doesn't light painted Darkness
+- **Status:** open
+- **Area:** combat-simulator
+- **Where:** `Combat/Arena/senses.py obscured_cells`
+
+Sight (arena plan step 28) reads only the painted light layer and kept areas that make Darkness or a fog. A creature carrying a torch, or standing in a Daylight's 60-foot Sphere of Bright Light or a Flaming Sphere's light, in a painted dark room is still unseen to eyes without Darkvision; the GM must repaint the light. Fix: kept areas (and a light badge on a creature) whose text gives Bright or Dim Light out to N feet light those cells for obscured_cells, and the Darkness spell's 'nonmagical light can't illuminate it' wins over them.
+
+**History**
+- 2026-11-18 claude-opus-5-5: found
+
+### DI-100 · Battle map: Devil's Sight (see normally in magical and nonmagical Darkness within 120 ft.) isn't a sense sight reads
+- **Status:** open
+- **Area:** character-engine-dev
+- **Where:** `CharacterContent/Invocations`, `Combat/Arena/senses.py sense_ranges`
+
+sense_ranges reads a sheet's Senses (Darkvision, Blindsight, Truesight) and badges' Vision. Devil's Sight is an invocation, not a sense grant, so a Warlock with it inside the Darkness spell is read as unseeing (DEEP_DARKNESS stops Darkvision). Fix: a Vision field for 'sees in Darkness, magical too, within N feet' (or a Sense) given by the invocation, read by _seen_in_light like Truesight for Darkness.
+
+**History**
+- 2026-11-18 claude-opus-5-5: found
+
+### DI-101 · Combat UI: Invisible's 'Concealed' (effects that need their target seen) isn't warned about when a spell targets a creature the caster can't see
+- **Status:** open
+- **Area:** combat-simulator
+- **Where:** `Combat/CombatUIQt/arena_mixin.py`, `Combat/Arena/ranges.py spell_range_warning`
+
+Step 28 counts sight in attack rolls and triggers' 'you can see it', but a spell that targets 'a creature you can see within range' (Hold Person, Command, Healing Word) cast at a creature the map says the caster doesn't see (Invisible, in Darkness) gets no warning, as a target past its range does. Fix: read 'you can see' in the spell's targeting text and warn like spell_range_warning from DamageMixin._sees.
+
+**History**
+- 2026-11-18 claude-opus-5-5: found
+
+### DI-102 · Combat UI: the GM's Heavily Obscured and Darkness visibility states aren't read by the battle map's sight
+- **Status:** open
+- **Area:** combat-simulator
+- **Where:** `Model/Creatures/Combatants.py Visibility`, `Combat/Arena/senses.py sees`
+
+Since step 28 the Invisible visibility state is the Invisible condition (DI-068), but a creature the GM marks 'Heavily Obscured' or 'Darkness' in the visibility combo is still seen by everyone on the map; only painted Darkness and kept areas hide it. Fix: count those states as its cells being DARKNESS (Darkness) or FOG (Heavily Obscured) in sees, or drop them from the combo in favour of the map.
+
+**History**
+- 2026-11-18 claude-opus-5-5: found
 
 ## Fixed
 
@@ -951,6 +981,17 @@ Cover.md: Half Cover gives +2 to AC and Dexterity saving throws, Three-Quarters 
 - 2026-11-09 main-session: found
 - 2026-11-09 combat-simulator: marked in-progress; Plan step 3.3: cover as a source of modifiers (ArmorClass and a D20Bonus on Dexterity saves)
 - 2026-11-09 combat-simulator: marked fixed; Plan step 3.3 (R38), uncommitted in worktree agent-a30cb9221e9d3c056: COVER_RULES in Combat/Effects/modifiers.py gives each cover an ArmorClass and a D20Bonus on Dexterity saves (most protective only); roll_save adds it ('Half Cover: +2'), the dialog's row reads 'DEX +5 (cover)'.
+
+### DI-068 · Combat UI: Invisible is a visibility state, so the Invisible condition's rules never reach the attack notes
+- **Status:** fixed · 2026-11-18 · uncommitted
+- **Area:** combat-simulator
+- **Where:** `Combat/Effects/modifiers.py:44 held_conditions, Model/Creatures/Combatants.py:71 Visibility.INVISIBLE`
+
+The GM marks a creature Invisible through the visibility combo (char['visibility_states']), and the spells add an 'Invisibility'/'Greater Invisibility' badge; held_conditions only reads char['conditions'] and matches 'Invisible' or 'Invisible ...'. So attack_plan never shows Invisible.md's 'Attack rolls against you have Disadvantage, and your attack rolls have Advantage. If a creature can somehow see you, you don't gain this benefit against that creature.' for the usual way a creature becomes Invisible. Fix: have held_conditions also read the Invisible visibility state (or the UI add the condition with it).
+
+**History**
+- 2026-11-09 rules-checker: found
+- 2026-11-18 claude-opus-5-5: marked fixed; arena plan step 28: held_conditions reads the Invisible visibility state as the condition, and the battle map's sight (Combat/Arena/senses.py) settles its 'can't see it' whens
 
 ### DI-069 · A monster ability's combat effects are written to the encounter log with dataclasses.asdict, which drops a badge modifier's type, so one with modifiers can't be read back
 - **Status:** fixed · 2026-11-11 · uncommitted

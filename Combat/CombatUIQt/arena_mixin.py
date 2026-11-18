@@ -1644,8 +1644,9 @@ class ArenaMixin(CombatWindowState):
     def _distance_note(self, target: dict) -> str:
         """ " (25 ft.)": how far `target` is from the source, for the target
         label in either view, and its cover from the source on the map once
-        it's in use (" (25 ft., Half Cover from Barrel at C4)"); "" unless
-        both are on the map and differ."""
+        it's in use (" (25 ft., Half Cover from Barrel at C4)"), and
+        whether the source sees it (" (25 ft., Edmund can't see it: Ogre is
+        Invisible)"); "" unless both are on the map and differ."""
         source = self.selected_character
         notes = []
         if source is not None and source is not target:
@@ -1658,8 +1659,17 @@ class ArenaMixin(CombatWindowState):
             elif reading:
                 notes.append(f"{reading.state} from {reading.by}")
         obscured = obscured_text(target, self.arena_settings)
-        if obscured:
+        seen = self._sees(source, target) if source is not target else None
+        if obscured and not (seen is not None and seen.obscured):
             notes.append(obscured)
+        # What the source sees of it (step 28): "Edmund can't see it: Ogre
+        # is Invisible", "Edmund sees it by Darkvision 60 ft.".
+        if seen is not None and source is not None and seen.can is not None:
+            who = source["name"]
+            if not seen.can:
+                notes.append(f"{who} can't see it: {seen.why}")
+            elif seen.why:
+                notes.append(f"{who} sees it by {seen.why}")
         return f" ({', '.join(notes)})" if notes else ""
 
     def _arena_distance(self, cell: Cell) -> str | None:

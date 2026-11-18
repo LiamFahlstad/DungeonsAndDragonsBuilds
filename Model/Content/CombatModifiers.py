@@ -380,6 +380,39 @@ class Movement:
 
 
 @dataclass(frozen=True)
+class Vision:
+    """What it sees by, or how it's seen, which the combat UI's battle map
+    counts (Combat/Arena/senses.py); each field is one rule:
+
+    - `darkvision_ft`, `blindsight_ft`, `truesight_ft`: it has that sense
+      out to that many feet (Darkvision: "Darkvision with a range of 150
+      feet"), on top of its own (the longest counts);
+    - `sees_invisible`: it sees creatures that have the Invisible condition
+      (See Invisibility: "as if they were visible");
+    - `outlined`: it can't benefit from the Invisible condition (Faerie
+      Fire)."""
+
+    darkvision_ft: int | None = None
+    blindsight_ft: int | None = None
+    truesight_ft: int | None = None
+    sees_invisible: bool = False
+    outlined: bool = False
+
+    def __post_init__(self):
+        for name in ("darkvision_ft", "blindsight_ft", "truesight_ft"):
+            if getattr(self, name) is not None:
+                _check_whole_number(self, name)
+                if getattr(self, name) <= 0:
+                    raise ValueError(
+                        f"A Vision's {name} is above 0, got {getattr(self, name)}"
+                    )
+        if not any(
+            getattr(self, field.name) != field.default for field in fields(self)
+        ):
+            raise ValueError("A Vision needs at least one rule")
+
+
+@dataclass(frozen=True)
 class Resistance:
     """Resistance to damage of these types; to all damage if none are given."""
 
@@ -599,6 +632,7 @@ Modifier = (
     | Speed
     | Size
     | Movement
+    | Vision
     | Resistance
     | DamageImmunity
     | Vulnerability
@@ -626,6 +660,7 @@ MODIFIER_TYPES: dict[str, type] = {
         Speed,
         Size,
         Movement,
+        Vision,
         Resistance,
         DamageImmunity,
         Vulnerability,
@@ -687,6 +722,11 @@ _PLAIN: dict[str, type | tuple[type, ...]] = {
     "swim_ft": int,
     "swims": bool,
     "hovers": bool,
+    "darkvision_ft": int,
+    "blindsight_ft": int,
+    "truesight_ft": int,
+    "sees_invisible": bool,
+    "outlined": bool,
 }
 
 

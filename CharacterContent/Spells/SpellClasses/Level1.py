@@ -49,6 +49,7 @@ from Model.Content.CombatModifiers import (
     Resistance,
     RollMode,
     Speed,
+    Vision,
     WhenHit,
 )
 from Model.Content.CombatTriggers import CombatTrigger, TriggerAim, TriggerEvent
@@ -1089,10 +1090,18 @@ class FaerieFire(ClassSpell):
             CombatEffect(
                 roll=EffectRoll.SAVE,
                 save_ability=Ability.DEXTERITY,
-                conditions=(CombatCondition("Faerie Fire"),),
-                notes=(
-                    "An affected creature sheds Dim Light, can't benefit from the Invisible condition, and attack rolls against it have Advantage if the attacker can see it.",
+                conditions=(
+                    CombatCondition(
+                        "Faerie Fire",
+                        modifiers=(
+                            Vision(outlined=True),
+                            AttacksAgainst(
+                                RollMode.ADVANTAGE, when="the attacker can see it"
+                            ),
+                        ),
+                    ),
                 ),
+                notes=("An affected creature sheds Dim Light.",),
             )
         ]
 

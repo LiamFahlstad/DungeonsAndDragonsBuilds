@@ -56,6 +56,9 @@ from .modifiers import (
 # isn't known (either off it, or the map not in use: the arena plan's
 # Decision 29). The window's _attacker_distance_ft.
 DistanceOf = Callable[[dict, dict], int | None]
+# Whether the first creature sees the second on the battle map, or None when
+# it isn't known (arena plan step 28; the window's _sees_of).
+SeesOf = Callable[[dict, dict], bool | None]
 
 
 @dataclass(frozen=True)
@@ -659,6 +662,7 @@ def outcome_firings(
     is_dead: Callable[[dict], bool] = is_down,
     used_this_turn: Collection[tuple[str, str]] = (),
     distance_of: DistanceOf | None = None,
+    sees_of: SeesOf | None = None,
     others: Iterable[dict] = (),
 ) -> tuple[list[HitFiring], list[str]]:
     """The triggered rows (`rows_of`, effect_options.triggered_rows) that
@@ -683,7 +687,8 @@ def outcome_firings(
     A row is AUTO when it isn't optional, has no `when`, costs nothing and
     every gate was checked; otherwise ASK, with `why` for each gate that
     couldn't be (the target's size, the attack's kind, which row hit). A
-    `when` the map's distance settles isn't asked (`distance_of`, step 27).
+    `when` the map's distance settles isn't asked (`distance_of`, step 27),
+    nor its "you can see it" (`sees_of`, step 28).
 
     A knockout also fires the REDUCES_TO_ZERO rows of each of `others` (the
     fight's creatures) with `others_within_ft`, for an enemy of theirs
@@ -703,7 +708,9 @@ def outcome_firings(
         if id(owner) not in rows_by_owner:
             rows_by_owner[id(owner)] = rows_of(owner)
         for row in rows_by_owner[id(owner)]:
-            yield owner, row, _firing(outcome, row, is_dead, distance_of=distance_of)
+            yield owner, row, _firing(
+                outcome, row, is_dead, distance_of=distance_of, sees_of=sees_of
+            )
         if not isinstance(outcome, KnockoutOutcome):
             return
         for other in others:
@@ -745,6 +752,7 @@ def hit_by_firings(
     *,
     is_dead: Callable[[dict], bool] = is_down,
     distance_of: DistanceOf | None = None,
+    sees_of: SeesOf | None = None,
 ) -> tuple[list[HitFiring], list[str]]:
     """What the creature `outcome` hits can answer the hit with before its
     damage is dealt (HIT_BY: Shield, Deflect Attacks): its rows of that
@@ -759,7 +767,12 @@ def hit_by_firings(
         return found, spent
     for row in rows_of(owner):
         firing = _firing(
-            outcome, row, is_dead, before_damage=True, distance_of=distance_of
+            outcome,
+            row,
+            is_dead,
+            before_damage=True,
+            distance_of=distance_of,
+            sees_of=sees_of,
         )
         if firing is None:
             continue
@@ -778,6 +791,7 @@ def attack_roll_firings(
     *,
     is_dead: Callable[[dict], bool] = is_down,
     distance_of: DistanceOf | None = None,
+    sees_of: SeesOf | None = None,
 ) -> list[HitFiring]:
     """What the creatures in `others` can answer attacker's attack roll
     against target with, before it's rolled (ATTACKS: Warding Flare, "when
@@ -798,7 +812,9 @@ def attack_roll_firings(
                 continue
             if row.uses is not None and row.uses[0] <= 0:
                 continue
-            firing = _firing(outcome, row, is_dead, distance_of=distance_of)
+            firing = _firing(
+                outcome, row, is_dead, distance_of=distance_of, sees_of=sees_of
+            )
             if firing is not None:
                 found.append(firing)
     return found
@@ -810,6 +826,7 @@ def badge_hit_firings(
     *,
     is_dead: Callable[[dict], bool] = is_down,
     distance_of: DistanceOf | None = None,
+    sees_of: SeesOf | None = None,
 ) -> list[HitFiring]:
     """What the badges of the creature `outcome` hits answer the hit with,
     once its damage is dealt (WhenHit, plan Q57: Armor of Agathys' Cold
@@ -833,7 +850,7 @@ def badge_hit_firings(
         row = row_of(bearer, record, modifier)
         if row is None:
             continue
-        when = _asked(modifier.when, bearer, attacker, distance_of)
+        when = _asked(modifier.when, bearer, attacker, distance_of, sees_of)
         if when is None:
             continue  # farther than its "within N feet"
         why = [f"if {when}"] if when else []
@@ -877,19 +894,37 @@ def settle_when(when: str, feet: int | None) -> tuple[bool | None, str]:
     return True, match["rest"].strip()
 
 
-def _asked(when: str, owner: dict, target: dict, distance_of: DistanceOf | None):
+# What's left of a `when` that asks only whether the owner sees the other
+# creature (Hellish Rebuke's, Warding Flare's, once their distance is
+# settled), which the map's sight settles (arena plan step 28).
+_WHEN_SEES = re.compile(r"you can see (?:it|them|the attacker)")
+
+
+def _asked(
+    when: str,
+    owner: dict,
+    target: dict,
+    distance_of: DistanceOf | None,
+    sees_of: SeesOf | None = None,
+):
     """A `when` as the map leaves it: None when the distance rules it out,
-    else what's still to ask ("" for nothing), with the distance it was
-    settled at said: "you can see it (25 ft. away)"."""
-    if not when or distance_of is None:
+    or the owner doesn't see target where it's asked; else what's still to
+    ask ("" for nothing), with the distance it was settled at said: "you
+    can see it (25 ft. away)"."""
+    if not when:
         return when
-    feet = distance_of(owner, target)
+    feet = distance_of(owner, target) if distance_of is not None else None
     holds, rest = settle_when(when, feet)
     if holds is False:
         return None
-    if holds and rest:
-        return f"{rest} ({feet} ft. away)"
-    return rest if holds else when
+    left = rest if holds else when
+    if sees_of is not None and _WHEN_SEES.fullmatch(left):
+        seen = sees_of(owner, target)
+        if seen is not None:
+            return "" if seen else None
+    if holds and left:
+        return f"{left} ({feet} ft. away)"
+    return left
 
 
 def _firing(
@@ -899,6 +934,7 @@ def _firing(
     *,
     before_damage: bool = False,
     distance_of: DistanceOf | None = None,
+    sees_of: SeesOf | None = None,
 ) -> HitFiring | None:
     """row's firing for outcome, if its gates let it fire (uses aside).
     `before_damage`: the hit's HIT_BY rows, of the creature hit. A `when`
@@ -994,9 +1030,9 @@ def _firing(
     conditions = gets.get("conditions") or []
     if row.conditions and all(c in conditions for c in row.conditions):
         return None
-    when = _asked(trigger.when, owner, target, distance_of)
+    when = _asked(trigger.when, owner, target, distance_of, sees_of)
     if when is None:
-        return None  # farther than its "within N feet"
+        return None  # farther than its "within N feet", or unseen
     automatic = not (
         trigger.optional
         or when

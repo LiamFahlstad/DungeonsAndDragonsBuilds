@@ -436,7 +436,12 @@ def _attack_text(
     says of its range (Long range's Disadvantage counted, past its reach
     warned about after the rest: "AC 15; past the 5 ft. reach")."""
     plan = attack_plan(
-        source, target, "Neutral", distance_ft=distance_ft, extra=reach.modifiers
+        source,
+        target,
+        "Neutral",
+        distance_ft=distance_ft,
+        extra=reach.modifiers,
+        sight=reach.sight,
     )
     parts = [_armor_text(covered or target, wielding)]
     if plan.mode != "Neutral":
@@ -466,7 +471,12 @@ def _attack_tooltip(
     DEX saves"), how it's rolled (`reach`: the map's range, counted) and
     what a hit adds."""
     plan = attack_plan(
-        source, target, "Neutral", distance_ft=distance_ft, extra=reach.modifiers
+        source,
+        target,
+        "Neutral",
+        distance_ft=distance_ft,
+        extra=reach.modifiers,
+        sight=reach.sight,
     )
     extras = [f"{label}: {extra_text(m)}" for label, m in hit_extras(source, target)]
     if extras:
@@ -1030,6 +1040,7 @@ class ConditionsMixin(CombatWindowState):
                     typed is not None,
                     feet,
                     reach.modifiers,
+                    reach.sight,
                 )
                 if typed is not None:
                     roll, notes = typed, plan.notes

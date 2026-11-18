@@ -9,6 +9,7 @@ from Combat.Arena.cover import (
     with_cover,
 )
 from Combat.Arena.geometry import Cell
+from Combat.Arena.senses import sees
 from Combat.Arena.ranges import (
     NO_RANGE_CHECK,
     AttackRange,
@@ -37,6 +38,7 @@ from Combat.Effects.triggers import (
     TriggerMode,
     reduced_damage,
 )
+from Combat.Effects.sight import UNKNOWN, Seen
 from Combat.Summons import vanishes_at_zero_hp
 from Core.Definitions import Condition
 from .amounts import AmountError, parse_amount, parse_damage
@@ -225,6 +227,20 @@ class DamageMixin(CombatWindowState):
         if not self.arena_settings.in_use:
             return None
         return distance_ft(attacker, target, self.arena_settings)
+
+    def _sees(self, viewer: dict | None, other: dict | None) -> Seen:
+        """Whether viewer sees other on the battle map, and why
+        (Combat/Arena/senses.py): its Darkness, a kept Fog Cloud, Invisible,
+        Blinded, Darkvision, Blindsight, Truesight. UNKNOWN without either,
+        with either off the map, or before the map is in use (Decision 29):
+        then what asks it stays the GM's."""
+        if viewer is None or other is None or not self.arena_settings.in_use:
+            return UNKNOWN
+        return sees(viewer, other, self.characters, self._map_settings())
+
+    def _sees_of(self, viewer: dict, other: dict) -> bool | None:
+        """_sees's answer alone, for the triggers' "you can see it"."""
+        return self._sees(viewer, other).can
 
     def _map_cover(
         self,

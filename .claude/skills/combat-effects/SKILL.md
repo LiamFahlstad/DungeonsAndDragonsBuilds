@@ -240,7 +240,14 @@ a distance between the row's owner and the other creature, written as
 within 60 feet"): once the battle map is in use, it's counted from the
 map, and the row fires as if it had no distance in it, or not at all past
 it (Combat/Effects/triggers.py's `settle_when`). Write a distance that
-way, and keep what else the GM judges before it ("you can see it").
+way, and keep what else the GM judges before it ("you can see it"). A
+"you can see it" left alone (with or without the distance) is the map's
+too: the owner's sight of the other creature (Combat/Arena/senses.py)
+drops it, or the row, once the map is in use. On a modifier, the sight
+`when`s the map settles are "the attacker can see it" / "can't see it"
+(on the target's AttacksAgainst: Faerie Fire, Invisible) and "the target
+can see it" / "can't see it" (on the attacker's own D20Mode); write them
+word for word.
 
 **Leave it untriggered, and say why** (`untriggered = "..."`, a class
 attribute on the feature) when the event is one the simulator can't see or
@@ -372,6 +379,7 @@ Names are the Python ones; `Ability`, `Condition` and `DamageType` come from
   | "size increases by one category" / "becomes Large" | `Size(steps=1)` / `Size(becomes=CreatureSize.LARGE)` | Enlarge/Reduce, Large Form |
   | "Hit Point maximum increases by 5" | `HitPointMaximum("5", upcast="5")` | Aid, Heroes' Feast's `"2d10"` |
   | "move through creatures and objects as if they were Difficult Terrain" / "unaffected by Difficult Terrain" / "a Climb Speed equal to its Speed" / "stand up by spending 5 feet" | `Movement(through_creatures=True, through_objects=True)` / `Movement(ignores_difficult=True)` / `Movement(climbs=True)` / `Movement(stands_up_ft=5)` | Incorporeal forms (Ghost Walk), Freedom of Movement, Spider Climb, Hop Up. The battle map counts it. An always-on feature returns it from `movement()` instead of a badge (Halfling Nimbleness `past_larger=True`; Speedy `ignores_difficult=True, after="Dash"`) |
+  | "has Darkvision with a range of 150 feet" / "you see creatures ... that have the Invisible condition" / "can't benefit from the Invisible condition" | `Vision(darkvision_ft=150)` (also `blindsight_ft`, `truesight_ft`) / `Vision(sees_invisible=True)` / `Vision(outlined=True)` | The Darkvision spell, See Invisibility, Faerie Fire. The battle map's sight counts it (who sees whom, and so Invisible's and the dark's Advantage and Disadvantage). A feature's own sense is the sheet's (GrantSense), not a Vision |
 
   A badge that lasts "until the start of your next turn" says so with
   `until=(TurnEdge.START, TurnOf.SOURCE)` (Shield, Absorb Elements). Write

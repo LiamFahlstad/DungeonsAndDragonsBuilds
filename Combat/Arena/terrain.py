@@ -17,7 +17,8 @@ The rules the arena counts from it (Combat/Arena/arena.py):
   costs 1 extra foot, 2 extra in Difficult Terrain, none with a Climb
   Speed), and height counts into the distance between two creatures.
 - Dim light is Lightly Obscured and Darkness Heavily Obscured (Rules
-  Glossary, Dim Light and Darkness): shown, not rolled.
+  Glossary, Dim Light and Darkness): shown, and Darkness hides who's in it
+  from sight (Combat/Arena/senses.py, the arena plan's step 28).
 - An object's cover (Rules Glossary, Cover) is shown on the hover, and
   counted between two creatures (Combat/Arena/cover.py); a wall is Total
   Cover. A hazard (a campfire, a trap) is a reminder to whoever enters it or

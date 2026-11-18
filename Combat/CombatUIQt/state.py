@@ -37,6 +37,7 @@ from Combat.Arena.cover import CoverReading
 from Combat.Arena.geometry import Cell
 from Combat.Arena.lasting import AreaPrompt
 from Combat.Arena.ranges import AttackRange, RangeCheck
+from Combat.Effects.sight import Seen
 from Combat.Effects.triggers import (
     AttackOutcome,
     DropOutcome,
@@ -355,6 +356,12 @@ class CombatWindowState:
         self, attacker: dict | None, target: dict | None
     ) -> int | None:
         raise NotImplementedError("DamageMixin._attacker_distance_ft")
+
+    def _sees(self, viewer: dict | None, other: dict | None) -> Seen:
+        raise NotImplementedError("DamageMixin._sees")
+
+    def _sees_of(self, viewer: dict, other: dict) -> bool | None:
+        raise NotImplementedError("DamageMixin._sees_of")
 
     def _map_cover(
         self,

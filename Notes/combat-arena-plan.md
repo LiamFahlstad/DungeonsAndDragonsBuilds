@@ -29,7 +29,8 @@ same day. Step 24, kept areas acting by a turn-column button and moved from
 their panel, Later's sixth, the same day. Step 25, walls (the rest of that
 sixth item) and DI-096, the same day. Step 26, other speeds, altitude,
 falling and water swum, Later's seventh and eighth, the same day. Step 27,
-distances in triggers (Later's ninth, closing DI-085), the same day. What's
+distances in triggers (Later's ninth, closing DI-085), the same day. Step
+28, light and senses (Later's tenth, with DI-068), the same day. What's
 next is under Later.
 
 ## How to use this document
@@ -108,6 +109,7 @@ verification passes per step unless asked.
 | 25 | Walls: a Wall shape aimed by its two ends (a ring by its middle); Wall of Force blocking movement and giving Total Cover while it lasts, through the map the rules read and never the painted one; Wall of Fire's damaging side picked by a third click and acting on who ends a turn by it; Flaming Sphere's area (DI-096) | Done 2026-11-18 (R23; Decisions 38 to 41); DI-096 fixed, DI-097 logged |
 | 26 | Other speeds: the speed bar picking a creature's Speed, Fly, Swim, Climb or Burrow Speed for its moves (switching counts what it moved), each costing as it should over the ground, a flyer's altitude (spending movement, counted into distances), falling when it can't stay aloft, water swum; the Fly spell's Fly Speed | Done 2026-11-18 (R24; Decisions 42 to 46); DI-098 logged |
 | 27 | Distances in triggers: a `when` asking how far the other creature is (Fire Shield's "within 5 feet", Hellish Rebuke's "within 60 feet") counted from the map, and Dark One's Blessing for a knockout someone else makes within 10 feet of its owner (combat-effects plan Q63) | Done 2026-11-18 (R25; Decisions 47, 48); DI-085 fixed |
+| 28 | Light and senses: who sees whom from the map (painted Darkness, kept areas that are Darkness or Heavily Obscured, Invisible, Blinded; Darkvision, Blindsight, Truesight, See Invisibility, Faerie Fire), counted in attack rolls, the close-combat Disadvantage and triggers' "you can see it"; the Invisible visibility state as the condition | Done 2026-11-18 (R26; Decisions 49-53); DI-068 fixed |
 
 ## How it fits the code that's there
 
@@ -1286,6 +1288,67 @@ map, and the Warlock's own at any distance; the gate's checks),
 from beside Edmund burning it without a question, and from 10 ft. not);
 `tests/test_hit_point_triggers.py`'s Dark One's Blessing trigger.
 
+### Step 28: light and senses (2026-11-18)
+
+Later's tenth item (the map painter plan's Q5), with DI-068. Read first,
+the Rules Glossary's Vision and Senses: Darkness is Heavily Obscured, and
+"You have the Blinded condition while trying to see something in a
+Heavily Obscured space"; Darkvision sees in Darkness within its range "as
+if it were Dim Light"; Blindsight sees within its range "anything that
+isn't behind Total Cover", Blinded, in Darkness or Invisible; Truesight
+sees "in normal and magical Darkness" and Invisible creatures; Invisible:
+"If a creature can somehow see you, you don't gain this benefit against
+that creature"; Tremorsense "doesn't count as a form of sight". And the
+spells' own words: Darkness ("magical Darkness ... Darkvision can't see
+through it"), Fog Cloud, Stinking Cloud, Sleet Storm, Cloudkill ("Heavily
+Obscured"), Hunger of Hadar ("a 20-foot-radius Sphere of Darkness"), the
+Darkvision spell ("Darkvision with a range of 150 feet"), See Invisibility,
+Faerie Fire ("can't benefit from the Invisible condition, and attack rolls
+against it have Advantage if the attacker can see it"). The Invisibility
+spell already gave the condition; DI-068 was the GM's visibility list.
+
+*Built (R26):* `Combat/Effects/sight.py`'s `Seen` (can: True, False or
+None; why; obscured) and `Sight` (each of an attack's two). The Qt-free
+`Combat/Arena/senses.py`: `sees(viewer, other, chars, settings)` by the
+rules above (Decisions 50, 53), `sense_ranges` (a stat block's senses
+text, a sheet's Senses, badges' `Vision`), `area_obscures` (a kept area's
+text: DEEP_DARKNESS, DARKNESS, FOG), `obscured_cells`.
+Model/Content/CombatModifiers.py: `Vision(darkvision_ft, blindsight_ft,
+truesight_ft, sees_invisible, outlined)`, given by the Darkvision spell's
+new effect, See Invisibility's badge and Faerie Fire's (with its
+`AttacksAgainst(Advantage, when="the attacker can see it")`, which was a
+note). Combat/Effects/modifiers.py: `held_conditions` reads the Invisible
+visibility state as the condition (DI-068); `attack_plan(..., sight=)`
+settles the `when`s that ask who sees whom and counts Heavily Obscured as
+Blinded's (Decision 51). Combat/Arena/ranges.py: `RangeCheck.sight`
+(`attack_sight`), so every attack row and roll that reads the map's range
+gets it; an enemy within 5 feet that doesn't see a ranged attacker imposes
+nothing and says why. Combat/Effects/triggers.py: `sees_of`, beside
+`distance_of`, settles "you can see it" (Decision 52). The window:
+`_sees` and `_sees_of` (DamageMixin, None before the map is in use), the
+target label's "Pirate can't see it: Darkness at B1" or "sees it by
+Darkvision 60 ft.".
+
+- Not done: light that spells and carried sources give over painted
+  Darkness (DI-099); Devil's Sight (DI-100); a spell that needs its target
+  seen isn't warned about (Invisible's "Concealed", DI-101); the GM's
+  Heavily Obscured and Darkness visibility states (DI-102); Lightly
+  Obscured (Perception only) and whether eyes see past Total Cover stay
+  the GM's (Decision 50).
+
+Tests: `tests/test_arena_senses.py` (reading a kept area's text and the
+senses; who sees whom off the map, in the light, in painted Darkness with
+and without Darkvision in range, partly lit, from the dark, in the Darkness
+spell, in a fog, Blinded with and without Blindsight and past Total Cover,
+blind beyond its radius, the Invisible state as the condition, Truesight,
+Blindsight and See Invisibility, Faerie Fire; Invisible's whens settled
+both ways, the dark's Blinded Advantage and Disadvantage, both cancelling,
+Blinded not counted twice, Faerie Fire's Advantage, Dodge; the close-combat
+rule; Hellish Rebuke's "you can see it"),
+`tests/test_combat_ui_arena_senses.py` (the Pirate's claws on the Tiger in
+the light, in Darkness, Invisible, and before the map is in use);
+`tests/test_arena_ranges.py`'s Blinded enemy close by, now settled.
+
 ### Later (not scheduled)
 
 In order of relevance (R15, the user, 2026-11-16: "add your suggestions
@@ -1293,7 +1356,7 @@ In order of relevance (R15, the user, 2026-11-16: "add your suggestions
 picked up. The first six, cover, range, pushes, grapples, the path
 walked and areas acting, were steps 19 to 24, and the sixth's walls step
 25; the seventh and eighth, speeds and water, step 26; the ninth,
-distances in triggers, step 27.
+distances in triggers, step 27; the tenth, light and senses, step 28.
 
 3. *(Step 21.)* **Shove's push** and the other pushes, moved on Apply.
    What's left is content (DI-095).
@@ -1317,9 +1380,12 @@ distances in triggers, step 27.
    for another's knockout (combat-effects-plan Q63); Spirit Guardians'
    aura is its kept area since step 24. Each still asks when either
    creature is off the map.
-10. **Light and senses counted** (the map painter plan's Q5): Heavily
-    Obscured as Blinded for sight there, Darkvision, Blindsight, Truesight,
-    each from the viewer's senses; needs DI-068 (Invisible as a condition).
+10. *(Step 28.)* **Light and senses counted** (the map painter plan's
+    Q5): Heavily Obscured as Blinded for sight there, Darkvision,
+    Blindsight, Truesight, each from the viewer's senses; DI-068 fixed.
+    What's left is light that spells give (DI-099), Devil's Sight
+    (DI-100), targets that must be seen (DI-101) and the GM's obscured
+    visibility states (DI-102).
 11. **The map on the Player Screen and the player link**, from the same
     token rows, hidden monsters left out the way `player_view_rows` leaves
     them out; kept areas on it (hidden with a hidden caster); later a fog
@@ -1341,8 +1407,8 @@ Map Painter ([map-painter-plan.md](map-painter-plan.md), 2026-11-15); the
 conditions' "within 5 feet" (step 16); moves that aren't walks (step 17);
 cover (step 19), range (step 20), pushes (step 21), grapples (step 22),
 the path walked (step 23), areas acting (step 24), walls (step 25),
-other speeds and water (step 26) and distances in triggers (step 27), its
-first nine items.
+other speeds and water (step 26), distances in triggers (step 27) and
+light and senses (step 28), its first ten items.
 
 ## Decisions
 
@@ -1763,6 +1829,45 @@ Taken in step 27 (2026-11-18), for the user to overrule:
     feet as the owner's own does (AUTO), farther not at all, and asked "if
     it was within 10 feet of you" off the map. A dead owner gets none.
 
+Taken in step 28 (2026-11-18), for the user to overrule:
+
+49. **Sight counts once the map is in use, from where everyone is.**
+    Answers the map painter plan's Q5, as its suggestion said. With both
+    creatures on the map and the map in use (Decision 29), who sees whom
+    is the map's; off it, everything that asks is noted as before, even
+    an Invisible target (a badge such as Faerie Fire may take its benefit
+    away, which only the GM knows then).
+50. **Only the space of what's looked at hides it.** As the glossary
+    words it ("trying to see something in a Heavily Obscured space"): a
+    creature every cell of which is dark (or in a fog) isn't seen, one
+    partly out of it is, and a creature in the dark still sees out. A fog
+    or Darkness between two lit creatures doesn't hide them. Eyes aren't
+    stopped by Total Cover here (an attack there is warned about already,
+    and a Wall of Force is see-through); Blindsight is, as its text says.
+    Dim Light (Lightly Obscured) changes nothing counted.
+51. **What being unseen counts in an attack roll.** Invisible's
+    Advantage and Disadvantage count when the other doesn't see it, and
+    say so when it does ("Ghost is Invisible: no Advantage, the target
+    sees it (Truesight 60 ft.)"). An attacker that can't see its target
+    for where the target is has Blinded's Disadvantage ("Pirate can't see
+    Tiger (Darkness at B1)"), and attacks against a target that can't see
+    the attacker for where that is have Blinded's Advantage; not again for
+    one Blinded already. A Blinded creature's own rules still count when
+    its Blindsight sees (the condition's "Attacks Affected" has no
+    exception). Dodge's Disadvantage counts only against an attacker its
+    bearer sees, and a ranged attack's close-combat Disadvantage only from
+    an enemy that sees the attacker (it replaces the note).
+52. **A trigger's "you can see it" is the map's.** What's left of a
+    `when` after its distance (Hellish Rebuke's, Warding Flare's): seen,
+    it isn't asked; unseen, the row isn't offered; not known, asked.
+53. **Senses and what hides, from the text.** A viewer's senses are its
+    stat block's ("Blindsight 10 ft. (blind beyond this radius)" sees
+    nothing farther), a player's sheet's and its badges' `Vision`. A kept
+    area's text says what its space is: magical Darkness Darkvision "can't
+    see through" (only Truesight and Blindsight see in it), other
+    Darkness (Darkvision too), "Heavily Obscured" (only Blindsight).
+    Painted Darkness is the ordinary kind.
+
 ## Open questions
 
 Each has a *Suggestion*: what gets built if nobody says otherwise.
@@ -2145,6 +2250,17 @@ Each has a *Suggestion*: what gets built if nobody says otherwise.
   the content name a distance, and none is on a turn trigger, so DI-085
   closes with this step.
 
+- **R26** (step 28, 2026-11-18). *Plan (Later 10):* "Heavily Obscured
+  as Blinded for sight there, Darkvision, Blindsight, Truesight, each from
+  the viewer's senses; needs DI-068". *Done:* that, and kept areas that
+  hide (the Darkness spell, Fog Cloud) read from their text, See
+  Invisibility and Faerie Fire as a new `Vision` modifier, the triggers'
+  "you can see it" and the close-combat rule's "an enemy who can see you".
+  The sight rides on the map's `RangeCheck` (its word on an attack), so
+  the attack rows and rolls that already read it needed no new argument.
+  *Found:* DI-068 was smaller than logged: the Invisibility spell already
+  gave the condition; only the GM's visibility list didn't.
+
 ## Discovered issues
 
 Found while writing the plan:
@@ -2195,10 +2311,20 @@ Found in step 26:
   the Sea, Zealot and Vengeance Paladin flight, the Swim Speeds of the
   Elements Monk and the Ranger, feats, Gaseous Form, Alter Self) are text;
   each needs a Movement (fly_ft, flies, swim_ft, swims, hovers).
+- **DI-099** (open, step 28): light that spells and carried sources give
+  (Light, Daylight, Flaming Sphere, Moonbeam, a torch) doesn't light
+  painted Darkness; the GM repaints it.
+- **DI-100** (open, step 28): Devil's Sight isn't a sense sight reads, so a
+  Warlock with it in the Darkness spell doesn't see.
+- **DI-101** (open, step 28): a spell that needs its target seen ("a
+  creature you can see") isn't warned about against one the caster
+  doesn't see (Invisible's Concealed).
+- **DI-102** (open, step 28): the GM's Heavily Obscured and Darkness
+  visibility states aren't read by sight.
 
 Already logged, and touched by this plan:
 
-- **DI-068** (open): Invisible is a visibility state, so the Invisible
+- **DI-068** (fixed 2026-11-18, step 28): Invisible is a visibility state, so the Invisible
   condition's rules never reach the attack notes. The map draws hidden
   tokens from the visibility states, so it doesn't depend on this, but a map
   on the Player Screen (Later) must leave Invisible creatures out the same

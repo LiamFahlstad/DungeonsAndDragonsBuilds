@@ -3,7 +3,8 @@ it. A combatant is the combat UI's dict. Its modifiers come from three places:
 
 - its "conditions", names, each a rules condition ("Restrained"), the same
   under a longer custom name ("Restrained by vines"), or a badge, which has no
-  rules of its own (Model/Content/RulesConditions.py);
+  rules of its own (Model/Content/RulesConditions.py); the Invisible
+  visibility state is the Invisible condition too (DI-068);
 - its cover (its "visibility_states"), the most protective one;
 - its lasting effects (active_effects.py): what a badge it has says it gives
   (Bless's 1d4, Shield of Faith's +2 AC), while it has the badge.
@@ -18,7 +19,11 @@ is never counted, only noted (plan principle 8), except one that asks only
 how far the attacker is ("the attacker is within 5 feet of it"): with the
 distance the battle map gives (`distance_ft`, None when either creature is
 off it), that one counts or doesn't, and its note says which (arena plan,
-step 16). A total rolled at the table counts as it is, so only the
+step 16). One that asks whether one of the two sees the other
+(Invisible's "the attacker can't see it") counts or doesn't the same way,
+by the map's `Sight` (sight.py, step 28), and a target in a space the
+attacker can't see into (Heavily Obscured) is Blinded's Disadvantage for
+it. A total rolled at the table counts as it is, so only the
 notes it can't have known about come with it. The roll modes are the UI's
 text: "Neutral", "Advantage", "Disadvantage".
 """
@@ -60,6 +65,7 @@ from Model.Content.StandardActions import DODGE
 from Model.Creatures.Combatants import Visibility
 
 from .active_effects import ActiveEffect, active_effects
+from .sight import NO_SIGHT, Seen, Sight
 
 NEUTRAL = "Neutral"
 
@@ -94,9 +100,14 @@ def rules_condition(name: str) -> Condition | None:
 def held_conditions(char: dict) -> list[Condition]:
     """The rules conditions char has, with those they give (Unconscious gives
     Incapacitated and Prone), each once. One that another makes it immune to
-    "doesn't affect you in any way" (Petrified's Poisoned), so it's left out."""
+    "doesn't affect you in any way" (Petrified's Poisoned), so it's left out.
+    The GM's Invisible visibility state is the Invisible condition (DI-068),
+    as the Invisibility spell gives it."""
     held: list[Condition] = []
-    for name in char.get("conditions", []):
+    names = list(char.get("conditions", []))
+    if Visibility.INVISIBLE.value in (char.get("visibility_states") or ()):
+        names.append(Condition.INVISIBLE.value)
+    for name in names:
         condition = rules_condition(name)
         if condition is not None:
             held += [c for c in conditions_given_by(condition) if c not in held]
@@ -401,6 +412,7 @@ def attack_plan(
     typed: bool = False,
     distance_ft: int | None = None,
     extra: Iterable[tuple[str, Modifier]] = (),
+    sight: Sight = NO_SIGHT,
 ) -> RollPlan:
     """An attack roll by attacker against target (either None: unknown, or
     several), asked for with `mode`: the attacker's own modifiers, then the
@@ -409,8 +421,15 @@ def attack_plan(
     isn't known; it settles a `when` that asks only that (Prone's "within 5
     feet"), which otherwise stays a note. `extra`: what else counts, by
     label, as the map's range does (Long range's Disadvantage,
-    Combat/Arena/ranges.py)."""
+    Combat/Arena/ranges.py). `sight`: whether each sees the other on the
+    map (Combat/Arena/senses.py), which settles a `when` that asks that
+    (Invisible's "the attacker can't see it", Faerie Fire's "the attacker
+    can see it", Dodge's), and a target Heavily Obscured to the attacker
+    gives Blinded's Disadvantage (and the other way round, its Advantage)."""
+    if attacker is None or target is None:
+        sight = NO_SIGHT
     sources: list[tuple[str, Modifier]] = list(extra)
+    sources += _unseen_modifiers(attacker, target, sight)
     if attacker is not None:
         sources += [
             (_whose(attacker, c), m)
@@ -419,7 +438,7 @@ def attack_plan(
         ]
     if target is not None:
         against: list[tuple[str, Modifier]] = [
-            (_whose(target, c), _as_seen(m, attacker, target))
+            (_whose(target, c), _as_seen(m, attacker, target, sight.target))
             for c, m in modifiers_on(target)
             if isinstance(m, AttacksAgainst) and not m.by_caster and not m.by_allies
         ]
@@ -433,23 +452,105 @@ def attack_plan(
         ]
         known = distance_ft if attacker is not None else None
         sources += _settled_against(against, known)
-    return _plan(mode, sources, D20Test.ATTACK_ROLL, None, typed)
+    sources, unseen = _settled_by_sight(sources, sight)
+    plan = _plan(mode, sources, D20Test.ATTACK_ROLL, None, typed)
+    return replace(plan, notes=(*plan.notes, *unseen)) if unseen else plan
 
 
 def _as_seen(
-    modifier: AttacksAgainst, attacker: dict | None, target: dict
+    modifier: AttacksAgainst, attacker: dict | None, target: dict, seen: Seen
 ) -> AttacksAgainst:
     """A `seen_attacker` AttacksAgainst (Dodge's Disadvantage) counts, unless
     the target may not see the attacker: an Invisible attacker, or a Blinded
-    target. Then it's a `when` the GM judges (See Invisibility, Blindsight)."""
+    target. Then it's a `when` the GM judges (See Invisibility, Blindsight),
+    which the map's sight settles when it knows (`seen`: whether the target
+    sees the attacker)."""
     if not modifier.seen_attacker or modifier.when or attacker is None:
         return modifier
-    invisible = has_condition(attacker, Condition.INVISIBLE) or (
-        Visibility.INVISIBLE.value in attacker.get("visibility_states", [])
-    )
-    if invisible or has_condition(target, Condition.BLINDED):
+    if seen.can is False:
+        return replace(modifier, when=_TARGET_SEES)
+    if seen.can:
+        return modifier
+    if has_condition(attacker, Condition.INVISIBLE) or has_condition(
+        target, Condition.BLINDED
+    ):
         return replace(modifier, when=f"{target['name']} can see the attacker")
     return modifier
+
+
+# The `when`s that ask whether one of an attack's two sees the other, which
+# the map's Sight settles, by whose sight it is and what it asks of it:
+# ("attacker", False) holds when the attacker doesn't see the target. On
+# the target's AttacksAgainst "it" is the target, on the attacker's own
+# D20Mode the attacker (Invisible's two; Faerie Fire's; Dodge's, _as_seen).
+_TARGET_SEES = "the target can see the attacker"
+_SIGHT_WHENS: dict[str, tuple[str, bool]] = {
+    "the attacker can't see it": ("attacker", False),
+    "the attacker can see it": ("attacker", True),
+    "the target can't see it": ("target", False),
+    "the target can see it": ("target", True),
+    _TARGET_SEES: ("target", True),
+}
+
+
+def _settled_by_sight(
+    sources: list[tuple[str, Modifier]], sight: Sight
+) -> tuple[list[tuple[str, Modifier]], list[str]]:
+    """`sources` with the `when`s the map's sight settles (_SIGHT_WHENS):
+    one that holds counts, its label saying who sees whom ("Ogre is
+    Invisible, the target doesn't see it"); one that doesn't is left out,
+    with a note saying why ("Ogre is Invisible: no Advantage, the target
+    sees it (Truesight 60 ft.)"). The rest stay as they are."""
+    settled: list[tuple[str, Modifier]] = []
+    notes: list[str] = []
+    for label, modifier in sources:
+        when = getattr(modifier, "when", "")
+        side = _SIGHT_WHENS.get(when) if when else None
+        seen: Seen | None = getattr(sight, side[0]) if side is not None else None
+        if side is None or seen is None or seen.can is None:
+            settled.append((label, modifier))
+            continue
+        how = f" ({seen.why})" if seen.why else ""
+        sees = "sees" if seen.can else "doesn't see"
+        who = f"the {side[0]} {sees} it{how}"
+        if seen.can == side[1]:
+            settled.append((f"{label}, {who}", replace(modifier, when="")))
+        elif isinstance(modifier, (D20Mode, AttacksAgainst)):
+            notes.append(f"{label}: no {modifier.mode}, {who}")
+    return settled, notes
+
+
+def _unseen_modifiers(
+    attacker: dict | None, target: dict | None, sight: Sight
+) -> list[tuple[str, Modifier]]:
+    """What a Heavily Obscured space counts in an attack roll (Rules
+    Glossary: "You have the Blinded condition while trying to see something
+    in a Heavily Obscured space"): Blinded's Disadvantage for an attacker
+    that can't see the target for where it is, and its Advantage against a
+    target that can't see the attacker for where that is. Not again for one
+    Blinded already."""
+    if attacker is None or target is None:
+        return []
+    found: list[tuple[str, Modifier]] = []
+    seen = sight.attacker
+    if seen.can is False and seen.obscured:
+        if not has_condition(attacker, Condition.BLINDED):
+            found.append(
+                (
+                    f"{attacker['name']} can't see {target['name']} ({seen.why})",
+                    D20Mode((D20Test.ATTACK_ROLL,), RollMode.DISADVANTAGE),
+                )
+            )
+    seen = sight.target
+    if seen.can is False and seen.obscured:
+        if not has_condition(target, Condition.BLINDED):
+            found.append(
+                (
+                    f"{target['name']} can't see {attacker['name']} ({seen.why})",
+                    D20Mode((D20Test.ATTACK_ROLL,), RollMode.ADVANTAGE),
+                )
+            )
+    return found
 
 
 def _by_allies_against(

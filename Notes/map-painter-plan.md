@@ -173,7 +173,8 @@ Taken in the plan (2026-11-15), for the user to overrule:
 8. **"Visibility" is the light, as the rules have it**: Dim Light is
    Lightly Obscured and Darkness Heavily Obscured (Rules Glossary). It's
    shown (shading, the hover, the target label: Heavily Obscured only when
-   every cell of the target is dark), not rolled into attacks yet (Q5).
+   every cell of the target is dark), and since the arena plan's step 28
+   counted in who sees whom, and so in attack rolls (Q5).
    What the players can see of the map is Q1.
 9. **Objects are per cell, with what the rules need**: whether they block
    movement, are Difficult Terrain (furniture), the cover they give, and
@@ -208,10 +209,11 @@ Taken in the plan (2026-11-15), for the user to overrule:
   count each cell's height into the area's reach.
 - **Q4. Flying creatures' altitude.** *Blocks nothing.* *Suggestion:* a
   token's own "flying at" height, added to the ground's in distances.
-- **Q5. Should Obscured change attack rolls?** *Blocks nothing.* Heavily
-  Obscured is Blinded while trying to see there. *Suggestion:* with DI-068
-  (Invisible as a condition), give the attack notes "target Heavily
-  Obscured: Disadvantage" from the map.
+- **Q5. Should Obscured change attack rolls?** *Answered by the arena
+  plan's step 28 (its Decisions 49 to 53, 2026-11-18), as suggested:*
+  Heavily Obscured is Blinded while trying to see there, counted in the
+  attack roll ("Pirate can't see Tiger (Darkness at B1): Disadvantage"),
+  with the viewer's Darkvision, Blindsight and Truesight; DI-068 fixed.
 - **Q6. Doors that open in a fight.** *Blocks nothing.* *Suggestion:* a
   click on an object in the fight's map selects it, as a kept area is, with
   Open/Close for a door (blocks or not).
@@ -244,8 +246,8 @@ None found while building.
 
 Already logged, and touched by this plan:
 
-- **DI-068** (open): Invisible is a visibility state, not a condition; Q5
-  would build on it.
+- **DI-068** (fixed 2026-11-18, the arena plan's step 28): Invisible is
+  a visibility state, not a condition; Q5 built on it.
 - **DI-085** (open): rules with a distance in their `when` aren't counted.
   The painted map's heights now count into every distance those rules will
   read.

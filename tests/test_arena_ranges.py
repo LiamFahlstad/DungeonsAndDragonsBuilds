@@ -12,6 +12,7 @@
 On 5-foot cells counted Manhattan; what can't be done is warned about, not
 refused (Decision 31)."""
 
+from dataclasses import replace
 from typing import Any
 
 from CharacterContent.Items.Weapons.Magic import MarksmansLongbow
@@ -29,6 +30,7 @@ from Combat.Arena.ranges import (
     weapon_range,
 )
 from Combat.Effects.modifiers import attack_plan
+from Combat.Effects.sight import NO_SIGHT
 
 BOW = AttackRange(normal_ft=150, long_ft=600, what="Longbow")
 SWORD = AttackRange(reach_ft=5, what="Longsword")
@@ -45,9 +47,12 @@ def _player(name: str, at, **keys: Any) -> dict:
 
 
 def _check(attack, attacker, target, *others):
-    return check_attack_range(
+    """The range part of the check: its sight (who sees whom, step 28) is
+    tests/test_arena_senses.py's."""
+    check = check_attack_range(
         attack, attacker, target, [attacker, target, *others], ArenaSettings()
     )
+    return replace(check, sight=NO_SIGHT)
 
 
 # ---------------------------------------------------------------------------
@@ -165,14 +170,16 @@ def test_an_ally_or_an_incapacitated_or_fallen_enemy_close_by_doesnt():
     assert _check(BOW, archer, goblin, friend, stunned, fallen) == NO_RANGE_CHECK
 
 
-def test_an_enemy_that_may_not_see_the_attacker_is_left_to_the_gm():
+def test_an_enemy_that_cant_see_the_attacker_imposes_nothing():
+    # "within 5 feet of an enemy who can see you": a Blinded one can't
+    # (step 28; before, it was left to the GM).
     archer, goblin = _player("Archer", (0, 0)), _monster("Goblin", (6, 0))
     blinded = _monster("Orc", (0, 1), conditions=["Blinded"])
     check = _check(BOW, archer, goblin, blinded)
     assert check.disadvantages == ()
     assert check.notes == (
-        "Ranged attack within 5 ft. of Orc (not counted): Disadvantage if it"
-        " can see the attacker",
+        "Ranged attack within 5 ft. of Orc: no Disadvantage, it doesn't see"
+        " the attacker (Orc is Blinded)",
     )
 
 

@@ -214,6 +214,19 @@
    "ability": "DEX",
    "action_cost": "Action",
    "amount_kind": "Damage",
+   "badge_modifiers": {
+    "Faerie Fire": [
+     {
+      "outlined": true,
+      "type": "Vision"
+     },
+     {
+      "mode": "Advantage",
+      "type": "AttacksAgainst",
+      "when": "the attacker can see it"
+     }
+    ]
+   },
    "bonus": null,
    "concentration": true,
    "condition": "Faerie Fire",
@@ -225,7 +238,7 @@
    "half_on_save": false,
    "is_described": true,
    "is_unavailable": false,
-   "note": "An affected creature sheds Dim Light, can't benefit from the Invisible condition, and attack rolls against it have Advantage if the attacker can see it.",
+   "note": "An affected creature sheds Dim Light.",
    "repeat_save": false,
    "roll": "Saving throw",
    "row_name": "",
