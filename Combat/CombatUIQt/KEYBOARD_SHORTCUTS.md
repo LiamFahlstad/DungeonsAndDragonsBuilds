@@ -203,6 +203,16 @@ the source nearest the mouse. For an area centred on a point (a Fireball),
 the bar says how far the point is against the spell's range, and warns
 when it's past it; it still lets you click.
 
+A **Wall** (Wall of Fire, Wall of Force, Blade Barrier, Wall of Thorns, read
+from their text) is aimed by two clicks, one on each end: the bar says how
+long it is so far, and it stops at its length (60 feet is 12 cells along a
+row). With **Ring** ticked (the size becomes the ring its text offers,
+Wall of Fire's 20 feet across), one click on its middle puts it. It's one
+cell thick, and nothing a wall crosses cuts it short. For a wall with a
+damaging side (Wall of Fire), a third click on one side picks it: the bar
+names it ("the east side", or inside and outside a ring) and shades the
+cells within reach of it.
+
 The bar's **colour** list (orange, red, blue, green, purple, yellow, teal,
 grey, or **Other...** for any colour) is what the area is shaded in, and the
 next area starts with the last colour picked.
@@ -233,7 +243,16 @@ source's Active Spells on its card:
   caster as the source and that creature the target, at the slot it was
   cast with, and **costs nothing**: no slot, action or concentration. What
   it gives (Web's Restrained) ends with the area's concentration. A walk's
-  button goes with Undo, a turn's with the next turn.
+  button goes with Undo, a turn's with the next turn. Wall of Fire's side,
+  shaded fainter, gives its button to whoever ends a turn within 10 feet
+  of it ("... (ended its turn by its damaging side)"); walking into the
+  wall itself gives the usual one.
+- **A wall is terrain while it lasts.** Wall of Force (its text calls it a
+  barrier) blocks movement and is Total Cover, like a painted wall: no
+  walk goes through it, an attack or a Fireball across it is blocked, and
+  the target label says so. Blade Barrier is Three-Quarters Cover and
+  Difficult Terrain. None of it is written into the painted map, and it's
+  gone when the spell ends (or Undo takes it back).
 
 **Selecting an area that stays:** click an empty cell of it (click again
 where areas overlap to go to the next one). It's edged brighter, and a panel
@@ -242,7 +261,7 @@ long it has left, with its rules text under it:
 
 - the **colour** list changes its colour (one undo step);
 - **Target who's in it** makes whoever stands in it the targets;
-- **Move** (not for one around its caster) aims it again in the area bar
+- **Move** (not for one around its caster, nor a wall) aims it again in the area bar
   from where it is, keeping its time, concentration and colour: the bar
   says how far it moves against its text's "up to" (Moonbeam's 60 ft.,
   warned past it), a click puts it there and spends what its text says

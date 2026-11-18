@@ -360,7 +360,7 @@ class SummonsMixin(CombatWindowState):
         for char in new:
             char["stats"] = _default_stats()
         # On the battle map, beside their owners (when they're on it).
-        place_summons(new, self.characters, self.arena_settings)
+        place_summons(new, self.characters, self._map_settings())
         own = [c for c in new if not follows_owner(c)]
         follow = [c for c in new if follows_owner(c)]
         rolls: dict[str, int] = {}

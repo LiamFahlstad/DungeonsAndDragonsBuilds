@@ -570,6 +570,9 @@ class CombatWindowState:
     def _deselect_area(self) -> bool:
         raise NotImplementedError("ArenaMixin._deselect_area")
 
+    def _map_settings(self) -> ArenaSettings:
+        raise NotImplementedError("ArenaMixin._map_settings")
+
     def _show_map_painter(self):
         raise NotImplementedError("MapPainterMixin._show_map_painter")
 

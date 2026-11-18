@@ -40,6 +40,14 @@ Cast on the area's effect at no cost. Move aims a kept area again in the
 area bar from where it is, keeping its time and concentration, spending
 what its text says moving it costs.
 
+Walls (step 25): the bar's Wall is aimed by two clicks, its two ends (or,
+ticked Ring, one on its middle), and for one with a damaging side (Wall of
+Fire) a third on the side that deals damage. While it lasts, a wall its
+text calls a barrier (Wall of Force) blocks movement and is Total Cover, as
+a painted wall is: every rule reads the map through `_map_settings`, the
+painted terrain with the kept walls laid over it, which is never saved into
+the painted map.
+
 The painted map (Notes/map-painter-plan.md): a fight starting puts whoever
 the encounter's map gives a starting cell there; the hover names what's
 painted on a cell, the target label says when a target is Lightly or
@@ -98,9 +106,15 @@ from Combat.Arena.areas import (
     AreaShape,
     area_cells,
     creatures_in,
+    damaging_side_ft,
     parse_area,
     point_range_ft,
+    side_cells,
+    side_name,
+    side_of,
     spell_range_ft,
+    wall_cells,
+    wall_ring_ft,
 )
 from Combat.Arena.geometry import Cell
 from Combat.Arena.lasting import (
@@ -117,6 +131,7 @@ from Combat.Arena.lasting import (
     area_record,
     area_timing,
     areas_at,
+    areas_beside,
     areas_holding,
     entered,
     find_area,
@@ -124,13 +139,15 @@ from Combat.Arena.lasting import (
     move_rule,
     record_area,
     record_cells,
+    record_end,
     time_left_text,
     who_is_in,
+    with_kept_walls,
 )
 from Combat.Arena.maps import place_at_starts
 from Combat.Arena.grapples import dragged_to, stretched
 from Combat.Arena.pushes import push_destination, push_order, too_big
-from Combat.Arena.terrain import BRIGHT, DARK, DIM, OBSCURED
+from Combat.Arena.terrain import BRIGHT, DARK, DIM, OBSCURED, MapObject
 from Combat.Effects.modifiers import has_condition
 from Combat.Effects.triggers import OpportunityAttack
 from Model.Content.CombatEffect import CombatPush
@@ -281,6 +298,14 @@ class ArenaMixin(CombatWindowState):
             " (Thunderwave)"
         )
         layout.addWidget(self._area_from_source)
+        self._area_ring = QCheckBox("Ring")
+        self._area_ring.setObjectName("areaRing")
+        self._area_ring.setToolTip(
+            "A wall in a ring as far across as the size (Wall of Fire's"
+            " ringed wall), aimed by a click on its middle; unticked, a"
+            " straight wall aimed by its two ends"
+        )
+        layout.addWidget(self._area_ring)
         self._area_color = _color_combo("areaColor")
         self._last_area_color = DEFAULT_AREA_COLOR
         layout.addWidget(self._area_color)
@@ -302,6 +327,7 @@ class ArenaMixin(CombatWindowState):
         self._area_size.valueChanged.connect(self._area_changed)
         self._area_width.valueChanged.connect(self._area_changed)
         self._area_from_source.toggled.connect(self._area_changed)
+        self._area_ring.toggled.connect(self._area_ring_toggled)
         self._area_color.currentIndexChanged.connect(self._area_color_changed)
         self._area_keep.toggled.connect(self._area_changed)
         bar.hide()
@@ -316,41 +342,62 @@ class ArenaMixin(CombatWindowState):
             self._area_width.value(),
             self._area_from_source.isChecked()
             and shape in (AreaShape.SPHERE, AreaShape.CYLINDER, AreaShape.CUBE),
+            ring=shape is AreaShape.WALL and self._area_ring.isChecked(),
+        )
+
+    def _area_boxes(self) -> tuple:
+        """The bar's controls that make up the area."""
+        return (
+            self._area_shape,
+            self._area_size,
+            self._area_width,
+            self._area_from_source,
+            self._area_ring,
         )
 
     def _show_area_in_bar(self, area: AreaOfEffect):
-        for box in (
-            self._area_shape,
-            self._area_size,
-            self._area_width,
-            self._area_from_source,
-        ):
+        for box in self._area_boxes():
             box.blockSignals(True)
         self._area_shape.setCurrentIndex(self._area_shape.findData(area.shape))
         self._area_size.setValue(area.size_ft)
-        self._area_width.setValue(area.width_ft)
+        # A Wall's thickness is no width the bar offers (it's one cell).
+        self._area_width.setValue(max(5, area.width_ft))
         self._area_from_source.setChecked(area.from_source)
-        for box in (
-            self._area_shape,
-            self._area_size,
-            self._area_width,
-            self._area_from_source,
-        ):
+        self._area_ring.setChecked(area.ring)
+        for box in self._area_boxes():
             box.blockSignals(False)
         self._show_area_controls()
 
     def _show_area_controls(self):
-        """A Line's width, and From the source for the shapes it changes."""
+        """A Line's width, From the source for the shapes it changes, and
+        Ring for a Wall."""
         shape = self._area_shape.currentData()
         self._area_width_label.setVisible(shape is AreaShape.LINE)
         self._area_width.setVisible(shape is AreaShape.LINE)
         self._area_from_source.setVisible(
             shape in (AreaShape.SPHERE, AreaShape.CYLINDER, AreaShape.CUBE)
         )
+        self._area_ring.setVisible(shape is AreaShape.WALL)
+
+    def _area_ring_toggled(self):
+        """Ring ticked or not: the size the pick's text gives that kind of
+        wall (Wall of Fire's 20-foot ring, its 60-foot wall), and the clicks
+        so far forgotten."""
+        request = self._area_targeting
+        if request is not None and not request.get("move"):
+            feet = request.get("ring_ft" if self._area_ring.isChecked() else "wall_ft")
+            if feet:
+                self._area_size.blockSignals(True)
+                self._area_size.setValue(feet)
+                self._area_size.blockSignals(False)
+            request["ends"] = []
+        self._area_changed()
 
     def _area_changed(self):
         self._show_area_controls()
         if self._area_targeting is not None:
+            if self._area_shape.currentData() is not AreaShape.WALL:
+                self._area_targeting["ends"] = []
             if not self._area_targeting.get("move"):
                 self._last_area = self._area_in_bar()
             self._arena_view.refresh_area()
@@ -404,6 +451,13 @@ class ArenaMixin(CombatWindowState):
             "read": area is not None,
             "range": range_ft,
             "about": option.tooltip if option is not None else "",
+            # A Wall's clicks so far (its ends, a ring's middle), the ring
+            # and straight sizes its text gives, and how far its damaging
+            # side reaches (Wall of Fire's 10 feet), if it has one.
+            "ends": [],
+            "wall_ft": area.size_ft if area is not None and area.is_wall else None,
+            "ring_ft": wall_ring_ft(option.tooltip) if option is not None else None,
+            "side_ft": damaging_side_ft(option.tooltip) if option is not None else None,
         }
         self._show_area_in_bar(area or self._last_area)
         self._last_area = self._area_in_bar()
@@ -425,6 +479,8 @@ class ArenaMixin(CombatWindowState):
         caster, entry = found
         record = entry[AREA_KEY]
         if record.get("follows") or record.get("aim") is None:
+            return
+        if record_area(record).is_wall:
             return
         rule = move_rule(self._area_text(caster, entry))
         self._aimed_area = None
@@ -448,12 +504,7 @@ class ArenaMixin(CombatWindowState):
     def _enable_area_shape(self, enabled: bool):
         """The bar's shape, size, width and From the source, changeable or
         not (not while a kept area is moved)."""
-        for box in (
-            self._area_shape,
-            self._area_size,
-            self._area_width,
-            self._area_from_source,
-        ):
+        for box in self._area_boxes():
             box.setEnabled(enabled)
 
     def _begin_aiming(self):
@@ -474,8 +525,59 @@ class ArenaMixin(CombatWindowState):
         request = self._area_targeting
         if request is None:
             return set()
-        return area_cells(
-            self._area_in_bar(), request["source"], aim, self.arena_settings
+        area, settings = self._area_in_bar(), self._map_settings()
+        if area.is_wall and not request.get("move"):
+            return self._wall_cells_at(area, request, aim, settings)
+        return area_cells(area, request["source"], aim, settings)
+
+    def _wall_cells_at(
+        self, area: AreaOfEffect, request: dict, aim: Cell | None, settings
+    ) -> set[Cell]:
+        """What a Wall being aimed covers with the mouse on `aim`: its first
+        end there, then the wall from it to there (a ring around there);
+        once put, the wall, and its damaging side on aim's side, to click."""
+        ends = request.get("ends") or []
+        if not _wall_placed(area, ends):
+            if aim is None or not settings.on_map(aim):
+                return set()
+            if area.ring or not ends:
+                return wall_cells(area, aim, None, settings)
+            return wall_cells(area, ends[0], aim, settings)
+        first, end = ends[0], (None if area.ring else ends[1])
+        cells = wall_cells(area, first, end, settings)
+        reach = request.get("side_ft")
+        if aim is not None and reach is not None:
+            side = side_of(area, first, end, aim, settings)
+            cells |= side_cells(area, first, end, side, reach, settings)
+        return cells
+
+    def _wall_text(self, area: AreaOfEffect, request: dict) -> str | None:
+        """What the bar says while a Wall is aimed: which click comes next,
+        how long it is so far, the side the mouse is on; None once it's put
+        and has no side to pick (the bar then names who's in it)."""
+        ends = request.get("ends") or []
+        aim = self._arena_view.area_aim
+        settings = self._map_settings()
+        if not _wall_placed(area, ends):
+            if area.ring:
+                return "click its middle."
+            if not ends:
+                return "click one end."
+            text = "click its other end"
+            if aim is not None:
+                rule = settings.distance_rule
+                feet = rule.feet(ends[0], aim, settings.cell_ft) + settings.cell_ft
+                text += f" ({min(feet, area.size_ft)} ft. long"
+                text += ", as far as it goes)" if feet > area.size_ft else ")"
+            return text + "."
+        if request.get("side_ft") is None:
+            return None
+        first, end = ends[0], (None if area.ring else ends[1])
+        side = side_of(area, first, end, aim, settings) if aim is not None else 0
+        which = f" (the {side_name(area, first, end, side)} side)" if side else ""
+        return (
+            f"click the side that deals damage{which}: within"
+            f" {request['side_ft']} ft. of it."
         )
 
     def _show_area_count(self, cells: set[Cell]):
@@ -488,7 +590,14 @@ class ArenaMixin(CombatWindowState):
         if not request["read"] and request["pick"]:
             head += "no area in its text, so check the shape. "
         inside = creatures_in(self.characters, cells, self.arena_settings)
-        if request.get("move") and cells:
+        wall = (
+            self._wall_text(area, request)
+            if area.is_wall and not request.get("move")
+            else None
+        )
+        if wall is not None:
+            text = f"{head}{area.text}: {wall}"
+        elif request.get("move") and cells:
             onto = ", ".join(c["name"] for c in inside)
             text = f"{head}{area.text}: click to move it there" + (
                 f" (onto {onto})." if onto else "."
@@ -532,7 +641,7 @@ class ArenaMixin(CombatWindowState):
         from where it was aimed before (how far it moves)."""
         start = request.get("from")
         if start is not None:
-            settings = self.arena_settings
+            settings = self._map_settings()
             return settings.distance_rule.feet(start, aim, settings.cell_ft)
         return distance_to_cell_ft(request["source"], aim, self.arena_settings)
 
@@ -581,30 +690,59 @@ class ArenaMixin(CombatWindowState):
             self._end_area_targeting()
             self._move_area(request["move"], cell)
             return
-        cells = self._area_cells_at(cell)
+        area, source = self._area_in_bar(), request["source"]
+        settings = self._map_settings()
+        aim, end, side = (cell if area.is_aimed else None), None, 0
+        if area.is_wall:
+            ends = request.setdefault("ends", [])
+            if not _wall_placed(area, ends):
+                ends.append(cell)
+                if not _wall_placed(area, ends) or request.get("side_ft") is not None:
+                    self._arena_view.refresh_area()  # the next click
+                    return
+            else:
+                side = side_of(area, ends[0], _wall_end(area, ends), cell, settings)
+                if side == 0:
+                    self._show_status(
+                        "Click a cell on the side that deals damage, off the"
+                        " wall's line."
+                    )
+                    return
+            aim, end = ends[0], _wall_end(area, ends)
+            cells = wall_cells(area, aim, end, settings)
+        else:
+            cells = self._area_cells_at(cell)
         inside = creatures_in(self.characters, cells, self.arena_settings)
         keep = self._area_keep.isChecked()
         if not inside and not (keep and cells):
+            if area.is_wall:
+                request["ends"] = []
+                self._arena_view.refresh_area()
             self._show_status("Nobody is in that area: aim it somewhere else.")
             return
         past = self._area_out_of_range()
-        area, source = self._area_in_bar(), request["source"]
-        aim = cell if area.is_aimed else None
         record = area_record(
             area,
             source,
             aim,
-            self.arena_settings,
+            settings,
             self._area_color_in_bar(),
             pick=request["pick"],
             about=request["about"],
+            end=end,
+            side=side,
         )
         self._end_area_targeting()
         # What the dialog, opened again, offers to keep on the map.
         self._aimed_area = {
             "source": source["name"],
             "record": record,
-            "text": area.text,
+            "text": area.text
+            + (
+                f", its {side_name(area, aim, end, side)} side dealing damage"
+                if side and aim is not None
+                else ""
+            ),
             "keep": keep,
         }
         self._set_targets(inside)
@@ -679,7 +817,7 @@ class ArenaMixin(CombatWindowState):
             self.characters, painted.starts, self.arena_settings
         ):
             self.arena_settings.in_use = True
-        place_new(self.characters, self.arena_settings)
+        place_new(self.characters, self._map_settings())
 
     def _refresh_arena(self):
         """Bring the map up to date (from _refresh_views), when it's shown."""
@@ -708,10 +846,20 @@ class ArenaMixin(CombatWindowState):
             # Someone moved, or was added: the area catches who's there now.
             self._arena_view.refresh_area()
 
+    def _map_settings(self) -> ArenaSettings:
+        """The map as the rules read it (step 25): the painted terrain, with
+        each kept wall's own laid over it while it lasts (Wall of Force
+        blocks movement and is Total Cover, Blade Barrier is Three-Quarters
+        Cover and Difficult Terrain: lasting.with_kept_walls). A copy for
+        reading, or `arena_settings` itself with no such wall up: what's
+        written (in_use, the painter, the log) goes to `arena_settings`, so
+        the wall is never saved into the painted map."""
+        return with_kept_walls(self.arena_settings, self.characters)
+
     def _lasting_rows(self) -> list[LastingArea]:
         """The kept areas the map draws, the one selected marked; a
         selection whose area has ended (or covers nothing now) is dropped."""
-        rows = lasting_areas(self.characters, self.arena_settings)
+        rows = lasting_areas(self.characters, self._map_settings())
         if self._selected_area not in {row.key for row in rows}:
             self._selected_area = None
         return [replace(row, selected=row.key == self._selected_area) for row in rows]
@@ -800,6 +948,7 @@ class ArenaMixin(CombatWindowState):
         if record.get("follows"):
             where = f"around {caster['name']}"
         parts = [record_area(record).text + (f" {where}" if where else "")]
+        parts += _wall_notes(record)
         if entry.get("concentration"):
             parts.append("Concentration")
         left = time_left_text(entry.get("time_left"))
@@ -810,8 +959,11 @@ class ArenaMixin(CombatWindowState):
             f"<b>{title}</b> · " + " · ".join(escape(p, quote=False) for p in parts)
         )
         about = record.get("about") or self._rules_text_of(record, entry)
-        # An area that follows its caster moves with it, not by itself.
-        self._area_panel_move.setVisible(not record.get("follows"))
+        # An area that follows its caster moves with it, not by itself; a
+        # wall's text doesn't move it (it's ended and cast again).
+        self._area_panel_move.setVisible(
+            not record.get("follows") and not record_area(record).is_wall
+        )
         how = move_rule(about).text
         self._area_panel_move.setToolTip(
             "Aim it again on the map, keeping its time and concentration"
@@ -861,7 +1013,7 @@ class ArenaMixin(CombatWindowState):
         if found is None:
             return
         caster, entry = found
-        cells = record_cells(entry[AREA_KEY], caster, self.arena_settings)
+        cells = record_cells(entry[AREA_KEY], caster, self._map_settings())
         inside = creatures_in(self.characters, cells, self.arena_settings)
         if not inside:
             self._show_status(f"Nobody is in {caster['name']}'s {entry['name']}.")
@@ -893,7 +1045,7 @@ class ArenaMixin(CombatWindowState):
         if found is None:
             return
         caster, entry = found
-        record, settings = entry[AREA_KEY], self.arena_settings
+        record, settings = entry[AREA_KEY], self._map_settings()
         rule = move_rule(self._area_text(caster, entry))
         title = f"{caster['name']}'s {entry['name']}"
         if (
@@ -960,7 +1112,9 @@ class ArenaMixin(CombatWindowState):
         char = self._arena_char(name)
         if char is None:
             return {}
-        return reachable(char, self.characters, self.arena_settings, remaining_ft(char))
+        return reachable(
+            char, self.characters, self._map_settings(), remaining_ft(char)
+        )
 
     def _arena_move(self, name: str, cell: Cell, kind: MoveKind = MoveKind.WALK):
         char = self._arena_char(name)
@@ -1009,7 +1163,7 @@ class ArenaMixin(CombatWindowState):
         what it has to say (a refusal, the warnings and reminders), for the
         caller to show. A push from the Custom Effect moves several in one
         Apply this way (_push_targets)."""
-        settings, name = self.arena_settings, char["name"]
+        settings, name = self._map_settings(), char["name"]
         if position(char) is None:
             anchor = nearest_free(char, [cell], self.characters, settings)
             if anchor is None:
@@ -1041,7 +1195,7 @@ class ArenaMixin(CombatWindowState):
         hazards_before = hazards_under(char, settings)
         # Someone moved on the map: it's in use, and its distances count
         # from now on (Decision 29).
-        settings.in_use = True
+        settings.in_use = self.arena_settings.in_use = True
         warnings = []
         if kind is not MoveKind.WALK:
             feet = straight_ft(char, cell, settings) or 0
@@ -1113,7 +1267,7 @@ class ArenaMixin(CombatWindowState):
         grappler: 1 extra foot a foot unless the creature is Tiny or two
         sizes smaller, counted in the walk already (arena.reachable). One
         with nowhere to go stays, and the grapple's range may end it."""
-        settings = self.arena_settings
+        settings = self._map_settings()
         lines = []
         for creature in held:
             to = dragged_to(creature, grappler, start, self.characters, settings)
@@ -1133,7 +1287,7 @@ class ArenaMixin(CombatWindowState):
         target and the grappler exceeds the grapple's range"): Grappled
         comes off, logged, and a line for the status."""
         lines = []
-        for gap in stretched(self.characters, self.arena_settings):
+        for gap in stretched(self.characters, self._map_settings()):
             name = gap.held["name"]
             self._remove_condition_from(
                 gap.held, Condition.GRAPPLED.value, source=gap.grappler
@@ -1157,7 +1311,7 @@ class ArenaMixin(CombatWindowState):
         stays. Part of the Apply's undo step. Returns the lines to show:
         each move's, and what stopped one short ("Goblin stops after 5 of
         10 ft.: the map's edge.")."""
-        settings = self.arena_settings
+        settings = self._map_settings()
         if not settings.in_use or position(pusher) is None:
             return []
         lines = []
@@ -1206,14 +1360,14 @@ class ArenaMixin(CombatWindowState):
         attackers = [
             a
             for a in opportunity_attackers(
-                char, start, self.characters, self.arena_settings, path
+                char, start, self.characters, self._map_settings(), path
             )
             if not any(a is d for d in dragged)
         ]
         strikers = [
             a
             for a in (
-                reactive_strikers(char, path, self.characters, self.arena_settings)
+                reactive_strikers(char, path, self.characters, self._map_settings())
                 if path
                 else []
             )
@@ -1305,8 +1459,13 @@ class ArenaMixin(CombatWindowState):
         from the source ("25 ft."); None without a source on the map, or
         over the source itself."""
         source = self.selected_character
-        lasting = lasting_areas(self.characters, self.arena_settings)
+        lasting = lasting_areas(self.characters, self._map_settings())
         names = [area.name for area in areas_at(cell, lasting)]
+        names += [
+            f"{area.name}'s damaging side"
+            for area in lasting
+            if cell in area.side and cell not in area.cells
+        ]
         names += self.arena_settings.terrain.describe(cell)
         inside = " · ".join(names) if names else None
         if source is None:
@@ -1332,6 +1491,9 @@ class ArenaMixin(CombatWindowState):
         if aim is None:
             return ""
         shape = self.arena_settings.distance_rule.shape
+        end = record_end(record)
+        if end is not None:
+            return f"from {shape.cell_name(Cell.of(aim))} to {shape.cell_name(end)}"
         return f"at {shape.cell_name(Cell.of(aim))}"
 
     def _log_area_kept(self, holder: dict, label: str, record: dict):
@@ -1390,7 +1552,7 @@ class ArenaMixin(CombatWindowState):
         what starting the turn did."""
         if self.phase != "COMBAT":
             return
-        settings = self.arena_settings
+        settings = self._map_settings()
         areas = lasting_areas(self.characters, settings)
         for when, chars, verb in (
             (ENDS, ended or [], "ends"),
@@ -1404,6 +1566,20 @@ class ArenaMixin(CombatWindowState):
                     self._offer_area_prompt(
                         area.key, char, when, self._turn_start_prompts
                     )
+                # By a wall's damaging side (Wall of Fire): as a turn ends.
+                beside = (
+                    areas_beside(char, areas, settings)
+                    if areas and when == ENDS
+                    else []
+                )
+                for area in beside:
+                    self._offer_area_prompt(
+                        area.key, char, when, self._turn_start_prompts, beside=True
+                    )
+                    line = (
+                        f"{char['name']} ends its turn by {area.title}'s damaging side."
+                    )
+                    self._log_event(line, character=char["name"], public=False)
                 names = [area.title for area in holding]
                 hazards = hazards_under(char, settings) if when == STARTS else []
                 if not names and not hazards:
@@ -1441,13 +1617,20 @@ class ArenaMixin(CombatWindowState):
             self._refresh_turn_prompts()
 
     def _offer_area_prompt(
-        self, key: str, char: dict, when: str, prompts: list, also: Iterable = ()
+        self,
+        key: str,
+        char: dict,
+        when: str,
+        prompts: list,
+        also: Iterable = (),
+        beside: bool = False,
     ):
         """Add to `prompts` the button for kept area `key` acting on char
         `when`, if its text says it acts then (an area acting on who enters
         it acts on who it's moved onto too), it's in combat, and there isn't
         one for the same area and creature in `prompts` or `also` already
-        (a creature makes its save "only once per turn")."""
+        (a creature makes its save "only once per turn"). `beside`: char
+        ended its turn by a wall's damaging side, not in it."""
         found = find_area(self.characters, key)
         if self.phase != "COMBAT" or found is None:
             return
@@ -1461,7 +1644,9 @@ class ArenaMixin(CombatWindowState):
             for p in (*prompts, *also)
         ):
             return
-        prompts.append(AreaPrompt(caster, char, entry["name"], key, when))
+        prompts.append(
+            AreaPrompt(caster, char, entry["name"], key, when, beside=beside)
+        )
 
     def _kept_area_answers(self, firing) -> bool:
         """Whether a badge's turn trigger (Spirit Guardians' "if it ends its
@@ -1503,6 +1688,39 @@ class ArenaMixin(CombatWindowState):
         self._refresh_views()
         self._refresh_turn_prompts()
         self._show_custom_condition_dialog(pick=row, kept_area=prompt.key)
+
+
+def _wall_placed(area: AreaOfEffect, ends: list[Cell]) -> bool:
+    """Whether a Wall's clicks so far put it: a ring's middle, or a
+    straight wall's two ends."""
+    return len(ends) >= (1 if area.ring else 2)
+
+
+def _wall_end(area: AreaOfEffect, ends: list[Cell]) -> Cell | None:
+    """A straight wall's second end once clicked; None for a ring."""
+    return ends[1] if not area.ring and len(ends) > 1 else None
+
+
+def _wall_notes(record: dict) -> list[str]:
+    """What the area panel says of a kept wall besides its shape: its
+    terrain ("blocks movement, Total Cover") and its damaging side ("the
+    south side deals damage")."""
+    area = record_area(record)
+    if not area.is_wall:
+        return []
+    notes = []
+    data = record.get("terrain")
+    if isinstance(data, dict):
+        thing = MapObject.from_dict(data)
+        said = thing.describe()[len(thing.name) :].strip(" ()")
+        if said:
+            notes.append(said)
+    side = record.get("side")
+    if side and record.get("aim") is not None:
+        aim = Cell.of(record["aim"])
+        name = side_name(area, aim, record_end(record), int(side))
+        notes.append(f"the {name} side deals damage")
+    return notes
 
 
 def hazards_under(char: dict, settings: ArenaSettings) -> list[str]:

@@ -34,6 +34,15 @@ An area that isn't aimed (an Emanation, a Sphere around the source) follows
 its caster, worked out from where the caster is now; any other stays on the
 cells it covered when it was put down (a Cone or Line aimed from the caster
 doesn't swing round as the caster walks on).
+
+A wall (step 25) keeps its other "end" (none for a ring, aimed at its
+middle), "ring", and, for one with a damaging side (Wall of Fire), the
+"side" picked and its "side_cells", where a turn ending acts too. A wall
+its text calls a barrier (Wall of Force: "Nothing can physically pass
+through the wall"), or one that gives cover or makes its space Difficult
+Terrain (Blade Barrier), keeps that as "terrain", a MapObject's dict:
+`with_kept_walls` lays it over the painted terrain for the rules to read
+while the wall lasts, never into the painted map or the log's terrain.
 """
 
 from __future__ import annotations
@@ -44,9 +53,19 @@ import uuid
 from dataclasses import dataclass
 from typing import Iterable
 
+from dataclasses import replace
+
 from Combat.Arena.arena import ArenaSettings, footprint
-from Combat.Arena.areas import AreaOfEffect, AreaShape, area_cells
+from Combat.Arena.areas import (
+    AreaOfEffect,
+    AreaShape,
+    area_cells,
+    damaging_side_ft,
+    side_cells,
+    wall_end,
+)
 from Combat.Arena.geometry import Cell
+from Combat.Arena.terrain import COVERS, NO_COVER, TOTAL, WALL, MapObject, Terrain
 
 AREA_KEY = "area"
 ACTIVE_SPELLS_KEY = "active_spells"
@@ -67,6 +86,8 @@ class LastingArea:
     concentration: bool = False
     key: str = ""  # which area it is (area_key)
     selected: bool = False  # the one clicked on the map: edged brighter
+    # A wall's damaging side (Wall of Fire): where a turn ending acts too.
+    side: frozenset[Cell] = frozenset()
 
     @property
     def title(self) -> str:
@@ -82,14 +103,19 @@ def area_record(
     color: str = DEFAULT_AREA_COLOR,
     pick: str = "",
     about: str = "",
+    end: Cell | None = None,
+    side: int = 0,
 ) -> dict:
     """The "area" an active spell keeps for `area` aimed at `aim` by
     `source`: its cells now, unless it follows its caster, with a key of
     its own, and what it was picked as and its rules text (`pick`,
-    `about`)."""
+    `about`). A Wall's other `end` and its damaging `side` (areas.side_of)
+    are kept too, with the terrain its text gives it (wall_terrain)."""
     follows = not area.is_aimed
-    cells = [] if follows else sorted(area_cells(area, source, aim, settings))
-    return {
+    if area.is_wall and aim is not None:
+        end = wall_end(area, aim, end, settings)  # where its length stops it
+    cells = [] if follows else sorted(area_cells(area, source, aim, settings, end))
+    record = {
         "shape": area.shape.value,
         "size_ft": area.size_ft,
         "width_ft": area.width_ft,
@@ -102,6 +128,82 @@ def area_record(
         "pick": pick,
         "about": about,
     }
+    if area.is_wall and aim is not None:
+        record["end"] = end.to_list() if end is not None and not area.ring else None
+        record["ring"] = area.ring
+        reach = damaging_side_ft(about)
+        if side and reach is not None:
+            near = side_cells(area, aim, end, side, reach, settings)
+            record["side"] = side
+            record["side_cells"] = [cell.to_list() for cell in sorted(near)]
+        thing = wall_terrain(pick or "Wall", about)
+        if thing is not None:
+            record["terrain"] = thing.to_dict()
+    return record
+
+
+# A wall its text calls a barrier, or says nothing passes through (Wall of
+# Force); the cover a wall "provides", and a space that "is Difficult
+# Terrain" (Blade Barrier).
+_BARRIER = re.compile(
+    r"\bbarrier\b|\bnothing can (?:physically )?pass through\b", re.IGNORECASE
+)
+_PROVIDES_COVER = re.compile(
+    r"\bprovides (Half|Three-Quarters|Total) Cover\b", re.IGNORECASE
+)
+_COVER_KEYS = {name.lower(): key for key, name in COVERS.items()}
+_SPACE_DIFFICULT = re.compile(r"\bspace is Difficult Terrain\b", re.IGNORECASE)
+
+
+def wall_terrain(name: str, text: str) -> MapObject | None:
+    """What a wall is as terrain while it lasts, from its rules text: one it
+    calls a barrier (Wall of Force) blocks movement and is Total Cover, as
+    a painted wall is; one that "provides Three-Quarters Cover" and whose
+    "space is Difficult Terrain" (Blade Barrier) is that; None for one that
+    says neither (Wall of Fire, Wall of Thorns)."""
+    if _BARRIER.search(text):
+        return MapObject(name, blocks=True, cover=TOTAL)
+    cover = _PROVIDES_COVER.search(text)
+    degree = (
+        _COVER_KEYS.get(f"{cover.group(1)} cover".lower(), NO_COVER)
+        if cover
+        else NO_COVER
+    )
+    difficult = bool(_SPACE_DIFFICULT.search(text))
+    if degree == NO_COVER and not difficult:
+        return None
+    return MapObject(name, difficult=difficult, cover=degree)
+
+
+def with_kept_walls(settings: ArenaSettings, chars: Iterable[dict]) -> ArenaSettings:
+    """The map as the rules read it: `settings` with each kept wall's terrain
+    (wall_terrain) on its cells while it lasts, over what's painted there (a
+    painted wall stays one; an object that blocks stays, under a wall that
+    doesn't). A copy, for reading: `settings` itself when no wall adds
+    anything, so the painted map and the log never get it."""
+    overlay: dict[Cell, MapObject] = {}
+    for char in chars:
+        for entry in char.get(ACTIVE_SPELLS_KEY) or []:
+            record = entry.get(AREA_KEY) or {}
+            data = record.get("terrain")
+            if not isinstance(data, dict):
+                continue
+            thing = MapObject.from_dict(data)
+            for cell in record_cells(record, char, settings):
+                here = overlay.get(cell)
+                if here is None or (thing.blocks and not here.blocks):
+                    overlay[cell] = thing
+    if not overlay:
+        return settings
+    cells = dict(settings.terrain.cells)
+    for cell, thing in overlay.items():
+        spot = settings.terrain.at(cell)
+        if spot.ground == WALL:
+            continue
+        if spot.thing is not None and spot.thing.blocks and not thing.blocks:
+            continue
+        cells[cell] = replace(spot, thing=thing)
+    return replace(settings, terrain=Terrain(cells))
 
 
 def area_key(caster: dict, entry: dict) -> str:
@@ -140,14 +242,26 @@ def record_area(record: dict) -> AreaOfEffect:
         int(record["size_ft"]),
         int(record.get("width_ft", 5)),
         bool(record.get("from_source", False)),
+        bool(record.get("ring", False)),
     )
+
+
+def record_end(record: dict) -> Cell | None:
+    """A straight wall's other end, if its record has one."""
+    end = record.get("end")
+    return Cell.of(end) if end is not None else None
 
 
 def record_origin(record: dict) -> list[Cell] | None:
     """Where an aimed area spreads from, for the cover against it: the cell
     a point area was aimed at (a Fireball's), or None for one that starts
-    at its source (a Cone, an Emanation), whose cover is the source's."""
-    if record_area(record).starts_at_source or record.get("aim") is None:
+    at its source (a Cone, an Emanation), whose cover is the source's. A
+    wall has no point of origin: it's where it is, so its own cells, with
+    nothing between it and who's in it."""
+    area = record_area(record)
+    if area.is_wall:
+        return [Cell.of(c) for c in record.get("cells", [])] or None
+    if area.starts_at_source or record.get("aim") is None:
         return None
     return [Cell.of(record["aim"])]
 
@@ -177,6 +291,7 @@ def lasting_areas(chars: Iterable[dict], settings: ArenaSettings) -> list[Lastin
             cells = record_cells(record, char, settings)
             if not cells:
                 continue
+            side = (Cell.of(c) for c in record.get("side_cells") or [])
             found.append(
                 LastingArea(
                     caster=char["name"],
@@ -185,6 +300,7 @@ def lasting_areas(chars: Iterable[dict], settings: ArenaSettings) -> list[Lastin
                     color=record.get("color") or DEFAULT_AREA_COLOR,
                     concentration=bool(entry.get("concentration")),
                     key=area_key(char, entry),
+                    side=frozenset(c for c in side if settings.on_map(c)),
                 )
             )
     return found
@@ -201,6 +317,19 @@ def areas_holding(
     """The areas char stands in: any of its cells in them."""
     own = set(footprint(char, settings.distance_rule))
     return [area for area in areas if own.intersection(area.cells)]
+
+
+def areas_beside(
+    char: dict, areas: Iterable[LastingArea], settings: ArenaSettings
+) -> list[LastingArea]:
+    """The walls char is by the damaging side of (Wall of Fire's "within 10
+    feet of that side") and not in."""
+    own = set(footprint(char, settings.distance_rule))
+    return [
+        area
+        for area in areas
+        if own.intersection(area.side) and not own.intersection(area.cells)
+    ]
 
 
 def who_is_in(
@@ -348,6 +477,8 @@ class AreaPrompt:
     key: str
     when: str
     pick: str = ""
+    # A turn that ended by a wall's damaging side, not in the wall (step 25).
+    beside: bool = False
 
     @property
     def caster(self) -> str:
@@ -362,5 +493,8 @@ class AreaPrompt:
     @property
     def prompt(self) -> str:
         """Its button in the turn column: "Clover's Moonbeam on Goblin
-        (entered it)"."""
-        return f"{self.title} on {self.target['name']} ({_WHEN_TEXT[self.when]})"
+        (entered it)", "... (ended its turn by its damaging side)"."""
+        when = _WHEN_TEXT[self.when]
+        if self.beside:
+            when = "ended its turn by its damaging side"
+        return f"{self.title} on {self.target['name']} ({when})"

@@ -25,6 +25,18 @@ The shapes are the Rules Glossary's (Areas of Effect). On the grid:
 - A Cube is centred on the cell aimed at, or, from the source (Thunderwave),
   set against the side of the source's space nearest the cell aimed at.
 
+A wall (Wall of Fire, Wall of Force, Blade Barrier, Wall of Thorns; step 25)
+isn't one of the glossary's six shapes and has no point of origin, so
+nothing it crosses cuts it. On the grid it's a Wall: a straight one is the
+cells a line between its two ends' middles crosses (both ends in it, a
+corner's two cells both), as far from its first end as its length lets by
+the map's rule; a ring (`ring`) is the edge of a Sphere half its size
+across, around the cell aimed at: each cell within that distance with a
+neighbour beyond it, so nothing walks through either. However thick its
+text says, it's one cell thick (1 to 5 feet in every wall here). A wall
+with a damaging side (Wall of Fire's "One side of the wall") keeps the
+cells within the distance its text says of that side (`side_cells`).
+
 Cells are reached through geometry's GridShape and DistanceRule only (the
 plan's Decision 3): directions are worked out from the shape's cell
 centres, never from a cell's coordinates.
@@ -52,6 +64,9 @@ class AreaShape(str, Enum):
     CONE = "Cone"
     LINE = "Line"
     EMANATION = "Emanation"
+    # Not one of the glossary's six: a wall, aimed by its two ends or, as a
+    # ring, by its middle (step 25).
+    WALL = "Wall"
 
 
 # Shapes whose size is a radius ("20-foot-radius Sphere").
@@ -63,14 +78,21 @@ _FROM_SOURCE = (AreaShape.CONE, AreaShape.LINE, AreaShape.EMANATION)
 @dataclass(frozen=True)
 class AreaOfEffect:
     """An area: its shape and size in feet (a Sphere's or Cylinder's radius,
-    a Cone's or Line's length, a Cube's side, an Emanation's distance), a
-    Line's width, and whether a Sphere, Cylinder or Cube starts at the
-    source rather than at a point (Cones, Lines and Emanations always do)."""
+    a Cone's or Line's length, a Cube's side, an Emanation's distance, a
+    Wall's length or a ring's distance across), a Line's width (a Wall's
+    thickness), whether a Sphere, Cylinder or Cube starts at the source
+    rather than at a point (Cones, Lines and Emanations always do), and
+    whether a Wall is a ring."""
 
     shape: AreaShape
     size_ft: int
     width_ft: int = 5
     from_source: bool = False
+    ring: bool = False
+
+    @property
+    def is_wall(self) -> bool:
+        return self.shape is AreaShape.WALL
 
     @property
     def starts_at_source(self) -> bool:
@@ -87,8 +109,13 @@ class AreaOfEffect:
     @property
     def text(self) -> str:
         """ "20-foot-radius Sphere", "15-foot Cone", "100-foot-long,
-        5-foot-wide Line", "15-foot Cube from you"."""
+        5-foot-wide Line", "15-foot Cube from you", "60-foot-long Wall",
+        "Wall in a 20-foot ring"."""
         shape = self.shape.value
+        if self.shape is AreaShape.WALL:
+            if self.ring:
+                return f"Wall in a {self.size_ft}-foot ring"
+            return f"{self.size_ft}-foot-long Wall"
         if self.shape in _BY_RADIUS:
             text = f"{self.size_ft}-foot-radius {shape}"
         elif self.shape is AreaShape.LINE:
@@ -164,18 +191,117 @@ _AROUND_SOURCE = re.compile(
     r"|originat\w* from (?:you|yourself|itself)\b",
     re.IGNORECASE,
 )
+# A light's reach isn't an area: Flaming Sphere "sheds Bright Light in a
+# 20-foot radius" (DI-096).
+_LIGHT_BEFORE = re.compile(r"\blight\s+(?:in|for)\s+(?:a|an)?\s*$", re.IGNORECASE)
+# Flaming Sphere's "Any creature that ends its turn within 5 feet of the
+# sphere": a Sphere that far around the cell it's on (DI-096).
+_WITHIN_SPHERE = re.compile(
+    rf"\bwithin {_NUMBER}{_FOOT} of (?:the|that) sphere\b", re.IGNORECASE
+)
+# A wall (step 25): "make the wall up to 60 feet long, 20 feet high, and 1
+# foot thick" (Wall of Fire, Wall of Thorns), "a straight wall up to 100
+# feet long" (Blade Barrier).
+_WALL_LONG = re.compile(
+    rf"\bwall\b[^.]{{0,40}}?\bup to {_NUMBER}{_FOOT} long", re.IGNORECASE
+)
+_THICK = re.compile(rf"{_NUMBER}{_FOOT}\s+thick", re.IGNORECASE)
+# Wall of Force's "a flat surface made up of ten 10-foot-by-10-foot panels".
+_COUNTS = {
+    "one": 1,
+    "two": 2,
+    "three": 3,
+    "four": 4,
+    "five": 5,
+    "six": 6,
+    "seven": 7,
+    "eight": 8,
+    "nine": 9,
+    "ten": 10,
+}
+_PANELS = re.compile(
+    rf"\b({'|'.join(_COUNTS)}|\d+) {_NUMBER}-foot(?:-by-\d+-foot|-square) panels\b",
+    re.IGNORECASE,
+)
+# A wall's ring, as its text gives the choice: "a ringed wall up to 20 feet
+# in diameter", "a circle that has a 20-foot diameter", "a globe with a
+# radius of up to 10 feet" (twice that across).
+_RING_ACROSS = re.compile(
+    rf"\bring(?:ed)? wall up to {_NUMBER}{_FOOT} in diameter"
+    rf"|\bcircle that has an? {_NUMBER}{_FOOT} diameter",
+    re.IGNORECASE,
+)
+_RING_RADIUS = re.compile(
+    rf"\b(?:dome|globe)\b[^.]{{0,30}}?\bradius of up to {_NUMBER}{_FOOT}",
+    re.IGNORECASE,
+)
+# Wall of Fire's "One side of the wall ... deals 5d8 Fire damage to each
+# creature that ends its turn within 10 feet of that side".
+_SIDE_WITHIN = re.compile(
+    rf"\bone side of the wall\b[^.]*?\bwithin {_NUMBER}{_FOOT} of that side",
+    re.IGNORECASE,
+)
 
 
 def _feet(text: str | None) -> int:
     return int((text or "0").replace(",", ""))
 
 
+def _walls(text: str) -> list[tuple[int, AreaOfEffect]]:
+    """The walls `text` states, by where each is said: a straight one, as
+    long and (when it says) as thick as its text, or Wall of Force's
+    panels side by side."""
+    found = []
+    for match in _WALL_LONG.finditer(text):
+        sentence_end = text.find(".", match.end())
+        rest = text[match.end() : sentence_end if sentence_end >= 0 else None]
+        thick = _THICK.search(rest)
+        width = max(1, _feet(thick.group(1))) if thick else 5
+        found.append(
+            (match.start(), AreaOfEffect(AreaShape.WALL, _feet(match.group(1)), width))
+        )
+    for match in _PANELS.finditer(text):
+        count = match.group(1).lower()
+        panels = _COUNTS.get(count) or int(count)
+        found.append(
+            (
+                match.start(),
+                AreaOfEffect(AreaShape.WALL, panels * _feet(match.group(2)), 1),
+            )
+        )
+    return found
+
+
+def wall_ring_ft(text: str) -> int | None:
+    """How far across a wall's ring may be, as its text offers one (Wall of
+    Fire's "ringed wall up to 20 feet in diameter", Wall of Force's globe
+    "with a radius of up to 10 feet"); None when it offers none."""
+    match = _RING_ACROSS.search(text)
+    if match:
+        return _feet(match.group(1) or match.group(2))
+    match = _RING_RADIUS.search(text)
+    return 2 * _feet(match.group(1)) if match else None
+
+
+def damaging_side_ft(text: str) -> int | None:
+    """How far from a wall's damaging side it reaches (Wall of Fire's 10
+    feet "of that side"), or None for a wall without one."""
+    match = _SIDE_WITHIN.search(text)
+    return _feet(match.group(1)) if match else None
+
+
 def parse_area(text: str) -> AreaOfEffect | None:
     """The first area of effect `text` states ("Each creature in a
     20-foot-radius Sphere centered on that point"), or None when it states
     none."""
-    found: list[tuple[int, AreaOfEffect]] = []
+    found: list[tuple[int, AreaOfEffect]] = _walls(text)
+    for match in _WITHIN_SPHERE.finditer(text):
+        size = _feet(match.group(1))
+        if size:
+            found.append((match.start(), AreaOfEffect(AreaShape.SPHERE, size)))
     for match in _RADIUS.finditer(text):
+        if _LIGHT_BEFORE.search(text[max(0, match.start() - 20) : match.start()]):
+            continue
         shape_name = (match.group(3) or "sphere").title()
         shape = AreaShape(shape_name)
         size = _feet(match.group(1))
@@ -358,16 +484,139 @@ def point_of_origin(
     return [aim] if aim is not None else []
 
 
+def wall_cells(
+    area: AreaOfEffect, aim: Cell, end: Cell | None, settings: ArenaSettings
+) -> set[Cell]:
+    """The map cells a Wall covers: a ring around `aim`, or a straight wall
+    from `aim` to `end` (just `aim` while the other end isn't clicked yet),
+    no further from `aim` than its length lets by the map's rule (a
+    60-foot wall along a row is 12 cells)."""
+    rule, shape = settings.distance_rule, settings.distance_rule.shape
+    cell_ft = settings.cell_ft
+    if area.ring:
+        radius = max(cell_ft, area.size_ft // 2)
+        return {
+            cell
+            for cell in shape.cells(settings.width, settings.height)
+            if rule.feet(aim, cell, cell_ft) <= radius
+            and any(rule.feet(aim, n, cell_ft) > radius for n in rule.neighbours(cell))
+        }
+    return {cell for step in _wall_steps(area, aim, end, settings) for cell in step}
+
+
+def _wall_steps(
+    area: AreaOfEffect, aim: Cell, end: Cell | None, settings: ArenaSettings
+) -> list[tuple[Cell, ...]]:
+    """A straight wall's cells from `aim` towards `end`, in order, a
+    corner's two cells as one step, as far as its length lets."""
+    rule, shape = settings.distance_rule, settings.distance_rule.shape
+    cell_ft = settings.cell_ft
+    steps: list[tuple[Cell, ...]] = [(aim,)]
+    if end is not None and end != aim:
+        steps += shape.crossed(aim, end) + [(end,)]
+    longest = max(0, area.size_ft - cell_ft)
+    kept = []
+    for step in steps:
+        cells = tuple(
+            c
+            for c in step
+            if settings.on_map(c) and rule.feet(aim, c, cell_ft) <= longest
+        )
+        if cells:
+            kept.append(cells)
+    return kept
+
+
+def wall_end(
+    area: AreaOfEffect, aim: Cell, end: Cell | None, settings: ArenaSettings
+) -> Cell | None:
+    """Where a straight wall from `aim` towards `end` really ends: `end`, or
+    the last cell its length reaches on the way (a 60-foot wall clicked 75
+    ft. long stops short); None for a ring or with no `end`."""
+    if area.ring or end is None:
+        return None
+    singles = [s[0] for s in _wall_steps(area, aim, end, settings) if len(s) == 1]
+    return singles[-1] if singles else None
+
+
+def side_of(
+    area: AreaOfEffect, aim: Cell, end: Cell | None, cell: Cell, settings: ArenaSettings
+) -> int:
+    """Which side of a Wall `cell` is on: for a ring, 1 inside and -1
+    outside; for a straight wall from `aim` to `end`, 1 or -1 by which side
+    of the line through their middles its middle is. 0 on the wall's line
+    (or a ring's edge), or for a straight wall with one end."""
+    rule, shape = settings.distance_rule, settings.distance_rule.shape
+    if area.ring:
+        radius = max(settings.cell_ft, area.size_ft // 2)
+        feet = rule.feet(aim, cell, settings.cell_ft)
+        return 1 if feet < radius else (-1 if feet > radius else 0)
+    if end is None or end == aim:
+        return 0
+    ax, ay = shape.center(aim, 1.0)
+    bx, by = shape.center(end, 1.0)
+    cx, cy = shape.center(cell, 1.0)
+    cross = (bx - ax) * (cy - ay) - (by - ay) * (cx - ax)
+    if abs(cross) < _EPSILON:
+        return 0
+    return 1 if cross > 0 else -1
+
+
+def side_cells(
+    area: AreaOfEffect,
+    aim: Cell,
+    end: Cell | None,
+    side: int,
+    reach_ft: int,
+    settings: ArenaSettings,
+) -> set[Cell]:
+    """The cells within `reach_ft` of a Wall, by the map's rule from its
+    nearest cell, on its `side` (side_of): Wall of Fire's damaging side."""
+    wall = wall_cells(area, aim, end, settings)
+    if not wall or side == 0:
+        return set()
+    rule, cell_ft = settings.distance_rule, settings.cell_ft
+    return {
+        cell
+        for cell in rule.shape.cells(settings.width, settings.height)
+        if cell not in wall
+        and side_of(area, aim, end, cell, settings) == side
+        and min(rule.feet(w, cell, cell_ft) for w in wall) <= reach_ft
+    }
+
+
+def side_name(area: AreaOfEffect, aim: Cell, end: Cell | None, side: int) -> str:
+    """ "inside" or "outside" a ring; for a straight wall, the way its side
+    faces ("north", "south-west"), by the side's direction on the map (up is
+    north)."""
+    if area.ring:
+        return "inside" if side > 0 else "outside"
+    if end is None or side == 0:
+        return ""
+    dx, dy = end.col - aim.col, end.row - aim.row
+    # The side's normal: to the right of the wall's direction for side 1
+    # (y grows downward, so a positive cross is clockwise of it).
+    nx, ny = (-dy, dx) if side > 0 else (dy, -dx)
+    angle = math.degrees(math.atan2(-ny, nx)) % 360
+    names = ("east", "north-east", "north", "north-west", "west", "south-west")
+    names += ("south", "south-east")
+    return names[int((angle + 22.5) // 45) % 8]
+
+
 def area_cells(
     area: AreaOfEffect,
     source: dict | None,
     aim: Cell | None,
     settings: ArenaSettings,
+    end: Cell | None = None,
 ) -> set[Cell]:
     """The map cells `area` covers, aimed at `aim` (None: not aimed yet) by
     `source`; none when it needs a source or an aim it doesn't have. A cell
     behind Total Cover from its point of origin isn't in it (a wall, a
-    closed door: Combat/Arena/cover.py)."""
+    closed door: Combat/Arena/cover.py). A Wall goes from `aim` to `end`
+    (wall_cells), and has no point of origin to be cut off from."""
+    if area.is_wall:
+        return wall_cells(area, aim, end, settings) if aim is not None else set()
     cells = _shape_cells(area, source, aim, settings)
     if not cells or not settings.terrain:
         return cells

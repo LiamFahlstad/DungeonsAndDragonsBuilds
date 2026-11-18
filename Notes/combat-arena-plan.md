@@ -26,7 +26,8 @@ grapples on the map (the grappler drags, the grapple ends past its range),
 Later's fourth, the same day. Step 23, the way a walk goes (Opportunity
 Attacks along it, Reactive Strike, Undo of the buttons), Later's fifth, the
 same day. Step 24, kept areas acting by a turn-column button and moved from
-their panel, Later's sixth, the same day. What's next is under Later.
+their panel, Later's sixth, the same day. Step 25, walls (the rest of that
+sixth item) and DI-096, the same day. What's next is under Later.
 
 ## How to use this document
 
@@ -101,6 +102,7 @@ verification passes per step unless asked.
 | 22 | Grapples: the Grappled creature names its grappler, who drags it at 1 extra foot a foot; the grapple ends past its range or with the grappler Incapacitated; the Unarmed Strike's Grapple row | Done 2026-11-18 (R20; Decision 34) |
 | 23 | The path walked: Opportunity Attacks anywhere along a walk, Polearm Master's Reactive Strike on entering a reach, Undo taking a walk's buttons back, a spent Reaction taking its attacker's other buttons away | Done 2026-11-18 (R21; Decision 35) |
 | 24 | Areas that stay, acting: a turn-column button when a creature enters a kept area, the area is moved onto it, or a turn starts or ends in it, as its text says, opening Use / Cast on its effect at no cost; the area panel's Move (Moonbeam, Flaming Sphere) | Done 2026-11-18 (R22; Decisions 36, 37); DI-096 logged |
+| 25 | Walls: a Wall shape aimed by its two ends (a ring by its middle); Wall of Force blocking movement and giving Total Cover while it lasts, through the map the rules read and never the painted one; Wall of Fire's damaging side picked by a third click and acting on who ends a turn by it; Flaming Sphere's area (DI-096) | Done 2026-11-18 (R23; Decisions 38 to 41); DI-096 fixed, DI-097 logged |
 
 ## How it fits the code that's there
 
@@ -1033,7 +1035,7 @@ where it was, with no dialog.
   creatures designated "to be unaffected" aren't known, so allies in it
   get a button too; Flaming Sphere's "stops moving for the turn" and its
   "over barriers up to 5 feet tall" are the GM's; its area is read as 20
-  feet (DI-096); walls (Later 6).
+  feet (DI-096, fixed in step 25); walls (Later 6, step 25).
 
 Tests: `tests/test_arena_lasting.py` (the timing and move readers on the
 spells' wording, the button's text), `tests/test_combat_ui_arena_area_prompts.py`
@@ -1045,13 +1047,121 @@ Action, past its reach and cancelled, Flaming Sphere's Bonus Action, no
 Move around a caster); `tests/test_combat_ui_arena_lasting.py`'s
 reminders test now has Moonbeam's turn start as a log line only.
 
+### Step 25: walls (2026-11-18)
+
+The rest of Later's sixth item, the user's request: "A kept area can be a
+wall: Wall of Fire (a straight wall up to 60 feet long, or a ring up to 20
+feet across), Wall of Force, Blade Barrier, Wall of Thorns. A wall isn't
+one of the six shapes, so it needs a shape of its own in
+Combat/Arena/areas.py, aimed in the area bar by two clicks (its two ends,
+or a ring's middle)", "A wall the text calls a barrier (Wall of Force)
+blocks movement and gives Total Cover while it lasts, the same as a painted
+wall: the terrain the rules read should count it, and it goes when the
+spell ends or Undo takes it back. Don't write it into the painted map's
+file", Wall of Fire's damaging side picked by the GM as it's put down, and
+DI-096.
+
+Read first: Rules Glossary, Area of Effect: an area "typically has one of
+six shapes" and a point of origin, and a location is left out when "all
+straight lines extending from the point of origin" to it are blocked by
+Total Cover; Cover: Total Cover "can't be targeted directly". The spells
+(Player's Handbook 2024, their classes): Wall of Fire, "up to 60 feet
+long, 20 feet high, and 1 foot thick, or a ringed wall up to 20 feet in
+diameter", "One side of the wall, selected by you when you cast this
+spell, deals 5d8 Fire damage to each creature that ends its turn within 10
+feet of that side or inside the wall. A creature takes the same damage
+when it enters the wall for the first time on a turn or ends its turn
+there"; Wall of Force, "a hemispherical dome or a globe with a radius of
+up to 10 feet, or ... a flat surface made up of ten 10-foot-by-10-foot
+panels", "as a horizontal or vertical barrier", "Nothing can physically
+pass through the wall"; Blade Barrier, "a straight wall up to 100 feet
+long ... and 5 feet thick, or a ringed wall up to 60 feet in diameter",
+"The wall provides Three-Quarters Cover, and its space is Difficult
+Terrain"; Wall of Thorns, "up to 60 feet long ... and 5 feet thick or a
+circle that has a 20-foot diameter", "For every 1 foot a creature moves
+through the wall, it must spend 4 feet of movement".
+
+*Built (R23):* areas.py: `AreaShape.WALL` and `AreaOfEffect.ring`; a Wall
+is read from "wall ... up to N feet long" (with its "N feet thick") and
+Wall of Force's "ten 10-foot-by-10-foot panels" (`parse_area`), its ring
+from "a ringed wall up to N feet in diameter", "a circle that has an
+N-foot diameter" or a globe's radius (`wall_ring_ft`), and a damaging
+side's reach from "One side of the wall ... within N feet of that side"
+(`damaging_side_ft`). Its cells (`wall_cells`, Decision 38), where a wall
+cut short by its length really ends (`wall_end`), which side of it a cell
+is on (`side_of`; `side_name` "east", "inside") and the cells within
+reach of a side (`side_cells`). `area_cells(..., end)` takes a Wall's
+second end, and leaves a Wall uncut by Total Cover (it has no point of
+origin). lasting.py: a wall's record keeps its "end", "ring", the "side"
+picked and its "side_cells"; `wall_terrain` reads what it is as terrain
+(Decision 39) into its "terrain", and `with_kept_walls` lays each kept
+wall's terrain over the painted terrain as a copy; `LastingArea.side`,
+`areas_beside` and `AreaPrompt.beside` ("... (ended its turn by its
+damaging side)"); `record_origin` of a wall is its own cells, so nothing
+covers who's in it.
+
+The window (`arena_mixin.py`): `_map_settings`, the map as the rules read
+it (with_kept_walls), is what every rule reads: the reach shaded and a
+walk's cost and path, where a move may end, pushes, drags and a grapple's
+range, Opportunity Attacks and Reactive Strike, the cover of attacks and
+saves and the range check (`damage_mixin.py`), an area aimed or kept
+(a Fireball doesn't spread past Wall of Force, an Emanation stops at it),
+who's in a kept area, new tokens and summons placed. What's written
+(`in_use`, the log's "arena", the Map Painter) stays `arena_settings`, so
+the wall is never saved into the painted map, and it goes with its active
+spell: the spell ending, Ctrl+C, the ✕, Undo. The area bar has **Ring**
+for a Wall (its size becoming the ring its text offers, Wall of Fire's
+20 feet across, and back), and the clicks go: one end ("click one end."),
+the other ("click its other end (20 ft. long)."), or a ring's middle; then,
+for Wall of Fire, the side ("click the side that deals damage (the east
+side): within 10 ft. of it.", the side's cells shaded with the wall; a
+click on the wall's line is refused). The dialog opens again as for any
+kept area ("Keep the 60-foot-long Wall, its east side dealing damage, on
+the map"). The map draws a wall's damaging side fainter, the hover names
+it ("Wall of Fire's damaging side"), and the area panel says where it runs
+("from G1 to G12"), what it is ("blocks movement, Total Cover") and which
+side deals damage, with no Move (Decision 41). A turn ending by the side
+gets the wall's button and a GM-only line ("Pirate ends its turn by
+Clover's Wall of Fire's damaging side."); entering the wall or ending a
+turn in it is step 24's.
+
+DI-096: `parse_area` skips a radius after "Light in a" or "Light for", and
+reads "within N feet of the sphere" as an N-foot Sphere, so Flaming Sphere
+is its cell and the four beside it.
+
+- Not done: Wall of Force's dome or globe is a ring on the grid and its
+  panels one straight wall (ten panels in any contiguous shape, or a
+  horizontal one, aren't drawn); a wall that appears through a creature's
+  space doesn't push it out (Wall of Force: "pushed to one side"; the GM
+  moves it, step 17's Alt); Wall of Fire's side opens the cast's own
+  row, with the Dexterity save its appearing has and the side's damage
+  doesn't, for the GM to switch off; the other walls' terrain (Wall of Stone, Wall of
+  Ice, Wall of Thorns' 4 feet a foot, opaque walls blocking sight) isn't
+  read (DI-097); a wall is one cell thick whatever its text says (Tsunami's
+  50 feet); its height isn't counted (a flier going over it is the GM's,
+  as flying is Later 7); "only once per turn" is as step 24 left it.
+
+Tests: `tests/test_arena_walls.py` (each wall's reading, its ring and
+side, Flaming Sphere's and a light's readings, a wall's cells and length,
+a diagonal one shutting a corner in, a ring, a painted wall not cutting
+one, sides and their names, the damaging side's reach, who ends a turn by
+it, a wall's cover origin, each wall's terrain, Wall of Force blocking,
+covering and stopping a Fireball without changing the map, what's painted
+under a wall staying), `tests/test_combat_ui_arena_walls.py` (the two
+clicks and the bar's text, Wall of Force's reach, cover, target label and
+a walk that can't get round, the saved fight with no wall in its terrain,
+Ctrl+C and Undo, Wall of Fire's third click with a click on its line
+refused, the side kept, the panel's text and no Move, the turn-end button
+by the side and entering the wall, a ring by its middle holding the Pirate
+in).
+
 ### Later (not scheduled)
 
 In order of relevance (R15, the user, 2026-11-16: "add your suggestions
 (in order of relevancy) to the plan"). Each is a step of its own when it's
 picked up. The first six, cover, range, pushes, grapples, the path
-walked and areas acting, were steps 19 to 24 (walls, part of the sixth,
-are still to do).
+walked and areas acting, were steps 19 to 24, and the sixth's walls step
+25.
 
 3. *(Step 21.)* **Shove's push** and the other pushes, moved on Apply.
    What's left is content (DI-095).
@@ -1060,15 +1170,11 @@ are still to do).
 5. *(Step 23.)* **The path walked kept**: Opportunity Attacks along it,
    Polearm Master's Reactive Strike, Undo of the buttons, a spent Reaction
    taking the rest.
-6. *(Step 24.)* **Areas that stay, acting** (Q12, Q13): a turn-column
-   button when one acts, the area panel's **Move**. What's left is
-   **walls** (Wall of Fire, Wall of Force, Blade Barrier, Wall of Thorns),
-   which aren't one of the six shapes: a Line of cells drawn freely (Wall
-   of Fire's 60 feet long, or a ring 20 feet across), one side of it
-   dealing damage, and its cover (Wall of Force is Total Cover and blocks
-   movement, as a painted wall does). It needs a shape of its own in
-   areas.py, aimed by two clicks, and terrain the kept area adds while it
-   lasts.
+6. *(Steps 24 and 25.)* **Areas that stay, acting** (Q12, Q13): a
+   turn-column button when one acts, the area panel's **Move**; and
+   **walls**, a shape of their own aimed by two clicks, Wall of Force
+   blocking movement and giving Total Cover while it lasts, Wall of Fire's
+   damaging side. What's left is the other walls' terrain (DI-097).
 7. **Other speeds** (Q7, the map painter plan's Q4): Fly, Swim, Climb or
    Burrow Speed chosen for a move, switching part-way (Rules Glossary,
    Speed: "subtract the distance already moved from the new speed"); a
@@ -1106,8 +1212,8 @@ Built from this list already: the map settings dialog and terrain, as the
 Map Painter ([map-painter-plan.md](map-painter-plan.md), 2026-11-15); the
 conditions' "within 5 feet" (step 16); moves that aren't walks (step 17);
 cover (step 19), range (step 20), pushes (step 21), grapples (step 22),
-the path walked (step 23) and areas acting (step 24), its first six items
-(walls aside).
+the path walked (step 23), areas acting (step 24) and walls (step 25), its
+first six items.
 
 ## Decisions
 
@@ -1420,6 +1526,54 @@ the user to overrule where marked:
     first when that's used already (as the dialog's costs do). Past its
     "up to" is warned about, not refused (as Decision 19), measured from
     where it was aimed to where it's aimed now. Its shape stays as it is.
+
+From the user (2026-11-18, the request for step 25), and taken in it for
+the user to overrule where marked:
+
+38. **How a wall sits on the grid.** The user asked for a shape of its
+    own, aimed by two clicks: its two ends, or a ring's middle. *Taken in
+    the plan:* a straight wall is the cells a straight line between its
+    two ends' middles crosses, both ends in it and a corner's two cells
+    both (so nothing walks through it diagonally), as far from its first
+    end as its length lets by the map's rule, as an area's size is
+    (Decision 18): a 60-foot wall is 12 cells along a row, and a click
+    past that stops it there. A ring is put by one click on its middle and
+    is the edge of a Sphere half its size across: each cell that far from
+    the middle with a neighbour beyond it, closed all round. Either is one
+    cell thick (every wall here is 1 to 5 feet). A wall has no point of
+    origin (Rules Glossary, Area of Effect), so nothing it crosses cuts it,
+    and nothing covers who's in it from it.
+39. **A kept wall is terrain the rules read, never painted.** The user
+    asked that a wall its text calls a barrier (Wall of Force) block
+    movement and give Total Cover while it lasts, as a painted wall does,
+    counted by the terrain the rules read, gone when the spell ends or
+    Undo takes it back, and not written into the painted map's file.
+    *Taken in the plan:* the wall's record keeps what it is as an object
+    (a `MapObject`), and the window reads every rule through the painted
+    terrain with each kept wall's object laid over its cells (Decision 3
+    still holds: no rule reads cells another way); what's written
+    (`in_use`, the log, the painter) is the painted map. Wall of Force's
+    "barrier" and "Nothing can physically pass through" make it block and
+    be Total Cover; Blade Barrier's own "provides Three-Quarters Cover, and
+    its space is Difficult Terrain" is read the same way. A painted wall
+    under a kept one stays a wall, and a blocking object stays under a wall
+    that doesn't block. A creature the wall appears on isn't moved (the GM
+    pushes it out).
+40. **Wall of Fire's side is picked by a third click.** The user asked for
+    the GM to pick a side as it's put down, and for step 24's buttons to
+    cover "ends its turn within 10 feet of that side or inside the wall"
+    and "enters the wall". *Taken in the plan:* after its two ends (or a
+    ring's middle) the bar asks for a click on one side, shading what that
+    side reaches and naming it by the map's compass ("the east side",
+    "inside"), as a click on the map is where the GM sees the sides; a
+    click on the wall's line is refused. The cells within its reach of
+    that side are kept with it. Ending a turn in the wall or by the side
+    gets its button (ENDS); entering it is the wall's cells only (ENTERS),
+    as "enters the wall" says. Only a wall whose text has "One side of the
+    wall ... within N feet of that side" asks.
+41. **A wall has no Move.** *Taken in the plan:* none of the walls' texts
+    moves one, so the area panel's Move (Decision 37) isn't shown for a
+    wall; a wall put in the wrong place is undone or ended and cast again.
 
 ## Open questions
 
@@ -1756,6 +1910,23 @@ Each has a *Suggestion*: what gets built if nobody says otherwise.
   record now; Spirit Guardians' badge already asked "if it ends its turn
   in the Emanation" of every enemy, which the area now answers itself;
   Flaming Sphere's area is read from its light (DI-096).
+- **R23** (step 25, the user's request, 2026-11-18). *Plan (Later 6):* "a
+  Line of cells drawn freely ..., one side of it dealing damage, and its
+  cover", "aimed by two clicks, and terrain the kept area adds while it
+  lasts". *Done:* as planned, with the terrain the wall adds as a layer
+  over the painted terrain that every rule reads (`_map_settings`,
+  Decision 39) rather than cells added to `arena_settings.terrain`, and
+  the damaging side picked by a third click (Decision 40). *Why:* terrain
+  added to the map would have been saved with it (the painter, the log's
+  "arena") and would need taking off by hand when the spell ends; laid
+  over from the active spell, it ends, undoes and saves with the spell, as
+  every kept area does. Blade Barrier's Three-Quarters Cover and Difficult
+  Terrain came along, as the same reading. *Found:* skipping light radii
+  (DI-096) changed other spells' readings for the better: Light, Continual
+  Flame and Produce Flame read no area now, Holy Weapon, Combustion and
+  Investiture of Flame the one their text states after the light; and the
+  wall reading also finds Wall of Stone, Wall of Ice, Prismatic Wall, Wind
+  Wall and four more, whose terrain isn't read (DI-097).
 
 ## Discovered issues
 
@@ -1787,10 +1958,18 @@ Found in step 21:
 
 Found in step 24:
 
-- **DI-096** (open, the area reading): Flaming Sphere's area is read as a
-  20-foot Sphere, from its "Bright Light in a 20-foot radius", not the
-  5-foot sphere whose damage reaches 5 feet; the GM sets 5 ft. in the bar
-  meanwhile.
+- **DI-096** (fixed 2026-11-18, step 25, the area reading): Flaming
+  Sphere's area is read as a 20-foot Sphere, from its "Bright Light in a
+  20-foot radius", not the 5-foot sphere whose damage reaches 5 feet; the
+  GM sets 5 ft. in the bar meanwhile.
+
+Found in step 25:
+
+- **DI-097** (open, a gap): kept walls other than Wall of Force and Blade
+  Barrier (and Wall of Water's Difficult Terrain) aren't terrain: Wall of
+  Stone and Wall of Ice can be walked through and give no cover, Wall of
+  Thorns' 4 feet a foot and the opaque walls' blocked sight aren't
+  counted.
 
 Already logged, and touched by this plan:
 

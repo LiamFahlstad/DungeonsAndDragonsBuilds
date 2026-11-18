@@ -242,11 +242,11 @@ class DamageMixin(CombatWindowState):
         if origin is not None:
             leave = [source] if source is not None else []
             return cover_between(
-                origin, target, self.characters, self.arena_settings, leave
+                origin, target, self.characters, self._map_settings(), leave
             )
         if source is None:
             return NO_COVER_READING
-        return cover_from(source, target, self.characters, self.arena_settings)
+        return cover_from(source, target, self.characters, self._map_settings())
 
     def _covered(
         self,
@@ -274,7 +274,7 @@ class DamageMixin(CombatWindowState):
         if not self.arena_settings.in_use:
             return NO_RANGE_CHECK
         return check_attack_range(
-            attack, source, target, self.characters, self.arena_settings
+            attack, source, target, self.characters, self._map_settings()
         )
 
     def _cover_warning(self, source: dict | None, target: dict) -> str:

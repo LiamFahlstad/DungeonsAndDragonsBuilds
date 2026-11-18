@@ -22,7 +22,8 @@ moved meanwhile. The shading is the colour the area bar picked.
 Areas that stay (step 11, Combat/Arena/lasting.py): each drawn over the grid
 in its own colour, with its name, the edge dashed while its caster
 concentrates on it. A click on an empty cell of one selects it (step 12),
-edged brighter; another click there goes to the next area on that cell.
+edged brighter; another click there goes to the next area on that cell. A
+wall's damaging side (Wall of Fire, step 25) is shaded fainter, unedged.
 
 The terrain painted in the Map Painter (draw_terrain; Notes/
 map-painter-plan.md) is drawn over the grid, under the areas and tokens."""
@@ -91,6 +92,8 @@ _AREA_EDGE_ALPHA = 200
 # An area that stays (step 11): fainter, so what's aimed shows over it.
 _LASTING_ALPHA = 70
 _LASTING_EDGE_ALPHA = 220
+# A wall's damaging side (step 25): fainter still.
+_LASTING_SIDE_ALPHA = 30
 # How far the mouse goes before a press on a token is a drag, not a click.
 _DRAG_PX = 6
 # The painted terrain (draw_terrain; Notes/map-painter-plan.md).
@@ -392,6 +395,14 @@ class ArenaView(QGraphicsView):
             pen.setStyle(Qt.PenStyle.DashLine)
         brush = QBrush(_with_alpha(colour, _LASTING_ALPHA))
         tip = area.title + (" (concentration)" if area.concentration else "")
+        side = QBrush(_with_alpha(colour, _LASTING_SIDE_ALPHA))
+        for cell in area.side - area.cells:
+            points = [QPointF(x, y) for x, y in shape.polygon(cell, CELL_PX)]
+            item = self._scene.addPolygon(
+                QPolygonF(points), QPen(Qt.PenStyle.NoPen), side
+            )
+            if item is not None:
+                item.setToolTip(f"{area.title}: its damaging side")
         for cell in area.cells:
             points = [QPointF(x, y) for x, y in shape.polygon(cell, CELL_PX)]
             item = self._scene.addPolygon(QPolygonF(points), pen, brush)

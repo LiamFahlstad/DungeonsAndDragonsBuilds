@@ -586,15 +586,15 @@ Arena step 21 added CombatEffect.push, which the battle map moves targets by. Fi
 **History**
 - 2026-11-18 main-session: found
 
-### DI-096 · Flaming Sphere's area is read as a 20-foot Sphere, from its light
+### DI-097 · Kept walls other than Wall of Force and Blade Barrier aren't terrain on the map (Wall of Stone, Wall of Ice walk-through)
 - **Status:** open
 - **Area:** combat-simulator
-- **Where:** `Combat/Arena/areas.py`
+- **Where:** `Combat/Arena/lasting.py`
 
-parse_area(Flaming Sphere's text) gives AreaOfEffect(SPHERE, 20): the first area-like phrase is the light it sheds ('Bright Light in a 20-foot radius'), not the sphere. The sphere is 5 feet across and burns 'any creature that ends its turn within 5 feet of the sphere', so the area to keep is about a 5-foot-radius Sphere on the cell aimed at (its cell and the cells beside it). Step 24 makes the kept area's turn-end button go to whoever stands in it, so with 20 feet it offers the save to creatures 20 ft. away. Fix: skip light radii in parse_area ('Bright Light in', 'Dim Light for'), or give the spell an area on its CombatEffect (the arena plan's Q10). The GM can set 5 ft. in the area bar meanwhile.
+Step 25 reads a kept wall's terrain from its text (wall_terrain): one it calls a barrier or says nothing passes through (Wall of Force) blocks movement and is Total Cover; one that 'provides ... Cover' and whose 'space is Difficult Terrain' (Blade Barrier, Wall of Water) is that. The other walls now read as Walls (parse_area) but give no terrain: Wall of Stone and Wall of Ice are solid (a creature walks through them and has no cover behind them), Prismatic Wall and Wind Wall have rules of their own, Wall of Thorns costs 4 feet a foot and blocks line of sight, Wall of Fire is opaque. Fix: a wall_terrain reading per wording (stone/ice 'panels' with hit points: blocks, Total Cover), or a terrain field on the spell's CombatEffect (the arena plan's Q10); Wall of Thorns' cost needs a cost other than Difficult Terrain's.
 
 **History**
-- 2026-11-18 main session (arena step 24): found
+- 2026-11-18 main session (arena step 25): found
 
 ## Fixed
 
@@ -1059,6 +1059,17 @@ Repro (combat-ui-explore, fixed dice d20=2, others max): Session('ashelm_church'
 - 2026-11-15 combat-ui-tester: found
 - 2026-11-15 combat-simulator: marked in-progress; Fixing
 - 2026-11-15 combat-simulator: marked fixed; _add_condition_to(counted=False) logs 'counted': False; stats.is_counted_condition skips it in _apply_replay_action and compute_player_log_stats (no key = counted, old logs). Concentrating still counts as a condition the caster gives itself and receives (live and replayed): left as is, it's a live-behaviour change, not this fix.
+
+### DI-096 · Flaming Sphere's area is read as a 20-foot Sphere, from its light
+- **Status:** fixed · 2026-11-18 · uncommitted
+- **Area:** combat-simulator
+- **Where:** `Combat/Arena/areas.py`
+
+parse_area(Flaming Sphere's text) gives AreaOfEffect(SPHERE, 20): the first area-like phrase is the light it sheds ('Bright Light in a 20-foot radius'), not the sphere. The sphere is 5 feet across and burns 'any creature that ends its turn within 5 feet of the sphere', so the area to keep is about a 5-foot-radius Sphere on the cell aimed at (its cell and the cells beside it). Step 24 makes the kept area's turn-end button go to whoever stands in it, so with 20 feet it offers the save to creatures 20 ft. away. Fix: skip light radii in parse_area ('Bright Light in', 'Dim Light for'), or give the spell an area on its CombatEffect (the arena plan's Q10). The GM can set 5 ft. in the area bar meanwhile.
+
+**History**
+- 2026-11-18 main session (arena step 24): found
+- 2026-11-18 main session (arena step 25): marked fixed; parse_area skips a radius after 'Light in a'/'Light for' and reads 'within N feet of the sphere' as an N-foot Sphere: Flaming Sphere is a 5-foot Sphere (its cell and the four beside it). Light, Continual Flame and other light-only spells now read no area; Holy Weapon, Combustion and Investiture of Flame read the area their text states after the light.
 
 ## Won't fix
 
