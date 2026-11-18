@@ -240,6 +240,7 @@ class LoggingMixin(CombatWindowState):
             print(f"Undid: {event}")
         self._rebuild_cards()
         self._refresh_turn()
+        self._refresh_turn_prompts()  # the buttons the undone step set off go
         if (self.round_number, self.current_turn_idx) != turn_before:
             self._on_turn_changed()
             self.attack_roll_input.setText(point.attack_roll_text)

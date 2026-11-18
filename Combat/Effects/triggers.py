@@ -587,12 +587,15 @@ class OpportunityAttack:
     """An Opportunity Attack `attacker` can make on `target`, whose walk took
     it out of attacker's reach (Rules Glossary, Opportunity Attacks): a
     turn-column prompt whose Use / Cast dialog spends attacker's Reaction
-    (`action`) on one melee attack, `pick` picked ("" for the GM to pick)."""
+    (`action`) on one melee attack, `pick` picked ("" for the GM to pick).
+    `name` is what the attack is: "Reactive Strike" for Polearm Master's,
+    made as a walk enters its reach (arena step 23)."""
 
     attacker: dict
     target: dict
     pick: str = ""
     action: str = REACTION
+    name: str = "Opportunity Attack"
 
     @property
     def caster(self) -> str:
@@ -604,8 +607,7 @@ class OpportunityAttack:
         """Its button in the turn column: "Tiger: Opportunity Attack on Kivi
         (Reaction)"."""
         return (
-            f"{self.caster}: Opportunity Attack on {self.target['name']}"
-            f" ({self.action})"
+            f"{self.caster}: {self.name} on {self.target['name']}" f" ({self.action})"
         )
 
 

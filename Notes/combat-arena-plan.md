@@ -23,7 +23,9 @@ map, 2026-11-15 and 16. Steps 19 and 20, cover and range counted from the
 map, the first two of Later, 2026-11-16. Step 21, pushes and pulls from
 the Use / Cast dialog moved on the map, Later's third, 2026-11-18. Step 22,
 grapples on the map (the grappler drags, the grapple ends past its range),
-Later's fourth, the same day. What's next is under Later.
+Later's fourth, the same day. Step 23, the way a walk goes (Opportunity
+Attacks along it, Reactive Strike, Undo of the buttons), Later's fifth, the
+same day. What's next is under Later.
 
 ## How to use this document
 
@@ -96,6 +98,7 @@ verification passes per step unless asked.
 | 20 | Reach and range: Long range's and close combat's Disadvantage counted, past a reach or range warned about | Done 2026-11-16 (R18; Decision 31) |
 | 21 | Pushes: a pick's `CombatPush` (Thunderwave, a Shove, the Push mastery) moves who it lands on straight away from its source as a Push move | Done 2026-11-18 (R19; Decisions 32, 33); DI-095 logged |
 | 22 | Grapples: the Grappled creature names its grappler, who drags it at 1 extra foot a foot; the grapple ends past its range or with the grappler Incapacitated; the Unarmed Strike's Grapple row | Done 2026-11-18 (R20; Decision 34) |
+| 23 | The path walked: Opportunity Attacks anywhere along a walk, Polearm Master's Reactive Strike on entering a reach, Undo taking a walk's buttons back, a spent Reaction taking its attacker's other buttons away | Done 2026-11-18 (R21; Decision 35) |
 
 ## How it fits the code that's there
 
@@ -912,23 +915,64 @@ Grappled, the escape DC in its note).
 Tests: `tests/test_arena_grapples.py`, `tests/test_combat_ui_arena_grapples.py`;
 the picker rows' goldens have the Grapple row.
 
+### Step 23: the path walked (2026-11-18)
+
+Later's fifth item. Rules Glossary, Opportunity Attacks: "when a creature
+that you can see leaves your reach". Polearm Master (Player's Handbook,
+2024), Reactive Strike: "While you're holding a Quarterstaff, a Spear, or a
+weapon that has the Heavy and Reach properties, you can take a Reaction to
+make one melee attack against a creature that enters the reach you have
+with that weapon." The 2024 Sentinel has no entering-reach rule (its
+Guardian answers Disengage and hits, its Halt is a row already), so it
+isn't here. Step 13 knew only a walk's two ends; step 14 left Undo of a
+walk's buttons, and an attacker's other buttons once its Reaction is
+spent, as Not done.
+
+*Built (R21):* `walk_path` (arena.py) gives the cells of the cheapest walk
+to the cell clicked, from the search `reachable` makes (now
+`_walk_search`, which keeps each cell's parent). `opportunity_attackers`
+takes that `path` and finds whoever had the walker in reach at one cell and
+not at the next; `reactive_strikers` whoever has Polearm Master
+(`_feature_objects`) and a polearm (`_polearm_reach_ft`: a Quarterstaff or
+a Spear by class, so a magic Spear counts and a Javelin, of Spear's
+family, doesn't, or a Heavy Reach weapon; 10 ft. with Reach) and had the
+walker outside that reach at one cell and inside at the next. The window's
+`_relocate` works out the path before the walk and
+`_opportunity_attack_reminders` uses it: an Opportunity Attack button as
+before, now also for a walk past someone, and a Reactive Strike button
+("Edmund: Reactive Strike on Tiger (Reaction)", `OpportunityAttack.name`,
+Disengaged or not), with a GM-only line ("Tiger enters Edmund's reach:
+Reactive Strike (Polearm Master), a Reaction."). A creature its walker
+drags gets neither. `UndoPoint` keeps the turn column's hit prompts, so
+Ctrl+Z takes back the buttons a walk or a hit set off, and `_undo_last`
+redraws them. Spending a Reaction (`_add_action_use`) takes away its
+spender's other Opportunity Attack and Reactive Strike buttons.
+
+- Not done: the path is the cheapest one, not the one the GM has in mind
+  (a walk round the other side of a pillar is the GM's to judge, as the
+  status names who it passed); Reactive Strike counts walks only, not a
+  push or a teleport into the reach; a monster's polearm and its "holding"
+  aren't read (stat blocks don't name feats); the buttons still don't
+  check that the attacker can see the walker.
+
+Tests: `tests/test_arena_paths.py`, `tests/test_combat_ui_arena_paths.py`;
+`tests/test_combat_ui_standard_actions.py`'s walk round a corner now
+provokes (Decision 35).
+
 ### Later (not scheduled)
 
 In order of relevance (R15, the user, 2026-11-16: "add your suggestions
 (in order of relevancy) to the plan"). Each is a step of its own when it's
-picked up. The first four, cover, range, pushes and grapples, were steps
-19 to 22.
+picked up. The first five, cover, range, pushes, grapples and the path
+walked, were steps 19 to 23.
 
 3. *(Step 21.)* **Shove's push** and the other pushes, moved on Apply.
    What's left is content (DI-095).
 4. *(Step 22.)* **Grappling moves the Grappled creature**, and the grapple
    ends past its range.
-5. **The path walked kept**, so an Opportunity Attack catches a walk that
-   passes through a reach, or leaves and comes back (only the walk's ends
-   are known now, step 13); Sentinel and Polearm Master's entering reach.
-   With it: Undo of the walk takes its Opportunity Attack buttons back, and
-   an enemy's other buttons go once it spends its Reaction (step 14's Not
-   done).
+5. *(Step 23.)* **The path walked kept**: Opportunity Attacks along it,
+   Polearm Master's Reactive Strike, Undo of the buttons, a spent Reaction
+   taking the rest.
 6. **Areas that stay, acting** (Q12, Q13): a creature entering one, or
    starting its turn in it, prompts its effect (a turn-column button, as a
    trigger's) instead of a reminder; a **Move** button on the area panel for
@@ -970,8 +1014,8 @@ picked up. The first four, cover, range, pushes and grapples, were steps
 Built from this list already: the map settings dialog and terrain, as the
 Map Painter ([map-painter-plan.md](map-painter-plan.md), 2026-11-15); the
 conditions' "within 5 feet" (step 16); moves that aren't walks (step 17);
-cover (step 19), range (step 20), pushes (step 21) and grapples (step
-22), its first four items.
+cover (step 19), range (step 20), pushes (step 21), grapples (step 22)
+and the path walked (step 23), its first five items.
 
 ## Decisions
 
@@ -1238,6 +1282,20 @@ Taken in step 22 (2026-11-18), for the user to overrule:
     grapple ends with a GM-only line when it's exceeded. Only a grapple
     whose source was known names a grappler: Grappled given by hand with
     no source drags nobody and never ends by distance.
+
+Taken in step 23 (2026-11-18), for the user to overrule:
+
+35. **A walk goes the cheapest way, cell by cell, and its reach is the
+    map's distance at each cell.** The GM clicks where a walk ends; the way
+    there is the cheapest walk (`walk_path`), and an Opportunity Attack is
+    owed wherever the walker was in a reach at one cell and out of it at
+    the next, once per attacker. With the Manhattan rule a diagonal cell is
+    10 ft. off, so stepping round a creature's corner leaves a 5-foot reach
+    and comes back: it provokes, as the hover's 10 ft. there says. That's
+    the price of Manhattan (the Player's Handbook's own diagonals, Later
+    14, would make it 5 ft.). Reactive Strike is owed where the walker
+    was outside the polearm's reach at one cell and inside at the next,
+    Disengage or not, for walks only.
 
 ## Open questions
 
@@ -1554,6 +1612,16 @@ Each has a *Suggestion*: what gets built if nobody says otherwise.
   dragged creature was measured for an Opportunity Attack on its own
   grappler, since the walk was checked before the drag; the drag comes
   first now.
+- **R21** (step 23, 2026-11-18). *Plan (Later):* "Sentinel and Polearm
+  Master's entering reach". *Done:* Polearm Master's Reactive Strike
+  only, as the 2024 Sentinel has no entering-reach rule. Undo now keeps
+  every hit prompt, not only the walk's, so undoing a hit takes its
+  trigger buttons (Hill's Tumble) back too, which step 14's Not done
+  asked for the Opportunity Attacks. *Found:* a walk round a creature's
+  corner, which `tests/test_combat_ui_standard_actions.py` had as "stays
+  in reach" from its two ends, leaves a 5-foot reach on the Manhattan
+  grid on the way (Decision 35); that test file's Tiger is the plain
+  one-cell `Combat.Combatants.Tiger`, not the Large stat block.
 
 ## Discovered issues
 

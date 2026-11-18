@@ -74,12 +74,14 @@ from Combat.Arena.arena import (
     nearest_free,
     opportunity_attackers,
     occupied,
+    reactive_strikers,
     place_new,
     position,
     reachable,
     remaining_ft,
     stand_up_ft,
     straight_ft,
+    walk_path,
     walking_speed_ft,
 )
 from Combat.Arena.areas import (
@@ -888,6 +890,8 @@ class ArenaMixin(CombatWindowState):
             warnings.append(line)
         else:
             walked = move_cost(char, self.characters, settings, cell)
+            # The way it's taken to have walked, for whose reach it passed.
+            path = walk_path(char, self.characters, settings, cell)
             feet = walked if walked is not None else straight_ft(char, cell, settings)
             feet = feet or 0
             # Whom it drags along (Rules Glossary, Grappled: Movable).
@@ -911,7 +915,7 @@ class ArenaMixin(CombatWindowState):
             if held and start is not None:
                 warnings += self._drag(char, start, held)
             if walked is not None and start is not None:
-                warnings += self._opportunity_attack_reminders(char, start)
+                warnings += self._opportunity_attack_reminders(char, start, path)
         if kind is MoveKind.WALK and has_condition(char, Condition.PRONE):
             stand = stand_up_ft(char)
             costs = "half its Speed" if stand is None else f"{stand} ft."
@@ -1018,56 +1022,99 @@ class ArenaMixin(CombatWindowState):
                 lines.append(line)
         return lines + self._end_stretched_grapples()
 
-    def _opportunity_attack_reminders(self, char: dict, start: Cell) -> list[str]:
+    def _opportunity_attack_reminders(
+        self, char: dict, start: Cell, path: list[Cell] | None = None
+    ) -> list[str]:
         """Who can make an Opportunity Attack on char, whose walk from
-        `start` on its own turn took it out of their reach
-        (opportunity_attackers), as GM-only log lines and for the status
-        line, and a turn-column button for each that opens Use / Cast with
-        it as the source, char as the target, its melee attack picked and its
-        Reaction as the cost: none for a Disengaged char (Rules Glossary,
-        Disengage); for one with Flyby, the GM judges whether it flew. A move
-        on someone else's turn (a shove, a correction) reminds of nothing: it
+        `start` on its own turn took it out of their reach anywhere along
+        `path`, the way it walked (opportunity_attackers, step 23), as
+        GM-only log lines and for the status line, and a turn-column button
+        for each that opens Use / Cast with it as the source, char as the
+        target, its melee attack picked and its Reaction as the cost: none
+        for a Disengaged char (Rules Glossary, Disengage); for one with
+        Flyby, the GM judges whether it flew. Polearm Master's Reactive
+        Strike too, for a walk that entered such a reach, Disengaged or
+        not. A creature char drags isn't one: it went along. A move on
+        someone else's turn (a shove, a correction) reminds of nothing: it
         may not be char's own movement."""
         if not any(char is c for c in self._current_turn_group()):
             return []
-        attackers = opportunity_attackers(
-            char, start, self.characters, self.arena_settings
-        )
-        if not attackers:
-            return []
+        dragged = grappled_by(char, self.characters)
+        attackers = [
+            a
+            for a in opportunity_attackers(
+                char, start, self.characters, self.arena_settings, path
+            )
+            if not any(a is d for d in dragged)
+        ]
+        strikers = [
+            a
+            for a in (
+                reactive_strikers(char, path, self.characters, self.arena_settings)
+                if path
+                else []
+            )
+            if not any(a is d for d in dragged)
+        ]
         name = char["name"]
-        names = _and([a["name"] for a in attackers])
-        if DISENGAGE in char["conditions"]:
-            line = f"{name} leaves {names}'s reach, Disengaged: no Opportunity Attack."
-        elif _has_trait(char, "Flyby"):
-            line = (
-                f"{name} leaves {names}'s reach: no Opportunity Attack if it"
-                " flies (Flyby)."
+        lines = []
+        new: list[OpportunityAttack] = []
+        if attackers:
+            names = _and([a["name"] for a in attackers])
+            if DISENGAGE in char["conditions"]:
+                line = (
+                    f"{name} leaves {names}'s reach, Disengaged: no Opportunity"
+                    " Attack."
+                )
+            elif _has_trait(char, "Flyby"):
+                line = (
+                    f"{name} leaves {names}'s reach: no Opportunity Attack if it"
+                    " flies (Flyby)."
+                )
+            else:
+                each = " each" if len(attackers) > 1 else ""
+                line = (
+                    f"{name} leaves {names}'s reach: an Opportunity Attack{each},"
+                    " a Reaction, if they can see it. Disengage would have"
+                    " stopped it."
+                )
+            lines.append(line)
+            if DISENGAGE not in char["conditions"]:
+                new += [
+                    OpportunityAttack(a, char, opportunity_attack_row(a))
+                    for a in attackers
+                ]
+        if strikers:
+            names = _and([a["name"] for a in strikers])
+            lines.append(
+                f"{name} enters {names}'s reach: Reactive Strike (Polearm"
+                " Master), a Reaction."
             )
-        else:
-            each = " each" if len(attackers) > 1 else ""
-            line = (
-                f"{name} leaves {names}'s reach: an Opportunity Attack{each}, a"
-                " Reaction, if they can see it. Disengage would have stopped it."
-            )
-        if DISENGAGE not in char["conditions"]:
-            # One button per attacker and mover, however often it walks out.
+            new += [
+                OpportunityAttack(
+                    a, char, opportunity_attack_row(a), name="Reactive Strike"
+                )
+                for a in strikers
+            ]
+        if new:
+            # One button per attacker, mover and kind, however often it walks.
             pending = {
-                (id(p.attacker), id(p.target))
+                (id(p.attacker), id(p.target), p.name)
                 for p in self._hit_prompts
                 if isinstance(p, OpportunityAttack)
             }
             self._hit_prompts = (
                 *self._hit_prompts,
                 *(
-                    OpportunityAttack(a, char, opportunity_attack_row(a))
-                    for a in attackers
-                    if (id(a), id(char)) not in pending
+                    p
+                    for p in new
+                    if (id(p.attacker), id(p.target), p.name) not in pending
                 ),
             )
             self._refresh_turn_prompts()
-        self._log_event(line, character=name, public=False)
-        return [line]
+        for line in lines:
+            self._log_event(line, character=name, public=False)
+        return lines
 
     def _distance_note(self, target: dict) -> str:
         """ " (25 ft.)": how far `target` is from the source, for the target

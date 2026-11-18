@@ -352,6 +352,30 @@ def has_climb_speed(char: dict) -> bool:
 def reachable(
     char: dict, chars: Iterable[dict], settings: ArenaSettings, feet: int
 ) -> dict[Cell, int]:
+    """Where char can end a move of up to `feet` feet, with what each costs
+    (_walk_search)."""
+    return _walk_search(char, chars, settings, feet)[0]
+
+
+def walk_path(
+    char: dict, chars: Iterable[dict], settings: ArenaSettings, to: Cell
+) -> list[Cell] | None:
+    """The cells char's anchor goes through on the cheapest walk to `to`,
+    its own cell first and `to` last (step 23: the GM clicks where a walk
+    ends, and this is the way it's taken to have gone); None when no walk
+    gets there, or char isn't on the map."""
+    ends, parents = _walk_search(char, chars, settings, _ANY_DISTANCE)
+    if to not in ends:
+        return None
+    path = [to]
+    while path[-1] in parents:
+        path.append(parents[path[-1]])
+    return path[::-1]
+
+
+def _walk_search(
+    char: dict, chars: Iterable[dict], settings: ArenaSettings, feet: int
+) -> tuple[dict[Cell, int], dict[Cell, Cell]]:
     """Where char can end a move of up to `feet` feet, as its anchor cell,
     with what getting there costs: a uniform-cost search over the rule's
     steps. A step into another creature's space is Difficult Terrain unless
@@ -370,7 +394,7 @@ def reachable(
     climbing nothing with `climbs`."""
     start = position(char)
     if start is None:
-        return {}
+        return {}, {}
     chars = list(chars)
     rule, cell_ft = settings.distance_rule, settings.cell_ft
     rules = movement_rules(char)
@@ -417,6 +441,8 @@ def reachable(
 
     start_height = settings.height_of(footprint_at(char, start, rule))
     best: dict[Cell, int] = {start: 0}
+    # The cell each was reached from on its cheapest way (walk_path).
+    parents: dict[Cell, Cell] = {}
     ends: dict[Cell, int] = {}
     tie = count()
     queue: list[tuple[int, int, Cell]] = [(0, next(tie), start)]
@@ -440,8 +466,9 @@ def reachable(
             )
             if new_cost <= feet and new_cost < best.get(step, new_cost + 1):
                 best[step] = new_cost
+                parents[step] = cell
                 heapq.heappush(queue, (new_cost, next(tie), step))
-    return ends
+    return ends, parents
 
 
 def grappler_of(char: dict, chars: Iterable[dict]) -> dict | None:
@@ -662,28 +689,102 @@ def reach_ft(char: dict) -> int:
     return max(reaches)
 
 
+def _in_reach_along(
+    mover: dict, cells: list[Cell], other: dict, reach: int, settings: ArenaSettings
+) -> list[bool]:
+    """Whether mover is within `reach` feet of `other` at each of `cells`
+    (its anchor on the way)."""
+    inside = []
+    for cell in cells:
+        feet = distance_ft(
+            dict(mover, **{POSITION_KEY: cell.to_list()}), other, settings
+        )
+        inside.append(feet is not None and feet <= reach)
+    return inside
+
+
+def _can_react(mover: dict, other: dict) -> bool:
+    """Whether `other` could take a Reaction against mover now: not on its
+    side, not down or Incapacitated, its Reaction not used since its turn
+    began."""
+    if other is mover or _is_ally(mover, other) or _out_of_the_fight(other):
+        return False
+    return (other.get("action_uses") or {}).get("Reaction", 0) == 0
+
+
 def opportunity_attackers(
-    mover: dict, start: Cell, chars: Iterable[dict], settings: ArenaSettings
+    mover: dict,
+    start: Cell,
+    chars: Iterable[dict],
+    settings: ArenaSettings,
+    path: list[Cell] | None = None,
 ) -> list[dict]:
     """Who can make an Opportunity Attack as mover's walk from `start` to
     where it stands now takes it out of their reach (Rules Glossary,
     Opportunity Attacks): each creature not on its side, on the map, not
     down or Incapacitated, its Reaction not used since its turn began, that
-    had mover in its reach at `start` and doesn't now. Only the walk's ends
-    are known (the GM clicks where it goes, not the way), so a walk that
-    passes through someone's reach, or leaves it and comes back, isn't
-    seen."""
-    before = dict(mover, **{POSITION_KEY: start.to_list()})
+    had mover in its reach at one cell of the walk and not at the next.
+    `path` is the walk's cells (walk_path, `start` first), so a walk that
+    passes through a reach, or leaves it and comes back, is caught (step
+    23); without it only the walk's two ends are known."""
+    end = position(mover)
+    cells = list(path) if path else [start] + ([end] if end is not None else [])
     found = []
     for other in chars:
-        if other is mover or _is_ally(mover, other) or _out_of_the_fight(other):
+        if not _can_react(mover, other):
             continue
-        if (other.get("action_uses") or {}).get("Reaction", 0) > 0:
+        inside = _in_reach_along(mover, cells, other, reach_ft(other), settings)
+        if any(was and not now for was, now in zip(inside, inside[1:])):
+            found.append(other)
+    return found
+
+
+POLEARM_MASTER = "Polearm Master"
+# The weapons Polearm Master's Reactive Strike is made with, by class name
+# (a magic Spear's class comes from Spear's; a Javelin shares Spear's
+# family, SpearMedium, but not its class), besides any Heavy Reach one.
+_POLEARMS = ("Quarterstaff", "Spear")
+
+
+def _polearm_reach_ft(char: dict) -> int | None:
+    """The reach char has with a weapon it holds that Polearm Master's
+    Reactive Strike is made with (a Quarterstaff, a Spear, or one with the
+    Heavy and Reach properties), when it has the feat; None otherwise. A
+    player's weapons are taken to be held, as the picker lists them."""
+    feats = [getattr(f, "name", "") for f in char.get("_feature_objects") or ()]
+    if POLEARM_MASTER not in feats:
+        return None
+    reaches = []
+    for weapon in char.get("_weapons_objects") or ():
+        properties = getattr(weapon, "properties", None) or ()
+        named = any(kind.__name__ in _POLEARMS for kind in type(weapon).__mro__)
+        heavy_reach = (
+            WeaponProperty.HEAVY in properties and WeaponProperty.REACH in properties
+        )
+        if named or heavy_reach:
+            reaches.append(10 if WeaponProperty.REACH in properties else 5)
+    return max(reaches) if reaches else None
+
+
+def reactive_strikers(
+    mover: dict,
+    path: list[Cell],
+    chars: Iterable[dict],
+    settings: ArenaSettings,
+) -> list[dict]:
+    """Who can make Polearm Master's Reactive Strike on mover, whose walk
+    along `path` entered the reach it has with its polearm ("a creature
+    that enters the reach you have with that weapon"): each that could react
+    now (as an Opportunity Attack's attacker), had mover outside that reach
+    at one cell of the walk and inside it at the next. Disengage doesn't
+    stop it: it isn't an Opportunity Attack."""
+    found = []
+    for other in chars:
+        reach = _polearm_reach_ft(other)
+        if reach is None or not _can_react(mover, other):
             continue
-        reach = reach_ft(other)
-        was = distance_ft(before, other, settings)
-        now = distance_ft(mover, other, settings)
-        if was is not None and now is not None and was <= reach < now:
+        inside = _in_reach_along(mover, path, other, reach, settings)
+        if any(now and not was for was, now in zip(inside, inside[1:])):
             found.append(other)
     return found
 

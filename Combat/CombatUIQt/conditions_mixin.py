@@ -89,6 +89,7 @@ from Model.Content.CombatModifiers import Modifier
 from Combat.Effects.triggers import (
     AttackOutcome,
     FailedSaveOutcome,
+    OpportunityAttack,
     UsesOutcome,
     outcome_firings,
     reduced_damage,
@@ -3390,6 +3391,17 @@ class ConditionsMixin(CombatWindowState):
         counts = char.setdefault("action_uses", {})
         counts[action_type] = counts.get(action_type, 0) + 1
         self._log_event(f"{char['name']} uses {action_type}", character=char["name"])
+        if action_type == "Reaction":
+            # Its other Opportunity Attack buttons go: the Reaction is spent
+            # (arena step 23).
+            left = tuple(
+                p
+                for p in self._hit_prompts
+                if not (isinstance(p, OpportunityAttack) and p.attacker is char)
+            )
+            if len(left) != len(self._hit_prompts):
+                self._hit_prompts = left
+                self._refresh_turn_prompts()
         self._refresh_selected_card()
 
     @undoable

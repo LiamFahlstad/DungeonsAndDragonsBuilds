@@ -67,6 +67,10 @@ class UndoPoint:
     # The battle map's settings and terrain (ArenaSettings.to_dict), which the
     # Map Painter can change during a fight.
     arena: dict | None = None
+    # The turn column's buttons for what a hit or a walk set off (an
+    # Opportunity Attack, Hill's Tumble): undoing the walk or the hit takes
+    # them back (arena step 23).
+    hit_prompts: tuple = ()
 
     @classmethod
     def capture(cls, app) -> "UndoPoint":
@@ -80,6 +84,7 @@ class UndoPoint:
             damage_text=app.damage_input.text(),
             attack_roll_text=app.attack_roll_input.text(),
             arena=app.arena_settings.to_dict(),
+            hit_prompts=tuple(app._hit_prompts),
         )
 
     def changed_since(self, app) -> bool:
@@ -109,6 +114,7 @@ class UndoPoint:
         app.round_number = self.round_number
         if self.arena is not None:
             app.arena_settings = ArenaSettings.from_dict(self.arena)
+        app._hit_prompts = self.hit_prompts
         app._saved_targets = [
             s for s in self.saved_targets if any(s is t for t in app.target_characters)
         ]

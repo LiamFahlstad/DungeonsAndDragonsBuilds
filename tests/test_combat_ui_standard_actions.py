@@ -311,11 +311,14 @@ def test_disengage_means_no_opportunity_attack(tmp_path, monkeypatch):
     assert DISENGAGE not in player["conditions"]
 
 
-def test_no_reminder_for_a_used_reaction_or_a_move_that_stays_in_reach(tmp_path):
+def test_no_reminder_for_a_used_reaction_but_one_for_rounding_a_corner(tmp_path):
     ui, player, tiger = _fight(tmp_path)
     _side_by_side(ui, player, tiger)
-    ui._move_combatant(player, Cell(6, 4))  # still next to the Tiger
-    assert "Opportunity Attack" not in ui._status_label.text()
+    # To G5, next to the Tiger again at the end, but through F5, a diagonal
+    # 10 ft. off by the Manhattan rule: the walk leaves its reach on the way
+    # (arena step 23; only the ends counted before).
+    ui._move_combatant(player, Cell(6, 4))
+    assert "leaves Tiger's reach: an Opportunity Attack" in ui._status_label.text()
     tiger["action_uses"] = {"Reaction": 1}
     ui._move_combatant(player, Cell(1, 6))
     assert "Opportunity Attack" not in ui._status_label.text()
