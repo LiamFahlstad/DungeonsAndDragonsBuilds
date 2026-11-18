@@ -25,7 +25,8 @@ the Use / Cast dialog moved on the map, Later's third, 2026-11-18. Step 22,
 grapples on the map (the grappler drags, the grapple ends past its range),
 Later's fourth, the same day. Step 23, the way a walk goes (Opportunity
 Attacks along it, Reactive Strike, Undo of the buttons), Later's fifth, the
-same day. What's next is under Later.
+same day. Step 24, kept areas acting by a turn-column button and moved from
+their panel, Later's sixth, the same day. What's next is under Later.
 
 ## How to use this document
 
@@ -99,6 +100,7 @@ verification passes per step unless asked.
 | 21 | Pushes: a pick's `CombatPush` (Thunderwave, a Shove, the Push mastery) moves who it lands on straight away from its source as a Push move | Done 2026-11-18 (R19; Decisions 32, 33); DI-095 logged |
 | 22 | Grapples: the Grappled creature names its grappler, who drags it at 1 extra foot a foot; the grapple ends past its range or with the grappler Incapacitated; the Unarmed Strike's Grapple row | Done 2026-11-18 (R20; Decision 34) |
 | 23 | The path walked: Opportunity Attacks anywhere along a walk, Polearm Master's Reactive Strike on entering a reach, Undo taking a walk's buttons back, a spent Reaction taking its attacker's other buttons away | Done 2026-11-18 (R21; Decision 35) |
+| 24 | Areas that stay, acting: a turn-column button when a creature enters a kept area, the area is moved onto it, or a turn starts or ends in it, as its text says, opening Use / Cast on its effect at no cost; the area panel's Move (Moonbeam, Flaming Sphere) | Done 2026-11-18 (R22; Decisions 36, 37); DI-096 logged |
 
 ## How it fits the code that's there
 
@@ -518,7 +520,8 @@ area view."
 - The map (`arena_view.py`): each kept area drawn over the grid in its
   colour, its name in its top-left cell, its edge dashed while its caster
   concentrates; the aiming shading and ring in the bar's colour.
-- Reminders (`arena_mixin.py`, Decision 23): a move after which someone is
+- Reminders (`arena_mixin.py`, Decision 23, replaced by Decision 36 in
+  step 24, where they became buttons): a move after which someone is
   in an area they weren't (walked in, or an Emanation moved onto them) says
   "Goblin enters Clover's Spirit Guardians." in the status line; a turn
   starting in one puts "Goblin starts its turn in Clover's Moonbeam." in
@@ -959,12 +962,96 @@ Tests: `tests/test_arena_paths.py`, `tests/test_combat_ui_arena_paths.py`;
 `tests/test_combat_ui_standard_actions.py`'s walk round a corner now
 provokes (Decision 35).
 
+### Step 24: areas that stay, acting (2026-11-18)
+
+Later's sixth item (Q12, Q13), the user's request: "A creature entering a
+kept area, or starting its turn in one, gets a turn-column button (like
+the Opportunity Attack prompts) that opens Use / Cast on the area's pick
+with that creature targeted, instead of today's reminder line", and "a
+Move button on the area panel for Moonbeam and Flaming Sphere: aim it
+again in the area bar, keeping its time and concentration". Walls left
+for later.
+
+The spells' own wording (Player's Handbook 2024, as their classes have
+it), read first: Moonbeam, "A creature also makes this save when the
+spell's area moves into its space and when it enters the spell's area or
+ends its turn there. A creature makes this save only once per turn", and
+"you can take a Magic action on later turns to move the Cylinder up to
+60 feet"; Spirit Guardians, "whenever the Emanation enters a creature's
+space and whenever a creature enters the Emanation or ends its turn
+there"; Flaming Sphere, "Any creature that ends its turn within 5 feet of
+the sphere makes a Dexterity saving throw", "As a Bonus Action, you can
+move the sphere up to 30 feet", "If you move the sphere into a creature's
+space, that creature makes the save"; Web, "The first time a creature
+enters the webs on a turn or starts its turn there". Most 2024 areas act
+as a turn *ends*, not as one starts, so the moment comes from the text
+(R22, Decision 36). The Rules Glossary's area entries (Emanation,
+Cylinder, Sphere) say nothing of when an area acts.
+
+*Built (R22):* `lasting.py`: `area_timing(text)`, when a kept area acts
+(ENTERS, MOVED_ONTO, STARTS, ENDS, read from its rules text; one that says
+none, ENTERS and STARTS, as the reminders were); `move_rule(text)`, how
+far it moves and what that costs (`MoveRule`: Moonbeam's 60 ft. and an
+Action, Flaming Sphere's 30 ft. and a Bonus Action); and `AreaPrompt`,
+the turn-column button ("Clover's Moonbeam on Goblin (entered it)", "...
+(ended its turn in it)"). The window (`arena_mixin.py`): a walk into an
+area gives the walker ENTERS, and an Emanation brought onto someone by its
+caster's move gives them MOVED_ONTO (`_area_entered`, kept with the hit
+prompts, so Undo of the walk takes it back and the next turn clears it);
+`_remind_lasting_areas` gives STARTS to whoever's turn starts in one and
+ENDS to whoever's just ended in one (shown in the next turn's column, as
+a turn-end trigger's button is), each with a GM-only log line ("Goblin
+ends its turn in Clover's Moonbeam."). One button per area and creature
+at a time. Pressed (`_use_area_prompt`), it opens Use / Cast with the
+caster as the source, the creature targeted and the area's row picked
+(`area_effect_row`: a row of the pick's that spends nothing, "Spirit
+Guardians: damage", else the pick itself), through the dialog's new
+`kept_area`: no slot, action or concentration (the cost widgets off, "...
+acting again: its cast is spent already, so this costs nothing, at level
+4."), damage at the slot it was cast with (the record's new
+`slot_level`), cover from where the area was aimed, and what it gives held
+by the area's concentration (`CustomEffect.from_area`,
+`_hold_with_area`: Web's Restrained ends with it). A badge's turn trigger
+of the same name as a kept area of its caster's (Spirit Guardians' "if it
+ends its turn in the Emanation") gives way to the area once the map is in
+use and the creature is on it (`_kept_area_answers`), so the button comes
+only for whoever is in it. Hazards stay turn-column reminders.
+
+The area panel's **Move** (not for an area around its caster): the area
+bar aims it again from where it is (`_move_selected_area`; its shape
+fixed, Keep and the colour hidden, "Moves 35 ft., up to 60 ft.", "past
+its 60 ft.!" past it), a click puts it there (`_move_area`, one undo
+step: its key, time, concentration and colour kept, "Clover's Moonbeam
+moves from K6 to O9 (35 ft.)." GM-only), spending what its text says
+from its caster, asked first when that's used already. Whoever it's
+moved onto gets its MOVED_ONTO button. Esc, a right click or G leaves it
+where it was, with no dialog.
+
+- Not done: "only once per turn" is one button at a time per area and
+  creature, not counted across the turn (a creature that entered and used
+  its button gets another as its turn ends there); Spirit Guardians'
+  creatures designated "to be unaffected" aren't known, so allies in it
+  get a button too; Flaming Sphere's "stops moving for the turn" and its
+  "over barriers up to 5 feet tall" are the GM's; its area is read as 20
+  feet (DI-096); walls (Later 6).
+
+Tests: `tests/test_arena_lasting.py` (the timing and move readers on the
+spells' wording, the button's text), `tests/test_combat_ui_arena_area_prompts.py`
+(Moonbeam's button costing nothing, Undo taking it back, its turn-end and
+not turn-start, Web's turn start and its Restrained held by concentration,
+an area that ended, an upcast one, Spirit Guardians through its area with
+its damage row, an Emanation teleported onto someone, Move with its
+Action, past its reach and cancelled, Flaming Sphere's Bonus Action, no
+Move around a caster); `tests/test_combat_ui_arena_lasting.py`'s
+reminders test now has Moonbeam's turn start as a log line only.
+
 ### Later (not scheduled)
 
 In order of relevance (R15, the user, 2026-11-16: "add your suggestions
 (in order of relevancy) to the plan"). Each is a step of its own when it's
-picked up. The first five, cover, range, pushes, grapples and the path
-walked, were steps 19 to 23.
+picked up. The first six, cover, range, pushes, grapples, the path
+walked and areas acting, were steps 19 to 24 (walls, part of the sixth,
+are still to do).
 
 3. *(Step 21.)* **Shove's push** and the other pushes, moved on Apply.
    What's left is content (DI-095).
@@ -973,11 +1060,15 @@ walked, were steps 19 to 23.
 5. *(Step 23.)* **The path walked kept**: Opportunity Attacks along it,
    Polearm Master's Reactive Strike, Undo of the buttons, a spent Reaction
    taking the rest.
-6. **Areas that stay, acting** (Q12, Q13): a creature entering one, or
-   starting its turn in it, prompts its effect (a turn-column button, as a
-   trigger's) instead of a reminder; a **Move** button on the area panel for
-   Moonbeam and Flaming Sphere; walls (Wall of Fire, Wall of Force), which
-   aren't one of the six shapes.
+6. *(Step 24.)* **Areas that stay, acting** (Q12, Q13): a turn-column
+   button when one acts, the area panel's **Move**. What's left is
+   **walls** (Wall of Fire, Wall of Force, Blade Barrier, Wall of Thorns),
+   which aren't one of the six shapes: a Line of cells drawn freely (Wall
+   of Fire's 60 feet long, or a ring 20 feet across), one side of it
+   dealing damage, and its cover (Wall of Force is Total Cover and blocks
+   movement, as a painted wall does). It needs a shape of its own in
+   areas.py, aimed by two clicks, and terrain the kept area adds while it
+   lasts.
 7. **Other speeds** (Q7, the map painter plan's Q4): Fly, Swim, Climb or
    Burrow Speed chosen for a move, switching part-way (Rules Glossary,
    Speed: "subtract the distance already moved from the new speed"); a
@@ -1014,8 +1105,9 @@ walked, were steps 19 to 23.
 Built from this list already: the map settings dialog and terrain, as the
 Map Painter ([map-painter-plan.md](map-painter-plan.md), 2026-11-15); the
 conditions' "within 5 feet" (step 16); moves that aren't walks (step 17);
-cover (step 19), range (step 20), pushes (step 21), grapples (step 22)
-and the path walked (step 23), its first five items.
+cover (step 19), range (step 20), pushes (step 21), grapples (step 22),
+the path walked (step 23) and areas acting (step 24), its first six items
+(walls aside).
 
 ## Decisions
 
@@ -1170,8 +1262,8 @@ Taken while building step 11 (2026-11-15), for the user to overrule:
 22. **An Emanation (or a Sphere around the source) follows its caster; any
     other kept area stays on the cells it covered when put down**, a Cone
     or Line too, so it doesn't swing round as its caster walks.
-23. **Entering an area or starting a turn in it is a reminder, not a
-    prompt**: what it asks varies by spell (Spirit Guardians on entering or
+23. *(Replaced by 36.)* **Entering an area or starting a turn in it is a
+    reminder, not a prompt**: what it asks varies by spell (Spirit Guardians on entering or
     ending a turn, Moonbeam and Web on entering or starting one), so the GM
     reads the line and uses the Custom Effect. "Enters" counts someone an
     Emanation moved onto too.
@@ -1297,6 +1389,38 @@ Taken in step 23 (2026-11-18), for the user to overrule:
     was outside the polearm's reach at one cell and inside at the next,
     Disengage or not, for walks only.
 
+From the user (2026-11-18, the request for step 24), and taken in it for
+the user to overrule where marked:
+
+36. **A kept area acts by a turn-column button, when its own text says.**
+    Answers Q12, replaces 23. The user asked for a button on entering a
+    kept area or starting a turn in one, opening Use / Cast on the area's
+    pick with that creature targeted, instead of the reminder. *Taken in
+    the plan, for the user to overrule:* the moments are the area's rules
+    text's (`area_timing`): entering it, the area moved onto the creature,
+    a turn starting there, a turn ending there (shown in the next turn's
+    column). The 2024 spells mostly act as a turn ends (Moonbeam, Spirit
+    Guardians, Cloud of Daggers, Flaming Sphere), so a button as Moonbeam's
+    turn starts would offer a save the rules don't give; a text that names
+    no moment (a stat block's, one typed in) acts on entering and at the
+    turn's start, as asked. An area that acts on who enters it acts on who
+    it's moved onto too. The button costs nothing (the cast was spent),
+    deals the damage of the slot it was cast with, and a condition it
+    gives is held by the area's concentration. A badge's turn trigger of
+    the same name gives way to the area while the creature is on the map
+    in use. The GM decides "once per turn" and who is unaffected; a
+    button is offered once per area and creature at a time.
+37. **Move re-aims a kept area in the area bar.** Answers Q13. The user
+    asked for it on the area panel for Moonbeam and Flaming Sphere,
+    keeping its time and concentration. *Taken in the plan:* it's shown
+    for every aimed kept area (not one around its caster, which moves
+    with it), as the GM may also correct where one was put; it spends
+    what its text says moving costs (Moonbeam's Magic action, Flaming
+    Sphere's Bonus Action), nothing when the text says none, and asks
+    first when that's used already (as the dialog's costs do). Past its
+    "up to" is warned about, not refused (as Decision 19), measured from
+    where it was aimed to where it's aimed now. Its shape stays as it is.
+
 ## Open questions
 
 Each has a *Suggestion*: what gets built if nobody says otherwise.
@@ -1373,15 +1497,8 @@ Each has a *Suggestion*: what gets built if nobody says otherwise.
   opening without targets means an Apply with none, which the dialog
   would then refuse with "Select targets in area, or right-click a card".
   *Since step 11, a kept area opens it with no targets (Decision 21).*
-- **Q12. Should entering an area, or starting a turn in it, open its
-  effect?** *Blocks nothing.* Now it's a reminder (Decision 23).
-  *Suggestion:* a prompt in the turn column, like a trigger's, opening the
-  Custom Effect on the pick with that creature targeted, once a kept area
-  records its pick and when its rules fire (a `CombatEffect` trigger).
-- **Q13. Can a kept area be moved?** *Blocks nothing.* Moonbeam and
-  Flaming Sphere move as an action. *Suggestion:* a **Move** button on
-  the area panel (step 12) that aims it again in the bar and keeps its
-  time.
+- Q12: Decision 36.
+- Q13: Decision 37.
 - **Q14. Which moving features still have no `Movement`?** *Blocks
   nothing.* The incorporeal forms are used features with no combat effect
   yet (Ghost Walk, Umbral Form, Superior Dread's Ghostly Flight, Frozen
@@ -1622,6 +1739,23 @@ Each has a *Suggestion*: what gets built if nobody says otherwise.
   in reach" from its two ends, leaves a 5-foot reach on the Manhattan
   grid on the way (Decision 35); that test file's Tiger is the plain
   one-cell `Combat.Combatants.Tiger`, not the Large stat block.
+- **R22** (step 24, the user's request, 2026-11-18). *Plan (Later, Q12):*
+  "a creature entering one, or starting its turn in it, prompts its
+  effect", "once a kept area records its pick and when its rules fire (a
+  `CombatEffect` trigger)". *Done:* the moments are read from the area's
+  own rules text, which every kept record has already (its `about`, else
+  its spell's), and include ending a turn there and the area moved onto
+  someone (Decision 36); no `CombatEffect` field was needed. *Why:* the
+  2024 wording puts most areas' damage at the end of a turn (Moonbeam's
+  "ends its turn there"), so a turn-start button would offer the wrong
+  save, and one moment per area would have to be written by hand for
+  every spell. *Found:* Use / Cast on Moonbeam's own row spends a slot,
+  the Action and a new concentration, which would end the very Moonbeam
+  acting, so the dialog has a no-cost mode (`kept_area`); the slot the
+  area was cast with wasn't kept, so its damage at that slot is on the
+  record now; Spirit Guardians' badge already asked "if it ends its turn
+  in the Emanation" of every enemy, which the area now answers itself;
+  Flaming Sphere's area is read from its light (DI-096).
 
 ## Discovered issues
 
@@ -1650,6 +1784,13 @@ Found in step 21:
 - **DI-095** (open, content): pushes and pulls written only in text (Thorn
   Whip, Thunderous Smite, Pushing Attack, Open Hand Technique, Repelling
   Blast and more); each needs a `CombatPush` on its effect.
+
+Found in step 24:
+
+- **DI-096** (open, the area reading): Flaming Sphere's area is read as a
+  20-foot Sphere, from its "Bright Light in a 20-foot radius", not the
+  5-foot sphere whose damage reaches 5 feet; the GM sets 5 ft. in the bar
+  meanwhile.
 
 Already logged, and touched by this plan:
 

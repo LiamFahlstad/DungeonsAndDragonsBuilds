@@ -23,14 +23,22 @@ that lasts: a spell with a duration), the dialog opens again with "Keep the
 area on the map", and its Apply puts the area on an active spell of the
 source's (Combat/Arena/lasting.py): it ends with the spell's time, the
 caster's concentration or the card's ✕. Such an area may be put down with
-nobody in it (Moonbeam on empty ground). Whoever walks into one, or starts
-a turn in one, gets a reminder in the status line and a GM-only log line.
+nobody in it (Moonbeam on empty ground). Whoever walks into one is named in
+the status line, and walking in or starting or ending a turn in one is a
+GM-only log line.
 
 Selecting a kept area (step 12): a click on an empty cell of one brings up
 the area panel over the map: whose it is, where, how long it has left and
-its rules text, with its colour to change, Target who's in it, End spell,
-and Close (or Esc). The selection is the window's, as the source is, but an
-area is never a source.
+its rules text, with its colour to change, Target who's in it, Move, End
+spell, and Close (or Esc). The selection is the window's, as the source is,
+but an area is never a source.
+
+Areas acting (step 24): when a kept area's text says it acts on a creature
+(entering it, the area moved onto it, a turn starting or ending there),
+that creature gets a turn-column button (an AreaPrompt) that opens Use /
+Cast on the area's effect at no cost. Move aims a kept area again in the
+area bar from where it is, keeping its time and concentration, spending
+what its text says moving it costs.
 
 The painted map (Notes/map-painter-plan.md): a fight starting puts whoever
 the encounter's map gives a starting cell there; the hover names what's
@@ -38,6 +46,7 @@ painted on a cell, the target label says when a target is Lightly or
 Heavily Obscured, and walking onto a hazard (a campfire, a trap) or starting
 a turn on one is a reminder, as an area that stays is."""
 
+from collections.abc import Iterable
 from dataclasses import replace
 from html import escape
 
@@ -95,15 +104,24 @@ from Combat.Arena.areas import (
 )
 from Combat.Arena.geometry import Cell
 from Combat.Arena.lasting import (
+    ACTIVE_SPELLS_KEY,
     AREA_KEY,
     DEFAULT_AREA_COLOR,
+    ENDS,
+    ENTERS,
+    MOVED_ONTO,
+    STARTS,
+    AreaPrompt,
     LastingArea,
+    area_key,
     area_record,
+    area_timing,
     areas_at,
     areas_holding,
     entered,
     find_area,
     lasting_areas,
+    move_rule,
     record_area,
     record_cells,
     time_left_text,
@@ -121,7 +139,7 @@ from Core.Definitions import Condition
 from Core.Rules import SECONDS_PER_ROUND
 
 from .arena_view import ArenaView, MoveKind, token_rows
-from .effect_options import _spell_named, opportunity_attack_row
+from .effect_options import _spell_named, area_effect_row, opportunity_attack_row
 from .saves import SPELL, CustomEffect, EffectOption
 from .settings import ARENA_VIEW_KEY
 from .state import CombatWindowState
@@ -333,7 +351,8 @@ class ArenaMixin(CombatWindowState):
     def _area_changed(self):
         self._show_area_controls()
         if self._area_targeting is not None:
-            self._last_area = self._area_in_bar()
+            if not self._area_targeting.get("move"):
+                self._last_area = self._area_in_bar()
             self._arena_view.refresh_area()
 
     def _area_color_in_bar(self) -> str:
@@ -388,6 +407,57 @@ class ArenaMixin(CombatWindowState):
         }
         self._show_area_in_bar(area or self._last_area)
         self._last_area = self._area_in_bar()
+        self._area_keep.show()
+        self._area_color.show()
+        self._enable_area_shape(True)
+        self._begin_aiming()
+        return True
+
+    def _move_selected_area(self):
+        """The area panel's Move: aim the kept area selected again in the
+        area bar, from where it is (Moonbeam's Magic action, Flaming
+        Sphere's Bonus Action); a click puts it there (_move_area), keeping
+        its time, concentration and colour. The bar says how far it went
+        against the "up to" its text gives; Esc or a right click leaves it."""
+        found = self._selected_lasting()
+        if found is None or self.phase != "COMBAT":
+            return
+        caster, entry = found
+        record = entry[AREA_KEY]
+        if record.get("follows") or record.get("aim") is None:
+            return
+        rule = move_rule(self._area_text(caster, entry))
+        self._aimed_area = None
+        self._area_targeting = {
+            "pick": "",
+            "source": caster,
+            "what": f"Move {caster['name']}'s {entry['name']}",
+            "read": True,
+            "range": rule.feet,
+            "about": "",
+            "move": area_key(caster, entry),
+            "from": Cell.of(record["aim"]),
+        }
+        self._show_area_in_bar(record_area(record))
+        self._area_keep.hide()
+        self._area_color.hide()
+        self._enable_area_shape(False)  # it keeps its shape as it moves
+        self._arena_view.set_area_color(record.get("color") or DEFAULT_AREA_COLOR)
+        self._begin_aiming()
+
+    def _enable_area_shape(self, enabled: bool):
+        """The bar's shape, size, width and From the source, changeable or
+        not (not while a kept area is moved)."""
+        for box in (
+            self._area_shape,
+            self._area_size,
+            self._area_width,
+            self._area_from_source,
+        ):
+            box.setEnabled(enabled)
+
+    def _begin_aiming(self):
+        """Bring up the map and the area bar to aim `_area_targeting`."""
         self._view_stack.setCurrentIndex(ARENA_PAGE)
         self._view_toggle_btn.setText("Cards")
         self._area_bar.show()
@@ -399,7 +469,6 @@ class ArenaMixin(CombatWindowState):
             self._show_area_count,
         )
         self._arena_view.setFocus()
-        return True
 
     def _area_cells_at(self, aim: Cell | None) -> set[Cell]:
         request = self._area_targeting
@@ -419,7 +488,12 @@ class ArenaMixin(CombatWindowState):
         if not request["read"] and request["pick"]:
             head += "no area in its text, so check the shape. "
         inside = creatures_in(self.characters, cells, self.arena_settings)
-        if not cells:
+        if request.get("move") and cells:
+            onto = ", ".join(c["name"] for c in inside)
+            text = f"{head}{area.text}: click to move it there" + (
+                f" (onto {onto})." if onto else "."
+            )
+        elif not cells:
             how = (
                 "hover over the map to aim it"
                 if area.is_aimed
@@ -446,12 +520,21 @@ class ArenaMixin(CombatWindowState):
         area = self._area_in_bar()
         if request is None or aim is None or request["range"] is None:
             return None
-        if area.starts_at_source:
+        if area.starts_at_source and not request.get("move"):
             return None
-        feet = distance_to_cell_ft(request["source"], aim, self.arena_settings)
+        feet = self._aim_feet(request, aim)
         if feet is None or feet <= request["range"]:
             return None
         return feet, request["range"]
+
+    def _aim_feet(self, request: dict, aim: Cell) -> int | None:
+        """How far `aim` is from the source, or for a kept area being moved,
+        from where it was aimed before (how far it moves)."""
+        start = request.get("from")
+        if start is not None:
+            settings = self.arena_settings
+            return settings.distance_rule.feet(start, aim, settings.cell_ft)
+        return distance_to_cell_ft(request["source"], aim, self.arena_settings)
 
     def _area_range_text(self) -> str:
         """The point aimed at against the range: "Aimed 45 ft. away, range
@@ -459,6 +542,13 @@ class ArenaMixin(CombatWindowState):
         area that starts at the source, or without a range or an aim."""
         request = self._area_targeting
         aim = self._arena_view.area_aim
+        if request is not None and aim is not None and request.get("move"):
+            feet = self._aim_feet(request, aim)
+            if request["range"] is None:
+                return f"Moves {feet} ft."
+            if feet is not None and feet > request["range"]:
+                return f"Moves {feet} ft.: past its {request['range']} ft.!"
+            return f"Moves {feet} ft., up to {request['range']} ft."
         if request is None or aim is None or request["range"] is None:
             return ""
         if self._area_in_bar().starts_at_source:
@@ -486,6 +576,10 @@ class ArenaMixin(CombatWindowState):
         changes nothing."""
         request = self._area_targeting
         if request is None:
+            return
+        if request.get("move"):
+            self._end_area_targeting()
+            self._move_area(request["move"], cell)
             return
         cells = self._area_cells_at(cell)
         inside = creatures_in(self.characters, cells, self.arena_settings)
@@ -527,7 +621,8 @@ class ArenaMixin(CombatWindowState):
         request = self._end_area_targeting()
         if request is None:
             return False
-        self._reopen_custom_effect(request["pick"])
+        if not request.get("move"):  # a kept area being moved just stays
+            self._reopen_custom_effect(request["pick"])
         return True
 
     def _reopen_custom_effect(self, pick: str):
@@ -647,6 +742,10 @@ class ArenaMixin(CombatWindowState):
         target.setToolTip("Make whoever is in the area the targets")
         target.clicked.connect(lambda: self._target_selected_area())
         top.addWidget(target)
+        self._area_panel_move = QPushButton("Move")
+        self._area_panel_move.setObjectName("areaPanelMoveBtn")
+        self._area_panel_move.clicked.connect(lambda: self._move_selected_area())
+        top.addWidget(self._area_panel_move)
         end = QPushButton("End spell")
         end.setObjectName("areaPanelEndBtn")
         end.setToolTip(
@@ -711,6 +810,13 @@ class ArenaMixin(CombatWindowState):
             f"<b>{title}</b> · " + " · ".join(escape(p, quote=False) for p in parts)
         )
         about = record.get("about") or self._rules_text_of(record, entry)
+        # An area that follows its caster moves with it, not by itself.
+        self._area_panel_move.setVisible(not record.get("follows"))
+        how = move_rule(about).text
+        self._area_panel_move.setToolTip(
+            "Aim it again on the map, keeping its time and concentration"
+            + (f" ({how})" if how else "")
+        )
         shown = (
             escape(about, quote=False).replace("\n", "<br>")
             if about
@@ -771,6 +877,61 @@ class ArenaMixin(CombatWindowState):
             return
         self._selected_area = None
         self._remove_active_spell(*found)
+        self._refresh_views()
+
+    @undoable
+    def _move_area(self, key: str, cell: Cell):
+        """Put kept area `key` where `cell` aims it (the panel's Move): one
+        undo step, its key, time, concentration and colour kept. What its
+        text says moving it costs (move_rule: Flaming Sphere's Bonus
+        Action) is spent from its caster, asked about first when that's
+        used already; past its "up to" is warned about, not refused (as
+        Decision 19). Whoever it's moved onto gets its button, when its
+        text acts then (Moonbeam: "when the spell's area moves into its
+        space"). A GM-only log line says where from and to."""
+        found = find_area(self.characters, key)
+        if found is None:
+            return
+        caster, entry = found
+        record, settings = entry[AREA_KEY], self.arena_settings
+        rule = move_rule(self._area_text(caster, entry))
+        title = f"{caster['name']}'s {entry['name']}"
+        if (
+            rule.action is not None
+            and self.phase == "COMBAT"
+            and not self._go_ahead_anyway(
+                caster, f"Move {title}", [self._action_lack(caster, rule.action)]
+            )
+        ):
+            return
+        before = who_is_in(self.characters, settings)
+        start = Cell.of(record["aim"]) if record.get("aim") is not None else None
+        cells = area_cells(record_area(record), caster, cell, settings)
+        record["aim"] = cell.to_list()
+        record["cells"] = [c.to_list() for c in sorted(cells)]
+        shape = settings.distance_rule.shape
+        feet = (
+            settings.distance_rule.feet(start, cell, settings.cell_ft)
+            if start is not None
+            else None
+        )
+        moved = f" from {shape.cell_name(start)}" if start is not None else ""
+        line = f"{title} moves{moved} to {shape.cell_name(cell)}" + (
+            f" ({feet} ft.)." if feet is not None else "."
+        )
+        self._log_event(line, character=caster["name"], public=False)
+        lines = [line]
+        if rule.feet is not None and feet is not None and feet > rule.feet:
+            lines.append(f"That's past its {rule.feet} ft.")
+        if rule.action is not None:
+            self._add_action_use(rule.action, caster, ask=False)
+        after = who_is_in(self.characters, settings)
+        for who, (owner, area) in entered(before, after):
+            text = f"{who} is in {owner}'s {area} now."
+            self._log_event(text, character=who, public=False)
+            lines.append(text)
+            self._area_entered(who, owner, area, MOVED_ONTO)
+        self._show_status(" ".join(lines))
         self._refresh_views()
 
     def _arena_char(self, name: str) -> dict | None:
@@ -929,12 +1090,14 @@ class ArenaMixin(CombatWindowState):
                 " Movement deals 1d10 Force damage if its turn ends there."
             )
         # Whoever is in an area now that wasn't: the mover walking in, or
-        # someone its Emanation moved onto.
+        # someone its Emanation moved onto. Each gets the area's button, when
+        # its text says it acts then (step 24).
         after = who_is_in(self.characters, settings)
         for who, (caster, area) in entered(before, after):
             line = f"{who} enters {caster}'s {area}."
             self._log_event(line, character=who, public=False)
             warnings.append(line)
+            self._area_entered(who, caster, area, ENTERS if who == name else MOVED_ONTO)
         for hazard in hazards_under(char, settings):
             if hazard not in hazards_before:
                 line = f"{name} enters a hazard: {hazard}."
@@ -1217,28 +1380,129 @@ class ArenaMixin(CombatWindowState):
         self._log_area_kept(holder, label, record)
         self._rebuild_card(holder)
 
-    def _remind_lasting_areas(self, group: list[dict]):
-        """Whoever starts its turn in an area that stays: a reminder in the
-        turn column, as what starting the turn did, and a GM-only log line
-        ("Goblin starts its turn in Clover's Moonbeam."), as its rules may
-        ask something of it now."""
+    def _remind_lasting_areas(self, group: list[dict], ended: list[dict] | None = None):
+        """Whoever starts its turn in an area that stays, or in a hazard, and
+        whoever just ended its turn in an area (`ended`): a GM-only log line
+        each ("Goblin starts its turn in Clover's Moonbeam."), and for an
+        area whose text acts then (area_timing: Web as a turn starts,
+        Moonbeam as one ends), its button in the turn column (an
+        AreaPrompt, step 24). A hazard is a reminder in the turn column, as
+        what starting the turn did."""
         if self.phase != "COMBAT":
             return
-        areas = lasting_areas(self.characters, self.arena_settings)
-        for char in group:
-            holding = [
-                area.title
-                for area in (
-                    areas_holding(char, areas, self.arena_settings) if areas else []
+        settings = self.arena_settings
+        areas = lasting_areas(self.characters, settings)
+        for when, chars, verb in (
+            (ENDS, ended or [], "ends"),
+            (STARTS, group, "starts"),
+        ):
+            for char in chars:
+                if self._char_death_state(char) == "dead":
+                    continue
+                holding = areas_holding(char, areas, settings) if areas else []
+                for area in holding:
+                    self._offer_area_prompt(
+                        area.key, char, when, self._turn_start_prompts
+                    )
+                names = [area.title for area in holding]
+                hazards = hazards_under(char, settings) if when == STARTS else []
+                if not names and not hazards:
+                    continue
+                line = (
+                    f"{char['name']} {verb} its turn in {', '.join(names + hazards)}."
                 )
-            ]
-            holding += hazards_under(char, self.arena_settings)
-            if not holding:
-                continue
-            names = ", ".join(holding)
-            line = f"{char['name']} starts its turn in {names}."
-            self._log_event(line, character=char["name"], public=False)
-            self._turn_start_notes.append(line)
+                self._log_event(line, character=char["name"], public=False)
+                if hazards:
+                    self._turn_start_notes.append(
+                        f"{char['name']} starts its turn in {', '.join(hazards)}."
+                    )
+
+    def _area_text(self, caster: dict, entry: dict) -> str:
+        """A kept area's rules text: its record's, else its spell's."""
+        record = entry[AREA_KEY]
+        return record.get("about") or self._rules_text_of(record, entry)
+
+    def _area_entered(self, who: str, caster: str, area: str, when: str):
+        """`who` is in caster's kept area `area` now (walked in, ENTERS, or
+        the area came onto it, MOVED_ONTO): its button, when its text acts
+        then, kept with the hit prompts for the rest of the turn."""
+        char = self._arena_char(who)
+        owner = self._arena_char(caster)
+        if char is None or owner is None:
+            return
+        prompts = list(self._hit_prompts)
+        for entry in owner.get(ACTIVE_SPELLS_KEY) or []:
+            if entry.get(AREA_KEY) and entry["name"] == area:
+                self._offer_area_prompt(
+                    area_key(owner, entry), char, when, prompts, self._turn_prompts
+                )
+        if len(prompts) != len(self._hit_prompts):
+            self._hit_prompts = tuple(prompts)
+            self._refresh_turn_prompts()
+
+    def _offer_area_prompt(
+        self, key: str, char: dict, when: str, prompts: list, also: Iterable = ()
+    ):
+        """Add to `prompts` the button for kept area `key` acting on char
+        `when`, if its text says it acts then (an area acting on who enters
+        it acts on who it's moved onto too), it's in combat, and there isn't
+        one for the same area and creature in `prompts` or `also` already
+        (a creature makes its save "only once per turn")."""
+        found = find_area(self.characters, key)
+        if self.phase != "COMBAT" or found is None:
+            return
+        caster, entry = found
+        if self._char_death_state(char) == "dead":
+            return
+        if when not in area_timing(self._area_text(caster, entry)):
+            return
+        if any(
+            isinstance(p, AreaPrompt) and p.key == key and p.target is char
+            for p in (*prompts, *also)
+        ):
+            return
+        prompts.append(AreaPrompt(caster, char, entry["name"], key, when))
+
+    def _kept_area_answers(self, firing) -> bool:
+        """Whether a badge's turn trigger (Spirit Guardians' "if it ends its
+        turn in the Emanation") is answered by its area on the map instead:
+        the badge's caster keeps an area of the badge's name, the map is in
+        use and the creature is on it, so the area's own button comes when
+        it's in it, and none when it isn't."""
+        caster = self._arena_char(firing.caster or firing.bearer["name"])
+        if caster is None or not self.arena_settings.in_use:
+            return False
+        if position(firing.target) is None:
+            return False
+        return any(
+            entry.get(AREA_KEY) and entry["name"] == firing.badge
+            for entry in caster.get(ACTIVE_SPELLS_KEY) or []
+        )
+
+    def _use_area_prompt(self, prompt: AreaPrompt):
+        """A kept area's button pressed: the Use / Cast dialog on its effect
+        (area_effect_row: Spirit Guardians' damage row, Moonbeam's own),
+        its caster the source and the creature the target, costing nothing
+        (the dialog's kept_area). The button goes once it's used, or when
+        the area has ended."""
+        target = self._find_character_by_name(prompt.target["name"])
+        if target is None:
+            self._show_status(f"{prompt.target['name']} is no longer in the fight.")
+            return
+        self._hit_prompts = tuple(p for p in self._hit_prompts if p is not prompt)
+        self._turn_prompts = [p for p in self._turn_prompts if p is not prompt]
+        found = find_area(self.characters, prompt.key)
+        if found is None:
+            self._refresh_turn_prompts()
+            self._show_status(f"{prompt.title} has ended.")
+            return
+        caster, entry = found
+        row = area_effect_row(caster, entry[AREA_KEY].get("pick") or entry["name"])
+        self._select_character(caster)
+        self._set_targets([target])
+        self._refresh_views()
+        self._refresh_turn_prompts()
+        self._show_custom_condition_dialog(pick=row, kept_area=prompt.key)
 
 
 def hazards_under(char: dict, settings: ArenaSettings) -> list[str]:

@@ -27,6 +27,7 @@ from PyQt6.QtWidgets import (
 import Combat.PlayerLog as PlayerLog
 from Model.Content.CombatModifiers import WhenHit
 from Model.Content.CombatTriggers import TriggerAim
+from Combat.Arena.lasting import AreaPrompt
 from Combat.Arena.ranges import action_range
 from Combat.Effects.active_effects import ActiveEffect
 from Combat.Effects.modifiers import attack_plan, hit_notes, hit_plan, hit_point_maximum
@@ -644,6 +645,8 @@ class TurnPanelMixin(CombatWindowState):
         ):
             if self._char_death_state(firing.target) == "dead":
                 continue
+            if self._kept_area_answers(firing):
+                continue  # its area on the map asks, if it's in it (step 24)
             if firing.is_prompt or not self._give_trigger_hit_points(firing):
                 self._turn_start_prompts.append(firing)
 
@@ -692,7 +695,7 @@ class TurnPanelMixin(CombatWindowState):
             if widget is not None:
                 widget.hide()
                 widget.deleteLater()
-        prompts: list[Firing | HitFiring | OpportunityAttack] = [
+        prompts: list[Firing | HitFiring | OpportunityAttack | AreaPrompt] = [
             *self._turn_prompts,
             *self._hit_prompts,
         ]
@@ -708,11 +711,17 @@ class TurnPanelMixin(CombatWindowState):
             )
             self._turn_prompts_layout.addWidget(button)
 
-    def _use_turn_prompt(self, firing: Firing | HitFiring | OpportunityAttack):
+    def _use_turn_prompt(
+        self, firing: Firing | HitFiring | OpportunityAttack | AreaPrompt
+    ):
         """Open the Custom Effect dialog for a prompt: its caster (if still
         in the fight) as the source, its creature as the target, its effect
         picked; for an Opportunity Attack, costing the Reaction whatever row
-        the GM ends up picking. The prompt goes once it's used."""
+        the GM ends up picking; for a kept area acting, costing nothing
+        (ArenaMixin._use_area_prompt). The prompt goes once it's used."""
+        if isinstance(firing, AreaPrompt):
+            self._use_area_prompt(firing)
+            return
         target = self._find_character_by_name(firing.target["name"])
         if target is None:
             self._show_status(f"{firing.target['name']} is no longer in the fight.")

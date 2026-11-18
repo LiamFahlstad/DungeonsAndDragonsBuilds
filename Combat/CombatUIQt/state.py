@@ -35,6 +35,7 @@ from PyQt6.QtWidgets import (
 from Combat.Arena.arena import ArenaSettings
 from Combat.Arena.cover import CoverReading
 from Combat.Arena.geometry import Cell
+from Combat.Arena.lasting import AreaPrompt
 from Combat.Arena.ranges import AttackRange, RangeCheck
 from Combat.Effects.triggers import (
     AttackOutcome,
@@ -91,12 +92,13 @@ class CombatWindowState:
     _turn_reminders: list[str]
     _turn_start_notes: list[str]
     # What the turn's triggers ask the GM, and those found as it started.
-    _turn_prompts: list[Firing]
-    _turn_start_prompts: list[Firing]
+    _turn_prompts: list[Firing | AreaPrompt]
+    _turn_start_prompts: list[Firing | AreaPrompt]
     # What hits triggered, asked as turn-column buttons (the setting
     # ask_triggers off), and the Opportunity Attacks a walk provoked
-    # (ArenaMixin), for the rest of the turn (TurnPanelMixin).
-    _hit_prompts: tuple[HitFiring | OpportunityAttack, ...] = ()
+    # (ArenaMixin), and what a kept area does to whoever it's moved onto or
+    # enters it (AreaPrompt), for the rest of the turn (TurnPanelMixin).
+    _hit_prompts: tuple[HitFiring | OpportunityAttack | AreaPrompt, ...] = ()
     # One Apply's attack outcomes, while its hits are being dealt: their
     # triggers are asked about together once it's done (None: no Apply is
     # collecting them; TurnPanelMixin._one_trigger_prompt).
@@ -556,8 +558,14 @@ class CombatWindowState:
     def _log_area_kept(self, holder: dict, label: str, record: dict):
         raise NotImplementedError("ArenaMixin._log_area_kept")
 
-    def _remind_lasting_areas(self, group: list[dict]):
+    def _remind_lasting_areas(self, group: list[dict], ended: list[dict] | None = None):
         raise NotImplementedError("ArenaMixin._remind_lasting_areas")
+
+    def _kept_area_answers(self, firing: Firing) -> bool:
+        raise NotImplementedError("ArenaMixin._kept_area_answers")
+
+    def _use_area_prompt(self, prompt: AreaPrompt):
+        raise NotImplementedError("ArenaMixin._use_area_prompt")
 
     def _deselect_area(self) -> bool:
         raise NotImplementedError("ArenaMixin._deselect_area")
@@ -771,7 +779,9 @@ class CombatWindowState:
     def _show_condition_info(self, condition_name: str):
         raise NotImplementedError("DialogsMixin._show_condition_info")
 
-    def _show_custom_condition_dialog(self, pick: str = "", cost: str | None = None):
+    def _show_custom_condition_dialog(
+        self, pick: str = "", cost: str | None = None, kept_area: str = ""
+    ):
         raise NotImplementedError("ConditionsMixin._show_custom_condition_dialog")
 
     def _show_current_log(self):

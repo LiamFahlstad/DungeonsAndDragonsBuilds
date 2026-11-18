@@ -222,9 +222,18 @@ source's Active Spells on its card:
 - An **Emanation** (Spirit Guardians) moves with its caster; anything else
   stays where it was put.
 - Whoever walks into one, or is reached by an Emanation as its caster
-  moves, is named in the status line; whoever starts a turn in one is in
-  the turn column's reminders. Both are GM-only log lines. Hovering a cell
-  names the areas on it. Undo takes an area back with the rest.
+  moves, is named in the status line, and whoever starts or ends a turn in
+  one gets a GM-only log line. Hovering a cell names the areas on it. Undo
+  takes an area back with the rest.
+- **The area acts by a button.** When its rules text says it acts then
+  (Moonbeam: entering it, its area moved onto someone, or ending a turn
+  there; Web: entering or starting a turn there), the turn column gets a
+  button such as "Clover's Moonbeam on Goblin (entered it)". It opens
+  Use / Cast on the area's effect (Spirit Guardians' damage row), the
+  caster as the source and that creature the target, at the slot it was
+  cast with, and **costs nothing**: no slot, action or concentration. What
+  it gives (Web's Restrained) ends with the area's concentration. A walk's
+  button goes with Undo, a turn's with the next turn.
 
 **Selecting an area that stays:** click an empty cell of it (click again
 where areas overlap to go to the next one). It's edged brighter, and a panel
@@ -232,8 +241,14 @@ over the map says whose it is, where, whether it's concentration and how
 long it has left, with its rules text under it:
 
 - the **colour** list changes its colour (one undo step);
-- **Target who's in it** makes whoever stands in it the targets, to apply
-  its damage when a turn starts in it, say;
+- **Target who's in it** makes whoever stands in it the targets;
+- **Move** (not for one around its caster) aims it again in the area bar
+  from where it is, keeping its time, concentration and colour: the bar
+  says how far it moves against its text's "up to" (Moonbeam's 60 ft.,
+  warned past it), a click puts it there and spends what its text says
+  (Moonbeam's Magic action, Flaming Sphere's Bonus Action), whoever it
+  lands on gets its button, and Esc or a right click leaves it where it
+  was. One undo step;
 - **End spell** ends it, as the card's ✕ does, concentration on it too;
 - **Close**, **Esc** or a click on an empty cell outside it deselects it.
 

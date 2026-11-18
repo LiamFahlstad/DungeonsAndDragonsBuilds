@@ -1875,6 +1875,25 @@ def opportunity_attack_row(char: dict) -> str:
     return ""
 
 
+def area_effect_row(char: dict, pick: str) -> str:
+    """The picker row a kept area's prompt starts with picked (arena step
+    24): a row of its own pick's that spends nothing and rolls or deals
+    something ("Spirit Guardians: damage", the badge's damage row), else
+    the pick itself (Moonbeam's one row, its cost left out by the dialog)."""
+    if not pick:
+        return ""
+    own = f"{pick}: "
+    for _, options in effect_options(char):
+        for option in options:
+            if (
+                option.name.startswith(own)
+                and not option.counts_uses
+                and (option.rolls or option.ability or option.roll == ATTACK_ROLL)
+            ):
+                return option.name
+    return pick
+
+
 def _pick_spell(option: EffectOption):
     """The spell a pick casts (its own row, or a feature's or a monster's
     use of one), or None."""

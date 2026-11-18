@@ -9,6 +9,7 @@ from PyQt6.QtWidgets import QApplication
 from Combat.Arena.arena import ArenaSettings
 from Combat.Definitions import tracked_condition_names
 from Combat.EncounterConfig import CombatantSpec
+from Combat.Arena.lasting import AreaPrompt
 from Combat.Effects.triggers import Firing
 from Combat.PlayerCombatant import combatant_from_character, combatant_from_stat_block
 from Combat.Scenario import CombatScenario
@@ -141,8 +142,8 @@ class CombatAppQt(
         self._turn_start_notes: list[str] = []
         # What the turn's triggers ask the GM (TurnPanelMixin), and those the
         # turn passing found for the turn starting.
-        self._turn_prompts: list[Firing] = []
-        self._turn_start_prompts: list[Firing] = []
+        self._turn_prompts: list[Firing | AreaPrompt] = []
+        self._turn_start_prompts: list[Firing | AreaPrompt] = []
         self._player_view = None
         self._player_server = PlayerServer()
         # Settings; run() loads the saved ones.

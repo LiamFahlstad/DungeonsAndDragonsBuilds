@@ -45,7 +45,7 @@ from Combat.Arena.ranges import (
     RangeCheck,
     spell_range_warning,
 )
-from Combat.Arena.lasting import AREA_KEY, record_origin
+from Combat.Arena.lasting import AREA_KEY, find_area, record_origin
 from Combat.Definitions import Action, CombatStatus, ConditionRule
 from Combat.Effects.active_effects import (
     CUSTOM,
@@ -526,6 +526,14 @@ def _damage_preview(text: str, chosen_type: str | None) -> str:
     return f"{text} {chosen_type}"
 
 
+def _with_slot(record: dict, slot: int | None) -> dict:
+    """A kept area's record with the slot level it was cast with, for its
+    damage when it acts again (arena step 24); as it was without a slot."""
+    if slot is None:
+        return record
+    return {**record, "slot_level": int(slot)}
+
+
 def _count(number: int, noun: str) -> str:
     return f"{number} {noun}" if number == 1 else f"{number} {noun}s"
 
@@ -935,7 +943,8 @@ class ConditionsMixin(CombatWindowState):
         caster = self.selected_character
         label = effect.name or effect.condition or "the effect"
         logged_use = False
-        if caster is not None:
+        # A kept area acting again (from_area) spends nothing: its cast did.
+        if caster is not None and not effect.from_area:
             pick = effect.pick
             if (
                 pick is not None
@@ -1144,6 +1153,8 @@ class ConditionsMixin(CombatWindowState):
             self._hold_concentration(caster, label, effect, applied)
         elif effect.area is not None and source is not None:
             self._hold_area(source, label, effect)
+        elif effect.from_area:
+            self._hold_with_area(effect.from_area, applied)
         if effect.damage and source is not None:
             source["_last_damage_type"] = effect.damage[-1][1]
         pushed = []
@@ -1417,6 +1428,21 @@ class ConditionsMixin(CombatWindowState):
         if effect.area is not None:
             self._log_area_kept(caster, label, effect.area)
         self._rebuild_card(caster)
+
+    def _hold_with_area(self, key: str, applied: list[dict]):
+        """What a kept area gave as it acted again (Web's Restrained), held
+        by the area's active spell when its caster concentrates on it, so
+        it comes off as the concentration ends, as what the cast gave does."""
+        found = find_area(self.characters, key)
+        if found is None or not applied:
+            return
+        caster, entry = found
+        if not entry.get("concentration"):
+            return
+        held = entry.setdefault("applied", [])
+        new = [row for row in applied if row not in held]
+        held.extend(new)
+        self._link_concentration(caster, new)
 
     def _link_concentration(self, caster: dict, applied: list[dict]):
         """Record on each effect in `applied` ({"target", "condition"} rows,
@@ -1785,7 +1811,9 @@ class ConditionsMixin(CombatWindowState):
         self._action_result_label.setText(" · ".join(words))
         self._action_result_label.setToolTip("")
 
-    def _show_custom_condition_dialog(self, pick: str = "", cost: str | None = None):
+    def _show_custom_condition_dialog(
+        self, pick: str = "", cost: str | None = None, kept_area: str = ""
+    ):
         """Set up an effect on every target (see _apply_custom_effect): what
         it costs the source, a saving throw or an attack roll, damage, and a
         condition with its duration and a note. What the source can use is
@@ -1795,7 +1823,11 @@ class ConditionsMixin(CombatWindowState):
         picked (an Opportunity Attack's Reaction). An area just aimed on the
         map for it (ArenaMixin's _aimed_area) is offered to keep on the map,
         and kept, it can be applied with no targets (Moonbeam put on empty
-        ground).
+        ground). `kept_area`, the key of an area kept on the map, makes it
+        that area acting again (its turn-column prompt, arena step 24): it
+        costs nothing, as its cast was spent, its damage is at the slot it
+        was cast with, the map's cover is counted from where it was aimed,
+        and a condition it gives is held by its concentration.
 
         It opens with or without targets: a box per target at the top,
         prefilled with the targets picked on the cards or the map, picks
@@ -1806,9 +1838,17 @@ class ConditionsMixin(CombatWindowState):
         aimed, self._aimed_area = self._aimed_area, None
         if aimed is not None and (source is None or aimed["source"] != source["name"]):
             aimed = None
+        # The kept area acting again, if this is its prompt: it spends nothing.
+        again = find_area(self.characters, kept_area) if kept_area else None
+        again_record: dict | None = again[1][AREA_KEY] if again is not None else None
+        again_level = (again_record or {}).get("slot_level")
+        if again_record is not None:
+            aimed = None
         # The map's cover against a save is counted from where the aimed
         # area spreads (a Fireball's cell), else from the source.
         cover_origin = record_origin(aimed["record"]) if aimed is not None else None
+        if again_record is not None:
+            cover_origin = record_origin(again_record)
         caster = self.selected_character
         # The targets as the boxes at the top pick them, changed in place.
         targets: list[dict] = list(self.target_characters)
@@ -2462,7 +2502,16 @@ class ConditionsMixin(CombatWindowState):
             push_box.show()
 
         for widget in (slot_combo, action_combo, concentrate_box):
-            widget.setEnabled(caster is not None)
+            widget.setEnabled(caster is not None and again is None)
+        if again is not None:
+            at = f", at level {int(again_level)}" if again_level else ""
+            free_lbl = QLabel(
+                f"{again[0]['name']}'s {again[1]['name']} acting again: its"
+                f" cast is spent already, so this costs nothing{at}."
+            )
+            free_lbl.setObjectName("keptAreaFree")
+            free_lbl.setWordWrap(True)
+            cost_box.addWidget(free_lbl)
         if caster is None:
             no_cost = QLabel("No source picked: left-click a card to spend from it.")
             no_cost.setObjectName("secondary")
@@ -2979,9 +3028,12 @@ class ConditionsMixin(CombatWindowState):
                 count_resistances=resistances_box.isChecked(),
                 healing=hit_points if kind == HEALING else 0,
                 temp_hp=hit_points if kind == TEMP_HP else 0,
-                slot_level=slot_combo.currentData(),
+                slot_level=(
+                    again_level if again is not None else slot_combo.currentData()
+                ),
                 action_cost=action_combo.currentData(),
                 concentration=concentrate_box.isChecked(),
+                from_area=kept_area if again is not None else "",
                 attack_bonus=bonus_input.value() if is_attack else None,
                 typed_attacks=nth(attacks, 0),
                 typed_extras=nth(extras, 0),
@@ -3005,7 +3057,11 @@ class ConditionsMixin(CombatWindowState):
                 typed_damage=bool(damage)
                 and not _DICELESS.search(damage_input.text())
                 and damage_input.text() != picked["damage"],
-                area=aimed["record"] if aimed is not None and keeps_area else None,
+                area=(
+                    _with_slot(aimed["record"], slot_combo.currentData())
+                    if aimed is not None and keeps_area
+                    else None
+                ),
                 cover_origin=cover_origin,
                 push=(
                     pick.push
@@ -3135,17 +3191,22 @@ class ConditionsMixin(CombatWindowState):
                     ),
                     0,
                 )
+                if again is None
+                else 0
             )
             spends = cost or option.action_cost
+            if again is not None:
+                spends = None  # a kept area acting: its cast was spent
             action_index = action_combo.findData(spends)
             action_combo.setCurrentIndex(max(action_index, 0) if spends else 0)
-            concentrate_box.setChecked(option.concentration)
+            concentrate_box.setChecked(option.concentration and again is None)
             # A type left from before would disagree with the pick's damage.
             type_combo.setCurrentIndex(0)
             amount_combo.setCurrentText(option.amount_kind)
-            damage = option.damage_at(slot_combo.currentData())
+            level = again_level if again is not None else slot_combo.currentData()
+            damage = option.damage_at(level)
             damage_input.setText(damage)
-            times = option.instances_at(slot_combo.currentData())
+            times = option.instances_at(level)
             times_input.setValue(times)
             name_combo.setCurrentText(option.condition)
             notes_input.clear()

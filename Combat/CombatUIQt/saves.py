@@ -104,6 +104,10 @@ class CustomEffect:
     slot_level: int | None = None
     action_cost: str | None = None
     concentration: bool = False
+    # The key of the kept area whose effect this is again, as a creature
+    # enters it or a turn starts or ends in it (arena step 24): it costs
+    # nothing, and a condition it gives is held by that area's concentration.
+    from_area: str = ""
     # The attack roll, if it's one instead of a saving throw: what the source
     # adds, and the rolls made at the table, by the combatant's id().
     attack_bonus: int | None = None

@@ -586,6 +586,16 @@ Arena step 21 added CombatEffect.push, which the battle map moves targets by. Fi
 **History**
 - 2026-11-18 main-session: found
 
+### DI-096 · Flaming Sphere's area is read as a 20-foot Sphere, from its light
+- **Status:** open
+- **Area:** combat-simulator
+- **Where:** `Combat/Arena/areas.py`
+
+parse_area(Flaming Sphere's text) gives AreaOfEffect(SPHERE, 20): the first area-like phrase is the light it sheds ('Bright Light in a 20-foot radius'), not the sphere. The sphere is 5 feet across and burns 'any creature that ends its turn within 5 feet of the sphere', so the area to keep is about a 5-foot-radius Sphere on the cell aimed at (its cell and the cells beside it). Step 24 makes the kept area's turn-end button go to whoever stands in it, so with 20 feet it offers the save to creatures 20 ft. away. Fix: skip light radii in parse_area ('Bright Light in', 'Dim Light for'), or give the spell an area on its CombatEffect (the arena plan's Q10). The GM can set 5 ft. in the area bar meanwhile.
+
+**History**
+- 2026-11-18 main session (arena step 24): found
+
 ## Fixed
 
 ### DI-001 · Temporary Hit Points stack instead of keeping one amount

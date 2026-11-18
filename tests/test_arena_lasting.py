@@ -11,14 +11,23 @@ from Combat.Arena.geometry import Cell
 from Combat.Arena.lasting import (
     AREA_KEY,
     DEFAULT_AREA_COLOR,
+    DEFAULT_TIMING,
+    ENDS,
+    ENTERS,
+    MOVED_ONTO,
+    STARTS,
+    AreaPrompt,
     LastingArea,
+    MoveRule,
     area_record,
+    area_timing,
     area_key,
     areas_at,
     areas_holding,
     entered,
     find_area,
     lasting_areas,
+    move_rule,
     record_area,
     time_left_text,
     who_is_in,
@@ -155,3 +164,52 @@ def test_time_left_reads_in_the_biggest_unit_that_fits():
     assert time_left_text(6) == "1 round left"
     assert time_left_text(0) == ""
     assert time_left_text(None) == ""
+
+
+# The spells' own wording (Player's Handbook 2024), as their classes have it.
+MOONBEAM_TEXT = (
+    "Until the spell ends, Dim Light fills the Cylinder, and you can take a"
+    " Magic action on later turns to move the Cylinder up to 60 feet.\nA"
+    " creature also makes this save when the spell's area moves into its"
+    " space and when it enters the spell's area or ends its turn there."
+)
+FLAMING_SPHERE_TEXT = (
+    "Any creature that ends its turn within 5 feet of the sphere makes a"
+    " Dexterity saving throw.\nAs a Bonus Action, you can move the sphere up"
+    " to 30 feet, rolling it along the ground. If you move the sphere into a"
+    " creature's space, that creature makes the save against the sphere."
+)
+WEB_TEXT = (
+    "The first time a creature enters the webs on a turn or starts its turn"
+    " there, it must succeed on a Dexterity saving throw."
+)
+
+
+def test_when_an_area_acts_is_read_from_its_text():
+    assert area_timing(MOONBEAM_TEXT) == {ENTERS, MOVED_ONTO, ENDS}
+    assert area_timing(FLAMING_SPHERE_TEXT) == {MOVED_ONTO, ENDS}
+    assert area_timing(WEB_TEXT) == {ENTERS, MOVED_ONTO, STARTS}
+    assert area_timing("Any creature that starts its turn in the area") == {STARTS}
+    assert area_timing("") == DEFAULT_TIMING == {ENTERS, STARTS}
+
+
+def test_how_an_area_moves_is_read_from_its_text():
+    assert move_rule(MOONBEAM_TEXT) == MoveRule(60, "Action")
+    assert move_rule(MOONBEAM_TEXT).text == "up to 60 ft., an Action"
+    assert move_rule(FLAMING_SPHERE_TEXT) == MoveRule(30, "Bonus Action")
+    assert move_rule(FLAMING_SPHERE_TEXT).text == "up to 30 ft., a Bonus Action"
+    assert move_rule(WEB_TEXT) == MoveRule()
+    assert MoveRule().text == ""
+
+
+def test_an_area_prompt_names_whose_area_whom_and_when():
+    clover, goblin = {"name": "Clover"}, {"name": "Goblin"}
+    prompt = AreaPrompt(clover, goblin, "Moonbeam", "k1", ENTERS)
+    assert prompt.caster == "Clover"
+    assert prompt.prompt == "Clover's Moonbeam on Goblin (entered it)"
+    assert AreaPrompt(clover, goblin, "Web", "k2", STARTS).prompt == (
+        "Clover's Web on Goblin (starts its turn in it)"
+    )
+    assert AreaPrompt(clover, goblin, "Moonbeam", "k1", ENDS).prompt == (
+        "Clover's Moonbeam on Goblin (ended its turn in it)"
+    )

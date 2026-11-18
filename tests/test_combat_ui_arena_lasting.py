@@ -306,9 +306,10 @@ def test_spirit_guardians_follows_its_caster_and_says_who_it_reaches(
     assert line in _logged(ui)
 
 
-def test_walking_into_an_area_and_starting_a_turn_in_it_are_reminded(
-    fight, monkeypatch
-):
+def test_walking_into_an_area_and_starting_a_turn_in_it_are_logged(fight, monkeypatch):
+    """Walking in says so; a turn starting in it is a GM-only log line.
+    Moonbeam's buttons (on entering, and as the turn ends there: step 24)
+    are tests/test_combat_ui_arena_area_prompts.py's."""
     ui, mephit, pirate, *_ = fight
     _put_down(ui, monkeypatch, "Moonbeam", Cell(12, 2), concentrate=True)
     ui._move_combatant(pirate, Cell(12, 3))
@@ -316,8 +317,8 @@ def test_walking_into_an_area_and_starting_a_turn_in_it_are_reminded(
     line = "Pirate starts its turn in Ice Mephit's Moonbeam."
     while ui._current_turn_group()[0] is not pirate:
         ui._advance_turn()
-    assert line in ui._turn_reminders, "in the turn column"
     assert line in _logged(ui)
+    assert line not in ui._turn_reminders, "Moonbeam acts as a turn ends"
     ui._advance_turn()  # the Tiger's: not in it
     assert not any("starts its turn in" in r for r in ui._turn_reminders)
 
