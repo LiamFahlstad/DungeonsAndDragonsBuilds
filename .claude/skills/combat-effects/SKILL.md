@@ -234,7 +234,13 @@ when it would give nothing, and one with uses is left out with none left
 the dialog may have retyped, a condition the simulator doesn't track
 ("your Rage is active"), a roll it doesn't make (Relentless Rage's DC 10
 Constitution save). A `when` always asks: don't add one for something a
-gate checks, or the row stops being AUTO for nothing.
+gate checks, or the row stops being AUTO for nothing. The one exception is
+a distance between the row's owner and the other creature, written as
+"within N feet" at its end ("it's within 5 feet of you", "you can see it
+within 60 feet"): once the battle map is in use, it's counted from the
+map, and the row fires as if it had no distance in it, or not at all past
+it (Combat/Effects/triggers.py's `settle_when`). Write a distance that
+way, and keep what else the GM judges before it ("you can see it").
 
 **Leave it untriggered, and say why** (`untriggered = "..."`, a class
 attribute on the feature) when the event is one the simulator can't see or
@@ -459,7 +465,9 @@ Names are the Python ones; `Ability`, `Condition` and `DamageType` come from
   least its Hit Point maximum); `REDUCES_TO_ZERO` fires for the creature
   that dealt the knockout, against the one knocked out (Dark One's
   Blessing: `optional=False, enemy_only=True` on a `targets_self`,
-  `spends_use=False` row with its `temp_hp`, so it's given at once). `BLOODIED` is asked of the creature
+  `spends_use=False` row with its `temp_hp`, so it's given at once; its
+  "someone else reduces an enemy within 10 feet of you" is
+  `others_within_ft=10`, counted from the battle map, else asked). `BLOODIED` is asked of the creature
   damage leaves Bloodied (not at 0), on itself: Harvest Undead.
   `ROLLS_INITIATIVE` (6.7) is given or asked once as the fight starts, and
   a row that only heals or `regains` isn't offered when there's nothing to

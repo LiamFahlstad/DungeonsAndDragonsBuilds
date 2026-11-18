@@ -524,17 +524,6 @@ prepared_log marks only the campaign's party allies (PartyAllies.mark); an encou
 **History**
 - 2026-11-12 main-session: found
 
-### DI-085 · Combat UI doesn't know where anyone is: rules that depend on distance are noted, never counted
-- **Status:** open
-- **Area:** combat-simulator
-- **Where:** `Combat/Effects/modifiers.py:17, Combat/Effects/modifiers.py:392, Model/Content/RulesConditions.py:31`
-
-With no positions, every modifier with a distance in its 'when' is only a note for the GM: Paralyzed's and Unconscious's automatic Critical Hits and Prone's Advantage 'within 5 feet' (Disadvantage farther), triggers whose 'when' names a distance (Fire Shield 'within 5 feet', Dark One's Blessing's '10 feet', plan Q63), auras (Spirit Guardians), a spell's range and Opportunity Attacks. A gap, not a bug: the arena (Notes/combat-arena-plan.md, 'Later: using distance in the rules') is what gives the simulator positions; until a rule reads them, nothing changes.
-
-**History**
-- 2026-11-13 main-session: found
-- 2026-11-16 combat-simulator: Arena step 16 (2026-11-16): Prone's Advantage/Disadvantage and Paralyzed's and Unconscious's Critical Hits now count from the map's distance when both creatures are on it (modifiers.settled_by_distance); other distance rules (Fire Shield, Dark One's Blessing, spell range, auras) are still notes, so it stays open.
-
 ### DI-086 · new-content-check marks Demon Hunter (Ranger) as implemented via RangerHunter.py
 - **Status:** open
 - **Area:** new-content-check
@@ -1007,6 +996,18 @@ The rules conditions give Speed 0 as a Note (_SPEED_0 = Note('Speed 0: its Speed
 **History**
 - 2026-11-13 main-session: found
 - 2026-11-13 main-session: marked fixed; RulesConditions gives the five conditions Speed(set_to=0) beside their Speed 0 note; speed_in_use and the arena's reach read it (arena plan step 2).
+
+### DI-085 · Combat UI doesn't know where anyone is: rules that depend on distance are noted, never counted
+- **Status:** fixed · 2026-11-18 · uncommitted
+- **Area:** combat-simulator
+- **Where:** `Combat/Effects/modifiers.py:17, Combat/Effects/modifiers.py:392, Model/Content/RulesConditions.py:31`
+
+With no positions, every modifier with a distance in its 'when' is only a note for the GM: Paralyzed's and Unconscious's automatic Critical Hits and Prone's Advantage 'within 5 feet' (Disadvantage farther), triggers whose 'when' names a distance (Fire Shield 'within 5 feet', Dark One's Blessing's '10 feet', plan Q63), auras (Spirit Guardians), a spell's range and Opportunity Attacks. A gap, not a bug: the arena (Notes/combat-arena-plan.md, 'Later: using distance in the rules') is what gives the simulator positions; until a rule reads them, nothing changes.
+
+**History**
+- 2026-11-13 main-session: found
+- 2026-11-16 combat-simulator: Arena step 16 (2026-11-16): Prone's Advantage/Disadvantage and Paralyzed's and Unconscious's Critical Hits now count from the map's distance when both creatures are on it (modifiers.settled_by_distance); other distance rules (Fire Shield, Dark One's Blessing, spell range, auras) are still notes, so it stays open.
+- 2026-11-18 main session (arena step 27): marked fixed; Step 27 counts the triggers' distances from the map once it's in use: a when ending in 'within N feet' (Fire Shield, Hellish Rebuke, Warding Flare, Storm's Thunder) is settled by Combat/Effects/triggers.py's settle_when in every firing path, and Dark One's Blessing answers another creature's knockout within 10 feet (CombatTrigger.others_within_ft). With steps 16 (conditions), 20 (reach and range), 23 (Opportunity Attacks) and 24 (Spirit Guardians' area), every distance rule in content is counted; only a distance to something that isn't a creature (a homebrew manifestation) stays a question.
 
 ### DI-088 · World of Warcraft spells (Prayer of Mending, Shadow Word: Pain, Psychic Horror, Void Eruption, ...) aren't in the spell data, so domain spell grants omit them
 - **Status:** fixed · 2026-11-14 · uncommitted

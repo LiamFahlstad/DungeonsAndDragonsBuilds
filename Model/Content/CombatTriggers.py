@@ -102,8 +102,14 @@ class CombatTrigger:
     not offered once it's used, and spent as the row is), the other creature
     being an enemy of the owner (`enemy_only`: Dark One's Blessing's "you
     reduce an enemy to 0 Hit Points"). What only the GM can judge is a
-    `when`, said as what follows "if": it always asks. `aim`: who it goes on
-    (TriggerAim); any but TARGET asks, for the GM to pick."""
+    `when`, said as what follows "if": it always asks, unless it's a distance
+    the battle map settles ("it's within 5 feet of you", "you can see it
+    within 60 feet": Combat/Effects/triggers.py's settle_when). `aim`: who it
+    goes on (TriggerAim); any but TARGET asks, for the GM to pick.
+    `others_within_ft` (REDUCES_TO_ZERO only): it also fires when another
+    creature reduces one of the owner's enemies within that many feet of the
+    owner to 0 Hit Points (Dark One's Blessing's "someone else reduces an
+    enemy within 10 feet of you")."""
 
     event: TriggerEvent
     optional: bool = True
@@ -117,6 +123,7 @@ class CombatTrigger:
     enemy_only: bool = False
     when: str = ""
     aim: TriggerAim = TriggerAim.TARGET
+    others_within_ft: int | None = None
 
     def __post_init__(self):
         # Text ("hit", "Large") is taken too, as JSON and logs have it.
@@ -185,6 +192,12 @@ class CombatTrigger:
             raise ValueError("needs_damage is for a 'hit' only")
         if self.critical_only and event not in (TriggerEvent.HIT, TriggerEvent.HIT_BY):
             raise ValueError("critical_only is for 'hit' and 'hit by' only")
+        if self.others_within_ft is not None:
+            feet = self.others_within_ft
+            if not isinstance(feet, int) or isinstance(feet, bool) or feet <= 0:
+                raise ValueError(f"others_within_ft is feet above 0, got {feet!r}")
+            if event is not TriggerEvent.REDUCES_TO_ZERO:
+                raise ValueError("others_within_ft is for 'reduces to zero' only")
 
     def to_dict(self) -> dict:
         """The trigger as plain data: the fields not at their default, enums

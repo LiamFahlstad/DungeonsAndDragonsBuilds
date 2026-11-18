@@ -77,13 +77,14 @@ class DarkOnesBlessing(Feature):
                 temp_hp=CombatHitPoints(str(amount)),
                 targets_self=True,
                 spends_use=False,
-                notes=(
-                    "Also when someone else reduces an enemy within 10 feet of"
-                    " you to 0 Hit Points: pick it then.",
-                ),
-                # Given at once as the Warlock reduces an enemy to 0.
+                # Given at once as the Warlock reduces an enemy to 0, and as
+                # someone else does within 10 feet of it (asked when the
+                # battle map doesn't know the distance).
                 trigger=CombatTrigger(
-                    TriggerEvent.REDUCES_TO_ZERO, optional=False, enemy_only=True
+                    TriggerEvent.REDUCES_TO_ZERO,
+                    optional=False,
+                    enemy_only=True,
+                    others_within_ft=10,
                 ),
             )
         ]

@@ -834,13 +834,20 @@ class TurnPanelMixin(CombatWindowState):
             triggered_rows,
             is_dead=is_dead,
             used_this_turn=self._triggers_used_this_turn(),
+            # A `when`'s distance from the map (arena step 27), and Dark
+            # One's Blessing's knockouts by others near its owner.
+            distance_of=self._attacker_distance_ft,
+            others=self.characters,
         )
         seen = {_firing_key(f) for f in found}
         for outcome in outcomes:
             if not isinstance(outcome, AttackOutcome):
                 continue
             for firing in badge_hit_firings(
-                outcome, self._badge_trigger_row, is_dead=is_dead
+                outcome,
+                self._badge_trigger_row,
+                is_dead=is_dead,
+                distance_of=self._attacker_distance_ft,
             ):
                 if _firing_key(firing) not in seen:
                     seen.add(_firing_key(firing))
@@ -945,6 +952,7 @@ class TurnPanelMixin(CombatWindowState):
             self.characters,
             triggered_rows,
             is_dead=lambda char: self._char_death_state(char) == "dead",
+            distance_of=self._attacker_distance_ft,
         )
         if not found:
             return
@@ -967,6 +975,7 @@ class TurnPanelMixin(CombatWindowState):
             outcome,
             triggered_rows,
             is_dead=lambda char: self._char_death_state(char) == "dead",
+            distance_of=self._attacker_distance_ft,
         )
         if not found:
             return True, 0

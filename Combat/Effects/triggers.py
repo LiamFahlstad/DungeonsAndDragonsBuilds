@@ -20,8 +20,9 @@ spell is aimed at, the Custom Effect dialog on whoever is targeted, and
 neither says where the Emanation is. A trigger counts only while its badge is
 on, as a modifier does. Nothing here imports Qt."""
 
+import re
 from collections.abc import Callable, Collection, Iterable
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from enum import StrEnum
 
 from Combat.PartyAllies import is_encounter_ally, is_party_ally
@@ -50,6 +51,11 @@ from .modifiers import (
     rules_condition,
     size_in_use,
 )
+
+# How far two creatures are on the battle map, in feet, or None when it
+# isn't known (either off it, or the map not in use: the arena plan's
+# Decision 29). The window's _attacker_distance_ft.
+DistanceOf = Callable[[dict, dict], int | None]
 
 
 @dataclass(frozen=True)
@@ -652,6 +658,8 @@ def outcome_firings(
     *,
     is_dead: Callable[[dict], bool] = is_down,
     used_this_turn: Collection[tuple[str, str]] = (),
+    distance_of: DistanceOf | None = None,
+    others: Iterable[dict] = (),
 ) -> tuple[list[HitFiring], list[str]]:
     """The triggered rows (`rows_of`, effect_options.triggered_rows) that
     come with `outcomes` (one Apply's: Times 3 is three, Multiattack's two
@@ -674,18 +682,44 @@ def outcome_firings(
 
     A row is AUTO when it isn't optional, has no `when`, costs nothing and
     every gate was checked; otherwise ASK, with `why` for each gate that
-    couldn't be (the target's size, the attack's kind, which row hit)."""
+    couldn't be (the target's size, the attack's kind, which row hit). A
+    `when` the map's distance settles isn't asked (`distance_of`, step 27).
+
+    A knockout also fires the REDUCES_TO_ZERO rows of each of `others` (the
+    fight's creatures) with `others_within_ft`, for an enemy of theirs
+    another creature dropped (Dark One's Blessing's "someone else reduces
+    an enemy within 10 feet of you"): within that distance on the map as
+    any of its rows would, farther not at all, and asked "if it was within
+    10 feet of you" when the distance isn't known."""
     found: list[HitFiring] = []
     spent: list[str] = []
     seen: set[tuple] = set()
     once: set[tuple] = set()
     rows_by_owner: dict[int, list[TriggerRow]] = {}
-    for outcome in outcomes:
+    others = list(others)
+
+    def candidates(outcome: Outcome):
         owner = _owner_of(outcome)
         if id(owner) not in rows_by_owner:
             rows_by_owner[id(owner)] = rows_of(owner)
         for row in rows_by_owner[id(owner)]:
-            firing = _firing(outcome, row, is_dead)
+            yield owner, row, _firing(outcome, row, is_dead, distance_of=distance_of)
+        if not isinstance(outcome, KnockoutOutcome):
+            return
+        for other in others:
+            if other is outcome.source or other is outcome.target:
+                continue
+            if id(other) not in rows_by_owner:
+                rows_by_owner[id(other)] = rows_of(other)
+            for row in rows_by_owner[id(other)]:
+                if row.trigger.others_within_ft is None:
+                    continue
+                yield other, row, _knockout_nearby(
+                    outcome, other, row, is_dead, distance_of
+                )
+
+    for outcome in outcomes:
+        for owner, row, firing in candidates(outcome):
             if firing is None:
                 continue
             key = (id(owner), id(firing.target), row.name)
@@ -710,6 +744,7 @@ def hit_by_firings(
     rows_of: Callable[[dict], list[TriggerRow]],
     *,
     is_dead: Callable[[dict], bool] = is_down,
+    distance_of: DistanceOf | None = None,
 ) -> tuple[list[HitFiring], list[str]]:
     """What the creature `outcome` hits can answer the hit with before its
     damage is dealt (HIT_BY: Shield, Deflect Attacks): its rows of that
@@ -723,7 +758,9 @@ def hit_by_firings(
     if not outcome.hits:
         return found, spent
     for row in rows_of(owner):
-        firing = _firing(outcome, row, is_dead, before_damage=True)
+        firing = _firing(
+            outcome, row, is_dead, before_damage=True, distance_of=distance_of
+        )
         if firing is None:
             continue
         if row.uses is not None and row.uses[0] <= 0:
@@ -740,6 +777,7 @@ def attack_roll_firings(
     rows_of: Callable[[dict], list[TriggerRow]],
     *,
     is_dead: Callable[[dict], bool] = is_down,
+    distance_of: DistanceOf | None = None,
 ) -> list[HitFiring]:
     """What the creatures in `others` can answer attacker's attack roll
     against target with, before it's rolled (ATTACKS: Warding Flare, "when
@@ -760,7 +798,7 @@ def attack_roll_firings(
                 continue
             if row.uses is not None and row.uses[0] <= 0:
                 continue
-            firing = _firing(outcome, row, is_dead)
+            firing = _firing(outcome, row, is_dead, distance_of=distance_of)
             if firing is not None:
                 found.append(firing)
     return found
@@ -771,6 +809,7 @@ def badge_hit_firings(
     row_of: Callable[[dict, ActiveEffect, WhenHit], TriggerRow | None],
     *,
     is_dead: Callable[[dict], bool] = is_down,
+    distance_of: DistanceOf | None = None,
 ) -> list[HitFiring]:
     """What the badges of the creature `outcome` hits answer the hit with,
     once its damage is dealt (WhenHit, plan Q57: Armor of Agathys' Cold
@@ -779,7 +818,8 @@ def badge_hit_firings(
     the modifier names, as its caster has it (None: there's no such row).
     Left out on a miss, against a dead attacker, or for an attack surely
     not of the modifier's kind. AUTO when the kind is surely the modifier's
-    and there's no `when`; otherwise ASK, saying why."""
+    and there's no `when` (or the map's distance settles it: Fire Shield's
+    "within 5 feet", step 27); otherwise ASK, saying why."""
     bearer, attacker = outcome.target, outcome.attacker
     if not outcome.hit or attacker is bearer or is_dead(attacker):
         return []
@@ -793,7 +833,10 @@ def badge_hit_firings(
         row = row_of(bearer, record, modifier)
         if row is None:
             continue
-        why = [f"if {modifier.when}"] if modifier.when else []
+        when = _asked(modifier.when, bearer, attacker, distance_of)
+        if when is None:
+            continue  # farther than its "within N feet"
+        why = [f"if {when}"] if when else []
         if fits is None:
             why.append(f"if it was {_a(modifier.attacks.value)}")
         found.append(
@@ -809,15 +852,58 @@ def badge_hit_firings(
     return found
 
 
+# A `when` that asks how far the other creature is (arena plan step 27):
+# Fire Shield's "it's within 5 feet of you", Storm's Thunder's "it is within
+# 60 feet", Hellish Rebuke's "you can see it within 60 feet", Warding
+# Flare's "you can see it within 30 feet of you". What comes before the
+# distance is what's left to ask.
+_WHEN_WITHIN = re.compile(
+    r"^(?P<rest>.*?)\s*(?:\bit(?:'s| is| was)\s+)?within (?P<feet>\d+) feet"
+    r"(?: of (?:you|it|yourself))?$"
+)
+
+
+def settle_when(when: str, feet: int | None) -> tuple[bool | None, str]:
+    """What the map's distance `feet` (owner to the other creature) settles
+    of a `when`: (False, "") when it's farther than the `when`'s "within N
+    feet", (True, what's left to ask: "you can see it", or "") when it's
+    within; (None, when) for a `when` with no distance in it, or no
+    distance known."""
+    match = _WHEN_WITHIN.match(when)
+    if match is None or feet is None:
+        return None, when
+    if feet > int(match["feet"]):
+        return False, ""
+    return True, match["rest"].strip()
+
+
+def _asked(when: str, owner: dict, target: dict, distance_of: DistanceOf | None):
+    """A `when` as the map leaves it: None when the distance rules it out,
+    else what's still to ask ("" for nothing), with the distance it was
+    settled at said: "you can see it (25 ft. away)"."""
+    if not when or distance_of is None:
+        return when
+    feet = distance_of(owner, target)
+    holds, rest = settle_when(when, feet)
+    if holds is False:
+        return None
+    if holds and rest:
+        return f"{rest} ({feet} ft. away)"
+    return rest if holds else when
+
+
 def _firing(
     outcome: Outcome,
     row: TriggerRow,
     is_dead: Callable[[dict], bool],
     *,
     before_damage: bool = False,
+    distance_of: DistanceOf | None = None,
 ) -> HitFiring | None:
     """row's firing for outcome, if its gates let it fire (uses aside).
-    `before_damage`: the hit's HIT_BY rows, of the creature hit."""
+    `before_damage`: the hit's HIT_BY rows, of the creature hit. A `when`
+    the map's distance settles (`distance_of`, settle_when) is no longer
+    asked, and one it rules out doesn't fire."""
     trigger = row.trigger
     event = trigger.event
     if isinstance(outcome, DamageOutcome):
@@ -908,15 +994,18 @@ def _firing(
     conditions = gets.get("conditions") or []
     if row.conditions and all(c in conditions for c in row.conditions):
         return None
+    when = _asked(trigger.when, owner, target, distance_of)
+    if when is None:
+        return None  # farther than its "within N feet"
     automatic = not (
         trigger.optional
-        or trigger.when
+        or when
         or row.costs
         or row.takes_reaction
         or trigger.aim is not TriggerAim.TARGET
     )
-    if trigger.when:
-        why.insert(0, f"if {trigger.when}")
+    if when:
+        why.insert(0, f"if {when}")
     mode = TriggerMode.AUTO if automatic and not why else TriggerMode.ASK
     return HitFiring(
         owner=owner,
@@ -925,6 +1014,34 @@ def _firing(
         mode=mode,
         why="; ".join(why),
         outcome=outcome,
+    )
+
+
+def _knockout_nearby(
+    outcome: KnockoutOutcome,
+    owner: dict,
+    row: TriggerRow,
+    is_dead: Callable[[dict], bool],
+    distance_of: DistanceOf | None,
+) -> HitFiring | None:
+    """owner's row with `others_within_ft` for a knockout another creature
+    made (outcome.source): its gates as for the owner's own (an enemy of
+    the owner's), then the distance from owner to the one dropped: farther
+    than the row's feet, nothing; not known, asked."""
+    feet_limit = row.trigger.others_within_ft
+    if is_dead(owner):
+        return None
+    firing = _firing(replace(outcome, source=owner), row, is_dead)
+    if firing is None or feet_limit is None:
+        return None
+    feet = distance_of(owner, outcome.target) if distance_of is not None else None
+    if feet is not None:
+        return firing if feet <= feet_limit else None
+    why = f"if it was within {feet_limit} feet of you"
+    return replace(
+        firing,
+        mode=TriggerMode.ASK,
+        why="; ".join(part for part in (why, firing.why) if part),
     )
 
 

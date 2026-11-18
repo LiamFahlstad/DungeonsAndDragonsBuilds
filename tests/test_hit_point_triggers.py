@@ -119,8 +119,12 @@ def test_dark_ones_blessing_gives_cha_plus_warlock_level_at_once():
     assert expected == 6
     assert effect.temp_hp is not None and effect.temp_hp.dice == "6"
     assert effect.targets_self
+    # "or someone else reduces an enemy within 10 feet of you" (arena step 27)
     assert effect.trigger == CombatTrigger(
-        TriggerEvent.REDUCES_TO_ZERO, optional=False, enemy_only=True
+        TriggerEvent.REDUCES_TO_ZERO,
+        optional=False,
+        enemy_only=True,
+        others_within_ft=10,
     )
 
 

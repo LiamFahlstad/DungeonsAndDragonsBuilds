@@ -2885,6 +2885,10 @@ a class.
   get a `drops_to` row when they're converted. *Recommended
   (2026-11-13):* leave it until a party has a Fiend Warlock; the gate is
   small then (a `by_anyone` flag read in `outcome_firings`' knockout case).
+  *Built 2026-11-18 in the arena plan's step 27 (its Decision 47):*
+  `CombatTrigger.others_within_ft=10` on Dark One's Blessing, counted from
+  the battle map once it's in use, else asked "if it was within 10 feet of
+  you"; its "pick it then" note is gone.
 - **Q2** done in 4.1 (R57, R60).
 - **Q17** moved to Decisions (10, R39): no.
 - **Q19** decided in 3.5 (R52): repeat saves stay as they are.

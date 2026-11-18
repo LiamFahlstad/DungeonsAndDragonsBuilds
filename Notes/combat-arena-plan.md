@@ -28,7 +28,8 @@ Attacks along it, Reactive Strike, Undo of the buttons), Later's fifth, the
 same day. Step 24, kept areas acting by a turn-column button and moved from
 their panel, Later's sixth, the same day. Step 25, walls (the rest of that
 sixth item) and DI-096, the same day. Step 26, other speeds, altitude,
-falling and water swum, Later's seventh and eighth, the same day. What's
+falling and water swum, Later's seventh and eighth, the same day. Step 27,
+distances in triggers (Later's ninth, closing DI-085), the same day. What's
 next is under Later.
 
 ## How to use this document
@@ -106,6 +107,7 @@ verification passes per step unless asked.
 | 24 | Areas that stay, acting: a turn-column button when a creature enters a kept area, the area is moved onto it, or a turn starts or ends in it, as its text says, opening Use / Cast on its effect at no cost; the area panel's Move (Moonbeam, Flaming Sphere) | Done 2026-11-18 (R22; Decisions 36, 37); DI-096 logged |
 | 25 | Walls: a Wall shape aimed by its two ends (a ring by its middle); Wall of Force blocking movement and giving Total Cover while it lasts, through the map the rules read and never the painted one; Wall of Fire's damaging side picked by a third click and acting on who ends a turn by it; Flaming Sphere's area (DI-096) | Done 2026-11-18 (R23; Decisions 38 to 41); DI-096 fixed, DI-097 logged |
 | 26 | Other speeds: the speed bar picking a creature's Speed, Fly, Swim, Climb or Burrow Speed for its moves (switching counts what it moved), each costing as it should over the ground, a flyer's altitude (spending movement, counted into distances), falling when it can't stay aloft, water swum; the Fly spell's Fly Speed | Done 2026-11-18 (R24; Decisions 42 to 46); DI-098 logged |
+| 27 | Distances in triggers: a `when` asking how far the other creature is (Fire Shield's "within 5 feet", Hellish Rebuke's "within 60 feet") counted from the map, and Dark One's Blessing for a knockout someone else makes within 10 feet of its owner (combat-effects plan Q63) | Done 2026-11-18 (R25; Decisions 47, 48); DI-085 fixed |
 
 ## How it fits the code that's there
 
@@ -1239,13 +1241,59 @@ spending movement and counting into the distance and the token, landing
 before walking, a Prone eagle falling once, the Fly spell's Fly Speed and
 hover, its end dropping Rowan and Undo putting it back).
 
+### Step 27: distances in triggers (2026-11-18)
+
+Later's ninth item (DI-085; combat-effects plan Q63). Step 16 counted the
+conditions' "within 5 feet", steps 20 and 23 reach, range and Opportunity
+Attacks, step 24 Spirit Guardians' Emanation through its kept area; what
+was left was the triggers. Read first, every `when` in content that names
+a distance: Fire Shield's `WhenHit(when="it's within 5 feet of you")`
+("Whenever a creature within 5 feet of you hits you with a melee attack
+roll"), Hellish Rebuke's "you can see it within 60 feet", Warding Flare's
+"you can see it within 30 feet of you", Storm's Thunder's "it is within 60
+feet"; and Dark One's Blessing's "You also gain this benefit if someone
+else reduces an enemy within 10 feet of you to 0 Hit Points". The one other
+(a homebrew monster's "within 5 feet of the manifestation") is a distance
+to something that isn't on the map. No turn trigger (AtTurnStart,
+AtTurnEnd) has one.
+
+*Built (R25):* Combat/Effects/triggers.py: `settle_when(when, feet)` reads
+a `when` ending in "within N feet (of you)" (Decision 47): farther, it
+doesn't fire; within, what's before the distance is all that's asked
+("you can see it", said with the distance: "if you can see it (25 ft.
+away)"), and nothing when that's all it said. Every firing path takes a
+`distance_of(owner, other)` (`outcome_firings`, `hit_by_firings`,
+`attack_roll_firings`, `badge_hit_firings`), which the window gives as
+`_attacker_distance_ft` (None before the map is in use, Decision 29, or
+with either off it: asked as before). `CombatTrigger.others_within_ft`
+(REDUCES_TO_ZERO only): `outcome_firings` given the fight's creatures
+(`others`) also fires such a row of each of them for a knockout another
+creature makes of one of their enemies (Decision 48). Dark One's Blessing
+has `others_within_ft=10`, its "pick it then" note gone. The combat-effects
+skill says how to write a distance in a `when`.
+
+- Not done: a turn trigger's `when` isn't read for a distance (none has
+  one); "you can see it" is still the GM's (Later 10, light and senses);
+  a distance to something that isn't a creature (the manifestation, a
+  point) stays a question.
+
+Tests: `tests/test_arena_trigger_distances.py` (settle_when's readings,
+Fire Shield from 5 ft. by itself, from 10 not at all, off the map asked;
+Hellish Rebuke's "can see" with the distance, past 60 feet, off the map;
+Dark One's Blessing for another's knockout within 10, past it, off the
+map, and the Warlock's own at any distance; the gate's checks),
+`tests/test_combat_ui_arena_trigger_distances.py` (the Ogre's Greatclub
+from beside Edmund burning it without a question, and from 10 ft. not);
+`tests/test_hit_point_triggers.py`'s Dark One's Blessing trigger.
+
 ### Later (not scheduled)
 
 In order of relevance (R15, the user, 2026-11-16: "add your suggestions
 (in order of relevancy) to the plan"). Each is a step of its own when it's
 picked up. The first six, cover, range, pushes, grapples, the path
 walked and areas acting, were steps 19 to 24, and the sixth's walls step
-25; the seventh and eighth, speeds and water, step 26.
+25; the seventh and eighth, speeds and water, step 26; the ninth,
+distances in triggers, step 27.
 
 3. *(Step 21.)* **Shove's push** and the other pushes, moved on Apply.
    What's left is content (DI-095).
@@ -1264,11 +1312,11 @@ walked and areas acting, were steps 19 to 24, and the sixth's walls step
    (DI-098) and a walk by two speeds at once.
 8. *(Step 26.)* **Water is swimming, not Difficult Terrain** (Rules
    Glossary, Swimming).
-9. **Distance in triggers and auras** (DI-085; the conditions' "within 5
-   feet" counts since step 16, through `settled_by_distance`): triggers
-   that ask "within 5 feet" (Fire Shield) or 10 feet (Dark One's Blessing,
-   combat-effects-plan Q63), Spirit Guardians' aura. Each still asks when
-   either creature is off the map.
+9. *(Step 27.)* **Distance in triggers and auras** (DI-085): Fire
+   Shield's "within 5 feet", Hellish Rebuke's 60, Dark One's Blessing's 10
+   for another's knockout (combat-effects-plan Q63); Spirit Guardians'
+   aura is its kept area since step 24. Each still asks when either
+   creature is off the map.
 10. **Light and senses counted** (the map painter plan's Q5): Heavily
     Obscured as Blinded for sight there, Darkvision, Blindsight, Truesight,
     each from the viewer's senses; needs DI-068 (Invisible as a condition).
@@ -1292,8 +1340,9 @@ Built from this list already: the map settings dialog and terrain, as the
 Map Painter ([map-painter-plan.md](map-painter-plan.md), 2026-11-15); the
 conditions' "within 5 feet" (step 16); moves that aren't walks (step 17);
 cover (step 19), range (step 20), pushes (step 21), grapples (step 22),
-the path walked (step 23), areas acting (step 24), walls (step 25) and
-other speeds and water (step 26), its first eight items.
+the path walked (step 23), areas acting (step 24), walls (step 25),
+other speeds and water (step 26) and distances in triggers (step 27), its
+first nine items.
 
 ## Decisions
 
@@ -1696,6 +1745,24 @@ Taken in step 26 (2026-11-18), for the user to overrule:
     unless it takes none"); the GM applies them, as a fall into water, a
     Feather Fall or a Reaction can change what happens.
 
+Taken in step 27 (2026-11-18), for the user to overrule:
+
+47. **A trigger's distance is counted, what else it asks isn't.** A `when`
+    ending in "within N feet" is between the row's owner and the other
+    creature of its event (the attacker, the one that dealt the damage,
+    the one dropped). Once the map is in use with both on it: farther, the
+    row doesn't fire and nothing is said (as a melee-only row for a ranged
+    hit); within, the distance is dropped from the question, and a row
+    with nothing else to ask is AUTO when its gates allow (Fire Shield).
+    The rest stays the GM's ("you can see it", with the distance said).
+    Off the map, the whole `when` is asked, as before.
+48. **Dark One's Blessing answers others' knockouts near its owner.**
+    Answers combat-effects Q63, as its suggestion said (`by_anyone`, named
+    `others_within_ft` for the distance it needs). Its rows fire for every
+    other creature's knockout of one of its owner's enemies: within its
+    feet as the owner's own does (AUTO), farther not at all, and asked "if
+    it was within 10 feet of you" off the map. A dead owner gets none.
+
 ## Open questions
 
 Each has a *Suggestion*: what gets built if nobody says otherwise.
@@ -2067,6 +2134,17 @@ Each has a *Suggestion*: what gets built if nobody says otherwise.
   so its altitude is read from what it was set to, not from the speeds it
   has now.
 
+- **R25** (step 27, 2026-11-18). *Plan (Later 9):* "triggers that ask
+  'within 5 feet' (Fire Shield) or 10 feet (Dark One's Blessing ...),
+  Spirit Guardians' aura". *Done:* the triggers, read from their own
+  `when` text by one pattern (Decision 47), rather than a distance field
+  on each trigger, as every distance in content is written the same way
+  and the skill now says to write it so; Dark One's Blessing's other
+  half as a new gate (Decision 48). Spirit Guardians' aura needed nothing
+  more: its kept area (step 24) is it. *Found:* only four `when`s in all
+  the content name a distance, and none is on a turn trigger, so DI-085
+  closes with this step.
+
 ## Discovered issues
 
 Found while writing the plan:
@@ -2077,7 +2155,7 @@ Found while writing the plan:
   its full Speed on its card and in More Info
   (`speed_in_use({"conditions": ["Grappled"]}, 30)` is 30). The arena's reach
   reads it, so step 2 fixed it first.
-- **DI-085** (open, a gap): the simulator doesn't know where anyone is, so
+- **DI-085** (fixed 2026-11-18, step 27; a gap): the simulator doesn't know where anyone is, so
   every rule with a distance in its `when` is noted, never counted. The arena
   is what lets those rules be counted later (Later: using distance in the
   rules); building the map alone doesn't close it. Step 16 counts the

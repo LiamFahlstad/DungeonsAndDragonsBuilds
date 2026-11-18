@@ -325,6 +325,15 @@ about on the target's row and in the log, not refused. A thrown weapon is
 melee within its reach and thrown past it. A spell aimed at a creature past
 its range says so on the save row.
 
+**Distances in triggers** (once the map is in use, with both creatures on
+it): a trigger that asks how far the other creature is is counted from the
+map. Fire Shield burns a creature that hits from 5 feet without asking, and
+not one with a reach weapon from 10; Hellish Rebuke past 60 feet isn't
+offered, and within them asks only whether the Warlock can see the
+attacker ("if you can see it (25 ft. away)"); Dark One's Blessing also
+gives its Temporary Hit Points when someone else drops an enemy within 10
+feet of the Warlock. Off the map they ask, as before.
+
 ## The Map Painter
 
 **Ctrl+M** or the **Map Painter** button opens it on the encounter that's
