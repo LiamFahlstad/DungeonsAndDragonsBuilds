@@ -294,6 +294,10 @@
    "ability": "WIS",
    "action_cost": "Action",
    "amount_kind": "Damage",
+   "area": {
+    "shape": "Emanation",
+    "size_ft": 30
+   },
    "bonus": null,
    "concentration": false,
    "condition": "Frightened + Incapacitated",
@@ -305,7 +309,7 @@
    "half_on_save": false,
    "is_described": true,
    "is_unavailable": false,
-   "note": "Each Undead of your choice within 30 feet. On its turns it moves as far from you as it can. It ends early on a creature that takes any damage, or if you have the Incapacitated condition or die.",
+   "note": "Each Undead of your choice in it. On its turns it moves as far from you as it can. It ends early on a creature that takes any damage, or if you have the Incapacitated condition or die.",
    "repeat_save": false,
    "roll": "Saving throw",
    "row_name": "",

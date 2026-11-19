@@ -1222,7 +1222,6 @@ class BoomingBlade(ClassSpell):
         ),
         usage_tags=("damage",),
         target=FeatureTarget.ENEMY,
-        area=CombatArea(CombatAreaShape.SPHERE, 5, from_source=True),
     )
     converted_from = RecordStamp("spells_dnd5e.json", "a61fd60b1fc090e5")
 
@@ -1790,7 +1789,6 @@ class GreenFlameBlade(ClassSpell):
         ),
         usage_tags=("damage", "utility"),
         target=FeatureTarget.ENEMY,
-        area=CombatArea(CombatAreaShape.SPHERE, 5, from_source=True),
     )
     converted_from = RecordStamp("spells_dnd5e.json", "884757d409fa65f8")
 
@@ -2374,7 +2372,7 @@ class MoldEarth(ClassSpell):
         ),
         usage_tags=("control", "utility"),
         target=FeatureTarget.OBJECT,
-        area=CombatArea(CombatAreaShape.CUBE, 5, move_ft=5),
+        area=CombatArea(CombatAreaShape.CUBE, 5),
     )
     converted_from = RecordStamp("spells_dnd5e.json", "0c2177e407bf27f1")
 

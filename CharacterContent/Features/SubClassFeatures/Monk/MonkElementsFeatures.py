@@ -15,6 +15,7 @@ from Model.Content.CombatEffect import (
     CombatEffect,
     EffectRoll,
 )
+from Model.Content.CombatArea import CombatArea, CombatAreaShape
 
 LEVEL_TO_MARTIAL_ARTS_DIE = {
     1: WeaponDamageRolls.D6,
@@ -238,6 +239,7 @@ class ElementalBurst(Feature):
                     ),
                 ),
                 uses_spent=2,
+                area=CombatArea(CombatAreaShape.SPHERE, 20, point_within_ft=120),
             )
         ]
 

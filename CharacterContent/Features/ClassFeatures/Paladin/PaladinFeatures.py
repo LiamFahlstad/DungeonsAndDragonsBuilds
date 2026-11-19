@@ -9,6 +9,7 @@ from Model.Content.Feature import (
 )
 from Model.Content.Improvements import SavingThrowBonus
 from Model.Content.CombatEffect import CombatEffect, CombatHitPoints
+from Model.Content.CombatArea import CombatArea, CombatAreaShape
 from Core.Definitions import Ability, CharacterClass
 from CharacterContent.Spells.SpellLists import PaladinLevel1Spells
 from Model.Spells import FeatureSpell
@@ -411,6 +412,7 @@ class ChannelDivinity(Feature):
                 CombatEffect(
                     name="Divine Sense",
                     action_type=ActionType.BONUS_ACTION,
+                    area=CombatArea(CombatAreaShape.EMANATION, 60),
                     notes=(
                         "For 10 minutes you know the location and creature type of"
                         " Celestials, Fiends and Undead within 60 feet, and sense"

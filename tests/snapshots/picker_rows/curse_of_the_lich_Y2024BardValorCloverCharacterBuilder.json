@@ -186,11 +186,6 @@
    "ability": null,
    "action_cost": "Action",
    "amount_kind": "Damage",
-   "area": {
-    "from_source": true,
-    "shape": "Sphere",
-    "size_ft": 5
-   },
    "bonus": 6,
    "concentration": false,
    "condition": "Booming Blade",
@@ -220,11 +215,6 @@
    "ability": null,
    "action_cost": null,
    "amount_kind": "Damage",
-   "area": {
-    "from_source": true,
-    "shape": "Sphere",
-    "size_ft": 5
-   },
    "bonus": null,
    "concentration": false,
    "condition": "",
@@ -404,11 +394,6 @@
    "ability": null,
    "action_cost": "Action",
    "amount_kind": "Damage",
-   "area": {
-    "from_source": true,
-    "shape": "Sphere",
-    "size_ft": 5
-   },
    "bonus": 6,
    "concentration": false,
    "condition": "",
@@ -435,11 +420,6 @@
    "ability": null,
    "action_cost": null,
    "amount_kind": "Damage",
-   "area": {
-    "from_source": true,
-    "shape": "Sphere",
-    "size_ft": 5
-   },
    "bonus": null,
    "concentration": false,
    "condition": "",

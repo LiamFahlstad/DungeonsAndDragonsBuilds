@@ -837,6 +837,10 @@ class ConjureElemental(ClassSpell):
         ),
         usage_tags=("control", "damage"),
         target=FeatureTarget.ENEMY,
+        # Within 5 feet of the Large spirit, aimed at it.
+        area=CombatArea(
+            CombatAreaShape.SPHERE, 5, acts=(AreaTiming.ENTERS, AreaTiming.STARTS)
+        ),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "08b95d49e98b822b")
 
@@ -2068,6 +2072,10 @@ class GraveGround(ClassSpell):
         ),
         usage_tags=("control", "damage"),
         target=FeatureTarget.AREA,
+        # One of up to four contiguous 10-foot squares.
+        area=CombatArea(
+            CombatAreaShape.CUBE, 10, acts=(AreaTiming.ENTERS, AreaTiming.ENDS)
+        ),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "e9b297ac46444c5a")
 
@@ -2166,6 +2174,7 @@ class Hallow(ClassSpell):
         ),
         usage_tags=("buff", "control"),
         target=FeatureTarget.AREA,
+        area=CombatArea(CombatAreaShape.SPHERE, 60),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "3a208a4b88f13b9a")
 
@@ -2336,7 +2345,7 @@ class HolyWeapon(ClassSpell):
         description="You imbue a weapon you touch with holy power. Until the spell ends, the weapon emits bright light in a 30-foot radius and dim light for an additional 30 feet. In addition, weapon attacks made with it deal an extra 2d8 radiant damage on a hit. If the weapon isn't already a magic weapon, it becomes one for the duration. As a bonus action on your turn, you can dismiss this spell and cause the weapon to emit a burst of radiance. Each creature of your choice that you can see within 30 feet of the weapon must make a Constitution saving throw. On a failed save, a creature takes 4d8 radiant damage, and it is blinded for 1 minute. On a successful save, a creature takes half as much damage and isn't blinded. At the end of each of its turns, a blinded creature can make a Constitution saving throw, ending the effect on itself on a success.",
         usage_tags=("buff", "damage", "utility"),
         target=FeatureTarget.OBJECT,
-        area=CombatArea(CombatAreaShape.EMANATION, 30),
+        area=CombatArea(CombatAreaShape.SPHERE, 30),
     )
     converted_from = RecordStamp("spells_dnd5e.json", "c1c756c942b894b3")
 
@@ -4850,7 +4859,12 @@ class WallOfLight(ClassSpell):
         ),
         usage_tags=("damage", "utility"),
         target=FeatureTarget.AREA,
-        area=CombatArea(CombatAreaShape.WALL, 60, acts=(AreaTiming.ENDS,)),
+        area=CombatArea(
+            CombatAreaShape.WALL,
+            60,
+            acts=(AreaTiming.ENDS,),
+            obscures=AreaSight.HEAVILY_OBSCURED,
+        ),
     )
     converted_from = RecordStamp("spells_dnd5e.json", "083dfc548f6f4700")
 
@@ -4963,7 +4977,9 @@ class WallOfStone(ClassSpell):
         ),
         usage_tags=("control",),
         target=FeatureTarget.OBJECT,
-        area=CombatArea(CombatAreaShape.WALL, 100, width_ft=1),
+        area=CombatArea(
+            CombatAreaShape.WALL, 100, width_ft=1, blocks=True, cover=AreaCover.TOTAL
+        ),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "0bdfae87c153ee07")
 

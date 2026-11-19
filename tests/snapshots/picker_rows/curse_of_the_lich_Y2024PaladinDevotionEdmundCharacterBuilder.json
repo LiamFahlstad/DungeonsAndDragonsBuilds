@@ -804,6 +804,10 @@
    "ability": null,
    "action_cost": "Bonus Action",
    "amount_kind": "Damage",
+   "area": {
+    "shape": "Emanation",
+    "size_ft": 60
+   },
    "bonus": null,
    "concentration": false,
    "condition": "",

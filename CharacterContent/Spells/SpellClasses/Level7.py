@@ -71,6 +71,12 @@ class ConjureCelestial(ClassSpell):
         ),
         usage_tags=("heal",),
         target=FeatureTarget.CREATURE,
+        area=CombatArea(
+            CombatAreaShape.CYLINDER,
+            10,
+            acts=(AreaTiming.ENTERS, AreaTiming.MOVED_ONTO, AreaTiming.ENDS),
+            move_ft=30,
+        ),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "a8f09205a54b122c")
 
@@ -812,6 +818,9 @@ class FireStorm(ClassSpell):
         ),
         usage_tags=("damage",),
         target=FeatureTarget.AREA,
+        # One of up to ten contiguous 10-foot Cubes (as Meteor Swarm's
+        # Sphere is one of four).
+        area=CombatArea(CombatAreaShape.CUBE, 10),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "b80ad9c169442982")
 
@@ -868,6 +877,7 @@ class Forcecage(ClassSpell):
         ),
         usage_tags=("buff", "control"),
         target=FeatureTarget.ENEMY,
+        area=CombatArea(CombatAreaShape.CUBE, 20),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "99975183a5e0ba69")
 
@@ -2331,6 +2341,7 @@ class TempleOfTheGods(ClassSpell):
         ),
         usage_tags=("control", "heal", "utility"),
         target=FeatureTarget.AREA,
+        area=CombatArea(CombatAreaShape.CUBE, 120, acts=(AreaTiming.ENTERS,)),
     )
     converted_from = RecordStamp("spells_dnd5e.json", "9bdb238eafbfad19")
 

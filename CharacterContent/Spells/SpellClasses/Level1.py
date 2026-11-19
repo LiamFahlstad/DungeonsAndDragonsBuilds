@@ -1547,7 +1547,6 @@ class IceKnife(ClassSpell):
         ),
         usage_tags=("damage",),
         target=FeatureTarget.ENEMY,
-        area=CombatArea(CombatAreaShape.EMANATION, 5),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "80932f05b1ec0493")
 
@@ -1600,9 +1599,9 @@ class IceKnife(ClassSpell):
                 save_ability=Ability.DEXTERITY,
                 damage=(CombatDamage("2d6", DamageType.COLD, upcast="1d6"),),
                 spends_use=False,
-                notes=(
-                    "The target and each creature within 5 feet of it. Part of the same casting: it spends no slot.",
-                ),
+                # The target and each creature within 5 feet of it.
+                area=CombatArea(CombatAreaShape.SPHERE, 5),
+                notes=("Part of the same casting: it spends no slot.",),
                 # Hit or miss, the shard then explodes: asked once it's applied.
                 trigger=CombatTrigger(
                     TriggerEvent.USES,
@@ -3111,6 +3110,7 @@ class DetectEvilAndGood(ClassSpell):
         ),
         usage_tags=("utility",),
         target=FeatureTarget.SELF,
+        area=CombatArea(CombatAreaShape.EMANATION, 30),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "eade6524daa0aa47")
 
@@ -3167,6 +3167,7 @@ class DetectMagic(ClassSpell):
         ),
         usage_tags=("utility",),
         target=FeatureTarget.SELF,
+        area=CombatArea(CombatAreaShape.EMANATION, 30),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "917c4d72ce0985cc")
 
@@ -3222,6 +3223,7 @@ class DetectPoisonAndDisease(ClassSpell):
         ),
         usage_tags=("utility",),
         target=FeatureTarget.SELF,
+        area=CombatArea(CombatAreaShape.EMANATION, 30),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "427077950f34b9bf")
 
@@ -3690,7 +3692,7 @@ class HailOfThorns(ClassSpell):
         ),
         usage_tags=("damage",),
         target=FeatureTarget.ENEMY,
-        area=CombatArea(CombatAreaShape.EMANATION, 5),
+        area=CombatArea(CombatAreaShape.SPHERE, 5),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "fbe5ccebb22560a1")
 
@@ -5460,6 +5462,7 @@ class FreezingTrap(ClassSpell):
         source="World of Warcraft",
         description="An Invisible, intangible trap appears on the ground at a point you choose within range. The first time a creature comes within 5 feet of the trap, the trap explodes in a burst of frost, the spell ends, and the triggering creature makes a Constitution saving throw. On a failed save, the target has the Restrained condition for 1 minute. If the creature takes any damage, the Restrained condition from the trap ends.",
         usage_tags=("control",),
+        area=CombatArea(CombatAreaShape.SPHERE, 5, acts=(AreaTiming.ENTERS,)),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "a8d8ccbc031c5bc1")
 

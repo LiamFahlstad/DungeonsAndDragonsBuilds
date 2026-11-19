@@ -21,7 +21,7 @@ from CharacterContent.Spells.SpellFactory.SpellFields import (
     Range,
 )
 from Core.Definitions import CharacterClass
-from Model.Content.CombatArea import AreaTiming, CombatArea, CombatAreaShape
+from Model.Content.CombatArea import AreaCover, AreaTiming, CombatArea, CombatAreaShape
 from Model.Content.Feature import FeatureTarget
 
 
@@ -101,7 +101,9 @@ class Detonate(ClassSpell):
         ),
         usage_tags=("damage",),
         target=FeatureTarget.ENEMY,
-        area=CombatArea(CombatAreaShape.EMANATION, 60),
+        # The 60-foot Emanation from the target, as a Sphere aimed at it:
+        # an Emanation starts at the caster.
+        area=CombatArea(CombatAreaShape.SPHERE, 60),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "521fc927bb4d88da")
 
@@ -363,7 +365,14 @@ class PrismaticWall(ClassSpell):
         ),
         usage_tags=("control",),
         target=FeatureTarget.AREA,
-        area=CombatArea(CombatAreaShape.WALL, 90, acts=(AreaTiming.STARTS,)),
+        area=CombatArea(
+            CombatAreaShape.WALL,
+            90,
+            width_ft=1,
+            acts=(AreaTiming.ENTERS,),
+            ring_ft=30,
+            cover=AreaCover.TOTAL,
+        ),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "fb29a547dc3db2f4")
 
@@ -440,6 +449,7 @@ class StormOfVengeance(ClassSpell):
         ),
         usage_tags=("control", "damage"),
         target=FeatureTarget.AREA,
+        area=CombatArea(CombatAreaShape.CYLINDER, 300),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "5509424a394c4ce5")
 

@@ -384,11 +384,6 @@
    "ability": null,
    "action_cost": "Action",
    "amount_kind": "Damage",
-   "area": {
-    "from_source": true,
-    "shape": "Sphere",
-    "size_ft": 5
-   },
    "bonus": 7,
    "concentration": false,
    "condition": "Booming Blade",
@@ -418,11 +413,6 @@
    "ability": null,
    "action_cost": null,
    "amount_kind": "Damage",
-   "area": {
-    "from_source": true,
-    "shape": "Sphere",
-    "size_ft": 5
-   },
    "bonus": null,
    "concentration": false,
    "condition": "",
@@ -1472,11 +1462,6 @@
    "ability": null,
    "action_cost": "Action",
    "amount_kind": "Damage",
-   "area": {
-    "from_source": true,
-    "shape": "Sphere",
-    "size_ft": 5
-   },
    "bonus": 7,
    "concentration": false,
    "condition": "",
@@ -1503,11 +1488,6 @@
    "ability": null,
    "action_cost": null,
    "amount_kind": "Damage",
-   "area": {
-    "from_source": true,
-    "shape": "Sphere",
-    "size_ft": 5
-   },
    "bonus": null,
    "concentration": false,
    "condition": "",
@@ -1942,7 +1922,7 @@
    "action_cost": null,
    "amount_kind": "Damage",
    "area": {
-    "shape": "Emanation",
+    "shape": "Sphere",
     "size_ft": 5
    },
    "bonus": null,
@@ -1956,7 +1936,7 @@
    "half_on_save": false,
    "is_described": true,
    "is_unavailable": false,
-   "note": "The target and each creature within 5 feet of it. Part of the same casting: it spends no slot.",
+   "note": "Part of the same casting: it spends no slot.",
    "repeat_save": false,
    "roll": "Saving throw",
    "row_name": "",
@@ -1979,10 +1959,6 @@
    "ability": null,
    "action_cost": "Action",
    "amount_kind": "Damage",
-   "area": {
-    "shape": "Emanation",
-    "size_ft": 5
-   },
    "bonus": 7,
    "concentration": false,
    "condition": "",

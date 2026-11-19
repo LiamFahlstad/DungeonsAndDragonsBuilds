@@ -1076,6 +1076,13 @@ class ConjureAnimals(ClassSpell):
         ),
         usage_tags=("damage", "summon"),
         target=FeatureTarget.ENEMY,
+        # Within 10 feet of the Large pack, aimed at it; it moves with you.
+        area=CombatArea(
+            CombatAreaShape.SPHERE,
+            10,
+            acts=(AreaTiming.ENTERS, AreaTiming.MOVED_ONTO, AreaTiming.ENDS),
+            move_ft=30,
+        ),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "9d6c93eb09530f4d")
 
@@ -1770,7 +1777,7 @@ class Fear(ClassSpell):
         ),
         usage_tags=("control",),
         target=FeatureTarget.AREA,
-        area=CombatArea(CombatAreaShape.CONE, 30, acts=(AreaTiming.ENDS,)),
+        area=CombatArea(CombatAreaShape.CONE, 30),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "5e6e1a387b8b0920")
 
@@ -2842,7 +2849,7 @@ class LightningArrow(ClassSpell):
         ),
         usage_tags=("damage",),
         target=FeatureTarget.ENEMY,
-        area=CombatArea(CombatAreaShape.EMANATION, 10),
+        area=CombatArea(CombatAreaShape.SPHERE, 10),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "a5cafb7bb5bc9cf6")
 
@@ -4060,6 +4067,7 @@ class SpiritShroud(ClassSpell):
         ),
         usage_tags=("damage", "heal", "utility"),
         target=FeatureTarget.ENEMY,
+        area=CombatArea(CombatAreaShape.EMANATION, 10, acts=(AreaTiming.STARTS,)),
     )
     converted_from = RecordStamp("spells_dnd5e.json", "17cd76a078650888")
 
@@ -4751,6 +4759,9 @@ class TidalWave(ClassSpell):
         description="You conjure up a wave of water that crashes down on an area within range. The area can be up to 30 feet long, up to 10 feet wide, and up to 10 feet tall. Each creature in that area must make a Dexterity saving throw. On a failure, a creature takes 4d8 bludgeoning damage and is knocked prone. On a success, a creature takes half as much damage and isn't knocked prone. The water then spreads out across the ground in all directions, extinguishing unprotected flames in its area and within 30 feet of it.",
         usage_tags=("control", "damage"),
         target=FeatureTarget.AREA,
+        # The wave's 30-by-10-foot area, aimed by its two ends: a Line
+        # would start at the caster.
+        area=CombatArea(CombatAreaShape.WALL, 30, width_ft=10),
     )
     converted_from = RecordStamp("spells_dnd5e.json", "588fa34f575eae8d")
 
@@ -4976,7 +4987,9 @@ class WallOfSand(ClassSpell):
         description="You conjure up a wall of swirling sand on the ground at a point you can see within range. You can make the wall up to 30 feet long, 10 feet high, and 10 feet thick, and it vanishes when the spell ends. It blocks line of sight but not movement. A creature is blinded while in the wall's space and must spend 3 feet of movement for every 1 foot it moves there.",
         usage_tags=("control", "utility"),
         target=FeatureTarget.OBJECT,
-        area=CombatArea(CombatAreaShape.WALL, 30, width_ft=10),
+        area=CombatArea(
+            CombatAreaShape.WALL, 30, width_ft=10, obscures=AreaSight.HEAVILY_OBSCURED
+        ),
     )
     converted_from = RecordStamp("spells_dnd5e.json", "cba5420c92fdaf59")
 
@@ -5020,12 +5033,7 @@ class WallOfWater(ClassSpell):
         usage_tags=("control", "damage", "utility"),
         target=FeatureTarget.OBJECT,
         area=CombatArea(
-            CombatAreaShape.WALL,
-            30,
-            width_ft=1,
-            acts=(AreaTiming.ENTERS, AreaTiming.MOVED_ONTO),
-            ring_ft=20,
-            difficult=True,
+            CombatAreaShape.WALL, 30, width_ft=1, ring_ft=20, difficult=True
         ),
     )
     converted_from = RecordStamp("spells_dnd5e.json", "6d782b1d1afaf195")

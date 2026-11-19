@@ -635,6 +635,26 @@ On HEAD (dbf889cd) the target label reads 'Target: Pirate (30 ft., Heavily Obscu
 **History**
 - 2026-11-19 main-session: found
 
+### DI-104 · test_a_spells_area_and_range_are_its_classs uses Lightning Lure's false area as its from-source Sphere
+- **Status:** open
+- **Area:** test-bughunter
+- **Where:** `tests/test_combat_ui_arena_areas.py:296`, `CharacterContent/Spells/SpellClasses/Cantrips.py`
+
+Lightning Lure (2014) targets one creature within 15 feet; its 'Self (15-foot radius)' is a range, and the one-off text reading made it CombatArea(SPHERE, 15, from_source=True). Booming Blade and Green-Flame Blade lost the same false 5-foot area (explicit-attributes-plan R9), but Lightning Lure's stays because this test asserts it. Fix: assert Investiture of Stone instead (SPHERE 15, from_source=True, the same AreaOfEffect), then remove Lightning Lure's area=.
+
+**History**
+- 2026-11-19 main session (Claude Opus 5.5): found
+
+### DI-105 · CombatArea can't say several things spells' areas do
+- **Status:** open
+- **Area:** combat-simulator
+- **Where:** `Model/Content/CombatArea.py`
+
+Found writing explicit areas (explicit-attributes-plan R9). (1) Difficult Terrain outside a Wall: Dark Star, Grave Ground (enemies only), Spike Growth, Storm of Vengeance (turn 5+), Investiture of Ice, Guardian of Nature. (2) An Emanation from a creature other than the caster, or a Large source's 'within N feet of it': Detonate, Conjure Animals, Conjure Elemental, Guardian of Faith are written as a Sphere aimed at it. (3) An area that never acts: empty acts is DEFAULT_TIMING, so Detect Magic's or Hallow's kept area still gets enters/starts prompts. (4) Movement costing more than Difficult Terrain (Wall of Thorns 4 ft per foot, Wall of Sand 3). (5) A zone beside a wall on both sides that acts on entering it (Prismatic Wall's 20-foot blinding). (6) A Cube that blocks movement (Forcecage's box) or one that only dims light by a step (Shadow of Moil). (7) Several aimed copies of one shape (Fire Storm's ten Cubes, Grave Ground's four squares): written as one.
+
+**History**
+- 2026-11-19 main session (Claude Opus 5.5): found
+
 ## Fixed
 
 ### DI-001 · Temporary Hit Points stack instead of keeping one amount

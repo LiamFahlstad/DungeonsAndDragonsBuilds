@@ -21,6 +21,7 @@ from Model.Content.CombatEffect import (
     EffectRoll,
     with_bonus,
 )
+from Model.Content.CombatArea import CombatArea, CombatAreaShape
 from CharacterContent.Items.Weapons import WeaponProficiency
 from Model.Content.FeatureText import Block, Facts, Option, Paragraph, dc_formula
 from CharacterContent.Features.ClassFeatures.SpellcastingTable import (
@@ -321,8 +322,9 @@ class ChannelDivinity(Feature):
                     CombatCondition("Frightened"),
                     CombatCondition("Incapacitated"),
                 ),
+                area=CombatArea(CombatAreaShape.EMANATION, 30),
                 notes=(
-                    "Each Undead of your choice within 30 feet.",
+                    "Each Undead of your choice in it.",
                     "On its turns it moves as far from you as it can. It ends"
                     " early on a creature that takes any damage, or if you have"
                     " the Incapacitated condition or die.",

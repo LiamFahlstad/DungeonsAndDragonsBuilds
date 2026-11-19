@@ -4,6 +4,7 @@ from CharacterContent.Features.ClassFeatures.ClassProficiencies import (
 from CharacterContent.Features.ClassFeatures.Monk.MonkFeatures import MARTIAL_ARTS_DIE
 from CharacterContent.ToolProficiencies.Proficiencies import BrewersSupplies
 from Core.Definitions import Ability, CharacterClass, DamageType, Skill
+from Model.Content.CombatArea import CombatArea, CombatAreaShape
 from Model.Content.CombatEffect import (
     CombatCondition,
     CombatDamage,
@@ -286,10 +287,11 @@ class MysticBrew(Feature):
                 ),
                 action_type=ActionType.ACTION,
                 spends_use=False,
+                area=CombatArea(CombatAreaShape.CONE, 30),
                 notes=(
                     "Only while you have drunk a Cinnamon Dragon beverage. A"
-                    " 30-foot Cone; a creature that succeeds takes half damage"
-                    " and isn't Poisoned.",
+                    " creature that succeeds takes half damage and isn't"
+                    " Poisoned.",
                 ),
             )
         ]

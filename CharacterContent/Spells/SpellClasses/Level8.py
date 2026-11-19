@@ -115,6 +115,8 @@ class AntipathySympathy(ClassSpell):
         ),
         usage_tags=("control",),
         target=FeatureTarget.ENEMY,
+        # Within 120 feet of the target, aimed at it.
+        area=CombatArea(CombatAreaShape.SPHERE, 120, acts=(AreaTiming.ENTERS,)),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "e66b37a252edc453")
 
@@ -413,13 +415,7 @@ class IllusoryDragon(ClassSpell):
         ),
         usage_tags=("control", "damage"),
         target=FeatureTarget.AREA,
-        area=CombatArea(
-            CombatAreaShape.CONE,
-            60,
-            acts=(AreaTiming.ENDS,),
-            move_ft=60,
-            move_action=ActionType.BONUS_ACTION,
-        ),
+        area=CombatArea(CombatAreaShape.CONE, 60),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "c0db74d15671dc42")
 
@@ -726,7 +722,13 @@ class Tsunami(ClassSpell):
         ),
         usage_tags=("damage",),
         target=FeatureTarget.AREA,
-        area=CombatArea(CombatAreaShape.WALL, 300, width_ft=50),
+        area=CombatArea(
+            CombatAreaShape.WALL,
+            300,
+            width_ft=50,
+            acts=(AreaTiming.MOVED_ONTO,),
+            move_ft=50,
+        ),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "d36fd76542b48c5a")
 
@@ -754,6 +756,12 @@ class DarkStar(ClassSpell):
         usage_tags=("control", "damage", "utility"),
         target=FeatureTarget.AREA,
         school_note="Dunamancy:Graviturgy",
+        area=CombatArea(
+            CombatAreaShape.SPHERE,
+            40,
+            acts=(AreaTiming.ENTERS, AreaTiming.STARTS),
+            obscures=AreaSight.DEEP_DARKNESS,
+        ),
     )
     converted_from = RecordStamp("spells_dnd5e.json", "e52476bb36c1baf2")
 

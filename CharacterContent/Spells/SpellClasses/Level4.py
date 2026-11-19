@@ -2082,6 +2082,10 @@ class GuardianOfFaith(ClassSpell):
         ),
         usage_tags=("damage", "control"),
         target=FeatureTarget.ENEMY,
+        # Within 10 feet of the Large guardian, aimed at it.
+        area=CombatArea(
+            CombatAreaShape.SPHERE, 10, acts=(AreaTiming.ENTERS, AreaTiming.STARTS)
+        ),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "c10dd8ebfb53da62")
 
@@ -2486,6 +2490,7 @@ class MordenkainensPrivateSanctum(ClassSpell):
         ),
         usage_tags=("buff", "control"),
         target=FeatureTarget.AREA,
+        area=CombatArea(CombatAreaShape.CUBE, 100),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "1a5842f88533ce3f")
 

@@ -263,6 +263,35 @@ entries.
 - **R8. Goldens.** `tests/test_picker_rows.py` now records a row's `area`
   and `ignores_cover` (only where set), so a change to a spell's area shows
   up in its diff.
+- **R9. The gaps, written from the rules (2026-11-19).** 22 more spells got
+  `SpellRules.area`: the three Detects and Warp Sense (30-foot Emanation),
+  Conjure Celestial, Conjure Animals, Conjure Elemental, Guardian of Faith,
+  Spirit Shroud, Roar of Ursoc, Cordon of Arrows, Freezing Trap,
+  Antipathy/Sympathy, Dark Star, Hallow, Grave Ground, Fire Storm, Forcecage,
+  Tidal Wave (a 30-by-10 Wall, aimed by its ends), Mordenkainen's Private
+  Sanctum, Temple of the Gods, Storm of Vengeance. 25 existing ones were
+  corrected: false finds removed (Booming Blade's and Green-Flame Blade's
+  2014 "Self (5-foot radius)" range; Ice Knife's area is now its explosion
+  row's 5-foot Sphere), Emanations around a target made Spheres aimed at it
+  (Hail of Thorns, Lightning Arrow, Searing Orb, Jim's Glowing Coin, Holy
+  Weapon, Detonate), the area a lasting spell actually keeps (Investiture of
+  Flame's and of Ice's aura, Pyrotechnics' smoke, Druid Grove's 90-foot
+  Cube without its fog), `acts` and move fields an instant area had picked
+  up removed (Fear, Illusory Dragon, Mold Earth, Wall of Water's misread
+  ranged-attack line), and walls given their terrain, sight and timing
+  (Wall of Stone and Wall of Ice block and give Total Cover; Prismatic Wall
+  is 1 inch thick, a 30-foot globe, Total Cover, acts on entering; Wall of
+  Sand, Thorns and Light are Heavily Obscured; Blade Barrier and Wall of
+  Thorns act on entering and ending a turn; Tsunami moves 50 feet onto
+  creatures). Four features got `area`: Turn Undead (30-foot Emanation),
+  Divine Sense (60-foot Emanation), Elemental Burst (20-foot Sphere within
+  120 feet) and Cinnamon Dragon breath (30-foot Cone). Left without one:
+  Control Weather, Commune with Nature, Mirage Arcane (miles), Forbiddance
+  (40,000 square feet of any shape), Find Traps and Hindsight (what's in
+  range or sight), Shadow of Moil (dims light a step), Guardian of Nature
+  (Difficult Terrain only), Bones of the Earth (2½-foot pillars), Detect
+  Thoughts (its 30 feet is where it targets). Lightning Lure keeps its false
+  area until its test moves (DI-104); what the model can't say is DI-105.
 
 Remaining text regexes under `Combat/` after Phase 3: group B (Phase 2),
 group D (Phase 4, including `_monster_area` and `ranges.py`'s
@@ -272,3 +301,5 @@ group D (Phase 4, including `_monster_area` and `ranges.py`'s
 
 - DI-103: `test_the_target_label_says_when_a_target_is_obscured` fails on
   HEAD (dbf889cd), before this plan's changes.
+- DI-104: a test asserts Lightning Lure's false area (R9).
+- DI-105: what `CombatArea` can't say yet, found writing R9's areas.

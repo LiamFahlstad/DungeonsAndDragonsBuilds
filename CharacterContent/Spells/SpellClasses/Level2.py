@@ -1605,6 +1605,10 @@ class CordonOfArrows(ClassSpell):
         ),
         usage_tags=("damage",),
         target=FeatureTarget.AREA,
+        # Within 30 feet of the ammunition planted in your space.
+        area=CombatArea(
+            CombatAreaShape.SPHERE, 30, acts=(AreaTiming.ENTERS, AreaTiming.ENDS)
+        ),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "42c4e3b3664757fb")
 
@@ -3268,7 +3272,7 @@ class JimsGlowingCoin(ClassSpell):
         description="When you cast the spell, you hurl the coin that is the spell's material component to any spot within range. The coin lights up as if under the effect of a light spell. Each creature of your choice that you can see within 30 feet of the coin must succeed on a Wisdom saving throw or be distracted for the duration. While distracted, a creature has disadvantage on Wisdom (Perception) checks and initiative rolls.",
         usage_tags=("buff", "utility"),
         target=FeatureTarget.ENEMY,
-        area=CombatArea(CombatAreaShape.EMANATION, 30),
+        area=CombatArea(CombatAreaShape.SPHERE, 30),
     )
     converted_from = RecordStamp("spells_dnd5e.json", "6f51d9bffcc00b4d")
 
@@ -4375,7 +4379,9 @@ class Pyrotechnics(ClassSpell):
         ),
         usage_tags=("utility",),
         target=FeatureTarget.OBJECT,
-        area=CombatArea(CombatAreaShape.CUBE, 5, obscures=AreaSight.HEAVILY_OBSCURED),
+        area=CombatArea(
+            CombatAreaShape.SPHERE, 20, obscures=AreaSight.HEAVILY_OBSCURED
+        ),
     )
     converted_from = RecordStamp("spells_dnd5e.json", "69035e49d7126703")
 
@@ -4602,7 +4608,7 @@ class SearingOrb(ClassSpell):
         ),
         usage_tags=("control", "damage"),
         target=FeatureTarget.ENEMY,
-        area=CombatArea(CombatAreaShape.EMANATION, 10),
+        area=CombatArea(CombatAreaShape.SPHERE, 10),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "1cb060299f20996f")
 
@@ -5549,6 +5555,7 @@ class WarpSense(ClassSpell):
         description="For the duration, you sense the presence of portals, even inactive ones, within 30 feet of yourself. If you detect a portal in this way, you can use your action to study it. Make a DC 15 ability check using your spellcasting ability. On a successful check, you learn the destination plane of the portal and what portal key it requires, then the spell ends. On a failed check, you learn nothing and can't study that portal again using this spell until you cast it again. The spell can penetrate most barriers but is blocked by 1 foot of stone, 1 inch of common metal, a thin sheet of lead, or 3 feet of wood or dirt.",
         usage_tags=("utility",),
         target=FeatureTarget.SELF,
+        area=CombatArea(CombatAreaShape.EMANATION, 30),
     )
     converted_from = RecordStamp("spells_dnd5e.json", "042125f9fb154bf4")
 
@@ -6166,6 +6173,7 @@ class RoarOfUrsoc(ClassSpell):
         source="World of Warcraft",
         description="You shape-shift as if you had used Wild Shape, but you don’t expend a use of your Wild Shape. Until the start of your next turn, any creature that starts its turn within 5 feet of you has Disadvantage on attack rolls against any creature other than you.",
         usage_tags=("control",),
+        area=CombatArea(CombatAreaShape.EMANATION, 5, acts=(AreaTiming.STARTS,)),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "9efb5d6628a32db9")
 

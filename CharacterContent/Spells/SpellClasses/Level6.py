@@ -117,7 +117,7 @@ class BladeBarrier(ClassSpell):
         area=CombatArea(
             CombatAreaShape.WALL,
             100,
-            acts=(AreaTiming.ENTERS, AreaTiming.MOVED_ONTO),
+            acts=(AreaTiming.ENTERS, AreaTiming.ENDS),
             ring_ft=60,
             cover=AreaCover.THREE_QUARTERS,
             difficult=True,
@@ -946,7 +946,7 @@ class DruidGrove(ClassSpell):
         ),
         usage_tags=("control", "utility"),
         target=FeatureTarget.AREA,
-        area=CombatArea(CombatAreaShape.CUBE, 30, obscures=AreaSight.HEAVILY_OBSCURED),
+        area=CombatArea(CombatAreaShape.CUBE, 90),
     )
     converted_from = RecordStamp("spells_dnd5e.json", "ccbfe6b66ecf65a7")
 
@@ -1952,8 +1952,8 @@ class InvestitureOfFlame(ClassSpell):
         usage_tags=("buff", "damage", "utility"),
         target=FeatureTarget.SELF,
         area=CombatArea(
-            CombatAreaShape.LINE,
-            15,
+            CombatAreaShape.EMANATION,
+            5,
             acts=(AreaTiming.ENTERS, AreaTiming.MOVED_ONTO, AreaTiming.ENDS),
         ),
     )
@@ -2030,7 +2030,7 @@ class InvestitureOfIce(ClassSpell):
         ),
         usage_tags=("buff", "control", "damage", "utility"),
         target=FeatureTarget.SELF,
-        area=CombatArea(CombatAreaShape.SPHERE, 10),
+        area=CombatArea(CombatAreaShape.EMANATION, 10),
     )
     converted_from = RecordStamp("spells_dnd5e.json", "cd5f3dba00842302")
 
@@ -3814,6 +3814,8 @@ class WallOfIce(ClassSpell):
             width_ft=1,
             acts=(AreaTiming.ENTERS, AreaTiming.MOVED_ONTO),
             ring_ft=20,
+            blocks=True,
+            cover=AreaCover.TOTAL,
         ),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "182502bea5890462")
@@ -3932,7 +3934,13 @@ class WallOfThorns(ClassSpell):
         ),
         usage_tags=("buff", "control", "damage"),
         target=FeatureTarget.AREA,
-        area=CombatArea(CombatAreaShape.WALL, 60, acts=(AreaTiming.ENDS,), ring_ft=20),
+        area=CombatArea(
+            CombatAreaShape.WALL,
+            60,
+            acts=(AreaTiming.ENTERS, AreaTiming.ENDS),
+            obscures=AreaSight.HEAVILY_OBSCURED,
+            ring_ft=20,
+        ),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "885e1cb3fbfd3136")
 
