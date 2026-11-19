@@ -1,7 +1,9 @@
-"""Every regex under Combat/ (outside Combat/Tools/), with why it's there
-(Notes/explicit-attributes-plan.md, guard test G).
+"""Every regex in the code that runs as the app does (Combat/ outside
+Combat/Tools/, Model/, Presentation/, CharacterContent/, Core/, Utils/,
+Builds/), with why it's there (Notes/explicit-attributes-plan.md, guard
+test G, widened in 6.4).
 
-A rule the simulator acts on should be a field, not read back out of rules
+A rule the program acts on should be a field, not read back out of rules
 text at runtime. The test finds every `re.` call by the module constant or
 function it's in and compares them with TEXT_READERS. A new one fails here
 until it's listed; one that's gone fails until its entry goes.
@@ -10,21 +12,59 @@ Each entry says what it reads:
 - "input": what the GM types ("nat 20", "2d6 + 3");
 - "log": our own log or display strings;
 - "validation": checks a value's form;
-- "phase 4" / "phase 5": rules text the plan's phase replaces with fields;
+- "phase 5": rules text the plan's phase replaces with fields;
 - "later: ...": rules text no phase covers yet, with what it reads.
 
-Don't add a "phase" or "later" entry for new code: give the content a
-field instead. In particular, nothing new may read text in EffectText
-(plan step 5.1); describe the spell or feature with combat effects."""
+AUTHORING lists whole modules that read text only where content is
+written (the spell converter, generate_monsters.py, an old log's upgrade
+as it loads): that's where parsing belongs, so their regexes aren't listed
+one by one. Don't add a "phase" or "later" entry, or an AUTHORING module
+the fight calls, for new code: give the content a field instead. In
+particular, nothing new may read text in EffectText (plan step 5.1);
+describe the spell or feature with combat effects."""
 
 import ast
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-FOLDER = "Combat"
+FOLDERS = (
+    "Combat",
+    "Model",
+    "Presentation",
+    "CharacterContent",
+    "Core",
+    "Utils",
+    "Builds",
+)
 SKIPPED = ("Combat/Tools/",)
 
-KINDS = ("input", "log", "validation", "phase 4", "phase 5", "later: ")
+# Modules that read text only where content is written: what each reads.
+AUTHORING: dict[str, str] = {
+    "Model/Content/CombatAreaText.py": (
+        "a spell's or feature's area, drafted into its class by the converter"
+        " (Phase 3)"
+    ),
+    "Model/Creatures/MonsterStatText.py": (
+        "a stat block's speeds, senses and spell DC, for generate_monsters.py"
+        " and an old log's monster as it loads (4.1)"
+    ),
+    "Model/Creatures/MonsterAbilityText.py": (
+        "an ability's recharge, uses, casts and turn start, for"
+        " generate_monsters.py and an old log's ability as it loads (4.2)"
+    ),
+    "CharacterContent/Spells/SpellFactory/SpellFields.py": (
+        "a scraped spell record's casting time, range, components and"
+        " duration, read when it's converted into a spell class"
+    ),
+    "CharacterContent/Spells/SpellFactory/DataSpell.py": (
+        "a scraped spell record; every spell has a class, so only the"
+        " converter reads one"
+    ),
+    "CharacterContent/Spells/SpellClassConverter.py": "writes the spell classes",
+    "CharacterContent/Spells/SpellGenerator.py": "names the spell enum's members",
+}
+
+KINDS = ("input", "log", "validation", "phase 5", "later: ")
 
 # (file, module constant or function): what it reads.
 TEXT_READERS: dict[tuple[str, str], str] = {
@@ -50,8 +90,22 @@ TEXT_READERS: dict[tuple[str, str], str] = {
     ("Combat/EncounterLogs.py", "TURN_PREFIX"): "log",
     # A Wild Shape form's shown senses say the Druid's Passive Perception.
     ("Combat/WildShape.py", "_PASSIVE_PERCEPTION"): "log",
+    # Card display: the level an origin label names, damage types coloured,
+    # a gear label made an id.
+    ("Presentation/FeatureCards.py", "_LEVEL_LABEL"): "log",
+    ("Presentation/Html.py", "_DAMAGE_TYPE_PATTERN"): "log",
+    ("Presentation/Html.py", "carrying_checkbox_id"): "log",
     # Validation
     ("Combat/EncounterConfig.py", "ID_PATTERN"): "validation",
+    # A CombatEffect's or modifier's dice and amounts are dice.
+    ("Model/Content/CombatEffect.py", "DICE"): "validation",
+    ("Model/Content/CombatEffect.py", "_UPCAST_DICE"): "validation",
+    ("Model/Content/CombatEffect.py", "_UPCAST_DICE_OR_NUMBER"): "validation",
+    ("Model/Content/CombatModifiers.py", "BONUS_AMOUNT"): "validation",
+    ("Model/Content/CombatModifiers.py", "EXTRA_DAMAGE_AMOUNT"): "validation",
+    ("Model/Content/CombatModifiers.py", "HIT_POINT_AMOUNT"): "validation",
+    # combat_effects.py check: a trigger's `when` that should be a field.
+    ("Model/Content/CombatTriggers.py", "_FIELD_IN_WHEN"): "validation",
     # Phase 5: EffectText, an undescribed spell's or feature's text. Frozen.
     # Its damage reading, which a monster's attacks no longer use (Phase
     # 4.3: Combat/Tools/monster_effect_text.py wrote their effects).
@@ -164,13 +218,26 @@ def _scopes_in(tree: ast.AST) -> set[str]:
 
 def _text_readers() -> set[tuple[str, str]]:
     found = set()
-    for path in sorted((ROOT / FOLDER).rglob("*.py")):
-        file = path.relative_to(ROOT).as_posix()
-        if file.startswith(SKIPPED):
-            continue
-        tree = ast.parse(path.read_text(encoding="utf-8"))
-        found |= {(file, scope) for scope in _scopes_in(tree)}
+    for folder in FOLDERS:
+        for path in sorted((ROOT / folder).rglob("*.py")):
+            file = path.relative_to(ROOT).as_posix()
+            if file.startswith(SKIPPED) or file in AUTHORING:
+                continue
+            tree = ast.parse(path.read_text(encoding="utf-8"))
+            found |= {(file, scope) for scope in _scopes_in(tree)}
     return found
+
+
+def test_every_authoring_module_is_there_and_reads_text():
+    """An AUTHORING entry for a module that's gone, or no longer uses a
+    regex, is taken out."""
+    stale = [
+        file
+        for file in AUTHORING
+        if not (ROOT / file).exists()
+        or not _scopes_in(ast.parse((ROOT / file).read_text(encoding="utf-8")))
+    ]
+    assert not stale, f"Take these out of AUTHORING: {stale}"
 
 
 def test_every_regex_is_listed():

@@ -687,6 +687,33 @@ The CR_0 catalog has the 2024 summon spells' stat blocks (Aberrant, Bestial, Cel
 **History**
 - 2026-11-19 main session (explicit-attributes plan 4.5): found
 
+### DI-109 · Homebrew abilities in older save prose have no save or damage effects, so their picker rows roll nothing
+- **Status:** open
+- **Area:** monster-ability-converter
+- **Where:** `Combat/Monsters/CR_1/monsters_homebrew.py`, `Combat/Monsters/CR_15/monsters_homebrew.py`, `tests/test_monster_effect_text.py`
+
+Homebrew stat blocks written in older prose ("Each creature within 10 feet of it must make a DC 12 Dexterity saving throw, taking 10 (3d6) Force damage on a failed save, or half as much damage on a successful one") were never read by Phase 4.3's reader, which knows the 2024 wording ("Dexterity Saving Throw: DC 12, ..."). So their picker rows roll nothing: 14 have no combat_effects at all, and 8 have only an area effect (CombatEffect(area=...)) with no save, DC or damage. tests/test_monster_effect_text.py::test_no_ability_with_a_roll_in_its_text_lacks_effects only checks what that reader finds, so it misses them.
+
+No combat effects: Fresh Accursed "1 x Mumbling the Curse"; Accursed Group (3) and (5) "Grab"; Curse Body Broken "Scream of the Trapped"; Curse Mind Broken "Memory Shatter"; The Headless Dragon "Frightful Presence", "Wing Buffet", "Grasping Hands" (lair); The Bell Saint "Muffled Toll", "Toll of Rising"; Sister Lumen "Interrupting Chime"; Ser Caldus "Rite of Silence"; The Crown Without a King "Coronation"; The Road Choir "Directions to Salvation"; traits: Brain-Bloated Accursed "Curse-Feeding Mind", The Hunter "Unnerving Calm".
+Only an area: Curse Cracked "Cracking Surge"; Curse Mind Broken "Curse Discharge"; The Headless Dragon "Sigil Breath"; Priest of the Black Tongues "Curse-Throat Wail"; Sister Lumen "Peal of Still Choirs"; The Choirmaster "Warding Rasp"; The Mouth That Walks "Noc'tra's Wail"; Elf Druid of the Land "Circle of the Land Magic".
+
+Fix: write each one's CombatEffect by hand (save ability, dc, damage, half_on_success, conditions), and widen the test to flag a homebrew ability whose text names "DC <n> <Ability> saving throw" without a save effect. Since Phase 6.1 the More Info dialog's save table reads the effects too, so these show no table until then (before, extract_dc read the number from the text).
+
+**History**
+- 2026-11-19 main session (explicit-attributes Phase 6): found
+
+### DI-110 · Monster traits that roll a save (Death Burst, ...) have no combat effects: no picker row, no save table
+- **Status:** open
+- **Area:** combat-simulator
+- **Where:** `Combat/Tools/monster_effect_text.py`
+
+Phase 4.3 wrote combat_effects only for the action sections (actions, bonus actions, reactions, legendary actions), so a trait that rolls a save has none: the catalog's Death Burst (Dust, Ice, Magma, Mud, Smoke, Steam Mephit, Magmin, Gas Spore Fungus, ...) and others, 30 catalog traits in all. They get no picker row (a trait is listed only with effects) and, since Phase 6.1, no save-chance table in the More Info dialog (it read "DC 10" from the text before). Some traits' DCs aren't saves at all (Kenku's Mimicry is a DC 14 Wisdom (Insight) check), so the old table was wrong for those.
+
+Fix (needs a decision: should a trait like Death Burst be a picker row?): give rolling traits combat_effects, with a trigger where there is one (Death Burst: when it drops to 0 Hit Points), via Combat/Tools/monster_effect_text.py's reader extended to traits, and insert them as Phase 4.3 did.
+
+**History**
+- 2026-11-19 main session (explicit-attributes Phase 6): found
+
 ## Fixed
 
 ### DI-001 · Temporary Hit Points stack instead of keeping one amount
@@ -1184,6 +1211,16 @@ parse_area(Flaming Sphere's text) gives AreaOfEffect(SPHERE, 20): the first area
 **History**
 - 2026-11-18 main session (arena step 24): found
 - 2026-11-18 main session (arena step 25): marked fixed; parse_area skips a radius after 'Light in a'/'Light for' and reads 'within N feet of the sphere' as an N-foot Sphere: Flaming Sphere is a 5-foot Sphere (its cell and the four beside it). Light, Continual Flame and other light-only spells now read no area; Holy Weapon, Combustion and Investiture of Flame read the area their text states after the light.
+
+### DI-111 · test_imports_point_down and test_with_the_setting_off_a_recharge_is_a_reminder failed on HEAD since Phase 4.2 (R14)
+- **Status:** fixed
+- **Area:** combat-simulator
+- **Where:** `Model/Creatures/MonsterAbilityText.py`, `tests/test_table_rolls.py`
+
+MonsterAbilityText.py (Model layer) imported CharacterContent lazily for its spell list; spell_name_in_list moved to Combat/Tools/monster_effect_text.py and read_ability takes spell_named as required. The recharge test's BREATH dict had no recharge field, which the fight reads since R14; it has recharge=5 now.
+
+**History**
+- 2026-11-19 main session (explicit-attributes Phase 6): found
 
 ## Won't fix
 

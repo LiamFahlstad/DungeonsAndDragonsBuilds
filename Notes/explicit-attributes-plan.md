@@ -57,7 +57,8 @@ About 160 `re.` calls in `Combat/`. Sorted by what they read:
 | 3 | `CombatArea` for spells and features (group C) | **Done** (2026-11-19, R1-R8). 3.5 done for described spells; Sharpshooter and Spell Sniper not (R6) |
 | 4 | Monster stat-block fields at generation time (group D) | **Done** (2026-11-19: R13, R14, R15, R16, Decisions 3 and 4) |
 | 5 | Retire `EffectText` (group E) | Not started; waits on the content rollout |
-| G | A guard test that lists every remaining text regex | **Done** (2026-11-19, R12) |
+| 6 | Text reads outside `Combat/` (group H) | **Done** (2026-11-19, R17) |
+| G | A guard test that lists every remaining text regex | **Done** (2026-11-19, R12); widened in 6.4 |
 
 ## Phase 1: read the fields that already exist
 
@@ -191,6 +192,56 @@ when nothing needs it. That is the combat-effects plan's content rollout
   `EffectText`. An undescribed source then gets a plain manual row (the
   GM fills in the dialog), and the readers move into
   `combat_effects.py draft`.
+
+## Phase 6: text reads outside `Combat/` (group H)
+
+The inventory and guard test G looked only under `Combat/`. A survey of
+the rest (2026-11-19, the user: "are regex and implicit information
+extraction prominent anywhere else?") found two runtime reads of rules
+text, one of our own display text, and the readers the survey of the first
+one turned up:
+
+| Where | Reads | Explicit home |
+|---|---|---|
+| `Model/Creatures/MonsterAbilities.py` `extract_dc_from_text`, `DcMonsterAbility.extract_dc`; `dialogs_mixin._ability_dc` | "DC 12" in a monster ability's description, for the More Info dialog's save-chance table (and a log's dict's) | the ability's `combat_effects` (Phase 4.3 wrote the DC there); a casting ability's stat block `spell_save_dc` |
+| `Model/Content/Feature.py` `_DURATION_RE`, `FeatureActivation.duration_to_seconds` | a feature's `duration="1 Minute"` card text, for its badge's timer | a `FeatureDuration(amount, unit)` |
+| `Model/Content/Feature.py` `_RANGE_SHAPE_RE` | a feature's `range="30-Foot Cone"`, split into range and shape for the card | `range=` and `range_shape=` written apart |
+| `Model/Creatures/MonsterStatText.py` `read_spellcasting` (authoring) | "spell save DC 17" in actions and traits only | the same, in every section: a Vampire's Charm (a bonus action) gave its stat block no `spell_save_dc` |
+| `Model/Creatures/MonsterAbilityText.py` `_CASTS` (authoring) | "casts Fear" but not "casts the Sleep spell" | the same, both wordings |
+
+Everything else outside `Combat/` is display (`Html.py`'s damage-type
+colours and tag stripping, `FeatureCards._LEVEL_LABEL`), validation (the
+dice patterns in `CombatEffect.py` and `CombatModifiers.py`), or
+authoring (`SpellFields.from_text`, `SpellClassConverter`, the `*Text.py`
+readers, `Scrapers/`, `Combat/Tools/`).
+
+- **6.1** The More Info dialog's probability table reads fields only: a
+  structured attack's `attack_bonus` or save's `dc`, else the first effect
+  that rolls an attack or a save with a number, else, for an ability that
+  `casts`, the stat block's `spell_save_dc`. `extract_dc_from_text`,
+  `DcMonsterAbility` (whose only job was `extract_dc`) and their regex go:
+  a scripted rename makes every `DcMonsterAbility(` a `MonsterAbility(`
+  (Decision 3: no regeneration), and the generator writes `MonsterAbility`.
+  With it, `read_spellcasting` reads every action section and `_CASTS`
+  reads "casts the Sleep spell", and the fields they add are inserted into
+  the files.
+- **6.2** `FeatureDuration(amount, unit, up_to=False, or_until="")` in
+  `Model/Content/Feature.py`. Its `text` is the card's ("1 Minute", "Up to
+  10 Minutes", "1 Minute or Until Incapacitated") and `seconds` the badge
+  timer's. `FeatureActivation.duration` takes it or a plain string (no
+  timer: "Until Start of Next Turn", "Proficiency Bonus Hours"). A one-off
+  script rewrites every `duration="<number> <unit>..."`. `_DURATION_RE` goes.
+- **6.3** The 28 features with `range="30-Foot Cone"` say
+  `range="30 Feet", range_shape="Cone"`, which is what `__post_init__`
+  made of it. `_RANGE_SHAPE_RE` goes.
+- **6.4** Guard test G covers `Model/`, `Presentation/` and
+  `CharacterContent/` as well as `Combat/`, with an "authoring" kind for
+  readers that run only where content is written.
+
+*Verify:* `tests/test_combat_ui_more_info.py` (its golden changes where a
+table changes; each change explained), the monster text tests, the feature
+card snapshots (no change from 6.2 or 6.3 unless a card's wording was
+irregular), `tests/test_text_readers.py`.
 
 ## Guard test G
 
@@ -617,6 +668,78 @@ group D (Phase 4, including `_monster_area` and `ranges.py`'s
 Remaining text regexes under `Combat/` after Phase 4: group E (`EffectText`,
 Phase 5), the five "later" ones (R12), and group F.
 
+- **R17. Phase 6 (2026-11-19).**
+  - *6.1, the More Info dialog.* `dialogs_mixin._ability_roll(ab, char)`
+    gives the table's ("hit", bonus) or ("save", DC) from fields only: a
+    structured attack's `attack_bonus` or save's `dc`, the first effect
+    that rolls an attack or a save with a number, or for an ability with
+    `casts` the stat block's `spell_save_dc` (so `_add_monster_ability`
+    now takes the combatant). `extract_dc_from_text`, `_DC_PATTERN` and
+    `DcMonsterAbility` are deleted. A one-off script made its 484 uses
+    `MonsterAbility` (37 files, their imports, and the header paragraph
+    that listed the wrapped classes); the generator never wrote it, so a
+    fresh run is now closer to the files. `SavingThrowEffect` derives from
+    `MonsterAbility`. The `monster-stat-blocks` skill says to give a
+    free-text save its effect instead.
+  - *Found and fixed with it:* `read_spellcasting` read only actions and
+    traits, so six stat blocks whose casting is a bonus or legendary action
+    (Kenku, Stone Golem, Adult and Ancient White Dragon, Vampire, Drider)
+    had no `spell_save_dc`, and their cast rows no DC. It reads every
+    section now (actions and traits first, so no DC already read changed;
+    `read_stat_block` takes the block). `_CASTS` missed "casts the Sleep
+    spell": seven abilities (Dust Mephit's Sleep, Vine Blight's Entangle,
+    Stone Golem's Slow, Cultist Fanatic's Spiritual Weapon, Ghost's
+    Etherealness, Cloaker's Mirror Image, Cloud Giant's Misty Step) now
+    `casts`, so they're cast rows. 13 lines inserted (Decision 3); a fresh
+    generator run writes the same `spell_save_dc`, `casts` and no wrapper.
+  - *Table survey* (every ability of the 554 catalog and homebrew stat
+    blocks, before and after): 464 freeform attacks gain a hit table
+    (before, only a structured attack had one); 82 abilities gain a save
+    table (a save effect on a plain `MonsterAbility`, or a cast with its
+    stat block's DC, such as Counterspell); 62 attacks whose table was
+    their rider's save DC (Banishing Claw, the Ghoul's Claw) now show their
+    attack. Lost, for want of a field: 108 catalog casting entries with no
+    `casts`, nearly all "Spellcasting" whose scraped spell list stops at
+    the colon (DI-035), and the hags' Coven Magic traits; 33 traits (Death
+    Burst; DI-110), some of whose DCs were checks, not saves (Kenku's
+    Mimicry); and 22 homebrew abilities in older save prose that never got
+    their save effect (DI-109), some of whose DCs were escape DCs (the
+    Accursed's Grab). Goldens:
+    `combat_ui_more_info.json` (Arcanaloth live and from a log, Shadow
+    Demon, Swarm of Bats, Sphinx of Valor, as above).
+  - *6.2, durations.* `FeatureDuration(amount, unit, up_to, or_until)` and
+    `TimeUnit` in `Model/Content/Feature.py`; `FeatureActivation.duration`
+    is one or plain text, `duration_text` the card's tag and
+    `duration_to_seconds()` its `seconds` or None. A one-off AST-guided
+    script rewrote 107 durations in 90 files; 42 wordings stay text
+    ("Until Start of Next Turn", "Proficiency Bonus Hours", "1 Hour (8
+    Hours if Enhanced)", "For 10 Minutes"). Changed on purpose: the 33
+    "N or Until ..." durations now get a badge timer of their whole length
+    (before, only a bare "1 Minute" did; Kivi's Elemental Attunement is the
+    picker golden's one change: `duration_seconds` 600), and two cards read
+    "or" and "Up to" for "Or" and "Up To".
+  - *6.3, shapes.* 28 `range="30-Foot Emanation"` became `range="30 Feet",
+    range_shape="Emanation"`; Dragonborn's "15-Foot Cone or 30-Foot Line"
+    was never split and stays.
+  - *6.4, guard test G* covers Combat/ (outside Tools), Model/,
+    Presentation/, CharacterContent/, Core/, Utils/ and Builds/. New kind:
+    AUTHORING, whole modules that read text only where content is written
+    (CombatAreaText, MonsterStatText, MonsterAbilityText, SpellFields,
+    DataSpell, SpellClassConverter, SpellGenerator), with a test that each
+    is there and still reads text. New entries: the card display regexes
+    ("log"), CombatEffect's and CombatModifiers' dice and the check's
+    `_FIELD_IN_WHEN` ("validation"). The "phase 4" kind is gone.
+  - *Also fixed (DI-111):* two tests failing on HEAD since R14.
+    `test_imports_point_down`: `MonsterAbilityText.py` (Model) imported
+    CharacterContent for its spell list; `spell_name_in_list` moved to
+    `Combat/Tools/monster_effect_text.py`, and `read_ability` takes
+    `spell_named` as required. `test_with_the_setting_off_a_recharge_is_a_reminder`:
+    its ability dict had no `recharge` field.
+  - *Full suite:* 1 failure left, DI-103 (open, from before this plan).
+
+Remaining text reads at runtime after Phase 6: group E (`EffectText`, Phase
+5), the five "later" ones (R12), and group F, all listed by guard test G.
+
 ## Discovered issues
 
 - DI-103: `test_the_target_label_says_when_a_target_is_obscured` fails on
@@ -628,3 +751,8 @@ Phase 5), the five "later" ones (R12), and group F.
   plan: [combat-area-gaps-plan.md](combat-area-gaps-plan.md).
 - DI-108: the catalog's 2024 spell-summon stat blocks have no combat
   effects, so their attacks don't roll and their reach isn't known (R16).
+- DI-109: homebrew abilities in older save prose have no save effects (R17).
+- DI-110: traits that roll a save (Death Burst) have no effects (R17).
+- DI-111 (fixed): two tests failing since R14 (R17).
+- DI-035 (older): catalog Spellcasting entries lost their spell lists, so
+  they have no `casts` and, since 6.1, no DC table (R17).
