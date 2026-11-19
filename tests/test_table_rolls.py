@@ -320,6 +320,9 @@ BREATH = {
     "name": "Fire Breath (Recharge 5\N{EN DASH}6)",
     "description": "Dexterity Saving Throw: DC 14, each creature in a 30-foot Cone."
     " Failure: 27 (6d8) Fire damage. Success: Half damage.",
+    # The fight spends and recharges by the field, not the name (Notes/
+    # explicit-attributes-plan.md, R14).
+    "recharge": 5,
 }
 
 

@@ -8,14 +8,6 @@
 # description text matched a known template exactly.
 # Re-running generate_monsters.py will overwrite these back to plain
 # MonsterAbility(...) calls.
-#
-# Additionally, entries whose freeform description names a save DC (e.g. "DC
-# 15 Wisdom saving throw") without matching a full structured template have
-# been wrapped in
-# DcMonsterAbility (see Model/Creatures/MonsterAbilities.py) so extract_dc() can still read
-# the DC back out for the combat UI, without rewriting the entry as a fully
-# structured subclass. Affected classes: AdultGoldDragon, AdultRedDragon,
-# DeathKnight, Dracolich, SphinxOfValor.
 from Core.Definitions import Condition, CreatureSize, DamageType, Skill
 from Model.Creatures.Combatants import (
     Alignment,
@@ -27,7 +19,6 @@ from Model.Creatures.MonsterAbilities import (
     MonsterCast,
     Amphibious,
     CastSpellLegendaryAction,
-    DcMonsterAbility,
     DiceType,
     LegendaryResistance,
     MagicResistance,
@@ -157,7 +148,7 @@ class AdultGoldDragon(ExtendedCombatantData):
                         ),
                     ),
                 ),
-                DcMonsterAbility(
+                MonsterAbility(
                     name="Spellcasting",
                     description="The dragon casts one of the following spells, requiring no Material components and using Charisma as the spellcasting ability (spell save DC 21, +13 to hit with spell attacks):",
                 ),
@@ -326,7 +317,7 @@ class AdultRedDragon(ExtendedCombatantData):
                         ),
                     ),
                 ),
-                DcMonsterAbility(
+                MonsterAbility(
                     name="Spellcasting",
                     description="The dragon casts one of the following spells, requiring no Material components and using Charisma as the spellcasting ability (spell save DC 20, +12 to hit with spell attacks):",
                 ),
@@ -442,7 +433,7 @@ class DeathKnight(ExtendedCombatantData):
                         ),
                     ),
                 ),
-                DcMonsterAbility(
+                MonsterAbility(
                     name="Hellfire Orb (Recharge 5–6)",
                     description="Dexterity Saving Throw: DC 18, each creature in a 20-foot-radius Sphere centered on a point the death knight can see within 120 feet. Failure: 35 (10d6) Fire damage plus 35 (10d6) Necrotic damage. Success: Half damage.",
                     recharge=5,
@@ -462,7 +453,7 @@ class DeathKnight(ExtendedCombatantData):
                         ),
                     ),
                 ),
-                DcMonsterAbility(
+                MonsterAbility(
                     name="Spellcasting",
                     description="The death knight casts one of the following spells, requiring no Material components and using Charisma as the spellcasting ability (spell save DC 18):",
                 ),
@@ -633,7 +624,7 @@ class Dracolich(ExtendedCombatantData):
                         ),
                     ),
                 ),
-                DcMonsterAbility(
+                MonsterAbility(
                     name="Spellcasting",
                     description="The dracolich casts one of the following spells, requiring no Material components and using Charisma as the spellcasting ability (spell save DC 19, +11 to hit with spell attacks):",
                 ),
@@ -1028,7 +1019,7 @@ class SphinxOfValor(ExtendedCombatantData):
                     description="The sphinx emits a magical roar. Whenever it roars, the roar has a different effect, as detailed below (the sequence resets when it takes a Long Rest):",
                     per_day=3,
                 ),
-                DcMonsterAbility(
+                MonsterAbility(
                     name="First Roar",
                     description=". Wisdom Saving Throw: DC 20, each enemy in a 500-foot Emanation originating from the sphinx. Failure: The target has the Frightened condition for 1 minute.",
                     combat_effects=(
@@ -1044,7 +1035,7 @@ class SphinxOfValor(ExtendedCombatantData):
                         ),
                     ),
                 ),
-                DcMonsterAbility(
+                MonsterAbility(
                     name="Second Roar",
                     description=". Wisdom Saving Throw: DC 20, each enemy in a 500-foot Emanation originating from the sphinx. Failure: The target has the Paralyzed condition, and it repeats the save at the end of each of its turns, ending the effect on itself on a success. After 1 minute, it succeeds automatically.",
                     combat_effects=(
@@ -1061,7 +1052,7 @@ class SphinxOfValor(ExtendedCombatantData):
                         ),
                     ),
                 ),
-                DcMonsterAbility(
+                MonsterAbility(
                     name="Third Roar",
                     description=". Constitution Saving Throw: DC 20, each enemy in a 500-foot Emanation originating from the sphinx. Failure: 44 (8d10) Thunder damage, and the target has the Prone condition. Success: Half damage only.",
                     combat_effects=(
@@ -1077,7 +1068,7 @@ class SphinxOfValor(ExtendedCombatantData):
                         ),
                     ),
                 ),
-                DcMonsterAbility(
+                MonsterAbility(
                     name="Spellcasting",
                     description="The sphinx casts one of the following spells, requiring no Material components and using Wisdom as the spellcasting ability (spell save DC 20):",
                 ),

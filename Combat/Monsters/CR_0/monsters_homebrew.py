@@ -6,7 +6,6 @@ from Model.Creatures.Combatants import (
     MonsterType,
 )
 from Model.Creatures.MonsterAbilities import (
-    DcMonsterAbility,
     DiceType,
     MeleeAttack,
     MonsterAbility,
@@ -130,7 +129,7 @@ class FreshAccursed(ExtendedCombatantData):
             languages="Understands the language it knew in life but can't speak",
             traits=[],
             actions=[
-                DcMonsterAbility(
+                MonsterAbility(
                     name="1 x Mumbling the Curse",
                     description="Wisdom Save (DC 11): 11 (4d4+1) on failed. The Accursed is Prone after.",
                 ),
@@ -354,7 +353,7 @@ class BrainBloatedAccursed(ExtendedCombatantData):
                     name="Horde Retaliation",
                     description="When a creature attacks the Brain-Bloated Accursed, each other living Accursed within 5 feet of the attacker can use its reaction to make one melee attack against that creature.",
                 ),
-                DcMonsterAbility(
+                MonsterAbility(
                     name="Curse-Feeding Mind",
                     description="A creature that starts its turn within 10 feet of the Brain-Bloated Accursed must succeed on a DC 12 Intelligence saving throw or take 3 (1d6) Psychic damage and have Disadvantage on its next attack roll before the end of its turn.",
                 ),
@@ -770,7 +769,7 @@ class ElfDruidOfTheLand(ExtendedCombatantData):
                         ),
                     ),
                 ),
-                DcMonsterAbility(
+                MonsterAbility(
                     name="Circle of the Land Magic",
                     description="The druid uses one of the following. Hold Person (1/Day): one Humanoid it can see within 60 feet must succeed on a DC 11 Wisdom saving throw or have the Paralyzed condition for 1 minute (Concentration), repeating the save at the end of each of its turns and ending the effect on itself on a success. Entangle (1/Day): each creature in a 20-foot square of ground within 90 feet must succeed on a DC 11 Strength saving throw or have the Restrained condition for 1 minute (Concentration); a Restrained creature can take an action to make a DC 11 Strength (Athletics) check, ending the condition on itself on a success, and the area is Difficult Terrain for the duration. Land's Aid (2/Day): each creature of its choice in a 10-foot-radius Sphere centered on a point within 60 feet makes a DC 11 Constitution saving throw, taking 7 (2d6) Necrotic damage on a failure or half as much on a success, and one creature of its choice in the area regains 7 (2d6) Hit Points.",
                     combat_effects=(

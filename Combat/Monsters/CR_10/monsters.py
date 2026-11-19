@@ -10,15 +10,6 @@
 # SpiderClimb, WebWalker).
 # Re-running generate_monsters.py will overwrite these back to plain
 # MonsterAbility(...) calls.
-#
-# Additionally, entries whose freeform description names a save DC (e.g. "DC
-# 15 Wisdom saving throw") without matching a full structured template have
-# been wrapped in
-# DcMonsterAbility (see Model/Creatures/MonsterAbilities.py) so extract_dc() can still read
-# the DC back out for the combat UI, without rewriting the entry as a fully
-# structured subclass. Affected classes: Aboleth, CultistHierophant,
-# CyclopsOracle, DeathSlaad, Deva, GuardianNaga, NobleProdigy, PerformerLegend,
-# SpyMaster, StoneGolem, Yochlol.
 from Core.Definitions import Condition, CreatureSize, DamageType, Skill
 from Model.Creatures.Combatants import (
     Alignment,
@@ -29,7 +20,6 @@ from Model.Creatures.Combatants import (
 from Model.Creatures.MonsterAbilities import (
     MonsterCast,
     Amphibious,
-    DcMonsterAbility,
     DiceType,
     LegendaryResistance,
     MagicResistance,
@@ -110,7 +100,7 @@ class Aboleth(ExtendedCombatantData):
                 LegendaryResistance(
                     creature_name="aboleth", uses=3, lair_uses=4, per_day=3
                 ),
-                DcMonsterAbility(
+                MonsterAbility(
                     name="Mucus Cloud",
                     description="While underwater, the aboleth is surrounded by mucus. Constitution Saving Throw: DC 14, each creature in a 5-foot Emanation originating from the aboleth at the end of the aboleth's turn. Failure: The target is cursed. Until the curse ends, the target's skin becomes slimy, the target can breathe air and water, and it can't regain Hit Points unless it is underwater. While the cursed creature is outside a body of water, the creature takes 6 (1d12) Acid damage at the end of every 10 minutes unless moisture is applied to its skin before those minutes have passed.",
                 ),
@@ -300,7 +290,7 @@ class CultistHierophant(ExtendedCombatantData):
                         ),
                     ),
                 ),
-                DcMonsterAbility(
+                MonsterAbility(
                     name="Spellcasting",
                     description="The cultist casts one of the following spells, using Charisma as the spellcasting ability (spell save DC 17):",
                 ),
@@ -391,7 +381,7 @@ class CyclopsOracle(ExtendedCombatantData):
                         ),
                     ),
                 ),
-                DcMonsterAbility(
+                MonsterAbility(
                     name="Spellcasting",
                     description="The cyclops casts one of the following spells, requiring no Material components and using Wisdom as the spellcasting ability (spell save DC 16):",
                 ),
@@ -497,7 +487,7 @@ class DeathSlaad(ExtendedCombatantData):
                         ),
                     ),
                 ),
-                DcMonsterAbility(
+                MonsterAbility(
                     name="Spellcasting",
                     description="The slaad casts one of the following spells, requiring no Material components and using Charisma as the spellcasting ability (spell save DC 16):",
                 ),
@@ -597,7 +587,7 @@ class Deva(ExtendedCombatantData):
                         ),
                     ),
                 ),
-                DcMonsterAbility(
+                MonsterAbility(
                     name="Spellcasting",
                     description="The deva casts one of the following spells, requiring no Material components and using Charisma as the spellcasting ability (spell save DC 17):",
                 ),
@@ -861,7 +851,7 @@ class GuardianNaga(ExtendedCombatantData):
                         ),
                     ),
                 ),
-                DcMonsterAbility(
+                MonsterAbility(
                     name="Spellcasting",
                     description="The naga casts one of the following spells, requiring no Somatic or Material components and using Wisdom as the spellcasting ability (spell save DC 16):",
                 ),
@@ -1075,7 +1065,7 @@ class NobleProdigy(ExtendedCombatantData):
                         ),
                     ),
                 ),
-                DcMonsterAbility(
+                MonsterAbility(
                     name="Spellcasting",
                     description="The noble casts one of the following spells, requiring no Material components and using Charisma as the spellcasting ability (spell save DC 16):",
                 ),
@@ -1207,14 +1197,14 @@ class PerformerLegend(ExtendedCombatantData):
                         ),
                     ),
                 ),
-                DcMonsterAbility(
+                MonsterAbility(
                     name="Spellcasting",
                     description="The performer casts one of the following spells, requiring no Material components and using Charisma as the spellcasting ability (spell save DC 17):",
                 ),
             ],
             bonus_actions=[],
             reactions=[
-                DcMonsterAbility(
+                MonsterAbility(
                     name="Warding Charm",
                     description="Trigger: A creature hits the performer with an attack roll. Response—Wisdom Saving Throw: DC 17, the triggering creature. Failure: The attack roll misses the performer, and the target has the Charmed condition until the end of the performer's next turn.",
                     combat_effects=(
@@ -1345,7 +1335,7 @@ class SpyMaster(ExtendedCombatantData):
                         ),
                     ),
                 ),
-                DcMonsterAbility(
+                MonsterAbility(
                     name="Smoke Bomb (1/Day)",
                     description="The spy throws a bomb to a point it can see within 30 feet of itself. Constitution Saving Throw: DC 16, each creature in a 20-foot-radius Sphere centered on that point. Failure: 28 (8d6) Poison damage, and the target has the Blinded condition until the end of the spy's next turn. Success: Half damage only.",
                     per_day=1,
@@ -1433,6 +1423,7 @@ class StoneGolem(ExtendedCombatantData):
             senses="Darkvision 120 ft., Passive Perception 10",
             darkvision_ft=120,
             passive_perception=10,
+            spell_save_dc=17,
             languages="Understands Common plus two other languages but can't speak",
             traits=[
                 MonsterAbility(
@@ -1486,10 +1477,11 @@ class StoneGolem(ExtendedCombatantData):
                 ),
             ],
             bonus_actions=[
-                DcMonsterAbility(
+                MonsterAbility(
                     name="Slow (Recharge 5–6)",
                     description="The golem casts the Slow spell, requiring no spell components and using Constitution as the spellcasting ability (spell save DC 17).",
                     recharge=5,
+                    casts=(MonsterCast("Slow"),),
                 ),
             ],
             reactions=[],
@@ -1697,7 +1689,7 @@ class Yochlol(ExtendedCombatantData):
                         ),
                     ),
                 ),
-                DcMonsterAbility(
+                MonsterAbility(
                     name="Spellcasting",
                     description="The yochlol casts one of the following spells, requiring no Material components and using Charisma as the spellcasting ability (spell save DC 15):",
                 ),
@@ -1709,7 +1701,7 @@ class Yochlol(ExtendedCombatantData):
                 ),
             ],
             reactions=[
-                DcMonsterAbility(
+                MonsterAbility(
                     name="Toxic Escape",
                     description="Trigger: The yochlol is hit by an attack roll. Response: The yochlol halves the attack's damage to itself (round down), and it teleports to an unoccupied space it can see within 30 feet of itself. Constitution Saving Throw: DC 15, each creature within 5 feet of the yochlol's destination space. Failure: The target has the Poisoned condition until the end of its next turn. While Poisoned, it has the Incapacitated condition.",
                     combat_effects=(

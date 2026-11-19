@@ -122,8 +122,7 @@ def test_every_stat_blocks_fields_say_what_its_text_says():
             **read_stat_block(
                 monster.speed_special_rules,
                 monster.senses,
-                monster.actions,
-                monster.traits,
+                monster,
             ),
         }
         has = {name: getattr(monster, name) for name in STAT_BLOCK_FIELDS}

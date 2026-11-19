@@ -17,6 +17,7 @@ from __future__ import annotations
 
 import re
 from dataclasses import dataclass
+from functools import lru_cache
 
 from Combat.CombatUIQt.effect_options import (
     _REPEATS_THE_SAVE,
@@ -531,10 +532,25 @@ def read_ability_fields(char, ability, section: str) -> dict:
     return read_ability(
         name,
         description,
+        spell_named=spell_name_in_list,
         names=picker_names(char),
         has_own_roll=has_own_roll,
         is_trait=section == "traits",
     )
+
+
+def spell_name_in_list(name: str) -> str | None:
+    """`name` as the game's spell list has it, or None if it isn't a spell.
+    Here rather than in Model/Creatures/MonsterAbilityText.py, which mustn't
+    import CharacterContent (tests/test_layering.py)."""
+    return _spell_names().get(name.lower())
+
+
+@lru_cache(maxsize=1)
+def _spell_names() -> dict[str, str]:
+    from CharacterContent.Spells.SpellFactory import SpellFactory
+
+    return {spell.name.lower(): spell.name for spell in SpellFactory.all_spells()}
 
 
 def main(argv: list[str]) -> int:

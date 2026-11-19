@@ -142,8 +142,7 @@ def generate_monster_class(monster: dict) -> str:
     read = read_stat_block(
         speed_special,
         monster.get("senses", ""),
-        monster.get("actions", []),
-        monster.get("traits", []),
+        monster,
     )
     indent = " " * 12
     speed_fields = stat_block_field_lines(read, "speed_special_rules", indent)

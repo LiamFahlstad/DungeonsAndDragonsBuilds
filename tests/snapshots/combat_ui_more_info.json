@@ -179,15 +179,58 @@
           "word_wrap": true
          },
          {
-          "margins": [
-           0,
-           2,
-           0,
-           2
-          ],
-          "text": "<b><i>Fiendish Burst.</i></b> Melee or Ranged Attack Roll: +9, reach 5 ft. or range 120 ft. Hit: 31 (4d12 + 5) Necrotic damage.",
-          "type": "QLabel",
-          "word_wrap": true
+          "layout": {
+           "items": [
+            {
+             "checkable": true,
+             "checked": false,
+             "flat": true,
+             "style": "QPushButton { text-align: left; padding: 2px 4px; background: transparent; border: none; color: #eaeaea; font-size: 12px; }QPushButton:hover { color: #c9a84c; }QPushButton:checked { color: #c9a84c; }",
+             "text": "\u25b6  Fiendish Burst  (+9 to hit)",
+             "type": "QPushButton"
+            },
+            {
+             "hidden": true,
+             "layout": {
+              "items": [
+               {
+                "text": "Melee or Ranged Attack Roll: +9, reach 5 ft. or range 120 ft. Hit: 31 (4d12 + 5) Necrotic damage.",
+                "type": "QLabel",
+                "word_wrap": true
+               },
+               {
+                "style": "color: #a0a0b0; font-size: 10px;",
+                "text": "Chance to hit, by target AC",
+                "type": "QLabel"
+               },
+               {
+                "text": "<table style='border-collapse:collapse'><tr><th style='borde... [1992 chars, sha1 d862449a9cbe]",
+                "text_format": "RichText",
+                "type": "QLabel"
+               }
+              ],
+              "margins": [
+               16,
+               2,
+               0,
+               4
+              ],
+              "spacing": 4,
+              "type": "QVBoxLayout"
+             },
+             "type": "QWidget"
+            }
+           ],
+           "margins": [
+            0,
+            0,
+            0,
+            0
+           ],
+           "spacing": 0,
+           "type": "QVBoxLayout"
+          },
+          "type": "QWidget"
          },
          {
           "layout": {
@@ -197,7 +240,7 @@
              "checked": false,
              "flat": true,
              "style": "QPushButton { text-align: left; padding: 2px 4px; background: transparent; border: none; color: #eaeaea; font-size: 12px; }QPushButton:hover { color: #c9a84c; }QPushButton:checked { color: #c9a84c; }",
-             "text": "\u25b6  Banishing Claw (Requires Soul Tome)  (DC 17)",
+             "text": "\u25b6  Banishing Claw (Requires Soul Tome)  (+9 to hit)",
              "type": "QPushButton"
             },
             {
@@ -211,11 +254,11 @@
                },
                {
                 "style": "color: #a0a0b0; font-size: 10px;",
-                "text": "Target's chance to fail the save, by save modifier",
+                "text": "Chance to hit, by target AC",
                 "type": "QLabel"
                },
                {
-                "text": "<table style='border-collapse:collapse'><tr><th style='borde... [2821 chars, sha1 b5a3df734501]",
+                "text": "<table style='border-collapse:collapse'><tr><th style='borde... [1992 chars, sha1 d862449a9cbe]",
                 "text_format": "RichText",
                 "type": "QLabel"
                }
@@ -244,58 +287,15 @@
           "type": "QWidget"
          },
          {
-          "layout": {
-           "items": [
-            {
-             "checkable": true,
-             "checked": false,
-             "flat": true,
-             "style": "QPushButton { text-align: left; padding: 2px 4px; background: transparent; border: none; color: #eaeaea; font-size: 12px; }QPushButton:hover { color: #c9a84c; }QPushButton:checked { color: #c9a84c; }",
-             "text": "\u25b6  Spellcasting  (DC 17)",
-             "type": "QPushButton"
-            },
-            {
-             "hidden": true,
-             "layout": {
-              "items": [
-               {
-                "text": "The arcanaloth casts one of the following spells, requiring no Material components and using Intelligence as the spellcasting ability (spell save DC 17):",
-                "type": "QLabel",
-                "word_wrap": true
-               },
-               {
-                "style": "color: #a0a0b0; font-size: 10px;",
-                "text": "Target's chance to fail the save, by save modifier",
-                "type": "QLabel"
-               },
-               {
-                "text": "<table style='border-collapse:collapse'><tr><th style='borde... [2821 chars, sha1 b5a3df734501]",
-                "text_format": "RichText",
-                "type": "QLabel"
-               }
-              ],
-              "margins": [
-               16,
-               2,
-               0,
-               4
-              ],
-              "spacing": 4,
-              "type": "QVBoxLayout"
-             },
-             "type": "QWidget"
-            }
-           ],
-           "margins": [
-            0,
-            0,
-            0,
-            0
-           ],
-           "spacing": 0,
-           "type": "QVBoxLayout"
-          },
-          "type": "QWidget"
+          "margins": [
+           0,
+           2,
+           0,
+           2
+          ],
+          "text": "<b><i>Spellcasting.</i></b> The arcanaloth casts one of the ... [181 chars, sha1 ea2a4a23f442]",
+          "type": "QLabel",
+          "word_wrap": true
          },
          {
           "frame_shape": "HLine",
@@ -337,15 +337,58 @@
           "type": "QLabel"
          },
          {
-          "margins": [
-           0,
-           2,
-           0,
-           2
-          ],
-          "text": "<b><i>Counterspell.</i></b> The arcanaloth casts Counterspell in response to that spell's trigger, using the same spellcasting ability as Spellcasting.",
-          "type": "QLabel",
-          "word_wrap": true
+          "layout": {
+           "items": [
+            {
+             "checkable": true,
+             "checked": false,
+             "flat": true,
+             "style": "QPushButton { text-align: left; padding: 2px 4px; background: transparent; border: none; color: #eaeaea; font-size: 12px; }QPushButton:hover { color: #c9a84c; }QPushButton:checked { color: #c9a84c; }",
+             "text": "\u25b6  Counterspell  (DC 17)",
+             "type": "QPushButton"
+            },
+            {
+             "hidden": true,
+             "layout": {
+              "items": [
+               {
+                "text": "The arcanaloth casts Counterspell in response to that spell's trigger, using the same spellcasting ability as Spellcasting.",
+                "type": "QLabel",
+                "word_wrap": true
+               },
+               {
+                "style": "color: #a0a0b0; font-size: 10px;",
+                "text": "Target's chance to fail the save, by save modifier",
+                "type": "QLabel"
+               },
+               {
+                "text": "<table style='border-collapse:collapse'><tr><th style='borde... [2821 chars, sha1 b5a3df734501]",
+                "text_format": "RichText",
+                "type": "QLabel"
+               }
+              ],
+              "margins": [
+               16,
+               2,
+               0,
+               4
+              ],
+              "spacing": 4,
+              "type": "QVBoxLayout"
+             },
+             "type": "QWidget"
+            }
+           ],
+           "margins": [
+            0,
+            0,
+            0,
+            0
+           ],
+           "spacing": 0,
+           "type": "QVBoxLayout"
+          },
+          "type": "QWidget"
          },
          {
           "type": "spacer"
@@ -393,21 +436,31 @@
   "toggles": [
    [
     [
-     "\u25bc  Banishing Claw (Requires Soul Tome)  (DC 17)",
+     "\u25bc  Fiendish Burst  (+9 to hit)",
      true
     ],
     [
-     "\u25b6  Banishing Claw (Requires Soul Tome)  (DC 17)",
+     "\u25b6  Fiendish Burst  (+9 to hit)",
      false
     ]
    ],
    [
     [
-     "\u25bc  Spellcasting  (DC 17)",
+     "\u25bc  Banishing Claw (Requires Soul Tome)  (+9 to hit)",
      true
     ],
     [
-     "\u25b6  Spellcasting  (DC 17)",
+     "\u25b6  Banishing Claw (Requires Soul Tome)  (+9 to hit)",
+     false
+    ]
+   ],
+   [
+    [
+     "\u25bc  Counterspell  (DC 17)",
+     true
+    ],
+    [
+     "\u25b6  Counterspell  (DC 17)",
      false
     ]
    ]
@@ -593,15 +646,58 @@
           "word_wrap": true
          },
          {
-          "margins": [
-           0,
-           2,
-           0,
-           2
-          ],
-          "text": "<b><i>Fiendish Burst.</i></b> Melee or Ranged Attack Roll: +9, reach 5 ft. or range 120 ft. Hit: 31 (4d12 + 5) Necrotic damage.",
-          "type": "QLabel",
-          "word_wrap": true
+          "layout": {
+           "items": [
+            {
+             "checkable": true,
+             "checked": false,
+             "flat": true,
+             "style": "QPushButton { text-align: left; padding: 2px 4px; background: transparent; border: none; color: #eaeaea; font-size: 12px; }QPushButton:hover { color: #c9a84c; }QPushButton:checked { color: #c9a84c; }",
+             "text": "\u25b6  Fiendish Burst  (+9 to hit)",
+             "type": "QPushButton"
+            },
+            {
+             "hidden": true,
+             "layout": {
+              "items": [
+               {
+                "text": "Melee or Ranged Attack Roll: +9, reach 5 ft. or range 120 ft. Hit: 31 (4d12 + 5) Necrotic damage.",
+                "type": "QLabel",
+                "word_wrap": true
+               },
+               {
+                "style": "color: #a0a0b0; font-size: 10px;",
+                "text": "Chance to hit, by target AC",
+                "type": "QLabel"
+               },
+               {
+                "text": "<table style='border-collapse:collapse'><tr><th style='borde... [1992 chars, sha1 d862449a9cbe]",
+                "text_format": "RichText",
+                "type": "QLabel"
+               }
+              ],
+              "margins": [
+               16,
+               2,
+               0,
+               4
+              ],
+              "spacing": 4,
+              "type": "QVBoxLayout"
+             },
+             "type": "QWidget"
+            }
+           ],
+           "margins": [
+            0,
+            0,
+            0,
+            0
+           ],
+           "spacing": 0,
+           "type": "QVBoxLayout"
+          },
+          "type": "QWidget"
          },
          {
           "layout": {
@@ -611,7 +707,7 @@
              "checked": false,
              "flat": true,
              "style": "QPushButton { text-align: left; padding: 2px 4px; background: transparent; border: none; color: #eaeaea; font-size: 12px; }QPushButton:hover { color: #c9a84c; }QPushButton:checked { color: #c9a84c; }",
-             "text": "\u25b6  Banishing Claw (Requires Soul Tome)  (DC 17)",
+             "text": "\u25b6  Banishing Claw (Requires Soul Tome)  (+9 to hit)",
              "type": "QPushButton"
             },
             {
@@ -625,11 +721,11 @@
                },
                {
                 "style": "color: #a0a0b0; font-size: 10px;",
-                "text": "Target's chance to fail the save, by save modifier",
+                "text": "Chance to hit, by target AC",
                 "type": "QLabel"
                },
                {
-                "text": "<table style='border-collapse:collapse'><tr><th style='borde... [2821 chars, sha1 b5a3df734501]",
+                "text": "<table style='border-collapse:collapse'><tr><th style='borde... [1992 chars, sha1 d862449a9cbe]",
                 "text_format": "RichText",
                 "type": "QLabel"
                }
@@ -658,58 +754,15 @@
           "type": "QWidget"
          },
          {
-          "layout": {
-           "items": [
-            {
-             "checkable": true,
-             "checked": false,
-             "flat": true,
-             "style": "QPushButton { text-align: left; padding: 2px 4px; background: transparent; border: none; color: #eaeaea; font-size: 12px; }QPushButton:hover { color: #c9a84c; }QPushButton:checked { color: #c9a84c; }",
-             "text": "\u25b6  Spellcasting  (DC 17)",
-             "type": "QPushButton"
-            },
-            {
-             "hidden": true,
-             "layout": {
-              "items": [
-               {
-                "text": "The arcanaloth casts one of the following spells, requiring no Material components and using Intelligence as the spellcasting ability (spell save DC 17):",
-                "type": "QLabel",
-                "word_wrap": true
-               },
-               {
-                "style": "color: #a0a0b0; font-size: 10px;",
-                "text": "Target's chance to fail the save, by save modifier",
-                "type": "QLabel"
-               },
-               {
-                "text": "<table style='border-collapse:collapse'><tr><th style='borde... [2821 chars, sha1 b5a3df734501]",
-                "text_format": "RichText",
-                "type": "QLabel"
-               }
-              ],
-              "margins": [
-               16,
-               2,
-               0,
-               4
-              ],
-              "spacing": 4,
-              "type": "QVBoxLayout"
-             },
-             "type": "QWidget"
-            }
-           ],
-           "margins": [
-            0,
-            0,
-            0,
-            0
-           ],
-           "spacing": 0,
-           "type": "QVBoxLayout"
-          },
-          "type": "QWidget"
+          "margins": [
+           0,
+           2,
+           0,
+           2
+          ],
+          "text": "<b><i>Spellcasting.</i></b> The arcanaloth casts one of the ... [181 chars, sha1 ea2a4a23f442]",
+          "type": "QLabel",
+          "word_wrap": true
          },
          {
           "frame_shape": "HLine",
@@ -751,15 +804,58 @@
           "type": "QLabel"
          },
          {
-          "margins": [
-           0,
-           2,
-           0,
-           2
-          ],
-          "text": "<b><i>Counterspell.</i></b> The arcanaloth casts Counterspell in response to that spell's trigger, using the same spellcasting ability as Spellcasting.",
-          "type": "QLabel",
-          "word_wrap": true
+          "layout": {
+           "items": [
+            {
+             "checkable": true,
+             "checked": false,
+             "flat": true,
+             "style": "QPushButton { text-align: left; padding: 2px 4px; background: transparent; border: none; color: #eaeaea; font-size: 12px; }QPushButton:hover { color: #c9a84c; }QPushButton:checked { color: #c9a84c; }",
+             "text": "\u25b6  Counterspell  (DC 17)",
+             "type": "QPushButton"
+            },
+            {
+             "hidden": true,
+             "layout": {
+              "items": [
+               {
+                "text": "The arcanaloth casts Counterspell in response to that spell's trigger, using the same spellcasting ability as Spellcasting.",
+                "type": "QLabel",
+                "word_wrap": true
+               },
+               {
+                "style": "color: #a0a0b0; font-size: 10px;",
+                "text": "Target's chance to fail the save, by save modifier",
+                "type": "QLabel"
+               },
+               {
+                "text": "<table style='border-collapse:collapse'><tr><th style='borde... [2821 chars, sha1 b5a3df734501]",
+                "text_format": "RichText",
+                "type": "QLabel"
+               }
+              ],
+              "margins": [
+               16,
+               2,
+               0,
+               4
+              ],
+              "spacing": 4,
+              "type": "QVBoxLayout"
+             },
+             "type": "QWidget"
+            }
+           ],
+           "margins": [
+            0,
+            0,
+            0,
+            0
+           ],
+           "spacing": 0,
+           "type": "QVBoxLayout"
+          },
+          "type": "QWidget"
          },
          {
           "type": "spacer"
@@ -807,21 +903,31 @@
   "toggles": [
    [
     [
-     "\u25bc  Banishing Claw (Requires Soul Tome)  (DC 17)",
+     "\u25bc  Fiendish Burst  (+9 to hit)",
      true
     ],
     [
-     "\u25b6  Banishing Claw (Requires Soul Tome)  (DC 17)",
+     "\u25b6  Fiendish Burst  (+9 to hit)",
      false
     ]
    ],
    [
     [
-     "\u25bc  Spellcasting  (DC 17)",
+     "\u25bc  Banishing Claw (Requires Soul Tome)  (+9 to hit)",
      true
     ],
     [
-     "\u25b6  Spellcasting  (DC 17)",
+     "\u25b6  Banishing Claw (Requires Soul Tome)  (+9 to hit)",
+     false
+    ]
+   ],
+   [
+    [
+     "\u25bc  Counterspell  (DC 17)",
+     true
+    ],
+    [
+     "\u25b6  Counterspell  (DC 17)",
      false
     ]
    ]
@@ -6954,15 +7060,58 @@
           "type": "QLabel"
          },
          {
-          "margins": [
-           0,
-           2,
-           0,
-           2
-          ],
-          "text": "<b><i>Umbral Claw.</i></b> Melee Attack Roll: +5, reach 5 ft. Hit: 16 (3d8 + 3) Psychic damage.",
-          "type": "QLabel",
-          "word_wrap": true
+          "layout": {
+           "items": [
+            {
+             "checkable": true,
+             "checked": false,
+             "flat": true,
+             "style": "QPushButton { text-align: left; padding: 2px 4px; background: transparent; border: none; color: #eaeaea; font-size: 12px; }QPushButton:hover { color: #c9a84c; }QPushButton:checked { color: #c9a84c; }",
+             "text": "\u25b6  Umbral Claw  (+5 to hit)",
+             "type": "QPushButton"
+            },
+            {
+             "hidden": true,
+             "layout": {
+              "items": [
+               {
+                "text": "Melee Attack Roll: +5, reach 5 ft. Hit: 16 (3d8 + 3) Psychic damage.",
+                "type": "QLabel",
+                "word_wrap": true
+               },
+               {
+                "style": "color: #a0a0b0; font-size: 10px;",
+                "text": "Chance to hit, by target AC",
+                "type": "QLabel"
+               },
+               {
+                "text": "<table style='border-collapse:collapse'><tr><th style='borde... [1991 chars, sha1 0402639cd3e4]",
+                "text_format": "RichText",
+                "type": "QLabel"
+               }
+              ],
+              "margins": [
+               16,
+               2,
+               0,
+               4
+              ],
+              "spacing": 4,
+              "type": "QVBoxLayout"
+             },
+             "type": "QWidget"
+            }
+           ],
+           "margins": [
+            0,
+            0,
+            0,
+            0
+           ],
+           "spacing": 0,
+           "type": "QVBoxLayout"
+          },
+          "type": "QWidget"
          },
          {
           "frame_shape": "HLine",
@@ -7032,7 +7181,18 @@
    "title": "Shadow Demon",
    "type": "QDialog"
   },
-  "toggles": []
+  "toggles": [
+   [
+    [
+     "\u25bc  Umbral Claw  (+5 to hit)",
+     true
+    ],
+    [
+     "\u25b6  Umbral Claw  (+5 to hit)",
+     false
+    ]
+   ]
+  ]
  },
  "sphinx": {
   "dialog": {
@@ -7435,58 +7595,15 @@
           "type": "QWidget"
          },
          {
-          "layout": {
-           "items": [
-            {
-             "checkable": true,
-             "checked": false,
-             "flat": true,
-             "style": "QPushButton { text-align: left; padding: 2px 4px; background: transparent; border: none; color: #eaeaea; font-size: 12px; }QPushButton:hover { color: #c9a84c; }QPushButton:checked { color: #c9a84c; }",
-             "text": "\u25b6  Spellcasting  (DC 20)",
-             "type": "QPushButton"
-            },
-            {
-             "hidden": true,
-             "layout": {
-              "items": [
-               {
-                "text": "The sphinx casts one of the following spells, requiring no Material components and using Wisdom as the spellcasting ability (spell save DC 20):",
-                "type": "QLabel",
-                "word_wrap": true
-               },
-               {
-                "style": "color: #a0a0b0; font-size: 10px;",
-                "text": "Target's chance to fail the save, by save modifier",
-                "type": "QLabel"
-               },
-               {
-                "text": "<table style='border-collapse:collapse'><tr><th style='borde... [2824 chars, sha1 d3050b08d416]",
-                "text_format": "RichText",
-                "type": "QLabel"
-               }
-              ],
-              "margins": [
-               16,
-               2,
-               0,
-               4
-              ],
-              "spacing": 4,
-              "type": "QVBoxLayout"
-             },
-             "type": "QWidget"
-            }
-           ],
-           "margins": [
-            0,
-            0,
-            0,
-            0
-           ],
-           "spacing": 0,
-           "type": "QVBoxLayout"
-          },
-          "type": "QWidget"
+          "margins": [
+           0,
+           2,
+           0,
+           2
+          ],
+          "text": "<b><i>Spellcasting.</i></b> The sphinx casts one of the foll... [171 chars, sha1 8c51c83a26c5]",
+          "type": "QLabel",
+          "word_wrap": true
          },
          {
           "frame_shape": "HLine",
@@ -7653,16 +7770,6 @@
    ],
    [
     [
-     "\u25bc  Spellcasting  (DC 20)",
-     true
-    ],
-    [
-     "\u25b6  Spellcasting  (DC 20)",
-     false
-    ]
-   ],
-   [
-    [
      "\u25bc  Weight of Years  (DC 16)",
      true
     ],
@@ -7806,15 +7913,58 @@
           "type": "QLabel"
          },
          {
-          "margins": [
-           0,
-           2,
-           0,
-           2
-          ],
-          "text": "<b><i>Bites.</i></b> Melee Attack Roll: +4, reach 5 ft. Hit: 5 (2d4) Piercing damage, or 2 (1d4) Piercing damage if the swarm is Bloodied.",
-          "type": "QLabel",
-          "word_wrap": true
+          "layout": {
+           "items": [
+            {
+             "checkable": true,
+             "checked": false,
+             "flat": true,
+             "style": "QPushButton { text-align: left; padding: 2px 4px; background: transparent; border: none; color: #eaeaea; font-size: 12px; }QPushButton:hover { color: #c9a84c; }QPushButton:checked { color: #c9a84c; }",
+             "text": "\u25b6  Bites  (+4 to hit)",
+             "type": "QPushButton"
+            },
+            {
+             "hidden": true,
+             "layout": {
+              "items": [
+               {
+                "text": "Melee Attack Roll: +4, reach 5 ft. Hit: 5 (2d4) Piercing damage, or 2 (1d4) Piercing damage if the swarm is Bloodied.",
+                "type": "QLabel",
+                "word_wrap": true
+               },
+               {
+                "style": "color: #a0a0b0; font-size: 10px;",
+                "text": "Chance to hit, by target AC",
+                "type": "QLabel"
+               },
+               {
+                "text": "<table style='border-collapse:collapse'><tr><th style='borde... [1991 chars, sha1 e73ba493d8e6]",
+                "text_format": "RichText",
+                "type": "QLabel"
+               }
+              ],
+              "margins": [
+               16,
+               2,
+               0,
+               4
+              ],
+              "spacing": 4,
+              "type": "QVBoxLayout"
+             },
+             "type": "QWidget"
+            }
+           ],
+           "margins": [
+            0,
+            0,
+            0,
+            0
+           ],
+           "spacing": 0,
+           "type": "QVBoxLayout"
+          },
+          "type": "QWidget"
          },
          {
           "type": "spacer"
@@ -7859,6 +8009,17 @@
    "title": "Swarm of Bats",
    "type": "QDialog"
   },
-  "toggles": []
+  "toggles": [
+   [
+    [
+     "\u25bc  Bites  (+4 to hit)",
+     true
+    ],
+    [
+     "\u25b6  Bites  (+4 to hit)",
+     false
+    ]
+   ]
+  ]
  }
 }

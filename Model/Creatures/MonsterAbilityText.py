@@ -13,7 +13,6 @@ from __future__ import annotations
 
 import re
 from collections.abc import Callable, Collection
-from functools import lru_cache
 
 from Model.Creatures.MonsterAbilities import MonsterCast
 
@@ -46,13 +45,16 @@ _SENTENCE = re.compile(r"(?<=[.!?])\s+")
 # "The lich casts Fear, using ...", "uses Spellcasting to cast Mind Spike
 # (level 3 version).", "casts Cure Wounds (level 2 version), Lesser
 # Restoration, or Remove Curse, using ...", "casts Counterspell or Shield in
-# response to ...". The names are checked against the spells there are.
+# response to ...", and the older "casts the Sleep spell, ...". The names
+# are checked against the spells there are.
 _CASTS = re.compile(
-    r"\bcasts? (?P<spells>[A-Z].*?)"
+    r"\bcasts? (?:the )?(?P<spells>[A-Z].*?)"
     r"(?=, using|\.(?:\s|$)| in response| on that| on the| on a| at will)"
 )
 _LIST_ITEM = re.compile(r",? or |, ")
-_AT_LEVEL = re.compile(r"(?P<name>.+?)(?: \(level (?P<level>\d+) version\))?")
+_AT_LEVEL = re.compile(
+    r"(?P<name>.+?)(?: spell)?(?: \(level (?P<level>\d+) version\))?"
+)
 # "casts one of the following spells, ... (spell save DC 12):" and its lists.
 _FOLLOWING = re.compile(r"following spells[^:]*:")
 _SPELL_LIST = re.compile(r"(?P<often>At will|\d+/Day(?: each)?): (?P<spells>[^.]+)")
@@ -150,7 +152,7 @@ def read_ability(
     name: str,
     description: str,
     *,
-    spell_named: SpellNamed | None = None,
+    spell_named: SpellNamed,
     names: Collection[str] = (),
     has_own_roll: bool = False,
     is_trait: bool = False,
@@ -165,24 +167,12 @@ def read_ability(
         sentence = read_turn_start(description)
         if sentence:
             found["at_turn_start"] = sentence
-    casts = read_casts(description, spell_named or spell_name_in_list)
+    casts = read_casts(description, spell_named)
     if casts:
         found["casts"] = casts
     if not has_own_roll:
         found.update(read_uses(name, description, names))
     return {key: found[key] for key in ABILITY_FIELDS if key in found}
-
-
-def spell_name_in_list(name: str) -> str | None:
-    """`name` as the game's spell list has it, or None if it isn't a spell."""
-    return _spell_names().get(name.lower())
-
-
-@lru_cache(maxsize=1)
-def _spell_names() -> dict[str, str]:
-    from CharacterContent.Spells.SpellFactory import SpellFactory
-
-    return {spell.name.lower(): spell.name for spell in SpellFactory.all_spells()}
 
 
 def keyword_source(fields: dict) -> list[str]:

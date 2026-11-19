@@ -29,8 +29,8 @@ from Model.Creatures.MonsterAbilityText import (
     read_costs,
     read_turn_start,
     read_uses,
-    spell_name_in_list,
 )
+from Combat.Tools.monster_effect_text import spell_name_in_list
 
 
 def test_costs_from_the_name():

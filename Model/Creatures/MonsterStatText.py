@@ -110,19 +110,41 @@ def _description(ability) -> str:
     return getattr(ability, "description", "") or ""
 
 
-def spellcasting_descriptions(actions, traits) -> list[str]:
-    """The texts read_spellcasting reads: actions first, then traits (a
-    monster's Spellcasting is an action; an older one's, a trait)."""
-    return [_description(a) for a in [*(actions or ()), *(traits or ())]]
+# The sections read_spellcasting reads, in this order: actions first, then
+# traits (a monster's Spellcasting is an action; an older one's, a trait),
+# then the rest (a Vampire's Charm is a bonus action, a dragon's Frightful
+# Presence a legendary action, each "(spell save DC 17)").
+SPELLCASTING_SECTIONS = (
+    "actions",
+    "traits",
+    "bonus_actions",
+    "reactions",
+    "legendary_actions",
+    "lair_actions",
+    "mythic_actions",
+)
 
 
-def read_stat_block(speed_text: str, senses_text: str, actions=(), traits=()) -> dict:
+def spellcasting_descriptions(block) -> list[str]:
+    """The texts read_spellcasting reads, from a stat block, its scraped
+    JSON record or its log dict: every ability, SPELLCASTING_SECTIONS'
+    order."""
+    sections = (
+        (block.get(name) for name in SPELLCASTING_SECTIONS)
+        if isinstance(block, dict)
+        else (getattr(block, name, None) for name in SPELLCASTING_SECTIONS)
+    )
+    return [_description(a) for section in sections for a in section or ()]
+
+
+def read_stat_block(speed_text: str, senses_text: str, block=None) -> dict:
     """Every field the stat block's text gives, in STAT_BLOCK_FIELDS order:
-    only the ones it gives."""
+    only the ones it gives. `block` is what holds its abilities (the stat
+    block, its JSON record or its log dict), read for its spellcasting."""
     found = {
         **read_speed_text(speed_text),
         **read_senses(senses_text),
-        **read_spellcasting(spellcasting_descriptions(actions, traits)),
+        **read_spellcasting(spellcasting_descriptions(block or {})),
     }
     return {name: found[name] for name in STAT_BLOCK_FIELDS if name in found}
 
@@ -136,8 +158,7 @@ def upgrade_stat_block_keys(char: dict) -> dict:
     read = read_stat_block(
         str(char.get("speed_special_rules") or ""),
         str(char.get("senses") or ""),
-        char.get("actions"),
-        char.get("traits"),
+        char,
     )
     char.update({**DEFAULTS, **read})
     return char

@@ -7,7 +7,6 @@ from Model.Creatures.Combatants import (
 )
 from Model.Creatures.MonsterAbilities import (
     MonsterCast,
-    DcMonsterAbility,
     DiceType,
     MeleeAttack,
     MonsterAbility,
@@ -101,7 +100,7 @@ class PriestOfTheBlackTongues(ExtendedCombatantData):
                         ),
                     ),
                 ),
-                DcMonsterAbility(
+                MonsterAbility(
                     name="Curse-Throat Wail (Recharge 5-6)",
                     description="The priest looses a rasping shout amplified by the brass throat-tube lashed across its ruined mouth. Each creature in a 15-foot cone must make a DC 12 Wisdom saving throw, taking 10 (3d6) Psychic damage and gaining the Frightened condition until the end of the priest's next turn on a failed save, or half as much damage only on a successful one.",
                     recharge=5,
@@ -109,7 +108,7 @@ class PriestOfTheBlackTongues(ExtendedCombatantData):
                         CombatEffect(area=CombatArea(CombatAreaShape.CONE, 15)),
                     ),
                 ),
-                DcMonsterAbility(
+                MonsterAbility(
                     name="Spellcasting",
                     description="The priest casts one of the following spells, using Wisdom as the spellcasting ability (spell save DC 12, +3 to hit with spell attacks): At will: Thaumaturgy, Toll the Dead. 2/Day each: Hold Person, Silence. 1/Day: Bestow Curse.",
                     casts=(
@@ -190,7 +189,7 @@ class SisterLumenBellWardenOfStillChoirs(ExtendedCombatantData):
                 ),
             ],
             actions=[
-                DcMonsterAbility(
+                MonsterAbility(
                     name="Chime-Rod",
                     description="Melee Attack Roll: +5, reach 5 ft. Hit: 6 (1d6 + 3) Bludgeoning damage to the throat. The target must succeed on a DC 12 Constitution saving throw or be unable to speak or make sound, including casting spells with a Verbal component, until the end of its next turn.",
                     combat_effects=(
@@ -205,7 +204,7 @@ class SisterLumenBellWardenOfStillChoirs(ExtendedCombatantData):
                         ),
                     ),
                 ),
-                DcMonsterAbility(
+                MonsterAbility(
                     name="Peal of Still Choirs (Recharge 5-6)",
                     description="Sister Lumen rings her cluster of harmonic bells. Each creature of her choice within 20 feet of her must make a DC 12 Wisdom saving throw. On a failed save, a creature takes 7 (2d6) Thunder damage, can't speak or cast spells with a Verbal component until the end of Sister Lumen's next turn, and a creature that was Concentrating on a spell must succeed on a Concentration saving throw or lose Concentration on that spell. On a successful save, a creature takes half as much damage only and suffers no other effect.",
                     recharge=5,
@@ -221,7 +220,7 @@ class SisterLumenBellWardenOfStillChoirs(ExtendedCombatantData):
                 ),
             ],
             reactions=[
-                DcMonsterAbility(
+                MonsterAbility(
                     name="Interrupting Chime (1/Day)",
                     description="When a creature Sister Lumen can see within 30 feet of her begins casting a spell with a Verbal component, she can ring a warning bell. The creature must succeed on a DC 12 Wisdom saving throw or its spell fails and has no effect.",
                     per_day=1,
@@ -296,7 +295,7 @@ class AccursedGroupOf5(ExtendedCombatantData):
                         ),
                     ),
                 ),
-                DcMonsterAbility(
+                MonsterAbility(
                     name="Grab",
                     description="reach 5 ft. If the target is a Medium or smaller creature, it has the Grappled condition (escape DC 13).",
                 ),

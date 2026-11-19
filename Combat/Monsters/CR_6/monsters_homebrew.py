@@ -6,7 +6,6 @@ from Model.Creatures.Combatants import (
     MonsterType,
 )
 from Model.Creatures.MonsterAbilities import (
-    DcMonsterAbility,
     DiceType,
     LegendaryResistance,
     MeleeOrRangedAttack,
@@ -97,7 +96,7 @@ class TheMouthThatWalks(ExtendedCombatantData):
                 ),
             ],
             actions=[
-                DcMonsterAbility(
+                MonsterAbility(
                     name="Devouring Maw",
                     description="Melee Attack Roll: +7, reach 10 ft. Hit: 26 (4d10 + 4) Piercing damage plus 7 (2d6) Necrotic damage. If the target is Medium or smaller and isn't already grappled by the Mouth, the target is also grappled (escape DC 15) and drawn into the wound: while grappled this way, the target is Restrained, and at the start of each of its turns it takes 7 (2d6) Necrotic damage as the wound convulses around it.",
                     combat_effects=(
@@ -115,7 +114,7 @@ class TheMouthThatWalks(ExtendedCombatantData):
                         ),
                     ),
                 ),
-                DcMonsterAbility(
+                MonsterAbility(
                     name="Chain-Wracked Lash (Recharge 5-6)",
                     description="One of the Mouth's anchoring chains tears free of the sanctum floor and lashes out. Melee Attack Roll: +7, reach 15 ft. Hit: 14 (2d10 + 4) Bludgeoning damage, and if the target is Large or smaller, it must succeed on a DC 15 Strength saving throw or be pulled up to 10 feet toward the Mouth.",
                     recharge=5,
@@ -131,7 +130,7 @@ class TheMouthThatWalks(ExtendedCombatantData):
                         ),
                     ),
                 ),
-                DcMonsterAbility(
+                MonsterAbility(
                     name="Noc'tra's Wail (Recharge 5-6)",
                     description="The wound shudders and screams a fragment of Noc'tra outward in a 15-foot Cone. Each creature in the area must succeed on a DC 15 Wisdom saving throw, taking 14 (4d6) Psychic damage and gaining the Frightened condition until the end of the Mouth's next turn on a failed save, or half as much damage only on a successful one.",
                     recharge=5,
@@ -203,7 +202,7 @@ class TheHunter(ExtendedCombatantData):
                     name="Cursebound",
                     description="The Hunter has absorbed the essence of an Accursed creature into its own flesh, marking it with grey skin, blackened teeth, and eyes like dying embers. It has Resistance to Necrotic damage, and it is immune to being Frightened.",
                 ),
-                DcMonsterAbility(
+                MonsterAbility(
                     name="Unnerving Calm",
                     description="The Hunter never raises its voice or its guard. It has Advantage on Charisma (Intimidation) checks. In addition, at the start of each of its turns, the Hunter can choose one creature within 10 feet of it that can see it; that creature must succeed on a DC 15 Wisdom saving throw or have Disadvantage on attack rolls against the Hunter until the start of the Hunter's next turn, unnerved by its stillness.",
                     at_turn_start="In addition, at the start of each of its turns, the Hunter can choose one creature within 10 feet of it that can see it; that creature must succeed on a DC 15 Wisdom saving throw or have Disadvantage on attack rolls against the Hunter until the start of the Hunter's next turn, unnerved by its stillness.",
@@ -232,7 +231,7 @@ class TheHunter(ExtendedCombatantData):
                 ),
             ],
             bonus_actions=[
-                DcMonsterAbility(
+                MonsterAbility(
                     name="Marked for the Hunt (Recharge 5-6)",
                     description="The Hunter fixes its gaze on one creature it can see within 30 feet. Constitution Saving Throw: DC 15, the target. Failure: The target is Marked until the start of the Hunter's next turn. While a creature is Marked this way, the Hunter's attack rolls against it score a Critical Hit on a roll of 19 or 20, and the Marked creature can't benefit from Invisible or Heavily Obscured against the Hunter.",
                     recharge=5,

@@ -6,7 +6,6 @@ from Model.Creatures.Combatants import (
     MonsterType,
 )
 from Model.Creatures.MonsterAbilities import (
-    DcMonsterAbility,
     DiceType,
     MonsterAbility,
     Multiattack,
@@ -114,7 +113,7 @@ class TheChoirmasterOfHollowHymns(ExtendedCombatantData):
                         ),
                     ),
                 ),
-                DcMonsterAbility(
+                MonsterAbility(
                     name="Warding Rasp (Recharge 5-6)",
                     description="The Choirmaster drags the hooked bow across his throat, and a broken fragment of Noc'tra tears free in a 20-foot Cone. Each creature in the area must make a DC 14 Wisdom saving throw, taking 17 (5d6) Psychic damage and gaining the Frightened condition until the end of the Choirmaster's next turn on a failed save, or half as much damage only on a successful one. The Choirmaster then gains one stack of Throat-Strain (see Throat-Strain).",
                     recharge=5,

@@ -5,7 +5,6 @@ from Model.Creatures.Combatants import (
     MonsterType,
 )
 from Model.Creatures.MonsterAbilities import (
-    DcMonsterAbility,
     DiceType,
     MeleeAttack,
     MonsterAbility,
@@ -81,7 +80,7 @@ class MarshalVirel(ExtendedCombatantData):
                     name="Multiattack",
                     description="Virel makes two Duelist's Rapier attacks.",
                 ),
-                DcMonsterAbility(
+                MonsterAbility(
                     name="Duelist's Rapier",
                     description="Melee Attack Roll: +6, reach 5 ft. Hit: 11 (1d8 + 6) Piercing damage. If this attack is a critical hit, the target must succeed on a DC 13 Constitution saving throw or have the Silenced condition (it can't speak or cast spells that require a Verbal component) until the end of its next turn.",
                     combat_effects=(

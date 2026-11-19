@@ -6,7 +6,6 @@ from Model.Creatures.Combatants import (
     MonsterType,
 )
 from Model.Creatures.MonsterAbilities import (
-    DcMonsterAbility,
     LegendaryResistance,
     MonsterAbility,
     Multiattack,
@@ -84,7 +83,7 @@ class TheBellSaint(ExtendedCombatantData):
                 Multiattack(
                     creature_name="Bell Saint", attacks_text="two Chain Lash attacks"
                 ),
-                DcMonsterAbility(
+                MonsterAbility(
                     name="Chain Lash",
                     description="Melee Attack Roll: +10, reach 15 ft. Hit: 15 (2d10 + 4) Bludgeoning damage, and the target is grappled (escape DC 15) by one of the bell's dragging chains.",
                     combat_effects=(
@@ -99,7 +98,7 @@ class TheBellSaint(ExtendedCombatantData):
                         ),
                     ),
                 ),
-                DcMonsterAbility(
+                MonsterAbility(
                     name="Toll of Rising (Recharge 5-6)",
                     description="The bell tolls with unholy force. Each Undead creature within 30 feet of the Bell Saint that isn't already under another creature's control rises to fight for the Bell Saint, acting immediately after the Bell Saint's turn. Each living creature within 30 feet must succeed on a DC 17 Wisdom saving throw or take 10 (3d6) Psychic damage and have its speed halved until the end of its next turn, or take half as much damage on a success and suffer no speed reduction.",
                     recharge=5,
@@ -117,7 +116,7 @@ class TheBellSaint(ExtendedCombatantData):
                     creature_name="Bell Saint",
                     attack_name="Chain Lash",
                 ),
-                DcMonsterAbility(
+                MonsterAbility(
                     name="Muffled Toll (Costs 2 Actions)",
                     description="One creature the Bell Saint can see within 30 feet must succeed on a DC 17 Wisdom saving throw or be frightened until the end of its next turn.",
                     legendary_cost=2,

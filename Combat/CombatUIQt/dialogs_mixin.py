@@ -26,7 +26,8 @@ from PyQt6.QtWidgets import (
 import Core.Definitions as Definitions
 from Combat.Definitions import ConditionRule
 from Core.Definitions import DamageType
-from Model.Creatures.MonsterAbilities import DcMonsterAbility, extract_dc_from_text
+from Model.Content.CombatEffect import EffectRoll
+from Model.Creatures.MonsterAbilities import ability_field
 from Combat.Rules import Rule, group_by_category, load_rules
 from Combat.PlayerCombatant import weapon_summary
 from Combat.WildShape import current_form
@@ -47,6 +48,7 @@ from .stats import (
     spell_slots_used_key,
 )
 from .attack_rolls import armor_text
+from .monster_actions import ability_effects
 from .player_server import PlayerServerError, lan_addresses
 from .settings import SETTING_SECTIONS
 from .styles import QSS
@@ -226,35 +228,40 @@ def _save_chance_table_html(dc: int) -> str:
     )
 
 
-def _ability_dc(ab) -> int | None:
-    """DC for a save-based ability: the `dc` field on a SavingThrowEffect, or
-    (for a DcMonsterAbility, live or resumed from a saved log as a plain
-    dict) the DC pulled out of its free-text description. A prose `dc` (a
-    summon's "equals your spell save DC") falls through to the description,
-    which names no number, so it has none."""
+def _ability_roll(ab, char: dict | None = None) -> tuple[str, int] | None:
+    """What an ability's probability table is of, from its fields (live, or
+    the plain dict a saved log makes of it), never its text: ("hit", bonus)
+    or ("save", DC). A structured attack's `attack_bonus` or save's `dc`;
+    else its first combat effect that rolls an attack or a save with a
+    number; else, for an ability that casts spells, its stat block's
+    `spell_save_dc`. A prose DC (a summon's "equals your spell save DC") is
+    no number, so it has none, and neither has an ability with nothing to
+    roll (Multiattack, most traits)."""
+    attack_bonus = _ability_field(ab, "attack_bonus")
+    if isinstance(attack_bonus, int):
+        return ("hit", attack_bonus)
     dc = _ability_field(ab, "dc")
     if isinstance(dc, int):
-        return dc
-    if isinstance(ab, DcMonsterAbility):
-        return ab.extract_dc()
-    if isinstance(ab, dict):
-        return extract_dc_from_text(ab.get("description", ""))
+        return ("save", dc)
+    for effect in ability_effects(ab):
+        if effect.roll is EffectRoll.ATTACK and isinstance(effect.attack_bonus, int):
+            return ("hit", effect.attack_bonus)
+        if effect.roll is EffectRoll.SAVE and isinstance(effect.dc, int):
+            return ("save", effect.dc)
+    spell_save_dc = (char or {}).get("spell_save_dc")
+    if ability_field(ab, "casts") and isinstance(spell_save_dc, int):
+        return ("save", spell_save_dc)
     return None
 
 
-def _ability_probability_table_html(ab) -> str | None:
-    """A MeleeAttack/RangedAttack gets a hit-chance-by-AC table; a
-    SavingThrowEffect or DcMonsterAbility gets a table of the target's
+def _ability_probability_table_html(roll: tuple[str, int]) -> str:
+    """An attack's hit-chance-by-AC table, or a save's table of the target's
     save-failure chance (i.e. the monster's chance of landing the effect)
-    by save modifier; anything else (traits, Multiattack, plain abilities,
-    ...) gets none."""
-    attack_bonus = _ability_field(ab, "attack_bonus")
-    if attack_bonus is not None:
-        return _hit_chance_table_html(attack_bonus)
-    dc = _ability_dc(ab)
-    if dc is not None:
-        return _save_chance_table_html(dc)
-    return None
+    by save modifier."""
+    kind, number = roll
+    if kind == "hit":
+        return _hit_chance_table_html(number)
+    return _save_chance_table_html(number)
 
 
 class _InfoPanel:
@@ -660,7 +667,7 @@ def _add_monster_details(panel: _InfoPanel, char: dict):
         if abilities:
             panel.section(label)
             for ab in abilities:
-                _add_monster_ability(panel, ab)
+                _add_monster_ability(panel, ab, char)
 
 
 def _add_monster_summary(panel: _InfoPanel, char: dict):
@@ -714,21 +721,22 @@ def _add_monster_defenses(panel: _InfoPanel, char: dict):
         )
 
 
-def _add_monster_ability(panel: _InfoPanel, ab):
+def _add_monster_ability(panel: _InfoPanel, ab, char: dict | None = None):
     """A trait/action/...: plain text, or for an attack or a save with a DC,
     expandable to its hit or save-failure chances."""
     name, desc = _ability_entry(ab)
-    table_html = _ability_probability_table_html(ab)
-    if table_html is None:
+    roll = _ability_roll(ab, char)
+    if roll is None:
         panel.ability(name, desc)
         return
+    table_html = _ability_probability_table_html(roll)
 
-    attack_bonus = _ability_field(ab, "attack_bonus")
-    if attack_bonus is not None:
-        header_suffix = f"{attack_bonus:+} to hit"
+    kind, number = roll
+    if kind == "hit":
+        header_suffix = f"{number:+} to hit"
         caption_text = "Chance to hit, by target AC"
     else:
-        header_suffix = f"DC {_ability_dc(ab)}"
+        header_suffix = f"DC {number}"
         caption_text = "Target's chance to fail the save, by save modifier"
 
     box, layout = _detail_box(spacing=4)

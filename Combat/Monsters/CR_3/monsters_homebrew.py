@@ -6,7 +6,6 @@ from Model.Creatures.Combatants import (
     MonsterType,
 )
 from Model.Creatures.MonsterAbilities import (
-    DcMonsterAbility,
     DiceType,
     MeleeAttack,
     MonsterAbility,
@@ -104,7 +103,7 @@ class CantorOfTheBlackChoir(ExtendedCombatantData):
                         ),
                     ),
                 ),
-                DcMonsterAbility(
+                MonsterAbility(
                     name="Speak Noc'tra (Recharge 5-6)",
                     description="The Cantor tears a fragment of the black word from its ruined throat in a 30-foot Cone. Each creature in the area makes a DC 11 Wisdom saving throw. Failure: 14 (4d6) Psychic damage, and the target has the Frightened condition until the end of the Cantor's next turn. Success: Half damage only. A half-second later, the word catches up to itself: at the start of the Cantor's next turn, each creature that failed the save must succeed on a DC 11 Wisdom saving throw or take 7 (2d6) Necrotic damage as the echo arrives. Whether or not the word strikes any target, the toll is real: the Cantor takes 3 (1d6) Necrotic damage as it passes through, one utterance closer to its own undoing.",
                     recharge=5,
@@ -218,7 +217,7 @@ class GarronTheKindly(ExtendedCombatantData):
                         ),
                     ),
                 ),
-                DcMonsterAbility(
+                MonsterAbility(
                     name="Precise Incision",
                     description="Melee Attack Roll: +5, reach 10 ft. Hit: 9 (2d6 + 2) Slashing damage, and the target must succeed on a DC 12 Constitution saving throw or Garron's blade finds the throat with surgical precision: until the end of the target's next turn, it can't speak and can't cast spells that require a Verbal component.",
                     combat_effects=(
@@ -329,7 +328,7 @@ class SerCaldusTheVowOfSilence(ExtendedCombatantData):
                         ),
                     ),
                 ),
-                DcMonsterAbility(
+                MonsterAbility(
                     name="Rite of Silence (3/Day)",
                     description="Immediately after hitting a creature with Silencing Blade, Ser Caldus kneels into the strike and calls the rite complete: the target takes an extra 9 (2d8) Psychic damage. If this damage reduces the target to 0 Hit Points, it dies without a sound, and each other creature within 10 feet that witnessed the kill must succeed on a DC 11 Wisdom saving throw or have the Frightened condition until the end of Ser Caldus's next turn.",
                     per_day=3,

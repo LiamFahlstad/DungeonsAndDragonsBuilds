@@ -18,7 +18,7 @@ For each subclass this prints its constructor fields with defaults, whether `nam
 - **Free name** (attacks, `SavingThrowEffect`, `CastSpellLegendaryAction`, `NamedAttackAction`): pass the flavour name (`"Bite"`, `"Chain Lash (Costs 1 Action)"`).
 - **A proper-name monster** whose text omits "The" ("Garron makes two..."): set `use_article=False` where the class has it (`Multiattack`, `NamedAttackAction`) and pass the exact display name as `creature_name`.
 - **Two damage types on one hit** ("14 (2d8 + 5) Piercing damage plus 4 (1d8) Fire damage"): `MeleeAttack` and `RangedAttack` support this through their `secondary_*` fields. `MeleeOrRangedAttack` does not; leave those as plain text.
-- **Free text that names a DC** but doesn't fit `SavingThrowEffect`: use `DcMonsterAbility(name=..., description=...)`, so the combat UI can still pull the DC out for its save-chance table.
+- **Free text that names a DC** but doesn't fit `SavingThrowEffect`: a plain `MonsterAbility` whose `combat_effects` has the save with its `dc` (the More Info dialog's save-chance table and the picker read it there, never from the text). A casting ability's DC is the stat block's `spell_save_dc`.
 
 ## When to use a subclass (writing or converting)
 

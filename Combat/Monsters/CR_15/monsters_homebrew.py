@@ -6,7 +6,6 @@ from Model.Creatures.Combatants import (
     MonsterType,
 )
 from Model.Creatures.MonsterAbilities import (
-    DcMonsterAbility,
     DiceType,
     LegendaryResistance,
     MeleeAttack,
@@ -116,7 +115,7 @@ class TheHeadlessDragon(ExtendedCombatantData):
                         ),
                     ),
                 ),
-                DcMonsterAbility(
+                MonsterAbility(
                     name="Sigil Breath (Recharge 5-6)",
                     description="The metal sigil erupts with corrosive void-acid in a 60-foot line. Each creature in the line makes a DC 18 Dexterity saving throw, taking 54 (12d8) Acid damage on a failed save, or half as much on a success. A creature that fails the save also can't speak or make any sound (as the Silence spell centered on it) for 1 minute.",
                     recharge=5,
@@ -124,7 +123,7 @@ class TheHeadlessDragon(ExtendedCombatantData):
                         CombatEffect(area=CombatArea(CombatAreaShape.LINE, 60)),
                     ),
                 ),
-                DcMonsterAbility(
+                MonsterAbility(
                     name="Frightful Presence",
                     description="Each creature of the dragon's choice within 120 feet that can sense it must succeed on a DC 17 Wisdom saving throw or be frightened for 1 minute.",
                 ),
@@ -142,7 +141,7 @@ class TheHeadlessDragon(ExtendedCombatantData):
                     attack_name="Tail",
                     uses_ability="Tail",
                 ),
-                DcMonsterAbility(
+                MonsterAbility(
                     name="Wing Buffet (Costs 2 Actions)",
                     description="The dragon beats its wings. Each creature within 15 feet must succeed on a DC 18 Dexterity saving throw or take 13 (2d6 + 6) Bludgeoning damage and be knocked prone. The dragon can then fly up to half its flying speed.",
                     legendary_cost=2,
@@ -150,7 +149,7 @@ class TheHeadlessDragon(ExtendedCombatantData):
             ],
             legendary_resistances=3,
             lair_actions=[
-                DcMonsterAbility(
+                MonsterAbility(
                     name="Grasping Hands",
                     description="On initiative count 20 (losing initiative ties), accursed hands erupt from the ground in a 20-foot-radius sphere centered on a point the dragon can see within 120 feet. Each creature in that area must succeed on a DC 16 Strength saving throw or be Restrained until the dragon uses this lair action again or the dragon dies.",
                 ),

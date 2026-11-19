@@ -6,7 +6,6 @@ from Model.Creatures.Combatants import (
     MonsterType,
 )
 from Model.Creatures.MonsterAbilities import (
-    DcMonsterAbility,
     DiceType,
     MeleeAttack,
     MonsterAbility,
@@ -191,7 +190,7 @@ class AccursedGroupOf3(ExtendedCombatantData):
                         ),
                     ),
                 ),
-                DcMonsterAbility(
+                MonsterAbility(
                     name="Grab",
                     description="reach 5 ft. If the target is a Medium or smaller creature, it has the Grappled condition (escape DC 12).",
                 ),
@@ -278,7 +277,7 @@ class CurseCracked(ExtendedCombatantData):
                         ),
                     ),
                 ),
-                DcMonsterAbility(
+                MonsterAbility(
                     name="Cracking Surge (Recharge 5-6)",
                     description="The cracks across the Curse Cracked's body flare with searing light. Each creature within 10 feet of it must make a DC 12 Dexterity saving throw, taking 10 (3d6) Force damage on a failed save, or half as much damage on a successful one.",
                     recharge=5,
@@ -365,7 +364,7 @@ class CurseBodyBroken(ExtendedCombatantData):
                     creature_name="Curse Body Broken",
                     attacks_text="two Eldritch Strike attacks",
                 ),
-                DcMonsterAbility(
+                MonsterAbility(
                     name="Eldritch Strike",
                     description="Melee Attack Roll: +5, reach 10 ft. Hit: 7 (1d8 + 3) Bludgeoning damage, and the target must succeed on a DC 12 Strength saving throw or have the Prone condition as the impossibly bent limb wrenches it off balance.",
                     combat_effects=(
@@ -381,14 +380,14 @@ class CurseBodyBroken(ExtendedCombatantData):
                         ),
                     ),
                 ),
-                DcMonsterAbility(
+                MonsterAbility(
                     name="Scream of the Trapped (Recharge 5-6)",
                     description="For one horrible instant, the victim's own voice tears free from the curse's grip in a scream of agony. Each creature within 20 feet that can hear the Curse Body Broken must succeed on a DC 12 Wisdom saving throw or have the Frightened condition until the end of the Curse Body Broken's next turn.",
                     recharge=5,
                 ),
             ],
             bonus_actions=[
-                DcMonsterAbility(
+                MonsterAbility(
                     name="Grasping Mutation",
                     description="Melee Attack Roll: +5, reach 15 ft. Hit: 5 (1d6 + 3) Bludgeoning damage, and the target has the Grappled condition (escape DC 13) if the Curse Body Broken doesn't have another creature grappled with this action.",
                     combat_effects=(
@@ -480,7 +479,7 @@ class CurseMindBroken(ExtendedCombatantData):
                         ),
                     ),
                 ),
-                DcMonsterAbility(
+                MonsterAbility(
                     name="Memory Shatter (Recharge 5-6)",
                     description="One creature the Curse Mind Broken can see within 30 feet must succeed on a DC 12 Wisdom saving throw or have the Stunned condition until the end of its next turn, as fragments of stolen memory overwhelm its mind.",
                     recharge=5,
@@ -492,7 +491,7 @@ class CurseMindBroken(ExtendedCombatantData):
                         CombatEffect(area=CombatArea(CombatAreaShape.EMANATION, 15)),
                     ),
                 ),
-                DcMonsterAbility(
+                MonsterAbility(
                     name="Curse Discharge (Recharge 5-6)",
                     description="Raw curse-magic bursts outward in a wave. Each creature within 15 feet of the Curse Mind Broken must make a DC 12 Dexterity saving throw, taking 16 (3d10) Force damage on a failed save, or half as much damage on a successful one.",
                     recharge=5,
@@ -875,7 +874,7 @@ class HumanPaladinOfDevotion(ExtendedCombatantData):
                         ),
                     ),
                 ),
-                DcMonsterAbility(
+                MonsterAbility(
                     name="Compelled Duel (1/Day)",
                     description="The paladin challenges one creature it can see within 30 feet. The target must succeed on a DC 11 Wisdom saving throw or, for 1 minute (Concentration), have Disadvantage on attack rolls against creatures other than the paladin, and must succeed on a DC 11 Wisdom saving throw to willingly move more than 30 feet away from it. The effect ends early if the paladin attacks or casts a spell at another creature.",
                     combat_effects=(
