@@ -454,9 +454,9 @@ class TurnPanelMixin(CombatWindowState):
         text = ": ".join(result[:1] + [" ".join(result[1:])]) if result[1:] else ""
         if notes:
             text = f"{text}\n{'; '.join(notes)}"
-        if hit is not False and action.rider:
-            rider = shorten(action.rider, _RIDER_LENGTH, placeholder="...")
-            text = f"{text}\nAlso: {rider}" if text else f"{action.name}: {rider}"
+        if hit is not False and action.notes:
+            said = shorten(" ".join(action.notes), _RIDER_LENGTH, placeholder="...")
+            text = f"{text}\n{said}" if text else f"{action.name}: {said}"
         self._action_result_label.setText(text)
         self._action_result_label.setToolTip(action.description)
 

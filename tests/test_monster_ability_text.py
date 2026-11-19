@@ -13,10 +13,10 @@ import Combat.Monsters
 from Combat.CombatUIQt.monster_actions import (
     ABILITY_SECTIONS,
     parse_action,
-    read_ability_fields,
     start_of_turn_traits,
     upgrade_ability_keys,
 )
+from Combat.Tools.monster_effect_text import read_ability_fields
 from Combat.EncounterLogs import LogJSONEncoder
 from Combat.Tools.monster_enum_format import format_ability_list
 from Model.Creatures.Combatants import ExtendedCombatantData

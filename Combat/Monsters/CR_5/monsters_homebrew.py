@@ -23,6 +23,7 @@ from Model.Content.CombatEffect import (
     TurnEdge,
     TurnOf,
 )
+from Model.Content.CombatArea import CombatArea, CombatAreaShape
 
 
 class TheChoirmasterOfHollowHymns(ExtendedCombatantData):
@@ -98,11 +99,27 @@ class TheChoirmasterOfHollowHymns(ExtendedCombatantData):
                 MonsterAbility(
                     name="Hooked Bow",
                     description="Melee Attack Roll: +6, reach 5 ft. Hit: 10 (1d8 + 3) Slashing damage plus 4 (1d8) Necrotic damage as the curse bleeds from his own throat into the wound.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=6,
+                            damage=(
+                                CombatDamage("1d8 + 3", DamageType.SLASHING),
+                                CombatDamage("1d8", DamageType.NECROTIC),
+                            ),
+                            notes=(
+                                "Also: as the curse bleeds from his own throat into the wound",
+                            ),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Warding Rasp (Recharge 5-6)",
                     description="The Choirmaster drags the hooked bow across his throat, and a broken fragment of Noc'tra tears free in a 20-foot Cone. Each creature in the area must make a DC 14 Wisdom saving throw, taking 17 (5d6) Psychic damage and gaining the Frightened condition until the end of the Choirmaster's next turn on a failed save, or half as much damage only on a successful one. The Choirmaster then gains one stack of Throat-Strain (see Throat-Strain).",
                     recharge=5,
+                    combat_effects=(
+                        CombatEffect(area=CombatArea(CombatAreaShape.CONE, 20)),
+                    ),
                 ),
             ],
             bonus_actions=[
@@ -186,6 +203,13 @@ class MiraPrincessOfTheLoop(ExtendedCombatantData):
                     dice_type=DiceType.D6,
                     damage_bonus=4,
                     damage_type=DamageType.FORCE,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=7,
+                            damage=(CombatDamage("2d6 + 4", DamageType.FORCE),),
+                        ),
+                    ),
                 ),
                 SavingThrowEffect(
                     name="Stutter Time",

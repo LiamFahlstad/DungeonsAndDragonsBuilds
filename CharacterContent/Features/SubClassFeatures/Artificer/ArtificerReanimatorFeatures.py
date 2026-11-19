@@ -11,7 +11,7 @@ from Model.Creatures.Combatants import (
     ExtendedCombatantData,
     MonsterType,
 )
-from Model.Creatures.MonsterAbilities import MonsterAbility
+from Model.Creatures.MonsterAbilities import MonsterAbility, dice_plus
 from Presentation.CreatureStatBlocks import format_creature_stat_block
 from Model.Content.Feature import (
     Feature,
@@ -266,6 +266,22 @@ def _build_reanimated_companion(character: CharacterView) -> ExtendedCombatantDa
                     f"Melee Attack Roll: {spell_attack:+}, reach 5 ft. "
                     f"Hit: 1d4 + {intelligence_modifier} Necrotic damage (1d4 plus your Intelligence modifier), "
                     "and the target can't take Opportunity Attacks until the start of its next turn."
+                ),
+                combat_effects=(
+                    CombatEffect(
+                        roll=EffectRoll.ATTACK,
+                        attack_bonus=spell_attack,
+                        damage=(
+                            CombatDamage(
+                                dice_plus("1d4", intelligence_modifier),
+                                DamageType.NECROTIC,
+                            ),
+                        ),
+                        notes=(
+                            "The target can't take Opportunity Attacks until the"
+                            " start of its next turn.",
+                        ),
+                    ),
                 ),
             )
         ],

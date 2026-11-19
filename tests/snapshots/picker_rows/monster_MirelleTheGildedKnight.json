@@ -43,7 +43,7 @@
    "duration_seconds": null,
    "feature_name": "",
    "half_on_save": true,
-   "is_described": false,
+   "is_described": true,
    "is_unavailable": false,
    "note": "Also: and the target has the Prone condition",
    "repeat_save": false,
@@ -52,7 +52,7 @@
    "slot_level": "None",
    "spell_level": 0,
    "spell_name": "",
-   "summary": "DC 12 Str  2d8 + 3 Slashing  half on save",
+   "summary": "DC 12 STR  2d8 + 3 Slashing  half on save  Prone",
    "until": null,
    "upcast": []
   },

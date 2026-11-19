@@ -6,7 +6,9 @@ from Model.Creatures.Combatants import (
     ExtendedCombatantData,
     MonsterType,
 )
-from Model.Creatures.MonsterAbilities import MonsterAbility
+from Model.Content.CombatArea import CombatArea, CombatAreaShape
+from Model.Content.CombatEffect import CombatDamage, CombatEffect, EffectRoll
+from Model.Creatures.MonsterAbilities import MonsterAbility, dice_plus
 from Core.Definitions import CharacterClass, DamageType
 from Model.Content.Feature import (
     Feature,
@@ -17,7 +19,12 @@ from Model.Content.Feature import (
     FeatureTarget,
 )
 from Presentation.CreatureStatBlocks import format_creature_stat_block
-from Core.Rules import MAX_PROFICIENCY_BONUS, levels_gained, proficiency_bonus
+from Core.Rules import (
+    MAX_PROFICIENCY_BONUS,
+    SPELL_SAVE_DC_BASE,
+    levels_gained,
+    proficiency_bonus,
+)
 from Model.View import CharacterView
 from Model.Content.FeatureText import (
     Block,
@@ -90,9 +97,42 @@ def _build_wildfire_spirit(
         languages="Understands the languages you speak",
         traits=[],
         actions=[
-            MonsterAbility(name="Flame Seed", description=flame_seed_description),
             MonsterAbility(
-                name="Fiery Teleportation", description=fiery_teleportation_description
+                name="Flame Seed",
+                description=flame_seed_description,
+                combat_effects=(
+                    CombatEffect(
+                        roll=EffectRoll.ATTACK,
+                        attack_bonus=spell_attack_modifier,
+                        damage=(
+                            CombatDamage(
+                                dice_plus("1d6", proficiency_bonus), DamageType.FIRE
+                            ),
+                        ),
+                    ),
+                ),
+            ),
+            MonsterAbility(
+                name="Fiery Teleportation",
+                description=fiery_teleportation_description,
+                combat_effects=(
+                    CombatEffect(
+                        roll=EffectRoll.SAVE,
+                        save_ability=Ability.DEXTERITY,
+                        dc=SPELL_SAVE_DC_BASE + spell_attack_modifier,
+                        damage=(
+                            CombatDamage(
+                                dice_plus("1d6", proficiency_bonus), DamageType.FIRE
+                            ),
+                        ),
+                        notes=(
+                            "Each creature within 5 feet of the space the spirit"
+                            " left; first move the spirit and the willing"
+                            " creatures within 5 feet of it up to 15 feet.",
+                        ),
+                        area=CombatArea(CombatAreaShape.EMANATION, 5),
+                    ),
+                ),
             ),
         ],
         bonus_actions=[],

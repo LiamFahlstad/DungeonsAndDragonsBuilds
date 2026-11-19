@@ -24,6 +24,17 @@ from Model.Creatures.MonsterAbilities import (
     MonsterCast,
 )
 from Core.Definitions import Ability
+from Model.Content.CombatArea import AreaSight, AreaTiming, CombatArea, CombatAreaShape
+from Model.Content.CombatEffect import (
+    CombatCondition,
+    CombatDamage,
+    CombatEffect,
+    CombatHitPoints,
+    EffectRoll,
+    TurnEdge,
+    TurnOf,
+)
+from Model.Content.CombatTriggers import CombatTrigger, TriggerEvent
 
 
 class AberrantCultist(ExtendedCombatantData):
@@ -78,10 +89,55 @@ class AberrantCultist(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Tentacle Lash",
                     description="Melee Attack Roll: +7, reach 10 ft. Hit: 7 (1d6 + 4) Slashing damage plus 14 (4d6) Psychic damage. If the target is a Large or smaller creature, it has the Grappled condition (escape DC 14) from one of two tentacles, and it has the Restrained condition until the grapple ends.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=7,
+                            damage=(
+                                CombatDamage("1d6 + 4", DamageType.SLASHING),
+                                CombatDamage("4d6", DamageType.PSYCHIC),
+                            ),
+                        ),
+                        CombatEffect(
+                            name="Tentacle Lash: Grappled + Restrained",
+                            conditions=(
+                                CombatCondition(Condition.GRAPPLED),
+                                CombatCondition(Condition.RESTRAINED),
+                            ),
+                            spends_use=False,
+                            notes=(
+                                "Escape DC 14, from one of two tentacles. Restrained until the grapple ends.",
+                            ),
+                            trigger=CombatTrigger(
+                                TriggerEvent.HIT,
+                                optional=False,
+                                after="Tentacle Lash",
+                                largest_target=CreatureSize.LARGE,
+                            ),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Mind Rot",
                     description="Wisdom Saving Throw: DC 15, one creature the cultist can see within 90 feet. Failure: 27 (6d8) Psychic damage, and the target has the Poisoned condition until the start of the cultist's next turn. Success: Half damage only.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.WISDOM,
+                            dc=15,
+                            half_on_success=True,
+                            damage=(CombatDamage("6d8", DamageType.PSYCHIC),),
+                            conditions=(
+                                CombatCondition(
+                                    Condition.POISONED,
+                                    until=(TurnEdge.START, TurnOf.SOURCE),
+                                ),
+                            ),
+                            notes=(
+                                "Also: and the target has the Poisoned condition until the start of the cultist's next turn",
+                            ),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -153,10 +209,43 @@ class Assassin(ExtendedCombatantData):
                 MonsterAbility(
                     name="Shortsword",
                     description="Melee Attack Roll: +7, reach 5 ft. Hit: 7 (1d6 + 4) Piercing damage plus 17 (5d6) Poison damage, and the target has the Poisoned condition until the start of the assassin's next turn.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=7,
+                            damage=(
+                                CombatDamage("1d6 + 4", DamageType.PIERCING),
+                                CombatDamage("5d6", DamageType.POISON),
+                            ),
+                        ),
+                        CombatEffect(
+                            name="Shortsword: Poisoned",
+                            conditions=(
+                                CombatCondition(
+                                    Condition.POISONED,
+                                    until=(TurnEdge.START, TurnOf.SOURCE),
+                                ),
+                            ),
+                            spends_use=False,
+                            trigger=CombatTrigger(
+                                TriggerEvent.HIT, optional=False, after="Shortsword"
+                            ),
+                        ),
+                    ),
                 ),
                 MonsterAbility(
                     name="Light Crossbow",
                     description="Ranged Attack Roll: +7, range 80/320 ft. Hit: 8 (1d8 + 4) Piercing damage plus 21 (6d6) Poison damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=7,
+                            damage=(
+                                CombatDamage("1d8 + 4", DamageType.PIERCING),
+                                CombatDamage("6d6", DamageType.POISON),
+                            ),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[
@@ -224,10 +313,33 @@ class BerserkerCommander(ExtendedCombatantData):
                 MonsterAbility(
                     name="Greataxe",
                     description="Melee Attack Roll: +7, reach 5 ft. Hit: 10 (1d12 + 4) Slashing damage, plus 10 (3d6) Thunder damage to the target or another creature within 5 feet of the target.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=7,
+                            damage=(
+                                CombatDamage("1d12 + 4", DamageType.SLASHING),
+                                CombatDamage("3d6", DamageType.THUNDER),
+                            ),
+                            notes=(
+                                "Also: to the target or another creature within 5 feet of the target",
+                            ),
+                        ),
+                    ),
                 ),
                 MonsterAbility(
                     name="Javelin",
                     description="Melee or Ranged Attack Roll: +7, reach 5 ft. or range 30/120 ft. Hit: 18 (4d6 + 4) Piercing damage, and the target's Speed decreases by 5 feet until the start of the berserker's next turn.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=7,
+                            damage=(CombatDamage("4d6 + 4", DamageType.PIERCING),),
+                            notes=(
+                                "Also: and the target's Speed decreases by 5 feet until the start of the berserker's next turn",
+                            ),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[
@@ -309,10 +421,51 @@ class ChainDevil(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Chain",
                     description="Melee Attack Roll: +7, reach 10 ft. Hit: 11 (2d6 + 4) Slashing damage. If the target is a Large or smaller creature, it has the Grappled condition (escape DC 14) from one of two chains, and it has the Restrained condition until the grapple ends.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=7,
+                            damage=(CombatDamage("2d6 + 4", DamageType.SLASHING),),
+                        ),
+                        CombatEffect(
+                            name="Chain: Grappled + Restrained",
+                            conditions=(
+                                CombatCondition(Condition.GRAPPLED),
+                                CombatCondition(Condition.RESTRAINED),
+                            ),
+                            spends_use=False,
+                            notes=(
+                                "Escape DC 14, from one of two chains. Restrained until the grapple ends.",
+                            ),
+                            trigger=CombatTrigger(
+                                TriggerEvent.HIT,
+                                optional=False,
+                                after="Chain",
+                                largest_target=CreatureSize.LARGE,
+                            ),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Conjure Infernal Chain",
                     description="The devil conjures a fiery chain to bind a creature. Dexterity Saving Throw: DC 15, one creature the devil can see within 60 feet. Failure: 9 (2d4 + 4) Fire damage, and the target has the Restrained condition until the end of the devil's next turn, at which point the chain disappears. If the target is Large or smaller, the devil moves the target up to 30 feet straight toward itself. Success: The chain disappears.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.DEXTERITY,
+                            dc=15,
+                            damage=(CombatDamage("2d4 + 4", DamageType.FIRE),),
+                            conditions=(
+                                CombatCondition(
+                                    Condition.RESTRAINED,
+                                    until=(TurnEdge.END, TurnOf.SOURCE),
+                                ),
+                            ),
+                            notes=(
+                                "Also: and the target has the Restrained condition until the end of the devil's next turn, at which point the chain disappears. If the target is Large or smaller, the devil moves the target up to 30 feet straight toward itself",
+                            ),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -320,6 +473,17 @@ class ChainDevil(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Unnerving Gaze",
                     description="Trigger: A creature the devil can see starts its turn within 30 feet of the devil and can see the devil. Response—Wisdom Saving Throw: DC 15, the triggering creature. Failure: The target has the Frightened condition until the end of its turn. Success: The target is immune to this devil's Unnerving Gaze for 24 hours.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.WISDOM,
+                            dc=15,
+                            conditions=(CombatCondition(Condition.FRIGHTENED),),
+                            notes=(
+                                "Also: The target has the Frightened condition until the end of its turn",
+                            ),
+                        ),
+                    ),
                 ),
             ],
             legendary_actions=[],
@@ -382,16 +546,51 @@ class Cloaker(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Attach",
                     description="Melee Attack Roll: +6, reach 5 ft. Hit: 13 (3d6 + 3) Piercing damage. If the target is a Large or smaller creature, the cloaker attaches to it. While the cloaker is attached, the target has the Blinded condition, and the cloaker can't make Attach attacks against other targets. In addition, the cloaker halves the damage it takes (round down), and the target takes the same amount of damage. The cloaker can detach itself by spending 5 feet of movement. The target or a creature within 5 feet of it can take an action to try to detach the cloaker, doing so by succeeding on a DC 14 Strength (Athletics) check.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=6,
+                            damage=(CombatDamage("3d6 + 3", DamageType.PIERCING),),
+                            conditions=(CombatCondition(Condition.BLINDED),),
+                            notes=(
+                                "Also: If the target is a Large or smaller creature, the cloaker attaches to it. While the cloaker is attached, the target has the Blinded condition, and the cloaker can't make Attach attacks against other targets. In addition, the cloaker halves the damage it takes (round down), and the target takes the same amount of damage. The cloaker can detach itself by spending 5 feet of movement. The target or a creature within 5 feet of it can take an action to try to detach the cloaker, doing so by succeeding on a DC 14 Strength (Athletics) check",
+                            ),
+                        ),
+                    ),
                 ),
                 MonsterAbility(
                     name="Tail",
                     description="Melee Attack Roll: +6, reach 10 ft. Hit: 8 (1d10 + 3) Slashing damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=6,
+                            damage=(CombatDamage("1d10 + 3", DamageType.SLASHING),),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[
                 DcMonsterAbility(
                     name="Moan",
                     description="Wisdom Saving Throw: DC 13, each creature in a 60-foot Emanation originating from the cloaker. Failure: The target has the Frightened condition until the end of the cloaker's next turn. Success: The target is immune to this cloaker's Moan for the next 24 hours.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.WISDOM,
+                            dc=13,
+                            conditions=(
+                                CombatCondition(
+                                    Condition.FRIGHTENED,
+                                    until=(TurnEdge.END, TurnOf.SOURCE),
+                                ),
+                            ),
+                            notes=(
+                                "Also: The target has the Frightened condition until the end of the cloaker's next turn",
+                            ),
+                            area=CombatArea(CombatAreaShape.EMANATION, 60),
+                        ),
+                    ),
                 ),
                 MonsterAbility(
                     name="Phantasms (Recharge after a Short or Long Rest)",
@@ -459,10 +658,44 @@ class CockatriceRegent(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Petrifying Bite",
                     description="Melee Attack Roll: +7, reach 5 ft. Hit: 13 (2d8 + 4) Piercing damage. If the target is a creature, it is subjected to the following effect. Constitution Saving Throw: DC 14. First Failure: The target has the Restrained condition and repeats the save at the end of its next turn if it is still Restrained, ending the effect on itself on a success. Second Failure: The target has the Petrified condition instead of the Restrained condition.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=7,
+                            damage=(CombatDamage("2d8 + 4", DamageType.PIERCING),),
+                            notes=(
+                                "Its Constitution save is a row of its own, rolled as it hits.",
+                                "Also: If the target is a creature, it is subjected to the following effect. Constitution Saving Throw: DC 14. First Failure: The target has the Restrained condition and repeats the save at the end of its next turn if it is still Restrained, ending the effect on itself on a success. Second Failure: The target has the Petrified condition instead of the Restrained condition",
+                            ),
+                        ),
+                        CombatEffect(
+                            name="Petrifying Bite: Constitution save",
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.CONSTITUTION,
+                            dc=14,
+                            conditions=(CombatCondition(Condition.RESTRAINED),),
+                            spends_use=False,
+                            notes=(
+                                "Also: The target has the Restrained condition and repeats the save at the end of its next turn if it is still Restrained, ending the effect on itself on a success. Second Failure: The target has the Petrified condition instead of the Restrained condition",
+                            ),
+                            trigger=CombatTrigger(
+                                TriggerEvent.HIT,
+                                optional=False,
+                                after="Petrifying Bite",
+                            ),
+                        ),
+                    ),
                 ),
                 MonsterAbility(
                     name="Talons",
                     description="Melee Attack Roll: +7, reach 5 ft. Hit: 18 (4d6 + 4) Slashing damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=7,
+                            damage=(CombatDamage("4d6 + 4", DamageType.SLASHING),),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -470,6 +703,14 @@ class CockatriceRegent(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Magical Backlash",
                     description="Trigger: A creature within 120 feet of the cockatrice deals damage to it. Response—Dexterity Saving Throw: DC 14, the triggering creature. Failure: 13 (3d6 + 3) Force damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.DEXTERITY,
+                            dc=14,
+                            damage=(CombatDamage("3d6 + 3", DamageType.FORCE),),
+                        ),
+                    ),
                 ),
             ],
             legendary_actions=[],
@@ -526,10 +767,30 @@ class DeathCultist(ExtendedCombatantData):
                 MonsterAbility(
                     name="Dread Scythe",
                     description="Melee Attack Roll: +7, reach 10 ft. Hit: 9 (1d10 + 4) Slashing damage plus 11 (2d10) Necrotic damage, and the target can't regain Hit Points until the end of its next turn.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=7,
+                            damage=(
+                                CombatDamage("1d10 + 4", DamageType.SLASHING),
+                                CombatDamage("2d10", DamageType.NECROTIC),
+                            ),
+                            notes=(
+                                "Also: and the target can't regain Hit Points until the end of its next turn",
+                            ),
+                        ),
+                    ),
                 ),
                 MonsterAbility(
                     name="Deathly Ray",
                     description="Ranged Attack Roll: +6, range 120 ft. Hit: 22 (4d10) Necrotic damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=6,
+                            damage=(CombatDamage("4d10", DamageType.NECROTIC),),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Spellcasting",
@@ -541,6 +802,25 @@ class DeathCultist(ExtendedCombatantData):
                     name="Spirit Wail (Recharge 5–6)",
                     description="Wisdom Saving Throw: DC 14, each creature in a 20-foot Emanation originating from the cultist. Failure: 14 (4d6) Psychic damage, and the target has the Frightened condition until the end of its next turn. Success: Half damage only.",
                     recharge=5,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.WISDOM,
+                            dc=14,
+                            half_on_success=True,
+                            damage=(CombatDamage("4d6", DamageType.PSYCHIC),),
+                            conditions=(
+                                CombatCondition(
+                                    Condition.FRIGHTENED,
+                                    until=(TurnEdge.END, TurnOf.TARGET),
+                                ),
+                            ),
+                            notes=(
+                                "Also: and the target has the Frightened condition until the end of its next turn",
+                            ),
+                            area=CombatArea(CombatAreaShape.EMANATION, 20),
+                        ),
+                    ),
                 ),
             ],
             reactions=[],
@@ -598,10 +878,54 @@ class ElementalCultist(ExtendedCombatantData):
                 MonsterAbility(
                     name="Elemental Flail",
                     description="Melee Attack Roll: +7, reach 5 ft. Hit: 25 (6d6 + 4) damage of a type chosen by the cultist: Acid, Cold, Fire, Lightning, or Thunder.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=7,
+                            damage=(
+                                CombatDamage(
+                                    "6d6 + 4",
+                                    None,
+                                    (
+                                        DamageType.ACID,
+                                        DamageType.COLD,
+                                        DamageType.FIRE,
+                                        DamageType.LIGHTNING,
+                                        DamageType.THUNDER,
+                                    ),
+                                ),
+                            ),
+                            notes=(
+                                "Also: of a type chosen by the cultist: Acid, Cold, Fire, Lightning, or Thunder",
+                            ),
+                        ),
+                    ),
                 ),
                 MonsterAbility(
                     name="Elemental Claw",
                     description="Ranged Attack Roll: +7, range 120 ft. Hit: 22 (4d10) damage of a type chosen by the cultist: Acid, Cold, Fire, Lightning, or Thunder. If the target is a Medium or smaller creature, the cultist moves the target up to 10 feet straight toward or away from itself.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=7,
+                            damage=(
+                                CombatDamage(
+                                    "4d10",
+                                    None,
+                                    (
+                                        DamageType.ACID,
+                                        DamageType.COLD,
+                                        DamageType.FIRE,
+                                        DamageType.LIGHTNING,
+                                        DamageType.THUNDER,
+                                    ),
+                                ),
+                            ),
+                            notes=(
+                                "Also: of a type chosen by the cultist: Acid, Cold, Fire, Lightning, or Thunder. If the target is a Medium or smaller creature, the cultist moves the target up to 10 feet straight toward or away from itself",
+                            ),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Spellcasting",
@@ -614,6 +938,7 @@ class ElementalCultist(ExtendedCombatantData):
                     name="Elemental Absorption (1/Day)",
                     description="Trigger: The cultist takes Acid, Cold, Fire, Lightning, or Thunder damage. Response: The cultist gives itself Resistance to that instance of damage and gains 10 Temporary Hit Points.",
                     per_day=1,
+                    combat_effects=(CombatEffect(temp_hp=CombatHitPoints(dice="10")),),
                 ),
             ],
             legendary_actions=[],
@@ -672,6 +997,16 @@ class FiendCultist(ExtendedCombatantData):
                 MonsterAbility(
                     name="Pact Axe",
                     description="Melee Attack Roll: +7, reach 5 ft. Hit: 10 (1d12 + 4) Slashing damage plus 13 (3d8) Fire damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=7,
+                            damage=(
+                                CombatDamage("1d12 + 4", DamageType.SLASHING),
+                                CombatDamage("3d8", DamageType.FIRE),
+                            ),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Spellcasting",
@@ -740,11 +1075,28 @@ class Fomorian(ExtendedCombatantData):
                 MonsterAbility(
                     name="Stone Club",
                     description="Melee Attack Roll: +9, reach 15 ft. Hit: 24 (4d8 + 6) Bludgeoning damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=9,
+                            damage=(CombatDamage("4d8 + 6", DamageType.BLUDGEONING),),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Warping Hex (Recharge 4–6)",
                     description="Wisdom Saving Throw: DC 16, one creature the fomorian can see within 120 feet. Failure: 21 (6d6) Psychic damage, and the target gains 1 Exhaustion level. Success: Half damage only.",
                     recharge=4,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.WISDOM,
+                            dc=16,
+                            half_on_success=True,
+                            damage=(CombatDamage("6d6", DamageType.PSYCHIC),),
+                            notes=("Also: and the target gains 1 Exhaustion level",),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -808,10 +1160,33 @@ class FrostGiant(ExtendedCombatantData):
                 MonsterAbility(
                     name="Frost Axe",
                     description="Melee Attack Roll: +9, reach 10 ft. Hit: 19 (2d12 + 6) Slashing damage plus 9 (2d8) Cold damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=9,
+                            damage=(
+                                CombatDamage("2d12 + 6", DamageType.SLASHING),
+                                CombatDamage("2d8", DamageType.COLD),
+                            ),
+                        ),
+                    ),
                 ),
                 MonsterAbility(
                     name="Great Bow",
                     description="Ranged Attack Roll: +9, range 150/600 ft. Hit: 17 (2d10 + 6) Piercing damage plus 7 (2d6) Cold damage, and the target's Speed decreases by 10 feet until the end of its next turn.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=9,
+                            damage=(
+                                CombatDamage("2d10 + 6", DamageType.PIERCING),
+                                CombatDamage("2d6", DamageType.COLD),
+                            ),
+                            notes=(
+                                "Also: and the target's Speed decreases by 10 feet until the end of its next turn",
+                            ),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[
@@ -819,6 +1194,9 @@ class FrostGiant(ExtendedCombatantData):
                     name="War Cry (Recharge 5–6)",
                     description="The giant or one creature of its choice that can see or hear it gains 16 (2d10 + 5) Temporary Hit Points and has Advantage on attack rolls until the start of the giant's next turn.",
                     recharge=5,
+                    combat_effects=(
+                        CombatEffect(temp_hp=CombatHitPoints(dice="2d10 + 5")),
+                    ),
                 ),
             ],
             reactions=[],
@@ -880,6 +1258,19 @@ class GithyankiKnight(ExtendedCombatantData):
                 MonsterAbility(
                     name="Silver Sword",
                     description="Melee Attack Roll: +6, reach 5 ft. Hit: 10 (2d6 + 3) Slashing damage plus 14 (4d6) Psychic damage. Critical Hit: If the target is in an astral body (as with the Astral Projection spell), the githyanki can cut the silvery cord that tethers the target to its material body instead of dealing damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=6,
+                            damage=(
+                                CombatDamage("2d6 + 3", DamageType.SLASHING),
+                                CombatDamage("4d6", DamageType.PSYCHIC),
+                            ),
+                            notes=(
+                                "Also: Critical Hit: If the target is in an astral body (as with the Astral Projection spell), the githyanki can cut the silvery cord that tethers the target to its material body instead of dealing damage",
+                            ),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Spellcasting",
@@ -954,11 +1345,41 @@ class GnollDemoniac(ExtendedCombatantData):
                 MonsterAbility(
                     name="Abyssal Strike",
                     description="Melee or Ranged Attack Roll: +6, reach 5 ft. or range 60 ft. Hit: 20 (5d6 + 3) Poison damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=6,
+                            damage=(CombatDamage("5d6 + 3", DamageType.POISON),),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Hunger of Yeenoghu (Recharge 5–6)",
                     description="The gnoll conjures a 30-foot Cube of magical Darkness originating from a point it can see within 60 feet, which lasts for 1 minute or until the gnoll's Concentration ends on it. This area is Difficult Terrain. Dexterity Saving Throw: DC 14, any creature that starts its turn in this area or enters it for the first time on a turn. Failure: 28 (8d6) Necrotic damage, and the gnoll or a creature of its choice it can see gains 10 Temporary Hit Points. Success: Half damage only.",
                     recharge=5,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.DEXTERITY,
+                            dc=14,
+                            half_on_success=True,
+                            damage=(CombatDamage("8d6", DamageType.NECROTIC),),
+                            notes=(
+                                "Also: and the gnoll or a creature of its choice it can see gains 10 Temporary Hit Points",
+                            ),
+                            area=CombatArea(
+                                CombatAreaShape.CUBE,
+                                30,
+                                point_within_ft=60,
+                                acts=(
+                                    AreaTiming.ENTERS,
+                                    AreaTiming.MOVED_ONTO,
+                                    AreaTiming.STARTS,
+                                ),
+                                obscures=AreaSight.DARKNESS,
+                            ),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[
@@ -1044,6 +1465,16 @@ class GreenSlaad(ExtendedCombatantData):
                 MonsterAbility(
                     name="Chaos Staff",
                     description="Melee or Ranged Attack Roll: +7, reach 10 ft. or range 60 ft. Hit: 8 (1d8 + 4) Force damage. Until the start of the slaad's next turn, the target has a condition determined by rolling 1d4: on a 1, Charmed; on a 2, Frightened; on a 3, Poisoned; or on a 4, Incapacitated.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=7,
+                            damage=(CombatDamage("1d8 + 4", DamageType.FORCE),),
+                            notes=(
+                                "Also: Until the start of the slaad's next turn, the target has a condition determined by rolling 1d4: on a 1, Charmed; on a 2, Frightened; on a 3, Poisoned; or on a 4, Incapacitated",
+                            ),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Spellcasting",
@@ -1134,6 +1565,16 @@ class Hezrou(ExtendedCombatantData):
                 MonsterAbility(
                     name="Rend",
                     description="Melee Attack Roll: +7, reach 5 ft. Hit: 6 (1d4 + 4) Slashing damage plus 9 (2d8) Poison damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=7,
+                            damage=(
+                                CombatDamage("1d4 + 4", DamageType.SLASHING),
+                                CombatDamage("2d8", DamageType.POISON),
+                            ),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[
@@ -1218,6 +1659,13 @@ class Hydra(ExtendedCombatantData):
                 MonsterAbility(
                     name="Bite",
                     description="Melee Attack Roll: +8, reach 10 ft. Hit: 10 (1d10 + 5) Piercing damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=8,
+                            damage=(CombatDamage("1d10 + 5", DamageType.PIERCING),),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -1291,10 +1739,31 @@ class SphinxOfSecrets(ExtendedCombatantData):
                 MonsterAbility(
                     name="Claw",
                     description="Melee Attack Roll: +7, reach 5 ft. Hit: 13 (2d8 + 4) Slashing damage plus 7 (2d6) Radiant damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=7,
+                            damage=(
+                                CombatDamage("2d8 + 4", DamageType.SLASHING),
+                                CombatDamage("2d6", DamageType.RADIANT),
+                            ),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Curse of the Riddle",
                     description="Intelligence Saving Throw: DC 15, one creature the sphinx can see within 60 feet. Failure: 21 (6d6) Psychic damage, and the target is cursed with a riddle. The cursed target has Disadvantage on ability checks and attack rolls. In addition, if it takes the Magic action, it must succeed on a DC 15 Intelligence saving throw or that action is wasted. The cursed target can take a Study action to make a DC 15 Intelligence check, solving the riddle and ending the curse on a success. The curse ends early if the sphinx curses another target.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.INTELLIGENCE,
+                            dc=15,
+                            damage=(CombatDamage("6d6", DamageType.PSYCHIC),),
+                            notes=(
+                                "Also: and the target is cursed with a riddle. The cursed target has Disadvantage on ability checks and attack rolls. In addition, if it takes the Magic action, it must succeed on a DC 15 Intelligence saving throw or that action is wasted. The cursed target can take a Study action to make a DC 15 Intelligence check, solving the riddle and ending the curse on a success. The curse ends early if the sphinx curses another target",
+                            ),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Spellcasting",
@@ -1370,10 +1839,27 @@ class SpiritNaga(ExtendedCombatantData):
                 MonsterAbility(
                     name="Bite",
                     description="Melee Attack Roll: +7, reach 10 ft. Hit: 7 (1d6 + 4) Piercing damage plus 14 (4d6) Poison damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=7,
+                            damage=(
+                                CombatDamage("1d6 + 4", DamageType.PIERCING),
+                                CombatDamage("4d6", DamageType.POISON),
+                            ),
+                        ),
+                    ),
                 ),
                 MonsterAbility(
                     name="Necrotic Ray",
                     description="Ranged Attack Roll: +6, range 60 ft. Hit: 21 (6d6) Necrotic damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=6,
+                            damage=(CombatDamage("6d6", DamageType.NECROTIC),),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Spellcasting",
@@ -1445,6 +1931,13 @@ class ThrikreenPsion(ExtendedCombatantData):
                 MonsterAbility(
                     name="Psionic Lance",
                     description="Melee or Ranged Attack Roll: +7, reach 10 ft. or range 120 ft. Hit: 18 (4d6 + 4) Psychic damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=7,
+                            damage=(CombatDamage("4d6 + 4", DamageType.PSYCHIC),),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Spellcasting",
@@ -1507,10 +2000,51 @@ class TyrannosaurusRex(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Bite",
                     description="Melee Attack Roll: +10, reach 10 ft. Hit: 33 (4d12 + 7) Piercing damage. If the target is a Large or smaller creature, it has the Grappled condition (escape DC 17). While Grappled, the target has the Restrained condition and can't be targeted by the tyrannosaurus's Tail.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=10,
+                            damage=(CombatDamage("4d12 + 7", DamageType.PIERCING),),
+                            conditions=(CombatCondition(Condition.RESTRAINED),),
+                            notes=(
+                                "Also: While Grappled, the target has the Restrained condition and can't be targeted by the tyrannosaurus's Tail",
+                            ),
+                        ),
+                        CombatEffect(
+                            name="Bite: Grappled",
+                            conditions=(CombatCondition(Condition.GRAPPLED),),
+                            spends_use=False,
+                            notes=("Escape DC 17.",),
+                            trigger=CombatTrigger(
+                                TriggerEvent.HIT,
+                                optional=False,
+                                after="Bite",
+                                largest_target=CreatureSize.LARGE,
+                            ),
+                        ),
+                    ),
                 ),
                 MonsterAbility(
                     name="Tail",
                     description="Melee Attack Roll: +10, reach 15 ft. Hit: 25 (4d8 + 7) Bludgeoning damage. If the target is a Huge or smaller creature, it has the Prone condition.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=10,
+                            damage=(CombatDamage("4d8 + 7", DamageType.BLUDGEONING),),
+                        ),
+                        CombatEffect(
+                            name="Tail: Prone",
+                            conditions=(CombatCondition(Condition.PRONE),),
+                            spends_use=False,
+                            trigger=CombatTrigger(
+                                TriggerEvent.HIT,
+                                optional=False,
+                                after="Tail",
+                                largest_target=CreatureSize.HUGE,
+                            ),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -1583,10 +2117,33 @@ class VampireNightbringer(ExtendedCombatantData):
                 MonsterAbility(
                     name="Bite",
                     description="Melee Attack Roll: +7, reach 5 ft. Hit: 7 (1d6 + 4) Piercing damage plus 10 (3d6) Necrotic damage. The target's Hit Point maximum decreases by an amount equal to the Necrotic damage taken, and the vampire regains Hit Points equal to that amount.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=7,
+                            damage=(
+                                CombatDamage("1d6 + 4", DamageType.PIERCING),
+                                CombatDamage("3d6", DamageType.NECROTIC),
+                            ),
+                            notes=(
+                                "Also: The target's Hit Point maximum decreases by an amount equal to the Necrotic damage taken, and the vampire regains Hit Points equal to that amount",
+                            ),
+                        ),
+                    ),
                 ),
                 MonsterAbility(
                     name="Shadow Strike",
                     description="Melee Attack Roll: +7, reach 5 ft. Hit: 7 (1d6 + 4) Slashing damage plus 14 (4d6) Cold damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=7,
+                            damage=(
+                                CombatDamage("1d6 + 4", DamageType.SLASHING),
+                                CombatDamage("4d6", DamageType.COLD),
+                            ),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[
@@ -1659,15 +2216,44 @@ class YoungBronzeDragon(ExtendedCombatantData):
                 MonsterAbility(
                     name="Rend",
                     description="Melee Attack Roll: +8, reach 10 ft. Hit: 16 (2d10 + 5) Slashing damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=8,
+                            damage=(CombatDamage("2d10 + 5", DamageType.SLASHING),),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Lightning Breath (Recharge 5–6)",
                     description="Dexterity Saving Throw: DC 15, each creature in a 60-foot-long, 5-foot-wide Line. Failure: 49 (9d10) Lightning damage. Success: Half damage.",
                     recharge=5,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.DEXTERITY,
+                            dc=15,
+                            half_on_success=True,
+                            damage=(CombatDamage("9d10", DamageType.LIGHTNING),),
+                            area=CombatArea(CombatAreaShape.LINE, 60),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Repulsion Breath",
                     description="Strength Saving Throw: DC 15, each creature in a 30-foot Cone. Failure: The target is pushed up to 40 feet straight away from the dragon and has the Prone condition.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.STRENGTH,
+                            dc=15,
+                            conditions=(CombatCondition(Condition.PRONE),),
+                            notes=(
+                                "Also: The target is pushed up to 40 feet straight away from the dragon and has the Prone condition",
+                            ),
+                            area=CombatArea(CombatAreaShape.CONE, 30),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -1735,11 +2321,31 @@ class YoungGreenDragon(ExtendedCombatantData):
                 MonsterAbility(
                     name="Rend",
                     description="Melee Attack Roll: +7, reach 10 ft. Hit: 11 (2d6 + 4) Slashing damage plus 7 (2d6) Poison damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=7,
+                            damage=(
+                                CombatDamage("2d6 + 4", DamageType.SLASHING),
+                                CombatDamage("2d6", DamageType.POISON),
+                            ),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Poison Breath (Recharge 5–6)",
                     description="Constitution Saving Throw: DC 14, each creature in a 30-foot Cone. Failure: 42 (12d6) Poison damage. Success: Half damage.",
                     recharge=5,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.CONSTITUTION,
+                            dc=14,
+                            half_on_success=True,
+                            damage=(CombatDamage("12d6", DamageType.POISON),),
+                            area=CombatArea(CombatAreaShape.CONE, 30),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],

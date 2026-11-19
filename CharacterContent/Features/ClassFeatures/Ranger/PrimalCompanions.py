@@ -1,9 +1,16 @@
 from enum import Enum
 from typing import Optional
 
-from Core.Definitions import CreatureSize
+from Core.Definitions import Condition, CreatureSize
+from Model.Content.CombatEffect import (
+    CombatCondition,
+    CombatDamage,
+    CombatEffect,
+    EffectRoll,
+)
+from Model.Content.CombatTriggers import CombatTrigger, TriggerEvent
 from Model.Creatures.Combatants import Alignment, ExtendedCombatantData, MonsterType
-from Model.Creatures.MonsterAbilities import MonsterAbility
+from Model.Creatures.MonsterAbilities import MonsterAbility, dice_plus
 from Core.Definitions import Ability, CharacterClass, DamageType
 from Presentation.CreatureStatBlocks import format_creature_stat_block
 from Model.View import CharacterView
@@ -42,13 +49,26 @@ def _strike_action(
     spell_attack_modifier: int,
     damage_type: DamageType,
     extra: str = "",
+    conditions: tuple[CombatCondition, ...] = (),
+    notes: tuple[str, ...] = (),
+    on_hit: tuple[CombatEffect, ...] = (),
 ) -> MonsterAbility:
+    """The beast's Beast's Strike, with its combat effects: the attack, the
+    `conditions` every hit gives, and rows applied as it hits (`on_hit`)."""
+    strike = CombatEffect(
+        roll=EffectRoll.ATTACK,
+        attack_bonus=spell_attack_modifier,
+        damage=(CombatDamage(dice_plus(damage_die, flat_bonus), damage_type),),
+        conditions=conditions,
+        notes=notes,
+    )
     return MonsterAbility(
         name="Beast's Strike",
         description=(
             f"Melee Attack Roll: {spell_attack_modifier:+}, reach 5 ft. "
             f"Hit: {damage_die} + {flat_bonus} {damage_type.value} damage{extra}"
         ),
+        combat_effects=(strike, *on_hit),
     )
 
 
@@ -106,6 +126,24 @@ class BeastOfTheLand(ExtendedCombatantData):
                         "If the beast moved at least 20 feet straight toward the target before "
                         "the hit, the target takes an extra 1d6 damage of the same type, and the "
                         "target has the Prone condition if it is a Large or smaller creature."
+                    ),
+                    on_hit=(
+                        CombatEffect(
+                            name="Beast's Strike: Charge",
+                            damage=(CombatDamage("1d6", damage_type),),
+                            conditions=(CombatCondition(Condition.PRONE),),
+                            spends_use=False,
+                            notes=("Prone only if Large or smaller.",),
+                            trigger=CombatTrigger(
+                                TriggerEvent.HIT,
+                                optional=False,
+                                after="Beast's Strike",
+                                when=(
+                                    "the beast moved at least 20 feet straight"
+                                    " toward the target before the hit"
+                                ),
+                            ),
+                        ),
                     ),
                 )
             ],
@@ -179,6 +217,8 @@ class BeastOfTheSea(ExtendedCombatantData):
                         " (your choice of Bludgeoning or Piercing when summoned), and the target "
                         f"has the Grappled condition (escape DC {spell_save_dc})."
                     ),
+                    conditions=(CombatCondition(Condition.GRAPPLED),),
+                    notes=(f"Escape DC {spell_save_dc}.",),
                 )
             ],
             bonus_actions=[],

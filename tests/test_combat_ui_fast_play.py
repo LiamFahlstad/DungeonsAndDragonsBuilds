@@ -34,46 +34,61 @@ from Combat.EncounterLogs import PLAYER_FIGHT_STATE_KEY, LogJSONEncoder
 from Core.Definitions import CreatureSize, DamageType
 from Model.Creatures.Combatants import DamageTypeEntry
 from tests._combat_ui import answer_out_of_resources, make_ui, open_dialog
+from tests._combat_ui import described
 
 FIRE = DamageType.FIRE.value
 SLASHING = DamageType.SLASHING.value
 POISON = DamageType.POISON.value
 
-BITE = {
-    "name": "Bite",
-    "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 7 (1d8 + 3) Piercing damage.",
-}
-FLAIL = {
-    "name": "Flail",
-    "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 5 (1d4 + 3) Slashing damage"
-    " plus 2 (1d4) Fire damage.",
-}
-BREATH = {
-    "name": "Fire Breath (Recharge 5\N{EN DASH}6)",
-    "description": "Dexterity Saving Throw: DC 14, each creature in a 30-foot Cone."
-    " Failure: 27 (6d8) Fire damage. Success: Half damage.",
-    "recharge": 5,
-}
-SCREECH = {
-    "name": "Screech (1/Day)",
-    "description": "Wisdom Saving Throw: DC 12, each creature. Failure: Frightened.",
-    "per_day": 1,
-}
+BITE = described(
+    {
+        "name": "Bite",
+        "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 7 (1d8 + 3) Piercing damage.",
+    }
+)
+FLAIL = described(
+    {
+        "name": "Flail",
+        "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 5 (1d4 + 3) Slashing damage"
+        " plus 2 (1d4) Fire damage.",
+    }
+)
+BREATH = described(
+    {
+        "name": "Fire Breath (Recharge 5\N{EN DASH}6)",
+        "description": "Dexterity Saving Throw: DC 14, each creature in a 30-foot Cone."
+        " Failure: 27 (6d8) Fire damage. Success: Half damage.",
+        "recharge": 5,
+    }
+)
+SCREECH = described(
+    {
+        "name": "Screech (1/Day)",
+        "description": "Wisdom Saving Throw: DC 12, each creature. Failure: Frightened.",
+        "per_day": 1,
+    }
+)
 MULTIATTACK = {"name": "Multiattack", "description": "It makes two Bite attacks."}
-LASH = {
-    "name": "Lash",
-    "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 4 (1d4 + 2) Slashing damage.",
-}
-WING = {
-    "name": "Wing Buffet (Costs 2 Actions)",
-    "description": "Dexterity Saving Throw: DC 14, each creature. Failure: Prone.",
-    "legendary_cost": 2,
-}
-REGENERATION = {
-    "name": "Regeneration",
-    "description": "It regains 10 Hit Points at the start of each of its turns.",
-    "at_turn_start": "It regains 10 Hit Points at the start of each of its turns.",
-}
+LASH = described(
+    {
+        "name": "Lash",
+        "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 4 (1d4 + 2) Slashing damage.",
+    }
+)
+WING = described(
+    {
+        "name": "Wing Buffet (Costs 2 Actions)",
+        "description": "Dexterity Saving Throw: DC 14, each creature. Failure: Prone.",
+        "legendary_cost": 2,
+    }
+)
+REGENERATION = described(
+    {
+        "name": "Regeneration",
+        "description": "It regains 10 Hit Points at the start of each of its turns.",
+        "at_turn_start": "It regains 10 Hit Points at the start of each of its turns.",
+    }
+)
 
 
 @pytest.fixture(autouse=True)
@@ -1442,11 +1457,13 @@ def test_ctrl_z_undoes_with_the_cursor_in_the_damage_field(shown_fight):
     assert ui.damage_input.text() == ""
 
 
-GOBLIN_SCIMITAR = {
-    "name": "Scimitar",
-    "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 5 (1d6 + 2) Slashing"
-    " damage, plus 2 (1d4) Slashing damage if the attack roll had Advantage.",
-}
+GOBLIN_SCIMITAR = described(
+    {
+        "name": "Scimitar",
+        "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 5 (1d6 + 2) Slashing"
+        " damage, plus 2 (1d4) Slashing damage if the attack roll had Advantage.",
+    }
+)
 
 
 def test_damage_that_depends_on_something_isnt_rolled_in(dragon, monkeypatch):
@@ -1481,11 +1498,13 @@ def test_the_result_never_moves_the_buttons(dragon):
 def test_a_type_of_its_choice_is_never_guessed(dragon, monkeypatch):
     ui, pirate, tiger, _ = dragon
     pirate["actions"] = [
-        {
-            "name": "Claw",
-            "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 4 (1d4 + 2)"
-            " Slashing damage plus 7 (2d6) damage of a type it chooses.",
-        }
+        described(
+            {
+                "name": "Claw",
+                "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 4 (1d4 + 2)"
+                " Slashing damage plus 7 (2d6) damage of a type it chooses.",
+            }
+        )
     ]
     tiger["ac"] = 10
     ui._refresh_views()

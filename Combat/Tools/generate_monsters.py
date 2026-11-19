@@ -192,6 +192,23 @@ def generate_monster_class(monster: dict) -> str:
     return class_code
 
 
+_HEADER_NAMES = {"Ability", "Condition", "CreatureSize", "DamageType", "Skill"}
+
+
+def effect_imports(code: str) -> str:
+    """The import lines for what the combat effects written in `code` use
+    (CombatEffect, EffectRoll, CombatTrigger, ...) beyond the header's."""
+    from CharacterContent.Spells import SpellClassConverter as converter
+
+    by_module: dict[str, set[str]] = {}
+    for name in converter._names_used(code) - _HEADER_NAMES:
+        by_module.setdefault(converter._IMPORTS[name], set()).add(name)
+    return "".join(
+        f"from {module} import {', '.join(sorted(names))}\n"
+        for module, names in sorted(by_module.items())
+    )
+
+
 def generate_monsters_file(monsters: list[dict], tier: int) -> tuple[str, list[str]]:
     """Generate the content of a monsters.py file for a tier."""
     # Sort monsters by name within the tier
@@ -222,6 +239,12 @@ from Model.Creatures.MonsterAbilities import MonsterAbility
         file_content = file_content.replace(
             "import MonsterAbility\n", "import MonsterAbility, MonsterCast\n"
         )
+    file_content = (
+        file_content.rstrip("\n")
+        + "\n"
+        + effect_imports("\n\n".join(class_codes))
+        + "\n\n"
+    )
     file_content += "\n\n".join(class_codes)
     file_content += f"\n\n__all__ = {class_names}\n"
 

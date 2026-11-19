@@ -21,6 +21,16 @@ from Model.Creatures.MonsterAbilities import (
     MonsterCast,
 )
 from Core.Definitions import Ability
+from Core.Definitions import Condition
+from Model.Content.CombatArea import CombatArea, CombatAreaShape
+from Model.Content.CombatEffect import (
+    CombatCondition,
+    CombatDamage,
+    CombatEffect,
+    EffectRoll,
+    TurnEdge,
+    TurnOf,
+)
 
 
 class AncientGoldDragon(ExtendedCombatantData):
@@ -91,11 +101,31 @@ class AncientGoldDragon(ExtendedCombatantData):
                 MonsterAbility(
                     name="Rend",
                     description="Melee Attack Roll: +17 to hit, reach 15 ft. Hit: 19 (2d8+ 10) Slashing damage plus 9 (2d8) Fire damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=17,
+                            damage=(
+                                CombatDamage("2d8 + 10", DamageType.SLASHING),
+                                CombatDamage("2d8", DamageType.FIRE),
+                            ),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Fire Breath (Recharge 5-6)",
                     description="Dexterity Saving Throw: DC 24, each creature in a 90-foot Cone. Failure: 71 (13d10) Fire damage. Success: Half damage.",
                     recharge=5,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.DEXTERITY,
+                            dc=24,
+                            half_on_success=True,
+                            damage=(CombatDamage("13d10", DamageType.FIRE),),
+                            area=CombatArea(CombatAreaShape.CONE, 90),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Spellcasting",
@@ -104,6 +134,18 @@ class AncientGoldDragon(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Weakening Breath",
                     description="Strength Saving Throw: DC 24, each creature that isn't currently affected by this breath in a 90-foot Cone. Failure: The target has Disadvantage on Strength-based D20 Tests and subtracts 5 (1d10) from its damage rolls. It repeats the save at the end of each of its turns, ending the effect on itself on a success. After 1 minute, it succeeds automatically.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.STRENGTH,
+                            dc=24,
+                            repeat_save=True,
+                            notes=(
+                                "Also: The target has Disadvantage on Strength-based D20 Tests and subtracts 5 (1d10) from its damage rolls. It repeats the save at the end of each of its turns, ending the effect on itself on a success. After 1 minute, it succeeds automatically",
+                            ),
+                            area=CombatArea(CombatAreaShape.CONE, 90),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -112,6 +154,23 @@ class AncientGoldDragon(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Banish",
                     description="Charisma Saving Throw: DC 24, one creature the dragon can see within 120 feet. Failure: 24 (7d6) Force damage, and the target has the Incapacitated condition and is transported to a harmless demiplane until the start of the dragon's next turn, at which point it reappears in an unoccupied space of the dragon's choice within 120 feet of the dragon. Failure or Success: The dragon can't take this action again until the start of its next turn.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.CHARISMA,
+                            dc=24,
+                            damage=(CombatDamage("7d6", DamageType.FORCE),),
+                            conditions=(
+                                CombatCondition(
+                                    Condition.INCAPACITATED,
+                                    until=(TurnEdge.START, TurnOf.SOURCE),
+                                ),
+                            ),
+                            notes=(
+                                "Also: and the target has the Incapacitated condition and is transported to a harmless demiplane until the start of the dragon's next turn, at which point it reappears in an unoccupied space of the dragon's choice within 120 feet of the dragon",
+                            ),
+                        ),
+                    ),
                 ),
                 MonsterAbility(
                     name="Guiding Light",
@@ -191,11 +250,31 @@ class AncientRedDragon(ExtendedCombatantData):
                 MonsterAbility(
                     name="Rend",
                     description="Melee Attack Roll: +17, reach 15 ft. Hit: 19 (2d8 + 10) Slashing damage plus 10 (3d6) Fire damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=17,
+                            damage=(
+                                CombatDamage("2d8 + 10", DamageType.SLASHING),
+                                CombatDamage("3d6", DamageType.FIRE),
+                            ),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Fire Breath (Recharge 5–6)",
                     description="Dexterity Saving Throw: DC 24, each creature in a 90-foot Cone. Failure: 91 (26d6) Fire damage. Success: Half damage.",
                     recharge=5,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.DEXTERITY,
+                            dc=24,
+                            half_on_success=True,
+                            damage=(CombatDamage("26d6", DamageType.FIRE),),
+                            area=CombatArea(CombatAreaShape.CONE, 90),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Spellcasting",

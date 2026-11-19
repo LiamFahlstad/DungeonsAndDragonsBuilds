@@ -22,6 +22,16 @@ from Model.Creatures.MonsterAbilities import (
     MonsterCast,
 )
 from Core.Definitions import Ability
+from Model.Content.CombatArea import AreaTiming, CombatArea, CombatAreaShape
+from Model.Content.CombatEffect import (
+    CombatCondition,
+    CombatDamage,
+    CombatEffect,
+    EffectRoll,
+    TurnEdge,
+    TurnOf,
+)
+from Model.Content.CombatTriggers import CombatTrigger, TriggerEvent
 
 
 class AdultBrassDragon(ExtendedCombatantData):
@@ -88,15 +98,52 @@ class AdultBrassDragon(ExtendedCombatantData):
                 MonsterAbility(
                     name="Rend",
                     description="Melee Attack Roll: +11, reach 10 ft. Hit: 17 (2d10 + 6) Slashing damage plus 4 (1d8) Fire damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=11,
+                            damage=(
+                                CombatDamage("2d10 + 6", DamageType.SLASHING),
+                                CombatDamage("1d8", DamageType.FIRE),
+                            ),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Fire Breath (Recharge 5–6)",
                     description="Dexterity Saving Throw: DC 18, each creature in a 60-foot-long, 5-foot-wide Line. Failure: 45 (10d8) Fire damage. Success: Half damage.",
                     recharge=5,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.DEXTERITY,
+                            dc=18,
+                            half_on_success=True,
+                            damage=(CombatDamage("10d8", DamageType.FIRE),),
+                            area=CombatArea(CombatAreaShape.LINE, 60),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Sleep Breath",
                     description="Constitution Saving Throw: DC 18, each creature in a 60-foot Cone. Failure: The target has the Incapacitated condition until the end of its next turn, at which point it repeats the save. Second Failure: The target has the Unconscious condition for 10 minutes. This effect ends for the target if it takes damage or a creature within 5 feet of it takes an action to wake it.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.CONSTITUTION,
+                            dc=18,
+                            conditions=(
+                                CombatCondition(
+                                    Condition.INCAPACITATED,
+                                    until=(TurnEdge.END, TurnOf.TARGET),
+                                ),
+                            ),
+                            notes=(
+                                "Also: The target has the Incapacitated condition until the end of its next turn, at which point it repeats the save. Second Failure: The target has the Unconscious condition for 10 minutes. This effect ends for the target if it takes damage or a creature within 5 feet of it takes an action to wake it",
+                            ),
+                            area=CombatArea(CombatAreaShape.CONE, 60),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Spellcasting",
@@ -121,6 +168,17 @@ class AdultBrassDragon(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Scorching Sands",
                     description="Dexterity Saving Throw: DC 16, one creature the dragon can see within 120 feet. Failure: 27 (6d8) Fire damage, and the target's Speed is halved until the end of its next turn. Failure or Success: The dragon can't take this action again until the start of its next turn.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.DEXTERITY,
+                            dc=16,
+                            damage=(CombatDamage("6d8", DamageType.FIRE),),
+                            notes=(
+                                "Also: and the target's Speed is halved until the end of its next turn",
+                            ),
+                        ),
+                    ),
                 ),
             ],
             legendary_resistances=3,
@@ -191,11 +249,31 @@ class AdultWhiteDragon(ExtendedCombatantData):
                 MonsterAbility(
                     name="Rend",
                     description="Melee Attack Roll: +11, reach 10 ft. Hit: 13 (2d6 + 6) Slashing damage plus 4 (1d8) Cold damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=11,
+                            damage=(
+                                CombatDamage("2d6 + 6", DamageType.SLASHING),
+                                CombatDamage("1d8", DamageType.COLD),
+                            ),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Cold Breath (Recharge 5–6)",
                     description="Constitution Saving Throw: DC 19, each creature in a 60-foot Cone. Failure: 54 (12d8) Cold damage. Success: Half damage.",
                     recharge=5,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.CONSTITUTION,
+                            dc=19,
+                            half_on_success=True,
+                            damage=(CombatDamage("12d8", DamageType.COLD),),
+                            area=CombatArea(CombatAreaShape.CONE, 60),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -204,6 +282,20 @@ class AdultWhiteDragon(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Freezing Burst",
                     description="Constitution Saving Throw: DC 14, each creature in a 30-foot-radius Sphere centered on a point the dragon can see within 120 feet. Failure: 7 (2d6) Cold damage, and the target's Speed is 0 until the end of the target's next turn. Failure or Success: The dragon can't take this action again until the start of its next turn.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.CONSTITUTION,
+                            dc=14,
+                            damage=(CombatDamage("2d6", DamageType.COLD),),
+                            notes=(
+                                "Also: and the target's Speed is 0 until the end of the target's next turn",
+                            ),
+                            area=CombatArea(
+                                CombatAreaShape.SPHERE, 30, point_within_ft=120
+                            ),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Frightful Presence",
@@ -340,6 +432,16 @@ class Nalfeshnee(ExtendedCombatantData):
                 MonsterAbility(
                     name="Rend",
                     description="Melee Attack Roll: +10, reach 10 ft. Hit: 16 (2d10 + 5) Slashing damage plus 11 (2d10) Force damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=10,
+                            damage=(
+                                CombatDamage("2d10 + 5", DamageType.SLASHING),
+                                CombatDamage("2d10", DamageType.FORCE),
+                            ),
+                        ),
+                    ),
                 ),
                 MonsterAbility(
                     name="Teleport",
@@ -351,6 +453,21 @@ class Nalfeshnee(ExtendedCombatantData):
                     name="Horror Nimbus (Recharge 5–6)",
                     description="Wisdom Saving Throw: DC 15, each creature in a 15-foot Emanation originating from the nalfeshnee. Failure: 28 (8d6) Psychic damage, and the target has the Frightened condition for 1 minute, until it takes damage, or until it ends its turn with the nalfeshnee out of line of sight. Success: The target is immune to this nalfeshnee's Horror Nimbus for 24 hours.",
                     recharge=5,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.WISDOM,
+                            dc=15,
+                            damage=(CombatDamage("8d6", DamageType.PSYCHIC),),
+                            conditions=(CombatCondition(Condition.FRIGHTENED),),
+                            notes=(
+                                "Also: and the target has the Frightened condition for 1 minute, until it takes damage, or until it ends its turn with the nalfeshnee out of line of sight",
+                            ),
+                            area=CombatArea(
+                                CombatAreaShape.EMANATION, 15, acts=(AreaTiming.ENDS,)
+                            ),
+                        ),
+                    ),
                 ),
             ],
             reactions=[
@@ -429,11 +546,36 @@ class Rakshasa(ExtendedCombatantData):
                 MonsterAbility(
                     name="Cursed Touch",
                     description="Melee Attack Roll: +10, reach 5 ft. Hit: 12 (2d6 + 5) Slashing damage plus 19 (3d12) Necrotic damage. If the target is a creature, it is cursed. While cursed, the target gains no benefit from finishing a Short or Long Rest.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=10,
+                            damage=(
+                                CombatDamage("2d6 + 5", DamageType.SLASHING),
+                                CombatDamage("3d12", DamageType.NECROTIC),
+                            ),
+                            notes=(
+                                "Also: If the target is a creature, it is cursed. While cursed, the target gains no benefit from finishing a Short or Long Rest",
+                            ),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Baleful Command (Recharge 5–6)",
                     description="Wisdom Saving Throw: DC 18, each enemy in a 30-foot Emanation originating from the rakshasa. Failure: 28 (8d6) Psychic damage, and the target has the Frightened and Incapacitated conditions until the start of the rakshasa's next turn.",
                     recharge=5,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.WISDOM,
+                            dc=18,
+                            damage=(CombatDamage("8d6", DamageType.PSYCHIC),),
+                            notes=(
+                                "Also: and the target has the Frightened and Incapacitated conditions until the start of the rakshasa's next turn",
+                            ),
+                            area=CombatArea(CombatAreaShape.EMANATION, 30),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Spellcasting",
@@ -515,11 +657,31 @@ class ShadowDragon(ExtendedCombatantData):
                 MonsterAbility(
                     name="Rend",
                     description="Melee Attack Roll: +10, reach 10 ft. Hit: 12 (2d6 + 5) Slashing damage plus 3 (1d6) Necrotic damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=10,
+                            damage=(
+                                CombatDamage("2d6 + 5", DamageType.SLASHING),
+                                CombatDamage("1d6", DamageType.NECROTIC),
+                            ),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Shadow Breath (Recharge 5–6)",
                     description="Dexterity Saving Throw: DC 17, each creature in a 60-foot Cone. Failure: 35 (10d6) Necrotic damage. Success: Half damage. Failure or Success: A Humanoid reduced to 0 Hit Points by this damage dies, and a Shadow rises from the corpse. The shadow is under the dragon's control and shares the dragon's Initiative count but acts immediately after the dragon.",
                     recharge=5,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.DEXTERITY,
+                            dc=17,
+                            half_on_success=True,
+                            damage=(CombatDamage("10d6", DamageType.NECROTIC),),
+                            area=CombatArea(CombatAreaShape.CONE, 60),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[
@@ -619,15 +781,58 @@ class StormGiant(ExtendedCombatantData):
                 MonsterAbility(
                     name="Storm Sword",
                     description="Melee Attack Roll: +14, reach 10 ft. Hit: 23 (4d6 + 9) Slashing damage plus 13 (3d8) Lightning damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=14,
+                            damage=(
+                                CombatDamage("4d6 + 9", DamageType.SLASHING),
+                                CombatDamage("3d8", DamageType.LIGHTNING),
+                            ),
+                        ),
+                    ),
                 ),
                 MonsterAbility(
                     name="Thunderbolt",
                     description="Ranged Attack Roll: +14, range 500 ft. Hit: 22 (2d12 + 9) Lightning damage, and the target has the Blinded and Deafened conditions until the start of the giant's next turn.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=14,
+                            damage=(CombatDamage("2d12 + 9", DamageType.LIGHTNING),),
+                        ),
+                        CombatEffect(
+                            name="Thunderbolt: Blinded + Deafened",
+                            conditions=(
+                                CombatCondition(
+                                    Condition.BLINDED,
+                                    until=(TurnEdge.START, TurnOf.SOURCE),
+                                ),
+                                CombatCondition(Condition.DEAFENED),
+                            ),
+                            spends_use=False,
+                            trigger=CombatTrigger(
+                                TriggerEvent.HIT, optional=False, after="Thunderbolt"
+                            ),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Lightning Storm (Recharge 5–6)",
                     description="Dexterity Saving Throw: DC 18, each creature in a 10-foot-radius, 40-foot-high Cylinder originating from a point the giant can see within 500 feet. Failure: 55 (10d10) Lightning damage. Success: Half damage.",
                     recharge=5,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.DEXTERITY,
+                            dc=18,
+                            half_on_success=True,
+                            damage=(CombatDamage("10d10", DamageType.LIGHTNING),),
+                            area=CombatArea(
+                                CombatAreaShape.CYLINDER, 10, point_within_ft=500
+                            ),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Spellcasting",
@@ -712,10 +917,38 @@ class Ultroloth(ExtendedCombatantData):
                 MonsterAbility(
                     name="Mercurial Whip",
                     description="Melee Attack Roll: +9, reach 15 ft. Hit: 25 (6d6 + 4) Force damage, and the ultroloth can teleport the target up to 10 feet to an unoccupied space the ultroloth can see that isn't in the air.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=9,
+                            damage=(CombatDamage("6d6 + 4", DamageType.FORCE),),
+                            notes=(
+                                "Also: and the ultroloth can teleport the target up to 10 feet to an unoccupied space the ultroloth can see that isn't in the air",
+                            ),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Hypnotic Gaze",
                     description="Wisdom Saving Throw: DC 17, each creature in a 30-foot Cone. Failure: 10 (3d6) Psychic damage, and the target has the Stunned condition until the start of the ultroloth's next turn. Success: The target is immune to this ultroloth's Hypnotic Gaze for 24 hours.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.WISDOM,
+                            dc=17,
+                            damage=(CombatDamage("3d6", DamageType.PSYCHIC),),
+                            conditions=(
+                                CombatCondition(
+                                    Condition.STUNNED,
+                                    until=(TurnEdge.START, TurnOf.SOURCE),
+                                ),
+                            ),
+                            notes=(
+                                "Also: and the target has the Stunned condition until the start of the ultroloth's next turn",
+                            ),
+                            area=CombatArea(CombatAreaShape.CONE, 30),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Spellcasting",
@@ -832,10 +1065,46 @@ class Vampire(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Grave Strike (Vampire Form Only)",
                     description="Melee Attack Roll: +9, reach 5 ft. Hit: 8 (1d8 + 4) Bludgeoning damage plus 7 (2d6) Necrotic damage. If the target is a Large or smaller creature, it has the Grappled condition (escape DC 14) from one of two hands.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=9,
+                            damage=(
+                                CombatDamage("1d8 + 4", DamageType.BLUDGEONING),
+                                CombatDamage("2d6", DamageType.NECROTIC),
+                            ),
+                        ),
+                        CombatEffect(
+                            name="Grave Strike: Grappled",
+                            conditions=(CombatCondition(Condition.GRAPPLED),),
+                            spends_use=False,
+                            notes=("Escape DC 14, from one of two hands.",),
+                            trigger=CombatTrigger(
+                                TriggerEvent.HIT,
+                                optional=False,
+                                after="Grave Strike (Vampire Form Only)",
+                                largest_target=CreatureSize.LARGE,
+                            ),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Bite (Bat or Vampire Form Only)",
                     description="Constitution Saving Throw: DC 17, one creature within 5 feet that is willing or that has the Grappled, Incapacitated, or Restrained condition. Failure: 6 (1d4 + 4) Piercing damage plus 13 (3d8) Necrotic damage. The target's Hit Point maximum decreases by an amount equal to the Necrotic damage taken, and the vampire regains Hit Points equal to that amount. A Humanoid reduced to 0 Hit Points by this damage and then buried rises the following sunset as a Vampire Spawn under the vampire's control.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.CONSTITUTION,
+                            dc=17,
+                            damage=(
+                                CombatDamage("1d4 + 4", DamageType.PIERCING),
+                                CombatDamage("3d8", DamageType.NECROTIC),
+                            ),
+                            notes=(
+                                "Also: The target's Hit Point maximum decreases by an amount equal to the Necrotic damage taken, and the vampire regains Hit Points equal to that amount. A Humanoid reduced to 0 Hit Points by this damage and then buried rises the following sunset as a Vampire Spawn under the vampire's control",
+                            ),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[

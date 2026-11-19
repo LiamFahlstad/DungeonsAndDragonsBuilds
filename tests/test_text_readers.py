@@ -36,6 +36,8 @@ TEXT_READERS: dict[tuple[str, str], str] = {
     ("Combat/CombatUIQt/conditions_mixin.py", "_WHOLE_NUMBER"): "input",
     ("Combat/CombatUIQt/conditions_mixin.py", "_DICELESS"): "input",
     ("Combat/CombatUIQt/saves.py", "_DICE"): "input",
+    # The dice of a roll, typed or an effect's ("2d6 + 3"), rolled
+    ("Combat/CombatUIQt/monster_actions.py", "DIE"): "input",
     ("Combat/CombatUIQt/trigger_prompt.py", "TriggerPrompt.choice"): "input",
     # Our own log and display strings
     ("Combat/CombatUIQt/arena_view.py", "token_label"): "log",
@@ -54,27 +56,12 @@ TEXT_READERS: dict[tuple[str, str], str] = {
     ("Combat/Arena/arena.py", "_REACH"): "phase 4",
     ("Combat/Arena/ranges.py", "_REACH"): "phase 4",
     ("Combat/Arena/ranges.py", "_RANGE"): "phase 4",
-    # The condition a freeform ability's hit gives
-    ("Combat/CombatUIQt/effect_options.py", "_HIT_ENDS"): "phase 4",
-    ("Combat/CombatUIQt/effect_options.py", "_monster_action_condition"): "phase 4",
-    # Attacks, saves, damage and riders
-    ("Combat/CombatUIQt/monster_actions.py", "_ATTACK"): "phase 4",
-    ("Combat/CombatUIQt/monster_actions.py", "_SAVE"): "phase 4",
-    ("Combat/CombatUIQt/monster_actions.py", "DAMAGE"): "phase 4",
-    ("Combat/CombatUIQt/monster_actions.py", "JOINED"): "phase 4",
-    ("Combat/CombatUIQt/monster_actions.py", "DIE"): "phase 4",
-    ("Combat/CombatUIQt/monster_actions.py", "_CONDITIONAL"): "phase 4",
-    ("Combat/CombatUIQt/monster_actions.py", "_JOINED_RIDER"): "phase 4",
-    ("Combat/CombatUIQt/monster_actions.py", "_IF_RIDER"): "phase 4",
-    ("Combat/CombatUIQt/monster_actions.py", "_GATES"): "phase 4",
-    ("Combat/CombatUIQt/monster_actions.py", "_PLAIN_RIDER"): "phase 4",
-    ("Combat/CombatUIQt/monster_actions.py", "_WHILE_GRAPPLED"): "phase 4",
-    ("Combat/CombatUIQt/monster_actions.py", "_RIDER_SENTENCE"): "phase 4",
-    ("Combat/CombatUIQt/monster_actions.py", "_THE_TARGETS_TURN"): "phase 4",
-    ("Combat/CombatUIQt/monster_actions.py", "parse_action"): "phase 4",
-    ("Combat/CombatUIQt/monster_actions.py", "_damage_rolls"): "phase 4",
-    ("Combat/CombatUIQt/monster_actions.py", "tidy_dice"): "phase 4",
     # Phase 5: EffectText, an undescribed spell's or feature's text. Frozen.
+    # Its damage reading, which a monster's attacks no longer use (Phase
+    # 4.3: Combat/Tools/monster_effect_text.py wrote their effects).
+    ("Combat/CombatUIQt/monster_actions.py", "DAMAGE"): "phase 5",
+    ("Combat/CombatUIQt/monster_actions.py", "JOINED"): "phase 5",
+    ("Combat/CombatUIQt/monster_actions.py", "tidy_dice"): "phase 5",
     ("Combat/CombatUIQt/effect_options.py", "_UPGRADE_PARAGRAPH"): "phase 5",
     ("Combat/CombatUIQt/effect_options.py", "_SENTENCE_END"): "phase 5",
     ("Combat/CombatUIQt/effect_options.py", "_SAVE"): "phase 5",

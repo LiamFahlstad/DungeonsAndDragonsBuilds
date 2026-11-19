@@ -39,7 +39,7 @@
    "duration_seconds": null,
    "feature_name": "",
    "half_on_save": false,
-   "is_described": false,
+   "is_described": true,
    "is_unavailable": false,
    "note": "",
    "repeat_save": false,

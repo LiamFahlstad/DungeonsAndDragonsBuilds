@@ -25,6 +25,7 @@ from Model.Content.CombatEffect import (
 )
 from Model.Content.CombatModifiers import AttackKind
 from Model.Content.CombatTriggers import CombatTrigger, TriggerEvent
+from Model.Content.CombatArea import CombatArea, CombatAreaShape
 
 
 class TheMouthThatWalks(ExtendedCombatantData):
@@ -99,16 +100,42 @@ class TheMouthThatWalks(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Devouring Maw",
                     description="Melee Attack Roll: +7, reach 10 ft. Hit: 26 (4d10 + 4) Piercing damage plus 7 (2d6) Necrotic damage. If the target is Medium or smaller and isn't already grappled by the Mouth, the target is also grappled (escape DC 15) and drawn into the wound: while grappled this way, the target is Restrained, and at the start of each of its turns it takes 7 (2d6) Necrotic damage as the wound convulses around it.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=7,
+                            damage=(
+                                CombatDamage("4d10 + 4", DamageType.PIERCING),
+                                CombatDamage("2d6", DamageType.NECROTIC),
+                            ),
+                            notes=(
+                                "Also: If the target is Medium or smaller and isn't already grappled by the Mouth, the target is also grappled (escape DC 15) and drawn into the wound: while grappled this way, the target is Restrained, and at the start of each of its turns it takes 7 (2d6) Necrotic damage as the wound convulses around it",
+                            ),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Chain-Wracked Lash (Recharge 5-6)",
                     description="One of the Mouth's anchoring chains tears free of the sanctum floor and lashes out. Melee Attack Roll: +7, reach 15 ft. Hit: 14 (2d10 + 4) Bludgeoning damage, and if the target is Large or smaller, it must succeed on a DC 15 Strength saving throw or be pulled up to 10 feet toward the Mouth.",
                     recharge=5,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=7,
+                            damage=(CombatDamage("2d10 + 4", DamageType.BLUDGEONING),),
+                            notes=(
+                                "Also: and if the target is Large or smaller, it must succeed on a DC 15 Strength saving throw or be pulled up to 10 feet toward the Mouth",
+                            ),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Noc'tra's Wail (Recharge 5-6)",
                     description="The wound shudders and screams a fragment of Noc'tra outward in a 15-foot Cone. Each creature in the area must succeed on a DC 15 Wisdom saving throw, taking 14 (4d6) Psychic damage and gaining the Frightened condition until the end of the Mouth's next turn on a failed save, or half as much damage only on a successful one.",
                     recharge=5,
+                    combat_effects=(
+                        CombatEffect(area=CombatArea(CombatAreaShape.CONE, 15)),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -188,6 +215,17 @@ class TheHunter(ExtendedCombatantData):
                 MonsterAbility(
                     name="Cursed Kris",
                     description="Melee Attack Roll: +7, reach 5 ft. Hit: 11 (2d6 + 4) Piercing damage plus 7 (2d6) Necrotic damage as the bound curse feeds through the blade.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=7,
+                            damage=(
+                                CombatDamage("2d6 + 4", DamageType.PIERCING),
+                                CombatDamage("2d6", DamageType.NECROTIC),
+                            ),
+                            notes=("Also: as the bound curse feeds through the blade",),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[
@@ -195,6 +233,16 @@ class TheHunter(ExtendedCombatantData):
                     name="Marked for the Hunt (Recharge 5-6)",
                     description="The Hunter fixes its gaze on one creature it can see within 30 feet. Constitution Saving Throw: DC 15, the target. Failure: The target is Marked until the start of the Hunter's next turn. While a creature is Marked this way, the Hunter's attack rolls against it score a Critical Hit on a roll of 19 or 20, and the Marked creature can't benefit from Invisible or Heavily Obscured against the Hunter.",
                     recharge=5,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.CONSTITUTION,
+                            dc=15,
+                            notes=(
+                                "Also: The target is Marked until the start of the Hunter's next turn. While a creature is Marked this way, the Hunter's attack rolls against it score a Critical Hit on a roll of 19 or 20, and the Marked creature can't benefit from Invisible or Heavily Obscured against the Hunter",
+                            ),
+                        ),
+                    ),
                 ),
             ],
             reactions=[
@@ -384,6 +432,7 @@ class ManifestationOfDurmor(ExtendedCombatantData):
                                 "The ground there becomes lava until the end of"
                                 " the manifestation's next turn.",
                             ),
+                            area=CombatArea(CombatAreaShape.EMANATION, 20),
                         ),
                     ),
                     recharge=6,
@@ -395,6 +444,13 @@ class ManifestationOfDurmor(ExtendedCombatantData):
                 MonsterAbility(
                     name="Lava Path (Costs 1 Action)",
                     description="Lava wells up from the ground in a 10-foot-radius circle centered on a point the manifestation can see within 60 feet of it, and lasts until the end of the manifestation's next turn. If the Goblin King is within 60 feet of the manifestation, he can then move up to half his Speed without provoking Opportunity Attacks.",
+                    combat_effects=(
+                        CombatEffect(
+                            area=CombatArea(
+                                CombatAreaShape.SPHERE, 10, point_within_ft=60
+                            )
+                        ),
+                    ),
                 ),
                 NamedAttackAction(
                     name="Molten Strike (Costs 3 Actions)",

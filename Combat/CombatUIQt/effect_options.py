@@ -26,14 +26,11 @@ from Combat.Arena.ranges import (
 from Combat.Effects.triggers import TriggerRow
 from Core.Definitions import Condition
 from Model.Content.CombatArea import CombatArea
-from Model.Content.CombatAreaText import read_combat_area
 from Model.Content.CombatEffect import (
     CombatCondition,
     CombatDamage,
     CombatEffect,
     CombatRegain,
-    TurnEdge,
-    TurnOf,
 )
 from Model.Content.CombatModifiers import ArmorClass, AttackKind, WhenHit
 from Model.Content.CombatTriggers import CombatTrigger, TriggerAim, TriggerEvent
@@ -232,8 +229,6 @@ _IGNORES_COVER = re.compile(
     r"(?:no benefit from|ignores?) Half Cover (?:or|and) Three-Quarters Cover",
     re.IGNORECASE,
 )
-# Where a monster's hit stops and a save it forces begins.
-_HIT_ENDS = re.compile(r"\b\w+ Saving Throw:|\bFailure:")
 _FLAT_ONE = "1d1"  # how a weapon writes an Unarmed Strike's damage
 # What an ExtraDamage's note says when the weapon doesn't always deal it.
 _NOT_ALWAYS = re.compile(r"\b(?:activate|chosen|when|while|if|only)\b", re.IGNORECASE)
@@ -833,42 +828,6 @@ def _text_spell_option(spell, who: dict) -> EffectOption:
     )
 
 
-def _monster_action_condition(
-    action: MonsterAction,
-) -> tuple[str, tuple[str, str] | None]:
-    """The condition its Hit: or Failure: text gives, and how long for if
-    that's a turn. A hit's text stops where a save it forces begins: that
-    save's condition is only for who fails it, so the GM applies it apart.
-    Neither is what "Failure or Success:" gives, whatever the roll: that's in
-    the rider."""
-    label = "Hit:" if action.to_hit is not None else "Failure:"
-    start = action.description.find(label)
-    if start < 0:
-        return "", None
-    text = action.description[start + len(label) :]
-    text = re.split(r"\b(?:Success|Failure or Success|Hit or Miss):", text)[0]
-    if action.to_hit is not None:
-        text = _HIT_ENDS.split(text)[0]
-    for rider in action.riders:
-        # Its own row gives it, as the attack hits (_rider_options).
-        text = text.replace(rider.text, "")
-    condition, _, until, _ = _inflicted_condition(text)
-    return condition, until
-
-
-def _monster_action_notes(action: MonsterAction) -> list[str]:
-    notes = []
-    if action.to_hit is not None and action.save_ability is not None:
-        notes.append(f"It has a {action.save_ability} save too: apply it apart.")
-    elif action.save_ability is not None and action.save_dc is None:
-        notes.append("The DC isn't known: set it.")
-    if any(roll.damage_type is None for roll in action.damage):
-        notes.append("It chooses a damage type: give one.")
-    if action.rider:
-        notes.append(f"Also: {action.rider}")
-    return notes
-
-
 def _availability(char: dict, action: MonsterAction, name: str) -> tuple[str, bool]:
     """(the row's name, whether it's greyed out): spent, or a legendary
     action costing more than are left."""
@@ -903,65 +862,7 @@ def monster_action_options(
     other = _action_it_uses(action, by_name)
     if other is not None:
         return [_as_other_action(char, action, other)]
-    return [_monster_action_option(char, action), *_rider_options(char, action)]
-
-
-def _rider_options(char: dict, action: MonsterAction) -> list[EffectOption]:
-    """A row for each condition an attack's hit gives in a sentence of its
-    own (monster_actions.hit_riders): "Tree Club: Prone", which the
-    simulator applies as Tree Club hits (Notes/combat-effects-plan.md, 6.4),
-    and asks first about what it can't check: a size it doesn't know, a
-    `when`, which attack hit. It spends nothing: the attack did."""
-    base = _NAME_ALONE.sub("", action.name)
-    options = []
-    for rider in action.riders:
-        first, *others = rider.conditions
-        until = None
-        if rider.until is not None:
-            until = (TurnEdge(rider.until[0]), TurnOf(rider.until[1]))
-        effect = CombatEffect(
-            name=f"{base}: {CONDITION_JOINER.join(rider.conditions)}",
-            conditions=(
-                CombatCondition(first, until=until),
-                *(CombatCondition(c) for c in others),
-            ),
-            spends_use=False,
-            notes=(rider.note,) if rider.note else (),
-            trigger=CombatTrigger(
-                TriggerEvent.HIT,
-                optional=False,
-                after=action.name,
-                largest_target=rider.largest_target,
-                once_per_turn=rider.once_per_turn,
-                when=rider.when,
-            ),
-        )
-        option = _described_option(
-            char,
-            effect,
-            name=action.name,
-            kind=MONSTER_ACTION,
-            tooltip=action.description,
-            default_area=_monster_area(action),
-        )
-        # Its row says when, not again what: "Tree Club: Prone  on a hit,
-        # Large or smaller".
-        when = ["on a hit"]
-        if rider.largest_target is not None:
-            when.append(f"{rider.largest_target.value} or smaller")
-        if rider.once_per_turn:
-            when.append("once per turn")
-        if rider.when:
-            when.append(f"if {rider.when}")
-        options.append(
-            replace(
-                option,
-                summary=", ".join(when),
-                until=rider.until,
-                is_described=False,
-            )
-        )
-    return options
+    return [_monster_action_option(char, action)]
 
 
 def _described_monster_option(
@@ -971,25 +872,38 @@ def _described_monster_option(
     stat block's section, which the turn column spends, so none is filled in
     unless the effect says so."""
     row_name, unavailable = _availability(char, action, effect.name or action.name)
-    return _described_option(
+    spent: MonsterAction | None = action
+    if not effect.spends_use:
+        # It spends nothing (Tree Club: Prone, as Tree Club hits): the
+        # attack did, so it's there even once that's spent.
+        row_name, unavailable, spent = "", False, None
+    option = _described_option(
         char,
         effect,
         name=action.name,
         kind=MONSTER_ACTION,
         tooltip=action.description,
         row_name=row_name,
-        monster_action=action,
+        monster_action=spent,
         is_unavailable=unavailable,
-        default_area=_monster_area(action),
     )
-
-
-def _monster_area(action: MonsterAction) -> CombatArea | None:
-    """A monster ability's area ("each creature in a 15-foot Cone"), read
-    from its description: stat blocks don't say it as a field yet
-    (Notes/explicit-attributes-plan.md, Phase 4). A CombatEffect written on
-    the ability can say its own `area` instead."""
-    return read_combat_area(action.description)
+    trigger = effect.trigger
+    after_events = (TriggerEvent.HIT, TriggerEvent.USES)
+    if trigger is None or trigger.event not in after_events or not trigger.after:
+        return option
+    # A row applied as another of its attacks hits (or after it, hit or
+    # miss) says when, not again what: "Tree Club: Prone  on a hit, Large or
+    # smaller".
+    when = ["on a hit" if trigger.event is TriggerEvent.HIT else "hit or miss"]
+    if trigger.largest_target is not None:
+        when.append(f"{trigger.largest_target.value} or smaller")
+    if trigger.once_per_turn:
+        when.append("once per turn")
+    if trigger.when:
+        when.append(f"if {trigger.when}")
+    if effect.roll == "save":
+        when.insert(0, option.summary)
+    return replace(option, summary=", ".join(when))
 
 
 def _spells_it_casts(
@@ -1109,7 +1023,11 @@ def _as_other_action(
     char: dict, action: MonsterAction, other: MonsterAction
 ) -> EffectOption:
     """What `other` fills in, used as `action`, which is what's spent."""
-    used = _monster_action_option(char, other)
+    used = (
+        _described_monster_option(char, other, other.effects[0])
+        if other.effects
+        else _monster_action_option(char, other)
+    )
     row_name, unavailable = _availability(char, action, action.name)
     base = _NAME_ALONE.sub("", other.name)
     doing = f"makes one {base} attack" if other.to_hit is not None else f"uses {base}"
@@ -1124,48 +1042,26 @@ def _as_other_action(
         tooltip=action.description,
         monster_action=action,
         is_unavailable=unavailable,
-        area=_monster_area(action),
     )
 
 
 def _monster_action_option(char: dict, action: MonsterAction) -> EffectOption:
-    """What an ability's own text fills in: its attack or save and damage, the
-    condition its hit or failed save gives, or the Hit Points it gives."""
+    """The row of an ability with no combat effects: nothing to fill in
+    (Multiattack, a trait-like action), only the use to spend."""
     row_name, unavailable = _availability(char, action, action.name)
-    is_save = action.to_hit is None and action.save_ability is not None
-    ability = _ABILITY_SHORT_NAMES.get(action.save_ability or "")
-    condition, until = _monster_action_condition(action)
-    notes = _monster_action_notes(action)
-    rolls, amount_kind = action.damage, DAMAGE_AMOUNT
-    gain = None if action.is_rollable or is_save else _read_gain(action.description, ())
-    if gain is not None:
-        amount_kind = TEMP_HP if gain.temporary else HEALING
-        rolls = (DamageRoll(gain.dice, None),)
+    notes = []
     if action.name.startswith("Multiattack"):
-        notes.insert(0, "Pick each of its attacks in turn.")
-    summary = action.summary
-    if gain is not None:
-        summary = amount_text(gain.dice, amount_kind)
+        notes.append("Pick each of its attacks in turn.")
     return EffectOption(
         name=action.name,
         kind=MONSTER_ACTION,
         row_name=row_name,
-        summary=summary,
+        summary=action.summary,
         tooltip=action.description,
         note=" ".join(notes),
-        roll=ATTACK_ROLL if action.to_hit is not None else SAVING_THROW,
-        ability=ability if is_save else None,
-        dc=action.save_dc if is_save else None,
-        bonus=action.to_hit,
-        half_on_save=is_save and action.half_on_save,
-        repeat_save=is_save and bool(_REPEATS_THE_SAVE.search(action.description)),
-        rolls=rolls,
-        amount_kind=amount_kind,
-        condition=condition,
-        until=until,
+        roll=SAVING_THROW,
         monster_action=action,
         is_unavailable=unavailable,
-        area=_monster_area(action),
     )
 
 

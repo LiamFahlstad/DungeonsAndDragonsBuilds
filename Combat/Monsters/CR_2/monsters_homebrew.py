@@ -15,6 +15,13 @@ from Model.Creatures.MonsterAbilities import (
     SavingThrowEffect,
 )
 from Core.Definitions import Ability
+from Model.Content.CombatArea import CombatArea, CombatAreaShape
+from Model.Content.CombatEffect import (
+    CombatCondition,
+    CombatDamage,
+    CombatEffect,
+    EffectRoll,
+)
 
 
 class PriestOfTheBlackTongues(ExtendedCombatantData):
@@ -79,11 +86,27 @@ class PriestOfTheBlackTongues(ExtendedCombatantData):
                 MonsterAbility(
                     name="Curse-Etched Stave",
                     description="Melee Attack Roll: +4, reach 5 ft. Hit: 5 (1d6 + 2) Bludgeoning damage plus 7 (2d6) Necrotic damage as curse-fire crawls from the wood into the wound.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=4,
+                            damage=(
+                                CombatDamage("1d6 + 2", DamageType.BLUDGEONING),
+                                CombatDamage("2d6", DamageType.NECROTIC),
+                            ),
+                            notes=(
+                                "Also: as curse-fire crawls from the wood into the wound",
+                            ),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Curse-Throat Wail (Recharge 5-6)",
                     description="The priest looses a rasping shout amplified by the brass throat-tube lashed across its ruined mouth. Each creature in a 15-foot cone must make a DC 12 Wisdom saving throw, taking 10 (3d6) Psychic damage and gaining the Frightened condition until the end of the priest's next turn on a failed save, or half as much damage only on a successful one.",
                     recharge=5,
+                    combat_effects=(
+                        CombatEffect(area=CombatArea(CombatAreaShape.CONE, 15)),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Spellcasting",
@@ -169,11 +192,24 @@ class SisterLumenBellWardenOfStillChoirs(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Chime-Rod",
                     description="Melee Attack Roll: +5, reach 5 ft. Hit: 6 (1d6 + 3) Bludgeoning damage to the throat. The target must succeed on a DC 12 Constitution saving throw or be unable to speak or make sound, including casting spells with a Verbal component, until the end of its next turn.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=5,
+                            damage=(CombatDamage("1d6 + 3", DamageType.BLUDGEONING),),
+                            notes=(
+                                "Also: to the throat. The target must succeed on a DC 12 Constitution saving throw or be unable to speak or make sound, including casting spells with a Verbal component, until the end of its next turn",
+                            ),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Peal of Still Choirs (Recharge 5-6)",
                     description="Sister Lumen rings her cluster of harmonic bells. Each creature of her choice within 20 feet of her must make a DC 12 Wisdom saving throw. On a failed save, a creature takes 7 (2d6) Thunder damage, can't speak or cast spells with a Verbal component until the end of Sister Lumen's next turn, and a creature that was Concentrating on a spell must succeed on a Concentration saving throw or lose Concentration on that spell. On a successful save, a creature takes half as much damage only and suffers no other effect.",
                     recharge=5,
+                    combat_effects=(
+                        CombatEffect(area=CombatArea(CombatAreaShape.EMANATION, 20)),
+                    ),
                 ),
             ],
             bonus_actions=[
@@ -250,6 +286,13 @@ class AccursedGroupOf5(ExtendedCombatantData):
                     dice_type=DiceType.D6,
                     damage_bonus=1,
                     damage_type=DamageType.BLUDGEONING,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=4,
+                            damage=(CombatDamage("1d6 + 1", DamageType.BLUDGEONING),),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Grab",
@@ -347,6 +390,16 @@ class HaratCR2(ExtendedCombatantData):
                     damage_bonus=4,
                     damage_type=DamageType.BLUDGEONING,
                     additional_ruling="Harat can choose to deal Thunder damage instead of Bludgeoning damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=6,
+                            damage=(CombatDamage("1d6 + 4", DamageType.BLUDGEONING),),
+                            notes=(
+                                "Also: Harat can choose to deal Thunder damage instead of Bludgeoning damage",
+                            ),
+                        ),
+                    ),
                 ),
                 SavingThrowEffect(
                     name="Thunderclap (Recharge 5-6)",
@@ -359,6 +412,20 @@ class HaratCR2(ExtendedCombatantData):
                     failure_effect="and the target is pushed 10 feet straight away from Harat and has the Prone condition",
                     success_effect="Half damage only.",
                     recharge=5,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.CONSTITUTION,
+                            dc=13,
+                            half_on_success=True,
+                            damage=(CombatDamage("2d8", DamageType.THUNDER),),
+                            conditions=(CombatCondition(Condition.PRONE),),
+                            notes=(
+                                "Also: and the target is pushed 10 feet straight away from Harat and has the Prone condition",
+                            ),
+                            area=CombatArea(CombatAreaShape.EMANATION, 10),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -448,6 +515,16 @@ class GreypawCR2(ExtendedCombatantData):
                     damage_bonus=3,
                     damage_type=DamageType.PIERCING,
                     additional_ruling="If the target is a Medium or smaller creature, it must succeed on a DC 12 Strength saving throw or be knocked Prone.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=5,
+                            damage=(CombatDamage("1d8 + 3", DamageType.PIERCING),),
+                            notes=(
+                                "Also: If the target is a Medium or smaller creature, it must succeed on a DC 12 Strength saving throw or be knocked Prone",
+                            ),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],

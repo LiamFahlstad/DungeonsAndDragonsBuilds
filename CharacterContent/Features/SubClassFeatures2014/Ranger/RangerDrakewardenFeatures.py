@@ -10,7 +10,7 @@ from Model.Content.Feature import (
     RegainedOn,
     FeatureDice,
 )
-from Model.Content.CombatEffect import CombatEffect
+from Model.Content.CombatEffect import CombatDamage, CombatEffect, EffectRoll
 from Core.Definitions import CreatureSize
 from Model.Creatures.Combatants import (
     Alignment,
@@ -18,7 +18,7 @@ from Model.Creatures.Combatants import (
     ExtendedCombatantData,
     MonsterType,
 )
-from Model.Creatures.MonsterAbilities import MonsterAbility
+from Model.Creatures.MonsterAbilities import MonsterAbility, dice_plus
 from Core.Definitions import Ability, CharacterClass, DamageType
 from Presentation.CreatureStatBlocks import format_creature_stat_block
 from Model.View import CharacterView
@@ -126,7 +126,29 @@ def _build_drake(
         passive_perception=12,
         languages="Draconic",
         traits=traits,
-        actions=[MonsterAbility(name="Bite", description=bite_description)],
+        actions=[
+            MonsterAbility(
+                name="Bite",
+                description=bite_description,
+                combat_effects=(
+                    CombatEffect(
+                        roll=EffectRoll.ATTACK,
+                        attack_bonus=3 + proficiency_bonus,
+                        damage=(
+                            CombatDamage(
+                                dice_plus("1d6", proficiency_bonus),
+                                DamageType.PIERCING,
+                            ),
+                            *(
+                                (CombatDamage(bite_extra_dice, chosen_type),)
+                                if has_wings
+                                else ()
+                            ),
+                        ),
+                    ),
+                ),
+            )
+        ],
         bonus_actions=[],
         reactions=reactions,
         legendary_actions=[],

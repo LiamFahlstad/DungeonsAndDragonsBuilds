@@ -23,7 +23,13 @@ from Builds.Characters.Y2024_Monk_Elements_KiviJatti import (
 )
 from Combat.CombatUIQt.attack_rolls import parse_attack_roll
 from Combat.CombatUIQt.effect_options import effect_options, triggered_rows
-from Combat.CombatUIQt.monster_actions import HitRider, hit_riders, parse_action
+from Combat.CombatUIQt.monster_actions import parse_action
+from Combat.Tools.monster_effect_text import (
+    HitRider,
+    hit_riders,
+    read_effects,
+    read_text,
+)
 from Combat.CombatUIQt.saves import CustomEffect
 from Combat.CombatUIQt.trigger_prompt import TriggerPrompt
 from Combat.Effects.triggers import (
@@ -532,11 +538,12 @@ def test_a_monster_buttons_hit_asks_once(fight, monkeypatch):
     ui, kivi, ogre, _, answers = fight
     monkeypatch.setattr(random, "randint", lambda a, b: min(b, 15))
     ui._set_targets([ogre])
+    text = "Melee Attack Roll: +6, reach 5 ft. Hit: 7 (1d6 + 4) Bludgeoning damage."
     slam = parse_action(
         {
             "name": "Slam",
-            "description": "Melee Attack Roll: +6, reach 5 ft. Hit: 7 (1d6 + 4)"
-            " Bludgeoning damage.",
+            "description": text,
+            "combat_effects": [e.to_dict() for e in read_effects("Slam", text)],
         }
     )
     ui._roll_action(slam, kivi)
@@ -726,7 +733,9 @@ def test_the_popup_gives_the_checked_rows(fight):
 
 
 # ---------------------------------------------------------------------------
-# Monster riders (6.4): a condition a monster's hit gives, read from its text.
+# Monster riders (6.4): a condition a monster's hit gives, read from its text
+# where stat blocks are written (Combat/Tools/monster_effect_text.py), as an
+# effect of its own that comes as the attack hits.
 # The Hill Giant's Tree Club: "Hit: 18 (3d8 + 5) Bludgeoning damage. If the
 # target is a Large or smaller creature, it has the Prone condition." Its
 # Trash Lob: "Hit: 16 (2d10 + 5) Bludgeoning damage, and the target has the
@@ -778,8 +787,9 @@ def test_tree_clubs_prone_is_a_row_of_its_own_that_comes_as_it_hits():
 
 def test_the_turn_columns_also_line_no_longer_says_the_rider():
     club = parse_action(_tree_club_ability())
-    assert club.rider == ""
-    (rider,) = club.riders
+    assert club.notes == ()
+    assert [e.name for e in club.effects] == ["", "Tree Club: Prone"]
+    (rider,) = read_text(_tree_club_ability().description).riders
     assert rider == HitRider(
         text="If the target is a Large or smaller creature, it has the Prone"
         " condition",
@@ -840,7 +850,7 @@ def test_the_turn_columns_also_line_no_longer_says_the_rider():
 def test_a_rider_reads_its_conditions_size_duration_and_note(
     hit, conditions, largest, until, note
 ):
-    action = parse_action(_attack(hit))
+    action = read_text(_attack(hit)["description"])
     (rider,) = action.riders
     assert (rider.conditions, rider.largest_target, rider.until, rider.note) == (
         conditions,
@@ -852,12 +862,12 @@ def test_a_rider_reads_its_conditions_size_duration_and_note(
 
 
 def test_what_only_the_gm_can_tell_is_a_when():
-    (rider,) = parse_action(
+    (rider,) = read_text(
         _attack(
             "20 (3d8 + 7) Piercing damage. If the target is a Huge or smaller"
             " creature and the elephant moved 20+ feet straight toward it"
             " immediately before the hit, the target has the Prone condition."
-        )
+        )["description"]
     ).riders
     assert (rider.largest_target, rider.when) == (
         CreatureSize.HUGE,
@@ -895,18 +905,18 @@ def test_what_only_the_gm_can_tell_is_a_when():
     ],
 )
 def test_a_sentence_that_says_more_is_no_rider(hit):
-    action = parse_action(_attack(hit))
+    action = read_text(_attack(hit)["description"])
     assert action.riders == ()
     assert action.rider  # still there for the GM to read
 
 
 def test_the_rest_of_the_text_stays_in_the_rider():
-    action = parse_action(
+    action = read_text(
         _attack(
             "9 (2d6 + 2) Piercing damage. If the target is a Medium or smaller"
             " creature, it has the Grappled condition (escape DC 12). Until the"
             " grapple ends, the kuo-toa can't make Pincer Staff attacks."
-        )
+        )["description"]
     )
     assert len(action.riders) == 1
     assert action.rider == (
@@ -1084,12 +1094,16 @@ def test_one_undo_takes_back_the_giants_hit_and_the_prone(giants_turn):
 
 def test_a_grapples_escape_dc_goes_on_its_badge(giants_turn):
     ui, _, ogre, giant, _ = giants_turn
+    text = (
+        "Melee Attack Roll: +8, reach 5 ft. Hit: 8 (1d8 + 4) Slashing damage. If"
+        " the target is a Large or smaller creature, it has the Grappled"
+        " condition (escape DC 14) from one of two claws."
+    )
     giant["actions"] = [
         {
             "name": "Claw",
-            "description": "Melee Attack Roll: +8, reach 5 ft. Hit: 8 (1d8 + 4)"
-            " Slashing damage. If the target is a Large or smaller creature, it"
-            " has the Grappled condition (escape DC 14) from one of two claws.",
+            "description": text,
+            "combat_effects": [e.to_dict() for e in read_effects("Claw", text)],
         }
     ]
     (rider,) = triggered_rows(giant)

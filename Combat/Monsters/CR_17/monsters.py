@@ -39,6 +39,16 @@ from Model.Creatures.MonsterAbilities import (
     SiegeMonster,
 )
 from Core.Definitions import Ability
+from Model.Content.CombatArea import CombatArea, CombatAreaShape
+from Model.Content.CombatEffect import (
+    CombatCondition,
+    CombatDamage,
+    CombatEffect,
+    EffectRoll,
+    TurnEdge,
+    TurnOf,
+)
+from Model.Content.CombatTriggers import CombatTrigger, TriggerEvent
 
 
 class AdultGoldDragon(ExtendedCombatantData):
@@ -114,6 +124,16 @@ class AdultGoldDragon(ExtendedCombatantData):
                     secondary_dice_count=1,
                     secondary_dice_type=DiceType.D8,
                     secondary_damage_type=DamageType.FIRE,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=14,
+                            damage=(
+                                CombatDamage("2d8 + 8", DamageType.SLASHING),
+                                CombatDamage("1d8", DamageType.FIRE),
+                            ),
+                        ),
+                    ),
                 ),
                 SavingThrowEffect(
                     name="Fire Breath (Recharge 5–6)",
@@ -125,6 +145,16 @@ class AdultGoldDragon(ExtendedCombatantData):
                     damage_type=DamageType.FIRE,
                     success_effect="Half damage.",
                     recharge=5,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.DEXTERITY,
+                            dc=21,
+                            half_on_success=True,
+                            damage=(CombatDamage("12d10", DamageType.FIRE),),
+                            area=CombatArea(CombatAreaShape.CONE, 60),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Spellcasting",
@@ -136,6 +166,18 @@ class AdultGoldDragon(ExtendedCombatantData):
                     dc=21,
                     target="each creature that isn't currently affected by this breath in a 60-foot Cone",
                     failure_effect="The target has Disadvantage on Strength-based D20 Tests and subtracts 3 (1d6) from its damage rolls. It repeats the save at the end of each of its turns, ending the effect on itself on a success. After 1 minute, it succeeds automatically.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.STRENGTH,
+                            dc=21,
+                            repeat_save=True,
+                            notes=(
+                                "Also: The target has Disadvantage on Strength-based D20 Tests and subtracts 3 (1d6) from its damage rolls. It repeats the save at the end of each of its turns, ending the effect on itself on a success. After 1 minute, it succeeds automatically",
+                            ),
+                            area=CombatArea(CombatAreaShape.CONE, 60),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -151,6 +193,23 @@ class AdultGoldDragon(ExtendedCombatantData):
                     damage_type=DamageType.FORCE,
                     failure_effect="and the target has the Incapacitated condition and is transported to a harmless demiplane until the start of the dragon's next turn, at which point it reappears in an unoccupied space of the dragon's choice within 120 feet of the dragon",
                     extra_ruling="Failure or Success: The dragon can't take this action again until the start of its next turn.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.CHARISMA,
+                            dc=21,
+                            damage=(CombatDamage("3d6", DamageType.FORCE),),
+                            conditions=(
+                                CombatCondition(
+                                    Condition.INCAPACITATED,
+                                    until=(TurnEdge.START, TurnOf.SOURCE),
+                                ),
+                            ),
+                            notes=(
+                                "Also: and the target has the Incapacitated condition and is transported to a harmless demiplane until the start of the dragon's next turn, at which point it reappears in an unoccupied space of the dragon's choice within 120 feet of the dragon",
+                            ),
+                        ),
+                    ),
                 ),
                 CastSpellLegendaryAction(
                     name="Guiding Light",
@@ -233,6 +292,16 @@ class AdultRedDragon(ExtendedCombatantData):
                     secondary_dice_count=2,
                     secondary_dice_type=DiceType.D4,
                     secondary_damage_type=DamageType.FIRE,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=14,
+                            damage=(
+                                CombatDamage("1d10 + 8", DamageType.SLASHING),
+                                CombatDamage("2d4", DamageType.FIRE),
+                            ),
+                        ),
+                    ),
                 ),
                 SavingThrowEffect(
                     name="Fire Breath (Recharge 5–6)",
@@ -244,6 +313,16 @@ class AdultRedDragon(ExtendedCombatantData):
                     damage_type=DamageType.FIRE,
                     success_effect="Half damage.",
                     recharge=5,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.DEXTERITY,
+                            dc=21,
+                            half_on_success=True,
+                            damage=(CombatDamage("17d6", DamageType.FIRE),),
+                            area=CombatArea(CombatAreaShape.CONE, 60),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Spellcasting",
@@ -349,11 +428,36 @@ class DeathKnight(ExtendedCombatantData):
                     secondary_dice_count=3,
                     secondary_dice_type=DiceType.D8,
                     secondary_damage_type=DamageType.NECROTIC,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=11,
+                            damage=(
+                                CombatDamage("2d6 + 5", DamageType.SLASHING),
+                                CombatDamage("3d8", DamageType.NECROTIC),
+                            ),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Hellfire Orb (Recharge 5–6)",
                     description="Dexterity Saving Throw: DC 18, each creature in a 20-foot-radius Sphere centered on a point the death knight can see within 120 feet. Failure: 35 (10d6) Fire damage plus 35 (10d6) Necrotic damage. Success: Half damage.",
                     recharge=5,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.DEXTERITY,
+                            dc=18,
+                            half_on_success=True,
+                            damage=(
+                                CombatDamage("10d6", DamageType.FIRE),
+                                CombatDamage("10d6", DamageType.NECROTIC),
+                            ),
+                            area=CombatArea(
+                                CombatAreaShape.SPHERE, 20, point_within_ft=120
+                            ),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Spellcasting",
@@ -385,6 +489,17 @@ class DeathKnight(ExtendedCombatantData):
                     damage_type=DamageType.NECROTIC,
                     failure_effect="and the target's Hit Point maximum decreases by an amount equal to the damage taken",
                     extra_ruling="Failure or Success: The death knight can't take this action again until the start of its next turn.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.CONSTITUTION,
+                            dc=18,
+                            damage=(CombatDamage("5d6", DamageType.NECROTIC),),
+                            notes=(
+                                "Also: and the target's Hit Point maximum decreases by an amount equal to the damage taken",
+                            ),
+                        ),
+                    ),
                 ),
                 MonsterAbility(
                     name="Lunge",
@@ -482,6 +597,16 @@ class Dracolich(ExtendedCombatantData):
                     secondary_dice_count=1,
                     secondary_dice_type=DiceType.D8,
                     secondary_damage_type=DamageType.NECROTIC,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=13,
+                            damage=(
+                                CombatDamage("2d10 + 7", DamageType.SLASHING),
+                                CombatDamage("1d8", DamageType.NECROTIC),
+                            ),
+                        ),
+                    ),
                 ),
                 SavingThrowEffect(
                     name="Necrotic Breath (Recharge 5–6)",
@@ -493,6 +618,16 @@ class Dracolich(ExtendedCombatantData):
                     damage_type=DamageType.NECROTIC,
                     success_effect="Half damage.",
                     recharge=5,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.CONSTITUTION,
+                            dc=20,
+                            half_on_success=True,
+                            damage=(CombatDamage("8d12", DamageType.NECROTIC),),
+                            area=CombatArea(CombatAreaShape.CONE, 60),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Spellcasting",
@@ -522,6 +657,24 @@ class Dracolich(ExtendedCombatantData):
                     damage_type=DamageType.PSYCHIC,
                     failure_effect="and the target has the Frightened condition until the end of its next turn",
                     extra_ruling="Failure or Success: The dracolich can't take this action again until the start of its next turn.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.WISDOM,
+                            dc=19,
+                            damage=(CombatDamage("2d10", DamageType.PSYCHIC),),
+                            conditions=(
+                                CombatCondition(
+                                    Condition.FRIGHTENED,
+                                    until=(TurnEdge.END, TurnOf.TARGET),
+                                ),
+                            ),
+                            notes=(
+                                "Also: and the target has the Frightened condition until the end of its next turn",
+                            ),
+                            area=CombatArea(CombatAreaShape.EMANATION, 30),
+                        ),
+                    ),
                 ),
             ],
             legendary_resistances=3,
@@ -592,6 +745,19 @@ class DragonTurtle(ExtendedCombatantData):
                     secondary_dice_type=DiceType.D6,
                     secondary_damage_type=DamageType.FIRE,
                     additional_ruling="Being underwater doesn't grant Resistance to this Fire damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=13,
+                            damage=(
+                                CombatDamage("3d10 + 7", DamageType.PIERCING),
+                                CombatDamage("2d6", DamageType.FIRE),
+                            ),
+                            notes=(
+                                "Also: Being underwater doesn't grant Resistance to this Fire damage",
+                            ),
+                        ),
+                    ),
                 ),
                 MeleeAttack(
                     name="Tail",
@@ -602,6 +768,24 @@ class DragonTurtle(ExtendedCombatantData):
                     damage_bonus=7,
                     damage_type=DamageType.BLUDGEONING,
                     additional_ruling="If the target is a Huge or smaller creature, it has the Prone condition.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=13,
+                            damage=(CombatDamage("2d10 + 7", DamageType.BLUDGEONING),),
+                        ),
+                        CombatEffect(
+                            name="Tail: Prone",
+                            conditions=(CombatCondition(Condition.PRONE),),
+                            spends_use=False,
+                            trigger=CombatTrigger(
+                                TriggerEvent.HIT,
+                                optional=False,
+                                after="Tail",
+                                largest_target=CreatureSize.HUGE,
+                            ),
+                        ),
+                    ),
                 ),
                 SavingThrowEffect(
                     name="Steam Breath (Recharge 5–6)",
@@ -614,6 +798,16 @@ class DragonTurtle(ExtendedCombatantData):
                     success_effect="Half damage.",
                     extra_ruling="Failure or Success: Being underwater doesn't grant Resistance to this Fire damage.",
                     recharge=5,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.CONSTITUTION,
+                            dc=19,
+                            half_on_success=True,
+                            damage=(CombatDamage("16d6", DamageType.FIRE),),
+                            area=CombatArea(CombatAreaShape.CONE, 60),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -697,6 +891,17 @@ class Goristro(ExtendedCombatantData):
                     damage_bonus=7,
                     damage_type=DamageType.PIERCING,
                     additional_ruling="If the target is a Huge or smaller creature, it is pushed up to 20 feet straight away from the goristro and has the Prone condition.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=13,
+                            damage=(CombatDamage("6d10 + 7", DamageType.PIERCING),),
+                            conditions=(CombatCondition(Condition.PRONE),),
+                            notes=(
+                                "Also: If the target is a Huge or smaller creature, it is pushed up to 20 feet straight away from the goristro and has the Prone condition",
+                            ),
+                        ),
+                    ),
                 ),
                 MeleeAttack(
                     name="Slam",
@@ -706,6 +911,13 @@ class Goristro(ExtendedCombatantData):
                     dice_type=DiceType.D10,
                     damage_bonus=7,
                     damage_type=DamageType.BLUDGEONING,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=13,
+                            damage=(CombatDamage("4d10 + 7", DamageType.BLUDGEONING),),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[
@@ -794,6 +1006,13 @@ class SphinxOfValor(ExtendedCombatantData):
                     dice_type=DiceType.D6,
                     damage_bonus=6,
                     damage_type=DamageType.SLASHING,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=12,
+                            damage=(CombatDamage("4d6 + 6", DamageType.SLASHING),),
+                        ),
+                    ),
                 ),
                 MonsterAbility(
                     name="Roar (3/Day)",
@@ -803,14 +1022,51 @@ class SphinxOfValor(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="First Roar",
                     description=". Wisdom Saving Throw: DC 20, each enemy in a 500-foot Emanation originating from the sphinx. Failure: The target has the Frightened condition for 1 minute.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.WISDOM,
+                            dc=20,
+                            conditions=(CombatCondition(Condition.FRIGHTENED),),
+                            notes=(
+                                "Also: The target has the Frightened condition for 1 minute",
+                            ),
+                            area=CombatArea(CombatAreaShape.EMANATION, 500),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Second Roar",
                     description=". Wisdom Saving Throw: DC 20, each enemy in a 500-foot Emanation originating from the sphinx. Failure: The target has the Paralyzed condition, and it repeats the save at the end of each of its turns, ending the effect on itself on a success. After 1 minute, it succeeds automatically.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.WISDOM,
+                            dc=20,
+                            repeat_save=True,
+                            conditions=(CombatCondition(Condition.PARALYZED),),
+                            notes=(
+                                "Also: The target has the Paralyzed condition, and it repeats the save at the end of each of its turns, ending the effect on itself on a success. After 1 minute, it succeeds automatically",
+                            ),
+                            area=CombatArea(CombatAreaShape.EMANATION, 500),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Third Roar",
                     description=". Constitution Saving Throw: DC 20, each enemy in a 500-foot Emanation originating from the sphinx. Failure: 44 (8d10) Thunder damage, and the target has the Prone condition. Success: Half damage only.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.CONSTITUTION,
+                            dc=20,
+                            half_on_success=True,
+                            damage=(CombatDamage("8d10", DamageType.THUNDER),),
+                            conditions=(CombatCondition(Condition.PRONE),),
+                            notes=("Also: and the target has the Prone condition",),
+                            area=CombatArea(CombatAreaShape.EMANATION, 500),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Spellcasting",
@@ -832,6 +1088,16 @@ class SphinxOfValor(ExtendedCombatantData):
                     target="one creature the sphinx can see within 120 feet",
                     failure_effect="The target gains 1 Exhaustion level. While the target has any Exhaustion levels, it appears 3d10 years older.",
                     extra_ruling="Failure or Success: The sphinx can't take this action again until the start of its next turn.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.CONSTITUTION,
+                            dc=16,
+                            notes=(
+                                "Also: The target gains 1 Exhaustion level. While the target has any Exhaustion levels, it appears 3d10 years older",
+                            ),
+                        ),
+                    ),
                 ),
             ],
             legendary_resistances=3,

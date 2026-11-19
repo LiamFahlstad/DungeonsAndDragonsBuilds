@@ -44,6 +44,7 @@ from Combat.PlayerCombatant import (
 )
 from Core.Weapons import WeaponDamageRolls, WeaponDamageTypes
 from Model.Content.ExtraDamage import ExtraDamage
+from tests._combat_ui import described
 
 # A monster whose Spellcasting says its numbers, as a reloaded fight has it.
 CASTER = {
@@ -58,32 +59,42 @@ CASTER = {
     "spell_save_dc": 15,
     "spell_attack_bonus": 7,
 }
-SLASH = {
-    "name": "Scimitar",
-    "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 5 (1d6 + 2) Slashing damage.",
-}
-GRAB = {
-    "name": "Bite",
-    "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 7 (1d10 + 2) Piercing"
-    " damage, and the target has the Grappled condition (escape DC 13).",
-}
-BREATH = {
-    "name": "Fire Breath (Recharge 5–6)",
-    "description": "Dexterity Saving Throw: DC 13, each creature in a 15-foot Cone."
-    " Failure: 14 (4d6) Fire damage. Success: Half damage.",
-    "recharge": 5,
-}
-SMITE = {
-    "name": "Smite",
-    "description": "Melee Attack Roll: +6, reach 5 ft. Hit: 8 (1d8 + 4) Radiant or"
-    " Necrotic damage, and it can't regain Hit Points until the start of its next turn.",
-}
-GAZE = {
-    "name": "Gaze (Costs 2 Actions)",
-    "description": "Wisdom Saving Throw: DC 14, one creature. Failure: The target has"
-    " the Frightened condition, and it repeats the save at the end of each of its turns.",
-    "legendary_cost": 2,
-}
+SLASH = described(
+    {
+        "name": "Scimitar",
+        "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 5 (1d6 + 2) Slashing damage.",
+    }
+)
+GRAB = described(
+    {
+        "name": "Bite",
+        "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 7 (1d10 + 2) Piercing"
+        " damage, and the target has the Grappled condition (escape DC 13).",
+    }
+)
+BREATH = described(
+    {
+        "name": "Fire Breath (Recharge 5–6)",
+        "description": "Dexterity Saving Throw: DC 13, each creature in a 15-foot Cone."
+        " Failure: 14 (4d6) Fire damage. Success: Half damage.",
+        "recharge": 5,
+    }
+)
+SMITE = described(
+    {
+        "name": "Smite",
+        "description": "Melee Attack Roll: +6, reach 5 ft. Hit: 8 (1d8 + 4) Radiant or"
+        " Necrotic damage, and it can't regain Hit Points until the start of its next turn.",
+    }
+)
+GAZE = described(
+    {
+        "name": "Gaze (Costs 2 Actions)",
+        "description": "Wisdom Saving Throw: DC 14, one creature. Failure: The target has"
+        " the Frightened condition, and it repeats the save at the end of each of its turns.",
+        "legendary_cost": 2,
+    }
+)
 
 
 def _spell(name: str):
@@ -500,11 +511,13 @@ def test_a_hits_save_doesnt_give_its_condition_on_the_hit():
 
 def test_a_hits_own_condition_stays():
     """As a row of its own since 6.4, which comes as the bite hits."""
-    bite = {
-        "name": "Bite",
-        "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 7 (1d10 + 2) Piercing"
-        " damage, and the target has the Grappled condition (escape DC 13).",
-    }
+    bite = described(
+        {
+            "name": "Bite",
+            "description": "Melee Attack Roll: +5, reach 5 ft. Hit: 7 (1d10 + 2) Piercing"
+            " damage, and the target has the Grappled condition (escape DC 13).",
+        }
+    )
     option, rider = dict(effect_options({"actions": [bite]}, []))["Actions"]
     assert option.condition == ""
     assert (rider.condition, rider.note) == ("Grappled", "Escape DC 13.")
@@ -528,11 +541,13 @@ def test_a_monsters_condition_lasts_till_a_turn(monster, name, condition, until)
 
 
 def test_its_next_turn_is_the_targets():
-    gaze = {
-        "name": "Gaze",
-        "description": "Wisdom Saving Throw: DC 12, one creature. Failure: The target"
-        " has the Frightened condition until the end of its next turn.",
-    }
+    gaze = described(
+        {
+            "name": "Gaze",
+            "description": "Wisdom Saving Throw: DC 12, one creature. Failure: The target"
+            " has the Frightened condition until the end of its next turn.",
+        }
+    )
     (option,) = dict(effect_options({"actions": [gaze]}, []))["Actions"]
     assert option.until == ("end", "target")
 

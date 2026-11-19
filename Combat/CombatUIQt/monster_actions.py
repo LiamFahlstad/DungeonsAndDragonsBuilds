@@ -1,22 +1,25 @@
 """A monster's abilities as the combat UI uses them on its turn: to-hit bonus,
-damage dice, save DC and how often it can be used, read from the stat block's
-text, so that freeform abilities, structured ones and ones reloaded from a
-saved fight (plain dicts) all work the same. An ability with combat effects
-written on it (MonsterAbility.combat_effects) is taken at its word instead."""
+damage dice, save DC and how often it can be used, from the combat effects
+and fields written on each (MonsterAbility.combat_effects, recharge, ...), so
+that freeform abilities, structured ones and ones reloaded from a saved fight
+(plain dicts) all work the same. Nothing here reads an ability's text:
+generate_monsters.py writes the effects from it
+(Combat/Tools/monster_effect_text.py, Notes/explicit-attributes-plan.md
+Phase 4.3), and an older log's are read as it loads (upgrade_ability_keys)."""
 
 import random
 import re
 from dataclasses import dataclass, field
 
-from Core.Definitions import Condition, CreatureSize, DamageType
-from Model.Content.CombatEffect import CombatEffect
+from Core.Definitions import DamageType
+from Model.Content.CombatEffect import CombatEffect, EffectRoll
 from Model.Content.CombatModifiers import AttackKind
 from Model.Creatures.MonsterAbilities import (
     MonsterCast,
     ability_field,
     stated_reach_and_range,
 )
-from Model.Creatures.MonsterAbilityText import ABILITY_FIELDS, name_alone, read_ability
+from Model.Creatures.MonsterAbilityText import ABILITY_FIELDS, name_alone
 
 # The stat blocks don't record this; nearly every legendary creature has 3.
 LEGENDARY_ACTIONS_PER_ROUND = 3
@@ -30,11 +33,6 @@ ACTION_SECTIONS = (
 )
 
 DAMAGE_TYPE_NAMES = {t.value.lower(): t.value for t in DamageType}
-_ATTACK = re.compile(r"Attack Roll:\s*([+-]\d+)")
-_SAVE = re.compile(
-    r"(Strength|Dexterity|Constitution|Intelligence|Wisdom|Charisma)"
-    r"\s+Saving Throw:\s*DC\s*(\d+)?"
-)
 _MINUS_SIGNS = "−–"
 _DICE = rf"\d+d\d+(?:\s*[+{_MINUS_SIGNS}-]\s*\d+)?"
 DAMAGE = re.compile(
@@ -44,151 +42,6 @@ DAMAGE = re.compile(
 JOINED = re.compile(r",?\s*(?:plus|and)\s+")
 # One kind of die in a roll: "2d6" is (2, 6).
 DIE = re.compile(r"(\d+)d(\d+)")
-_CONDITIONAL = re.compile(r"\s+(?:if|while|when|unless|until|at the|on a)\b")
-
-
-# A condition an attack's hit gives, in one sentence of its Hit: text
-# (Notes/combat-effects-plan.md, 6.4). Read strictly: a sentence that says
-# anything more ("and the allosaurus can make one Bite attack against it",
-# "the balor pulls the target", "(pixie's choice)") isn't one, and stays in
-# the rider for the GM to read.
-_CONDITION = "|".join(c.value for c in Condition)
-_SIZE = "|".join(s.value for s in CreatureSize)
-_SIZE_GATE = (
-    rf"(?:the )?target is (?:a |an )?(?P<size>{_SIZE}) or smaller(?: creature)?"
-)
-_GIVES = (
-    rf"(?:has|have) the (?P<first>{_CONDITION})(?: and (?P<second>{_CONDITION}))?"
-    r" conditions?"
-    r"(?: \(escape DC (?P<escape>\d+)\))?"
-    r"(?: (?P<holds>from [^,.]+?))?"
-    rf"(?:, and (?:it|the target) has the (?P<grapple>{_CONDITION}) condition"
-    r" until the grapple ends)?"
-    r"(?: until the (?P<edge>start|end) of"
-    r" (?P<whose>its|their|the [\w -]+?['’]s) next turn)?"
-)
-# "..., and the target has the Poisoned condition until the end of its next
-# turn": joined onto the damage, so the rider starts with "and".
-_JOINED_RIDER = re.compile(rf"and (?:the target|it) (?:also )?{_GIVES}")
-# "If the target is a Large or smaller creature, it has the Prone
-# condition."; with what only the GM can tell ("and the elephant moved 20+
-# feet straight toward it immediately before the hit"), or "Once per turn".
-_IF_RIDER = re.compile(
-    r"(?P<once>Once per turn, )?[Ii]f (?P<gates>[^,]+),"
-    rf" (?:it|the target) (?:also )?{_GIVES}"
-)
-_GATES = (
-    re.compile(rf"{_SIZE_GATE}(?: and (?P<when>.+))?"),
-    re.compile(rf"(?P<when>.+?) and {_SIZE_GATE}"),
-)
-# "The target has the Grappled condition (escape DC 15) from one of ten
-# tentacles, ...": a sentence of its own, with no gate.
-_PLAIN_RIDER = re.compile(rf"The target (?:also )?{_GIVES}")
-# "While Grappled, the target has the Restrained condition.", right after
-# the rider that grapples.
-_WHILE_GRAPPLED = re.compile(
-    rf"While (?P<held>{_CONDITION}), the target (?:also )?has the"
-    rf" (?P<also>{_CONDITION}) condition"
-)
-_RIDER_SENTENCE = re.compile(r"(?<=[.!?])\s+")
-_THE_TARGETS_TURN = re.compile(r"its|their|the (?:target|creature)['’]s")
-
-
-@dataclass(frozen=True)
-class HitRider:
-    """A condition an attack's hit gives, read from one sentence of its
-    Hit: text (`text`, as it was in the rider): the conditions, the largest
-    target it lands on ("If the target is a Large or smaller creature"),
-    how long the first lasts if that's a turn (("end", "target") for "until
-    the end of its next turn", as EffectOption.until has it), whether it's
-    once per turn, what only the GM can tell (`when`, said as what follows
-    "if"), and a note for the badge ("Escape DC 13, from one of two
-    claws.")."""
-
-    text: str
-    conditions: tuple[str, ...]
-    largest_target: CreatureSize | None = None
-    until: tuple[str, str] | None = None
-    once_per_turn: bool = False
-    when: str = ""
-    note: str = ""
-
-
-def hit_riders(rider: str) -> tuple[tuple[HitRider, ...], str]:
-    """The conditions an attack's hit gives that its `rider` text (what its
-    Hit: text says after the damage) says in a sentence of their own, and
-    the rest of the rider, without those sentences."""
-    riders: list[HitRider] = []
-    rest: list[str] = []
-    for sentence in _RIDER_SENTENCE.split(rider):
-        sentence = sentence.rstrip(".").strip()
-        if not sentence:
-            continue
-        found = _read_rider(sentence)
-        if found is not None:
-            riders.append(found)
-            continue
-        also = _WHILE_GRAPPLED.fullmatch(sentence)
-        if also is not None and riders and also["held"] in riders[-1].conditions:
-            last = riders[-1]
-            note = f"{also['also']} while {also['held']}."
-            riders[-1] = HitRider(
-                text=f"{last.text}. {sentence}",
-                conditions=(*last.conditions, also["also"]),
-                largest_target=last.largest_target,
-                until=last.until,
-                once_per_turn=last.once_per_turn,
-                when=last.when,
-                note=f"{last.note} {note}".strip(),
-            )
-            continue
-        rest.append(sentence)
-    if not riders:
-        return (), rider
-    return tuple(riders), ". ".join(rest)
-
-
-def _read_rider(sentence: str) -> HitRider | None:
-    """The rider one sentence is, if it's nothing but one."""
-    match = _JOINED_RIDER.fullmatch(sentence) or _PLAIN_RIDER.fullmatch(sentence)
-    size: str | None = None
-    when = ""
-    once = False
-    if match is None:
-        match = _IF_RIDER.fullmatch(sentence)
-        if match is None:
-            return None
-        once = bool(match["once"])
-        gates = match["gates"]
-        for pattern in _GATES:
-            gate = pattern.fullmatch(gates)
-            if gate is not None:
-                size, when = gate["size"], gate["when"] or ""
-                break
-        else:
-            when = gates
-    conditions = tuple(
-        c for c in (match["first"], match["second"], match["grapple"]) if c
-    )
-    until = None
-    if match["edge"]:
-        whose = "target" if _THE_TARGETS_TURN.fullmatch(match["whose"]) else "source"
-        until = (match["edge"], whose)
-    notes = []
-    if match["escape"]:
-        holds = f", {match['holds']}" if match["holds"] else ""
-        notes.append(f"Escape DC {match['escape']}{holds}.")
-    if match["grapple"]:
-        notes.append(f"{match['grapple']} until the grapple ends.")
-    return HitRider(
-        text=sentence,
-        conditions=conditions,
-        largest_target=CreatureSize(size) if size else None,
-        until=until,
-        once_per_turn=once,
-        when=when.strip(),
-        note=" ".join(notes),
-    )
 
 
 @dataclass(frozen=True)
@@ -209,12 +62,12 @@ class MonsterAction:
     recharge_on: int | None = None  # the lowest d6 that brings it back
     per_day: int | None = None
     legendary_cost: int = 0
-    rider: str = ""  # what its text says besides that damage, conditions apart
-    # The conditions its hit gives in sentences of their own (hit_riders),
-    # which the picker makes rows of, applied as it hits; not in `rider`.
-    riders: tuple[HitRider, ...] = ()
+    # What its first effect says for the GM (its rider, a save its hit
+    # forces), shown as it hits.
+    notes: tuple[str, ...] = ()
     # What its stat block says using it does (MonsterAbility.combat_effects),
-    # one per way to use it; () to read its text.
+    # one per way to use it, each a picker row; () for one that has nothing
+    # to apply (Multiattack).
     effects: tuple[CombatEffect, ...] = ()
     # A structured attack's (reach_ft, range_ft, long_range_ft) fields
     # (stated_reach_and_range); None for a freeform one, read from its text.
@@ -301,98 +154,53 @@ def ability_effects(ability) -> tuple[CombatEffect, ...]:
 
 
 def parse_action(ability, legendary: bool = False) -> MonsterAction:
-    """What an ability rolls and costs: from the combat effects written on it
-    (its first, for the turn column's buttons), or else from its text. What it
-    costs, casts and uses are its fields either way (MonsterAbility): a
-    recharge, uses per day, a legendary action's cost."""
+    """What an ability rolls and costs, from its combat effects and fields
+    (MonsterAbility): its first effect's attack or save and damage, for the
+    turn column's buttons, or for an attack whose hit forces a save, that
+    save's (its HIT-triggered effect after it); a recharge, uses per day, a
+    legendary action's cost; the spells it casts and the ability it uses."""
     name, description = ability_text(ability)
-    recharge_on = ability_field(ability, "recharge")
-    uses_per_day = ability_field(ability, "per_day")
-    legendary_cost = ability_field(ability, "legendary_cost") if legendary else 0
     effects = ability_effects(ability)
-    stated = stated_reach_and_range(ability)
-    used = dict(
+    first = effects[0] if effects else None
+    save = None
+    if first is not None and first.roll == EffectRoll.SAVE:
+        save = first
+    elif first is not None and first.roll == EffectRoll.ATTACK:
+        save = next(
+            (
+                e
+                for e in effects[1:]
+                if e.roll == EffectRoll.SAVE
+                and e.trigger is not None
+                and e.trigger.after == name
+            ),
+            None,
+        )
+    return MonsterAction(
+        name=name,
+        description=description,
+        to_hit=(
+            first.attack_bonus
+            if first is not None and first.roll == EffectRoll.ATTACK
+            else None
+        ),
+        save_ability=save.save_ability.value if save and save.save_ability else None,
+        save_dc=save.dc if save is not None else None,
+        half_on_save=save.half_on_success if save is not None else False,
+        damage=tuple(
+            DamageRoll(d.dice, d.damage_type.value if d.damage_type else None)
+            for d in (first.damage if first is not None else ())
+        ),
+        notes=first.notes if first is not None else (),
+        effects=effects,
+        recharge_on=ability_field(ability, "recharge"),
+        per_day=ability_field(ability, "per_day"),
+        legendary_cost=ability_field(ability, "legendary_cost") if legendary else 0,
+        stated_range=stated_reach_and_range(ability),
         casts=ability_field(ability, "casts"),
         uses_ability=ability_field(ability, "uses_ability"),
         moves_first=ability_field(ability, "moves_first"),
     )
-    if effects:
-        first = effects[0]
-        return MonsterAction(
-            name=name,
-            description=description,
-            to_hit=first.attack_bonus if first.roll == "attack" else None,
-            save_ability=first.save_ability.value if first.save_ability else None,
-            save_dc=first.dc,
-            half_on_save=first.half_on_success,
-            damage=tuple(
-                DamageRoll(d.dice, d.damage_type.value if d.damage_type else None)
-                for d in first.damage
-            ),
-            effects=effects,
-            recharge_on=recharge_on,
-            per_day=uses_per_day,
-            legendary_cost=legendary_cost,
-            stated_range=stated,
-            **used,
-        )
-    attack = _ATTACK.search(description)
-    save = _SAVE.search(description)
-    damage, rider = _damage_rolls(description, attack is not None)
-    riders: tuple[HitRider, ...] = ()
-    if attack is not None:
-        riders, rider = hit_riders(rider)
-    return MonsterAction(
-        name=name,
-        description=description,
-        to_hit=int(attack.group(1)) if attack else None,
-        save_ability=save.group(1) if save else None,
-        save_dc=int(save.group(2)) if save and save.group(2) else None,
-        half_on_save=bool(re.search(r"Success:\s*Half", description)),
-        damage=damage,
-        rider=rider,
-        riders=riders,
-        recharge_on=recharge_on,
-        per_day=uses_per_day,
-        legendary_cost=legendary_cost,
-        stated_range=stated,
-        **used,
-    )
-
-
-def _damage_rolls(
-    description: str, is_attack: bool
-) -> tuple[tuple[DamageRoll, ...], str]:
-    """The damage every hit or failed save deals, and the text after it. Only
-    the first sentence's first damage counts, plus any joined straight onto
-    it. What's left waits on something ("if the attack roll had Advantage", "at
-    the start of each of its turns", "or 9 (3d4 + 2) if it charged"), so it's
-    for the GM to read, not to go on the hit by itself."""
-    label = "Hit:" if is_attack else "Failure:"
-    start = description.find(label)
-    if start < 0:
-        return (), ""
-    text = description[start + len(label) :]
-    text = re.split(r"\b(?:Success|Failure or Success|Hit or Miss):", text)[0]
-    rolls: list[DamageRoll] = []
-    position = 0
-    for match in DAMAGE.finditer(text):
-        between = text[position : match.start()]
-        if rolls:
-            if not JOINED.fullmatch(between) or _CONDITIONAL.match(text, match.end()):
-                break
-        elif ". " in between:
-            break  # the first sentence has none: it's an effect's, for later
-        word = match["type"]
-        damage_type = DAMAGE_TYPE_NAMES.get(word.lower()) if word else None
-        if word and damage_type is None and not match["or"]:
-            break  # "1 extra damage": not a type, not a roll of its own
-        if match["or"]:
-            damage_type = None  # "Necrotic or Radiant": the monster's choice
-        dice = match["dice"] or match["bare"] or match["flat"]
-        rolls.append(DamageRoll(tidy_dice(dice), damage_type))
-        position = match.end()
-    return tuple(rolls), text[position:].strip(" ,.")
 
 
 def tidy_dice(dice: str) -> str:
@@ -453,41 +261,35 @@ def picker_names(char) -> set[str]:
     return {name_alone(ability_text(a)[0]).lower() for a in abilities}
 
 
-def read_ability_fields(char, ability, section: str) -> dict:
-    """What `ability`'s name and text say its MonsterAbility fields are
-    (Model/Creatures/MonsterAbilityText.py), as one of char's `section`:
-    only the ones it gives. For writing stat blocks and upgrading old logs,
-    never for the fight."""
-    name, description = ability_text(ability)
-    action = parse_action(ability)
-    return read_ability(
-        name,
-        description,
-        names=picker_names(char),
-        has_own_roll=action.is_rollable or action.save_ability is not None,
-        is_trait=section == "traits",
-    )
-
-
 def upgrade_ability_keys(char: dict) -> dict:
     """A monster's combat dict from a log saved before its abilities had
-    their recharge, uses, cost, casts and turn-start fields, with them read
-    from their text once, in place. A log leaves out the fields at their
-    defaults (EncounterLogs._encode), so an ability dict with none of them
-    is read: for a stat block that gives what it had, as its fields say what
-    its text does (tests/test_monster_ability_text.py). One with any of them
-    is left as it is."""
+    their fields (recharge, uses, cost, casts, turn start) or combat effects,
+    with them read from their text once, in place
+    (Combat/Tools/monster_effect_text.py). A log leaves out the fields at
+    their defaults and an ability's effects when it has none
+    (EncounterLogs._encode), so an ability dict without them is read: for a
+    stat block that gives what it had, as its fields and effects say what
+    its text does (tests/test_monster_ability_text.py,
+    tests/test_monster_effect_text.py). One with any is left as it is."""
+    from Combat.Tools.monster_effect_text import (
+        read_ability_effects,
+        read_ability_fields,
+    )
+
     for section in ABILITY_SECTIONS:
         for ability in char.get(section) or []:
-            if not isinstance(ability, dict) or any(
-                k in ability for k in ABILITY_FIELDS
-            ):
+            if not isinstance(ability, dict):
                 continue
-            read = read_ability_fields(char, ability, section)
-            for key, value in read.items():
-                if key == "casts":
-                    value = [vars(cast) for cast in value]
-                ability[key] = value
+            if not any(k in ability for k in ABILITY_FIELDS):
+                read = read_ability_fields(char, ability, section)
+                for key, value in read.items():
+                    if key == "casts":
+                        value = [vars(cast) for cast in value]
+                    ability[key] = value
+            if "combat_effects" not in ability:
+                effects = read_ability_effects(ability, section)
+                if effects:
+                    ability["combat_effects"] = [e.to_dict() for e in effects]
     return char
 
 

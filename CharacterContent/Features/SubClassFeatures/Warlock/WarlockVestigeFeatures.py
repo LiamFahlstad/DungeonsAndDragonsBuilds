@@ -47,7 +47,8 @@ from Model.Creatures.Combatants import (
     ExtendedCombatantData,
     MonsterType,
 )
-from Model.Creatures.MonsterAbilities import MonsterAbility
+from Model.Content.CombatEffect import CombatDamage, CombatEffect, EffectRoll
+from Model.Creatures.MonsterAbilities import MonsterAbility, dice_plus
 from Model.View import CharacterView
 from Presentation.CreatureStatBlocks import format_creature_stat_block
 from Model.Content.FeatureText import (
@@ -232,6 +233,17 @@ def _build_vestige(
                 description=(
                     f"Melee or Ranged Attack Roll: {spell_attack:+} (your spell attack modifier), reach 5 ft. or range 60 ft. "
                     f"Hit: 1d6 + {3 + charisma_modifier} {damage_type.value} damage (1d6 + 3 plus your Charisma modifier)."
+                ),
+                combat_effects=(
+                    CombatEffect(
+                        roll=EffectRoll.ATTACK,
+                        attack_bonus=spell_attack,
+                        damage=(
+                            CombatDamage(
+                                dice_plus("1d6", 3 + charisma_modifier), damage_type
+                            ),
+                        ),
+                    ),
                 ),
             ),
         ],

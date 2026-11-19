@@ -44,6 +44,18 @@ def qapp() -> QApplication:
     return _app
 
 
+def described(ability: dict) -> dict:
+    """A stat-block ability's dict with the combat effects its text gives,
+    as generate_monsters.py writes them: the fight reads those, never the
+    text (Notes/explicit-attributes-plan.md, Phase 4.3)."""
+    from Combat.Tools.monster_effect_text import read_effects
+
+    effects = read_effects(ability["name"], ability["description"])
+    if not effects:
+        return dict(ability)
+    return {**ability, "combat_effects": [e.to_dict() for e in effects]}
+
+
 def make_ui(tmp_path, combatants=(), character_sheets=()) -> CombatAppQt:
     """A CombatAppQt fighting `combatants` (with `character_sheets` as the
     party) and logging to tmp_path/logs/fight.json, with its window built."""

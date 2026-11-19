@@ -343,13 +343,15 @@ def test_multiattack_says_to_pick_each_attack():
     assert row.note.startswith("Pick each of its attacks in turn.")
 
 
-def test_an_attack_read_from_its_text_is_unchanged():
+def test_a_catalog_attack_fills_in_from_the_effects_its_text_gave():
+    """generate_monsters.py wrote them from its text (Phase 4.3 of
+    Notes/explicit-attributes-plan.md); the picker reads them."""
     row = _row(Tiger(), "Rend")
     assert (row.bonus, row.damage, row.condition) == (5, "2d6 + 3 Slashing", "")
-    assert row.amount_kind == DAMAGE_AMOUNT and not row.is_described
+    assert row.amount_kind == DAMAGE_AMOUNT and row.is_described
     # Its Prone is a row of its own, given as Rend hits (6.4).
     rider = _row(Tiger(), "Rend: Prone")
-    assert rider.condition == "Prone" and not rider.is_described
+    assert rider.condition == "Prone" and rider.is_described
 
 
 def test_every_monster_still_reads():

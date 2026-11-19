@@ -44,6 +44,17 @@ from Model.Creatures.MonsterAbilities import (
     WebWalker,
 )
 from Core.Definitions import Ability
+from Model.Content.CombatArea import CombatArea, CombatAreaShape
+from Model.Content.CombatEffect import (
+    CombatCondition,
+    CombatDamage,
+    CombatEffect,
+    CombatHitPoints,
+    EffectRoll,
+    TurnEdge,
+    TurnOf,
+)
+from Model.Content.CombatTriggers import CombatTrigger, TriggerEvent
 
 
 class Aboleth(ExtendedCombatantData):
@@ -122,6 +133,25 @@ class Aboleth(ExtendedCombatantData):
                     damage_bonus=5,
                     damage_type=DamageType.BLUDGEONING,
                     additional_ruling="If the target is a Large or smaller creature, it has the Grappled condition (escape DC 14) from one of four tentacles.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=9,
+                            damage=(CombatDamage("2d6 + 5", DamageType.BLUDGEONING),),
+                        ),
+                        CombatEffect(
+                            name="Tentacle: Grappled",
+                            conditions=(CombatCondition(Condition.GRAPPLED),),
+                            spends_use=False,
+                            notes=("Escape DC 14, from one of four tentacles.",),
+                            trigger=CombatTrigger(
+                                TriggerEvent.HIT,
+                                optional=False,
+                                after="Tentacle",
+                                largest_target=CreatureSize.LARGE,
+                            ),
+                        ),
+                    ),
                 ),
                 SavingThrowEffect(
                     name="Consume Memories",
@@ -133,6 +163,15 @@ class Aboleth(ExtendedCombatantData):
                     damage_type=DamageType.PSYCHIC,
                     success_effect="Half damage.",
                     extra_ruling="Failure or Success: The aboleth gains the target's memories if the target is a Humanoid and is reduced to 0 Hit Points by this action.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.INTELLIGENCE,
+                            dc=16,
+                            half_on_success=True,
+                            damage=(CombatDamage("3d6", DamageType.PSYCHIC),),
+                        ),
+                    ),
                 ),
                 SavingThrowEffect(
                     name="Dominate Mind (2/Day)",
@@ -141,6 +180,17 @@ class Aboleth(ExtendedCombatantData):
                     target="one creature the aboleth can see within 30 feet",
                     failure_effect="The target has the Charmed condition until the aboleth dies or is on a different plane of existence from the target. While Charmed, the target acts as an ally to the aboleth and is under its control while within 60 feet of it. In addition, the aboleth and the target can communicate telepathically with each other over any distance. The target repeats the save whenever it takes damage as well as after every 24 hours it spends at least 1 mile away from the aboleth, ending the effect on itself on a success.",
                     per_day=2,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.WISDOM,
+                            dc=16,
+                            conditions=(CombatCondition(Condition.CHARMED),),
+                            notes=(
+                                "Also: The target has the Charmed condition until the aboleth dies or is on a different plane of existence from the target. While Charmed, the target acts as an ally to the aboleth and is under its control while within 60 feet of it. In addition, the aboleth and the target can communicate telepathically with each other over any distance. The target repeats the save whenever it takes damage as well as after every 24 hours it spends at least 1 mile away from the aboleth, ending the effect on itself on a success",
+                            ),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -154,6 +204,9 @@ class Aboleth(ExtendedCombatantData):
                 MonsterAbility(
                     name="Psychic Drain",
                     description="If the aboleth has at least one creature Charmed or Grappled, it uses Consume Memories and regains 5 (1d10) Hit Points.",
+                    combat_effects=(
+                        CombatEffect(healing=CombatHitPoints(dice="1d10")),
+                    ),
                 ),
             ],
             legendary_resistances=3,
@@ -217,6 +270,16 @@ class CultistHierophant(ExtendedCombatantData):
                     secondary_dice_count=4,
                     secondary_dice_type=DiceType.D8,
                     secondary_damage_type=DamageType.RADIANT,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=9,
+                            damage=(
+                                CombatDamage("2d6 + 5", DamageType.SLASHING),
+                                CombatDamage("4d8", DamageType.RADIANT),
+                            ),
+                        ),
+                    ),
                 ),
                 RangedAttack(
                     name="Radiant Ray",
@@ -226,6 +289,13 @@ class CultistHierophant(ExtendedCombatantData):
                     dice_type=DiceType.D12,
                     damage_bonus=5,
                     damage_type=DamageType.RADIANT,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=9,
+                            damage=(CombatDamage("4d12 + 5", DamageType.RADIANT),),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Spellcasting",
@@ -294,10 +364,27 @@ class CyclopsOracle(ExtendedCombatantData):
                     dice_type=DiceType.D10,
                     damage_bonus=6,
                     damage_type=DamageType.RADIANT,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=10,
+                            damage=(CombatDamage("3d10 + 6", DamageType.RADIANT),),
+                        ),
+                    ),
                 ),
                 MonsterAbility(
                     name="Flash of Light",
                     description="Ranged Attack Roll: +10, range 120 ft. Hit: 17 (2d10 + 6) Radiant damage, and the target has Disadvantage on attack rolls until the end of the cyclops's next turn.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=10,
+                            damage=(CombatDamage("2d10 + 6", DamageType.RADIANT),),
+                            notes=(
+                                "Also: and the target has Disadvantage on attack rolls until the end of the cyclops's next turn",
+                            ),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Spellcasting",
@@ -390,6 +477,19 @@ class DeathSlaad(ExtendedCombatantData):
                     secondary_dice_type=DiceType.D6,
                     secondary_damage_type=DamageType.NECROTIC,
                     additional_ruling="Until the start of the slaad's next turn, the target has a condition determined by rolling 1d4: on a 1, Charmed; on a 2, Frightened; on a 3, Poisoned; or on a 4, Incapacitated.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=9,
+                            damage=(
+                                CombatDamage("1d12 + 5", DamageType.SLASHING),
+                                CombatDamage("3d6", DamageType.NECROTIC),
+                            ),
+                            notes=(
+                                "Also: Until the start of the slaad's next turn, the target has a condition determined by rolling 1d4: on a 1, Charmed; on a 2, Frightened; on a 3, Poisoned; or on a 4, Incapacitated",
+                            ),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Spellcasting",
@@ -479,6 +579,16 @@ class Deva(ExtendedCombatantData):
                     secondary_dice_count=4,
                     secondary_dice_type=DiceType.D8,
                     secondary_damage_type=DamageType.RADIANT,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=8,
+                            damage=(
+                                CombatDamage("1d6 + 4", DamageType.BLUDGEONING),
+                                CombatDamage("4d8", DamageType.RADIANT),
+                            ),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Spellcasting",
@@ -554,6 +664,32 @@ class DireWorg(ExtendedCombatantData):
                 MonsterAbility(
                     name="Bite",
                     description="Melee Attack Roll: +10, reach 5 ft. Hit: 15 (2d8 + 6) Piercing damage plus 7 (2d6) Poison damage, and the target has the Poisoned condition until the start of the worg's next turn. While Poisoned, the target can't regain Hit Points.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=10,
+                            damage=(
+                                CombatDamage("2d8 + 6", DamageType.PIERCING),
+                                CombatDamage("2d6", DamageType.POISON),
+                            ),
+                            notes=(
+                                "Also: While Poisoned, the target can't regain Hit Points",
+                            ),
+                        ),
+                        CombatEffect(
+                            name="Bite: Poisoned",
+                            conditions=(
+                                CombatCondition(
+                                    Condition.POISONED,
+                                    until=(TurnEdge.START, TurnOf.SOURCE),
+                                ),
+                            ),
+                            spends_use=False,
+                            trigger=CombatTrigger(
+                                TriggerEvent.HIT, optional=False, after="Bite"
+                            ),
+                        ),
+                    ),
                 ),
                 SavingThrowEffect(
                     name="Dreadful Howl (Recharge 5–6)",
@@ -566,6 +702,24 @@ class DireWorg(ExtendedCombatantData):
                     failure_effect="and the target has the Frightened condition until the start of the worg's next turn",
                     success_effect="Half damage only.",
                     recharge=5,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.WISDOM,
+                            dc=16,
+                            half_on_success=True,
+                            damage=(CombatDamage("8d8", DamageType.PSYCHIC),),
+                            conditions=(
+                                CombatCondition(
+                                    Condition.FRIGHTENED,
+                                    until=(TurnEdge.START, TurnOf.SOURCE),
+                                ),
+                            ),
+                            notes=(
+                                "Also: and the target has the Frightened condition until the start of the worg's next turn",
+                            ),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[
@@ -658,6 +812,16 @@ class GuardianNaga(ExtendedCombatantData):
                     secondary_dice_count=4,
                     secondary_dice_type=DiceType.D10,
                     secondary_damage_type=DamageType.POISON,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=8,
+                            damage=(
+                                CombatDamage("2d12 + 4", DamageType.PIERCING),
+                                CombatDamage("4d10", DamageType.POISON),
+                            ),
+                        ),
+                    ),
                 ),
                 SavingThrowEffect(
                     name="Poisonous Spittle",
@@ -669,6 +833,24 @@ class GuardianNaga(ExtendedCombatantData):
                     damage_type=DamageType.POISON,
                     failure_effect="and the target has the Blinded condition until the start of the naga's next turn",
                     success_effect="Half damage only.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.CONSTITUTION,
+                            dc=16,
+                            half_on_success=True,
+                            damage=(CombatDamage("7d8", DamageType.POISON),),
+                            conditions=(
+                                CombatCondition(
+                                    Condition.BLINDED,
+                                    until=(TurnEdge.START, TurnOf.SOURCE),
+                                ),
+                            ),
+                            notes=(
+                                "Also: and the target has the Blinded condition until the start of the naga's next turn",
+                            ),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Spellcasting",
@@ -768,6 +950,13 @@ class HauntingRevenant(ExtendedCombatantData):
                     dice_type=DiceType.D8,
                     damage_bonus=5,
                     damage_type=DamageType.BLUDGEONING,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=9,
+                            damage=(CombatDamage("5d8 + 5", DamageType.BLUDGEONING),),
+                        ),
+                    ),
                 ),
                 SavingThrowEffect(
                     name="Invitation",
@@ -775,6 +964,17 @@ class HauntingRevenant(ExtendedCombatantData):
                     dc=17,
                     target="each creature in a 60-foot Cone",
                     failure_effect="The target is teleported inside the revenant's space and swallowed. A swallowed creature has Total Cover against attacks and other effects outside the revenant. While the revenant has Hit Points, a swallowed creature can leave the revenant's space only by using magic that enables planar travel, such as the Plane Shift spell.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.CHARISMA,
+                            dc=17,
+                            notes=(
+                                "Also: The target is teleported inside the revenant's space and swallowed. A swallowed creature has Total Cover against attacks and other effects outside the revenant. While the revenant has Hit Points, a swallowed creature can leave the revenant's space only by using magic that enables planar travel, such as the Plane Shift spell",
+                            ),
+                            area=CombatArea(CombatAreaShape.CONE, 60),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -838,6 +1038,28 @@ class NobleProdigy(ExtendedCombatantData):
                 MonsterAbility(
                     name="Beguiling Strike",
                     description="Melee or Ranged Attack Roll: +8, reach 5 ft. or range 60 ft. Hit: 18 (4d6 + 4) Psychic damage, and the target has the Charmed condition until the start of the noble's next turn.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=8,
+                            damage=(CombatDamage("4d6 + 4", DamageType.PSYCHIC),),
+                        ),
+                        CombatEffect(
+                            name="Beguiling Strike: Charmed",
+                            conditions=(
+                                CombatCondition(
+                                    Condition.CHARMED,
+                                    until=(TurnEdge.START, TurnOf.SOURCE),
+                                ),
+                            ),
+                            spends_use=False,
+                            trigger=CombatTrigger(
+                                TriggerEvent.HIT,
+                                optional=False,
+                                after="Beguiling Strike",
+                            ),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Spellcasting",
@@ -926,6 +1148,16 @@ class PerformerLegend(ExtendedCombatantData):
                     secondary_dice_count=3,
                     secondary_dice_type=DiceType.D6,
                     secondary_damage_type=DamageType.PSYCHIC,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=9,
+                            damage=(
+                                CombatDamage("2d4 + 5", DamageType.BLUDGEONING),
+                                CombatDamage("3d6", DamageType.PSYCHIC),
+                            ),
+                        ),
+                    ),
                 ),
                 SavingThrowEffect(
                     name="Majestic Song",
@@ -938,6 +1170,27 @@ class PerformerLegend(ExtendedCombatantData):
                     damage_type=DamageType.PSYCHIC,
                     failure_effect="and the target has the Charmed or Frightened condition (performer's choice) until the end of the performer's next turn",
                     success_effect="Half damage only.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.WISDOM,
+                            dc=17,
+                            half_on_success=True,
+                            damage=(CombatDamage("4d8 + 4", DamageType.PSYCHIC),),
+                            conditions=(
+                                CombatCondition(
+                                    Condition.CHARMED,
+                                    until=(TurnEdge.END, TurnOf.SOURCE),
+                                ),
+                            ),
+                            notes=(
+                                "Also: and the target has the Charmed or Frightened condition (performer's choice) until the end of the performer's next turn",
+                            ),
+                            area=CombatArea(
+                                CombatAreaShape.SPHERE, 20, point_within_ft=120
+                            ),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Spellcasting",
@@ -949,6 +1202,22 @@ class PerformerLegend(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Warding Charm",
                     description="Trigger: A creature hits the performer with an attack roll. Response—Wisdom Saving Throw: DC 17, the triggering creature. Failure: The attack roll misses the performer, and the target has the Charmed condition until the end of the performer's next turn.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.WISDOM,
+                            dc=17,
+                            conditions=(
+                                CombatCondition(
+                                    Condition.CHARMED,
+                                    until=(TurnEdge.END, TurnOf.SOURCE),
+                                ),
+                            ),
+                            notes=(
+                                "Also: The attack roll misses the performer, and the target has the Charmed condition until the end of the performer's next turn",
+                            ),
+                        ),
+                    ),
                 ),
             ],
             legendary_actions=[],
@@ -1024,6 +1293,16 @@ class SpyMaster(ExtendedCombatantData):
                     secondary_dice_count=2,
                     secondary_dice_type=DiceType.D6,
                     secondary_damage_type=DamageType.POISON,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=9,
+                            damage=(
+                                CombatDamage("2d8 + 5", DamageType.PIERCING),
+                                CombatDamage("2d6", DamageType.POISON),
+                            ),
+                        ),
+                    ),
                 ),
                 RangedAttack(
                     name="Hand Crossbow",
@@ -1037,11 +1316,42 @@ class SpyMaster(ExtendedCombatantData):
                     secondary_dice_count=2,
                     secondary_dice_type=DiceType.D8,
                     secondary_damage_type=DamageType.POISON,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=9,
+                            damage=(
+                                CombatDamage("2d6 + 5", DamageType.PIERCING),
+                                CombatDamage("2d8", DamageType.POISON),
+                            ),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Smoke Bomb (1/Day)",
                     description="The spy throws a bomb to a point it can see within 30 feet of itself. Constitution Saving Throw: DC 16, each creature in a 20-foot-radius Sphere centered on that point. Failure: 28 (8d6) Poison damage, and the target has the Blinded condition until the end of the spy's next turn. Success: Half damage only.",
                     per_day=1,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.CONSTITUTION,
+                            dc=16,
+                            half_on_success=True,
+                            damage=(CombatDamage("8d6", DamageType.POISON),),
+                            conditions=(
+                                CombatCondition(
+                                    Condition.BLINDED,
+                                    until=(TurnEdge.END, TurnOf.SOURCE),
+                                ),
+                            ),
+                            notes=(
+                                "Also: and the target has the Blinded condition until the end of the spy's next turn",
+                            ),
+                            area=CombatArea(
+                                CombatAreaShape.SPHERE, 20, point_within_ft=30
+                            ),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[
@@ -1128,6 +1438,16 @@ class StoneGolem(ExtendedCombatantData):
                     secondary_dice_count=2,
                     secondary_dice_type=DiceType.D8,
                     secondary_damage_type=DamageType.FORCE,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=10,
+                            damage=(
+                                CombatDamage("2d8 + 6", DamageType.BLUDGEONING),
+                                CombatDamage("2d8", DamageType.FORCE),
+                            ),
+                        ),
+                    ),
                 ),
                 RangedAttack(
                     name="Force Bolt",
@@ -1136,6 +1456,13 @@ class StoneGolem(ExtendedCombatantData):
                     dice_count=4,
                     dice_type=DiceType.D12,
                     damage_type=DamageType.FORCE,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=9,
+                            damage=(CombatDamage("4d12", DamageType.FORCE),),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[
@@ -1210,6 +1537,16 @@ class WarriorCommander(ExtendedCombatantData):
                     damage_bonus=5,
                     damage_type=DamageType.SLASHING,
                     additional_ruling="The warrior also creates one of the following effects:",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=9,
+                            damage=(CombatDamage("4d6 + 5", DamageType.SLASHING),),
+                            notes=(
+                                "Also: The warrior also creates one of the following effects:",
+                            ),
+                        ),
+                    ),
                 ),
                 MonsterAbility(
                     name="Sap",
@@ -1222,6 +1559,16 @@ class WarriorCommander(ExtendedCombatantData):
                 MonsterAbility(
                     name="Longbow",
                     description="Ranged Attack Roll: +9, range 150/600 ft. Hit: 18 (3d8 + 5) Piercing damage, and the target's Speed decreases by 10 feet until the end of the target's next turn.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=9,
+                            damage=(CombatDamage("3d8 + 5", DamageType.PIERCING),),
+                            notes=(
+                                "Also: and the target's Speed decreases by 10 feet until the end of the target's next turn",
+                            ),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[
@@ -1317,6 +1664,13 @@ class Yochlol(ExtendedCombatantData):
                     dice_type=DiceType.D6,
                     damage_bonus=4,
                     damage_type=DamageType.ACID,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=8,
+                            damage=(CombatDamage("6d6 + 4", DamageType.ACID),),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Spellcasting",
@@ -1333,6 +1687,23 @@ class Yochlol(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Toxic Escape",
                     description="Trigger: The yochlol is hit by an attack roll. Response: The yochlol halves the attack's damage to itself (round down), and it teleports to an unoccupied space it can see within 30 feet of itself. Constitution Saving Throw: DC 15, each creature within 5 feet of the yochlol's destination space. Failure: The target has the Poisoned condition until the end of its next turn. While Poisoned, it has the Incapacitated condition.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.CONSTITUTION,
+                            dc=15,
+                            conditions=(
+                                CombatCondition(
+                                    Condition.POISONED,
+                                    until=(TurnEdge.END, TurnOf.TARGET),
+                                ),
+                            ),
+                            notes=(
+                                "Also: The target has the Poisoned condition until the end of its next turn. While Poisoned, it has the Incapacitated condition",
+                            ),
+                            area=CombatArea(CombatAreaShape.EMANATION, 5),
+                        ),
+                    ),
                 ),
             ],
             legendary_actions=[],
@@ -1406,6 +1777,13 @@ class YoungGoldDragon(ExtendedCombatantData):
                     dice_type=DiceType.D10,
                     damage_bonus=6,
                     damage_type=DamageType.SLASHING,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=10,
+                            damage=(CombatDamage("2d10 + 6", DamageType.SLASHING),),
+                        ),
+                    ),
                 ),
                 SavingThrowEffect(
                     name="Fire Breath (Recharge 5–6)",
@@ -1417,6 +1795,16 @@ class YoungGoldDragon(ExtendedCombatantData):
                     damage_type=DamageType.FIRE,
                     success_effect="Half damage.",
                     recharge=5,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.DEXTERITY,
+                            dc=17,
+                            half_on_success=True,
+                            damage=(CombatDamage("10d10", DamageType.FIRE),),
+                            area=CombatArea(CombatAreaShape.CONE, 30),
+                        ),
+                    ),
                 ),
                 SavingThrowEffect(
                     name="Weakening Breath",
@@ -1424,6 +1812,18 @@ class YoungGoldDragon(ExtendedCombatantData):
                     dc=17,
                     target="each creature that isn't currently affected by this breath in a 30-foot Cone",
                     failure_effect="The target has Disadvantage on Strength-based D20 Tests and subtracts 3 (1d6) from its damage rolls. It repeats the save at the end of each of its turns, ending the effect on itself on a success. After 1 minute, it succeeds automatically.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.STRENGTH,
+                            dc=17,
+                            repeat_save=True,
+                            notes=(
+                                "Also: The target has Disadvantage on Strength-based D20 Tests and subtracts 3 (1d6) from its damage rolls. It repeats the save at the end of each of its turns, ending the effect on itself on a success. After 1 minute, it succeeds automatically",
+                            ),
+                            area=CombatArea(CombatAreaShape.CONE, 30),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -1493,6 +1893,16 @@ class YoungRedDragon(ExtendedCombatantData):
                     secondary_dice_count=1,
                     secondary_dice_type=DiceType.D6,
                     secondary_damage_type=DamageType.FIRE,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=10,
+                            damage=(
+                                CombatDamage("2d6 + 6", DamageType.SLASHING),
+                                CombatDamage("1d6", DamageType.FIRE),
+                            ),
+                        ),
+                    ),
                 ),
                 SavingThrowEffect(
                     name="Fire Breath (Recharge 5–6)",
@@ -1504,6 +1914,16 @@ class YoungRedDragon(ExtendedCombatantData):
                     damage_type=DamageType.FIRE,
                     success_effect="Half damage.",
                     recharge=5,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.DEXTERITY,
+                            dc=17,
+                            half_on_success=True,
+                            damage=(CombatDamage("16d6", DamageType.FIRE),),
+                            area=CombatArea(CombatAreaShape.CONE, 30),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],

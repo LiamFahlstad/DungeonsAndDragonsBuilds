@@ -21,6 +21,15 @@ from Model.Creatures.MonsterAbilities import (
     MonsterCast,
 )
 from Core.Definitions import Ability
+from Model.Content.CombatArea import CombatArea, CombatAreaShape
+from Model.Content.CombatEffect import (
+    CombatCondition,
+    CombatDamage,
+    CombatEffect,
+    EffectRoll,
+    TurnEdge,
+    TurnOf,
+)
 
 
 class AdultBlackDragon(ExtendedCombatantData):
@@ -87,11 +96,31 @@ class AdultBlackDragon(ExtendedCombatantData):
                 MonsterAbility(
                     name="Rend",
                     description="Melee Attack Roll: +11, reach 10 ft. Hit: 13 (2d6 + 6) Slashing damage plus 4 (1d8) Acid damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=11,
+                            damage=(
+                                CombatDamage("2d6 + 6", DamageType.SLASHING),
+                                CombatDamage("1d8", DamageType.ACID),
+                            ),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Acid Breath (Recharge 5–6)",
                     description="Dexterity Saving Throw: DC 18, each creature in a 60-foot-long, 5-foot-wide Line. Failure: 54 (12d8) Acid damage. Success: Half damage.",
                     recharge=5,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.DEXTERITY,
+                            dc=18,
+                            half_on_success=True,
+                            damage=(CombatDamage("12d8", DamageType.ACID),),
+                            area=CombatArea(CombatAreaShape.LINE, 60),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Spellcasting",
@@ -104,6 +133,17 @@ class AdultBlackDragon(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Cloud of Insects",
                     description="Dexterity Saving Throw: DC 17, one creature the dragon can see within 120 feet. Failure: 22 (4d10) Poison damage, and the target has Disadvantage on saving throws to maintain Concentration until the end of its next turn. Failure or Success: The dragon can't take this action again until the start of its next turn.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.DEXTERITY,
+                            dc=17,
+                            damage=(CombatDamage("4d10", DamageType.POISON),),
+                            notes=(
+                                "Also: and the target has Disadvantage on saving throws to maintain Concentration until the end of its next turn",
+                            ),
+                        ),
+                    ),
                 ),
                 MonsterAbility(
                     name="Frightful Presence",
@@ -182,15 +222,46 @@ class AdultCopperDragon(ExtendedCombatantData):
                 MonsterAbility(
                     name="Rend",
                     description="Melee Attack Roll: +11, reach 10 ft. Hit: 17 (2d10 + 6) Slashing damage plus 4 (1d8) Acid damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=11,
+                            damage=(
+                                CombatDamage("2d10 + 6", DamageType.SLASHING),
+                                CombatDamage("1d8", DamageType.ACID),
+                            ),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Acid Breath (Recharge 5–6)",
                     description="Dexterity Saving Throw: DC 18, each creature in an 60-foot-long, 5-foot-wide Line. Failure: 54 (12d8) Acid damage. Success: Half damage.",
                     recharge=5,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.DEXTERITY,
+                            dc=18,
+                            half_on_success=True,
+                            damage=(CombatDamage("12d8", DamageType.ACID),),
+                            area=CombatArea(CombatAreaShape.LINE, 60),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Slowing Breath",
                     description="Constitution Saving Throw: DC 18, each creature in a 60-foot Cone. Failure: The target can't take Reactions; its Speed is halved; and it can take either an action or a Bonus Action on its turn, not both. This effect lasts until the end of its next turn.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.CONSTITUTION,
+                            dc=18,
+                            notes=(
+                                "Also: The target can't take Reactions; its Speed is halved; and it can take either an action or a Bonus Action on its turn, not both. This effect lasts until the end of its next turn",
+                            ),
+                            area=CombatArea(CombatAreaShape.CONE, 60),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Spellcasting",
@@ -203,6 +274,17 @@ class AdultCopperDragon(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Giggling Magic",
                     description="Charisma Saving Throw: DC 17, one creature the dragon can see within 90 feet. Failure: 24 (7d6) Psychic damage. Until the end of its next turn, the target rolls 1d6 whenever it makes an ability check or attack roll and subtracts the number rolled from the D20 Test. Failure or Success: The dragon can't take this action again until the start of its next turn.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.CHARISMA,
+                            dc=17,
+                            damage=(CombatDamage("7d6", DamageType.PSYCHIC),),
+                            notes=(
+                                "Also: Until the end of its next turn, the target rolls 1d6 whenever it makes an ability check or attack roll and subtracts the number rolled from the D20 Test",
+                            ),
+                        ),
+                    ),
                 ),
                 MonsterAbility(
                     name="Mind Jolt",
@@ -286,6 +368,13 @@ class DeathTyrant(ExtendedCombatantData):
                 MonsterAbility(
                     name="Bite",
                     description="Melee Attack Roll: +9, reach 5 ft. Hit: 13 (2d8 + 4) Piercing damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=9,
+                            damage=(CombatDamage("2d8 + 4", DamageType.PIERCING),),
+                        ),
+                    ),
                 ),
                 MonsterAbility(
                     name="Eye Rays",
@@ -294,48 +383,184 @@ class DeathTyrant(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="1: Charm Ray",
                     description=". Wisdom Saving Throw: DC 17. Failure: 13 (3d8) Psychic damage, and the target has the Charmed condition for 1 hour or until it takes damage. Success: Half damage only.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.WISDOM,
+                            dc=17,
+                            half_on_success=True,
+                            damage=(CombatDamage("3d8", DamageType.PSYCHIC),),
+                            conditions=(CombatCondition(Condition.CHARMED),),
+                            notes=(
+                                "Also: and the target has the Charmed condition for 1 hour or until it takes damage",
+                            ),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="2: Paralyzing Ray",
                     description=". Constitution Saving Throw: DC 17. Failure: The target has the Paralyzed condition and repeats the save at the end of each of its turns, ending the effect on itself on a success. After 1 minute, it succeeds automatically.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.CONSTITUTION,
+                            dc=17,
+                            repeat_save=True,
+                            conditions=(CombatCondition(Condition.PARALYZED),),
+                            notes=(
+                                "Also: The target has the Paralyzed condition and repeats the save at the end of each of its turns, ending the effect on itself on a success. After 1 minute, it succeeds automatically",
+                            ),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="3: Fear Ray",
                     description=". Wisdom Saving Throw: DC 17. Failure: 10 (3d6) Psychic damage, and the target has the Frightened condition until the end of its next turn. Success: Half damage only.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.WISDOM,
+                            dc=17,
+                            half_on_success=True,
+                            damage=(CombatDamage("3d6", DamageType.PSYCHIC),),
+                            conditions=(
+                                CombatCondition(
+                                    Condition.FRIGHTENED,
+                                    until=(TurnEdge.END, TurnOf.TARGET),
+                                ),
+                            ),
+                            notes=(
+                                "Also: and the target has the Frightened condition until the end of its next turn",
+                            ),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="4: Slowing Ray",
                     description=". Constitution Saving Throw: DC 17. Failure: 18 (4d8) Necrotic damage. Until the end of the target's next turn, the target can't take Reactions; its Speed is halved; and it can take either an action or a Bonus Action on its turn, not both. Success: Half damage only.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.CONSTITUTION,
+                            dc=17,
+                            half_on_success=True,
+                            damage=(CombatDamage("4d8", DamageType.NECROTIC),),
+                            notes=(
+                                "Also: Until the end of the target's next turn, the target can't take Reactions; its Speed is halved; and it can take either an action or a Bonus Action on its turn, not both",
+                            ),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="5: Enervation Ray",
                     description=". Constitution Saving Throw: DC 17. Failure: 16 (3d10) Poison damage, and the target has the Poisoned condition until the end of its next turn. While Poisoned, the target can't regain Hit Points. Success: Half damage only.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.CONSTITUTION,
+                            dc=17,
+                            half_on_success=True,
+                            damage=(CombatDamage("3d10", DamageType.POISON),),
+                            conditions=(
+                                CombatCondition(
+                                    Condition.POISONED,
+                                    until=(TurnEdge.END, TurnOf.TARGET),
+                                ),
+                            ),
+                            notes=(
+                                "Also: and the target has the Poisoned condition until the end of its next turn. While Poisoned, the target can't regain Hit Points",
+                            ),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="6: Telekinetic Ray",
                     description=". Strength Saving Throw: DC 17 (the target succeeds automatically if it is Gargantuan). Failure: The death tyrant moves the target up to 30 feet in any direction. The target has the Restrained condition until the start of the death tyrant's next turn or until the death tyrant has the Incapacitated condition. The death tyrant can also exert fine control on objects with this ray, such as manipulating a tool or opening a door or container.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.STRENGTH,
+                            dc=17,
+                            conditions=(
+                                CombatCondition(
+                                    Condition.RESTRAINED,
+                                    until=(TurnEdge.START, TurnOf.SOURCE),
+                                ),
+                            ),
+                            notes=(
+                                "Also: The death tyrant moves the target up to 30 feet in any direction. The target has the Restrained condition until the start of the death tyrant's next turn or until the death tyrant has the Incapacitated condition. The death tyrant can also exert fine control on objects with this ray, such as manipulating a tool or opening a door or container",
+                            ),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="7: Sleep Ray",
                     description=". Wisdom Saving Throw: DC 17 (the target succeeds automatically if it is a Construct or an Undead). Failure: The target has the Unconscious condition for 1 minute. The condition ends if the target takes damage or a creature within 5 feet of it takes an action to wake it.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.WISDOM,
+                            dc=17,
+                            conditions=(CombatCondition(Condition.UNCONSCIOUS),),
+                            notes=(
+                                "Also: The target has the Unconscious condition for 1 minute. The condition ends if the target takes damage or a creature within 5 feet of it takes an action to wake it",
+                            ),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="8: Petrification Ray",
                     description=". Constitution Saving Throw: DC 17. First Failure: The target has the Restrained condition and repeats the save at the end of its next turn if it is still Restrained, ending the effect on itself on a success. Second Failure: The target has the Petrified condition instead of the Restrained condition.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.CONSTITUTION,
+                            dc=17,
+                            conditions=(CombatCondition(Condition.RESTRAINED),),
+                            notes=(
+                                "Also: The target has the Restrained condition and repeats the save at the end of its next turn if it is still Restrained, ending the effect on itself on a success. Second Failure: The target has the Petrified condition instead of the Restrained condition",
+                            ),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="9: Disintegration Ray",
                     description=". Dexterity Saving Throw: DC 17. Failure: 36 (8d8) Force damage. If the target is a nonmagical object or a creation of magical force, a 10-foot Cube of it disintegrates into dust. Success: Half damage. Failure or Success: If the target is a creature and this damage reduces it to 0 Hit Points, it disintegrates into dust.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.DEXTERITY,
+                            dc=17,
+                            half_on_success=True,
+                            damage=(CombatDamage("8d8", DamageType.FORCE),),
+                            notes=(
+                                "Also: If the target is a nonmagical object or a creation of magical force, a 10-foot Cube of it disintegrates into dust",
+                            ),
+                            area=CombatArea(CombatAreaShape.CUBE, 10),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="10: Death Ray",
                     description=". Dexterity Saving Throw: DC 17. Failure: 55 (10d10) Necrotic damage. Success: Half damage. Failure or Success: The target dies if the ray reduces it to 0 Hit Points.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.DEXTERITY,
+                            dc=17,
+                            half_on_success=True,
+                            damage=(CombatDamage("10d10", DamageType.NECROTIC),),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[
                 MonsterAbility(
                     name="Negative Energy Cone",
                     description="The death tyrant's central eye emits an imperceptible, magical wave of negative energy in a 150-foot Cone. Creatures in that area can't regain Hit Points until the start of the death tyrant's next turn. An intact Humanoid corpse there instantly rises as a Zombie under the death tyrant's control and takes its turn immediately after the death tyrant on the same initiative count.",
+                    combat_effects=(
+                        CombatEffect(area=CombatArea(CombatAreaShape.CONE, 150)),
+                    ),
                 ),
             ],
             reactions=[],
@@ -421,10 +646,33 @@ class IceDevil(ExtendedCombatantData):
                 MonsterAbility(
                     name="Ice Spear",
                     description="Melee or Ranged Attack Roll: +10, reach 5 ft. or range 30/120 ft. Hit: 14 (2d8 + 5) Piercing damage plus 10 (3d6) Cold damage. Until the end of its next turn, the target can't take a Bonus Action or Reaction, its Speed decreases by 10 feet, and it can move or take one action on its turn, not both. Hit or Miss: The spear magically returns to the devil's hand immediately after a ranged attack.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=10,
+                            damage=(
+                                CombatDamage("2d8 + 5", DamageType.PIERCING),
+                                CombatDamage("3d6", DamageType.COLD),
+                            ),
+                            notes=(
+                                "Also: Until the end of its next turn, the target can't take a Bonus Action or Reaction, its Speed decreases by 10 feet, and it can move or take one action on its turn, not both",
+                            ),
+                        ),
+                    ),
                 ),
                 MonsterAbility(
                     name="Tail",
                     description="Melee Attack Roll: +10, reach 10 ft. Hit: 15 (3d6 + 5) Bludgeoning damage plus 18 (4d8) Cold damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=10,
+                            damage=(
+                                CombatDamage("3d6 + 5", DamageType.BLUDGEONING),
+                                CombatDamage("4d8", DamageType.COLD),
+                            ),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Ice Wall (Recharge 6)",

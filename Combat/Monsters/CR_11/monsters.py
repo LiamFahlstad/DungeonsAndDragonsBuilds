@@ -22,6 +22,16 @@ from Model.Creatures.MonsterAbilities import (
     MonsterCast,
 )
 from Core.Definitions import Ability
+from Model.Content.CombatArea import CombatArea, CombatAreaShape
+from Model.Content.CombatEffect import (
+    CombatCondition,
+    CombatDamage,
+    CombatEffect,
+    EffectRoll,
+    TurnEdge,
+    TurnOf,
+)
+from Model.Content.CombatTriggers import CombatTrigger, TriggerEvent
 
 
 class BanditCrimeLord(ExtendedCombatantData):
@@ -75,10 +85,30 @@ class BanditCrimeLord(ExtendedCombatantData):
                 MonsterAbility(
                     name="Scimitar",
                     description="Melee Attack Roll: +9, reach 5 ft. Hit: 12 (2d6 + 5) Slashing damage plus 14 (4d6) Poison damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=9,
+                            damage=(
+                                CombatDamage("2d6 + 5", DamageType.SLASHING),
+                                CombatDamage("4d6", DamageType.POISON),
+                            ),
+                        ),
+                    ),
                 ),
                 MonsterAbility(
                     name="Pistol",
                     description="Ranged Attack Roll: +9, range 30/90 ft. Hit: 10 (1d10 + 5) Piercing damage plus 14 (4d6) Poison damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=9,
+                            damage=(
+                                CombatDamage("1d10 + 5", DamageType.PIERCING),
+                                CombatDamage("4d6", DamageType.POISON),
+                            ),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[
@@ -145,21 +175,64 @@ class Behir(ExtendedCombatantData):
                 MonsterAbility(
                     name="Bite",
                     description="Melee Attack Roll: +10, reach 10 ft. Hit: 19 (2d12 + 6) Piercing damage plus 11 (2d10) Lightning damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=10,
+                            damage=(
+                                CombatDamage("2d12 + 6", DamageType.PIERCING),
+                                CombatDamage("2d10", DamageType.LIGHTNING),
+                            ),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Constrict",
                     description="Strength Saving Throw: DC 18, one Large or smaller creature the behir can see within 5 feet. Failure: 28 (5d8 + 6) Bludgeoning damage. The target has the Grappled condition (escape DC 16), and it has the Restrained condition until the grapple ends.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.STRENGTH,
+                            dc=18,
+                            damage=(CombatDamage("5d8 + 6", DamageType.BLUDGEONING),),
+                            conditions=(CombatCondition(Condition.GRAPPLED),),
+                            notes=(
+                                "Also: The target has the Grappled condition (escape DC 16), and it has the Restrained condition until the grapple ends",
+                            ),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Lightning Breath (Recharge 5–6)",
                     description="Dexterity Saving Throw: DC 16, each creature in a 90-foot-long, 5-foot-wide Line. Failure: 66 (12d10) Lightning damage. Success: Half damage.",
                     recharge=5,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.DEXTERITY,
+                            dc=16,
+                            half_on_success=True,
+                            damage=(CombatDamage("12d10", DamageType.LIGHTNING),),
+                            area=CombatArea(CombatAreaShape.LINE, 90),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[
                 DcMonsterAbility(
                     name="Swallow",
                     description="Dexterity Saving Throw: DC 18, one Large or smaller creature Grappled by the behir (the behir can have only one creature swallowed at a time). Failure: The behir swallows the target, which is no longer Grappled. While swallowed, a creature has the Blinded and Restrained conditions, has Total Cover against attacks and other effects outside the behir, and takes 21 (6d6) Acid damage at the start of each of the behir's turns. If the behir takes 30 damage or more on a single turn from the swallowed creature, the behir must succeed on a DC 14 Constitution saving throw at the end of that turn or regurgitate the creature, which falls in a space within 10 feet of the behir and has the Prone condition. If the behir dies, a swallowed creature is no longer Restrained and can escape from the corpse by using 15 feet of movement, exiting Prone.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.DEXTERITY,
+                            dc=18,
+                            conditions=(CombatCondition(Condition.PRONE),),
+                            notes=(
+                                "Also: The behir swallows the target, which is no longer Grappled. While swallowed, a creature has the Blinded and Restrained conditions, has Total Cover against attacks and other effects outside the behir, and takes 21 (6d6) Acid damage at the start of each of the behir's turns. If the behir takes 30 damage or more on a single turn from the swallowed creature, the behir must succeed on a DC 14 Constitution saving throw at the end of that turn or regurgitate the creature, which falls in a space within 10 feet of the behir and has the Prone condition. If the behir dies, a swallowed creature is no longer Restrained and can escape from the corpse by using 15 feet of movement, exiting Prone",
+                            ),
+                        ),
+                    ),
                 ),
             ],
             reactions=[],
@@ -237,10 +310,50 @@ class Dao(ExtendedCombatantData):
                 MonsterAbility(
                     name="Earthen Maul",
                     description="Melee Attack Roll: +10, reach 5 ft. Hit: 20 (4d6 + 6) Bludgeoning damage. If the target is a Large or smaller creature, it has the Prone condition.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=10,
+                            damage=(CombatDamage("4d6 + 6", DamageType.BLUDGEONING),),
+                        ),
+                        CombatEffect(
+                            name="Earthen Maul: Prone",
+                            conditions=(CombatCondition(Condition.PRONE),),
+                            spends_use=False,
+                            trigger=CombatTrigger(
+                                TriggerEvent.HIT,
+                                optional=False,
+                                after="Earthen Maul",
+                                largest_target=CreatureSize.LARGE,
+                            ),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Earth Burst",
                     description="Ranged Attack Roll: +10, range 120 ft. Hit: 15 (2d8 + 6) Bludgeoning damage. Hit or Miss: Earth explodes from the target's space, creating the following effect. Dexterity Saving Throw: DC 16, each creature in a 10-foot Emanation originating from and including the target. Failure: 10 (3d6) Thunder damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=10,
+                            damage=(CombatDamage("2d8 + 6", DamageType.BLUDGEONING),),
+                            notes=(
+                                "Its Dexterity save is a row of its own, rolled as it hits.",
+                            ),
+                        ),
+                        CombatEffect(
+                            name="Earth Burst: Dexterity save",
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.DEXTERITY,
+                            dc=16,
+                            damage=(CombatDamage("3d6", DamageType.THUNDER),),
+                            spends_use=False,
+                            trigger=CombatTrigger(
+                                TriggerEvent.USES, optional=False, after="Earth Burst"
+                            ),
+                            area=CombatArea(CombatAreaShape.EMANATION, 10),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Spellcasting",
@@ -320,11 +433,36 @@ class DeathKnightAspirant(ExtendedCombatantData):
                 MonsterAbility(
                     name="Dread Blade",
                     description="Melee Attack Roll: +9, reach 5 ft. Hit: 14 (2d8 + 5) Slashing damage plus 10 (3d6) Necrotic damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=9,
+                            damage=(
+                                CombatDamage("2d8 + 5", DamageType.SLASHING),
+                                CombatDamage("3d6", DamageType.NECROTIC),
+                            ),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Hellfire Orb (Recharge 5–6)",
                     description="Dexterity Saving Throw: DC 15, each creature in a 20-foot-radius Sphere centered on a point the aspirant can see within 120 feet of itself. Failure: 21 (6d6) Fire damage plus 21 (6d6) Necrotic damage. Success: Half damage.",
                     recharge=5,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.DEXTERITY,
+                            dc=15,
+                            half_on_success=True,
+                            damage=(
+                                CombatDamage("6d6", DamageType.FIRE),
+                                CombatDamage("6d6", DamageType.NECROTIC),
+                            ),
+                            area=CombatArea(
+                                CombatAreaShape.SPHERE, 20, point_within_ft=120
+                            ),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Spellcasting",
@@ -410,14 +548,60 @@ class Djinni(ExtendedCombatantData):
                 MonsterAbility(
                     name="Storm Blade",
                     description="Melee Attack Roll: +9, reach 5 ft. Hit: 12 (2d6 + 5) Slashing damage plus 7 (2d6) Lightning damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=9,
+                            damage=(
+                                CombatDamage("2d6 + 5", DamageType.SLASHING),
+                                CombatDamage("2d6", DamageType.LIGHTNING),
+                            ),
+                        ),
+                    ),
                 ),
                 MonsterAbility(
                     name="Storm Bolt",
                     description="Ranged Attack Roll: +9, range 120 ft. Hit: 13 (3d8) Thunder damage. If the target is a Large or smaller creature, it has the Prone condition.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=9,
+                            damage=(CombatDamage("3d8", DamageType.THUNDER),),
+                        ),
+                        CombatEffect(
+                            name="Storm Bolt: Prone",
+                            conditions=(CombatCondition(Condition.PRONE),),
+                            spends_use=False,
+                            trigger=CombatTrigger(
+                                TriggerEvent.HIT,
+                                optional=False,
+                                after="Storm Bolt",
+                                largest_target=CreatureSize.LARGE,
+                            ),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Create Whirlwind",
                     description="The djinni conjures a whirlwind at a point it can see within 120 feet. The whirlwind fills a 20-foot-radius, 60-foot-high Cylinder centered on that point. The whirlwind lasts until the djinni's Concentration on it ends. The djinni can move the whirlwind up to 20 feet at the start of each of its turns. Whenever the whirlwind enters a creature's space or a creature enters the whirlwind, that creature is subjected to the following effect. Strength Saving Throw: DC 17 (a creature makes this save only once per turn, and the djinni is unaffected). Failure: While in the whirlwind, the target has the Restrained condition and moves with the whirlwind. At the start of each of its turns, the Restrained target takes 21 (6d6) Thunder damage. At the end of each of its turns, the target repeats the save, ending the effect on itself on a success.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.STRENGTH,
+                            dc=17,
+                            repeat_save=True,
+                            conditions=(CombatCondition(Condition.RESTRAINED),),
+                            notes=(
+                                "Also: While in the whirlwind, the target has the Restrained condition and moves with the whirlwind. At the start of each of its turns, the Restrained target takes 21 (6d6) Thunder damage. At the end of each of its turns, the target repeats the save, ending the effect on itself on a success",
+                            ),
+                            area=CombatArea(
+                                CombatAreaShape.CYLINDER,
+                                20,
+                                point_within_ft=120,
+                                move_ft=20,
+                            ),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Spellcasting",
@@ -497,10 +681,27 @@ class Efreeti(ExtendedCombatantData):
                 MonsterAbility(
                     name="Heated Blade",
                     description="Melee Attack Roll: +10, reach 5 ft. Hit: 13 (2d6 + 6) Slashing damage plus 13 (2d12) Fire damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=10,
+                            damage=(
+                                CombatDamage("2d6 + 6", DamageType.SLASHING),
+                                CombatDamage("2d12", DamageType.FIRE),
+                            ),
+                        ),
+                    ),
                 ),
                 MonsterAbility(
                     name="Hurl Flame",
                     description="Ranged Attack Roll: +8, range 120 ft. Hit: 24 (7d6) Fire damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=8,
+                            damage=(CombatDamage("7d6", DamageType.FIRE),),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Spellcasting",
@@ -580,14 +781,45 @@ class HornedDevil(ExtendedCombatantData):
                 MonsterAbility(
                     name="Searing Fork",
                     description="Melee Attack Roll: +10, reach 10 ft. Hit: 15 (2d8 + 6) Piercing damage plus 9 (2d8) Fire damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=10,
+                            damage=(
+                                CombatDamage("2d8 + 6", DamageType.PIERCING),
+                                CombatDamage("2d8", DamageType.FIRE),
+                            ),
+                        ),
+                    ),
                 ),
                 MonsterAbility(
                     name="Hurl Flame",
                     description="Ranged Attack Roll: +8, range 150 ft. Hit: 26 (5d8 + 4) Fire damage. If the target is a flammable object that isn't being worn or carried, it starts burning.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=8,
+                            damage=(CombatDamage("5d8 + 4", DamageType.FIRE),),
+                            notes=(
+                                "Also: If the target is a flammable object that isn't being worn or carried, it starts burning",
+                            ),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Infernal Tail",
                     description="Dexterity Saving Throw: DC 17, one creature the devil can see within 10 feet. Failure: 10 (1d8 + 6) Necrotic damage, and the target receives an infernal wound if it doesn't have one. While wounded, the target loses 10 (3d6) Hit Points at the start of each of its turns. The wound closes after 1 minute, after a spell restores Hit Points to the target, or after the target or a creature within 5 feet of it takes an action to stanch the wound, doing so by succeeding on a DC 17 Wisdom (Medicine) check.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.DEXTERITY,
+                            dc=17,
+                            damage=(CombatDamage("1d8 + 6", DamageType.NECROTIC),),
+                            notes=(
+                                "Also: and the target receives an infernal wound if it doesn't have one. While wounded, the target loses 10 (3d6) Hit Points at the start of each of its turns. The wound closes after 1 minute, after a spell restores Hit Points to the target, or after the target or a creature within 5 feet of it takes an action to stanch the wound, doing so by succeeding on a DC 17 Wisdom (Medicine) check",
+                            ),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -666,6 +898,16 @@ class Marid(ExtendedCombatantData):
                 MonsterAbility(
                     name="Aquatic Lash",
                     description="Melee Attack Roll: +10, reach 15 ft. Hit: 15 (2d8 + 6) Slashing damage plus 9 (2d8) Cold damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=10,
+                            damage=(
+                                CombatDamage("2d8 + 6", DamageType.SLASHING),
+                                CombatDamage("2d8", DamageType.COLD),
+                            ),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Spellcasting",
@@ -674,6 +916,20 @@ class Marid(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Water Jet",
                     description="Dexterity Saving Throw: DC 18, each creature in a 60-foot-long, 10-foot-wide Line. Failure: 31 (9d6) Cold damage. If the target is a Huge or smaller creature, it is pushed up to 20 feet straight away from the marid and has the Prone condition. Success: Half damage only.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.DEXTERITY,
+                            dc=18,
+                            half_on_success=True,
+                            damage=(CombatDamage("9d6", DamageType.COLD),),
+                            conditions=(CombatCondition(Condition.PRONE),),
+                            notes=(
+                                "Also: If the target is a Huge or smaller creature, it is pushed up to 20 feet straight away from the marid and has the Prone condition",
+                            ),
+                            area=CombatArea(CombatAreaShape.LINE, 60, width_ft=10),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[
@@ -758,11 +1014,40 @@ class MindFlayerArcanist(ExtendedCombatantData):
                 MonsterAbility(
                     name="Arcane Tentacles",
                     description="Melee or Ranged Attack Roll: +9, reach 5 ft. or range 120 ft. Hit: 27 (4d10 + 5) Psychic damage, and the mind flayer can teleport the target up to 30 feet to an unoccupied space the mind flayer can see on a surface or liquid large enough to support the target. If this damage reduces the target to 0 Hit Points, the mind flayer kills it and magically devours its brain.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=9,
+                            damage=(CombatDamage("4d10 + 5", DamageType.PSYCHIC),),
+                            notes=(
+                                "Also: and the mind flayer can teleport the target up to 30 feet to an unoccupied space the mind flayer can see on a surface or liquid large enough to support the target. If this damage reduces the target to 0 Hit Points, the mind flayer kills it and magically devours its brain",
+                            ),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Mind Burst (Recharge 5–6)",
                     description="Intelligence Saving Throw: DC 17, each creature in a 40-foot Emanation originating from the mind flayer. Failure: 41 (8d8 + 5) Psychic damage, and the target has the Stunned condition until the end of the mind flayer's next turn. Success: Half damage only.",
                     recharge=5,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.INTELLIGENCE,
+                            dc=17,
+                            half_on_success=True,
+                            damage=(CombatDamage("8d8 + 5", DamageType.PSYCHIC),),
+                            conditions=(
+                                CombatCondition(
+                                    Condition.STUNNED,
+                                    until=(TurnEdge.END, TurnOf.SOURCE),
+                                ),
+                            ),
+                            notes=(
+                                "Also: and the target has the Stunned condition until the end of the mind flayer's next turn",
+                            ),
+                            area=CombatArea(CombatAreaShape.EMANATION, 40),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Spellcasting",
@@ -838,12 +1123,48 @@ class Remorhaz(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Bite",
                     description="Melee Attack Roll: +11, reach 10 ft. Hit: 18 (2d10 + 7) Piercing damage plus 14 (4d6) Fire damage. If the target is a Large or smaller creature, it has the Grappled condition (escape DC 17), and it has the Restrained condition until the grapple ends.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=11,
+                            damage=(
+                                CombatDamage("2d10 + 7", DamageType.PIERCING),
+                                CombatDamage("4d6", DamageType.FIRE),
+                            ),
+                        ),
+                        CombatEffect(
+                            name="Bite: Grappled + Restrained",
+                            conditions=(
+                                CombatCondition(Condition.GRAPPLED),
+                                CombatCondition(Condition.RESTRAINED),
+                            ),
+                            spends_use=False,
+                            notes=("Escape DC 17. Restrained until the grapple ends.",),
+                            trigger=CombatTrigger(
+                                TriggerEvent.HIT,
+                                optional=False,
+                                after="Bite",
+                                largest_target=CreatureSize.LARGE,
+                            ),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[
                 DcMonsterAbility(
                     name="Swallow",
                     description="Strength Saving Throw: DC 19, one Large or smaller creature Grappled by the remorhaz (it can have up to two creatures swallowed at a time). Failure: The target is swallowed by the remorhaz, and the Grappled condition ends. A swallowed creature has the Blinded and Restrained conditions, it has Total Cover against attacks and other effects outside the remorhaz, and it takes 10 (3d6) Acid damage plus 10 (3d6) Fire damage at the start of each of the remorhaz's turns. If the remorhaz takes 30 damage or more on a single turn from a creature inside it, the remorhaz must succeed on a DC 15 Constitution saving throw at the end of that turn or regurgitate all swallowed creatures, each of which falls in a space within 5 feet of the remorhaz and has the Prone condition. If the remorhaz dies, any swallowed creature no longer has the Restrained condition and can escape from the corpse by using 15 feet of movement, exiting Prone.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.STRENGTH,
+                            dc=19,
+                            conditions=(CombatCondition(Condition.PRONE),),
+                            notes=(
+                                "Also: The target is swallowed by the remorhaz, and the Grappled condition ends. A swallowed creature has the Blinded and Restrained conditions, it has Total Cover against attacks and other effects outside the remorhaz, and it takes 10 (3d6) Acid damage plus 10 (3d6) Fire damage at the start of each of the remorhaz's turns. If the remorhaz takes 30 damage or more on a single turn from a creature inside it, the remorhaz must succeed on a DC 15 Constitution saving throw at the end of that turn or regurgitate all swallowed creatures, each of which falls in a space within 5 feet of the remorhaz and has the Prone condition. If the remorhaz dies, any swallowed creature no longer has the Restrained condition and can escape from the corpse by using 15 feet of movement, exiting Prone",
+                            ),
+                        ),
+                    ),
                 ),
             ],
             reactions=[],
@@ -900,10 +1221,41 @@ class Roc(ExtendedCombatantData):
                 MonsterAbility(
                     name="Beak",
                     description="Melee Attack Roll: +13, reach 10 ft. Hit: 28 (3d12 + 9) Piercing damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=13,
+                            damage=(CombatDamage("3d12 + 9", DamageType.PIERCING),),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Talons",
                     description="Melee Attack Roll: +13, reach 5 ft. Hit: 23 (4d6 + 9) Slashing damage. If the target is a Huge or smaller creature, it has the Grappled condition (escape DC 19) from both talons, and it has the Restrained condition until the grapple ends.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=13,
+                            damage=(CombatDamage("4d6 + 9", DamageType.SLASHING),),
+                        ),
+                        CombatEffect(
+                            name="Talons: Grappled + Restrained",
+                            conditions=(
+                                CombatCondition(Condition.GRAPPLED),
+                                CombatCondition(Condition.RESTRAINED),
+                            ),
+                            spends_use=False,
+                            notes=(
+                                "Escape DC 19, from both talons. Restrained until the grapple ends.",
+                            ),
+                            trigger=CombatTrigger(
+                                TriggerEvent.HIT,
+                                optional=False,
+                                after="Talons",
+                                largest_target=CreatureSize.HUGE,
+                            ),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[
@@ -989,11 +1341,36 @@ class SphinxOfLore(ExtendedCombatantData):
                 MonsterAbility(
                     name="Claw",
                     description="Melee Attack Roll: +8, reach 5 ft. Hit: 14 (3d6 + 4) Slashing damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=8,
+                            damage=(CombatDamage("3d6 + 4", DamageType.SLASHING),),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Mind-Rending Roar (Recharge 5–6)",
                     description="Wisdom Saving Throw: DC 16, each enemy in a 300-foot Emanation originating from the sphinx. Failure: 35 (10d6) Psychic damage, and the target has the Incapacitated condition until the start of the sphinx's next turn.",
                     recharge=5,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.WISDOM,
+                            dc=16,
+                            damage=(CombatDamage("10d6", DamageType.PSYCHIC),),
+                            conditions=(
+                                CombatCondition(
+                                    Condition.INCAPACITATED,
+                                    until=(TurnEdge.START, TurnOf.SOURCE),
+                                ),
+                            ),
+                            notes=(
+                                "Also: and the target has the Incapacitated condition until the start of the sphinx's next turn",
+                            ),
+                            area=CombatArea(CombatAreaShape.EMANATION, 300),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Spellcasting",
@@ -1011,6 +1388,16 @@ class SphinxOfLore(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Weight of Years",
                     description="Constitution Saving Throw: DC 16, one creature the sphinx can see within 120 feet. Failure: The target gains 1 Exhaustion level. While the target has any Exhaustion levels, it appears 3d10 years older. Failure or Success: The sphinx can't take this action again until the start of its next turn.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.CONSTITUTION,
+                            dc=16,
+                            notes=(
+                                "Also: The target gains 1 Exhaustion level. While the target has any Exhaustion levels, it appears 3d10 years older",
+                            ),
+                        ),
+                    ),
                 ),
             ],
             legendary_resistances=3,

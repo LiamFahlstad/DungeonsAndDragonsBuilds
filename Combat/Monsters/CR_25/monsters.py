@@ -16,6 +16,14 @@ from Model.Creatures.Combatants import (
 )
 from Model.Creatures.MonsterAbilities import DcMonsterAbility, MonsterAbility
 from Core.Definitions import Ability
+from Model.Content.CombatArea import CombatArea, CombatAreaShape
+from Model.Content.CombatEffect import (
+    CombatCondition,
+    CombatDamage,
+    CombatEffect,
+    EffectRoll,
+)
+from Model.Content.CombatTriggers import CombatTrigger, TriggerEvent
 
 
 class Colossus(ExtendedCombatantData):
@@ -97,15 +105,53 @@ class Colossus(ExtendedCombatantData):
                 MonsterAbility(
                     name="Slam",
                     description="Melee Attack Roll: +18, reach 20 ft. Hit: 32 (4d10 + 10) Bludgeoning damage, and the colossus pushes the target up to 20 feet straight away from itself.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=18,
+                            damage=(CombatDamage("4d10 + 10", DamageType.BLUDGEONING),),
+                            notes=(
+                                "Also: and the colossus pushes the target up to 20 feet straight away from itself",
+                            ),
+                        ),
+                    ),
                 ),
                 MonsterAbility(
                     name="Radiant Ray",
                     description="Ranged Attack Roll: +18, range 300 ft. Hit: 22 (4d10) Radiant damage. If the target is a Large or smaller creature, it has the Prone condition.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=18,
+                            damage=(CombatDamage("4d10", DamageType.RADIANT),),
+                        ),
+                        CombatEffect(
+                            name="Radiant Ray: Prone",
+                            conditions=(CombatCondition(Condition.PRONE),),
+                            spends_use=False,
+                            trigger=CombatTrigger(
+                                TriggerEvent.HIT,
+                                optional=False,
+                                after="Radiant Ray",
+                                largest_target=CreatureSize.LARGE,
+                            ),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Divine Beam (Recharge 5–6)",
                     description="Dexterity Saving Throw: DC 26, each creature in a 300-foot-long, 10-foot-wide Line. Failure: 65 (10d12) Radiant damage. Success: Half damage. Failure or Success: A creature reduced to 0 Hit Points by this beam disintegrates into dust, leaving behind any magic items it was wearing or carrying.",
                     recharge=5,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.DEXTERITY,
+                            dc=26,
+                            half_on_success=True,
+                            damage=(CombatDamage("10d12", DamageType.RADIANT),),
+                            area=CombatArea(CombatAreaShape.LINE, 300, width_ft=10),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],

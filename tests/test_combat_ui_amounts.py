@@ -1,6 +1,8 @@
-"""What the combat UI's amount fields understand (amounts.py), and how a
-monster's abilities are read from its stat block (monster_actions.py), run
-over every monster in the game so a new wording shows up here."""
+"""What the combat UI's amount fields understand (amounts.py), and what a
+monster's abilities roll on its turn (monster_actions.py): from the combat
+effects written on them, which Combat/Tools/monster_effect_text.py reads from
+the stat block's text where stat blocks are written, run over every monster
+in the game so a new wording shows up here."""
 
 import importlib
 import inspect
@@ -23,7 +25,9 @@ from Combat.CombatUIQt.monster_actions import (
     roll_dice,
     start_of_turn_traits,
 )
+from Combat.EncounterLogs import _plain
 from Combat.Monsters.CR_0.monsters import GoblinWarrior, Stirge
+from Combat.Tools.monster_effect_text import read_effects
 from Core.Definitions import DamageType
 from Model.Creatures.Combatants import BasicCombatantData
 from Model.Creatures.MonsterAbilities import (
@@ -148,8 +152,15 @@ def test_parse_damage_says_whats_wrong(text, message):
 # Monster abilities
 
 
+def _described(ability: MonsterAbility) -> MonsterAbility:
+    """The ability with the combat effects its text gives, as
+    generate_monsters.py writes them."""
+    ability.combat_effects = read_effects(ability.name, ability.description)
+    return ability
+
+
 def _ability(name: str, description: str, **fields) -> MonsterAbility:
-    return MonsterAbility(name=name, description=description, **fields)
+    return _described(MonsterAbility(name=name, description=description, **fields))
 
 
 def test_an_attack():
@@ -284,27 +295,31 @@ def test_per_day_and_legendary_cost_are_its_fields():
 
 def test_structured_abilities_read_the_same():
     attack = parse_action(
-        MeleeAttack(
-            name="Bite",
-            attack_bonus=5,
-            dice_count=2,
-            dice_type=DiceType.D6,
-            damage_bonus=3,
-            damage_type=DamageType.PIERCING,
+        _described(
+            MeleeAttack(
+                name="Bite",
+                attack_bonus=5,
+                dice_count=2,
+                dice_type=DiceType.D6,
+                damage_bonus=3,
+                damage_type=DamageType.PIERCING,
+            )
         )
     )
     assert attack.to_hit == 5
     assert attack.damage == (DamageRoll("2d6 + 3", PIERCING),)
 
     save = parse_action(
-        SavingThrowEffect(
-            name="Spit",
-            ability=Ability.DEXTERITY,
-            dc=13,
-            target="one creature",
-            dice_count=2,
-            dice_type=DiceType.D6,
-            damage_type=DamageType.ACID,
+        _described(
+            SavingThrowEffect(
+                name="Spit",
+                ability=Ability.DEXTERITY,
+                dc=13,
+                target="one creature",
+                dice_count=2,
+                dice_type=DiceType.D6,
+                damage_type=DamageType.ACID,
+            )
         )
     )
     assert (save.save_ability, save.save_dc) == ("Dexterity", 13)
@@ -313,9 +328,8 @@ def test_structured_abilities_read_the_same():
 
 def test_a_saved_fights_dicts_read_the_same():
     text = "Melee Attack Roll: +5, reach 5 ft. Hit: 7 (1d8 + 3) Slashing damage."
-    assert parse_action({"name": "Claw", "description": text}) == parse_action(
-        _ability("Claw", text)
-    )
+    claw = _ability("Claw", text)
+    assert parse_action(_plain({"a": claw})["a"]) == parse_action(claw)
 
 
 def test_sections_and_legendary_marking():
@@ -398,7 +412,7 @@ def test_real_stat_blocks_roll_only_what_every_hit_deals():
     scimitar, *_ = GoblinWarrior().actions
     action = parse_action(scimitar)
     assert action.damage == (DamageRoll("1d6 + 2", SLASHING),)
-    assert action.rider.endswith("if the attack roll had Advantage")
+    assert action.notes[-1].endswith("if the attack roll had Advantage")
 
     action = parse_action(Stirge().actions[0])
     assert action.damage == (DamageRoll("1d6 + 3", PIERCING),)

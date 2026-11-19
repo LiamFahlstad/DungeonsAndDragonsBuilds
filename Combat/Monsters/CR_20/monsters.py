@@ -21,6 +21,16 @@ from Model.Creatures.MonsterAbilities import (
     MonsterCast,
 )
 from Core.Definitions import Ability
+from Model.Content.CombatArea import CombatArea, CombatAreaShape
+from Model.Content.CombatEffect import (
+    CombatCondition,
+    CombatDamage,
+    CombatEffect,
+    EffectRoll,
+    TurnEdge,
+    TurnOf,
+)
+from Model.Content.CombatTriggers import CombatTrigger, TriggerEvent
 
 
 class AncientBrassDragon(ExtendedCombatantData):
@@ -87,15 +97,52 @@ class AncientBrassDragon(ExtendedCombatantData):
                 MonsterAbility(
                     name="Rend",
                     description="Melee Attack Roll: +14, reach 15 ft. Hit: 19 (2d10 + 8) Slashing damage plus 7 (2d6) Fire damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=14,
+                            damage=(
+                                CombatDamage("2d10 + 8", DamageType.SLASHING),
+                                CombatDamage("2d6", DamageType.FIRE),
+                            ),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Fire Breath (Recharge 5–6)",
                     description="Dexterity Saving Throw: DC 21, each creature in a 90-foot-long, 5-foot-wide Line. Failure: 58 (13d8) Fire damage. Success: Half damage.",
                     recharge=5,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.DEXTERITY,
+                            dc=21,
+                            half_on_success=True,
+                            damage=(CombatDamage("13d8", DamageType.FIRE),),
+                            area=CombatArea(CombatAreaShape.LINE, 90),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Sleep Breath",
                     description="Constitution Saving Throw: DC 21, each creature in a 90-foot Cone. Failure: The target has the Incapacitated condition until the end of its next turn, at which point it repeats the save. Second Failure: The target has the Unconscious condition for 10 minutes. This effect ends for the target if it takes damage or a creature within 5 feet of it takes an action to wake it.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.CONSTITUTION,
+                            dc=21,
+                            conditions=(
+                                CombatCondition(
+                                    Condition.INCAPACITATED,
+                                    until=(TurnEdge.END, TurnOf.TARGET),
+                                ),
+                            ),
+                            notes=(
+                                "Also: The target has the Incapacitated condition until the end of its next turn, at which point it repeats the save. Second Failure: The target has the Unconscious condition for 10 minutes. This effect ends for the target if it takes damage or a creature within 5 feet of it takes an action to wake it",
+                            ),
+                            area=CombatArea(CombatAreaShape.CONE, 90),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Spellcasting",
@@ -120,6 +167,17 @@ class AncientBrassDragon(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Scorching Sands",
                     description="Dexterity Saving Throw: DC 20, one creature the dragon can see within 120 feet. Failure: 36 (8d8) Fire damage, and the target's Speed is halved until the end of its next turn. Failure or Success: The dragon can't take this action again until the start of its next turn.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.DEXTERITY,
+                            dc=20,
+                            damage=(CombatDamage("8d8", DamageType.FIRE),),
+                            notes=(
+                                "Also: and the target's Speed is halved until the end of its next turn",
+                            ),
+                        ),
+                    ),
                 ),
             ],
             legendary_resistances=4,
@@ -190,11 +248,31 @@ class AncientWhiteDragon(ExtendedCombatantData):
                 MonsterAbility(
                     name="Rend",
                     description="Melee Attack Roll: +14, reach 15 ft. Hit: 17 (2d8 + 8) Slashing damage plus 7 (2d6) Cold damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=14,
+                            damage=(
+                                CombatDamage("2d8 + 8", DamageType.SLASHING),
+                                CombatDamage("2d6", DamageType.COLD),
+                            ),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Cold Breath (Recharge 5–6)",
                     description="Constitution Saving Throw: DC 22, each creature in a 90-foot Cone. Failure: 63 (14d8) Cold damage. Success: Half damage.",
                     recharge=5,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.CONSTITUTION,
+                            dc=22,
+                            half_on_success=True,
+                            damage=(CombatDamage("14d8", DamageType.COLD),),
+                            area=CombatArea(CombatAreaShape.CONE, 90),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -203,6 +281,20 @@ class AncientWhiteDragon(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Freezing Burst",
                     description="Constitution Saving Throw: DC 20, each creature in a 30-foot-radius Sphere centered on a point the dragon can see within 120 feet. Failure: 14 (4d6) Cold damage, and the target's Speed is 0 until the end of the target's next turn. Failure or Success: The dragon can't take this action again until the start of its next turn.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.CONSTITUTION,
+                            dc=20,
+                            damage=(CombatDamage("4d6", DamageType.COLD),),
+                            notes=(
+                                "Also: and the target's Speed is 0 until the end of the target's next turn",
+                            ),
+                            area=CombatArea(
+                                CombatAreaShape.SPHERE, 30, point_within_ft=120
+                            ),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Frightful Presence",
@@ -360,14 +452,57 @@ class PitFiend(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Bite",
                     description="Melee Attack Roll: +14, reach 10 ft. Hit: 18 (3d6 + 8) Piercing damage. If the target is a creature, it must make the following saving throw. Constitution Saving Throw: DC 21. Failure: The target has the Poisoned condition. While Poisoned, the target can't regain Hit Points and takes 21 (6d6) Poison damage at the start of each of its turns, and it repeats the save at the end of each of its turns, ending the effect on itself on a success. After 1 minute, it succeeds automatically.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=14,
+                            damage=(CombatDamage("3d6 + 8", DamageType.PIERCING),),
+                            notes=(
+                                "Its Constitution save is a row of its own, rolled as it hits.",
+                                "Also: If the target is a creature, it must make the following saving throw. Constitution Saving Throw: DC 21. Failure: The target has the Poisoned condition. While Poisoned, the target can't regain Hit Points and takes 21 (6d6) Poison damage at the start of each of its turns, and it repeats the save at the end of each of its turns, ending the effect on itself on a success. After 1 minute, it succeeds automatically",
+                            ),
+                        ),
+                        CombatEffect(
+                            name="Bite: Constitution save",
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.CONSTITUTION,
+                            dc=21,
+                            repeat_save=True,
+                            conditions=(CombatCondition(Condition.POISONED),),
+                            spends_use=False,
+                            notes=(
+                                "Also: The target has the Poisoned condition. While Poisoned, the target can't regain Hit Points and takes 21 (6d6) Poison damage at the start of each of its turns, and it repeats the save at the end of each of its turns, ending the effect on itself on a success. After 1 minute, it succeeds automatically",
+                            ),
+                            trigger=CombatTrigger(
+                                TriggerEvent.HIT, optional=False, after="Bite"
+                            ),
+                        ),
+                    ),
                 ),
                 MonsterAbility(
                     name="Devilish Claw",
                     description="Melee Attack Roll: +14, reach 10 ft. Hit: 26 (4d8 + 8) Necrotic damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=14,
+                            damage=(CombatDamage("4d8 + 8", DamageType.NECROTIC),),
+                        ),
+                    ),
                 ),
                 MonsterAbility(
                     name="Fiery Mace",
                     description="Melee Attack Roll: +14, reach 10 ft. Hit: 22 (4d6 + 8) Force damage plus 21 (6d6) Fire damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=14,
+                            damage=(
+                                CombatDamage("4d6 + 8", DamageType.FORCE),
+                                CombatDamage("6d6", DamageType.FIRE),
+                            ),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Hellfire Spellcasting (Recharge 4–6)",

@@ -18,6 +18,7 @@ from Model.Content.CombatEffect import (
 )
 from Model.Content.CombatModifiers import ArmorClass
 from Model.Content.CombatTriggers import CombatTrigger, TriggerEvent
+from Model.Content.CombatEffect import EffectRoll
 
 
 class MarshalVirel(ExtendedCombatantData):
@@ -83,6 +84,16 @@ class MarshalVirel(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Duelist's Rapier",
                     description="Melee Attack Roll: +6, reach 5 ft. Hit: 11 (1d8 + 6) Piercing damage. If this attack is a critical hit, the target must succeed on a DC 13 Constitution saving throw or have the Silenced condition (it can't speak or cast spells that require a Verbal component) until the end of its next turn.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=6,
+                            damage=(CombatDamage("1d8 + 6", DamageType.PIERCING),),
+                            notes=(
+                                "Also: If this attack is a critical hit, the target must succeed on a DC 13 Constitution saving throw or have the Silenced condition (it can't speak or cast spells that require a Verbal component) until the end of its next turn",
+                            ),
+                        ),
+                    ),
                 ),
                 MeleeAttack(
                     name="Throat Strike (Recharge 5-6)",
@@ -94,6 +105,16 @@ class MarshalVirel(ExtendedCombatantData):
                     damage_type=DamageType.PIERCING,
                     additional_ruling="The target must succeed on a DC 13 Constitution saving throw or have the Silenced condition (it can't speak or cast spells that require a Verbal component) and can't take Reactions until the end of its next turn.",
                     recharge=5,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=6,
+                            damage=(CombatDamage("2d8 + 9", DamageType.PIERCING),),
+                            notes=(
+                                "Also: The target must succeed on a DC 13 Constitution saving throw or have the Silenced condition (it can't speak or cast spells that require a Verbal component) and can't take Reactions until the end of its next turn",
+                            ),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[
@@ -211,6 +232,13 @@ class GoblinKingCR4(ExtendedCombatantData):
                     dice_type=DiceType.D6,
                     damage_bonus=3,
                     damage_type=DamageType.SLASHING,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=5,
+                            damage=(CombatDamage("1d6 + 3", DamageType.SLASHING),),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[

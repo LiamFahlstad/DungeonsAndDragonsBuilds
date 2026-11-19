@@ -149,6 +149,7 @@ The report goes to `Combat/Campaigns/<C>/player_statistics_report.html`. Lifetim
 | `python -m Combat.Tools.generate_monster_cr_compare` | → `Combat/Tools/monster_cr_compare.html` (sortable implied-CR table of official monsters) |
 | `python Combat/Tools/scrape_monsters.py` | Scrape aidedd.org → `Combat/monsters_raw.json` (needs the scraper deps) |
 | `python -m Combat.Tools.generate_monsters` | Regenerate `Combat/Monsters/CR_*/monsters.py` from the raw JSON. ⚠ Overwrites unmarked generated files |
+| `python -m Combat.Tools.monster_effect_text "Name" "description"` | Print the `combat_effects=` a stat-block ability's text gives, as Python: a draft for a hand-written monster's ability, to check and fix |
 | `python -m Combat.Tools.migrate_monster_enums` / `…_speed_type` / `…_creature_type` | One-time source migrations. They skip files already migrated |
 
 Hand-made monsters go in `Combat/Monsters/CR_<x>/monsters_homebrew.py`.

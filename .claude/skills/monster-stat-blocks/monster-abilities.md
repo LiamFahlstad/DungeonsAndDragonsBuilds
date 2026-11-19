@@ -50,15 +50,20 @@ for ab in m.traits + m.actions + m.bonus_actions + m.reactions + m.legendary_act
 
 Imports: add the subclasses to the `from Model.Creatures.MonsterAbilities import (...)` block (alphabetical). Before you remove `MonsterAbility` from it, grep the file to confirm no entry still uses the plain class.
 
-## What the combat UI's Custom Effect picker makes of an ability (`combat_effects`)
+## What the combat UI does with an ability (`combat_effects`)
 
-The combat UI's Custom Effect dialog lists every action, bonus action, reaction and legendary action, and fills in its form from the ability's text:
-- **Attacks and saves:** the standard stat-block sentences, which every subclass above writes.
-- **Hit Points:** "regains 9 (2d4 + 4) Hit Points" and "gains 10 Temporary Hit Points".
-- **Spells it casts:** "casts Fear", "uses Spellcasting to cast Mind Spike (level 3 version)", at the stat block's spell save DC.
-- **Another action it makes or uses:** "makes one Rend attack", "uses Dreadful Glare".
+The combat UI never reads an ability's text (Notes/explicit-attributes-plan.md, Phase 4.3). Its Custom Effect dialog and the turn column's buttons fill in from fields:
+- **Attacks, saves, damage, conditions, Hit Points, areas:** `combat_effects`, one `CombatEffect` (`Model/Content/CombatEffect.py`, the model features and spells use) per way to use it. The first is its attack or save; then come the rows applied as it hits, one per condition its hit gives in a sentence of its own (`trigger=CombatTrigger(TriggerEvent.HIT, optional=False, after="Tree Club")`, `spends_use=False`) and one for a save its hit forces.
+- **Spells it casts:** `casts=` (below), at the stat block's spell save DC.
+- **Another action it makes or uses:** `uses_ability=` (below).
 
-When the text says something else, write what it does on the ability itself, with the same model features use (`Model/Content/CombatEffect.py`):
+**Every action, bonus action, reaction and legendary action whose text has an attack, save, damage, condition or Hit Points needs `combat_effects`**, structured subclasses included: `tests/test_monster_effect_text.py` fails otherwise. Draft them from the text, then check and fix the draft by hand:
+
+```bash
+python -m Combat.Tools.monster_effect_text "Bite" "Melee Attack Roll: +5, reach 5 ft. Hit: 7 (1d8 + 3) Piercing damage."
+```
+
+A hand-written one says what the text means where the reader can't:
 
 ```python
 MonsterAbility(
@@ -75,12 +80,12 @@ MonsterAbility(
 )
 ```
 
-- **Write it** (in a hand-maintained file only) for the following: old-style prose ("must succeed on a DC 11 Wisdom saving throw or"); healing from a pool (`healing=CombatHitPoints()`, with no dice, lets the GM type the amount); a badge that isn't a rules condition; a condition the text gives only sometimes ("if it had Advantage", which the reader would apply on every hit); and an ability with several uses (a cleric's Life Domain Magic gets one `CombatEffect` per use, each with a `name=`). Examples are the Time Loop PR monsters: `HumanPaladinOfDevotion`, `DwarfLifeCleric`, `MirelleTheGildedKnight` and `MiraPrincessOfTheLoop`.
+- **Fix the draft by hand** (in a hand-maintained file only) for: old-style prose ("must succeed on a DC 11 Wisdom saving throw or", which the reader misses); healing from a pool (`healing=CombatHitPoints()`, with no dice, lets the GM type the amount); a badge that isn't a rules condition; a condition the text gives only sometimes ("if it had Advantage": a `CombatTrigger(..., when="it had Advantage")` row, not the attack's own condition); and an ability with several uses (a cleric's Life Domain Magic gets one `CombatEffect` per use, each with a `name=`). Examples are the Time Loop PR monsters: `HumanPaladinOfDevotion`, `DwarfLifeCleric`, `MirelleTheGildedKnight` and `MiraPrincessOfTheLoop`, and the summons in `CharacterContent` (Steel Defender, Primal Companion), whose numbers follow their owner (`dice_plus("1d8", 2 + intelligence_modifier)`).
 - **A trait is listed only once it has `combat_effects`** (a Divine Smite that's used, not a Pack Tactics that just is).
-- **Don't write it** for an ability whose text the picker already reads right. Its numbers would then be in two places that can drift apart. Never write it in a generated `monsters.py`.
+- **Never write them by hand in a generated `monsters.py`**: `generate_monsters.py` writes them from the text, and the test holds each to what its text says.
 - **Costs, casts and uses are fields; the name is shown.** A recharge, uses per day and a legendary action's cost stay in the name for display ("Fire Breath (Recharge 5-6)"), but the combat UI spends `recharge=5`, `per_day=2` and `legendary_cost=2` on the ability. Likewise `at_turn_start=` (a trait's sentence saying what it does at the start of the monster's turn, which the turn column reminds of), `casts=(MonsterCast("Fear"),)` (`MonsterCast(spell, level=None, per_day=None)`, the spell's name as the spell list has it), and `uses_ability="Rend"` (the other ability whose use this is, as in "makes one Rend attack"; add `moves_first=True` for "moves up to half its Speed, and"). Write only the ones the name or text gives, after `description=` / `combat_effects=`; `generate_monsters.py` emits them, and `tests/test_monster_ability_text.py` fails when the fields and the text disagree. The stat-block section is the action.
 - **It doesn't change the balance score.** `monster_score.py` doesn't read `combat_effects`, but check the score anyway if you also changed the text.
-- **Check it** by running `./run_tests.sh -q tests/test_monster_combat_effects.py`.
+- **Check it** by running `./run_tests.sh -q tests/test_monster_combat_effects.py tests/test_monster_effect_text.py`.
 
 ## Adding a new subclass
 

@@ -19,6 +19,13 @@ from Model.Content.CombatEffect import (
     CombatEffect,
     EffectRoll,
 )
+from Model.Content.CombatArea import CombatArea, CombatAreaShape
+from Model.Content.CombatEffect import (
+    CombatCondition,
+    CombatHitPoints,
+    TurnEdge,
+    TurnOf,
+)
 
 
 class CantorOfTheBlackChoir(ExtendedCombatantData):
@@ -84,11 +91,43 @@ class CantorOfTheBlackChoir(ExtendedCombatantData):
                 MonsterAbility(
                     name="Curseward Lash",
                     description="Melee or Ranged Attack Roll: +5, reach 5 ft. or range 30 ft. Hit: 11 (2d8 + 2) Necrotic damage, and the target has Disadvantage on the next saving throw it makes against a Wisdom- or Charisma-based effect before the start of the Cantor's next turn, its will already fraying at the edge of the Cantor's voice.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=5,
+                            damage=(CombatDamage("2d8 + 2", DamageType.NECROTIC),),
+                            notes=(
+                                "Also: and the target has Disadvantage on the next saving throw it makes against a Wisdom- or Charisma-based effect before the start of the Cantor's next turn, its will already fraying at the edge of the Cantor's voice",
+                            ),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Speak Noc'tra (Recharge 5-6)",
                     description="The Cantor tears a fragment of the black word from its ruined throat in a 30-foot Cone. Each creature in the area makes a DC 11 Wisdom saving throw. Failure: 14 (4d6) Psychic damage, and the target has the Frightened condition until the end of the Cantor's next turn. Success: Half damage only. A half-second later, the word catches up to itself: at the start of the Cantor's next turn, each creature that failed the save must succeed on a DC 11 Wisdom saving throw or take 7 (2d6) Necrotic damage as the echo arrives. Whether or not the word strikes any target, the toll is real: the Cantor takes 3 (1d6) Necrotic damage as it passes through, one utterance closer to its own undoing.",
                     recharge=5,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.WISDOM,
+                            dc=11,
+                            half_on_success=True,
+                            damage=(CombatDamage("4d6", DamageType.PSYCHIC),),
+                            conditions=(
+                                CombatCondition(
+                                    Condition.FRIGHTENED,
+                                    until=(TurnEdge.END, TurnOf.SOURCE),
+                                ),
+                            ),
+                            notes=(
+                                "At the start of the Cantor's next turn, each"
+                                " creature that failed makes a DC 11 Wisdom save"
+                                " or takes 7 (2d6) Necrotic damage.",
+                                "The Cantor takes 3 (1d6) Necrotic damage.",
+                            ),
+                            area=CombatArea(CombatAreaShape.CONE, 30),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[
@@ -168,10 +207,27 @@ class GarronTheKindly(ExtendedCombatantData):
                 MonsterAbility(
                     name="Surgeon's Maul",
                     description="Melee Attack Roll: +5, reach 10 ft. Hit: 14 (2d10 + 3) Bludgeoning damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=5,
+                            damage=(CombatDamage("2d10 + 3", DamageType.BLUDGEONING),),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Precise Incision",
                     description="Melee Attack Roll: +5, reach 10 ft. Hit: 9 (2d6 + 2) Slashing damage, and the target must succeed on a DC 12 Constitution saving throw or Garron's blade finds the throat with surgical precision: until the end of the target's next turn, it can't speak and can't cast spells that require a Verbal component.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=5,
+                            damage=(CombatDamage("2d6 + 2", DamageType.SLASHING),),
+                            notes=(
+                                "Also: and the target must succeed on a DC 12 Constitution saving throw or Garron's blade finds the throat with surgical precision: until the end of the target's next turn, it can't speak and can't cast spells that require a Verbal component",
+                            ),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[
@@ -179,6 +235,9 @@ class GarronTheKindly(ExtendedCombatantData):
                     name="Field Dressing (Recharge 5-6)",
                     description="Garron tends to his own wounds or those of one creature within 5 feet of him. The chosen creature regains 13 (2d8 + 4) Hit Points.",
                     recharge=5,
+                    combat_effects=(
+                        CombatEffect(healing=CombatHitPoints(dice="2d8 + 4")),
+                    ),
                 ),
             ],
             reactions=[],
@@ -258,6 +317,13 @@ class SerCaldusTheVowOfSilence(ExtendedCombatantData):
                     dice_type=DiceType.D6,
                     damage_bonus=3,
                     damage_type=DamageType.SLASHING,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=5,
+                            damage=(CombatDamage("2d6 + 3", DamageType.SLASHING),),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Rite of Silence (3/Day)",
@@ -356,6 +422,16 @@ class GreypawCR3(ExtendedCombatantData):
                     damage_bonus=4,
                     damage_type=DamageType.PIERCING,
                     additional_ruling="If the target is a Medium or smaller creature, it must succeed on a DC 12 Strength saving throw or be knocked Prone.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=6,
+                            damage=(CombatDamage("2d8 + 4", DamageType.PIERCING),),
+                            notes=(
+                                "Also: If the target is a Medium or smaller creature, it must succeed on a DC 12 Strength saving throw or be knocked Prone",
+                            ),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -456,6 +532,18 @@ class MirelleTheGildedKnight(ExtendedCombatantData):
                     failure_effect="and the target has the Prone condition",
                     success_effect="Half damage only.",
                     recharge=5,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.STRENGTH,
+                            dc=12,
+                            half_on_success=True,
+                            damage=(CombatDamage("2d8 + 3", DamageType.SLASHING),),
+                            conditions=(CombatCondition(Condition.PRONE),),
+                            notes=("Also: and the target has the Prone condition",),
+                            area=CombatArea(CombatAreaShape.CONE, 15),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],

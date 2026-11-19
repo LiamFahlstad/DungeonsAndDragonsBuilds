@@ -21,6 +21,16 @@ from Model.Creatures.MonsterAbilities import (
     MonsterCast,
 )
 from Core.Definitions import Ability
+from Model.Content.CombatArea import CombatArea, CombatAreaShape
+from Model.Content.CombatEffect import (
+    CombatCondition,
+    CombatDamage,
+    CombatEffect,
+    EffectRoll,
+    TurnEdge,
+    TurnOf,
+)
+from Model.Content.CombatTriggers import CombatTrigger, TriggerEvent
 
 
 class Arcanaloth(ExtendedCombatantData):
@@ -102,10 +112,48 @@ class Arcanaloth(ExtendedCombatantData):
                 MonsterAbility(
                     name="Fiendish Burst",
                     description="Melee or Ranged Attack Roll: +9, reach 5 ft. or range 120 ft. Hit: 31 (4d12 + 5) Necrotic damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=9,
+                            damage=(CombatDamage("4d12 + 5", DamageType.NECROTIC),),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Banishing Claw (Requires Soul Tome)",
                     description="Melee Attack Roll: +9, reach 5 ft. Hit: 10 (2d4 + 5) Slashing damage plus 19 (3d12) Psychic damage. If the target is a creature, it is subjected to the following effect. Charisma Saving Throw: DC 17. Failure: The target is trapped in a demiplane inside the Soul Tome. While trapped there, the target has the Incapacitated condition. At the end of each of its turns, the target repeats the save, escaping the tome on a success. When the target escapes, it appears in the space it left or, if that space is occupied, the nearest unoccupied space. If the target fails three of these saves while in the demiplane, it becomes bound to the tome and can escape only if the tome is reduced to 0 Hit Points.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=9,
+                            damage=(
+                                CombatDamage("2d4 + 5", DamageType.SLASHING),
+                                CombatDamage("3d12", DamageType.PSYCHIC),
+                            ),
+                            notes=(
+                                "Its Charisma save is a row of its own, rolled as it hits.",
+                                "Also: If the target is a creature, it is subjected to the following effect. Charisma Saving Throw: DC 17. Failure: The target is trapped in a demiplane inside the Soul Tome. While trapped there, the target has the Incapacitated condition. At the end of each of its turns, the target repeats the save, escaping the tome on a success. When the target escapes, it appears in the space it left or, if that space is occupied, the nearest unoccupied space. If the target fails three of these saves while in the demiplane, it becomes bound to the tome and can escape only if the tome is reduced to 0 Hit Points",
+                            ),
+                        ),
+                        CombatEffect(
+                            name="Banishing Claw: Charisma save",
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.CHARISMA,
+                            dc=17,
+                            repeat_save=True,
+                            conditions=(CombatCondition(Condition.INCAPACITATED),),
+                            spends_use=False,
+                            notes=(
+                                "Also: The target is trapped in a demiplane inside the Soul Tome. While trapped there, the target has the Incapacitated condition. At the end of each of its turns, the target repeats the save, escaping the tome on a success. When the target escapes, it appears in the space it left or, if that space is occupied, the nearest unoccupied space. If the target fails three of these saves while in the demiplane, it becomes bound to the tome and can escape only if the tome is reduced to 0 Hit Points",
+                            ),
+                            trigger=CombatTrigger(
+                                TriggerEvent.HIT,
+                                optional=False,
+                                after="Banishing Claw (Requires Soul Tome)",
+                            ),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Spellcasting",
@@ -186,6 +234,13 @@ class Archmage(ExtendedCombatantData):
                 MonsterAbility(
                     name="Arcane Burst",
                     description="Melee or Ranged Attack Roll: +9, reach 5 ft. or range 150 ft. Hit: 27 (4d10 + 5) Force damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=9,
+                            damage=(CombatDamage("4d10 + 5", DamageType.FORCE),),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Spellcasting",
@@ -272,11 +327,37 @@ class Archpriest(ExtendedCombatantData):
                 MonsterAbility(
                     name="Radiant Burst",
                     description="Melee or Ranged Attack Roll: +9, reach 5 ft. or range 60 ft. Hit: 27 (4d10 + 5) Radiant damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=9,
+                            damage=(CombatDamage("4d10 + 5", DamageType.RADIANT),),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Holy Word (Recharge 4–6)",
                     description="Wisdom Saving Throw: DC 17, each enemy in a 20-foot Emanation originating from the archpriest. Failure: 21 (6d6) Radiant damage, and the target has the Stunned condition until the end of the archpriest's next turn. Success: Half damage only.",
                     recharge=4,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.WISDOM,
+                            dc=17,
+                            half_on_success=True,
+                            damage=(CombatDamage("6d6", DamageType.RADIANT),),
+                            conditions=(
+                                CombatCondition(
+                                    Condition.STUNNED,
+                                    until=(TurnEdge.END, TurnOf.SOURCE),
+                                ),
+                            ),
+                            notes=(
+                                "Also: and the target has the Stunned condition until the end of the archpriest's next turn",
+                            ),
+                            area=CombatArea(CombatAreaShape.EMANATION, 20),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Spellcasting",
@@ -373,10 +454,32 @@ class Erinyes(ExtendedCombatantData):
                 MonsterAbility(
                     name="Withering Sword",
                     description="Melee Attack Roll: +8, reach 5 ft. Hit: 13 (2d8 + 4) Slashing damage plus 11 (2d10) Necrotic damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=8,
+                            damage=(
+                                CombatDamage("2d8 + 4", DamageType.SLASHING),
+                                CombatDamage("2d10", DamageType.NECROTIC),
+                            ),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Entangling Rope (Requires Magic Rope)",
                     description="Strength Saving Throw: DC 16, one creature the erinyes can see within 120 feet. Failure: 14 (4d6) Force damage, and the target has the Restrained condition until the rope is destroyed, the erinyes uses a Bonus Action to release the target, or the erinyes uses Entangling Rope again.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.STRENGTH,
+                            dc=16,
+                            damage=(CombatDamage("4d6", DamageType.FORCE),),
+                            conditions=(CombatCondition(Condition.RESTRAINED),),
+                            notes=(
+                                "Also: and the target has the Restrained condition until the rope is destroyed, the erinyes uses a Bonus Action to release the target, or the erinyes uses Entangling Rope again",
+                            ),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -446,6 +549,16 @@ class GithzeraiPsion(ExtendedCombatantData):
                 MonsterAbility(
                     name="Psychic Warp",
                     description="Melee or Ranged Attack Roll: +8, reach 5 ft. or range 120 ft. Hit: 26 (4d10 + 4) Psychic damage, and the target has the githzerai's choice of (A) the Charmed condition until the start of the githzerai's next turn or (B) the Prone condition, provided the target is a Large or smaller creature.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=8,
+                            damage=(CombatDamage("4d10 + 4", DamageType.PSYCHIC),),
+                            notes=(
+                                "Also: and the target has the githzerai's choice of (A) the Charmed condition until the start of the githzerai's next turn or (B) the Prone condition, provided the target is a Large or smaller creature",
+                            ),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Spellcasting",
@@ -518,6 +631,19 @@ class PirateAdmiral(ExtendedCombatantData):
                 MonsterAbility(
                     name="Scimitar",
                     description="Melee Attack Roll: +10, reach 5 ft. Hit: 16 (3d6 + 6) Slashing damage plus 7 (2d6) Poison damage, and the target suffers one of the following effects of the pirate's choice:",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=10,
+                            damage=(
+                                CombatDamage("3d6 + 6", DamageType.SLASHING),
+                                CombatDamage("2d6", DamageType.POISON),
+                            ),
+                            notes=(
+                                "Also: and the target suffers one of the following effects of the pirate's choice:",
+                            ),
+                        ),
+                    ),
                 ),
                 MonsterAbility(
                     name="Awestruck",
@@ -530,6 +656,13 @@ class PirateAdmiral(ExtendedCombatantData):
                 MonsterAbility(
                     name="Pistol",
                     description="Ranged Attack Roll: +10, range 30/90 ft. Hit: 28 (4d10 + 6) Piercing damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=10,
+                            damage=(CombatDamage("4d10 + 6", DamageType.PIERCING),),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[
@@ -609,10 +742,30 @@ class QuestingKnight(ExtendedCombatantData):
                 MonsterAbility(
                     name="Greatsword",
                     description="Melee Attack Roll: +9, reach 5 ft. Hit: 12 (2d6 + 5) Slashing damage plus 22 (5d8) Radiant damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=9,
+                            damage=(
+                                CombatDamage("2d6 + 5", DamageType.SLASHING),
+                                CombatDamage("5d8", DamageType.RADIANT),
+                            ),
+                        ),
+                    ),
                 ),
                 MonsterAbility(
                     name="Longbow",
                     description="Ranged Attack Roll: +7, range 150/600 ft. Hit: 12 (2d8 + 3) Piercing damage plus 22 (5d8) Radiant damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=7,
+                            damage=(
+                                CombatDamage("2d8 + 3", DamageType.PIERCING),
+                                CombatDamage("5d8", DamageType.RADIANT),
+                            ),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Spellcasting",

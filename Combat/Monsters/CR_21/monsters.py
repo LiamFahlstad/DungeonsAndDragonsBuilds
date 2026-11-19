@@ -21,6 +21,16 @@ from Model.Creatures.MonsterAbilities import (
     MonsterCast,
 )
 from Core.Definitions import Ability
+from Model.Content.CombatArea import CombatArea, CombatAreaShape
+from Model.Content.CombatEffect import (
+    CombatCondition,
+    CombatDamage,
+    CombatEffect,
+    EffectRoll,
+    TurnEdge,
+    TurnOf,
+)
+from Model.Content.CombatTriggers import CombatTrigger, TriggerEvent
 
 
 class AncientBlackDragon(ExtendedCombatantData):
@@ -91,11 +101,31 @@ class AncientBlackDragon(ExtendedCombatantData):
                 MonsterAbility(
                     name="Rend",
                     description="Melee Attack Roll: +15, reach 15 ft. Hit: 17 (2d8 + 8) Slashing damage plus 9 (2d8) Acid damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=15,
+                            damage=(
+                                CombatDamage("2d8 + 8", DamageType.SLASHING),
+                                CombatDamage("2d8", DamageType.ACID),
+                            ),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Acid Breath (Recharge 5–6)",
                     description="Dexterity Saving Throw: DC 22, each creature in a 90-foot-long, 10-foot-wide Line. Failure: 67 (15d8) Acid damage. Success: Half damage.",
                     recharge=5,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.DEXTERITY,
+                            dc=22,
+                            half_on_success=True,
+                            damage=(CombatDamage("15d8", DamageType.ACID),),
+                            area=CombatArea(CombatAreaShape.LINE, 90, width_ft=10),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Spellcasting",
@@ -108,6 +138,17 @@ class AncientBlackDragon(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Cloud of Insects",
                     description="Dexterity Saving Throw: DC 21, one creature the dragon can see within 120 feet. Failure: 33 (6d10) Poison damage, and the target has Disadvantage on saving throws to maintain Concentration until the end of its next turn. Failure or Success: The dragon can't take this action again until the start of its next turn.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.DEXTERITY,
+                            dc=21,
+                            damage=(CombatDamage("6d10", DamageType.POISON),),
+                            notes=(
+                                "Also: and the target has Disadvantage on saving throws to maintain Concentration until the end of its next turn",
+                            ),
+                        ),
+                    ),
                 ),
                 MonsterAbility(
                     name="Frightful Presence",
@@ -186,15 +227,46 @@ class AncientCopperDragon(ExtendedCombatantData):
                 MonsterAbility(
                     name="Rend",
                     description="Melee Attack Roll: +15, reach 15 ft. Hit: 19 (2d10 + 8) Slashing damage plus 9 (2d8) Acid damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=15,
+                            damage=(
+                                CombatDamage("2d10 + 8", DamageType.SLASHING),
+                                CombatDamage("2d8", DamageType.ACID),
+                            ),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Acid Breath (Recharge 5–6)",
                     description="Dexterity Saving Throw: DC 22, each creature in an 90-foot-long, 10-foot-wide Line. Failure: 63 (14d8) Acid damage. Success: Half damage.",
                     recharge=5,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.DEXTERITY,
+                            dc=22,
+                            half_on_success=True,
+                            damage=(CombatDamage("14d8", DamageType.ACID),),
+                            area=CombatArea(CombatAreaShape.LINE, 90, width_ft=10),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Slowing Breath",
                     description="Constitution Saving Throw: DC 22, each creature in a 90-foot Cone. Failure: The target can't take Reactions; its Speed is halved; and it can take either an action or a Bonus Action on its turn, not both. This effect lasts until the end of its next turn.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.CONSTITUTION,
+                            dc=22,
+                            notes=(
+                                "Also: The target can't take Reactions; its Speed is halved; and it can take either an action or a Bonus Action on its turn, not both. This effect lasts until the end of its next turn",
+                            ),
+                            area=CombatArea(CombatAreaShape.CONE, 90),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Spellcasting",
@@ -207,6 +279,17 @@ class AncientCopperDragon(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Giggling Magic",
                     description="Charisma Saving Throw: DC 21, one creature the dragon can see within 120 feet. Failure: 31 (9d6) Psychic damage. Until the end of its next turn, the target rolls 1d8 whenever it makes an ability check or attack roll and subtracts the number rolled from the D20 Test. Failure or Success: The dragon can't take this action again until the start of its next turn.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.CHARISMA,
+                            dc=21,
+                            damage=(CombatDamage("9d6", DamageType.PSYCHIC),),
+                            notes=(
+                                "Also: Until the end of its next turn, the target rolls 1d8 whenever it makes an ability check or attack roll and subtracts the number rolled from the D20 Test",
+                            ),
+                        ),
+                    ),
                 ),
                 MonsterAbility(
                     name="Mind Jolt",
@@ -302,10 +385,38 @@ class Archhag(ExtendedCombatantData):
                 MonsterAbility(
                     name="Spectral Claw",
                     description="Melee or Ranged Attack Roll: +14, reach 10 ft. or range 60 ft. Hit: 17 (3d6 + 7) Force damage. If the target is a Large or smaller creature, it has the Prone condition.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=14,
+                            damage=(CombatDamage("3d6 + 7", DamageType.FORCE),),
+                        ),
+                        CombatEffect(
+                            name="Spectral Claw: Prone",
+                            conditions=(CombatCondition(Condition.PRONE),),
+                            spends_use=False,
+                            trigger=CombatTrigger(
+                                TriggerEvent.HIT,
+                                optional=False,
+                                after="Spectral Claw",
+                                largest_target=CreatureSize.LARGE,
+                            ),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Crackling Wave",
                     description="Dexterity Saving Throw: DC 22, each creature in a 60-foot Cone. Failure: 32 (5d12) Lightning damage. Success: Half damage. Failure or Success: The target is cursed until the end of the hag's next turn. The target can't take Reactions until the curse ends.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.DEXTERITY,
+                            dc=22,
+                            half_on_success=True,
+                            damage=(CombatDamage("5d12", DamageType.LIGHTNING),),
+                            area=CombatArea(CombatAreaShape.CONE, 60),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Spellcasting",
@@ -316,6 +427,9 @@ class Archhag(ExtendedCombatantData):
                 MonsterAbility(
                     name="Witch Strike",
                     description="Each creature cursed by the hag and within 60 feet of it takes 14 (4d6) Lightning damage.",
+                    combat_effects=(
+                        CombatEffect(area=CombatArea(CombatAreaShape.EMANATION, 60)),
+                    ),
                 ),
             ],
             reactions=[
@@ -427,10 +541,39 @@ class Lich(ExtendedCombatantData):
                 MonsterAbility(
                     name="Eldritch Burst",
                     description="Melee or Ranged Attack Roll: +12, reach 5 ft. or range 120 ft. Hit: 31 (4d12 + 5) Force damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=12,
+                            damage=(CombatDamage("4d12 + 5", DamageType.FORCE),),
+                        ),
+                    ),
                 ),
                 MonsterAbility(
                     name="Paralyzing Touch",
                     description="Melee Attack Roll: +12, reach 5 ft. Hit: 15 (3d6 + 5) Cold damage, and the target has the Paralyzed condition until the start of the lich's next turn.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=12,
+                            damage=(CombatDamage("3d6 + 5", DamageType.COLD),),
+                        ),
+                        CombatEffect(
+                            name="Paralyzing Touch: Paralyzed",
+                            conditions=(
+                                CombatCondition(
+                                    Condition.PARALYZED,
+                                    until=(TurnEdge.START, TurnOf.SOURCE),
+                                ),
+                            ),
+                            spends_use=False,
+                            trigger=CombatTrigger(
+                                TriggerEvent.HIT,
+                                optional=False,
+                                after="Paralyzing Touch",
+                            ),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Spellcasting",
@@ -449,10 +592,23 @@ class Lich(ExtendedCombatantData):
                 MonsterAbility(
                     name="Deathly Teleport",
                     description="The lich teleports up to 60 feet to an unoccupied space it can see, and each creature within 10 feet of the space it left takes 11 (2d10) Necrotic damage.",
+                    combat_effects=(
+                        CombatEffect(area=CombatArea(CombatAreaShape.EMANATION, 10)),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Disrupt Life",
                     description="Constitution Saving Throw: DC 20, each creature that isn't an Undead in a 20-foot Emanation originating from the lich. Failure: 31 (9d6) Necrotic damage. Success: Half damage. Failure or Success: The lich can't take this action again until the start of its next turn.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.CONSTITUTION,
+                            dc=20,
+                            half_on_success=True,
+                            damage=(CombatDamage("9d6", DamageType.NECROTIC),),
+                            area=CombatArea(CombatAreaShape.EMANATION, 20),
+                        ),
+                    ),
                 ),
                 MonsterAbility(
                     name="Frightening Gaze",
@@ -541,10 +697,30 @@ class Solar(ExtendedCombatantData):
                 MonsterAbility(
                     name="Flying Sword",
                     description="Melee or Ranged Attack Roll: +15, reach 10 ft. or range 120 ft. Hit: 22 (4d6 + 8) Slashing damage plus 36 (8d8) Radiant damage. Hit or Miss: The sword magically returns to the solar's hand or hovers within 5 feet of the solar immediately after a ranged attack.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=15,
+                            damage=(
+                                CombatDamage("4d6 + 8", DamageType.SLASHING),
+                                CombatDamage("8d8", DamageType.RADIANT),
+                            ),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Slaying Bow",
                     description="Dexterity Saving Throw: DC 21, one creature the solar can see within 600 feet. Failure: If the creature has 100 Hit Points or fewer, it dies. It otherwise takes 24 (4d8 + 6) Piercing damage plus 36 (8d8) Radiant damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.DEXTERITY,
+                            dc=21,
+                            notes=(
+                                "Also: If the creature has 100 Hit Points or fewer, it dies. It otherwise takes 24 (4d8 + 6) Piercing damage plus 36 (8d8) Radiant damage",
+                            ),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Spellcasting",
@@ -568,10 +744,31 @@ class Solar(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Blinding Gaze",
                     description="Constitution Saving Throw: DC 25, one creature the solar can see within 120 feet. Failure: The target has the Blinded condition for 1 minute. Failure or Success: The solar can't take this action again until the start of its next turn.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.CONSTITUTION,
+                            dc=25,
+                            conditions=(CombatCondition(Condition.BLINDED),),
+                            notes=(
+                                "Also: The target has the Blinded condition for 1 minute",
+                            ),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Radiant Teleport",
                     description="The solar teleports up to 60 feet to an unoccupied space it can see. Dexterity Saving Throw: DC 25, each creature in a 10-foot Emanation originating from the solar at its destination space. Failure: 11 (2d10) Radiant damage. Success: Half damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.DEXTERITY,
+                            dc=25,
+                            half_on_success=True,
+                            damage=(CombatDamage("2d10", DamageType.RADIANT),),
+                            area=CombatArea(CombatAreaShape.EMANATION, 10),
+                        ),
+                    ),
                 ),
             ],
             legendary_resistances=4,

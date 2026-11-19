@@ -19,15 +19,22 @@ class MonsterAbility:
     """A single ability (trait, action, etc.) from a monster's stat block.
 
     `combat_effects` says what using it does in a fight, for the combat UI's
-    Custom Effect picker: one CombatEffect (Model/Content/CombatEffect.py) per
-    way to use it, each a row of its own. Leave it empty and the picker reads
-    the description instead, which works for the standard stat-block
-    sentences ("Melee Attack Roll: +5 ... Hit: 7 (1d8 + 3) Slashing damage")
-    and the structured subclasses below that write them. Set it where the
-    text can't be read (an old-style "must succeed on a DC 11 Wisdom saving
-    throw or ...", healing from a pool, a badge, a condition the text only
-    gives sometimes) or for an ability with several uses (a cleric's Life
-    Domain Magic: Cure Wounds, Bless, ...).
+    Custom Effect picker and the turn column's buttons: one CombatEffect
+    (Model/Content/CombatEffect.py) per way to use it, each a row of its own,
+    the first its attack or save, then any applied as it hits (a condition
+    its hit gives in a sentence of its own, a save its hit forces). The fight
+    never reads the description (Notes/explicit-attributes-plan.md, Phase
+    4.3): empty means nothing to apply (Multiattack). generate_monsters.py
+    writes them from the standard stat-block sentences ("Melee Attack Roll:
+    +5 ... Hit: 7 (1d8 + 3) Slashing damage";
+    Combat/Tools/monster_effect_text.py). A hand-written stat block or a
+    structured subclass below sets them by hand, also where the text says
+    more than the reader would (an old-style "must succeed on a DC 11 Wisdom
+    saving throw or ...", healing from a pool, a badge, a condition the text
+    only gives sometimes) or for an ability with several uses (a cleric's
+    Life Domain Magic: Cure Wounds, Bless, ...).
+    tests/test_monster_effect_text.py fails for an ability whose text has a
+    roll and no effects.
 
     The fields after it are what the combat UI acts on, so it never reads
     them back out of the text (Notes/explicit-attributes-plan.md, Phase 4.2).
@@ -194,6 +201,17 @@ class MeleeAttack(MonsterAbility):
             f"Melee Attack Roll: +{self.attack_bonus}, reach {self.reach_ft} ft. "
             f"Hit: {average} ({dice_notation}) {self.damage_type.value} damage{secondary}.{ruling}"
         )
+
+
+def dice_plus(dice: str, bonus: int) -> str:
+    """ "1d8" with a bonus, as CombatDamage writes dice: "1d8 + 3", "1d8 - 1",
+    or "1d8" for none; for a summon's damage that adds its owner's
+    modifier."""
+    if bonus > 0:
+        return f"{dice} + {bonus}"
+    if bonus < 0:
+        return f"{dice} - {-bonus}"
+    return dice
 
 
 def _format_dice_notation(

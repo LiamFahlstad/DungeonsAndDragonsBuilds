@@ -18,6 +18,7 @@ from CharacterContent.Spells.SpellClasses.Level1 import ArmorOfAgathys
 from CharacterContent.Spells.SpellClasses.Level4 import FireShield
 from Combat.CombatUIQt.effect_options import badge_trigger_row, trigger_option
 from Combat.CombatUIQt.monster_actions import parse_action
+from Combat.Tools.monster_effect_text import read_effects
 from Combat.Effects.active_effects import give_modifiers
 from Combat.Effects.modifiers import rolled_modifiers
 from Combat.Effects.triggers import (
@@ -256,6 +257,13 @@ def test_fire_shield_is_asked_and_deals_2d8_fire(fight):
     ],
 )
 def test_a_monsters_attack_says_whether_it_is_melee(description, kind):
-    action = parse_action({"name": "Strike", "description": description})
+    effects = read_effects("Strike", description)
+    action = parse_action(
+        {
+            "name": "Strike",
+            "description": description,
+            "combat_effects": [e.to_dict() for e in effects],
+        }
+    )
     assert action.to_hit is not None
     assert action.attack_kind is kind

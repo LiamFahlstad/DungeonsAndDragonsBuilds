@@ -55,7 +55,7 @@ About 160 `re.` calls in `Combat/`. Sorted by what they read:
 | 1 | Read the fields that already exist (group A) | **Done** (2026-11-19): 1.2 with Phase 3 (R3), 1.1 and 1.3 (R10) |
 | 2 | Our own `when` strings become fields (group B) | **Done** (2026-11-19, R11) |
 | 3 | `CombatArea` for spells and features (group C) | **Done** (2026-11-19, R1-R8). 3.5 done for described spells; Sharpshooter and Spell Sniper not (R6) |
-| 4 | Monster stat-block fields at generation time (group D) | In progress (Decision 3): **4.1 done** (2026-11-19, R13), **4.2 done** (2026-11-19, R14; 4.4's upgrade for them came along); 4.3 not started |
+| 4 | Monster stat-block fields at generation time (group D) | **4.1-4.4 done** (2026-11-19: R13, R14, R15, Decisions 3 and 4). Left: 4.5, a freeform ability's reach and range and an attack's melee/ranged kind (R15) |
 | 5 | Retire `EffectText` (group E) | Not started; waits on the content rollout |
 | G | A guard test that lists every remaining text regex | **Done** (2026-11-19, R12) |
 
@@ -91,7 +91,8 @@ clearest case of the pattern the user means.
   `_WITHIN_FEET` and `_FARTHER_THAN_FEET`.
 - **2.3** `combat_effects.py check` flags a `when` that still says "within
   N feet" or "you can see", so new content uses the fields. Update the
-  `combat-effects` skill's Triggers section.
+  `combat-effects` skill's Triggers section
+  .
 
 *Verify:* the trigger and modifier tests; the same pop-ups appear at the
 same distances.
@@ -163,6 +164,16 @@ writes fields. Homebrew files get the same fields by hand, or through the
   text read lives only there), or is re-read from the catalog by
   `combatant_type` (Q3).
 
+- **4.5** (added with R15) The last stat-block text the fight reads: a
+  freeform ability's reach and range (`Arena/arena.py` and
+  `Arena/ranges.py` `_REACH`, `_RANGE`; only a `MeleeAttack`'s,
+  `RangedAttack`'s or `MeleeOrRangedAttack`'s are fields, R10) and
+  `MonsterAction.attack_kind`, which reads whether the description starts
+  "Melee" or "Ranged". *Suggestion:* `reach_ft`, `range_ft`,
+  `long_range_ft` and `attack_kind` on `CombatEffect`, which a spell's
+  attack could use too (the "later" `ranges._RANGED_SPELL` /
+  `_MELEE_SPELL`), written the same way as 4.3's effects.
+
 *Verify:* regenerate, then `tests/test_picker_rows.py` must not change for
 any homebrew monster or catalog row. Also run `monster_score.py` over a CR
 tier before and after: the same scores.
@@ -227,6 +238,15 @@ entries.
    emits the new fields, and a one-off script adds the same keyword
    arguments to the existing `monsters.py` files, leaving every other line
    as it is. Nothing is regenerated.
+4. **4.3: CombatEffect, not flat fields** (the user, 2026-11-19, over
+   attack/save/damage fields on `MonsterAbility`). Each rolling ability gets
+   `combat_effects=(CombatEffect(...), ...)`: its attack or save with its
+   damage and the condition it gives, plus one HIT-triggered effect per
+   condition its hit gives in a sentence of its own (the rider rows the
+   picker already builds). One model for monsters, spells and features, so
+   the picker's text-reading row path can go. Picker goldens may change
+   where a described row says things differently from a text-read one;
+   each change gets explained.
 
 ## Revisions
 
@@ -456,6 +476,83 @@ group D (Phase 4, including `_monster_area` and `ranges.py`'s
     `per_day`, as before.
   - The name still says "(Recharge 5-6)", which `effect_options._NAME_ALONE`
     takes off for a row's name (now listed as "log").
+  - *Correction (found in 4.3):* `upgrade_ability_keys` was never called as
+    a log loads, so an old log's abilities lost their recharge, uses and
+    casts. `logging_mixin` calls it now, after `upgrade_stat_block_keys`.
+
+- **R15. Phase 4.3 (2026-11-19, Decision 4).**
+  - *Model:* nothing new. Each action-section ability (actions, bonus
+    actions, reactions, legendary actions) with something to apply has
+    `combat_effects`: its own effect (attack or save, damage with a damage
+    type or `choices`, the condition its outcome gives and until when,
+    Hit Points, area, repeat save, and an "Also: ..." note with what's
+    left), then a HIT-triggered `spends_use=False` effect per condition its
+    hit gives in a sentence of its own (what `_rider_options` built), and
+    one for a save its hit forces. That last one is new: "Hit: ... If the
+    target is a creature that isn't an Undead or elf, it is subjected to the
+    following effect. Constitution Saving Throw: DC 10. Failure: ...
+    Paralyzed" was one note ("apply it apart"); now it's a row with its DC,
+    condition and duration, its `when` the gate, and its own area. A "Hit
+    or Miss:" save (the Dao's Earth Burst) is a USES row instead, as Ice
+    Knife's explosion is. Not read: an ability that `casts` or has
+    `uses_ability` (those rows come first, as before) or already has
+    effects.
+  - *Readers:* `Combat/Tools/monster_effect_text.py` (`read_effects`,
+    `read_ability_effects`, and `read_ability_fields`, moved from
+    `monster_actions`) holds `_ATTACK`, `_SAVE`, `_CONDITIONAL`, the rider
+    regexes and `_damage_rolls` from `monster_actions.py`, and `_HIT_ENDS` /
+    `_monster_action_condition` from `effect_options.py`. It still borrows
+    `_inflicted_condition`, `_read_gain` and `_REPEATS_THE_SAVE` from
+    EffectText (Phase 5), and `DAMAGE`, `JOINED`, `tidy_dice` stay in
+    `monster_actions` for EffectText (relisted as "phase 5"; `DIE` as
+    "input"). It's in `Combat/Tools/` rather than `Model/` (where 4.1's and
+    4.2's are) because of those borrowings. `python -m
+    Combat.Tools.monster_effect_text "Name" "text"` drafts a hand-written
+    ability's effects. `generate_monsters.py` writes them (its header now
+    imports what they use), a one-off scratch script inserted them into the
+    files (999 abilities, 1,119 effects: 936 in 27 `monsters.py`, 63 in 10
+    `monsters_homebrew.py`), and `upgrade_ability_keys` reads an old log's
+    once. `SpellClassConverter._IMPORTS` gained `CombatTrigger`,
+    `TriggerEvent` and `CreatureSize`, which any written trigger needs.
+  - *Runtime:* `parse_action` reads only effects and fields (the first
+    effect, or for an attack the save after it); `MonsterAction.rider` /
+    `riders` became `notes` (the first effect's, shown by the turn column as
+    it hits). `effect_options` lost the text row path (`_monster_action_condition`,
+    `_monster_action_notes`, `_rider_options`, `_monster_area`): an
+    ability without effects is a plain row (Multiattack). A HIT- or
+    USES-triggered row says when ("on a hit, Large or smaller") and, as
+    before, spends nothing, isn't greyed out by its attack's spent recharge,
+    and has no `monster_action`.
+  - *Summons* (hand-written, their numbers follow the owner through
+    `MonsterAbilities.dice_plus`): Steel Defender's Rend and Repair, the
+    Wildfire Spirit's Flame Seed and Fiery Teleportation (both missed by
+    any reader: 2014 "Ranged Weapon Attack" and an old-style save), Vestige's
+    Strike, Beast's Strike (the Land beast's charge is a HIT row with its
+    `when`, not an unconditional Prone), Dreadful Swipe, the drake's Bite.
+  - *By hand in homebrew:* the Cantor of the Black Choir's Speak Noc'tra is
+    now a DC 11 Wisdom save (old-style prose: before, a save row with no
+    ability and "half on save"), and the Manifestation of Durmor's Eruption
+    got its 20-foot Emanation (the text reading gave it before).
+  - *Parity:* every picker row and turn-column reading of all 554 stat
+    blocks dumped before and after. The same, apart from: 1,195 rows now
+    `is_described` (from data, not text); 594 summaries in the described
+    rows' style ("+4  1d6 + 2 Piercing + 1d4 Thunder", "DC 12 STR", the
+    condition named); 37 notes (reordered, "Its damage is of a type to
+    choose (Necrotic, Radiant)" for "It chooses a damage type", a listed
+    choice like the kobold's five types now taken as listed); the 20 new
+    forced-save rows; 3 "uses Breath Weapon" rows that now carry the
+    breath's Cone; the Dao's attack no longer claiming its burst's area; the
+    Cantor. Picker goldens: 7 lines in the 4 homebrew monsters' files
+    (`is_described`, two summaries). A fresh generator run writes as many
+    effects per tier as the files have.
+  - *Tests:* `tests/test_monster_effect_text.py` (the reader; every
+    generated ability's effects equal its text's reading; no catalog,
+    homebrew or summon ability with a roll in its text lacks effects; logs;
+    the generator). Tests that built monsters from bare text now give them
+    effects through `tests/_combat_ui.described()`, as the generator would.
+    `tests/test_spell_combat_effects.py`'s CASTER got the 4.1 fields it had
+    missed (`test_fireball` and `test_guiding_bolt` failed on HEAD since R13).
+  - *Left:* 4.5 (a freeform ability's reach and range, an attack's kind).
 
 ## Discovered issues
 

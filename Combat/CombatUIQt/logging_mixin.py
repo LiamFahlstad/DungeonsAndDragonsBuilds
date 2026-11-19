@@ -31,6 +31,7 @@ from Combat.Effects.modifiers import hit_point_maximum
 from Model.Creatures.MonsterStatText import upgrade_stat_block_keys
 
 from .effect_options import row_uses_most
+from .monster_actions import upgrade_ability_keys
 from .player_view import may_read_log_line
 from .public_log import public_log_rounds
 from .stats import (
@@ -322,10 +323,12 @@ class LoggingMixin(CombatWindowState):
             else:
                 # An older log's companion_of / companion_choice, and its
                 # timers, badge tooltips and repeat saves, and its stat block's
-                # speeds, senses and spellcasting from before they were fields.
+                # speeds, senses and spellcasting from before they were fields,
+                # and its abilities' costs, casts and combat effects.
                 upgrade_keys(char)
                 upgrade_old_keys(char)
                 upgrade_stat_block_keys(char)
+                upgrade_ability_keys(char)
             stats = char.setdefault("stats", {})
             for key in STAT_KEYS:
                 stats.setdefault(key, 0)

@@ -50,6 +50,17 @@ from Model.Creatures.MonsterAbilities import (
     WebWalker,
 )
 from Core.Definitions import Ability
+from Model.Content.CombatArea import AreaSight, AreaTiming, CombatArea, CombatAreaShape
+from Model.Content.CombatEffect import (
+    CombatCondition,
+    CombatDamage,
+    CombatEffect,
+    CombatHitPoints,
+    EffectRoll,
+    TurnEdge,
+    TurnOf,
+)
+from Model.Content.CombatTriggers import CombatTrigger, TriggerEvent
 
 
 class AarakocraSkirmisher(ExtendedCombatantData):
@@ -94,10 +105,30 @@ class AarakocraSkirmisher(ExtendedCombatantData):
                 MonsterAbility(
                     name="Talons",
                     description="Melee Attack Roll: +4, reach 5 ft. Hit: 4 (1d4 + 2) Slashing damage, or 9 (3d4 + 2) Slashing damage if the aarakocra moved 30+ feet straight toward the target immediately before the hit.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=4,
+                            damage=(CombatDamage("1d4 + 2", DamageType.SLASHING),),
+                            notes=(
+                                "Also: or 9 (3d4 + 2) Slashing damage if the aarakocra moved 30+ feet straight toward the target immediately before the hit",
+                            ),
+                        ),
+                    ),
                 ),
                 MonsterAbility(
                     name="Wind Javelin",
                     description="Melee or Ranged Attack Roll: +4, reach 5 ft. or range 30/120 ft. Hit: 5 (1d6 + 2) Piercing damage plus 2 (1d4) Thunder damage. Hit or Miss: The javelin magically returns to the aarakocra's hand immediately after a ranged attack.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=4,
+                            damage=(
+                                CombatDamage("1d6 + 2", DamageType.PIERCING),
+                                CombatDamage("1d4", DamageType.THUNDER),
+                            ),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -254,6 +285,13 @@ class AnimatedBroom(ExtendedCombatantData):
                     dice_type=DiceType.D4,
                     damage_bonus=3,
                     damage_type=DamageType.BLUDGEONING,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=5,
+                            damage=(CombatDamage("1d4 + 3", DamageType.BLUDGEONING),),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -325,6 +363,13 @@ class AnimatedFlyingSword(ExtendedCombatantData):
                     dice_type=DiceType.D8,
                     damage_bonus=2,
                     damage_type=DamageType.SLASHING,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=4,
+                            damage=(CombatDamage("1d8 + 2", DamageType.SLASHING),),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -447,6 +492,13 @@ class Ape(ExtendedCombatantData):
                     dice_type=DiceType.D4,
                     damage_bonus=3,
                     damage_type=DamageType.BLUDGEONING,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=5,
+                            damage=(CombatDamage("1d4 + 3", DamageType.BLUDGEONING),),
+                        ),
+                    ),
                 ),
                 RangedAttack(
                     name="Rock (Recharge 6)",
@@ -458,6 +510,13 @@ class Ape(ExtendedCombatantData):
                     damage_bonus=3,
                     damage_type=DamageType.BLUDGEONING,
                     recharge=6,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=5,
+                            damage=(CombatDamage("2d6 + 3", DamageType.BLUDGEONING),),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -515,6 +574,13 @@ class AwakenedShrub(ExtendedCombatantData):
                 MonsterAbility(
                     name="Rake",
                     description="Melee Attack Roll: +1, reach 5 ft. Hit: 1 Slashing damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=1,
+                            damage=(CombatDamage("1", DamageType.SLASHING),),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -573,6 +639,13 @@ class AxeBeak(ExtendedCombatantData):
                     dice_type=DiceType.D8,
                     damage_bonus=2,
                     damage_type=DamageType.SLASHING,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=4,
+                            damage=(CombatDamage("1d8 + 2", DamageType.SLASHING),),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -633,6 +706,13 @@ class Baboon(ExtendedCombatantData):
                     dice_type=DiceType.D4,
                     damage_bonus=-1,
                     damage_type=DamageType.PIERCING,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=1,
+                            damage=(CombatDamage("1d4 - 1", DamageType.PIERCING),),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -690,6 +770,13 @@ class Badger(ExtendedCombatantData):
                 MonsterAbility(
                     name="Bite",
                     description="Melee Attack Roll: +2, reach 5 ft. Hit: 1 Piercing damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=2,
+                            damage=(CombatDamage("1", DamageType.PIERCING),),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -748,6 +835,13 @@ class Bandit(ExtendedCombatantData):
                     dice_type=DiceType.D6,
                     damage_bonus=1,
                     damage_type=DamageType.SLASHING,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=3,
+                            damage=(CombatDamage("1d6 + 1", DamageType.SLASHING),),
+                        ),
+                    ),
                 ),
                 RangedAttack(
                     name="Light Crossbow",
@@ -758,6 +852,13 @@ class Bandit(ExtendedCombatantData):
                     dice_type=DiceType.D8,
                     damage_bonus=1,
                     damage_type=DamageType.PIERCING,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=3,
+                            damage=(CombatDamage("1d8 + 1", DamageType.PIERCING),),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -812,6 +913,13 @@ class Bat(ExtendedCombatantData):
                 MonsterAbility(
                     name="Bite",
                     description="Melee Attack Roll: +4, reach 5 ft. Hit: 1 Piercing damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=4,
+                            damage=(CombatDamage("1", DamageType.PIERCING),),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -1113,6 +1221,13 @@ class BlackBear(ExtendedCombatantData):
                     dice_type=DiceType.D6,
                     damage_bonus=2,
                     damage_type=DamageType.SLASHING,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=4,
+                            damage=(CombatDamage("1d6 + 2", DamageType.SLASHING),),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -1172,6 +1287,13 @@ class BlinkDog(ExtendedCombatantData):
                     dice_type=DiceType.D4,
                     damage_bonus=3,
                     damage_type=DamageType.PIERCING,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=5,
+                            damage=(CombatDamage("1d4 + 3", DamageType.PIERCING),),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[
@@ -1233,6 +1355,16 @@ class BloodHawk(ExtendedCombatantData):
                 MonsterAbility(
                     name="Beak",
                     description="Melee Attack Roll: +4, reach 5 ft. Hit: 4 (1d4 + 2) Piercing damage, or 6 (1d8 + 2) Piercing damage if the target is Bloodied.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=4,
+                            damage=(CombatDamage("1d4 + 2", DamageType.PIERCING),),
+                            notes=(
+                                "Also: or 6 (1d8 + 2) Piercing damage if the target is Bloodied",
+                            ),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -1297,6 +1429,17 @@ class Boar(ExtendedCombatantData):
                     damage_bonus=1,
                     damage_type=DamageType.PIERCING,
                     additional_ruling="If the target is a Medium or smaller creature and the boar moved 20+ feet straight toward it immediately before the hit, the target takes an extra 3 (1d6) Piercing damage and has the Prone condition.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=3,
+                            damage=(CombatDamage("1d6 + 1", DamageType.PIERCING),),
+                            conditions=(CombatCondition(Condition.PRONE),),
+                            notes=(
+                                "Also: If the target is a Medium or smaller creature and the boar moved 20+ feet straight toward it immediately before the hit, the target takes an extra 3 (1d6) Piercing damage and has the Prone condition",
+                            ),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -1364,6 +1507,16 @@ class BullywugWarrior(ExtendedCombatantData):
                     secondary_dice_count=1,
                     secondary_dice_type=DiceType.D4,
                     secondary_damage_type=DamageType.POISON,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=4,
+                            damage=(
+                                CombatDamage("1d8 + 2", DamageType.PIERCING),
+                                CombatDamage("1d4", DamageType.POISON),
+                            ),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[
@@ -1428,6 +1581,13 @@ class Camel(ExtendedCombatantData):
                     dice_type=DiceType.D4,
                     damage_bonus=2,
                     damage_type=DamageType.BLUDGEONING,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=4,
+                            damage=(CombatDamage("1d4 + 2", DamageType.BLUDGEONING),),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -1487,6 +1647,13 @@ class Cat(ExtendedCombatantData):
                 MonsterAbility(
                     name="Scratch",
                     description="Melee Attack Roll: +4, reach 5 ft. Hit: 1 Slashing damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=4,
+                            damage=(CombatDamage("1", DamageType.SLASHING),),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -1551,11 +1718,15 @@ class CelestialSpirit(ExtendedCombatantData):
                 MonsterAbility(
                     name="Radiant Mace (Defender Only)",
                     description="Melee Attack Roll: Bonus equals your spell attack modifier, reach 5 ft. Hit: 1d10 + 3 + the spell's level Radiant damage, and the spirit can choose itself or another creature it can see within 10 feet of the target. The chosen creature gains 1d10 Temporary Hit Points.",
+                    combat_effects=(
+                        CombatEffect(temp_hp=CombatHitPoints(dice="1d10")),
+                    ),
                 ),
                 MonsterAbility(
                     name="Healing Touch (1/Day)",
                     description="The spirit touches another creature. The target regains Hit Points equal to 2d8 + the spell's level.",
                     per_day=1,
+                    combat_effects=(CombatEffect(healing=CombatHitPoints(dice="2d8")),),
                 ),
             ],
             bonus_actions=[],
@@ -1616,6 +1787,33 @@ class Cockatrice(ExtendedCombatantData):
                     damage_bonus=1,
                     damage_type=DamageType.PIERCING,
                     additional_ruling="If the target is a creature, it is subjected to the following effect. Constitution Saving Throw: DC 11. First Failure: The target has the Restrained condition. The target repeats the save at the end of its next turn if it is still Restrained, ending the effect on itself on a success. Second Failure: The target has the Petrified condition, instead of the Restrained condition, for 24 hours.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=3,
+                            damage=(CombatDamage("1d4 + 1", DamageType.PIERCING),),
+                            notes=(
+                                "Its Constitution save is a row of its own, rolled as it hits.",
+                                "Also: If the target is a creature, it is subjected to the following effect. Constitution Saving Throw: DC 11. First Failure: The target has the Restrained condition. The target repeats the save at the end of its next turn if it is still Restrained, ending the effect on itself on a success. Second Failure: The target has the Petrified condition, instead of the Restrained condition, for 24 hours",
+                            ),
+                        ),
+                        CombatEffect(
+                            name="Petrifying Bite: Constitution save",
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.CONSTITUTION,
+                            dc=11,
+                            conditions=(CombatCondition(Condition.RESTRAINED),),
+                            spends_use=False,
+                            notes=(
+                                "Also: The target has the Restrained condition. The target repeats the save at the end of its next turn if it is still Restrained, ending the effect on itself on a success. Second Failure: The target has the Petrified condition, instead of the Restrained condition, for 24 hours",
+                            ),
+                            trigger=CombatTrigger(
+                                TriggerEvent.HIT,
+                                optional=False,
+                                after="Petrifying Bite",
+                            ),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -1679,6 +1877,13 @@ class Commoner(ExtendedCombatantData):
                     dice_type=DiceType.D4,
                     damage_bonus=0,
                     damage_type=DamageType.BLUDGEONING,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=2,
+                            damage=(CombatDamage("1d4", DamageType.BLUDGEONING),),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -1739,6 +1944,13 @@ class ConstrictorSnake(ExtendedCombatantData):
                     dice_type=DiceType.D8,
                     damage_bonus=2,
                     damage_type=DamageType.PIERCING,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=4,
+                            damage=(CombatDamage("1d8 + 2", DamageType.PIERCING),),
+                        ),
+                    ),
                 ),
                 SavingThrowEffect(
                     name="Constrict",
@@ -1750,6 +1962,18 @@ class ConstrictorSnake(ExtendedCombatantData):
                     damage_bonus=0,
                     damage_type=DamageType.BLUDGEONING,
                     failure_effect="and the target has the Grappled condition (escape DC 12)",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.STRENGTH,
+                            dc=12,
+                            damage=(CombatDamage("3d4", DamageType.BLUDGEONING),),
+                            conditions=(CombatCondition(Condition.GRAPPLED),),
+                            notes=(
+                                "Also: and the target has the Grappled condition (escape DC 12)",
+                            ),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -1887,6 +2111,13 @@ class Crab(ExtendedCombatantData):
                 MonsterAbility(
                     name="Claw",
                     description="Melee Attack Roll: +2, reach 5 ft. Hit: 1 Bludgeoning damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=2,
+                            damage=(CombatDamage("1", DamageType.BLUDGEONING),),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -1950,6 +2181,13 @@ class CrawlingClaw(ExtendedCombatantData):
                 MonsterAbility(
                     name="Slam",
                     description="Melee Attack Roll: +3, reach 5 ft. Hit: 2 Necrotic damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=3,
+                            damage=(CombatDamage("2", DamageType.NECROTIC),),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -2015,6 +2253,28 @@ class Crocodile(ExtendedCombatantData):
                     damage_bonus=2,
                     damage_type=DamageType.PIERCING,
                     additional_ruling="If the target is Medium or smaller, it has the Grappled condition (escape DC 12). While Grappled, the target has the Restrained condition.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=4,
+                            damage=(CombatDamage("1d8 + 2", DamageType.PIERCING),),
+                        ),
+                        CombatEffect(
+                            name="Bite: Grappled + Restrained",
+                            conditions=(
+                                CombatCondition(Condition.GRAPPLED),
+                                CombatCondition(Condition.RESTRAINED),
+                            ),
+                            spends_use=False,
+                            notes=("Escape DC 12. Restrained while Grappled.",),
+                            trigger=CombatTrigger(
+                                TriggerEvent.HIT,
+                                optional=False,
+                                after="Bite",
+                                largest_target=CreatureSize.MEDIUM,
+                            ),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -2068,6 +2328,16 @@ class Cultist(ExtendedCombatantData):
                 MonsterAbility(
                     name="Ritual Sickle",
                     description="Melee Attack Roll: +3, reach 5 ft. Hit: 3 (1d4 + 1) Slashing damage plus 1 Necrotic damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=3,
+                            damage=(
+                                CombatDamage("1d4 + 1", DamageType.SLASHING),
+                                CombatDamage("1", DamageType.NECROTIC),
+                            ),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -2122,11 +2392,30 @@ class Darkmantle(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Crush",
                     description="Melee Attack Roll: +5, reach 5 ft. Hit: 6 (1d6 + 3) Bludgeoning damage, and the darkmantle attaches to the target. If the target is a Medium or smaller creature and the darkmantle had Advantage on the attack roll, it covers the target, which has the Blinded condition and is suffocating while the darkmantle is attached in this way. While attached to a target, the darkmantle can attack only the target but has Advantage on its attack rolls. Its Speed becomes 0, it can't benefit from any bonus to its Speed, and it moves with the target. A creature can take an action to try to detach the darkmantle from itself, doing so with a successful DC 13 Strength (Athletics) check. On its turn, the darkmantle can detach itself by using 5 feet of movement.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=5,
+                            damage=(CombatDamage("1d6 + 3", DamageType.BLUDGEONING),),
+                            notes=(
+                                "Also: and the darkmantle attaches to the target. If the target is a Medium or smaller creature and the darkmantle had Advantage on the attack roll, it covers the target, which has the Blinded condition and is suffocating while the darkmantle is attached in this way. While attached to a target, the darkmantle can attack only the target but has Advantage on its attack rolls. Its Speed becomes 0, it can't benefit from any bonus to its Speed, and it moves with the target. A creature can take an action to try to detach the darkmantle from itself, doing so with a successful DC 13 Strength (Athletics) check. On its turn, the darkmantle can detach itself by using 5 feet of movement",
+                            ),
+                        ),
+                    ),
                 ),
                 MonsterAbility(
                     name="Darkness Aura (1/Day)",
                     description="Magical Darkness fills a 15-foot Emanation originating from the darkmantle. This effect lasts while the darkmantle maintains Concentration on it, up to 10 minutes. Darkvision can't penetrate this area, and no light can illuminate it.",
                     per_day=1,
+                    combat_effects=(
+                        CombatEffect(
+                            area=CombatArea(
+                                CombatAreaShape.EMANATION,
+                                15,
+                                obscures=AreaSight.DARKNESS,
+                            )
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -2191,6 +2480,13 @@ class Deer(ExtendedCombatantData):
                     dice_type=DiceType.D4,
                     damage_bonus=0,
                     damage_type=DamageType.BLUDGEONING,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=2,
+                            damage=(CombatDamage("1d4", DamageType.BLUDGEONING),),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -2277,6 +2573,38 @@ class DraconicSpirit(ExtendedCombatantData):
                     damage_type=None,
                     failure_effect="2d6 damage of a type this spirit has Resistance to (your choice when you cast the spell).",
                     success_effect="Half damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.DEXTERITY,
+                            half_on_success=True,
+                            damage=(
+                                CombatDamage(
+                                    "2d6",
+                                    None,
+                                    (
+                                        DamageType.ACID,
+                                        DamageType.BLUDGEONING,
+                                        DamageType.COLD,
+                                        DamageType.FIRE,
+                                        DamageType.FORCE,
+                                        DamageType.LIGHTNING,
+                                        DamageType.NECROTIC,
+                                        DamageType.PIERCING,
+                                        DamageType.POISON,
+                                        DamageType.PSYCHIC,
+                                        DamageType.RADIANT,
+                                        DamageType.SLASHING,
+                                        DamageType.THUNDER,
+                                    ),
+                                ),
+                            ),
+                            notes=(
+                                "Also: of a type this spirit has Resistance to (your choice when you cast the spell)",
+                            ),
+                            area=CombatArea(CombatAreaShape.CONE, 30),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -2335,6 +2663,13 @@ class DraftHorse(ExtendedCombatantData):
                     dice_type=DiceType.D4,
                     damage_bonus=4,
                     damage_type=DamageType.BLUDGEONING,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=6,
+                            damage=(CombatDamage("1d4 + 4", DamageType.BLUDGEONING),),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -2400,6 +2735,13 @@ class Dretch(ExtendedCombatantData):
                     dice_type=DiceType.D6,
                     damage_bonus=1,
                     damage_type=DamageType.SLASHING,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=3,
+                            damage=(CombatDamage("1d6 + 1", DamageType.SLASHING),),
+                        ),
+                    ),
                 ),
                 SavingThrowEffect(
                     name="Fetid Cloud (1/Day)",
@@ -2410,6 +2752,23 @@ class Dretch(ExtendedCombatantData):
                     damage_type=None,
                     failure_effect="The target has the Poisoned condition until the end of its next turn. While Poisoned, the creature can take either an action or a Bonus Action on its turn, not both, and it can't take Reactions.",
                     per_day=1,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.CONSTITUTION,
+                            dc=11,
+                            conditions=(
+                                CombatCondition(
+                                    Condition.POISONED,
+                                    until=(TurnEdge.END, TurnOf.TARGET),
+                                ),
+                            ),
+                            notes=(
+                                "Also: The target has the Poisoned condition until the end of its next turn. While Poisoned, the creature can take either an action or a Bonus Action on its turn, not both, and it can't take Reactions",
+                            ),
+                            area=CombatArea(CombatAreaShape.EMANATION, 10),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -2479,6 +2838,13 @@ class DustMephit(ExtendedCombatantData):
                     dice_type=DiceType.D4,
                     damage_bonus=2,
                     damage_type=DamageType.SLASHING,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=4,
+                            damage=(CombatDamage("1d4 + 2", DamageType.SLASHING),),
+                        ),
+                    ),
                 ),
                 SavingThrowEffect(
                     name="Blinding Breath (Recharge 6)",
@@ -2489,6 +2855,23 @@ class DustMephit(ExtendedCombatantData):
                     damage_type=None,
                     failure_effect="The target has the Blinded condition until the end of the mephit's next turn.",
                     recharge=6,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.DEXTERITY,
+                            dc=10,
+                            conditions=(
+                                CombatCondition(
+                                    Condition.BLINDED,
+                                    until=(TurnEdge.END, TurnOf.SOURCE),
+                                ),
+                            ),
+                            notes=(
+                                "Also: The target has the Blinded condition until the end of the mephit's next turn",
+                            ),
+                            area=CombatArea(CombatAreaShape.CONE, 15),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Sleep (1/Day)",
@@ -2547,6 +2930,13 @@ class Eagle(ExtendedCombatantData):
                 MonsterAbility(
                     name="Talons",
                     description="Melee Attack Roll: +4, reach 5 feet. Hit: 4 (1d4 + 2) Slashing damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=4,
+                            damage=(CombatDamage("1d4 + 2", DamageType.SLASHING),),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -2689,6 +3079,17 @@ class Elk(ExtendedCombatantData):
                     damage_bonus=3,
                     damage_type=DamageType.BLUDGEONING,
                     additional_ruling="If the elk moved at least 20 feet straight toward the target immediately before the hit, the target takes an extra 3 (1d6) Bludgeoning damage and, if it is Huge or smaller, has the Prone condition.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=5,
+                            damage=(CombatDamage("1d6 + 3", DamageType.BLUDGEONING),),
+                            conditions=(CombatCondition(Condition.PRONE),),
+                            notes=(
+                                "Also: If the elk moved at least 20 feet straight toward the target immediately before the hit, the target takes an extra 3 (1d6) Bludgeoning damage and, if it is Huge or smaller, has the Prone condition",
+                            ),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -2761,10 +3162,26 @@ class FeySpirit(ExtendedCombatantData):
                 MonsterAbility(
                     name="Mirthful",
                     description=". Wisdom Saving Throw: DC equals your spell save DC, one creature the spirit can see within 10 feet of itself. Failure: The target is Charmed by you and the spirit for 1 minute or until the target takes any damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.WISDOM,
+                            notes=(
+                                "Also: The target is Charmed by you and the spirit for 1 minute or until the target takes any damage",
+                            ),
+                        ),
+                    ),
                 ),
                 MonsterAbility(
                     name="Tricksy",
                     description=". The spirit fills a 10-foot Cube within 5 feet of it with magical Darkness, which lasts until the end of its next turn.",
+                    combat_effects=(
+                        CombatEffect(
+                            area=CombatArea(
+                                CombatAreaShape.CUBE, 10, obscures=AreaSight.DARKNESS
+                            )
+                        ),
+                    ),
                 ),
             ],
             reactions=[],
@@ -2919,6 +3336,13 @@ class Flumph(ExtendedCombatantData):
                     dice_type=DiceType.D4,
                     damage_bonus=2,
                     damage_type=DamageType.ACID,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=4,
+                            damage=(CombatDamage("1d4 + 2", DamageType.ACID),),
+                        ),
+                    ),
                 ),
                 SavingThrowEffect(
                     name="Stench Spray (1/Day)",
@@ -2929,6 +3353,18 @@ class Flumph(ExtendedCombatantData):
                     damage_type=None,
                     failure_effect="The target is coated in a foul-smelling liquid, exudes a stench for 1d4 hours, and has the Poisoned condition while the stench lasts. Other creatures have the Poisoned condition while in a 5-foot Emanation originating from the coated target. The target can remove the stench on itself if it bathes during a Short or Long Rest.",
                     per_day=1,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.DEXTERITY,
+                            dc=10,
+                            conditions=(CombatCondition(Condition.POISONED),),
+                            notes=(
+                                "Also: The target is coated in a foul-smelling liquid, exudes a stench for 1d4 hours, and has the Poisoned condition while the stench lasts. Other creatures have the Poisoned condition while in a 5-foot Emanation originating from the coated target. The target can remove the stench on itself if it bathes during a Short or Long Rest",
+                            ),
+                            area=CombatArea(CombatAreaShape.EMANATION, 5),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -2989,6 +3425,16 @@ class FlyingSnake(ExtendedCombatantData):
                 MonsterAbility(
                     name="Bite",
                     description="Melee Attack Roll: +4, reach 5 ft. Hit: 1 Piercing damage plus 5 (2d4) Poison damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=4,
+                            damage=(
+                                CombatDamage("1", DamageType.PIERCING),
+                                CombatDamage("2d4", DamageType.POISON),
+                            ),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -3050,6 +3496,13 @@ class Frog(ExtendedCombatantData):
                 MonsterAbility(
                     name="Bite",
                     description="Melee Attack Roll: +3, reach 5 ft. Hit: 1 Piercing damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=3,
+                            damage=(CombatDamage("1", DamageType.PIERCING),),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -3120,6 +3573,26 @@ class GasSporeFungus(ExtendedCombatantData):
                 MonsterAbility(
                     name="Tendril",
                     description="Melee Attack Roll: +0, reach 5 ft. Hit: 3 (1d6) Poison damage, and the target has the Poisoned condition until the end of its next turn.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=0,
+                            damage=(CombatDamage("1d6", DamageType.POISON),),
+                        ),
+                        CombatEffect(
+                            name="Tendril: Poisoned",
+                            conditions=(
+                                CombatCondition(
+                                    Condition.POISONED,
+                                    until=(TurnEdge.END, TurnOf.TARGET),
+                                ),
+                            ),
+                            spends_use=False,
+                            trigger=CombatTrigger(
+                                TriggerEvent.HIT, optional=False, after="Tendril"
+                            ),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -3182,6 +3655,13 @@ class GiantBadger(ExtendedCombatantData):
                     dice_type=DiceType.D4,
                     damage_bonus=1,
                     damage_type=DamageType.PIERCING,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=3,
+                            damage=(CombatDamage("2d4 + 1", DamageType.PIERCING),),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -3241,6 +3721,13 @@ class GiantBat(ExtendedCombatantData):
                     dice_type=DiceType.D6,
                     damage_bonus=3,
                     damage_type=DamageType.PIERCING,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=5,
+                            damage=(CombatDamage("1d6 + 3", DamageType.PIERCING),),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -3295,6 +3782,26 @@ class GiantCentipede(ExtendedCombatantData):
                 MonsterAbility(
                     name="Bite",
                     description="Melee Attack Roll: +4, reach 5 ft. Hit: 4 (1d4 + 2) Piercing damage, and the target has the Poisoned condition until the start of the centipede's next turn.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=4,
+                            damage=(CombatDamage("1d4 + 2", DamageType.PIERCING),),
+                        ),
+                        CombatEffect(
+                            name="Bite: Poisoned",
+                            conditions=(
+                                CombatCondition(
+                                    Condition.POISONED,
+                                    until=(TurnEdge.START, TurnOf.SOURCE),
+                                ),
+                            ),
+                            spends_use=False,
+                            trigger=CombatTrigger(
+                                TriggerEvent.HIT, optional=False, after="Bite"
+                            ),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -3358,6 +3865,25 @@ class GiantCrab(ExtendedCombatantData):
                     damage_bonus=1,
                     damage_type=DamageType.BLUDGEONING,
                     additional_ruling="If the target is a Medium or smaller creature, it has the Grappled condition (escape DC 11) from one of two claws.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=3,
+                            damage=(CombatDamage("1d6 + 1", DamageType.BLUDGEONING),),
+                        ),
+                        CombatEffect(
+                            name="Claw: Grappled",
+                            conditions=(CombatCondition(Condition.GRAPPLED),),
+                            spends_use=False,
+                            notes=("Escape DC 11, from one of two claws.",),
+                            trigger=CombatTrigger(
+                                TriggerEvent.HIT,
+                                optional=False,
+                                after="Claw",
+                                largest_target=CreatureSize.MEDIUM,
+                            ),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -3416,6 +3942,13 @@ class GiantFireBeetle(ExtendedCombatantData):
                 MonsterAbility(
                     name="Bite",
                     description="Melee Attack Roll: +1, reach 5 ft. Hit: 1 Fire damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=1,
+                            damage=(CombatDamage("1", DamageType.FIRE),),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -3483,6 +4016,25 @@ class GiantFrog(ExtendedCombatantData):
                     damage_bonus=2,
                     damage_type=DamageType.PIERCING,
                     additional_ruling="If the target is a Medium or smaller creature, it has the Grappled condition (escape DC 11).",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=3,
+                            damage=(CombatDamage("1d6 + 2", DamageType.PIERCING),),
+                        ),
+                        CombatEffect(
+                            name="Bite: Grappled",
+                            conditions=(CombatCondition(Condition.GRAPPLED),),
+                            spends_use=False,
+                            notes=("Escape DC 11.",),
+                            trigger=CombatTrigger(
+                                TriggerEvent.HIT,
+                                optional=False,
+                                after="Bite",
+                                largest_target=CreatureSize.MEDIUM,
+                            ),
+                        ),
+                    ),
                 ),
                 MonsterAbility(
                     name="Swallow",
@@ -3547,6 +4099,17 @@ class GiantGoat(ExtendedCombatantData):
                     damage_bonus=3,
                     damage_type=DamageType.BLUDGEONING,
                     additional_ruling="If the target is a Large or smaller creature and the goat moved 20+ feet straight toward it immediately before the hit, the target takes an extra 5 (2d4) Bludgeoning damage and has the Prone condition.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=5,
+                            damage=(CombatDamage("1d6 + 3", DamageType.BLUDGEONING),),
+                            conditions=(CombatCondition(Condition.PRONE),),
+                            notes=(
+                                "Also: If the target is a Large or smaller creature and the goat moved 20+ feet straight toward it immediately before the hit, the target takes an extra 5 (2d4) Bludgeoning damage and has the Prone condition",
+                            ),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -3622,6 +4185,21 @@ class GiantInsect(ExtendedCombatantData):
                     dice_count=0,
                     damage_type=None,
                     failure_effect="The target has the Poisoned condition until the start of the insect's next turn.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.CONSTITUTION,
+                            conditions=(
+                                CombatCondition(
+                                    Condition.POISONED,
+                                    until=(TurnEdge.START, TurnOf.SOURCE),
+                                ),
+                            ),
+                            notes=(
+                                "Also: The target has the Poisoned condition until the start of the insect's next turn",
+                            ),
+                        ),
+                    ),
                 ),
             ],
             reactions=[],
@@ -3682,6 +4260,13 @@ class GiantLizard(ExtendedCombatantData):
                     dice_type=DiceType.D8,
                     damage_bonus=2,
                     damage_type=DamageType.PIERCING,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=4,
+                            damage=(CombatDamage("1d8 + 2", DamageType.PIERCING),),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -3749,6 +4334,13 @@ class GiantOwl(ExtendedCombatantData):
                     dice_type=DiceType.D10,
                     damage_bonus=2,
                     damage_type=DamageType.SLASHING,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=4,
+                            damage=(CombatDamage("1d10 + 2", DamageType.SLASHING),),
+                        ),
+                    ),
                 ),
                 MonsterAbility(
                     name="Spellcasting",
@@ -3809,6 +4401,13 @@ class GiantRat(ExtendedCombatantData):
                 MonsterAbility(
                     name="Bite",
                     description="Melee Attack Roll: +5, reach 5 feet. Hit: 5 (1d4 + 3) Piercing damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=5,
+                            damage=(CombatDamage("1d4 + 3", DamageType.PIERCING),),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -3865,6 +4464,16 @@ class GiantSeahorse(ExtendedCombatantData):
                 MonsterAbility(
                     name="Ram",
                     description="Melee Attack Roll: +4, reach 5 ft. Hit: 9 (2d6 + 2) Bludgeoning damage, or 11 (2d8 + 2) Bludgeoning damage if the seahorse moved 20+ feet straight toward the target immediately before the hit.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=4,
+                            damage=(CombatDamage("2d6 + 2", DamageType.BLUDGEONING),),
+                            notes=(
+                                "Also: or 11 (2d8 + 2) Bludgeoning damage if the seahorse moved 20+ feet straight toward the target immediately before the hit",
+                            ),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[
@@ -3933,6 +4542,16 @@ class GiantVenomousSnake(ExtendedCombatantData):
                     secondary_dice_count=1,
                     secondary_dice_type=DiceType.D8,
                     secondary_damage_type=DamageType.POISON,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=6,
+                            damage=(
+                                CombatDamage("1d4 + 4", DamageType.PIERCING),
+                                CombatDamage("1d8", DamageType.POISON),
+                            ),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -3998,6 +4617,16 @@ class GiantWasp(ExtendedCombatantData):
                     secondary_dice_count=2,
                     secondary_dice_type=DiceType.D4,
                     secondary_damage_type=DamageType.POISON,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=4,
+                            damage=(
+                                CombatDamage("1d6 + 2", DamageType.PIERCING),
+                                CombatDamage("2d4", DamageType.POISON),
+                            ),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -4057,6 +4686,13 @@ class GiantWeasel(ExtendedCombatantData):
                     dice_type=DiceType.D4,
                     damage_bonus=3,
                     damage_type=DamageType.PIERCING,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=5,
+                            damage=(CombatDamage("1d4 + 3", DamageType.PIERCING),),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -4121,6 +4757,16 @@ class GiantWolfSpider(ExtendedCombatantData):
                     secondary_dice_count=2,
                     secondary_dice_type=DiceType.D4,
                     secondary_damage_type=DamageType.POISON,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=5,
+                            damage=(
+                                CombatDamage("1d4 + 3", DamageType.PIERCING),
+                                CombatDamage("2d4", DamageType.POISON),
+                            ),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -4180,6 +4826,13 @@ class GnollWarrior(ExtendedCombatantData):
                     dice_type=DiceType.D6,
                     damage_bonus=2,
                     damage_type=DamageType.PIERCING,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=4,
+                            damage=(CombatDamage("1d6 + 2", DamageType.PIERCING),),
+                        ),
+                    ),
                 ),
                 RangedAttack(
                     name="Bone Bow",
@@ -4190,6 +4843,13 @@ class GnollWarrior(ExtendedCombatantData):
                     dice_type=DiceType.D10,
                     damage_bonus=1,
                     damage_type=DamageType.PIERCING,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=3,
+                            damage=(CombatDamage("1d10 + 1", DamageType.PIERCING),),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[
@@ -4253,6 +4913,16 @@ class Goat(ExtendedCombatantData):
                 MonsterAbility(
                     name="Ram",
                     description="Melee Attack Roll: +2, reach 5 ft. Hit: 1 Bludgeoning damage, or the goat deals 2 (1d4) Bludgeoning damage if it moved at least 20 feet straight toward the target immediately before the hit.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=2,
+                            damage=(CombatDamage("1", DamageType.BLUDGEONING),),
+                            notes=(
+                                "Also: or the goat deals 2 (1d4) Bludgeoning damage if it moved at least 20 feet straight toward the target immediately before the hit",
+                            ),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -4313,6 +4983,13 @@ class GoblinMinion(ExtendedCombatantData):
                     dice_type=DiceType.D4,
                     damage_bonus=2,
                     damage_type=DamageType.PIERCING,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=4,
+                            damage=(CombatDamage("1d4 + 2", DamageType.PIERCING),),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[
@@ -4369,10 +5046,30 @@ class GoblinWarrior(ExtendedCombatantData):
                 MonsterAbility(
                     name="Scimitar",
                     description="Melee Attack Roll: +4, reach 5 ft. Hit: 5 (1d6 + 2) Slashing damage, plus 2 (1d4) Slashing damage if the attack roll had Advantage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=4,
+                            damage=(CombatDamage("1d6 + 2", DamageType.SLASHING),),
+                            notes=(
+                                "Also: plus 2 (1d4) Slashing damage if the attack roll had Advantage",
+                            ),
+                        ),
+                    ),
                 ),
                 MonsterAbility(
                     name="Shortbow",
                     description="Ranged Attack Roll: +4, range 80/320 ft. Hit: 5 (1d6 + 2) Piercing damage, plus 2 (1d4) Piercing damage if the attack roll had Advantage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=4,
+                            damage=(CombatDamage("1d6 + 2", DamageType.PIERCING),),
+                            notes=(
+                                "Also: plus 2 (1d4) Piercing damage if the attack roll had Advantage",
+                            ),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[
@@ -4457,6 +5154,16 @@ class GrayOoze(ExtendedCombatantData):
                     damage_bonus=1,
                     damage_type=DamageType.ACID,
                     additional_ruling="Nonmagical armor worn by the target takes a -1 penalty to the AC it offers. The armor is destroyed if the penalty reduces its AC to 10. The penalty can be removed by casting the Mending spell on the armor.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=3,
+                            damage=(CombatDamage("2d8 + 1", DamageType.ACID),),
+                            notes=(
+                                "Also: Nonmagical armor worn by the target takes a -1 penalty to the AC it offers. The armor is destroyed if the penalty reduces its AC to 10. The penalty can be removed by casting the Mending spell on the armor",
+                            ),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -4518,6 +5225,16 @@ class Grimlock(ExtendedCombatantData):
                     secondary_dice_count=1,
                     secondary_dice_type=DiceType.D4,
                     secondary_damage_type=DamageType.PSYCHIC,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=5,
+                            damage=(
+                                CombatDamage("1d6 + 3", DamageType.BLUDGEONING),
+                                CombatDamage("1d4", DamageType.PSYCHIC),
+                            ),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -4577,6 +5294,13 @@ class Guard(ExtendedCombatantData):
                     dice_type=DiceType.D6,
                     damage_bonus=1,
                     damage_type=DamageType.PIERCING,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=3,
+                            damage=(CombatDamage("1d6 + 1", DamageType.PIERCING),),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -4630,6 +5354,13 @@ class Hawk(ExtendedCombatantData):
                 MonsterAbility(
                     name="Talons",
                     description="Melee Attack Roll: +5, reach 5 ft. Hit: 1 Slashing damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=5,
+                            damage=(CombatDamage("1", DamageType.SLASHING),),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -4691,6 +5422,13 @@ class HobgoblinWarrior(ExtendedCombatantData):
                     dice_type=DiceType.D10,
                     damage_bonus=1,
                     damage_type=DamageType.SLASHING,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=3,
+                            damage=(CombatDamage("2d10 + 1", DamageType.SLASHING),),
+                        ),
+                    ),
                 ),
                 RangedAttack(
                     name="Longbow",
@@ -4704,6 +5442,16 @@ class HobgoblinWarrior(ExtendedCombatantData):
                     secondary_dice_count=3,
                     secondary_dice_type=DiceType.D4,
                     secondary_damage_type=DamageType.POISON,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=3,
+                            damage=(
+                                CombatDamage("1d8 + 1", DamageType.PIERCING),
+                                CombatDamage("3d4", DamageType.POISON),
+                            ),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -4765,6 +5513,36 @@ class Homunculus(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Bite",
                     description="Melee Attack Roll: +4, reach 5 ft. Hit: 1 Piercing damage, and the target is subjected to the following effect. Constitution Saving Throw: DC 12. Failure: The target has the Poisoned condition until the end of the homunculus's next turn. Failure by 5 or More: The target has the Poisoned condition for 1 minute. While Poisoned, the target has the Unconscious condition, which ends early if the target takes any damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=4,
+                            damage=(CombatDamage("1", DamageType.PIERCING),),
+                            notes=(
+                                "Its Constitution save is a row of its own, rolled as it hits.",
+                                "Also: and the target is subjected to the following effect. Constitution Saving Throw: DC 12. Failure: The target has the Poisoned condition until the end of the homunculus's next turn. Failure by 5 or More: The target has the Poisoned condition for 1 minute. While Poisoned, the target has the Unconscious condition, which ends early if the target takes any damage",
+                            ),
+                        ),
+                        CombatEffect(
+                            name="Bite: Constitution save",
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.CONSTITUTION,
+                            dc=12,
+                            conditions=(
+                                CombatCondition(
+                                    Condition.POISONED,
+                                    until=(TurnEdge.END, TurnOf.SOURCE),
+                                ),
+                            ),
+                            spends_use=False,
+                            notes=(
+                                "Also: The target has the Poisoned condition until the end of the homunculus's next turn. Failure by 5 or More: The target has the Poisoned condition for 1 minute. While Poisoned, the target has the Unconscious condition, which ends early if the target takes any damage",
+                            ),
+                            trigger=CombatTrigger(
+                                TriggerEvent.HIT, optional=False, after="Bite"
+                            ),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -4826,6 +5604,13 @@ class Hyena(ExtendedCombatantData):
                     dice_type=DiceType.D6,
                     damage_bonus=0,
                     damage_type=DamageType.PIERCING,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=2,
+                            damage=(CombatDamage("1d6", DamageType.PIERCING),),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -4897,6 +5682,16 @@ class IceMephit(ExtendedCombatantData):
                     secondary_dice_count=1,
                     secondary_dice_type=DiceType.D4,
                     secondary_damage_type=DamageType.COLD,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=3,
+                            damage=(
+                                CombatDamage("1d4 + 1", DamageType.SLASHING),
+                                CombatDamage("1d4", DamageType.COLD),
+                            ),
+                        ),
+                    ),
                 ),
                 MonsterAbility(
                     name="Fog Cloud (1/Day)",
@@ -4915,6 +5710,16 @@ class IceMephit(ExtendedCombatantData):
                     damage_type=DamageType.COLD,
                     success_effect="Half damage.",
                     recharge=6,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.CONSTITUTION,
+                            dc=10,
+                            half_on_success=True,
+                            damage=(CombatDamage("3d4", DamageType.COLD),),
+                            area=CombatArea(CombatAreaShape.CONE, 15),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -4969,6 +5774,13 @@ class Jackal(ExtendedCombatantData):
                 MonsterAbility(
                     name="Bite",
                     description="Melee Attack Roll: +1, reach 5 ft. Hit: 1 (1d4 – 1) Piercing damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=1,
+                            damage=(CombatDamage("1d4 - 1", DamageType.PIERCING),),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -5033,6 +5845,13 @@ class Jackalwere(ExtendedCombatantData):
                     dice_type=DiceType.D6,
                     damage_bonus=2,
                     damage_type=DamageType.PIERCING,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=4,
+                            damage=(CombatDamage("1d6 + 2", DamageType.PIERCING),),
+                        ),
+                    ),
                 ),
                 MeleeAttack(
                     name="Slam (Human or Hybrid Form Only)",
@@ -5042,6 +5861,13 @@ class Jackalwere(ExtendedCombatantData):
                     dice_type=DiceType.D4,
                     damage_bonus=2,
                     damage_type=DamageType.BLUDGEONING,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=4,
+                            damage=(CombatDamage("1d4 + 2", DamageType.BLUDGEONING),),
+                        ),
+                    ),
                 ),
                 SavingThrowEffect(
                     name="Sleep Gaze (Recharge 5–6)",
@@ -5053,6 +5879,17 @@ class Jackalwere(ExtendedCombatantData):
                     failure_effect="The target has the Unconscious condition for 10 minutes or until it takes damage or a creature within 5 feet of it takes an action to wake it.",
                     success_effect="The target is immune to this jackalwere's Sleep Gaze for 24 hours.",
                     recharge=5,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.WISDOM,
+                            dc=10,
+                            conditions=(CombatCondition(Condition.UNCONSCIOUS),),
+                            notes=(
+                                "Also: The target has the Unconscious condition for 10 minutes or until it takes damage or a creature within 5 feet of it takes an action to wake it",
+                            ),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[
@@ -5123,6 +5960,13 @@ class Kenku(ExtendedCombatantData):
                     damage_bonus=3,
                     damage_type=DamageType.NECROTIC,
                     additional_ruling="Hit or Miss: The blade magically returns to the kenku's hand immediately after a ranged attack.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=5,
+                            damage=(CombatDamage("1d6 + 3", DamageType.NECROTIC),),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[
@@ -5193,6 +6037,13 @@ class KoboldWarrior(ExtendedCombatantData):
                     dice_type=DiceType.D4,
                     damage_bonus=2,
                     damage_type=DamageType.PIERCING,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=4,
+                            damage=(CombatDamage("1d4 + 2", DamageType.PIERCING),),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -5258,6 +6109,13 @@ class Kuotoa(ExtendedCombatantData):
                     dice_type=DiceType.D8,
                     damage_bonus=1,
                     damage_type=DamageType.PIERCING,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=3,
+                            damage=(CombatDamage("1d8 + 1", DamageType.PIERCING),),
+                        ),
+                    ),
                 ),
                 SavingThrowEffect(
                     name="Sticky Net (1/Day)",
@@ -5268,6 +6126,17 @@ class Kuotoa(ExtendedCombatantData):
                     damage_type=None,
                     failure_effect="The target has the Restrained condition until the net is destroyed (AC 10; HP 5; Immunity to Bludgeoning, Poison, and Psychic damage). A creature can take an action to make a DC 10 Strength (Athletics) check to free itself or another creature in a net within 5 feet, destroying the net on a success.",
                     per_day=1,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.DEXTERITY,
+                            dc=10,
+                            conditions=(CombatCondition(Condition.RESTRAINED),),
+                            notes=(
+                                "Also: The target has the Restrained condition until the net is destroyed (AC 10; HP 5; Immunity to Bludgeoning, Poison, and Psychic damage). A creature can take an action to make a DC 10 Strength (Athletics) check to free itself or another creature in a net within 5 feet, destroying the net on a success",
+                            ),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -5275,6 +6144,17 @@ class Kuotoa(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Sticky Shield",
                     description="Trigger: A creature misses the kuo-toa with a melee attack roll using a weapon. Response—Strength Saving Throw: DC 11, the triggering creature. Failure: The attack's weapon sticks to the kuo-toa's shield. If the target doesn't let go of the weapon, the target has the Grappled condition while the weapon is stuck (escape DC 11). While stuck, the weapon can't be used. The target can take an action to make a DC 11 Strength (Athletics) check, freeing the weapon on a success.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.STRENGTH,
+                            dc=11,
+                            conditions=(CombatCondition(Condition.GRAPPLED),),
+                            notes=(
+                                "Also: The attack's weapon sticks to the kuo-toa's shield. If the target doesn't let go of the weapon, the target has the Grappled condition while the weapon is stuck (escape DC 11). While stuck, the weapon can't be used. The target can take an action to make a DC 11 Strength (Athletics) check, freeing the weapon on a success",
+                            ),
+                        ),
+                    ),
                 ),
             ],
             legendary_actions=[],
@@ -5332,6 +6212,13 @@ class Larva(ExtendedCombatantData):
                     dice_type=DiceType.D4,
                     damage_bonus=-1,
                     damage_type=DamageType.NECROTIC,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=1,
+                            damage=(CombatDamage("1d4 - 1", DamageType.NECROTIC),),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -5405,6 +6292,13 @@ class Lemure(ExtendedCombatantData):
                     dice_type=DiceType.D4,
                     damage_bonus=0,
                     damage_type=DamageType.POISON,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=2,
+                            damage=(CombatDamage("1d4", DamageType.POISON),),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -5461,6 +6355,13 @@ class Lizard(ExtendedCombatantData):
                 MonsterAbility(
                     name="Bite",
                     description="Melee Attack Roll: +2, reach 5 ft. Hit: 1 Piercing damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=2,
+                            damage=(CombatDamage("1", DamageType.PIERCING),),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -5532,6 +6433,16 @@ class MagmaMephit(ExtendedCombatantData):
                     secondary_dice_count=1,
                     secondary_dice_type=DiceType.D6,
                     secondary_damage_type=DamageType.FIRE,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=3,
+                            damage=(
+                                CombatDamage("1d4 + 1", DamageType.SLASHING),
+                                CombatDamage("1d6", DamageType.FIRE),
+                            ),
+                        ),
+                    ),
                 ),
                 SavingThrowEffect(
                     name="Fire Breath (Recharge 6)",
@@ -5544,6 +6455,16 @@ class MagmaMephit(ExtendedCombatantData):
                     damage_type=DamageType.FIRE,
                     success_effect="Half damage.",
                     recharge=6,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.DEXTERITY,
+                            dc=11,
+                            half_on_success=True,
+                            damage=(CombatDamage("2d6", DamageType.FIRE),),
+                            area=CombatArea(CombatAreaShape.CONE, 15),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -5611,6 +6532,16 @@ class Magmin(ExtendedCombatantData):
                     damage_bonus=2,
                     damage_type=DamageType.FIRE,
                     additional_ruling="If the target is a creature or a flammable object that isn't being worn or carried, it starts burning.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=4,
+                            damage=(CombatDamage("2d4 + 2", DamageType.FIRE),),
+                            notes=(
+                                "Also: If the target is a creature or a flammable object that isn't being worn or carried, it starts burning",
+                            ),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[
@@ -5685,6 +6616,13 @@ class Manes(ExtendedCombatantData):
                     dice_type=DiceType.D4,
                     damage_bonus=0,
                     damage_type=DamageType.SLASHING,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=2,
+                            damage=(CombatDamage("2d4", DamageType.SLASHING),),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -5745,6 +6683,24 @@ class Mastiff(ExtendedCombatantData):
                     damage_bonus=1,
                     damage_type=DamageType.PIERCING,
                     additional_ruling="If the target is a Medium or smaller creature, it has the Prone condition.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=3,
+                            damage=(CombatDamage("1d6 + 1", DamageType.PIERCING),),
+                        ),
+                        CombatEffect(
+                            name="Bite: Prone",
+                            conditions=(CombatCondition(Condition.PRONE),),
+                            spends_use=False,
+                            trigger=CombatTrigger(
+                                TriggerEvent.HIT,
+                                optional=False,
+                                after="Bite",
+                                largest_target=CreatureSize.MEDIUM,
+                            ),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -5801,6 +6757,19 @@ class MerfolkSkirmisher(ExtendedCombatantData):
                 MonsterAbility(
                     name="Ocean Spear",
                     description="Melee or Ranged Attack Roll: +2, reach 5 ft. or range 20/60 ft. Hit: 3 (1d6) Piercing damage plus 2 (1d4) Cold damage. If the target is a creature, its Speed decreases by 10 feet until the end of its next turn. Hit or Miss: The spear magically returns to the merfolk's hand immediately after a ranged attack.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=2,
+                            damage=(
+                                CombatDamage("1d6", DamageType.PIERCING),
+                                CombatDamage("1d4", DamageType.COLD),
+                            ),
+                            notes=(
+                                "Also: If the target is a creature, its Speed decreases by 10 feet until the end of its next turn",
+                            ),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -5868,6 +6837,13 @@ class MudMephit(ExtendedCombatantData):
                     dice_type=DiceType.D6,
                     damage_bonus=1,
                     damage_type=DamageType.BLUDGEONING,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=3,
+                            damage=(CombatDamage("1d6 + 1", DamageType.BLUDGEONING),),
+                        ),
+                    ),
                 ),
                 SavingThrowEffect(
                     name="Mud Breath (Recharge 6)",
@@ -5878,6 +6854,22 @@ class MudMephit(ExtendedCombatantData):
                     damage_type=None,
                     failure_effect="The target has the Restrained condition until the end of the mephit's next turn.",
                     recharge=6,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.DEXTERITY,
+                            dc=11,
+                            conditions=(
+                                CombatCondition(
+                                    Condition.RESTRAINED,
+                                    until=(TurnEdge.END, TurnOf.SOURCE),
+                                ),
+                            ),
+                            notes=(
+                                "Also: The target has the Restrained condition until the end of the mephit's next turn",
+                            ),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -5941,6 +6933,13 @@ class Mule(ExtendedCombatantData):
                     dice_type=DiceType.D4,
                     damage_bonus=2,
                     damage_type=DamageType.BLUDGEONING,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=4,
+                            damage=(CombatDamage("1d4 + 2", DamageType.BLUDGEONING),),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -6006,6 +7005,16 @@ class MyconidAdult(ExtendedCombatantData):
                     secondary_dice_count=1,
                     secondary_dice_type=DiceType.D6,
                     secondary_damage_type=DamageType.POISON,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=2,
+                            damage=(
+                                CombatDamage("1d8", DamageType.BLUDGEONING),
+                                CombatDamage("1d6", DamageType.POISON),
+                            ),
+                        ),
+                    ),
                 ),
                 SavingThrowEffect(
                     name="Pacifying Spores (1/Day)",
@@ -6016,10 +7025,25 @@ class MyconidAdult(ExtendedCombatantData):
                     damage_type=None,
                     failure_effect="The target has the Stunned condition and repeats the save at the end of each of its turns, ending the effect on itself on a success. After 1 minute, it succeeds automatically.",
                     per_day=1,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.CONSTITUTION,
+                            dc=11,
+                            repeat_save=True,
+                            conditions=(CombatCondition(Condition.STUNNED),),
+                            notes=(
+                                "Also: The target has the Stunned condition and repeats the save at the end of each of its turns, ending the effect on itself on a success. After 1 minute, it succeeds automatically",
+                            ),
+                        ),
+                    ),
                 ),
                 MonsterAbility(
                     name="Rapport Spores",
                     description="The myconid expels spores in a 30-foot Emanation originating from itself. Creatures in that area with an Intelligence score of 2 or higher that aren't Constructs, Elementals, or Undead gain telepathy with a range of 30 feet for 1 hour.",
+                    combat_effects=(
+                        CombatEffect(area=CombatArea(CombatAreaShape.EMANATION, 30)),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -6086,10 +7110,23 @@ class MyconidSprout(ExtendedCombatantData):
                     secondary_dice_count=1,
                     secondary_dice_type=DiceType.D4,
                     secondary_damage_type=DamageType.POISON,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=1,
+                            damage=(
+                                CombatDamage("1d4 - 1", DamageType.BLUDGEONING),
+                                CombatDamage("1d4", DamageType.POISON),
+                            ),
+                        ),
+                    ),
                 ),
                 MonsterAbility(
                     name="Rapport Spores",
                     description="The myconid expels spores in a 30-foot Emanation originating from itself. Creatures in that area with an Intelligence score of 2 or higher that aren't Constructs, Elementals, or Undead gain telepathy with a range of 30 feet for 1 hour.",
+                    combat_effects=(
+                        CombatEffect(area=CombatArea(CombatAreaShape.EMANATION, 30)),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -6149,6 +7186,13 @@ class NeedleBlight(ExtendedCombatantData):
                     dice_type=DiceType.D4,
                     damage_bonus=1,
                     damage_type=DamageType.SLASHING,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=3,
+                            damage=(CombatDamage("2d4 + 1", DamageType.SLASHING),),
+                        ),
+                    ),
                 ),
                 RangedAttack(
                     name="Needles",
@@ -6159,6 +7203,13 @@ class NeedleBlight(ExtendedCombatantData):
                     dice_type=DiceType.D4,
                     damage_bonus=1,
                     damage_type=DamageType.PIERCING,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=3,
+                            damage=(CombatDamage("2d4 + 1", DamageType.PIERCING),),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -6217,6 +7268,13 @@ class Noble(ExtendedCombatantData):
                     dice_type=DiceType.D8,
                     damage_bonus=1,
                     damage_type=DamageType.PIERCING,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=3,
+                            damage=(CombatDamage("1d8 + 1", DamageType.PIERCING),),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -6283,6 +7341,13 @@ class Octopus(ExtendedCombatantData):
                 MonsterAbility(
                     name="Tentacles",
                     description="Melee Attack Roll: +4, reach 5 ft. Hit: 1 Bludgeoning damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=4,
+                            damage=(CombatDamage("1", DamageType.BLUDGEONING),),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -6291,6 +7356,17 @@ class Octopus(ExtendedCombatantData):
                     name="Ink Cloud (1/Day)",
                     description="Trigger: A creature ends its turn within 5 feet of the octopus while underwater. Response: The octopus releases ink that fills a 5-foot Cube centered on itself, and the octopus moves up to its Swim Speed. The Cube is Heavily Obscured for 1 minute or until a strong current or similar effect disperses the ink.",
                     per_day=1,
+                    combat_effects=(
+                        CombatEffect(
+                            area=CombatArea(
+                                CombatAreaShape.CUBE,
+                                5,
+                                from_source=True,
+                                acts=(AreaTiming.ENDS,),
+                                obscures=AreaSight.HEAVILY_OBSCURED,
+                            )
+                        ),
+                    ),
                 ),
             ],
             legendary_actions=[],
@@ -6358,6 +7434,21 @@ class OtherworldlySteed(ExtendedCombatantData):
                     dice_count=0,
                     damage_type=None,
                     failure_effect="The target has the Frightened condition until the end of your next turn.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.WISDOM,
+                            conditions=(
+                                CombatCondition(
+                                    Condition.FRIGHTENED,
+                                    until=(TurnEdge.END, TurnOf.SOURCE),
+                                ),
+                            ),
+                            notes=(
+                                "Also: The target has the Frightened condition until the end of your next turn",
+                            ),
+                        ),
+                    ),
                 ),
                 MonsterAbility(
                     name="Fey Step (Fey Only; Recharges after a Long Rest)",
@@ -6366,6 +7457,7 @@ class OtherworldlySteed(ExtendedCombatantData):
                 MonsterAbility(
                     name="Healing Touch (Celestial Only; Recharges after a Long Rest)",
                     description="One creature within 5 feet of the steed regains a number of Hit Points equal to 2d8 plus the spell's level.",
+                    combat_effects=(CombatEffect(healing=CombatHitPoints(dice="2d8")),),
                 ),
             ],
             reactions=[],
@@ -6424,6 +7516,13 @@ class Owl(ExtendedCombatantData):
                 MonsterAbility(
                     name="Talons",
                     description="Melee Attack Roll: +3, reach 5 ft. Hit: 1 Slashing damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=3,
+                            damage=(CombatDamage("1", DamageType.SLASHING),),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -6483,6 +7582,13 @@ class Panther(ExtendedCombatantData):
                     dice_type=DiceType.D6,
                     damage_bonus=3,
                     damage_type=DamageType.SLASHING,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=5,
+                            damage=(CombatDamage("1d6 + 3", DamageType.SLASHING),),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[
@@ -6543,6 +7649,13 @@ class Performer(ExtendedCombatantData):
                     dice_type=DiceType.D6,
                     damage_bonus=3,
                     damage_type=DamageType.PIERCING,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=5,
+                            damage=(CombatDamage("1d6 + 3", DamageType.PIERCING),),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -6610,10 +7723,25 @@ class Piercer(ExtendedCombatantData):
                     dice_type=DiceType.D8,
                     damage_bonus=1,
                     damage_type=DamageType.PIERCING,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=3,
+                            damage=(CombatDamage("1d8 + 1", DamageType.PIERCING),),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Drop",
                     description="The piercer falls. Dexterity Saving Throw: DC 11, one creature directly underneath the piercer. Failure: 10 (3d6) Piercing damage. Failure or Success: The piercer reduces any damage it takes from the fall by 20.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.DEXTERITY,
+                            dc=11,
+                            damage=(CombatDamage("3d6", DamageType.PIERCING),),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -6671,6 +7799,13 @@ class Piranha(ExtendedCombatantData):
                 MonsterAbility(
                     name="Bite",
                     description="Melee Attack Roll: +5 (with Advantage if the target doesn't have all its Hit Points), reach 5 ft. Hit: 1 Piercing damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=5,
+                            damage=(CombatDamage("1", DamageType.PIERCING),),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -6727,6 +7862,22 @@ class Pixie(ExtendedCombatantData):
                 MonsterAbility(
                     name="Faerie Dust",
                     description="Melee or Ranged Attack Roll: +4, reach 5 ft. or range 60 ft. Hit: 1 Radiant damage, and the target has the Charmed or Poisoned condition (pixie's choice) until the start of the pixie's next turn.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=4,
+                            damage=(CombatDamage("1", DamageType.RADIANT),),
+                            conditions=(
+                                CombatCondition(
+                                    Condition.CHARMED,
+                                    until=(TurnEdge.START, TurnOf.SOURCE),
+                                ),
+                            ),
+                            notes=(
+                                "Also: and the target has the Charmed or Poisoned condition (pixie's choice) until the start of the pixie's next turn",
+                            ),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Spellcasting",
@@ -6789,6 +7940,13 @@ class Pony(ExtendedCombatantData):
                     dice_type=DiceType.D4,
                     damage_bonus=2,
                     damage_type=DamageType.BLUDGEONING,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=4,
+                            damage=(CombatDamage("1d4 + 2", DamageType.BLUDGEONING),),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -6849,6 +8007,16 @@ class PriestAcolyte(ExtendedCombatantData):
                     secondary_dice_count=1,
                     secondary_dice_type=DiceType.D4,
                     secondary_damage_type=DamageType.RADIANT,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=4,
+                            damage=(
+                                CombatDamage("1d6 + 2", DamageType.BLUDGEONING),
+                                CombatDamage("1d4", DamageType.RADIANT),
+                            ),
+                        ),
+                    ),
                 ),
                 RangedAttack(
                     name="Radiant Flame",
@@ -6858,6 +8026,13 @@ class PriestAcolyte(ExtendedCombatantData):
                     dice_type=DiceType.D6,
                     damage_bonus=0,
                     damage_type=DamageType.RADIANT,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=4,
+                            damage=(CombatDamage("2d6", DamageType.RADIANT),),
+                        ),
+                    ),
                 ),
                 MonsterAbility(
                     name="Spellcasting",
@@ -6938,6 +8113,13 @@ class Pseudodragon(ExtendedCombatantData):
                     dice_type=DiceType.D4,
                     damage_bonus=2,
                     damage_type=DamageType.PIERCING,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=4,
+                            damage=(CombatDamage("1d4 + 2", DamageType.PIERCING),),
+                        ),
+                    ),
                 ),
                 SavingThrowEffect(
                     name="Sting",
@@ -6949,6 +8131,18 @@ class Pseudodragon(ExtendedCombatantData):
                     damage_bonus=0,
                     damage_type=DamageType.POISON,
                     failure_effect="and the target has the Poisoned condition for 1 hour. While Poisoned, the target also has the Unconscious condition, which ends early if the target takes damage or a creature within 5 feet of it takes an action to wake it",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.CONSTITUTION,
+                            dc=12,
+                            damage=(CombatDamage("2d4", DamageType.POISON),),
+                            conditions=(CombatCondition(Condition.POISONED),),
+                            notes=(
+                                "Also: and the target has the Poisoned condition for 1 hour. While Poisoned, the target also has the Unconscious condition, which ends early if the target takes damage or a creature within 5 feet of it takes an action to wake it",
+                            ),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -7012,6 +8206,13 @@ class Pteranodon(ExtendedCombatantData):
                     dice_type=DiceType.D8,
                     damage_bonus=2,
                     damage_type=DamageType.PIERCING,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=4,
+                            damage=(CombatDamage("1d8 + 2", DamageType.PIERCING),),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -7071,6 +8272,13 @@ class Rat(ExtendedCombatantData):
                 MonsterAbility(
                     name="Bite",
                     description="Melee Attack Roll: +2, reach 5 ft. Hit: 1 Piercing damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=2,
+                            damage=(CombatDamage("1", DamageType.PIERCING),),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -7129,6 +8337,13 @@ class Raven(ExtendedCombatantData):
                 MonsterAbility(
                     name="Beak",
                     description="Melee Attack Roll: +4, reach 5 ft. Hit: 1 Piercing damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=4,
+                            damage=(CombatDamage("1", DamageType.PIERCING),),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -7192,6 +8407,13 @@ class ReefShark(ExtendedCombatantData):
                     dice_type=DiceType.D4,
                     damage_bonus=2,
                     damage_type=DamageType.PIERCING,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=4,
+                            damage=(CombatDamage("2d4 + 2", DamageType.PIERCING),),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -7250,6 +8472,13 @@ class RidingHorse(ExtendedCombatantData):
                     dice_type=DiceType.D8,
                     damage_bonus=3,
                     damage_type=DamageType.BLUDGEONING,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=5,
+                            damage=(CombatDamage("1d8 + 3", DamageType.BLUDGEONING),),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -7319,14 +8548,34 @@ class RustMonster(ExtendedCombatantData):
                     dice_type=DiceType.D8,
                     damage_bonus=1,
                     damage_type=DamageType.PIERCING,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=3,
+                            damage=(CombatDamage("1d8 + 1", DamageType.PIERCING),),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Antennae",
                     description="The rust monster targets one nonmagical metal object—armor or a weapon—worn or carried by a creature within 5 feet of itself. Dexterity Saving Throw: DC 11, the creature with the object. Failure: The object takes a −1 penalty to the AC it offers (armor) or to its attack rolls (weapon). Armor is destroyed if the penalty reduces its AC to 10, and a weapon is destroyed if its penalty reaches −5. The penalty can be removed by casting the Mending spell on the armor or weapon.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.DEXTERITY,
+                            dc=11,
+                            notes=(
+                                "Also: The object takes a −1 penalty to the AC it offers (armor) or to its attack rolls (weapon). Armor is destroyed if the penalty reduces its AC to 10, and a weapon is destroyed if its penalty reaches −5. The penalty can be removed by casting the Mending spell on the armor or weapon",
+                            ),
+                        ),
+                    ),
                 ),
                 MonsterAbility(
                     name="Destroy Metal",
                     description="The rust monster touches a nonmagical metal object within 5 feet of itself that isn't being worn or carried. The touch destroys a 1-foot Cube of the object.",
+                    combat_effects=(
+                        CombatEffect(area=CombatArea(CombatAreaShape.CUBE, 1)),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -7410,6 +8659,13 @@ class SahuaginWarrior(ExtendedCombatantData):
                     dice_type=DiceType.D6,
                     damage_bonus=1,
                     damage_type=DamageType.SLASHING,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=3,
+                            damage=(CombatDamage("1d6 + 1", DamageType.SLASHING),),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[
@@ -7476,6 +8732,16 @@ class Satyr(ExtendedCombatantData):
                     damage_bonus=3,
                     damage_type=DamageType.BLUDGEONING,
                     additional_ruling="If the target is a Medium or smaller creature, the satyr pushes the target up to 10 feet straight away from itself.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=5,
+                            damage=(CombatDamage("1d4 + 3", DamageType.BLUDGEONING),),
+                            notes=(
+                                "Also: If the target is a Medium or smaller creature, the satyr pushes the target up to 10 feet straight away from itself",
+                            ),
+                        ),
+                    ),
                 ),
                 SavingThrowEffect(
                     name="Mockery",
@@ -7486,6 +8752,14 @@ class Satyr(ExtendedCombatantData):
                     dice_type=DiceType.D6,
                     damage_bonus=2,
                     damage_type=DamageType.PSYCHIC,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.WISDOM,
+                            dc=12,
+                            damage=(CombatDamage("1d6 + 2", DamageType.PSYCHIC),),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -7540,6 +8814,16 @@ class Scorpion(ExtendedCombatantData):
                 MonsterAbility(
                     name="Sting",
                     description="Melee Attack Roll: +2, reach 5 ft. Hit: 1 Piercing damage plus 3 (1d6) Poison damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=2,
+                            damage=(
+                                CombatDamage("1", DamageType.PIERCING),
+                                CombatDamage("1d6", DamageType.POISON),
+                            ),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -7607,6 +8891,13 @@ class Scout(ExtendedCombatantData):
                     dice_type=DiceType.D6,
                     damage_bonus=2,
                     damage_type=DamageType.PIERCING,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=4,
+                            damage=(CombatDamage("1d6 + 2", DamageType.PIERCING),),
+                        ),
+                    ),
                 ),
                 RangedAttack(
                     name="Longbow",
@@ -7617,6 +8908,13 @@ class Scout(ExtendedCombatantData):
                     dice_type=DiceType.D8,
                     damage_bonus=2,
                     damage_type=DamageType.PIERCING,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=4,
+                            damage=(CombatDamage("1d8 + 2", DamageType.PIERCING),),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -7757,6 +9055,16 @@ class Shadow(ExtendedCombatantData):
                 MonsterAbility(
                     name="Draining Swipe",
                     description="Melee Attack Roll: +4, reach 5 ft. Hit: 5 (1d6 + 2) Necrotic damage, and the target's Strength score decreases by 1d4. The target dies if this reduces that score to 0. If a Humanoid is slain by this attack, a Shadow rises from the corpse 1d4 hours later.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=4,
+                            damage=(CombatDamage("1d6 + 2", DamageType.NECROTIC),),
+                            notes=(
+                                "Also: and the target's Strength score decreases by 1d4. The target dies if this reduces that score to 0. If a Humanoid is slain by this attack, a Shadow rises from the corpse 1d4 hours later",
+                            ),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[
@@ -7884,6 +9192,13 @@ class Skeleton(ExtendedCombatantData):
                     dice_type=DiceType.D6,
                     damage_bonus=3,
                     damage_type=DamageType.PIERCING,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=5,
+                            damage=(CombatDamage("1d6 + 3", DamageType.PIERCING),),
+                        ),
+                    ),
                 ),
                 RangedAttack(
                     name="Shortbow",
@@ -7894,6 +9209,13 @@ class Skeleton(ExtendedCombatantData):
                     dice_type=DiceType.D6,
                     damage_bonus=3,
                     damage_type=DamageType.PIERCING,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=5,
+                            damage=(CombatDamage("1d6 + 3", DamageType.PIERCING),),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -7962,6 +9284,13 @@ class SlaadTadpole(ExtendedCombatantData):
                     dice_type=DiceType.D6,
                     damage_bonus=2,
                     damage_type=DamageType.PIERCING,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=4,
+                            damage=(CombatDamage("1d6 + 2", DamageType.PIERCING),),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -8029,6 +9358,13 @@ class SmokeMephit(ExtendedCombatantData):
                     dice_type=DiceType.D4,
                     damage_bonus=2,
                     damage_type=DamageType.SLASHING,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=4,
+                            damage=(CombatDamage("1d4 + 2", DamageType.SLASHING),),
+                        ),
+                    ),
                 ),
                 SavingThrowEffect(
                     name="Cinder Breath (Recharge 6)",
@@ -8039,6 +9375,22 @@ class SmokeMephit(ExtendedCombatantData):
                     damage_type=None,
                     failure_effect="The target has the Blinded condition until the end of the mephit's next turn.",
                     recharge=6,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.DEXTERITY,
+                            dc=11,
+                            conditions=(
+                                CombatCondition(
+                                    Condition.BLINDED,
+                                    until=(TurnEdge.END, TurnOf.SOURCE),
+                                ),
+                            ),
+                            notes=(
+                                "Also: The target has the Blinded condition until the end of the mephit's next turn",
+                            ),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -8096,6 +9448,16 @@ class Spider(ExtendedCombatantData):
                 MonsterAbility(
                     name="Bite",
                     description="Melee Attack Roll: +4, reach 5 ft. Hit: 1 Piercing damage plus 2 (1d4) Poison damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=4,
+                            damage=(
+                                CombatDamage("1", DamageType.PIERCING),
+                                CombatDamage("1d4", DamageType.POISON),
+                            ),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -8154,10 +9516,37 @@ class Sprite(ExtendedCombatantData):
                     dice_type=DiceType.D4,
                     damage_bonus=4,
                     damage_type=DamageType.PIERCING,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=6,
+                            damage=(CombatDamage("1d4 + 4", DamageType.PIERCING),),
+                        ),
+                    ),
                 ),
                 MonsterAbility(
                     name="Enchanting Bow",
                     description="Ranged Attack Roll: +6, range 40/160 ft. Hit: 1 Piercing damage, and the target has the Charmed condition until the start of the sprite's next turn.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=6,
+                            damage=(CombatDamage("1", DamageType.PIERCING),),
+                        ),
+                        CombatEffect(
+                            name="Enchanting Bow: Charmed",
+                            conditions=(
+                                CombatCondition(
+                                    Condition.CHARMED,
+                                    until=(TurnEdge.START, TurnOf.SOURCE),
+                                ),
+                            ),
+                            spends_use=False,
+                            trigger=CombatTrigger(
+                                TriggerEvent.HIT, optional=False, after="Enchanting Bow"
+                            ),
+                        ),
+                    ),
                 ),
                 SavingThrowEffect(
                     name="Heart Sight",
@@ -8167,6 +9556,16 @@ class Sprite(ExtendedCombatantData):
                     dice_count=0,
                     damage_type=None,
                     failure_effect="The sprite knows the target's emotions and alignment.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.CHARISMA,
+                            dc=10,
+                            notes=(
+                                "Also: The sprite knows the target's emotions and alignment",
+                            ),
+                        ),
+                    ),
                 ),
                 MonsterAbility(
                     name="Invisibility",
@@ -8243,6 +9642,16 @@ class SteamMephit(ExtendedCombatantData):
                     secondary_dice_count=1,
                     secondary_dice_type=DiceType.D4,
                     secondary_damage_type=DamageType.FIRE,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=2,
+                            damage=(
+                                CombatDamage("1d4", DamageType.SLASHING),
+                                CombatDamage("1d4", DamageType.FIRE),
+                            ),
+                        ),
+                    ),
                 ),
                 SavingThrowEffect(
                     name="Steam Breath (Recharge 6)",
@@ -8256,6 +9665,19 @@ class SteamMephit(ExtendedCombatantData):
                     success_effect="Half damage only.",
                     extra_ruling="Failure or Success: Being underwater doesn't grant Resistance to this Fire damage.",
                     recharge=6,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.CONSTITUTION,
+                            dc=10,
+                            half_on_success=True,
+                            damage=(CombatDamage("2d4", DamageType.FIRE),),
+                            notes=(
+                                "Also: and the target's Speed decreases by 10 feet until the end of the mephit's next turn",
+                            ),
+                            area=CombatArea(CombatAreaShape.CONE, 15),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -8310,6 +9732,16 @@ class Stirge(ExtendedCombatantData):
                 MonsterAbility(
                     name="Proboscis",
                     description="Melee Attack Roll: +5, reach 5 ft. Hit: 6 (1d6 + 3) Piercing damage, and the stirge attaches to the target. While attached, the stirge can't make Proboscis attacks, and the target takes 5 (2d4) Necrotic damage at the start of each of the stirge's turns. The stirge can detach itself by spending 5 feet of its movement. The target or a creature within 5 feet of it can detach the stirge as an action.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=5,
+                            damage=(CombatDamage("1d6 + 3", DamageType.PIERCING),),
+                            notes=(
+                                "Also: and the stirge attaches to the target. While attached, the stirge can't make Proboscis attacks, and the target takes 5 (2d4) Necrotic damage at the start of each of the stirge's turns. The stirge can detach itself by spending 5 feet of its movement. The target or a creature within 5 feet of it can detach the stirge as an action",
+                            ),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -8379,6 +9811,16 @@ class SwarmOfBats(ExtendedCombatantData):
                 MonsterAbility(
                     name="Bites",
                     description="Melee Attack Roll: +4, reach 5 ft. Hit: 5 (2d4) Piercing damage, or 2 (1d4) Piercing damage if the swarm is Bloodied.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=4,
+                            damage=(CombatDamage("2d4", DamageType.PIERCING),),
+                            notes=(
+                                "Also: or 2 (1d4) Piercing damage if the swarm is Bloodied",
+                            ),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -8452,6 +9894,16 @@ class SwarmOfInsects(ExtendedCombatantData):
                 MonsterAbility(
                     name="Bites",
                     description="Melee Attack Roll: +3, reach 5 ft. Hit: 6 (2d4 + 1) Poison damage, or 3 (1d4 + 1) Poison damage if the swarm is Bloodied.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=3,
+                            damage=(CombatDamage("2d4 + 1", DamageType.POISON),),
+                            notes=(
+                                "Also: or 3 (1d4 + 1) Poison damage if the swarm is Bloodied",
+                            ),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -8521,6 +9973,16 @@ class SwarmOfRats(ExtendedCombatantData):
                 MonsterAbility(
                     name="Bites",
                     description="Melee Attack Roll: +2, reach 5 ft. Hit: 5 (2d4) Piercing damage, or 2 (1d4) Piercing damage if the swarm is Bloodied.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=2,
+                            damage=(CombatDamage("2d4", DamageType.PIERCING),),
+                            notes=(
+                                "Also: or 2 (1d4) Piercing damage if the swarm is Bloodied",
+                            ),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -8589,6 +10051,16 @@ class SwarmOfRavens(ExtendedCombatantData):
                 MonsterAbility(
                     name="Beaks",
                     description="Melee Attack Roll: +4, reach 5 ft. Hit: 5 (1d6 + 2) Piercing damage, or 2 (1d4) Piercing damage if the swarm is Bloodied.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=4,
+                            damage=(CombatDamage("1d6 + 2", DamageType.PIERCING),),
+                            notes=(
+                                "Also: or 2 (1d4) Piercing damage if the swarm is Bloodied",
+                            ),
+                        ),
+                    ),
                 ),
                 SavingThrowEffect(
                     name="Cacophony (Recharge 6)",
@@ -8599,6 +10071,22 @@ class SwarmOfRavens(ExtendedCombatantData):
                     damage_type=None,
                     failure_effect="The target has the Deafened condition until the start of the swarm's next turn. While Deafened, the target also has Disadvantage on ability checks and attack rolls.",
                     recharge=6,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.WISDOM,
+                            dc=10,
+                            conditions=(
+                                CombatCondition(
+                                    Condition.DEAFENED,
+                                    until=(TurnEdge.START, TurnOf.SOURCE),
+                                ),
+                            ),
+                            notes=(
+                                "Also: The target has the Deafened condition until the start of the swarm's next turn. While Deafened, the target also has Disadvantage on ability checks and attack rolls",
+                            ),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -8659,6 +10147,13 @@ class Tough(ExtendedCombatantData):
                     dice_type=DiceType.D6,
                     damage_bonus=2,
                     damage_type=DamageType.BLUDGEONING,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=4,
+                            damage=(CombatDamage("1d6 + 2", DamageType.BLUDGEONING),),
+                        ),
+                    ),
                 ),
                 RangedAttack(
                     name="Heavy Crossbow",
@@ -8669,6 +10164,13 @@ class Tough(ExtendedCombatantData):
                     dice_type=DiceType.D10,
                     damage_bonus=1,
                     damage_type=DamageType.PIERCING,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=3,
+                            damage=(CombatDamage("1d10 + 1", DamageType.PIERCING),),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -8740,6 +10242,13 @@ class Troglodyte(ExtendedCombatantData):
                     dice_type=DiceType.D6,
                     damage_bonus=2,
                     damage_type=DamageType.SLASHING,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=4,
+                            damage=(CombatDamage("1d6 + 2", DamageType.SLASHING),),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -8809,6 +10318,13 @@ class TrollLimb(ExtendedCombatantData):
                     dice_type=DiceType.D4,
                     damage_bonus=4,
                     damage_type=DamageType.SLASHING,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=6,
+                            damage=(CombatDamage("2d4 + 4", DamageType.SLASHING),),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -8872,6 +10388,13 @@ class TwigBlight(ExtendedCombatantData):
                     dice_type=DiceType.D4,
                     damage_bonus=2,
                     damage_type=DamageType.SLASHING,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=4,
+                            damage=(CombatDamage("1d4 + 2", DamageType.SLASHING),),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -9023,6 +10546,16 @@ class VenomousSnake(ExtendedCombatantData):
                     secondary_dice_count=1,
                     secondary_dice_type=DiceType.D6,
                     secondary_damage_type=DamageType.POISON,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=4,
+                            damage=(
+                                CombatDamage("1d4 + 2", DamageType.PIERCING),
+                                CombatDamage("1d6", DamageType.POISON),
+                            ),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -9084,6 +10617,28 @@ class VineBlight(ExtendedCombatantData):
                     damage_bonus=2,
                     damage_type=DamageType.BLUDGEONING,
                     additional_ruling="If the target is a Large or smaller creature, it has the Grappled condition (escape DC 12). Until the grapple ends, the target takes 4 (1d8) Bludgeoning damage at the start of each of its turns, and the blight can't make Constricting Vine attacks.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=4,
+                            damage=(CombatDamage("1d8 + 2", DamageType.BLUDGEONING),),
+                            notes=(
+                                "Also: Until the grapple ends, the target takes 4 (1d8) Bludgeoning damage at the start of each of its turns, and the blight can't make Constricting Vine attacks",
+                            ),
+                        ),
+                        CombatEffect(
+                            name="Constricting Vine: Grappled",
+                            conditions=(CombatCondition(Condition.GRAPPLED),),
+                            spends_use=False,
+                            notes=("Escape DC 12.",),
+                            trigger=CombatTrigger(
+                                TriggerEvent.HIT,
+                                optional=False,
+                                after="Constricting Vine",
+                                largest_target=CreatureSize.LARGE,
+                            ),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Entangling Plants (Recharge 5–6)",
@@ -9156,6 +10711,13 @@ class VioletFungus(ExtendedCombatantData):
                     dice_type=DiceType.D8,
                     damage_bonus=0,
                     damage_type=DamageType.NECROTIC,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=2,
+                            damage=(CombatDamage("1d8", DamageType.NECROTIC),),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -9216,6 +10778,13 @@ class Vulture(ExtendedCombatantData):
                     dice_type=DiceType.D4,
                     damage_bonus=0,
                     damage_type=DamageType.PIERCING,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=2,
+                            damage=(CombatDamage("1d4", DamageType.PIERCING),),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -9275,6 +10844,17 @@ class Warhorse(ExtendedCombatantData):
                     damage_bonus=4,
                     damage_type=DamageType.BLUDGEONING,
                     additional_ruling="If the horse moved at least 20 feet straight toward the target immediately before the hit, the target takes an extra 5 (2d4) Bludgeoning damage and, if it is Huge or smaller, has the Prone condition.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=6,
+                            damage=(CombatDamage("2d4 + 4", DamageType.BLUDGEONING),),
+                            conditions=(CombatCondition(Condition.PRONE),),
+                            notes=(
+                                "Also: If the horse moved at least 20 feet straight toward the target immediately before the hit, the target takes an extra 5 (2d4) Bludgeoning damage and, if it is Huge or smaller, has the Prone condition",
+                            ),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -9339,6 +10919,25 @@ class WarhorseSkeleton(ExtendedCombatantData):
                     damage_bonus=4,
                     damage_type=DamageType.BLUDGEONING,
                     additional_ruling="If the target is a Large or smaller creature and the skeleton moved 20+ feet straight toward it immediately before the hit, the target has the Prone condition.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=6,
+                            damage=(CombatDamage("1d6 + 4", DamageType.BLUDGEONING),),
+                        ),
+                        CombatEffect(
+                            name="Hooves: Prone",
+                            conditions=(CombatCondition(Condition.PRONE),),
+                            spends_use=False,
+                            trigger=CombatTrigger(
+                                TriggerEvent.HIT,
+                                optional=False,
+                                after="Hooves",
+                                largest_target=CreatureSize.LARGE,
+                                when="the skeleton moved 20+ feet straight toward it immediately before the hit",
+                            ),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -9400,6 +10999,13 @@ class WarriorInfantry(ExtendedCombatantData):
                     dice_type=DiceType.D6,
                     damage_bonus=1,
                     damage_type=DamageType.PIERCING,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=3,
+                            damage=(CombatDamage("1d6 + 1", DamageType.PIERCING),),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -9454,6 +11060,13 @@ class Weasel(ExtendedCombatantData):
                 MonsterAbility(
                     name="Bite",
                     description="Melee Attack Roll: +5, reach 5 ft. Hit: 1 Piercing damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=5,
+                            damage=(CombatDamage("1", DamageType.PIERCING),),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -9516,10 +11129,39 @@ class WingedKobold(ExtendedCombatantData):
                     dice_type=DiceType.D6,
                     damage_bonus=3,
                     damage_type=DamageType.PIERCING,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=5,
+                            damage=(CombatDamage("1d6 + 3", DamageType.PIERCING),),
+                        ),
+                    ),
                 ),
                 MonsterAbility(
                     name="Chromatic Spittle",
                     description="Ranged Attack Roll: +5, range 30 ft. Hit: 6 (1d6 + 3) damage of a type chosen by the kobold: Acid, Cold, Fire, Lightning, or Poison.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=5,
+                            damage=(
+                                CombatDamage(
+                                    "1d6 + 3",
+                                    None,
+                                    (
+                                        DamageType.ACID,
+                                        DamageType.COLD,
+                                        DamageType.FIRE,
+                                        DamageType.LIGHTNING,
+                                        DamageType.POISON,
+                                    ),
+                                ),
+                            ),
+                            notes=(
+                                "Also: of a type chosen by the kobold: Acid, Cold, Fire, Lightning, or Poison",
+                            ),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -9585,6 +11227,24 @@ class Wolf(ExtendedCombatantData):
                     damage_bonus=2,
                     damage_type=DamageType.PIERCING,
                     additional_ruling="If the target is a Medium or smaller creature, it has the Prone condition.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=4,
+                            damage=(CombatDamage("1d6 + 2", DamageType.PIERCING),),
+                        ),
+                        CombatEffect(
+                            name="Bite: Prone",
+                            conditions=(CombatCondition(Condition.PRONE),),
+                            spends_use=False,
+                            trigger=CombatTrigger(
+                                TriggerEvent.HIT,
+                                optional=False,
+                                after="Bite",
+                                largest_target=CreatureSize.MEDIUM,
+                            ),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -9639,6 +11299,16 @@ class Worg(ExtendedCombatantData):
                 MonsterAbility(
                     name="Bite",
                     description="Melee Attack Roll: +5, reach 5 ft. Hit: 7 (1d8 + 3) Piercing damage, and the next attack roll made against the target before the start of the worg's next turn has Advantage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=5,
+                            damage=(CombatDamage("1d8 + 3", DamageType.PIERCING),),
+                            notes=(
+                                "Also: and the next attack roll made against the target before the start of the worg's next turn has Advantage",
+                            ),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -9705,6 +11375,13 @@ class Zombie(ExtendedCombatantData):
                     dice_type=DiceType.D8,
                     damage_bonus=1,
                     damage_type=DamageType.BLUDGEONING,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=3,
+                            damage=(CombatDamage("1d8 + 1", DamageType.BLUDGEONING),),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],

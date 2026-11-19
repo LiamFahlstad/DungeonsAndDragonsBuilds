@@ -60,6 +60,7 @@ from Core.Definitions import Condition, DamageType
 from Model.Content.Feature import Feature
 from Model.Creatures.Combatants import DamageTypeEntry, Visibility
 from tests._combat_ui import answer_out_of_resources, make_ui, open_dialog
+from tests._combat_ui import described
 
 FIRE = DamageType.FIRE.value
 
@@ -1503,7 +1504,7 @@ def test_known_attack_bonus():
     assert known_attack_bonus(None) is None
     assert known_attack_bonus({"name": "Tiger"}) is None
     bite = "Melee Attack Roll: +7, reach 5 ft. Hit: 7 (1d8 + 3) Piercing damage."
-    claws = {"name": "Bite", "description": bite}
+    claws = described({"name": "Bite", "description": bite})
     assert known_attack_bonus({"spell_attack_bonus": 6}) == 6
     assert known_attack_bonus({"actions": [claws]}) == 7
     assert known_attack_bonus({"actions": [claws], "spell_attack_bonus": 6}) == 6
@@ -1790,7 +1791,9 @@ def test_the_bonus_starts_at_a_monsters_attack(fight, monkeypatch):
     ui, pirate, *_ = fight
     ui._select_character(pirate)
     pirate["actions"] = [
-        {"name": "Slash", "description": "Melee Attack Roll: +6, reach 5 ft."}
+        described(
+            {"name": "Slash", "description": "Melee Attack Roll: +6, reach 5 ft."}
+        )
     ]
     dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
     assert dlg.findChild(QSpinBox, "attackBonus").value() == 6
@@ -1800,7 +1803,7 @@ def test_a_negative_bonus_starts_as_it_is(fight, monkeypatch):
     ui, pirate, *_ = fight
     ui._select_character(pirate)
     pirate["actions"] = [
-        {"name": "Slap", "description": "Melee Attack Roll: -1, reach 5 ft."}
+        described({"name": "Slap", "description": "Melee Attack Roll: -1, reach 5 ft."})
     ]
     dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
     assert dlg.findChild(QSpinBox, "attackBonus").value() == -1
@@ -1964,29 +1967,37 @@ def test_a_bad_typed_attack_says_so(paladin_fight, monkeypatch):
 # Picking what was used (effect_options.py): it fills in the form, and Apply
 # spends it as Cast Spell, Enable Feature and the turn column's buttons do.
 
-SCIMITAR = {
-    "name": "Scimitar",
-    "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 5 (1d6 + 2) Slashing damage.",
-}
-BREATH = {
-    "name": "Fire Breath (Recharge 5–6)",
-    "description": "Dexterity Saving Throw: DC 13, each creature in a 15-foot Cone."
-    " Failure: 14 (4d6) Fire damage. Success: Half damage.",
-    "recharge": 5,
-}
-REND = {
-    "name": "Rend (Recharge 6)",
-    "description": "Melee Attack Roll: +6, reach 5 ft. Hit: 9 (2d6 + 2) Slashing"
-    " damage, and the target can't take Reactions until the start of its next turn"
-    " while it's bleeding badly from the wound the claws leave in it.",
-    "recharge": 6,
-}
-GAZE = {
-    "name": "Gaze (Costs 2 Actions)",
-    "description": "Wisdom Saving Throw: DC 14, one creature. Failure: The target has"
-    " the Frightened condition, and it repeats the save at the end of each of its turns.",
-    "legendary_cost": 2,
-}
+SCIMITAR = described(
+    {
+        "name": "Scimitar",
+        "description": "Melee Attack Roll: +4, reach 5 ft. Hit: 5 (1d6 + 2) Slashing damage.",
+    }
+)
+BREATH = described(
+    {
+        "name": "Fire Breath (Recharge 5–6)",
+        "description": "Dexterity Saving Throw: DC 13, each creature in a 15-foot Cone."
+        " Failure: 14 (4d6) Fire damage. Success: Half damage.",
+        "recharge": 5,
+    }
+)
+REND = described(
+    {
+        "name": "Rend (Recharge 6)",
+        "description": "Melee Attack Roll: +6, reach 5 ft. Hit: 9 (2d6 + 2) Slashing"
+        " damage, and the target can't take Reactions until the start of its next turn"
+        " while it's bleeding badly from the wound the claws leave in it.",
+        "recharge": 6,
+    }
+)
+GAZE = described(
+    {
+        "name": "Gaze (Costs 2 Actions)",
+        "description": "Wisdom Saving Throw: DC 14, one creature. Failure: The target has"
+        " the Frightened condition, and it repeats the save at the end of each of its turns.",
+        "legendary_cost": 2,
+    }
+)
 
 
 def _tree(dlg) -> QTreeWidget:
@@ -2762,12 +2773,14 @@ def test_a_spent_recharge_survives_reloading_the_fight(monster, tmp_path, monkey
 # What review found
 
 
-PARALYZING_TOUCH = {
-    "name": "Paralyzing Touch",
-    "description": "Melee Attack Roll: +12, reach 5 ft. Hit: 15 (3d6 + 5) Cold damage,"
-    " and the target has the Paralyzed condition until the start of the lich's next"
-    " turn.",
-}
+PARALYZING_TOUCH = described(
+    {
+        "name": "Paralyzing Touch",
+        "description": "Melee Attack Roll: +12, reach 5 ft. Hit: 15 (3d6 + 5) Cold damage,"
+        " and the target has the Paralyzed condition until the start of the lich's next"
+        " turn.",
+    }
+)
 
 
 def test_retyping_the_name_drops_the_pick(paladin, monkeypatch):

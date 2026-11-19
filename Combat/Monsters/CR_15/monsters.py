@@ -22,6 +22,16 @@ from Model.Creatures.MonsterAbilities import (
     MonsterCast,
 )
 from Core.Definitions import Ability
+from Model.Content.CombatArea import AreaTiming, CombatArea, CombatAreaShape
+from Model.Content.CombatEffect import (
+    CombatCondition,
+    CombatDamage,
+    CombatEffect,
+    EffectRoll,
+    TurnEdge,
+    TurnOf,
+)
+from Model.Content.CombatTriggers import CombatTrigger, TriggerEvent
 
 
 class AdultBronzeDragon(ExtendedCombatantData):
@@ -88,15 +98,47 @@ class AdultBronzeDragon(ExtendedCombatantData):
                 MonsterAbility(
                     name="Rend",
                     description="Melee Attack Roll: +12, reach 10 ft. Hit: 16 (2d8 + 7) Slashing damage plus 5 (1d10) Lightning damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=12,
+                            damage=(
+                                CombatDamage("2d8 + 7", DamageType.SLASHING),
+                                CombatDamage("1d10", DamageType.LIGHTNING),
+                            ),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Lightning Breath (Recharge 5–6)",
                     description="Dexterity Saving Throw: DC 19, each creature in a 90-foot-long, 5-foot-wide Line. Failure: 55 (10d10) Lightning damage. Success: Half damage.",
                     recharge=5,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.DEXTERITY,
+                            dc=19,
+                            half_on_success=True,
+                            damage=(CombatDamage("10d10", DamageType.LIGHTNING),),
+                            area=CombatArea(CombatAreaShape.LINE, 90),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Repulsion Breath",
                     description="Strength Saving Throw: DC 19, each creature in a 30-foot Cone. Failure: The target is pushed up to 60 feet straight away from the dragon and has the Prone condition.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.STRENGTH,
+                            dc=19,
+                            conditions=(CombatCondition(Condition.PRONE),),
+                            notes=(
+                                "Also: The target is pushed up to 60 feet straight away from the dragon and has the Prone condition",
+                            ),
+                            area=CombatArea(CombatAreaShape.CONE, 30),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Spellcasting",
@@ -121,6 +163,26 @@ class AdultBronzeDragon(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Thunderclap",
                     description="Constitution Saving Throw: DC 17, each creature in a 20-foot-radius Sphere centered on a point the dragon can see within 90 feet. Failure: 10 (3d6) Thunder damage, and the target has the Deafened condition until the end of its next turn.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.CONSTITUTION,
+                            dc=17,
+                            damage=(CombatDamage("3d6", DamageType.THUNDER),),
+                            conditions=(
+                                CombatCondition(
+                                    Condition.DEAFENED,
+                                    until=(TurnEdge.END, TurnOf.TARGET),
+                                ),
+                            ),
+                            notes=(
+                                "Also: and the target has the Deafened condition until the end of its next turn",
+                            ),
+                            area=CombatArea(
+                                CombatAreaShape.SPHERE, 20, point_within_ft=90
+                            ),
+                        ),
+                    ),
                 ),
             ],
             legendary_resistances=3,
@@ -197,11 +259,31 @@ class AdultGreenDragon(ExtendedCombatantData):
                 MonsterAbility(
                     name="Rend",
                     description="Melee Attack Roll: +11, reach 10 ft. Hit: 15 (2d8 + 6) Slashing damage plus 7 (2d6) Poison damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=11,
+                            damage=(
+                                CombatDamage("2d8 + 6", DamageType.SLASHING),
+                                CombatDamage("2d6", DamageType.POISON),
+                            ),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Poison Breath (Recharge 5–6)",
                     description="Constitution Saving Throw: DC 18, each creature in a 60-foot Cone. Failure: 56 (16d6) Poison damage. Success: Half damage.",
                     recharge=5,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.CONSTITUTION,
+                            dc=18,
+                            half_on_success=True,
+                            damage=(CombatDamage("16d6", DamageType.POISON),),
+                            area=CombatArea(CombatAreaShape.CONE, 60),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Spellcasting",
@@ -220,6 +302,20 @@ class AdultGreenDragon(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Noxious Miasma",
                     description="Constitution Saving Throw: DC 17, each creature in a 20-foot-radius Sphere centered on a point the dragon can see within 90 feet. Failure: 7 (2d6) Poison damage, and the target takes a −2 penalty to AC until the end of its next turn. Failure or Success: The dragon can't take this action again until the start of its next turn.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.CONSTITUTION,
+                            dc=17,
+                            damage=(CombatDamage("2d6", DamageType.POISON),),
+                            notes=(
+                                "Also: and the target takes a −2 penalty to AC until the end of its next turn",
+                            ),
+                            area=CombatArea(
+                                CombatAreaShape.SPHERE, 20, point_within_ft=90
+                            ),
+                        ),
+                    ),
                 ),
                 MonsterAbility(
                     name="Pounce",
@@ -309,14 +405,51 @@ class MummyLord(ExtendedCombatantData):
                 MonsterAbility(
                     name="Rotting Fist",
                     description="Melee Attack Roll: +9, reach 5 ft. Hit: 15 (2d10 + 4) Bludgeoning damage plus 10 (3d6) Necrotic damage. If the target is a creature, it is cursed. While cursed, the target can't regain Hit Points, it gains no benefit from finishing a Long Rest, and its Hit Point maximum decreases by 10 (3d6) every 24 hours that elapse. A creature dies and turns to dust if reduced to 0 Hit Points by this attack.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=9,
+                            damage=(
+                                CombatDamage("2d10 + 4", DamageType.BLUDGEONING),
+                                CombatDamage("3d6", DamageType.NECROTIC),
+                            ),
+                            notes=(
+                                "Also: If the target is a creature, it is cursed. While cursed, the target can't regain Hit Points, it gains no benefit from finishing a Long Rest, and its Hit Point maximum decreases by 10 (3d6) every 24 hours that elapse. A creature dies and turns to dust if reduced to 0 Hit Points by this attack",
+                            ),
+                        ),
+                    ),
                 ),
                 MonsterAbility(
                     name="Channel Negative Energy",
                     description="Ranged Attack Roll: +9, range 60 ft. Hit: 25 (6d6 + 4) Necrotic damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=9,
+                            damage=(CombatDamage("6d6 + 4", DamageType.NECROTIC),),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Dreadful Glare",
                     description="Wisdom Saving Throw: DC 17, one creature the mummy can see within 60 feet. Failure: 25 (6d6 + 4) Psychic damage, and the target has the Paralyzed condition until the end of the mummy's next turn.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.WISDOM,
+                            dc=17,
+                            damage=(CombatDamage("6d6 + 4", DamageType.PSYCHIC),),
+                            conditions=(
+                                CombatCondition(
+                                    Condition.PARALYZED,
+                                    until=(TurnEdge.END, TurnOf.SOURCE),
+                                ),
+                            ),
+                            notes=(
+                                "Also: and the target has the Paralyzed condition until the end of the mummy's next turn",
+                            ),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Spellcasting",
@@ -407,16 +540,59 @@ class PurpleWorm(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Bite",
                     description="Melee Attack Roll: +14, reach 10 ft. Hit: 22 (3d8 + 9) Piercing damage. If the target is a Large or smaller creature, it has the Grappled condition (escape DC 19), and it has the Restrained condition until the grapple ends.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=14,
+                            damage=(CombatDamage("3d8 + 9", DamageType.PIERCING),),
+                        ),
+                        CombatEffect(
+                            name="Bite: Grappled + Restrained",
+                            conditions=(
+                                CombatCondition(Condition.GRAPPLED),
+                                CombatCondition(Condition.RESTRAINED),
+                            ),
+                            spends_use=False,
+                            notes=("Escape DC 19. Restrained until the grapple ends.",),
+                            trigger=CombatTrigger(
+                                TriggerEvent.HIT,
+                                optional=False,
+                                after="Bite",
+                                largest_target=CreatureSize.LARGE,
+                            ),
+                        ),
+                    ),
                 ),
                 MonsterAbility(
                     name="Tail Stinger",
                     description="Melee Attack Roll: +14, reach 10 ft. Hit: 16 (2d6 + 9) Piercing damage plus 35 (10d6) Poison damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=14,
+                            damage=(
+                                CombatDamage("2d6 + 9", DamageType.PIERCING),
+                                CombatDamage("10d6", DamageType.POISON),
+                            ),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[
                 DcMonsterAbility(
                     name="Swallow",
                     description="Strength Saving Throw: DC 19, one Large or smaller creature Grappled by the worm (it can have up to three creatures swallowed at a time). Failure: The target is swallowed by the worm, and the Grappled condition ends. A swallowed creature has the Blinded and Restrained conditions, has Total Cover against attacks and other effects outside the worm, and takes 17 (5d6) Acid damage at the start of each of the worm's turns. If the worm takes 30 damage or more on a single turn from a creature inside it, the worm must succeed on a DC 21 Constitution saving throw at the end of that turn or regurgitate all swallowed creatures, each of which falls in a space within 5 feet of the worm and has the Prone condition. If the worm dies, any swallowed creature no longer has the Restrained condition and can escape from the corpse using 20 feet of movement, exiting Prone.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.STRENGTH,
+                            dc=19,
+                            conditions=(CombatCondition(Condition.PRONE),),
+                            notes=(
+                                "Also: The target is swallowed by the worm, and the Grappled condition ends. A swallowed creature has the Blinded and Restrained conditions, has Total Cover against attacks and other effects outside the worm, and takes 17 (5d6) Acid damage at the start of each of the worm's turns. If the worm takes 30 damage or more on a single turn from a creature inside it, the worm must succeed on a DC 21 Constitution saving throw at the end of that turn or regurgitate all swallowed creatures, each of which falls in a space within 5 feet of the worm and has the Prone condition. If the worm dies, any swallowed creature no longer has the Restrained condition and can escape from the corpse using 20 feet of movement, exiting Prone",
+                            ),
+                        ),
+                    ),
                 ),
             ],
             reactions=[],
@@ -487,17 +663,51 @@ class SalamanderInfernoMaster(ExtendedCombatantData):
                 MonsterAbility(
                     name="Flame Trident",
                     description="Melee or Ranged Attack Roll: +12, reach 5 ft. or range 30/90 ft. Hit: 16 (2d8 + 7) Piercing damage plus 14 (4d6) Fire damage. Hit or Miss: The trident magically returns to the salamander's hand immediately after a ranged attack.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=12,
+                            damage=(
+                                CombatDamage("2d8 + 7", DamageType.PIERCING),
+                                CombatDamage("4d6", DamageType.FIRE),
+                            ),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Inferno Blast (Recharge 5–6)",
                     description="Dexterity Saving Throw: DC 18, each creature in a 30-foot-radius Sphere centered on a point the salamander can see within 120 feet. Failure: 35 (10d6) Fire damage, and the target starts burning, taking 5 (1d10) Fire damage at the start of each of its turns instead of the normal burning damage. The target gains 1 Exhaustion level whenever it takes this burning damage. Success: Half damage only.",
                     recharge=5,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.DEXTERITY,
+                            dc=18,
+                            half_on_success=True,
+                            damage=(CombatDamage("10d6", DamageType.FIRE),),
+                            notes=(
+                                "Also: and the target starts burning, taking 5 (1d10) Fire damage at the start of each of its turns instead of the normal burning damage. The target gains 1 Exhaustion level whenever it takes this burning damage",
+                            ),
+                            area=CombatArea(
+                                CombatAreaShape.SPHERE, 30, point_within_ft=120
+                            ),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[
                 MonsterAbility(
                     name="Blazing Movement",
                     description="The salamander moves up to its Speed without provoking Opportunity Attacks. During this movement, fire fills a 5-foot Emanation originating from the salamander. When the Emanation enters a creature's space, that creature takes 7 (2d6) Fire damage. A creature can take this damage only once per turn.",
+                    combat_effects=(
+                        CombatEffect(
+                            area=CombatArea(
+                                CombatAreaShape.EMANATION,
+                                5,
+                                acts=(AreaTiming.MOVED_ONTO,),
+                            )
+                        ),
+                    ),
                 ),
             ],
             reactions=[],
@@ -595,6 +805,16 @@ class VampireUmbralLord(ExtendedCombatantData):
                 MonsterAbility(
                     name="Grave Strike",
                     description="Melee Attack Roll: +10, reach 5 ft. Hit: 9 (1d8 + 5) Slashing damage plus 13 (3d8) Necrotic damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=10,
+                            damage=(
+                                CombatDamage("1d8 + 5", DamageType.SLASHING),
+                                CombatDamage("3d8", DamageType.NECROTIC),
+                            ),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Hunger of Hadar (Recharge 5–6)",
@@ -605,12 +825,43 @@ class VampireUmbralLord(ExtendedCombatantData):
                 MonsterAbility(
                     name="Sickening Ray",
                     description="Ranged Attack Roll: +10, range 120 ft. Hit: 16 (2d10 + 5) Necrotic damage, and the target has the Poisoned condition until the start of the vampire's next turn.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=10,
+                            damage=(CombatDamage("2d10 + 5", DamageType.NECROTIC),),
+                        ),
+                        CombatEffect(
+                            name="Sickening Ray: Poisoned",
+                            conditions=(
+                                CombatCondition(
+                                    Condition.POISONED,
+                                    until=(TurnEdge.START, TurnOf.SOURCE),
+                                ),
+                            ),
+                            spends_use=False,
+                            trigger=CombatTrigger(
+                                TriggerEvent.HIT, optional=False, after="Sickening Ray"
+                            ),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[
                 DcMonsterAbility(
                     name="Sanguine Drain",
                     description="Constitution Saving Throw: DC 18, one creature the vampire can see within 30 feet that isn't a Construct or an Undead. Failure: 14 (4d6) Necrotic damage. The target's Hit Point maximum decreases by an amount equal to the damage taken, and the vampire regains Hit Points equal to that amount.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.CONSTITUTION,
+                            dc=18,
+                            damage=(CombatDamage("4d6", DamageType.NECROTIC),),
+                            notes=(
+                                "Also: The target's Hit Point maximum decreases by an amount equal to the damage taken, and the vampire regains Hit Points equal to that amount",
+                            ),
+                        ),
+                    ),
                 ),
             ],
             reactions=[],

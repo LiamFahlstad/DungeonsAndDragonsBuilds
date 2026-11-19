@@ -13,6 +13,7 @@ from Model.Creatures.MonsterAbilities import (
     NamedAttackAction,
 )
 from Core.Definitions import Ability
+from Model.Content.CombatEffect import CombatDamage, CombatEffect, EffectRoll
 
 
 class TheBellSaint(ExtendedCombatantData):
@@ -86,6 +87,16 @@ class TheBellSaint(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Chain Lash",
                     description="Melee Attack Roll: +10, reach 15 ft. Hit: 15 (2d10 + 4) Bludgeoning damage, and the target is grappled (escape DC 15) by one of the bell's dragging chains.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=10,
+                            damage=(CombatDamage("2d10 + 4", DamageType.BLUDGEONING),),
+                            notes=(
+                                "Also: and the target is grappled (escape DC 15) by one of the bell's dragging chains",
+                            ),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Toll of Rising (Recharge 5-6)",

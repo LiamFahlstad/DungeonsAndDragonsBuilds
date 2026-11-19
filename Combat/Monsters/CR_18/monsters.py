@@ -16,6 +16,15 @@ from Model.Creatures.Combatants import (
 )
 from Model.Creatures.MonsterAbilities import DcMonsterAbility, MonsterAbility
 from Core.Definitions import Ability
+from Model.Content.CombatArea import CombatArea, CombatAreaShape
+from Model.Content.CombatEffect import (
+    CombatCondition,
+    CombatDamage,
+    CombatEffect,
+    EffectRoll,
+    TurnEdge,
+    TurnOf,
+)
 
 
 class Demilich(ExtendedCombatantData):
@@ -98,11 +107,27 @@ class Demilich(ExtendedCombatantData):
                 MonsterAbility(
                     name="Necrotic Burst",
                     description="Melee or Ranged Attack Roll: +11, reach 5 ft. or range 120 ft. Hit: 24 (7d6) Necrotic damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=11,
+                            damage=(CombatDamage("7d6", DamageType.NECROTIC),),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Howl (Recharge 5–6)",
                     description="Constitution Saving Throw: DC 19, each creature in a 30-foot Emanation originating from the demilich. Failure: 70 (20d6) Psychic damage. Failure or Success: The target has the Frightened condition until the start of the demilich's next turn.",
                     recharge=5,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.CONSTITUTION,
+                            dc=19,
+                            damage=(CombatDamage("20d6", DamageType.PSYCHIC),),
+                            area=CombatArea(CombatAreaShape.EMANATION, 30),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -111,10 +136,37 @@ class Demilich(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Energy Drain",
                     description="Constitution Saving Throw: DC 19, one creature the demilich can see within 120 feet. Failure: The target's Hit Point maximum decreases by 14 (4d6). Failure or Success: The demilich can't take this action again until the start of its next turn.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.CONSTITUTION,
+                            dc=19,
+                            notes=(
+                                "Also: The target's Hit Point maximum decreases by 14 (4d6)",
+                            ),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Grave-Dust Flight",
                     description="The demilich flies up to its Fly Speed, shedding grave dust. Each creature within 5 feet of the demilich as it moves is targeted once by the following effect. Constitution Saving Throw: DC 19. Failure: The target has the Blinded condition until the end of the demilich's next turn. Failure or Success: The demilich can't take this action again until the start of its next turn.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.CONSTITUTION,
+                            dc=19,
+                            conditions=(
+                                CombatCondition(
+                                    Condition.BLINDED,
+                                    until=(TurnEdge.END, TurnOf.SOURCE),
+                                ),
+                            ),
+                            notes=(
+                                "Also: The target has the Blinded condition until the end of the demilich's next turn",
+                            ),
+                            area=CombatArea(CombatAreaShape.EMANATION, 5),
+                        ),
+                    ),
                 ),
                 MonsterAbility(
                     name="Necrosis",

@@ -20,6 +20,8 @@ from Model.Content.CombatEffect import (
     CombatEffect,
     CombatHitPoints,
 )
+from Model.Content.CombatArea import CombatArea, CombatAreaShape
+from Model.Content.CombatEffect import CombatDamage, EffectRoll
 
 
 class Accursed(ExtendedCombatantData):
@@ -70,6 +72,13 @@ class Accursed(ExtendedCombatantData):
                     dice_type=DiceType.D6,
                     damage_bonus=1,
                     damage_type=DamageType.BLUDGEONING,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=3,
+                            damage=(CombatDamage("1d6 + 1", DamageType.BLUDGEONING),),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -133,6 +142,13 @@ class FreshAccursed(ExtendedCombatantData):
                     dice_type=DiceType.D4,
                     damage_bonus=1,
                     damage_type=DamageType.BLUDGEONING,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=2,
+                            damage=(CombatDamage("1d4 + 1", DamageType.BLUDGEONING),),
+                        ),
+                    ),
                 ),
             ],
             reactions=[],
@@ -196,6 +212,13 @@ class PhysicalAccursed(ExtendedCombatantData):
                     dice_type=DiceType.D6,
                     damage_bonus=1,
                     damage_type=DamageType.BLUDGEONING,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=4,
+                            damage=(CombatDamage("1d6 + 1", DamageType.BLUDGEONING),),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -264,6 +287,13 @@ class ArmoredAccursed(ExtendedCombatantData):
                     dice_type=DiceType.D10,
                     damage_bonus=0,
                     damage_type=DamageType.SLASHING,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=4,
+                            damage=(CombatDamage("1d10", DamageType.SLASHING),),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -338,6 +368,13 @@ class BrainBloatedAccursed(ExtendedCombatantData):
                     dice_type=DiceType.D8,
                     damage_bonus=1,
                     damage_type=DamageType.PSYCHIC,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=4,
+                            damage=(CombatDamage("1d8 + 1", DamageType.PSYCHIC),),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -410,6 +447,13 @@ class CurseHighAccursed(ExtendedCombatantData):
                     dice_type=DiceType.D6,
                     damage_bonus=1,
                     damage_type=DamageType.BLUDGEONING,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=3,
+                            damage=(CombatDamage("1d6 + 1", DamageType.BLUDGEONING),),
+                        ),
+                    ),
                 ),
                 MeleeAttack(
                     name="Clinging Euphoria",
@@ -420,6 +464,16 @@ class CurseHighAccursed(ExtendedCombatantData):
                     damage_bonus=1,
                     damage_type=DamageType.SLASHING,
                     additional_ruling="The target must succeed on a DC 11 Strength or Dexterity saving throw or the Curse-High Accursed attaches to its back. While attached, it moves with the target, cannot be targeted separately, and the target's speed is halved. At the start of the Accursed's turn, the target takes 3 (1d6) Psychic damage. The target can use its action to make a DC 11 Strength (Athletics) or Dexterity (Acrobatics) check to detach it; an adjacent creature can instead make a DC 8 Strength (Athletics) check.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=4,
+                            damage=(CombatDamage("1d6 + 1", DamageType.SLASHING),),
+                            notes=(
+                                "Also: The target must succeed on a DC 11 Strength or Dexterity saving throw or the Curse-High Accursed attaches to its back. While attached, it moves with the target, cannot be targeted separately, and the target's speed is halved. At the start of the Accursed's turn, the target takes 3 (1d6) Psychic damage. The target can use its action to make a DC 11 Strength (Athletics) or Dexterity (Acrobatics) check to detach it; an adjacent creature can instead make a DC 8 Strength (Athletics) check",
+                            ),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -501,6 +555,16 @@ class HaratCR1_2(ExtendedCombatantData):
                     damage_bonus=3,
                     damage_type=DamageType.BLUDGEONING,
                     additional_ruling="Harat can choose to deal Thunder damage instead of Bludgeoning damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=5,
+                            damage=(CombatDamage("1d6 + 3", DamageType.BLUDGEONING),),
+                            notes=(
+                                "Also: Harat can choose to deal Thunder damage instead of Bludgeoning damage",
+                            ),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -575,6 +639,14 @@ class DwarfLifeCleric(ExtendedCombatantData):
                     dice_type=DiceType.D8,
                     damage_type=DamageType.RADIANT,
                     success_effect="No damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.DEXTERITY,
+                            dc=11,
+                            damage=(CombatDamage("1d8", DamageType.RADIANT),),
+                        ),
+                    ),
                 ),
                 MonsterAbility(
                     name="Life Domain Magic",
@@ -613,6 +685,9 @@ class DwarfLifeCleric(ExtendedCombatantData):
                     name="Healing Word (2/Day)",
                     description="One creature the cleric can see within 60 feet regains 9 (2d4 + 4) Hit Points.",
                     per_day=2,
+                    combat_effects=(
+                        CombatEffect(healing=CombatHitPoints(dice="2d4 + 4")),
+                    ),
                 ),
             ],
             reactions=[],
@@ -684,10 +759,28 @@ class ElfDruidOfTheLand(ExtendedCombatantData):
                     dice_type=DiceType.D8,
                     damage_type=DamageType.COLD,
                     additional_ruling="The target's Speed is reduced by 10 feet until the start of the druid's next turn.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=3,
+                            damage=(CombatDamage("1d8", DamageType.COLD),),
+                            notes=(
+                                "Also: The target's Speed is reduced by 10 feet until the start of the druid's next turn",
+                            ),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Circle of the Land Magic",
                     description="The druid uses one of the following. Hold Person (1/Day): one Humanoid it can see within 60 feet must succeed on a DC 11 Wisdom saving throw or have the Paralyzed condition for 1 minute (Concentration), repeating the save at the end of each of its turns and ending the effect on itself on a success. Entangle (1/Day): each creature in a 20-foot square of ground within 90 feet must succeed on a DC 11 Strength saving throw or have the Restrained condition for 1 minute (Concentration); a Restrained creature can take an action to make a DC 11 Strength (Athletics) check, ending the condition on itself on a success, and the area is Difficult Terrain for the duration. Land's Aid (2/Day): each creature of its choice in a 10-foot-radius Sphere centered on a point within 60 feet makes a DC 11 Constitution saving throw, taking 7 (2d6) Necrotic damage on a failure or half as much on a success, and one creature of its choice in the area regains 7 (2d6) Hit Points.",
+                    combat_effects=(
+                        CombatEffect(
+                            healing=CombatHitPoints(dice="2d6"),
+                            area=CombatArea(
+                                CombatAreaShape.CUBE, 20, point_within_ft=60
+                            ),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],

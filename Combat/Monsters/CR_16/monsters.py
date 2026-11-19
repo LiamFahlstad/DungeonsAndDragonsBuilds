@@ -22,6 +22,16 @@ from Model.Creatures.MonsterAbilities import (
     MonsterCast,
 )
 from Core.Definitions import Ability
+from Model.Content.CombatArea import CombatArea, CombatAreaShape
+from Model.Content.CombatEffect import (
+    CombatCondition,
+    CombatDamage,
+    CombatEffect,
+    EffectRoll,
+    TurnEdge,
+    TurnOf,
+)
+from Model.Content.CombatTriggers import CombatTrigger, TriggerEvent
 
 
 class AdultBlueDragon(ExtendedCombatantData):
@@ -83,11 +93,31 @@ class AdultBlueDragon(ExtendedCombatantData):
                 MonsterAbility(
                     name="Rend",
                     description="Melee Attack Roll: +12, reach 10 ft. Hit: 16 (2d8 + 7) Slashing damage plus 5 (1d10) Lightning damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=12,
+                            damage=(
+                                CombatDamage("2d8 + 7", DamageType.SLASHING),
+                                CombatDamage("1d10", DamageType.LIGHTNING),
+                            ),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Lightning Breath (Recharge 5–6)",
                     description="Dexterity Saving Throw: DC 19, each creature in a 90-foot-long, 5-foot-wide Line. Failure: 60 (11d10) Lightning damage. Success: Half damage.",
                     recharge=5,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.DEXTERITY,
+                            dc=19,
+                            half_on_success=True,
+                            damage=(CombatDamage("11d10", DamageType.LIGHTNING),),
+                            area=CombatArea(CombatAreaShape.LINE, 90),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Spellcasting",
@@ -179,15 +209,53 @@ class AdultSilverDragon(ExtendedCombatantData):
                 MonsterAbility(
                     name="Rend",
                     description="Melee Attack Roll: +13, reach 10 ft. Hit: 17 (2d8 + 8) Slashing damage plus 4 (1d8) Cold damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=13,
+                            damage=(
+                                CombatDamage("2d8 + 8", DamageType.SLASHING),
+                                CombatDamage("1d8", DamageType.COLD),
+                            ),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Cold Breath (Recharge 5–6)",
                     description="Constitution Saving Throw: DC 20, each creature in a 60-foot Cone. Failure: 54 (12d8) Cold damage. Success: Half damage.",
                     recharge=5,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.CONSTITUTION,
+                            dc=20,
+                            half_on_success=True,
+                            damage=(CombatDamage("12d8", DamageType.COLD),),
+                            area=CombatArea(CombatAreaShape.CONE, 60),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Paralyzing Breath",
                     description="Constitution Saving Throw: DC 20, each creature in a 60-foot Cone. First Failure: The target has the Incapacitated condition until the end of its next turn, when it repeats the save. Second Failure: The target has the Paralyzed condition, and it repeats the save at the end of each of its turns, ending the effect on itself on a success. After 1 minute, it succeeds automatically.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.CONSTITUTION,
+                            dc=20,
+                            repeat_save=True,
+                            conditions=(
+                                CombatCondition(
+                                    Condition.INCAPACITATED,
+                                    until=(TurnEdge.END, TurnOf.TARGET),
+                                ),
+                            ),
+                            notes=(
+                                "Also: The target has the Incapacitated condition until the end of its next turn, when it repeats the save. Second Failure: The target has the Paralyzed condition, and it repeats the save at the end of each of its turns, ending the effect on itself on a success. After 1 minute, it succeeds automatically",
+                            ),
+                            area=CombatArea(CombatAreaShape.CONE, 60),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Spellcasting",
@@ -206,6 +274,19 @@ class AdultSilverDragon(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Cold Gale",
                     description="Dexterity Saving Throw: DC 19, each creature in a 60-foot-long, 10-foot-wide Line. Failure: 14 (4d6) Cold damage, and the target is pushed up to 30 feet straight away from the dragon. Success: Half damage only. Failure or Success: The dragon can't take this action again until the start of its next turn.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.DEXTERITY,
+                            dc=19,
+                            half_on_success=True,
+                            damage=(CombatDamage("4d6", DamageType.COLD),),
+                            notes=(
+                                "Also: and the target is pushed up to 30 feet straight away from the dragon",
+                            ),
+                            area=CombatArea(CombatAreaShape.LINE, 60, width_ft=10),
+                        ),
+                    ),
                 ),
                 MonsterAbility(
                     name="Pounce",
@@ -275,11 +356,49 @@ class GithyankiDracomancer(ExtendedCombatantData):
                 MonsterAbility(
                     name="Draconic Strike",
                     description="Melee or Ranged Attack Roll: +10, reach 10 ft. or range 120 ft. Hit: 12 (2d6 + 5) Slashing damage plus 17 (5d6) Fire damage, and the target has the Frightened condition until the start of the githyanki's next turn.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=10,
+                            damage=(
+                                CombatDamage("2d6 + 5", DamageType.SLASHING),
+                                CombatDamage("5d6", DamageType.FIRE),
+                            ),
+                        ),
+                        CombatEffect(
+                            name="Draconic Strike: Frightened",
+                            conditions=(
+                                CombatCondition(
+                                    Condition.FRIGHTENED,
+                                    until=(TurnEdge.START, TurnOf.SOURCE),
+                                ),
+                            ),
+                            spends_use=False,
+                            trigger=CombatTrigger(
+                                TriggerEvent.HIT,
+                                optional=False,
+                                after="Draconic Strike",
+                            ),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Conjured Dragon's Breath (Recharge 5–6)",
                     description="Dexterity Saving Throw: DC 18, each creature in a 90-foot Cone. Failure: 27 (6d8) Fire damage plus 27 (6d8) Force damage. Success: Half damage.",
                     recharge=5,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.DEXTERITY,
+                            dc=18,
+                            half_on_success=True,
+                            damage=(
+                                CombatDamage("6d8", DamageType.FIRE),
+                                CombatDamage("6d8", DamageType.FORCE),
+                            ),
+                            area=CombatArea(CombatAreaShape.CONE, 90),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Spellcasting",
@@ -358,14 +477,40 @@ class GulthiasBlight(ExtendedCombatantData):
                 MonsterAbility(
                     name="Slam",
                     description="Melee Attack Roll: +12, reach 10 ft. Hit: 25 (4d8 + 7) Bludgeoning damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=12,
+                            damage=(CombatDamage("4d8 + 7", DamageType.BLUDGEONING),),
+                        ),
+                    ),
                 ),
                 MonsterAbility(
                     name="Thorn Volley",
                     description="Ranged Attack Roll: +12, range 60/180 ft. Hit: 20 (3d8 + 7) Piercing damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=12,
+                            damage=(CombatDamage("3d8 + 7", DamageType.PIERCING),),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Life-Draining Root",
                     description="Constitution Saving Throw: DC 20, one Huge or smaller creature the blight can see within 30 feet. Failure: 14 (2d6 + 7) Necrotic damage, and the target has the Grappled condition (escape DC 17) from one of six roots. Until the grapple ends, the target has the Restrained condition and takes 14 (4d6) Necrotic damage at the start of each of its turns. The target's Hit Point maximum decreases by an amount equal to the Necrotic damage taken, and the blight regains Hit Points equal to that amount.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.CONSTITUTION,
+                            dc=20,
+                            damage=(CombatDamage("2d6 + 7", DamageType.NECROTIC),),
+                            conditions=(CombatCondition(Condition.GRAPPLED),),
+                            notes=(
+                                "Also: and the target has the Grappled condition (escape DC 17) from one of six roots. Until the grapple ends, the target has the Restrained condition and takes 14 (4d6) Necrotic damage at the start of each of its turns. The target's Hit Point maximum decreases by an amount equal to the Necrotic damage taken, and the blight regains Hit Points equal to that amount",
+                            ),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -447,15 +592,42 @@ class IronGolem(ExtendedCombatantData):
                 MonsterAbility(
                     name="Bladed Arm",
                     description="Melee Attack Roll: +12, reach 10 ft. Hit: 20 (3d8 + 7) Slashing damage plus 10 (3d6) Fire damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=12,
+                            damage=(
+                                CombatDamage("3d8 + 7", DamageType.SLASHING),
+                                CombatDamage("3d6", DamageType.FIRE),
+                            ),
+                        ),
+                    ),
                 ),
                 MonsterAbility(
                     name="Fiery Bolt",
                     description="Ranged Attack Roll: +10, range 120 ft. Hit: 36 (8d8) Fire damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=10,
+                            damage=(CombatDamage("8d8", DamageType.FIRE),),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Poison Breath (Recharge 6)",
                     description="Constitution Saving Throw: DC 18, each creature in a 60-foot Cone. Failure: 55 (10d10) Poison damage. Success: Half damage.",
                     recharge=6,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.CONSTITUTION,
+                            dc=18,
+                            half_on_success=True,
+                            damage=(CombatDamage("10d10", DamageType.POISON),),
+                            area=CombatArea(CombatAreaShape.CONE, 60),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -539,10 +711,32 @@ class Marilith(ExtendedCombatantData):
                 MonsterAbility(
                     name="Pact Blade",
                     description="Melee Attack Roll: +10, reach 5 ft. Hit: 10 (1d10 + 5) Slashing damage plus 7 (2d6) Necrotic damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=10,
+                            damage=(
+                                CombatDamage("1d10 + 5", DamageType.SLASHING),
+                                CombatDamage("2d6", DamageType.NECROTIC),
+                            ),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Constrict",
                     description="Strength Saving Throw: DC 17, one Medium or smaller creature the marilith can see within 5 feet. Failure: 15 (2d10 + 4) Bludgeoning damage. The target has the Grappled condition (escape DC 14), and it has the Restrained condition until the grapple ends.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.STRENGTH,
+                            dc=17,
+                            damage=(CombatDamage("2d10 + 4", DamageType.BLUDGEONING),),
+                            conditions=(CombatCondition(Condition.GRAPPLED),),
+                            notes=(
+                                "Also: The target has the Grappled condition (escape DC 14), and it has the Restrained condition until the grapple ends",
+                            ),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[
@@ -638,10 +832,32 @@ class Planetar(ExtendedCombatantData):
                 MonsterAbility(
                     name="Radiant Sword",
                     description="Melee Attack Roll: +12, reach 10 ft. Hit: 14 (2d6 + 7) Slashing damage plus 18 (4d8) Radiant damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=12,
+                            damage=(
+                                CombatDamage("2d6 + 7", DamageType.SLASHING),
+                                CombatDamage("4d8", DamageType.RADIANT),
+                            ),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Holy Burst",
                     description="Dexterity Saving Throw: DC 20, each enemy in a 20-foot-radius Sphere centered on a point the planetar can see within 120 feet. Failure: 24 (7d6) Radiant damage. Success: Half damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.DEXTERITY,
+                            dc=20,
+                            half_on_success=True,
+                            damage=(CombatDamage("7d6", DamageType.RADIANT),),
+                            area=CombatArea(
+                                CombatAreaShape.SPHERE, 20, point_within_ft=120
+                            ),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Spellcasting",

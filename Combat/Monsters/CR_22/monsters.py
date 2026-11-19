@@ -21,6 +21,15 @@ from Model.Creatures.MonsterAbilities import (
     MonsterCast,
 )
 from Core.Definitions import Ability
+from Model.Content.CombatArea import CombatArea, CombatAreaShape
+from Model.Content.CombatEffect import (
+    CombatCondition,
+    CombatDamage,
+    CombatEffect,
+    EffectRoll,
+    TurnEdge,
+    TurnOf,
+)
 
 
 class AncientBronzeDragon(ExtendedCombatantData):
@@ -87,15 +96,47 @@ class AncientBronzeDragon(ExtendedCombatantData):
                 MonsterAbility(
                     name="Rend",
                     description="Melee Attack Roll: +16, reach 15 ft. Hit: 18 (2d8 + 9) Slashing damage plus 9 (2d8) Lightning damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=16,
+                            damage=(
+                                CombatDamage("2d8 + 9", DamageType.SLASHING),
+                                CombatDamage("2d8", DamageType.LIGHTNING),
+                            ),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Lightning Breath (Recharge 5–6)",
                     description="Dexterity Saving Throw: DC 23, each creature in a 120-foot-long, 10-foot-wide Line. Failure: 82 (15d10) Lightning damage. Success: Half damage.",
                     recharge=5,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.DEXTERITY,
+                            dc=23,
+                            half_on_success=True,
+                            damage=(CombatDamage("15d10", DamageType.LIGHTNING),),
+                            area=CombatArea(CombatAreaShape.LINE, 120, width_ft=10),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Repulsion Breath",
                     description="Strength Saving Throw: DC 23, each creature in a 30-foot Cone. Failure: The target is pushed up to 60 feet straight away from the dragon and has the Prone condition.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.STRENGTH,
+                            dc=23,
+                            conditions=(CombatCondition(Condition.PRONE),),
+                            notes=(
+                                "Also: The target is pushed up to 60 feet straight away from the dragon and has the Prone condition",
+                            ),
+                            area=CombatArea(CombatAreaShape.CONE, 30),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Spellcasting",
@@ -120,6 +161,26 @@ class AncientBronzeDragon(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Thunderclap",
                     description="Constitution Saving Throw: DC 22, each creature in a 20-foot-radius Sphere centered on a point the dragon can see within 120 feet. Failure: 13 (3d8) Thunder damage, and the target has the Deafened condition until the end of its next turn.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.CONSTITUTION,
+                            dc=22,
+                            damage=(CombatDamage("3d8", DamageType.THUNDER),),
+                            conditions=(
+                                CombatCondition(
+                                    Condition.DEAFENED,
+                                    until=(TurnEdge.END, TurnOf.TARGET),
+                                ),
+                            ),
+                            notes=(
+                                "Also: and the target has the Deafened condition until the end of its next turn",
+                            ),
+                            area=CombatArea(
+                                CombatAreaShape.SPHERE, 20, point_within_ft=120
+                            ),
+                        ),
+                    ),
                 ),
             ],
             legendary_resistances=4,
@@ -196,11 +257,31 @@ class AncientGreenDragon(ExtendedCombatantData):
                 MonsterAbility(
                     name="Rend",
                     description="Melee Attack Roll: +15, reach 15 ft. Hit: 17 (2d8 + 8) Slashing damage plus 10 (3d6) Poison damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=15,
+                            damage=(
+                                CombatDamage("2d8 + 8", DamageType.SLASHING),
+                                CombatDamage("3d6", DamageType.POISON),
+                            ),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Poison Breath (Recharge 5–6)",
                     description="Constitution Saving Throw: DC 22, each creature in a 90-foot Cone. Failure: 77 (22d6) Poison damage. Success: Half damage.",
                     recharge=5,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.CONSTITUTION,
+                            dc=22,
+                            half_on_success=True,
+                            damage=(CombatDamage("22d6", DamageType.POISON),),
+                            area=CombatArea(CombatAreaShape.CONE, 90),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Spellcasting",
@@ -219,6 +300,20 @@ class AncientGreenDragon(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Noxious Miasma",
                     description="Constitution Saving Throw: DC 21, each creature in a 30-foot-radius Sphere centered on a point the dragon can see within 90 feet. Failure: 17 (5d6) Poison damage, and the target takes a -2 penalty to AC until the end of its next turn. Failure or Success: The dragon can't take this action again until the start of its next turn.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.CONSTITUTION,
+                            dc=21,
+                            damage=(CombatDamage("5d6", DamageType.POISON),),
+                            notes=(
+                                "Also: and the target takes a -2 penalty to AC until the end of its next turn",
+                            ),
+                            area=CombatArea(
+                                CombatAreaShape.SPHERE, 30, point_within_ft=90
+                            ),
+                        ),
+                    ),
                 ),
                 MonsterAbility(
                     name="Pounce",

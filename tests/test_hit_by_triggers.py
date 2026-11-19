@@ -65,6 +65,7 @@ from Core.Definitions import DamageType
 from Model.Content.CombatEffect import CombatEffect
 from Model.Content.CombatTriggers import CombatTrigger, TriggerEvent
 from tests._combat_ui import make_ui
+from tests._combat_ui import described
 
 # ---------------------------------------------------------------------------
 # As data
@@ -444,11 +445,13 @@ def test_a_monster_buttons_hit_asks_as_enter_deals_it(fight, monkeypatch):
     monkeypatch.setattr(random, "randint", lambda a, b: min(b, 14))
     ui._set_targets([clover])
     club = parse_action(
-        {
-            "name": "Greatclub",
-            "description": "Melee Attack Roll: +6, reach 5 ft. Hit: 13 (2d8 + 4)"
-            " Bludgeoning damage.",
-        }
+        described(
+            {
+                "name": "Greatclub",
+                "description": "Melee Attack Roll: +6, reach 5 ft. Hit: 13 (2d8 + 4)"
+                " Bludgeoning damage.",
+            }
+        )
     )
     hp = clover["hp"]
     ui._roll_action(club, ogre)  # 14 + 6 = 20 against AC 18: a hit

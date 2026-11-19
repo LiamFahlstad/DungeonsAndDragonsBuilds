@@ -27,6 +27,7 @@ from Combat.CombatUIQt.effect_options import effect_options, triggered_rows
 from Combat.CombatUIQt.monster_actions import parse_action
 from Combat.CombatUIQt.saves import CustomEffect
 from Combat.Effects.triggers import TriggerChoice, TriggerMode, attack_roll_firings
+from Combat.Tools.monster_effect_text import read_effects
 from Combat.Monsters.CR_2.monsters import Ogre
 from Model.Content.CombatEffect import CombatEffect
 from Model.Content.CombatModifiers import AttackKind
@@ -161,11 +162,12 @@ def _dice(monkeypatch, *rolls: int):
     monkeypatch.setattr(random, "randint", lambda a, b: left.pop(0) if left else 1)
 
 
+_CLUB_TEXT = "Melee Attack Roll: +6, reach 5 ft. Hit: 13 (2d8 + 4) Bludgeoning damage."
 CLUB = parse_action(
     {
         "name": "Greatclub",
-        "description": "Melee Attack Roll: +6, reach 5 ft. Hit: 13 (2d8 + 4)"
-        " Bludgeoning damage.",
+        "description": _CLUB_TEXT,
+        "combat_effects": [e.to_dict() for e in read_effects("Greatclub", _CLUB_TEXT)],
     }
 )
 

@@ -20,7 +20,13 @@ from Model.Creatures.Combatants import (
     ExtendedCombatantData,
     MonsterType,
 )
-from Model.Creatures.MonsterAbilities import MonsterAbility
+from Model.Content.CombatEffect import (
+    CombatDamage,
+    CombatEffect,
+    CombatHitPoints,
+    EffectRoll,
+)
+from Model.Creatures.MonsterAbilities import MonsterAbility, dice_plus
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.View import CharacterView
 from Presentation.CreatureStatBlocks import format_creature_stat_block
@@ -212,6 +218,18 @@ def _build_steel_defender(character: CharacterView) -> ExtendedCombatantData:
                     f"Melee Attack Roll: {spell_attack:+}, reach 5 ft. "
                     f"Hit: 1d8 + {2 + intelligence_modifier} Force damage (1d8 + 2 plus your Intelligence modifier)."
                 ),
+                combat_effects=(
+                    CombatEffect(
+                        roll=EffectRoll.ATTACK,
+                        attack_bonus=spell_attack,
+                        damage=(
+                            CombatDamage(
+                                dice_plus("1d8", 2 + intelligence_modifier),
+                                DamageType.FORCE,
+                            ),
+                        ),
+                    ),
+                ),
             ),
             MonsterAbility(
                 name="Repair (3/Day)",
@@ -220,6 +238,17 @@ def _build_steel_defender(character: CharacterView) -> ExtendedCombatantData:
                     f"equal to 2d8 + {intelligence_modifier} (2d8 plus your Intelligence modifier)."
                 ),
                 per_day=3,
+                combat_effects=(
+                    CombatEffect(
+                        healing=CombatHitPoints(
+                            dice_plus("2d8", intelligence_modifier)
+                        ),
+                        notes=(
+                            "The defender, or one Construct or object it can see"
+                            " within 5 feet of it.",
+                        ),
+                    ),
+                ),
             ),
         ],
         bonus_actions=[],

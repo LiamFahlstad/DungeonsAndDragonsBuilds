@@ -356,8 +356,10 @@ def format_ability_list(abilities: list, section: str = "", monster=None) -> str
 
     Given the monster (its raw dict) and which of its sections these are,
     each ability also gets the fields its name and text give (recharge=5,
-    casts=(MonsterCast("Fear"),), ...: Model/Creatures/MonsterAbilityText.py),
-    which the combat UI reads instead of the text."""
+    casts=(MonsterCast("Fear"),), ...: Model/Creatures/MonsterAbilityText.py)
+    and the combat effects its text gives (combat_effects=(CombatEffect(...),):
+    Combat/Tools/monster_effect_text.py), which the combat UI reads instead
+    of the text."""
     if not abilities:
         return "[]"
     lines = ["["]
@@ -366,11 +368,18 @@ def format_ability_list(abilities: list, section: str = "", monster=None) -> str
         desc = ab.get("description", "")
         fields = ""
         if monster is not None:
-            from Combat.CombatUIQt.monster_actions import read_ability_fields
+            from CharacterContent.Spells.SpellClassConverter import source_of
+            from Combat.Tools.monster_effect_text import (
+                read_ability_effects,
+                read_ability_fields,
+            )
             from Model.Creatures.MonsterAbilityText import keyword_source
 
             read = read_ability_fields(monster, ab, section)
             fields = "".join(f", {kw}" for kw in keyword_source(read))
+            effects = read_ability_effects({**ab, **read}, section)
+            if effects:
+                fields += f", combat_effects={source_of(effects)}"
         lines.append(
             f"        MonsterAbility(name={name!r}, description={desc!r}{fields}),"
         )

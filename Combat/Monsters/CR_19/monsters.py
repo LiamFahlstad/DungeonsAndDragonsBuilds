@@ -16,6 +16,12 @@ from Model.Creatures.Combatants import (
 )
 from Model.Creatures.MonsterAbilities import DcMonsterAbility, MonsterAbility
 from Core.Definitions import Ability
+from Model.Content.CombatEffect import (
+    CombatCondition,
+    CombatDamage,
+    CombatEffect,
+    EffectRoll,
+)
 
 
 class Balor(ExtendedCombatantData):
@@ -94,10 +100,37 @@ class Balor(ExtendedCombatantData):
                 MonsterAbility(
                     name="Flame Whip",
                     description="Melee Attack Roll: +14, reach 30 ft. Hit: 18 (3d6 + 8) Force damage plus 17 (5d6) Fire damage. If the target is a Huge or smaller creature, the balor pulls the target up to 25 feet straight toward itself, and the target has the Prone condition.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=14,
+                            damage=(
+                                CombatDamage("3d6 + 8", DamageType.FORCE),
+                                CombatDamage("5d6", DamageType.FIRE),
+                            ),
+                            conditions=(CombatCondition(Condition.PRONE),),
+                            notes=(
+                                "Also: If the target is a Huge or smaller creature, the balor pulls the target up to 25 feet straight toward itself, and the target has the Prone condition",
+                            ),
+                        ),
+                    ),
                 ),
                 MonsterAbility(
                     name="Lightning Blade",
                     description="Melee Attack Roll: +14, reach 10 ft. Hit: 21 (3d8 + 8) Force damage plus 22 (4d10) Lightning damage, and the target can't take Reactions until the start of the balor's next turn",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=14,
+                            damage=(
+                                CombatDamage("3d8 + 8", DamageType.FORCE),
+                                CombatDamage("4d10", DamageType.LIGHTNING),
+                            ),
+                            notes=(
+                                "Also: and the target can't take Reactions until the start of the balor's next turn",
+                            ),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[

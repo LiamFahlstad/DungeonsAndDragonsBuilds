@@ -21,6 +21,7 @@ from Model.Content.CombatEffect import (
     EffectRoll,
 )
 from Core.Definitions import Ability
+from Model.Content.CombatArea import CombatArea, CombatAreaShape
 
 
 class CommonCultist(ExtendedCombatantData):
@@ -88,6 +89,13 @@ class CommonCultist(ExtendedCombatantData):
                     dice_type=DiceType.D6,
                     damage_bonus=2,
                     damage_type=DamageType.SLASHING,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=4,
+                            damage=(CombatDamage("1d6 + 2", DamageType.SLASHING),),
+                        ),
+                    ),
                 ),
                 RangedAttack(
                     name="Scavenged Sling",
@@ -98,6 +106,13 @@ class CommonCultist(ExtendedCombatantData):
                     dice_type=DiceType.D4,
                     damage_bonus=2,
                     damage_type=DamageType.BLUDGEONING,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=4,
+                            damage=(CombatDamage("1d4 + 2", DamageType.BLUDGEONING),),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[
@@ -168,6 +183,13 @@ class AccursedGroupOf3(ExtendedCombatantData):
                     dice_type=DiceType.D6,
                     damage_bonus=1,
                     damage_type=DamageType.BLUDGEONING,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=4,
+                            damage=(CombatDamage("1d6 + 1", DamageType.BLUDGEONING),),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Grab",
@@ -248,11 +270,21 @@ class CurseCracked(ExtendedCombatantData):
                     dice_type=DiceType.D6,
                     damage_bonus=2,
                     damage_type=DamageType.FORCE,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=5,
+                            damage=(CombatDamage("2d6 + 2", DamageType.FORCE),),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Cracking Surge (Recharge 5-6)",
                     description="The cracks across the Curse Cracked's body flare with searing light. Each creature within 10 feet of it must make a DC 12 Dexterity saving throw, taking 10 (3d6) Force damage on a failed save, or half as much damage on a successful one.",
                     recharge=5,
+                    combat_effects=(
+                        CombatEffect(area=CombatArea(CombatAreaShape.EMANATION, 10)),
+                    ),
                 ),
             ],
             bonus_actions=[
@@ -336,6 +368,17 @@ class CurseBodyBroken(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Eldritch Strike",
                     description="Melee Attack Roll: +5, reach 10 ft. Hit: 7 (1d8 + 3) Bludgeoning damage, and the target must succeed on a DC 12 Strength saving throw or have the Prone condition as the impossibly bent limb wrenches it off balance.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=5,
+                            damage=(CombatDamage("1d8 + 3", DamageType.BLUDGEONING),),
+                            conditions=(CombatCondition(Condition.PRONE),),
+                            notes=(
+                                "Also: and the target must succeed on a DC 12 Strength saving throw or have the Prone condition as the impossibly bent limb wrenches it off balance",
+                            ),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Scream of the Trapped (Recharge 5-6)",
@@ -347,6 +390,17 @@ class CurseBodyBroken(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Grasping Mutation",
                     description="Melee Attack Roll: +5, reach 15 ft. Hit: 5 (1d6 + 3) Bludgeoning damage, and the target has the Grappled condition (escape DC 13) if the Curse Body Broken doesn't have another creature grappled with this action.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=5,
+                            damage=(CombatDamage("1d6 + 3", DamageType.BLUDGEONING),),
+                            conditions=(CombatCondition(Condition.GRAPPLED),),
+                            notes=(
+                                "Also: and the target has the Grappled condition (escape DC 13) if the Curse Body Broken doesn't have another creature grappled with this action",
+                            ),
+                        ),
+                    ),
                 ),
             ],
             reactions=[],
@@ -416,6 +470,13 @@ class CurseMindBroken(ExtendedCombatantData):
                     dice_type=DiceType.D6,
                     damage_bonus=2,
                     damage_type=DamageType.PSYCHIC,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=5,
+                            damage=(CombatDamage("2d6 + 2", DamageType.PSYCHIC),),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Memory Shatter (Recharge 5-6)",
@@ -425,11 +486,17 @@ class CurseMindBroken(ExtendedCombatantData):
                 MonsterAbility(
                     name="Whispering Madness",
                     description="Each creature within 15 feet of the Curse Mind Broken that can hear its ceaseless whispering has Disadvantage on Concentration saving throws and can't speak or cast spells with a Verbal component clearly enough to be understood.",
+                    combat_effects=(
+                        CombatEffect(area=CombatArea(CombatAreaShape.EMANATION, 15)),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Curse Discharge (Recharge 5-6)",
                     description="Raw curse-magic bursts outward in a wave. Each creature within 15 feet of the Curse Mind Broken must make a DC 12 Dexterity saving throw, taking 16 (3d10) Force damage on a failed save, or half as much damage on a successful one.",
                     recharge=5,
+                    combat_effects=(
+                        CombatEffect(area=CombatArea(CombatAreaShape.EMANATION, 15)),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -512,6 +579,16 @@ class HaratCR1(ExtendedCombatantData):
                     damage_bonus=3,
                     damage_type=DamageType.BLUDGEONING,
                     additional_ruling="Harat can choose to deal Thunder damage instead of Bludgeoning damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=5,
+                            damage=(CombatDamage("1d6 + 3", DamageType.BLUDGEONING),),
+                            notes=(
+                                "Also: Harat can choose to deal Thunder damage instead of Bludgeoning damage",
+                            ),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -592,6 +669,13 @@ class GreypawCR1(ExtendedCombatantData):
                     dice_type=DiceType.D10,
                     damage_bonus=3,
                     damage_type=DamageType.PIERCING,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=5,
+                            damage=(CombatDamage("1d10 + 3", DamageType.PIERCING),),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -661,6 +745,16 @@ class GoblinKingCR1(ExtendedCombatantData):
                     damage_bonus=2,
                     damage_type=DamageType.SLASHING,
                     additional_ruling="If the attack roll had Advantage, the target takes an extra 2 (1d4) Slashing damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=4,
+                            damage=(CombatDamage("1d6 + 2", DamageType.SLASHING),),
+                            notes=(
+                                "Also: If the attack roll had Advantage, the target takes an extra 2 (1d4) Slashing damage",
+                            ),
+                        ),
+                    ),
                 ),
                 RangedAttack(
                     name="Shortbow",
@@ -672,6 +766,16 @@ class GoblinKingCR1(ExtendedCombatantData):
                     damage_bonus=2,
                     damage_type=DamageType.PIERCING,
                     additional_ruling="If the attack roll had Advantage, the target takes an extra 2 (1d4) Piercing damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=4,
+                            damage=(CombatDamage("1d6 + 2", DamageType.PIERCING),),
+                            notes=(
+                                "Also: If the attack roll had Advantage, the target takes an extra 2 (1d4) Piercing damage",
+                            ),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[
@@ -761,6 +865,13 @@ class HumanPaladinOfDevotion(ExtendedCombatantData):
                     dice_type=DiceType.D8,
                     damage_bonus=2,
                     damage_type=DamageType.RADIANT,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=4,
+                            damage=(CombatDamage("1d8 + 2", DamageType.RADIANT),),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Compelled Duel (1/Day)",
@@ -878,6 +989,13 @@ class OrcAssassin(ExtendedCombatantData):
                     dice_type=DiceType.D6,
                     damage_bonus=3,
                     damage_type=DamageType.PIERCING,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=5,
+                            damage=(CombatDamage("1d6 + 3", DamageType.PIERCING),),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[

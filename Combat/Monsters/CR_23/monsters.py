@@ -21,6 +21,17 @@ from Model.Creatures.MonsterAbilities import (
     MonsterCast,
 )
 from Core.Definitions import Ability
+from Model.Content.CombatArea import CombatArea, CombatAreaShape
+from Model.Content.CombatEffect import (
+    CombatCondition,
+    CombatDamage,
+    CombatEffect,
+    CombatHitPoints,
+    EffectRoll,
+    TurnEdge,
+    TurnOf,
+)
+from Model.Content.CombatTriggers import CombatTrigger, TriggerEvent
 
 
 class AncientBlueDragon(ExtendedCombatantData):
@@ -82,11 +93,31 @@ class AncientBlueDragon(ExtendedCombatantData):
                 MonsterAbility(
                     name="Rend",
                     description="Melee Attack Roll: +16, reach 15 ft. Hit: 18 (2d8 + 9) Slashing damage plus 11 (2d10) Lightning damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=16,
+                            damage=(
+                                CombatDamage("2d8 + 9", DamageType.SLASHING),
+                                CombatDamage("2d10", DamageType.LIGHTNING),
+                            ),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Lightning Breath (Recharge 5–6)",
                     description="Dexterity Saving Throw: DC 23, each creature in a 120-foot-long, 10-foot-wide Line. Failure: 88 (16d10) Lightning damage. Success: Half damage.",
                     recharge=5,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.DEXTERITY,
+                            dc=23,
+                            half_on_success=True,
+                            damage=(CombatDamage("16d10", DamageType.LIGHTNING),),
+                            area=CombatArea(CombatAreaShape.LINE, 120, width_ft=10),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Spellcasting",
@@ -178,15 +209,53 @@ class AncientSilverDragon(ExtendedCombatantData):
                 MonsterAbility(
                     name="Rend",
                     description="Melee Attack Roll: +17, reach 15 ft. Hit: 19 (2d8 + 10) Slashing damage plus 9 (2d8) Cold damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=17,
+                            damage=(
+                                CombatDamage("2d8 + 10", DamageType.SLASHING),
+                                CombatDamage("2d8", DamageType.COLD),
+                            ),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Cold Breath (Recharge 5–6)",
                     description="Constitution Saving Throw: DC 24, each creature in a 90-foot Cone. Failure: 67 (15d8) Cold damage. Success: Half damage.",
                     recharge=5,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.CONSTITUTION,
+                            dc=24,
+                            half_on_success=True,
+                            damage=(CombatDamage("15d8", DamageType.COLD),),
+                            area=CombatArea(CombatAreaShape.CONE, 90),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Paralyzing Breath",
                     description="Constitution Saving Throw: DC 24, each creature in a 90-foot Cone. First Failure: The target has the Incapacitated condition until the end of its next turn, when it repeats the save. Second Failure: The target has the Paralyzed condition, and it repeats the save at the end of each of its turns, ending the effect on itself on a success. After 1 minute, it succeeds automatically.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.CONSTITUTION,
+                            dc=24,
+                            repeat_save=True,
+                            conditions=(
+                                CombatCondition(
+                                    Condition.INCAPACITATED,
+                                    until=(TurnEdge.END, TurnOf.TARGET),
+                                ),
+                            ),
+                            notes=(
+                                "Also: The target has the Incapacitated condition until the end of its next turn, when it repeats the save. Second Failure: The target has the Paralyzed condition, and it repeats the save at the end of each of its turns, ending the effect on itself on a success. After 1 minute, it succeeds automatically",
+                            ),
+                            area=CombatArea(CombatAreaShape.CONE, 90),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Spellcasting",
@@ -205,6 +274,19 @@ class AncientSilverDragon(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Cold Gale",
                     description="Dexterity Saving Throw: DC 23, each creature in a 60-foot-long, 10-foot-wide Line. Failure: 14 (4d6) Cold damage, and the target is pushed up to 30 feet straight away from the dragon. Success: Half damage only. Failure or Success: The dragon can't take this action again until the start of its next turn.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.DEXTERITY,
+                            dc=23,
+                            half_on_success=True,
+                            damage=(CombatDamage("4d6", DamageType.COLD),),
+                            notes=(
+                                "Also: and the target is pushed up to 30 feet straight away from the dragon",
+                            ),
+                            area=CombatArea(CombatAreaShape.LINE, 60, width_ft=10),
+                        ),
+                    ),
                 ),
                 MonsterAbility(
                     name="Pounce",
@@ -355,10 +437,47 @@ class Empyrean(ExtendedCombatantData):
                 MonsterAbility(
                     name="Sacred Weapon",
                     description="Melee Attack Roll: +17, reach 10 ft. Hit: 31 (6d6 + 10) Force damage, and the target has the Stunned condition until the start of the empyrean's next turn. The target can choose not to be Stunned, in which case it takes an extra 21 Force damage that bypasses Resistance or Immunity.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=17,
+                            damage=(CombatDamage("6d6 + 10", DamageType.FORCE),),
+                            notes=(
+                                "Also: The target can choose not to be Stunned, in which case it takes an extra 21 Force damage that bypasses Resistance or Immunity",
+                            ),
+                        ),
+                        CombatEffect(
+                            name="Sacred Weapon: Stunned",
+                            conditions=(
+                                CombatCondition(
+                                    Condition.STUNNED,
+                                    until=(TurnEdge.START, TurnOf.SOURCE),
+                                ),
+                            ),
+                            spends_use=False,
+                            trigger=CombatTrigger(
+                                TriggerEvent.HIT, optional=False, after="Sacred Weapon"
+                            ),
+                        ),
+                    ),
                 ),
                 MonsterAbility(
                     name="Divine Ray",
                     description="Ranged Attack Roll: +15, range 600 ft. Hit: 35 (6d8 + 8) Necrotic or Radiant damage (empyrean's choice).",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=15,
+                            damage=(
+                                CombatDamage(
+                                    "6d8 + 8",
+                                    None,
+                                    (DamageType.NECROTIC, DamageType.RADIANT),
+                                ),
+                            ),
+                            notes=("Also: (empyrean's choice)",),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Spellcasting",
@@ -371,10 +490,23 @@ class Empyrean(ExtendedCombatantData):
                 MonsterAbility(
                     name="Bolster",
                     description="The empyrean gains 10 Temporary Hit Points, and the empyrean and each ally within 30 feet of it gain Advantage on D20 Tests until the end of the empyrean's next turn. The empyrean can't take this action again until the start of its next turn.",
+                    combat_effects=(CombatEffect(temp_hp=CombatHitPoints(dice="10")),),
                 ),
                 DcMonsterAbility(
                     name="Shockwave of Glory",
                     description="Constitution Saving Throw: DC 23, each creature in a 30-foot Emanation originating from the empyrean. Failure: 27 (6d8) Force damage, and the target has the Prone condition. Success: Half damage only. Failure or Success: The empyrean can't take this action again until the start of its next turn.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.CONSTITUTION,
+                            dc=23,
+                            half_on_success=True,
+                            damage=(CombatDamage("6d8", DamageType.FORCE),),
+                            conditions=(CombatCondition(Condition.PRONE),),
+                            notes=("Also: and the target has the Prone condition",),
+                            area=CombatArea(CombatAreaShape.EMANATION, 30),
+                        ),
+                    ),
                 ),
                 MonsterAbility(
                     name="Smite",
@@ -464,18 +596,71 @@ class Kraken(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Tentacle",
                     description="Melee Attack Roll: +17, reach 30 ft. Hit: 24 (4d6 + 10) Bludgeoning damage. The target has the Grappled condition (escape DC 20) from one of ten tentacles, and it has the Restrained condition until the grapple ends.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=17,
+                            damage=(CombatDamage("4d6 + 10", DamageType.BLUDGEONING),),
+                        ),
+                        CombatEffect(
+                            name="Tentacle: Grappled + Restrained",
+                            conditions=(
+                                CombatCondition(Condition.GRAPPLED),
+                                CombatCondition(Condition.RESTRAINED),
+                            ),
+                            spends_use=False,
+                            notes=(
+                                "Escape DC 20, from one of ten tentacles. Restrained until the grapple ends.",
+                            ),
+                            trigger=CombatTrigger(
+                                TriggerEvent.HIT, optional=False, after="Tentacle"
+                            ),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Fling",
                     description="The kraken throws a Large or smaller creature Grappled by it to a space it can see within 60 feet of itself that isn't in the air. Dexterity Saving Throw: DC 25, the creature thrown and each creature in the destination space. Failure: 18 (4d8) Bludgeoning damage, and the target has the Prone condition. Success: Half damage only.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.DEXTERITY,
+                            dc=25,
+                            half_on_success=True,
+                            damage=(CombatDamage("4d8", DamageType.BLUDGEONING),),
+                            conditions=(CombatCondition(Condition.PRONE),),
+                            notes=("Also: and the target has the Prone condition",),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Lightning Strike",
                     description="Dexterity Saving Throw: DC 23, one creature the kraken can see within 120 feet. Failure: 33 (6d10) Lightning damage. Success: Half damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.DEXTERITY,
+                            dc=23,
+                            half_on_success=True,
+                            damage=(CombatDamage("6d10", DamageType.LIGHTNING),),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Swallow",
                     description="Dexterity Saving Throw: DC 25, one creature Grappled by the kraken (it can have up to four creatures swallowed at a time). Failure: 23 (3d8 + 10) Piercing damage. If the target is Large or smaller, it is swallowed and no longer Grappled. A swallowed creature has the Restrained condition, has Total Cover against attacks and other effects outside the kraken, and takes 24 (7d6) Acid damage at the start of each of its turns. If the kraken takes 50 damage or more on a single turn from a creature inside it, the kraken must succeed on a DC 25 Constitution saving throw at the end of that turn or regurgitate all swallowed creatures, each of which falls in a space within 10 feet of the kraken with the Prone condition. If the kraken dies, any swallowed creature no longer has the Restrained condition and can escape from the corpse using 15 feet of movement, exiting Prone.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.DEXTERITY,
+                            dc=25,
+                            damage=(CombatDamage("3d8 + 10", DamageType.PIERCING),),
+                            conditions=(CombatCondition(Condition.RESTRAINED),),
+                            notes=(
+                                "Also: If the target is Large or smaller, it is swallowed and no longer Grappled. A swallowed creature has the Restrained condition, has Total Cover against attacks and other effects outside the kraken, and takes 24 (7d6) Acid damage at the start of each of its turns. If the kraken takes 50 damage or more on a single turn from a creature inside it, the kraken must succeed on a DC 25 Constitution saving throw at the end of that turn or regurgitate all swallowed creatures, each of which falls in a space within 10 feet of the kraken with the Prone condition. If the kraken dies, any swallowed creature no longer has the Restrained condition and can escape from the corpse using 15 feet of movement, exiting Prone",
+                            ),
+                        ),
+                    ),
                 ),
             ],
             bonus_actions=[],
@@ -489,6 +674,17 @@ class Kraken(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Toxic Ink",
                     description="Constitution Saving Throw: DC 23, each creature in a 15-foot Emanation originating from the kraken while it is underwater. Failure: The target has the Blinded and Poisoned conditions until the end of the kraken's next turn. The kraken then moves up to its Speed. Failure or Success: The kraken can't take this action again until the start of its next turn.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.CONSTITUTION,
+                            dc=23,
+                            notes=(
+                                "Also: The target has the Blinded and Poisoned conditions until the end of the kraken's next turn. The kraken then moves up to its Speed",
+                            ),
+                            area=CombatArea(CombatAreaShape.EMANATION, 15),
+                        ),
+                    ),
                 ),
             ],
             legendary_resistances=4,

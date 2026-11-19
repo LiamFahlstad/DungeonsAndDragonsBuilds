@@ -15,6 +15,8 @@ from Model.Creatures.MonsterAbilities import (
     NamedAttackAction,
 )
 from Core.Definitions import Ability
+from Model.Content.CombatArea import CombatArea, CombatAreaShape
+from Model.Content.CombatEffect import CombatDamage, CombatEffect, EffectRoll
 
 
 class TheHeadlessDragon(ExtendedCombatantData):
@@ -90,6 +92,13 @@ class TheHeadlessDragon(ExtendedCombatantData):
                     dice_type=DiceType.D10,
                     damage_bonus=6,
                     damage_type=DamageType.SLASHING,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=11,
+                            damage=(CombatDamage("2d10 + 6", DamageType.SLASHING),),
+                        ),
+                    ),
                 ),
                 MeleeAttack(
                     name="Tail",
@@ -99,11 +108,21 @@ class TheHeadlessDragon(ExtendedCombatantData):
                     dice_type=DiceType.D8,
                     damage_bonus=6,
                     damage_type=DamageType.BLUDGEONING,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=11,
+                            damage=(CombatDamage("2d8 + 6", DamageType.BLUDGEONING),),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Sigil Breath (Recharge 5-6)",
                     description="The metal sigil erupts with corrosive void-acid in a 60-foot line. Each creature in the line makes a DC 18 Dexterity saving throw, taking 54 (12d8) Acid damage on a failed save, or half as much on a success. A creature that fails the save also can't speak or make any sound (as the Silence spell centered on it) for 1 minute.",
                     recharge=5,
+                    combat_effects=(
+                        CombatEffect(area=CombatArea(CombatAreaShape.LINE, 60)),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Frightful Presence",

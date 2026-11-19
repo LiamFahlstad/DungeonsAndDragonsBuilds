@@ -15,6 +15,12 @@ from Model.Creatures.MonsterAbilities import (
     SavingThrowEffect,
 )
 from Core.Definitions import Ability
+from Model.Content.CombatEffect import (
+    CombatCondition,
+    CombatDamage,
+    CombatEffect,
+    EffectRoll,
+)
 
 
 class TheCrownWithoutAKing(ExtendedCombatantData):
@@ -89,6 +95,13 @@ class TheCrownWithoutAKing(ExtendedCombatantData):
                     dice_type=DiceType.D6,
                     damage_bonus=2,
                     damage_type=DamageType.PIERCING,
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=7,
+                            damage=(CombatDamage("2d6 + 2", DamageType.PIERCING),),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Coronation (Recharge 5-6)",
@@ -193,6 +206,16 @@ class TheRoadChoir(ExtendedCombatantData):
                 MonsterAbility(
                     name="Grasping Limb",
                     description="Melee Attack Roll: +8, reach 10 ft. Hit: 12 (2d6 + 5) Bludgeoning damage plus 5 (1d8) Necrotic damage.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.ATTACK,
+                            attack_bonus=8,
+                            damage=(
+                                CombatDamage("2d6 + 5", DamageType.BLUDGEONING),
+                                CombatDamage("1d8", DamageType.NECROTIC),
+                            ),
+                        ),
+                    ),
                 ),
                 SavingThrowEffect(
                     name="Swallowed Into the Mass",
@@ -200,6 +223,17 @@ class TheRoadChoir(ExtendedCombatantData):
                     dc=16,
                     target="one Large or smaller creature within 10 feet",
                     failure_effect="The target is dragged into the writhing mass of bodies and has the Grappled condition (escape DC 16). Until the grapple ends, the target has the Restrained condition and takes 9 (2d8) Necrotic damage at the start of each of its turns as dozens of dead hands claw at it from every side. The Road Choir can have up to two creatures Grappled by this action at a time.",
+                    combat_effects=(
+                        CombatEffect(
+                            roll=EffectRoll.SAVE,
+                            save_ability=Ability.STRENGTH,
+                            dc=16,
+                            conditions=(CombatCondition(Condition.GRAPPLED),),
+                            notes=(
+                                "Also: The target is dragged into the writhing mass of bodies and has the Grappled condition (escape DC 16). Until the grapple ends, the target has the Restrained condition and takes 9 (2d8) Necrotic damage at the start of each of its turns as dozens of dead hands claw at it from every side. The Road Choir can have up to two creatures Grappled by this action at a time",
+                            ),
+                        ),
+                    ),
                 ),
                 DcMonsterAbility(
                     name="Directions to Salvation (Recharge 5-6)",

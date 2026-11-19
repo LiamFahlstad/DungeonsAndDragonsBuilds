@@ -19,6 +19,7 @@ from Combat.Effects.triggers import OpportunityAttack
 from Combat.PlayerCombatant import combatant_from_character
 from Model.Content.StandardActions import DISENGAGE
 from tests._combat_ui import make_ui, open_dialog
+from tests._combat_ui import described
 
 
 @pytest.fixture(autouse=True)
@@ -142,16 +143,20 @@ def test_the_attack_picked_is_a_melee_one():
     archer = {
         "name": "Archer",
         "actions": [
-            {
-                "name": "Longbow",
-                "description": "Ranged Attack Roll: +5, range 150/600 ft. Hit:"
-                " 7 (1d8 + 3) Piercing damage.",
-            },
-            {
-                "name": "Dagger",
-                "description": "Melee or Ranged Attack Roll: +5, reach 5 ft. or"
-                " range 20/60 ft. Hit: 5 (1d4 + 3) Piercing damage.",
-            },
+            described(
+                {
+                    "name": "Longbow",
+                    "description": "Ranged Attack Roll: +5, range 150/600 ft. Hit:"
+                    " 7 (1d8 + 3) Piercing damage.",
+                }
+            ),
+            described(
+                {
+                    "name": "Dagger",
+                    "description": "Melee or Ranged Attack Roll: +5, reach 5 ft. or"
+                    " range 20/60 ft. Hit: 5 (1d4 + 3) Piercing damage.",
+                }
+            ),
         ],
     }
     # No plain melee attack: one that can be melee or ranged, never the bow.
