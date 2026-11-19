@@ -845,6 +845,7 @@ class _Reader:
                 ("once_per_turn", False),
                 ("reaction", False),
                 ("enemy_only", False),
+                ("sees", False),
             )
         }
         return self.build(
@@ -860,6 +861,12 @@ class _Reader:
             when=self.kind(data.get("when"), "trigger.when", (str,), ""),
             aim=self.enum(data.get("aim"), "trigger.aim", TriggerAim)
             or TriggerAim.TARGET,
+            others_within_ft=self.kind(
+                data.get("others_within_ft"), "trigger.others_within_ft", (int,), None
+            ),
+            within_ft=self.kind(
+                data.get("within_ft"), "trigger.within_ft", (int,), None
+            ),
             **flags,
         )
 

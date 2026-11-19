@@ -284,7 +284,7 @@ class ManifestationOfDurmor(ExtendedCombatantData):
                                 TriggerEvent.HIT_BY,
                                 optional=False,
                                 attacks=AttackKind.MELEE,
-                                when="the attacker is within 5 feet of the manifestation",
+                                within_ft=5,
                             ),
                             notes=("To the creature that hit it in melee.",),
                         ),

@@ -52,8 +52,8 @@ About 160 `re.` calls in `Combat/`. Sorted by what they read:
 
 | Phase | Step | State |
 |---|---|---|
-| 1 | Read the fields that already exist (group A) | 1.2 **done** with Phase 3 (R3); 1.1, 1.3 not started |
-| 2 | Our own `when` strings become fields (group B) | Not started |
+| 1 | Read the fields that already exist (group A) | **Done** (2026-11-19): 1.2 with Phase 3 (R3), 1.1 and 1.3 (R10) |
+| 2 | Our own `when` strings become fields (group B) | **Done** (2026-11-19, R11) |
 | 3 | `CombatArea` for spells and features (group C) | **Done** (2026-11-19, R1-R8). 3.5 done for described spells; Sharpshooter and Spell Sniper not (R6) |
 | 4 | Monster stat-block fields at generation time (group D) | Not started |
 | 5 | Retire `EffectText` (group E) | Not started; waits on the content rollout |
@@ -297,9 +297,62 @@ Remaining text regexes under `Combat/` after Phase 3: group B (Phase 2),
 group D (Phase 4, including `_monster_area` and `ranges.py`'s
 "ranged spell attack"), group E (`EffectText`, Phase 5), and group F.
 
+- **R10. Phase 1.1 and 1.3 (2026-11-19).**
+  - *1.1.* `MonsterAbilities.stated_reach_and_range(ability)` reads a
+    MeleeAttack's, RangedAttack's or MeleeOrRangedAttack's `reach_ft`,
+    `range_ft` and `long_range_ft`. It works on the ability or on its log
+    dict, which `EncounterLogs._encode` writes with every field.
+    `MonsterAction.stated_range` keeps them. `ranges.monster_action_range`
+    is what the turn column and `pick_attack_range` call now, and
+    `arena.reach_ft` reads the field too. `action_range` and `_REACH` stay
+    only for a freeform `MonsterAbility`, whose text is all there is
+    (Phase 4 gives those fields). A feature's tooltip still goes through
+    `action_range` in `pick_attack_range`'s last line.
+  - *1.3.* The text read was deleted, not kept for old logs: a log never
+    holds a player's `"ac"` (`PLAYER_FIGHT_KEYS` doesn't list it; players
+    are rebuilt from their build each time), so no old log has the
+    sentence. `PlayerCombatant` writes `ac_without_shield`
+    (`AC_WITHOUT_SHIELD_KEY`, None without a Shield), and Wild Shape sets
+    it to None while in a form (the "kept" record puts it back).
+    `"ac"` is now only shown.
+  - *Goldens:* the plan said "no golden changes", but
+    `tests/snapshots/combatants.json` gains the new key for every build
+    (a number for the 52 with a Shield). Nothing else changed.
+- **R11. Phase 2 (2026-11-19).**
+  - *2.1:* `CombatTrigger` has `within_ft` and `sees`, for events with
+    another creature only. `CombatTrigger.asks` says what's left to the GM
+    (`asked_text`: "you can see it within 60 feet of you"). Fire Shield's
+    distance was on a badge's `WhenHit`, not a trigger, so `WhenHit` got
+    `within_ft` too. `triggers._asked` reads the fields. `settle_when`,
+    `_WHEN_WITHIN` and `_WHEN_SEES` are deleted. The map's sight now
+    settles `sees` even when the distance isn't known; before, it was only
+    checked once the distance was settled. Moved to fields: Storm's Thunder
+    (Goliath), Warding Flare, Hellish Rebuke, Fire Shield ×2, and the
+    Molten Body trait of the CR 6 homebrew manifestation ("the attacker is
+    within 5 feet of the manifestation", which the old regex never
+    matched). The asked text now always ends "of you" (Goliath's was "it
+    is within 60 feet").
+  - *Found on the way:* `CombatEffect.from_dict` dropped a trigger's
+    `others_within_ft` (Dark One's Blessing), so it was lost on a round
+    trip. It's read now, with the new fields. A round-trip test is in
+    `tests/test_arena_trigger_distances.py`.
+  - *2.2:* `AttacksAgainst` and `CriticalHitsAgainst` have `within_ft` /
+    `farther_than_ft` (Prone, Paralyzed, Unconscious in
+    `RulesConditions.py`). `modifiers.settled_by_distance(modifier, feet)`
+    reads them. When the map gives no distance, `_distance_asked` turns them
+    into the same `when` text as before (`attacker_distance_text`), so
+    the notes read as they did. `_WITHIN_FEET` and `_FARTHER_THAN_FEET` are
+    deleted.
+  - *2.3:* `trigger_problems` (run by `combat_effects.py check`) flags a
+    trigger's or a `WhenHit`'s `when` that says "within N feet" or "you
+    can see it". The `combat-effects` skill's Triggers section says to use
+    the fields instead. Picker goldens changed only in those four rows'
+    trigger dicts.
+
 ## Discovered issues
 
 - DI-103: `test_the_target_label_says_when_a_target_is_obscured` fails on
   HEAD (dbf889cd), before this plan's changes.
 - DI-104: a test asserts Lightning Lure's false area (R9).
-- DI-105: what `CombatArea` can't say yet, found writing R9's areas.
+- DI-105: what `CombatArea` can't say yet, found writing R9's areas. Its
+  plan: [combat-area-gaps-plan.md](combat-area-gaps-plan.md).

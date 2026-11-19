@@ -372,7 +372,7 @@ def test_an_enemy_close_by_that_cant_see_the_archer_imposes_nothing():
 REBUKE = TriggerRow(
     name="Hellish Rebuke",
     trigger=CombatTrigger(
-        TriggerEvent.TAKES_DAMAGE, reaction=True, when="you can see it within 60 feet"
+        TriggerEvent.TAKES_DAMAGE, reaction=True, within_ft=60, sees=True
     ),
 )
 

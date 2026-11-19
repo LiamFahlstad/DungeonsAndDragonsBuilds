@@ -3789,7 +3789,8 @@ class HellishRebuke(ClassSpell):
                 notes=("The creature that damaged you.",),
                 trigger=CombatTrigger(
                     TriggerEvent.TAKES_DAMAGE,
-                    when="you can see it within 60 feet",
+                    within_ft=60,
+                    sees=True,
                 ),
             )
         ]

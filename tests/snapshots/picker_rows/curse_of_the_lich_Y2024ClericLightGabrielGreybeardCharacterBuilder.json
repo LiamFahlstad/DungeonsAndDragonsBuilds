@@ -358,7 +358,8 @@
    "trigger": {
     "enemy_only": true,
     "event": "attacks",
-    "when": "you can see it within 30 feet of you"
+    "sees": true,
+    "within_ft": 30
    },
    "until": [
     "end",

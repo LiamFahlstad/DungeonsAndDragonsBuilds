@@ -19,6 +19,7 @@ from CharacterContent.Spells.SpellFactory.Enums import RangeType
 from Combat.Arena.ranges import (
     AttackRange,
     action_range,
+    monster_action_range,
     spell_attack_range,
     weapon_range,
 )
@@ -1951,8 +1952,9 @@ def pick_attack_range(
     option: EffectOption | None, char: dict | None
 ) -> AttackRange | None:
     """How far a pick's attack roll reaches (Combat/Arena/ranges.py): a
-    spell's attack by its range, a monster's by its text ("reach 10 ft.",
-    "range 80/320 ft."), char's weapon by the weapon; None for a pick that
+    spell's attack by its range, a monster's by its fields (a freeform
+    one's by its text, "reach 10 ft."), char's weapon by the weapon; None
+    for a pick that
     isn't an attack roll, or one whose reach can't be told."""
     if option is None or option.roll != ATTACK_ROLL:
         return None
@@ -1961,7 +1963,7 @@ def pick_attack_range(
         text = f"{option.tooltip} {getattr(spell, 'description', '')}"
         return spell_attack_range(spell_range_ft(spell), text, spell.name)
     if option.monster_action is not None:
-        return action_range(option.monster_action.description, option.name)
+        return monster_action_range(option.monster_action, option.name)
     if option.kind == WEAPON:
         for weapon in (char or {}).get("_weapons_objects") or []:
             if weapon.name == option.name:
@@ -2026,6 +2028,7 @@ def badge_trigger_row(
             optional=False,
             attacks=modifier.attacks,
             when=modifier.when,
+            within_ft=modifier.within_ft,
         ),
         conditions=tuple(condition_names(option.condition)),
         what=_trigger_row_what(option),

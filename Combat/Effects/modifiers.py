@@ -28,7 +28,6 @@ notes it can't have known about come with it. The roll modes are the UI's
 text: "Neutral", "Advantage", "Disadvantage".
 """
 
-import re
 from collections.abc import Callable, Iterable, Mapping
 from dataclasses import dataclass, replace
 from typing import TypeVar
@@ -58,6 +57,7 @@ from Model.Content.CombatModifiers import (
     Speed,
     Vulnerability,
     WhenHit,
+    attacker_distance_text,
     modifier_from_dict,
 )
 from Model.Content.RulesConditions import CONDITION_RULES, conditions_given_by
@@ -275,31 +275,39 @@ def _uncounted(modifier) -> str:
     return f"{modifier.mode}{when}"
 
 
-# The `when`s that ask only how far the attacker is from the creature the
-# modifier is on, which a distance settles: Prone's, Paralyzed's and
-# Unconscious's "the attacker is within 5 feet of it", and Prone's
-# "Otherwise" ("the attacker is farther than 5 feet").
-_WITHIN_FEET = re.compile(r"the attacker is within (\d+) feet(?: of (?:it|you))?")
-_FARTHER_THAN_FEET = re.compile(
-    r"the attacker is farther than (\d+) feet(?: away)?(?: from (?:it|you))?"
-)
+def asks_distance(modifier) -> bool:
+    """Whether a modifier counts only for an attacker at some distance from
+    the creature it's on (`within_ft`, `farther_than_ft`: Prone's,
+    Paralyzed's and Unconscious's 5 feet)."""
+    return (
+        getattr(modifier, "within_ft", None) is not None
+        or getattr(modifier, "farther_than_ft", None) is not None
+    )
 
 
-def settled_by_distance(when: str, distance_ft: int | None) -> bool | None:
-    """Whether `when` holds for an attacker `distance_ft` feet from the
-    creature the modifier is on: True or False for a `when` that asks only
-    how far the attacker is ("the attacker is within 5 feet of it"), with
-    the distance known. None for any other `when`, or with no distance
-    (either creature off the map, or no attacker known): the GM's to judge."""
-    if distance_ft is None:
+def settled_by_distance(modifier, distance_ft: int | None) -> bool | None:
+    """Whether a modifier's attacker distance (`within_ft`,
+    `farther_than_ft`) holds for an attacker `distance_ft` feet from the
+    creature the modifier is on. None for one that asks no distance, or with
+    no distance (either creature off the map, or no attacker known): the
+    GM's to judge."""
+    if distance_ft is None or not asks_distance(modifier):
         return None
-    within = _WITHIN_FEET.fullmatch(when)
-    if within:
-        return distance_ft <= int(within[1])
-    farther = _FARTHER_THAN_FEET.fullmatch(when)
-    if farther:
-        return distance_ft > int(farther[1])
-    return None
+    within = getattr(modifier, "within_ft", None)
+    if within is not None:
+        return distance_ft <= within
+    return distance_ft > modifier.farther_than_ft
+
+
+def _distance_asked(modifier):
+    """A modifier whose attacker distance the map can't settle, as a `when`
+    for the GM to judge: Prone's "the attacker is within 5 feet of it"."""
+    return replace(
+        modifier,
+        when=attacker_distance_text(modifier),
+        within_ft=None,
+        farther_than_ft=None,
+    )
 
 
 def _at_distance(label: str, distance_ft: int | None) -> str:
@@ -317,17 +325,15 @@ def _settled_against(
     rest stay as they are."""
     settled: list[tuple[str, Modifier]] = []
     for label, modifier in sources:
-        holds = (
-            settled_by_distance(modifier.when, distance_ft)
-            if isinstance(modifier, AttacksAgainst) and modifier.when
-            else None
-        )
-        if holds is None:
+        if not (isinstance(modifier, AttacksAgainst) and asks_distance(modifier)):
             settled.append((label, modifier))
+            continue
+        holds = settled_by_distance(modifier, distance_ft)
+        if holds is None:
+            settled.append((label, _distance_asked(modifier)))
         elif holds:
-            settled.append(
-                (_at_distance(label, distance_ft), replace(modifier, when=""))
-            )
+            counted = replace(modifier, within_ft=None, farther_than_ft=None)
+            settled.append((_at_distance(label, distance_ft), counted))
     return settled
 
 
@@ -646,13 +652,17 @@ def _critical_hits_against(
 ) -> list[tuple[str, CriticalHitsAgainst, bool | None]]:
     """Each CriticalHitsAgainst on target, by what gives it, and whether it
     makes a hit by an attacker `distance_ft` away a Critical Hit: True for
-    one without a `when`, its `when` settled by the distance (Paralyzed's
-    "within 5 feet"), or None, the GM's to judge."""
+    one without a `when` or a distance, its distance settled by the map's
+    (Paralyzed's "within 5 feet"), or None, the GM's to judge."""
     return [
         (
             _whose(target, source),
             modifier,
-            settled_by_distance(modifier.when, distance_ft) if modifier.when else True,
+            (
+                settled_by_distance(modifier, distance_ft)
+                if asks_distance(modifier)
+                else (None if modifier.when else True)
+            ),
         )
         for source, modifier in modifiers_on(target)
         if isinstance(modifier, CriticalHitsAgainst)
@@ -667,8 +677,9 @@ def hit_notes(target: dict, distance_ft: int | None = None) -> list[str]:
     notes = []
     for label, modifier, holds in _critical_hits_against(target, distance_ft):
         if holds is None:
-            notes.append(f"{label}: a Critical Hit if {modifier.when} (not counted)")
-        elif not modifier.when:
+            asked = attacker_distance_text(modifier)
+            notes.append(f"{label}: a Critical Hit if {asked} (not counted)")
+        elif not asks_distance(modifier):
             notes.append(f"{label}: a Critical Hit")
         elif holds:
             notes.append(f"{_at_distance(label, distance_ft)}: a Critical Hit")

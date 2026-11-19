@@ -18,12 +18,13 @@ their values: {"event": "hit", "needs_damage": true, "largest_target": "Large"}.
 A badge's turn triggers (AtTurnStart, AtTurnEnd) are modifiers instead
 (CombatModifiers.py), and stay so (Q46)."""
 
+import re
 from dataclasses import dataclass, fields
 from enum import Enum, StrEnum
 from typing import Any
 
 from Core.Definitions import CreatureSize
-from Model.Content.CombatModifiers import AttackKind
+from Model.Content.CombatModifiers import AttackKind, WhenHit
 
 
 class TriggerEvent(StrEnum):
@@ -102,10 +103,12 @@ class CombatTrigger:
     not offered once it's used, and spent as the row is), the other creature
     being an enemy of the owner (`enemy_only`: Dark One's Blessing's "you
     reduce an enemy to 0 Hit Points"). What only the GM can judge is a
-    `when`, said as what follows "if": it always asks, unless it's a distance
-    the battle map settles ("it's within 5 feet of you", "you can see it
-    within 60 feet": Combat/Effects/triggers.py's settle_when). `aim`: who it
-    goes on (TriggerAim); any but TARGET asks, for the GM to pick.
+    `when`, said as what follows "if": it always asks. What the battle map
+    settles are fields: the other creature within `within_ft` feet of the
+    owner (Fire Shield's "within 5 feet of you", Hellish Rebuke's 60), and
+    `sees`, the owner seeing it (Hellish Rebuke's "you can see"); asked
+    (`asks`) when the map can't tell (Combat/Effects/triggers.py). `aim`:
+    who it goes on (TriggerAim); any but TARGET asks, for the GM to pick.
     `others_within_ft` (REDUCES_TO_ZERO only): it also fires when another
     creature reduces one of the owner's enemies within that many feet of the
     owner to 0 Hit Points (Dark One's Blessing's "someone else reduces an
@@ -124,6 +127,8 @@ class CombatTrigger:
     when: str = ""
     aim: TriggerAim = TriggerAim.TARGET
     others_within_ft: int | None = None
+    within_ft: int | None = None
+    sees: bool = False
 
     def __post_init__(self):
         # Text ("hit", "Large") is taken too, as JSON and logs have it.
@@ -160,6 +165,7 @@ class CombatTrigger:
             "once_per_turn",
             "reaction",
             "enemy_only",
+            "sees",
         ):
             if not isinstance(getattr(self, name), bool):
                 raise ValueError(
@@ -198,6 +204,23 @@ class CombatTrigger:
                 raise ValueError(f"others_within_ft is feet above 0, got {feet!r}")
             if event is not TriggerEvent.REDUCES_TO_ZERO:
                 raise ValueError("others_within_ft is for 'reduces to zero' only")
+        if self.within_ft is not None:
+            feet = self.within_ft
+            if not isinstance(feet, int) or isinstance(feet, bool) or feet <= 0:
+                raise ValueError(f"within_ft is feet above 0, got {feet!r}")
+        for name in ("within_ft", "sees"):
+            if getattr(self, name) not in (None, False) and event not in TARGET_EVENTS:
+                raise ValueError(
+                    f"{name} needs an event with another creature in it,"
+                    f" not {event.value!r}"
+                )
+
+    @property
+    def asks(self) -> str:
+        """All it asks the GM, as what follows "if", when the map settles
+        none of it: "you can see it within 60 feet of you", "it's within 5
+        feet of you", its `when`; "" for nothing."""
+        return asked_text(self.when, self.within_ft, self.sees)
 
     def to_dict(self) -> dict:
         """The trigger as plain data: the fields not at their default, enums
@@ -214,6 +237,22 @@ class CombatTrigger:
 TRIGGER_KEYS = tuple(field.name for field in fields(CombatTrigger))
 
 
+def asked_text(when: str, within_ft: int | None = None, sees: bool = False) -> str:
+    """What a trigger asks about the other creature, as what follows "if":
+    the owner seeing it (`sees`), it within `within_ft` feet of the owner,
+    then `when`, what only the GM can judge."""
+    parts = []
+    if sees and within_ft is not None:
+        parts.append(f"you can see it within {within_ft} feet of you")
+    elif sees:
+        parts.append("you can see it")
+    elif within_ft is not None:
+        parts.append(f"it's within {within_ft} feet of you")
+    if when:
+        parts.append(when)
+    return " and ".join(parts)
+
+
 def size_fits(size: str | None, largest: CreatureSize) -> bool | None:
     """Whether a creature of `size` (its card's "size", "Large") is `largest`
     or smaller; None when its size isn't known."""
@@ -226,14 +265,44 @@ def size_fits(size: str | None, largest: CreatureSize) -> bool | None:
     return SIZES.index(known) <= SIZES.index(largest)
 
 
+# A `when` that says what is a field (explicit-attributes plan 2.3): a
+# distance (`within_ft`) or the owner's sight of the other creature
+# (`sees`), which the battle map settles; a `when` is only what it can't.
+_FIELD_IN_WHEN = re.compile(
+    r"\bwithin \d+ (?:feet|ft)\b|\byou can see (?:it|them|the attacker)\b"
+)
+
+
+def _when_problems(where: str, effect) -> list[str]:
+    """A `when` of effect's trigger, or of a WhenHit its badges give, that
+    says a distance or the owner's sight in words."""
+    whens = []
+    trigger = getattr(effect, "trigger", None)
+    if trigger is not None and trigger.when:
+        whens.append(("its trigger", trigger.when, "within_ft / sees"))
+    for condition in getattr(effect, "conditions", ()) or ():
+        for modifier in getattr(condition, "modifiers", ()) or ():
+            if isinstance(modifier, WhenHit) and modifier.when:
+                whens.append(
+                    (f"{condition.name}'s WhenHit", modifier.when, "within_ft")
+                )
+    return [
+        f"{where}: {what}'s when {when!r} says a distance or sight: use {fields}"
+        for what, when, fields in whens
+        if _FIELD_IN_WHEN.search(when)
+    ]
+
+
 def trigger_problems(source: str, effects) -> list[str]:
     """What's wrong with the triggers of one source's combat effects (a
     spell's, a feature's, a monster ability's) that no row alone can tell: an
-    `after` that names no other row of the source. A row's name is its own,
+    `after` that names no other row of the source, and a `when` saying what
+    a field says (a distance, the owner's sight). A row's name is its own,
     or the source's when it has none."""
     names = [effect.name or source for effect in effects]
     problems = []
     for index, effect in enumerate(effects):
+        problems += _when_problems(f"{source!r}[{index}]", effect)
         trigger = getattr(effect, "trigger", None)
         if trigger is None or not trigger.after:
             continue

@@ -1,9 +1,11 @@
 """Distances in triggers, counted from the battle map (Notes/combat-arena-plan.md,
 step 27; DI-085), with no Qt: a `when` that asks how far the other creature
-is (Fire Shield's "it's within 5 feet of you", Hellish Rebuke's "you can see
-it within 60 feet") is settled by the distance when it's known, and Dark
+is (Fire Shield's "within 5 feet of you", Hellish Rebuke's "you can see it
+within 60 feet") is settled by the distance when it's known, and Dark
 One's Blessing also answers a knockout someone else makes within 10 feet of
-its owner (combat-effects plan Q63)."""
+its owner (combat-effects plan Q63). The distance and the sight are fields
+(`within_ft`, `sees`: explicit-attributes plan Phase 2), never read from a
+`when`."""
 
 import pytest
 
@@ -17,31 +19,62 @@ from Combat.Effects.triggers import (
     TriggerRow,
     badge_hit_firings,
     outcome_firings,
-    settle_when,
 )
 from Model.Content.CombatModifiers import AttackKind, WhenHit
-from Model.Content.CombatTriggers import CombatTrigger, TriggerEvent
+from Model.Content.CombatTriggers import CombatTrigger, TriggerEvent, trigger_problems
+from Model.Content.CombatEffect import CombatEffect
+
+TAKES_DAMAGE = TriggerEvent.TAKES_DAMAGE
 
 
 @pytest.mark.parametrize(
-    "when, feet, settled",
+    "trigger, asks",
     [
-        ("it's within 5 feet of you", 5, (True, "")),
-        ("it's within 5 feet of you", 10, (False, "")),
-        ("it is within 60 feet", 60, (True, "")),
-        ("you can see it within 60 feet", 25, (True, "you can see it")),
-        ("you can see it within 30 feet of you", 35, (False, "")),
-        # No distance known, or none in the `when`: the GM's.
-        ("it's within 5 feet of you", None, (None, "it's within 5 feet of you")),
+        (CombatTrigger(TAKES_DAMAGE, within_ft=5), "it's within 5 feet of you"),
         (
-            "the target is a Fiend or an Undead",
-            5,
-            (None, "the target is a Fiend or an Undead"),
+            CombatTrigger(TAKES_DAMAGE, within_ft=60, sees=True),
+            "you can see it within 60 feet of you",
         ),
+        (CombatTrigger(TAKES_DAMAGE, sees=True), "you can see it"),
+        (
+            CombatTrigger(TAKES_DAMAGE, within_ft=5, when="it's a Fiend"),
+            "it's within 5 feet of you and it's a Fiend",
+        ),
+        (CombatTrigger(TAKES_DAMAGE), ""),
     ],
 )
-def test_settle_when(when, feet, settled):
-    assert settle_when(when, feet) == settled
+def test_a_trigger_asks_its_fields_in_words(trigger, asks):
+    assert trigger.asks == asks
+
+
+def test_distance_and_sight_need_another_creature():
+    with pytest.raises(ValueError):
+        CombatTrigger(TriggerEvent.BLOODIED, within_ft=5)
+    with pytest.raises(ValueError):
+        CombatTrigger(TriggerEvent.BLOODIED, sees=True)
+    with pytest.raises(ValueError):
+        CombatTrigger(TAKES_DAMAGE, within_ft=0)
+
+
+def test_they_round_trip_through_a_log():
+    effect = CombatEffect(
+        trigger=CombatTrigger(TAKES_DAMAGE, within_ft=60, sees=True), name="Rebuke"
+    )
+    assert CombatEffect.from_dict(effect.to_dict()) == effect
+    blessing = CombatEffect(
+        trigger=CombatTrigger(TriggerEvent.REDUCES_TO_ZERO, others_within_ft=10)
+    )
+    assert CombatEffect.from_dict(blessing.to_dict()) == blessing
+
+
+def test_a_when_saying_a_distance_or_sight_is_flagged():
+    worded = CombatEffect(
+        trigger=CombatTrigger(TAKES_DAMAGE, when="you can see it within 60 feet")
+    )
+    (problem,) = trigger_problems("Rebuke", [worded])
+    assert "within_ft / sees" in problem
+    judged = CombatEffect(trigger=CombatTrigger(TAKES_DAMAGE, when="it's a Fiend"))
+    assert trigger_problems("Rebuke", [judged]) == []
 
 
 def _creature(name: str, party: bool = False) -> dict:
@@ -62,7 +95,7 @@ def _distance(feet):
 @pytest.fixture
 def fire_shield():
     wizard, ogre = _creature("Wizard", party=True), _creature("Ogre")
-    warm = WhenHit("Fire Shield: warm flames", when="it's within 5 feet of you")
+    warm = WhenHit("Fire Shield: warm flames", within_ft=5)
     wizard["conditions"].append("Fire Shield")
     give_modifiers(wizard, "Fire Shield", (warm,))
     record = next(e for e in wizard["active_effects"] if e["name"] == "Fire Shield")
@@ -101,7 +134,7 @@ def test_fire_shield_still_asks_off_the_map(fire_shield):
 REBUKE = TriggerRow(
     name="Hellish Rebuke",
     trigger=CombatTrigger(
-        TriggerEvent.TAKES_DAMAGE, reaction=True, when="you can see it within 60 feet"
+        TriggerEvent.TAKES_DAMAGE, reaction=True, within_ft=60, sees=True
     ),
 )
 
@@ -128,7 +161,27 @@ def test_hellish_rebuke_is_not_offered_past_60_feet():
 
 def test_off_the_map_it_asks_as_before():
     (firing,) = _rebukes(None)
-    assert firing.why == "if you can see it within 60 feet"
+    assert firing.why == "if you can see it within 60 feet of you"
+
+
+def test_the_maps_sight_settles_it_even_off_the_map():
+    """Sight known, distance not: only the distance is left to ask."""
+    warlock, ogre = _creature("Warlock", party=True), _creature("Ogre")
+    found, _ = outcome_firings(
+        [DamageOutcome(ogre, warlock, 7)],
+        lambda char: [REBUKE] if char is warlock else [],
+        distance_of=_distance(None),
+        sees_of=lambda owner, target: True,
+    )
+    (firing,) = found
+    assert firing.why == "if it's within 60 feet of you"
+    unseen, _ = outcome_firings(
+        [DamageOutcome(ogre, warlock, 7)],
+        lambda char: [REBUKE] if char is warlock else [],
+        distance_of=_distance(25),
+        sees_of=lambda owner, target: False,
+    )
+    assert unseen == []
 
 
 # ---------------------------------------------------------------------------

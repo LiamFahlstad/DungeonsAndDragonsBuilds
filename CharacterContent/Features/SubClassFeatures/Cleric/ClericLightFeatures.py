@@ -189,7 +189,8 @@ class WardingFlare(Feature):
                 trigger=CombatTrigger(
                     TriggerEvent.ATTACKS,
                     enemy_only=True,
-                    when="you can see it within 30 feet of you",
+                    within_ft=30,
+                    sees=True,
                 ),
                 notes=(
                     "Picked by hand, pick the attacker before its roll: the"

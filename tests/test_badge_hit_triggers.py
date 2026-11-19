@@ -46,12 +46,12 @@ COLD = "Armor of Agathys: Cold damage"
 
 
 def test_when_hit_reads_back_as_it_was_written():
-    modifier = WhenHit("Fire Shield: warm flames", when="it's within 5 feet of you")
+    modifier = WhenHit("Fire Shield: warm flames", within_ft=5)
     data = modifier_to_dict(modifier)
     assert data == {
         "type": "WhenHit",
         "effect": "Fire Shield: warm flames",
-        "when": "it's within 5 feet of you",
+        "within_ft": 5,
     }
     assert modifier_from_dict(data) == modifier
     kept = WhenHit(COLD, levels_up=2)
@@ -145,7 +145,7 @@ def test_the_damage_counts_the_slot_it_was_cast_with():
 def test_fire_shield_asks_whether_the_attacker_is_within_5_feet():
     wizard = {"name": "Wizard", "hp": 30, "max_hp": 30, "conditions": []}
     ogre = {"name": "Ogre", "hp": 59, "max_hp": 59, "conditions": []}
-    warm = WhenHit("Fire Shield: warm flames", when="it's within 5 feet of you")
+    warm = WhenHit("Fire Shield: warm flames", within_ft=5)
     _with_badge(wizard, "Fire Shield", (warm,), "Fire Shield", wizard)
     (firing,) = badge_hit_firings(
         AttackOutcome(ogre, wizard, True, kind=AttackKind.MELEE), _row_of

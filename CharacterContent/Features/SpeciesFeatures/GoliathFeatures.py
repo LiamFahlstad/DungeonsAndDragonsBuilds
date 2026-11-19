@@ -313,9 +313,7 @@ class GiantAncestry(Feature):
                 name="Storm's Thunder",
                 damage=(CombatDamage("1d8", DamageType.THUNDER),),
                 notes=("To the creature that just damaged you.",),
-                trigger=CombatTrigger(
-                    TriggerEvent.TAKES_DAMAGE, when="it is within 60 feet"
-                ),
+                trigger=CombatTrigger(TriggerEvent.TAKES_DAMAGE, within_ft=60),
             ),
         }[self.giant_ancestry_type]
         return [effect]

@@ -230,24 +230,29 @@ when it would give nothing, and one with uses is left out with none left
 (the status line says so).
 
 **A `when`** is for what only the GM can judge, written as what follows
-"if": where creatures are ("you can see it within 60 feet"), a damage type
-the dialog may have retyped, a condition the simulator doesn't track
-("your Rage is active"), a roll it doesn't make (Relentless Rage's DC 10
-Constitution save). A `when` always asks: don't add one for something a
-gate checks, or the row stops being AUTO for nothing. The one exception is
-a distance between the row's owner and the other creature, written as
-"within N feet" at its end ("it's within 5 feet of you", "you can see it
-within 60 feet"): once the battle map is in use, it's counted from the
-map, and the row fires as if it had no distance in it, or not at all past
-it (Combat/Effects/triggers.py's `settle_when`). Write a distance that
-way, and keep what else the GM judges before it ("you can see it"). A
-"you can see it" left alone (with or without the distance) is the map's
-too: the owner's sight of the other creature (Combat/Arena/senses.py)
-drops it, or the row, once the map is in use. On a modifier, the sight
-`when`s the map settles are "the attacker can see it" / "can't see it"
-(on the target's AttacksAgainst: Faerie Fire, Invisible) and "the target
-can see it" / "can't see it" (on the attacker's own D20Mode); write them
-word for word.
+"if": a damage type the dialog may have retyped, a condition the
+simulator doesn't track ("your Rage is active"), a roll it doesn't make
+(Relentless Rage's DC 10 Constitution save). A `when` always asks: don't
+add one for something a gate checks, or the row stops being AUTO for
+nothing.
+
+**Distance and sight are fields, never words in a `when`** (explicit-
+attributes plan Phase 2). The other creature within N feet of the row's
+owner is `within_ft=N` on the `CombatTrigger` (Hellish Rebuke's 60, Storm's
+Thunder's 60) or on a badge's `WhenHit` (Fire Shield's 5). The owner seeing
+it ("you can see it") is `sees=True`. Once the battle map is in use, they're
+settled from it (the distance, and the owner's sight of the other creature,
+Combat/Arena/senses.py): the row fires as if they weren't there, or not at
+all. Off the map they're asked, worded for the GM by `CombatTrigger.asks`
+("you can see it within 60 feet of you"). `check` flags a `when` that still
+says "within N feet" or "you can see it". A rules condition's "if the
+attacker is within 5 feet of it" is the same on a modifier: `within_ft` /
+`farther_than_ft` on `AttacksAgainst` and `CriticalHitsAgainst`
+(Model/Content/RulesConditions.py: Prone, Paralyzed, Unconscious). On a
+modifier, the sight `when`s the map settles are "the attacker can see it" /
+"can't see it" (on the target's AttacksAgainst: Faerie Fire, Invisible) and
+"the target can see it" / "can't see it" (on the attacker's own D20Mode);
+write them word for word.
 
 **Leave it untriggered, and say why** (`untriggered = "..."`, a class
 attribute on the feature) when the event is one the simulator can't see or

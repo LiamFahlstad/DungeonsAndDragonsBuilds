@@ -1163,7 +1163,7 @@
      {
       "effect": "Fire Shield: chill flames",
       "type": "WhenHit",
-      "when": "it's within 5 feet of you"
+      "within_ft": 5
      }
     ]
    },
@@ -1231,7 +1231,7 @@
      {
       "effect": "Fire Shield: warm flames",
       "type": "WhenHit",
-      "when": "it's within 5 feet of you"
+      "within_ft": 5
      }
     ]
    },
@@ -1724,7 +1724,8 @@
    "summary": "DC 15 DEX  2d10 Fire  half on save",
    "trigger": {
     "event": "takes damage",
-    "when": "you can see it within 60 feet"
+    "sees": true,
+    "within_ft": 60
    },
    "until": null,
    "upcast": [

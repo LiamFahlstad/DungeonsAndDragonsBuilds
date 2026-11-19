@@ -8,11 +8,13 @@ starts or ends) are in the same list, as they are what it does too.
 
 Each modifier is what one sentence of the rules says. One the simulator can't
 decide by itself, because it depends on where creatures are or what they can
-see, has a `when`, said as what follows "if" ("the attacker is within 5
-feet"): it is shown to the GM next to the roll, not counted, except one
-that asks only how far the attacker is, which the battle map's distance
+see, has a `when`, said as what follows "if" ("the target can't see it"):
+it is shown to the GM next to the roll, not counted. How far the attacker
+is isn't a `when` but fields (`within_ft`, `farther_than_ft`: Prone's "if
+the attacker is within 5 feet of it"), which the battle map's distance
 settles when both creatures are on it (Combat/Effects/modifiers.py,
-settled_by_distance). Anything
+settled_by_distance), and which are said to the GM otherwise
+(attacker_distance_text). Anything
 that changes no roll, AC, Hit Point maximum, Speed, size or damage is a Note.
 
 modifier_to_dict() and modifier_from_dict() are a modifier as plain data, the
@@ -73,6 +75,39 @@ def _check_once(modifier):
         raise ValueError(f"once is True or False, got {modifier.once!r}")
 
 
+def _check_feet(feet: Any, what: str) -> None:
+    """ValueError unless `feet` is None or a distance above 0."""
+    if feet is not None and (
+        not isinstance(feet, int) or isinstance(feet, bool) or feet <= 0
+    ):
+        raise ValueError(f"{what} is feet above 0 or None, got {feet!r}")
+
+
+def _check_attacker_distance(modifier) -> None:
+    name = type(modifier).__name__
+    _check_feet(modifier.within_ft, f"A {name}'s within_ft")
+    _check_feet(modifier.farther_than_ft, f"A {name}'s farther_than_ft")
+    if modifier.within_ft is not None and modifier.farther_than_ft is not None:
+        raise ValueError(f"A {name} has within_ft or farther_than_ft, not both")
+
+
+def attacker_distance_text(modifier) -> str:
+    """What a modifier asks of the attacker's distance, as what follows "if"
+    ("the attacker is within 5 feet of it", "the attacker is farther than 5
+    feet"), with its `when` after it; its `when` alone for one that asks
+    no distance."""
+    parts = []
+    within = getattr(modifier, "within_ft", None)
+    farther = getattr(modifier, "farther_than_ft", None)
+    if within is not None:
+        parts.append(f"the attacker is within {within} feet of it")
+    if farther is not None:
+        parts.append(f"the attacker is farther than {farther} feet")
+    if modifier.when:
+        parts.append(modifier.when)
+    return " and ".join(parts)
+
+
 @dataclass(frozen=True)
 class D20Mode:
     """Its own `tests` have Advantage or Disadvantage: of these `abilities`
@@ -95,7 +130,11 @@ class D20Mode:
 
 @dataclass(frozen=True)
 class AttacksAgainst:
-    """Attack rolls against it have Advantage or Disadvantage. `by_caster`:
+    """Attack rolls against it have Advantage or Disadvantage. Only by an
+    attacker within `within_ft` feet of it, or farther than
+    `farther_than_ft` (Prone's "if the attacker is within 5 feet of it.
+    Otherwise, ..."), which the battle map's distance settles
+    (attacker_distance_text says it to the GM otherwise). `by_caster`:
     only those made by the creature that gave it (Vex: "your next attack
     roll against that creature"). `once`: only the next such attack roll
     (Guiding Bolt, Vex); the badge ends once that roll is made.
@@ -111,9 +150,12 @@ class AttacksAgainst:
     once: bool = False
     seen_attacker: bool = False
     by_allies: bool = False
+    within_ft: int | None = None
+    farther_than_ft: int | None = None
 
     def __post_init__(self):
         _check_once(self)
+        _check_attacker_distance(self)
         if not isinstance(self.by_caster, bool):
             raise ValueError(f"by_caster is True or False, got {self.by_caster!r}")
         if not isinstance(self.by_allies, bool):
@@ -160,9 +202,16 @@ class D20Bonus:
 
 @dataclass(frozen=True)
 class CriticalHitsAgainst:
-    """An attack roll that hits it is a Critical Hit."""
+    """An attack roll that hits it is a Critical Hit: only one by an
+    attacker within `within_ft` feet of it, when given (Paralyzed's "if the
+    attacker is within 5 feet of you"), or farther than `farther_than_ft`."""
 
     when: str = ""
+    within_ft: int | None = None
+    farther_than_ft: int | None = None
+
+    def __post_init__(self):
+        _check_attacker_distance(self)
 
 
 @dataclass(frozen=True)
@@ -584,24 +633,28 @@ class AtTurnEnd:
 @dataclass(frozen=True)
 class WhenHit:
     """As a creature hits its bearer with an attack roll of the `attacks`
-    kind, once the hit's damage is dealt, the bearer uses `effect` (the name
-    of another of the badge's source's combat effects, one that spends no
-    use) on that creature: Armor of Agathys' "If a creature hits you with a
-    melee attack roll ..., the creature takes 5 Cold damage", Fire Shield's
-    2d8. Applied by itself when the attack is surely of that kind and there's
-    no `when` ("it's within 5 feet of you"); otherwise the GM is asked.
-    `levels_up` is kept as the badge is given: the slot levels the spell was
-    cast with above its own, which the effect's upcast counts (Armor of
-    Agathys' 5 more Cold damage per level)."""
+        kind, once the hit's damage is dealt, the bearer uses `effect` (the name
+        of another of the badge's source's combat effects, one that spends no
+        use) on that creature: Armor of Agathys' "If a creature hits you with a
+        melee attack roll ..., the creature takes 5 Cold damage", Fire Shield's
+        2d8. Applied by itself when the attack is surely of that kind and there's
+        no `when`, and the attacker within `within_ft` feet of its bearer, when
+    given (Fire Shield's "within 5 feet of you"), as the battle map's distance
+    settles; otherwise the GM is asked.
+        `levels_up` is kept as the badge is given: the slot levels the spell was
+        cast with above its own, which the effect's upcast counts (Armor of
+        Agathys' 5 more Cold damage per level)."""
 
     effect: str
     attacks: AttackKind = AttackKind.MELEE
     when: str = ""
     levels_up: int = 0
+    within_ft: int | None = None
 
     def __post_init__(self):
         if not isinstance(self.effect, str) or not self.effect.strip():
             raise ValueError("A WhenHit needs the name of the effect it uses")
+        _check_feet(self.within_ft, "A WhenHit's within_ft")
         if not isinstance(self.attacks, AttackKind):
             raise ValueError(
                 f"A WhenHit's attacks is an AttackKind, got {self.attacks!r}"
@@ -709,6 +762,8 @@ _PLAIN: dict[str, type | tuple[type, ...]] = {
     "set_to": int,
     "steps": int,
     "levels_up": int,
+    "within_ft": int,
+    "farther_than_ft": int,
     "past_larger": bool,
     "through_creatures": bool,
     "through_objects": bool,

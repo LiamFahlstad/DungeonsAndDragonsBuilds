@@ -31,7 +31,6 @@ INITIATIVE = D20Test.INITIATIVE
 # Speed 0 counts (speed_in_use reads it; a set_to also stops any bonus, so
 # it "can't increase"), and the sentence stays as the rules say it.
 _SPEED_0 = (Speed(set_to=0), Note("Speed 0: its Speed is 0 and can't increase."))
-_WITHIN_5_FEET = "the attacker is within 5 feet of it"
 _STRENGTH_AND_DEXTERITY = (Ability.STRENGTH, Ability.DEXTERITY)
 _FAILS_STRENGTH_AND_DEXTERITY_SAVES = AutoFail((SAVING_THROW,), _STRENGTH_AND_DEXTERITY)
 
@@ -102,7 +101,7 @@ CONDITION_RULES: dict[Condition, tuple[Modifier, ...]] = {
         *_SPEED_0,
         _FAILS_STRENGTH_AND_DEXTERITY_SAVES,
         AttacksAgainst(ADVANTAGE),
-        CriticalHitsAgainst(when=_WITHIN_5_FEET),
+        CriticalHitsAgainst(within_ft=5),
     ),
     Condition.PETRIFIED: (
         Note(
@@ -123,8 +122,8 @@ CONDITION_RULES: dict[Condition, tuple[Modifier, ...]] = {
             " stand up and end the condition (not with a Speed of 0)."
         ),
         D20Mode((ATTACK_ROLL,), DISADVANTAGE),
-        AttacksAgainst(ADVANTAGE, when=_WITHIN_5_FEET),
-        AttacksAgainst(DISADVANTAGE, when="the attacker is farther than 5 feet"),
+        AttacksAgainst(ADVANTAGE, within_ft=5),
+        AttacksAgainst(DISADVANTAGE, farther_than_ft=5),
     ),
     Condition.RESTRAINED: (
         *_SPEED_0,
@@ -146,7 +145,7 @@ CONDITION_RULES: dict[Condition, tuple[Modifier, ...]] = {
         *_SPEED_0,
         AttacksAgainst(ADVANTAGE),
         _FAILS_STRENGTH_AND_DEXTERITY_SAVES,
-        CriticalHitsAgainst(when=_WITHIN_5_FEET),
+        CriticalHitsAgainst(within_ft=5),
         Note("Unaware: it's unaware of its surroundings."),
     ),
 }

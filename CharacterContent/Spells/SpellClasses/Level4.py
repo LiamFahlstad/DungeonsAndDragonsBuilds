@@ -1569,7 +1569,7 @@ class FireShield(ClassSpell):
                             Resistance((DamageType.COLD,)),
                             WhenHit(
                                 "Fire Shield: warm flames",
-                                when="it's within 5 feet of you",
+                                within_ft=5,
                             ),
                         ),
                     ),
@@ -1588,7 +1588,7 @@ class FireShield(ClassSpell):
                             Resistance((DamageType.FIRE,)),
                             WhenHit(
                                 "Fire Shield: chill flames",
-                                when="it's within 5 feet of you",
+                                within_ft=5,
                             ),
                         ),
                     ),

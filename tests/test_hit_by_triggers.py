@@ -262,7 +262,7 @@ def test_hellish_rebuke_asks_about_the_creature_that_dealt_the_damage(party):
     assert firing.question.startswith(
         "Ogre deals Clover 7 damage: use Hellish Rebuke? 2d10 Fire."
     )
-    assert firing.question.endswith("Check: if you can see it within 60 feet.")
+    assert firing.question.endswith("Check: if you can see it within 60 feet of you.")
 
 
 def test_no_damage_taken_and_its_own_damage_answer_nothing(party):

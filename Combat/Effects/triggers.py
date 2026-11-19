@@ -20,7 +20,6 @@ spell is aimed at, the Custom Effect dialog on whoever is targeted, and
 neither says where the Emanation is. A trigger counts only while its badge is
 on, as a modifier does. Nothing here imports Qt."""
 
-import re
 from collections.abc import Callable, Collection, Iterable
 from dataclasses import dataclass, field, replace
 from enum import StrEnum
@@ -40,6 +39,7 @@ from Model.Content.CombatTriggers import (
     CombatTrigger,
     TriggerAim,
     TriggerEvent,
+    asked_text,
     size_fits,
 )
 from Model.Content.RulesConditions import conditions_with
@@ -850,7 +850,14 @@ def badge_hit_firings(
         row = row_of(bearer, record, modifier)
         if row is None:
             continue
-        when = _asked(modifier.when, bearer, attacker, distance_of, sees_of)
+        when = _asked(
+            modifier.when,
+            bearer,
+            attacker,
+            distance_of,
+            sees_of,
+            within_ft=modifier.within_ft,
+        )
         if when is None:
             continue  # farther than its "within N feet"
         why = [f"if {when}"] if when else []
@@ -869,60 +876,34 @@ def badge_hit_firings(
     return found
 
 
-# A `when` that asks how far the other creature is (arena plan step 27):
-# Fire Shield's "it's within 5 feet of you", Storm's Thunder's "it is within
-# 60 feet", Hellish Rebuke's "you can see it within 60 feet", Warding
-# Flare's "you can see it within 30 feet of you". What comes before the
-# distance is what's left to ask.
-_WHEN_WITHIN = re.compile(
-    r"^(?P<rest>.*?)\s*(?:\bit(?:'s| is| was)\s+)?within (?P<feet>\d+) feet"
-    r"(?: of (?:you|it|yourself))?$"
-)
-
-
-def settle_when(when: str, feet: int | None) -> tuple[bool | None, str]:
-    """What the map's distance `feet` (owner to the other creature) settles
-    of a `when`: (False, "") when it's farther than the `when`'s "within N
-    feet", (True, what's left to ask: "you can see it", or "") when it's
-    within; (None, when) for a `when` with no distance in it, or no
-    distance known."""
-    match = _WHEN_WITHIN.match(when)
-    if match is None or feet is None:
-        return None, when
-    if feet > int(match["feet"]):
-        return False, ""
-    return True, match["rest"].strip()
-
-
-# What's left of a `when` that asks only whether the owner sees the other
-# creature (Hellish Rebuke's, Warding Flare's, once their distance is
-# settled), which the map's sight settles (arena plan step 28).
-_WHEN_SEES = re.compile(r"you can see (?:it|them|the attacker)")
-
-
 def _asked(
     when: str,
     owner: dict,
     target: dict,
     distance_of: DistanceOf | None,
     sees_of: SeesOf | None = None,
+    *,
+    within_ft: int | None = None,
+    sees: bool = False,
 ):
-    """A `when` as the map leaves it: None when the distance rules it out,
-    or the owner doesn't see target where it's asked; else what's still to
-    ask ("" for nothing), with the distance it was settled at said: "you
-    can see it (25 ft. away)"."""
-    if not when:
-        return when
-    feet = distance_of(owner, target) if distance_of is not None else None
-    holds, rest = settle_when(when, feet)
-    if holds is False:
-        return None
-    left = rest if holds else when
-    if sees_of is not None and _WHEN_SEES.fullmatch(left):
+    """What a trigger (or a WhenHit) asks about `target`, as the map leaves
+    it: None when the map rules it out (farther than `within_ft` feet from
+    owner, arena plan step 27; unseen by owner with `sees`, step 28); else
+    what's still to ask ("" for nothing), what the map couldn't settle of
+    the two and `when`, with the distance it settled said: "you can see it
+    (25 ft. away)"."""
+    feet = None
+    if within_ft is not None and distance_of is not None:
+        feet = distance_of(owner, target)
+        if feet is not None and feet > within_ft:
+            return None
+    seen = None
+    if sees and sees_of is not None:
         seen = sees_of(owner, target)
-        if seen is not None:
-            return "" if seen else None
-    if holds and left:
+        if seen is False:
+            return None
+    left = asked_text(when, within_ft if feet is None else None, sees and seen is None)
+    if feet is not None and left:
         return f"{left} ({feet} ft. away)"
     return left
 
@@ -938,7 +919,7 @@ def _firing(
 ) -> HitFiring | None:
     """row's firing for outcome, if its gates let it fire (uses aside).
     `before_damage`: the hit's HIT_BY rows, of the creature hit. A `when`
-    the map's distance settles (`distance_of`, settle_when) is no longer
+    the map settles (`distance_of`, `sees_of`: _asked) is no longer
     asked, and one it rules out doesn't fire."""
     trigger = row.trigger
     event = trigger.event
@@ -1030,7 +1011,15 @@ def _firing(
     conditions = gets.get("conditions") or []
     if row.conditions and all(c in conditions for c in row.conditions):
         return None
-    when = _asked(trigger.when, owner, target, distance_of, sees_of)
+    when = _asked(
+        trigger.when,
+        owner,
+        target,
+        distance_of,
+        sees_of,
+        within_ft=trigger.within_ft,
+        sees=trigger.sees,
+    )
     if when is None:
         return None  # farther than its "within N feet", or unseen
     automatic = not (
@@ -1121,7 +1110,7 @@ def drop_firings(
             spent.append(f"{row.name}: no uses left")
             continue
         automatic = not (
-            trigger.optional or trigger.when or row.costs or row.takes_reaction
+            trigger.optional or trigger.asks or row.costs or row.takes_reaction
         )
         found.append(
             HitFiring(
@@ -1129,7 +1118,7 @@ def drop_firings(
                 target=owner,
                 row=row,
                 mode=TriggerMode.AUTO if automatic else TriggerMode.ASK,
-                why=f"if {trigger.when}" if trigger.when else "",
+                why=f"if {trigger.asks}" if trigger.asks else "",
                 outcome=outcome,
             )
         )
