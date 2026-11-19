@@ -23,11 +23,12 @@ from Combat.Arena.areas import AreaOfEffect, AreaShape
 from Combat.Arena.arena import POSITION_KEY
 from Combat.Arena.geometry import Cell
 from Combat.CombatUIQt.arena_mixin import ARENA_PAGE, CARDS_PAGE, area_reading
-from Combat.CombatUIQt.effect_options import _spell_named
+from Combat.CombatUIQt.effect_options import _spell_named, spell_option
 from Combat.CombatUIQt.saves import MONSTER_ACTION, SPELL, EffectOption
 from Combat.Combatants import Pirate
 from Combat.Monsters.CR_0.monsters import IceMephit
 from Combat.Monsters.CR_1.monsters import Tiger
+from Model.Content.CombatArea import CombatArea, CombatAreaShape
 from tests._combat_ui import make_ui, qapp
 from tests._snapshot_helpers import build
 
@@ -277,23 +278,24 @@ def test_the_bar_remembers_the_last_area_for_a_pick_without_one(fight, monkeypat
     assert isinstance(ui._area_bar.findChild(QSpinBox, "areaSize"), QSpinBox)
 
 
-def test_a_spells_area_and_range_are_read_from_its_range_and_text():
-    fireball = _spell_named("Fireball")
-    option = EffectOption(name="Fireball", kind=SPELL, tooltip=fireball.description)
-    area, range_ft = area_reading(option)
+def _spell_pick(name: str) -> EffectOption:
+    """The picker's row for the spell `name`, cast by a caster with slots."""
+    return spell_option(_spell_named(name), {"name": "Caster"})
+
+
+def test_a_spells_area_and_range_are_its_classs():
+    """SpellRules.area, and the range of the spell (Range), or the point
+    its area may be centred on."""
+    area, range_ft = area_reading(_spell_pick("Fireball"))
     assert area == AreaOfEffect(AreaShape.SPHERE, 20)
     assert range_ft == 150
-    burning = _spell_named("Burning Hands")
-    option = EffectOption(name="Burning Hands", kind=SPELL, tooltip=burning.description)
-    assert area_reading(option) == (AreaOfEffect(AreaShape.CONE, 15), None)
-    lure = _spell_named("Lightning Lure")
-    option = EffectOption(name="Lightning Lure", kind=SPELL, tooltip=lure.description)
-    assert area_reading(option)[0] == AreaOfEffect(AreaShape.SPHERE, 15, 5, True)
-    wind = _spell_named("Investiture of Wind")
-    option = EffectOption(
-        name="Investiture of Wind", kind=SPELL, tooltip=wind.description
+    assert area_reading(_spell_pick("Burning Hands")) == (
+        AreaOfEffect(AreaShape.CONE, 15),
+        None,
     )
-    assert area_reading(option) == (
+    lure = area_reading(_spell_pick("Lightning Lure"))[0]
+    assert lure == AreaOfEffect(AreaShape.SPHERE, 15, 5, True)
+    assert area_reading(_spell_pick("Investiture of Wind")) == (
         AreaOfEffect(AreaShape.CUBE, 15),
         60,
     ), "a Self range, but the Cube goes at a point within 60 feet"
@@ -312,6 +314,7 @@ def test_the_bar_says_how_far_the_point_is_against_the_range(fight, monkeypatch)
             "Dexterity Saving Throw: DC 10, each creature in a 10-foot-radius"
             " Sphere centered on a point within 30 feet."
         ),
+        area=CombatArea(CombatAreaShape.SPHERE, 10, point_within_ft=30),
     )
     assert ui._start_area_targeting(burst)
     view = ui._arena_view

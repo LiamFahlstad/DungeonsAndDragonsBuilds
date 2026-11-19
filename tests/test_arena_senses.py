@@ -9,6 +9,7 @@ from typing import Any
 
 import pytest
 
+from CharacterContent.Spells.SpellFactory import SpellFactory
 from Combat.Arena.arena import ArenaSettings
 from Combat.Arena.geometry import Cell
 from Combat.Arena.ranges import AttackRange, check_attack_range
@@ -24,6 +25,8 @@ from Combat.Arena.terrain import DARK, WALL
 from Combat.Effects.active_effects import give_modifiers
 from Combat.Effects.modifiers import attack_plan, has_condition
 from Combat.Effects.sight import UNKNOWN, Seen, Sight
+from Model.Content.CombatArea import AreaSight, CombatArea, CombatAreaShape
+from Model.Content.CombatAreaText import read_obscures
 from Combat.Effects.triggers import (
     DamageOutcome,
     TriggerMode,
@@ -56,14 +59,16 @@ def _dark(*cells) -> ArenaSettings:
     return settings
 
 
-def _area(caster: dict, name: str, text: str, *cells) -> dict:
-    """A kept area of caster's on `cells` with rules text `text`."""
+def _area(caster: dict, name: str, obscures: AreaSight, *cells) -> dict:
+    """A kept area of caster's on `cells` whose rules make its space
+    `obscures`."""
+    rules = CombatArea(CombatAreaShape.SPHERE, 15, obscures=obscures)
     record = {
         "shape": "Sphere",
         "size_ft": 15,
         "cells": [list(c) for c in cells],
         "follows": False,
-        "about": text,
+        "rules": rules.to_dict(),
     }
     caster.setdefault("active_spells", []).append({"name": name, "area": record})
     return caster
@@ -85,7 +90,8 @@ FOG_TEXT = (
 
 
 # ---------------------------------------------------------------------------
-# Reading what a kept area is to sight, and a creature's senses
+# What a kept area is to sight (drafted from its text for a spell's class),
+# and a creature's senses
 
 
 @pytest.mark.parametrize(
@@ -98,8 +104,16 @@ FOG_TEXT = (
         ("A silvery beam of pale light shines down in a 5-foot-radius", None),
     ],
 )
-def test_area_obscures(text, kind):
-    assert area_obscures(text) == kind
+def test_what_an_area_hides_is_drafted_from_its_text(text, kind):
+    read = read_obscures(text)
+    assert (read.value if read is not None else None) == kind
+
+
+def test_area_obscures_is_its_rules():
+    assert area_obscures(SpellFactory.create("Darkness").combat_area) == DEEP_DARKNESS
+    assert area_obscures(SpellFactory.create("Fog Cloud").combat_area) == FOG
+    assert area_obscures(SpellFactory.create("Fireball").combat_area) is None
+    assert area_obscures(None) is None
 
 
 class _Sheet:
@@ -158,7 +172,7 @@ def test_the_viewer_in_darkness_still_sees_out():
 
 def test_the_darkness_spell_stops_darkvision_not_truesight():
     goblin = _creature("Goblin", (3, 0))
-    caster = _area(_creature("Warlock"), "Darkness", DARKNESS_TEXT, (3, 0))
+    caster = _area(_creature("Warlock"), "Darkness", AreaSight.DEEP_DARKNESS, (3, 0))
     elf = _creature("Elf", (0, 0), senses="Darkvision 60 ft.")
     seen = _sees(elf, goblin, None, caster)
     assert seen == Seen(False, "Warlock's Darkness", obscured=True)
@@ -168,7 +182,7 @@ def test_the_darkness_spell_stops_darkvision_not_truesight():
 
 def test_a_fog_hides_from_every_sight_but_blindsight():
     goblin = _creature("Goblin", (3, 0))
-    caster = _area(_creature("Druid"), "Fog Cloud", FOG_TEXT, (3, 0))
+    caster = _area(_creature("Druid"), "Fog Cloud", AreaSight.HEAVILY_OBSCURED, (3, 0))
     devil = _creature("Devil", (0, 0), senses="Truesight 120 ft.")
     assert _sees(devil, goblin, None, caster).can is False
     bat = _creature("Bat", (0, 0), senses="Blindsight 60 ft.")

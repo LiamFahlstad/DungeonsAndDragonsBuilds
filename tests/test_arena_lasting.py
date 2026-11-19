@@ -29,9 +29,16 @@ from Combat.Arena.lasting import (
     lasting_areas,
     move_rule,
     record_area,
+    record_move,
+    record_rules,
+    record_timing,
     time_left_text,
     who_is_in,
 )
+from CharacterContent.Spells.SpellFactory import SpellFactory
+from Model.Content.ActionType import ActionType
+from Model.Content.CombatArea import AreaTiming, CombatArea, CombatAreaShape
+from Model.Content.CombatAreaText import read_move, read_timing
 
 SETTINGS = ArenaSettings()
 MOONBEAM = AreaOfEffect(AreaShape.CYLINDER, 5)
@@ -185,21 +192,77 @@ WEB_TEXT = (
 )
 
 
-def test_when_an_area_acts_is_read_from_its_text():
-    assert area_timing(MOONBEAM_TEXT) == {ENTERS, MOVED_ONTO, ENDS}
-    assert area_timing(FLAMING_SPHERE_TEXT) == {MOVED_ONTO, ENDS}
-    assert area_timing(WEB_TEXT) == {ENTERS, MOVED_ONTO, STARTS}
-    assert area_timing("Any creature that starts its turn in the area") == {STARTS}
-    assert area_timing("") == DEFAULT_TIMING == {ENTERS, STARTS}
+def _timing(text: str) -> set[str]:
+    return {when.value for when in read_timing(text)}
 
 
-def test_how_an_area_moves_is_read_from_its_text():
-    assert move_rule(MOONBEAM_TEXT) == MoveRule(60, "Action")
-    assert move_rule(MOONBEAM_TEXT).text == "up to 60 ft., an Action"
-    assert move_rule(FLAMING_SPHERE_TEXT) == MoveRule(30, "Bonus Action")
-    assert move_rule(FLAMING_SPHERE_TEXT).text == "up to 30 ft., a Bonus Action"
-    assert move_rule(WEB_TEXT) == MoveRule()
+def test_when_an_area_acts_is_drafted_from_its_text():
+    """For writing a spell's class (Model/Content/CombatAreaText.py)."""
+    assert _timing(MOONBEAM_TEXT) == {ENTERS, MOVED_ONTO, ENDS}
+    assert _timing(FLAMING_SPHERE_TEXT) == {MOVED_ONTO, ENDS}
+    assert _timing(WEB_TEXT) == {ENTERS, MOVED_ONTO, STARTS}
+    assert _timing("Any creature that starts its turn in the area") == {STARTS}
+    assert read_timing("") == ()
+
+
+def test_how_an_area_moves_is_drafted_from_its_text():
+    assert read_move(MOONBEAM_TEXT) == (60, ActionType.ACTION)
+    assert read_move(FLAMING_SPHERE_TEXT) == (30, ActionType.BONUS_ACTION)
+    assert read_move(WEB_TEXT) == (None, None)
+
+
+def test_when_an_area_acts_is_its_rules():
+    moonbeam = SpellFactory.create("Moonbeam").combat_area
+    assert area_timing(moonbeam) == {ENTERS, MOVED_ONTO, ENDS}
+    sphere = SpellFactory.create("Flaming Sphere").combat_area
+    assert area_timing(sphere) == {MOVED_ONTO, ENDS}
+    web = SpellFactory.create("Web").combat_area
+    assert area_timing(web) == {ENTERS, MOVED_ONTO, STARTS}
+    plain = CombatArea(CombatAreaShape.SPHERE, 20)
+    assert area_timing(plain) == area_timing(None) == DEFAULT_TIMING
+    assert DEFAULT_TIMING == {ENTERS, STARTS}
+
+
+def test_how_an_area_moves_is_its_rules():
+    moonbeam = SpellFactory.create("Moonbeam").combat_area
+    assert move_rule(moonbeam) == MoveRule(60, "Action")
+    assert move_rule(moonbeam).text == "up to 60 ft., an Action"
+    sphere = SpellFactory.create("Flaming Sphere").combat_area
+    assert move_rule(sphere) == MoveRule(30, "Bonus Action")
+    assert move_rule(sphere).text == "up to 30 ft., a Bonus Action"
+    assert move_rule(SpellFactory.create("Web").combat_area) == MoveRule()
+    assert move_rule(None) == MoveRule()
     assert MoveRule().text == ""
+
+
+def test_a_kept_area_keeps_its_rules():
+    rules = CombatArea(
+        CombatAreaShape.CYLINDER,
+        5,
+        acts=(AreaTiming.ENDS,),
+        move_ft=60,
+        move_action=ActionType.ACTION,
+    )
+    cleric = _at("Clover", 2, 2)
+    record = area_record(MOONBEAM, cleric, Cell(8, 8), SETTINGS, rules=rules)
+    assert json.loads(json.dumps(record)) == record, "plain JSON"
+    assert record_rules(record) == rules
+    assert record_timing(record) == {ENDS}
+    assert record_move(record) == MoveRule(60, "Action")
+    bare = area_record(MOONBEAM, cleric, Cell(8, 8), SETTINGS)
+    assert record_rules(bare) is None and record_timing(bare) == DEFAULT_TIMING
+
+
+def test_a_kept_area_from_before_its_rules_were_kept_takes_its_spells():
+    """A record logged before 2026-11-19 has no "rules": those of the spell
+    it was picked as, or its active spell's name."""
+    cleric = _at("Clover", 2, 2)
+    record = area_record(MOONBEAM, cleric, Cell(8, 8), SETTINGS, pick="Moonbeam")
+    del record["rules"]
+    assert record_timing(record) == {ENTERS, MOVED_ONTO, ENDS}
+    record["pick"] = ""
+    assert record_move(record, "Flaming Sphere") == MoveRule(30, "Bonus Action")
+    assert record_rules(record, "Not a spell") is None
 
 
 def test_an_area_prompt_names_whose_area_whom_and_when():

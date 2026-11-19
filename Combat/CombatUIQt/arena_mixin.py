@@ -33,12 +33,12 @@ its rules text, with its colour to change, Target who's in it, Move, End
 spell, and Close (or Esc). The selection is the window's, as the source is,
 but an area is never a source.
 
-Areas acting (step 24): when a kept area's text says it acts on a creature
+Areas acting (step 24): when a kept area's rules say it acts on a creature
 (entering it, the area moved onto it, a turn starting or ending there),
 that creature gets a turn-column button (an AreaPrompt) that opens Use /
 Cast on the area's effect at no cost. Move aims a kept area again in the
 area bar from where it is, keeping its time and concentration, spending
-what its text says moving it costs.
+what its rules say moving it costs (its CombatArea, kept as "rules").
 
 Walls (step 25): the bar's Wall is aimed by two clicks, its two ends (or,
 ticked Ring, one on its middle), and for one with a damaging side (Wall of
@@ -114,16 +114,12 @@ from Combat.Arena.areas import (
     AreaOfEffect,
     AreaShape,
     area_cells,
+    area_of,
     creatures_in,
-    damaging_side_ft,
-    parse_area,
-    point_range_ft,
     side_cells,
     side_name,
     side_of,
-    spell_range_ft,
     wall_cells,
-    wall_ring_ft,
 )
 from Combat.Arena.geometry import Cell
 from Combat.Arena.lasting import (
@@ -138,17 +134,17 @@ from Combat.Arena.lasting import (
     LastingArea,
     area_key,
     area_record,
-    area_timing,
     areas_at,
     areas_beside,
     areas_holding,
     entered,
     find_area,
     lasting_areas,
-    move_rule,
     record_area,
     record_cells,
     record_end,
+    record_move,
+    record_timing,
     time_left_text,
     who_is_in,
     with_kept_walls,
@@ -182,7 +178,12 @@ from Core.Definitions import Condition
 from Core.Rules import SECONDS_PER_ROUND
 
 from .arena_view import ArenaView, MoveKind, token_rows
-from .effect_options import _spell_named, area_effect_row, opportunity_attack_row
+from .effect_options import (
+    _spell_named,
+    area_effect_row,
+    opportunity_attack_row,
+    spell_range_ft,
+)
 from .saves import SPELL, CustomEffect, EffectOption
 from .settings import ARENA_VIEW_KEY
 from .state import CombatWindowState
@@ -642,6 +643,7 @@ class ArenaMixin(CombatWindowState):
             self._show_status("Targets in an area need the source on the map.")
             return False
         area, range_ft = area_reading(option)
+        rules = option.area if option is not None else None
         pick = option.name if option is not None else ""
         self._aimed_area = None
         self._area_keep.setChecked(area_lasts(option))
@@ -653,13 +655,16 @@ class ArenaMixin(CombatWindowState):
             "read": area is not None,
             "range": range_ft,
             "about": option.tooltip if option is not None else "",
+            # Its pick's CombatArea, for the record kept (when it acts, how
+            # it's moved, what it hides, a wall's terrain).
+            "rules": rules,
             # A Wall's clicks so far (its ends, a ring's middle), the ring
-            # and straight sizes its text gives, and how far its damaging
+            # and straight sizes its rules give, and how far its damaging
             # side reaches (Wall of Fire's 10 feet), if it has one.
             "ends": [],
             "wall_ft": area.size_ft if area is not None and area.is_wall else None,
-            "ring_ft": wall_ring_ft(option.tooltip) if option is not None else None,
-            "side_ft": damaging_side_ft(option.tooltip) if option is not None else None,
+            "ring_ft": rules.ring_ft if rules is not None else None,
+            "side_ft": rules.side_ft if rules is not None else None,
         }
         self._show_area_in_bar(area or self._last_area)
         self._last_area = self._area_in_bar()
@@ -684,7 +689,7 @@ class ArenaMixin(CombatWindowState):
             return
         if record_area(record).is_wall:
             return
-        rule = move_rule(self._area_text(caster, entry))
+        rule = record_move(record, entry["name"])
         self._aimed_area = None
         self._area_targeting = {
             "pick": "",
@@ -790,7 +795,7 @@ class ArenaMixin(CombatWindowState):
         area = self._area_in_bar()
         head = f"{request['what']}: " if request["what"] else ""
         if not request["read"] and request["pick"]:
-            head += "no area in its text, so check the shape. "
+            head += "no area given for it, so check the shape. "
         inside = creatures_in(self.characters, cells, self.arena_settings)
         wall = (
             self._wall_text(area, request)
@@ -933,6 +938,7 @@ class ArenaMixin(CombatWindowState):
             about=request["about"],
             end=end,
             side=side,
+            rules=request.get("rules"),
         )
         self._end_area_targeting()
         # What the dialog, opened again, offers to keep on the map.
@@ -1167,7 +1173,7 @@ class ArenaMixin(CombatWindowState):
         self._area_panel_move.setVisible(
             not record.get("follows") and not record_area(record).is_wall
         )
-        how = move_rule(about).text
+        how = record_move(record, entry["name"]).text
         self._area_panel_move.setToolTip(
             "Aim it again on the map, keeping its time and concentration"
             + (f" ({how})" if how else "")
@@ -1238,18 +1244,18 @@ class ArenaMixin(CombatWindowState):
     def _move_area(self, key: str, cell: Cell):
         """Put kept area `key` where `cell` aims it (the panel's Move): one
         undo step, its key, time, concentration and colour kept. What its
-        text says moving it costs (move_rule: Flaming Sphere's Bonus
+        rules say moving it costs (record_move: Flaming Sphere's Bonus
         Action) is spent from its caster, asked about first when that's
         used already; past its "up to" is warned about, not refused (as
         Decision 19). Whoever it's moved onto gets its button, when its
-        text acts then (Moonbeam: "when the spell's area moves into its
+        rules act then (Moonbeam: "when the spell's area moves into its
         space"). A GM-only log line says where from and to."""
         found = find_area(self.characters, key)
         if found is None:
             return
         caster, entry = found
         record, settings = entry[AREA_KEY], self._map_settings()
-        rule = move_rule(self._area_text(caster, entry))
+        rule = record_move(record, entry["name"])
         title = f"{caster['name']}'s {entry['name']}"
         if (
             rule.action is not None
@@ -1453,7 +1459,7 @@ class ArenaMixin(CombatWindowState):
             )
         # Whoever is in an area now that wasn't: the mover walking in, or
         # someone its Emanation moved onto. Each gets the area's button, when
-        # its text says it acts then (step 24).
+        # its rules say it acts then (step 24).
         after = who_is_in(self.characters, settings)
         for who, (caster, area) in entered(before, after):
             line = f"{who} enters {caster}'s {area}."
@@ -1764,7 +1770,7 @@ class ArenaMixin(CombatWindowState):
         """Whoever starts its turn in an area that stays, or in a hazard, and
         whoever just ended its turn in an area (`ended`): a GM-only log line
         each ("Goblin starts its turn in Clover's Moonbeam."), and for an
-        area whose text acts then (area_timing: Web as a turn starts,
+        area whose rules act then (record_timing: Web as a turn starts,
         Moonbeam as one ends), its button in the turn column (an
         AreaPrompt, step 24). A hazard is a reminder in the turn column, as
         what starting the turn did."""
@@ -1811,14 +1817,9 @@ class ArenaMixin(CombatWindowState):
                         f"{char['name']} starts its turn in {', '.join(hazards)}."
                     )
 
-    def _area_text(self, caster: dict, entry: dict) -> str:
-        """A kept area's rules text: its record's, else its spell's."""
-        record = entry[AREA_KEY]
-        return record.get("about") or self._rules_text_of(record, entry)
-
     def _area_entered(self, who: str, caster: str, area: str, when: str):
         """`who` is in caster's kept area `area` now (walked in, ENTERS, or
-        the area came onto it, MOVED_ONTO): its button, when its text acts
+        the area came onto it, MOVED_ONTO): its button, when its rules act
         then, kept with the hit prompts for the rest of the turn."""
         char = self._arena_char(who)
         owner = self._arena_char(caster)
@@ -1844,7 +1845,7 @@ class ArenaMixin(CombatWindowState):
         beside: bool = False,
     ):
         """Add to `prompts` the button for kept area `key` acting on char
-        `when`, if its text says it acts then (an area acting on who enters
+        `when`, if its rules say it acts then (an area acting on who enters
         it acts on who it's moved onto too), it's in combat, and there isn't
         one for the same area and creature in `prompts` or `also` already
         (a creature makes its save "only once per turn"). `beside`: char
@@ -1855,7 +1856,7 @@ class ArenaMixin(CombatWindowState):
         caster, entry = found
         if self._char_death_state(char) == "dead":
             return
-        if when not in area_timing(self._area_text(caster, entry)):
+        if when not in record_timing(entry[AREA_KEY], entry["name"]):
             return
         if any(
             isinstance(p, AreaPrompt) and p.key == key and p.target is char
@@ -1966,25 +1967,20 @@ def obscured_text(char: dict, settings: ArenaSettings) -> str:
 
 
 def area_reading(option: EffectOption | None) -> tuple[AreaOfEffect | None, int | None]:
-    """The area a Custom Effect pick states and how far away its point may
-    be: a spell's (its own, or the one a feature or a monster's action
-    casts) from its range ("Self (15-foot cone)" is the area, "150 feet"
-    the reach) and its text; anything else from its text alone ("each
-    creature in a 20-foot-radius Sphere centered on a point within 120
-    feet"). A range of Self doesn't make the area start at the source:
-    Investiture of Wind's Cube is "centered on a point you can see within
-    60 feet". (None, None) for no pick."""
+    """The area a Custom Effect pick has (EffectOption.area: its
+    CombatEffect's, or its spell's SpellRules.area) and how far away its
+    point may be: the area's own point_within_ft ("a point you can see
+    within 60 feet"), else the range of the spell it casts ("150 feet").
+    (None, None) for no pick; (None, range) for a pick without an area."""
     if option is None:
         return None, None
     name = option.spell_name or (option.name if option.kind == SPELL else "")
     spell = _spell_named(name) if name else None
-    text = option.tooltip
-    range_ft = None
-    if spell is not None:
-        text = f"Range: {spell.range}. {text}"
-        range_ft = spell_range_ft(spell.range)
-    point = point_range_ft(option.tooltip)
-    return parse_area(text), point if point is not None else range_ft
+    range_ft = spell_range_ft(spell) if spell is not None else None
+    rules = option.area
+    if rules is not None and rules.point_within_ft is not None:
+        range_ft = rules.point_within_ft
+    return area_of(rules), range_ft
 
 
 def area_lasts(option: EffectOption | None) -> bool:

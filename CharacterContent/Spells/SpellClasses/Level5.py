@@ -21,6 +21,14 @@ from CharacterContent.Spells.SpellFactory.SpellFields import (
     Range,
 )
 from Core.Definitions import CharacterClass
+from Model.Content.ActionType import ActionType
+from Model.Content.CombatArea import (
+    AreaCover,
+    AreaSight,
+    AreaTiming,
+    CombatArea,
+    CombatAreaShape,
+)
 from Model.Content.Feature import FeatureTarget
 from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table
 
@@ -51,6 +59,7 @@ class AlustrielsMooncloak(ClassSpell):
         ),
         usage_tags=("buff", "heal"),
         target=FeatureTarget.ALLY,
+        area=CombatArea(CombatAreaShape.EMANATION, 20),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "5891c78a7fd1780a")
 
@@ -231,6 +240,7 @@ class AntilifeShell(ClassSpell):
         ),
         usage_tags=("buff",),
         target=FeatureTarget.SELF,
+        area=CombatArea(CombatAreaShape.EMANATION, 10),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "c8baf4c782d59407")
 
@@ -541,6 +551,7 @@ class CircleOfPower(ClassSpell):
         description="An aura radiates from you in a 30-foot Emanation for the duration. While in the aura, you and your allies have Advantage on saving throws against spells and other magical effects. When an affected creature makes a saving throw against a spell or magical effect that allows a save to take only half damage, it takes no damage if it succeeds on the save.",
         usage_tags=("buff",),
         target=FeatureTarget.ALLY,
+        area=CombatArea(CombatAreaShape.EMANATION, 30),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "f38a2720c00e15ef")
 
@@ -585,6 +596,12 @@ class Cloudkill(ClassSpell):
         ),
         usage_tags=("control", "damage"),
         target=FeatureTarget.AREA,
+        area=CombatArea(
+            CombatAreaShape.SPHERE,
+            20,
+            acts=(AreaTiming.ENTERS, AreaTiming.MOVED_ONTO, AreaTiming.ENDS),
+            obscures=AreaSight.HEAVILY_OBSCURED,
+        ),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "0ac70055d6bd3530")
 
@@ -769,6 +786,7 @@ class ConeOfCold(ClassSpell):
         ),
         usage_tags=("damage",),
         target=FeatureTarget.AREA,
+        area=CombatArea(CombatAreaShape.CONE, 60),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "d8c4a73b64cdc730")
 
@@ -906,6 +924,7 @@ class ConjureVolley(ClassSpell):
         description="You brandish the weapon used to cast the spell and choose a point within range. Hundreds of similar spectral weapons (or ammunition appropriate to the weapon) fall in a volley and then disappear. Each creature of your choice that you can see in a 40-foot-radius, 20-foot-high Cylinder centered on that point makes a Dexterity saving throw. A creature takes 8d8 Force damage on a failed save or half as much damage on a successful one.",
         usage_tags=("damage",),
         target=FeatureTarget.ENEMY,
+        area=CombatArea(CombatAreaShape.CYLINDER, 40),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "0c33887bd163d0b7")
 
@@ -1092,6 +1111,11 @@ class ControlWinds(ClassSpell):
         ),
         usage_tags=("control", "damage", "utility"),
         target=FeatureTarget.AREA,
+        area=CombatArea(
+            CombatAreaShape.CUBE,
+            100,
+            acts=(AreaTiming.ENTERS, AreaTiming.MOVED_ONTO, AreaTiming.STARTS),
+        ),
     )
     converted_from = RecordStamp("spells_dnd5e.json", "9ea4ee838dc44728")
 
@@ -1248,6 +1272,7 @@ class Creation(ClassSpell):
         ),
         usage_tags=("utility",),
         target=FeatureTarget.OBJECT,
+        area=CombatArea(CombatAreaShape.CUBE, 5),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "a72d00cff174f7e1")
 
@@ -1416,6 +1441,13 @@ class Dawn(ClassSpell):
         description="The light of dawn shines down on a location you specify within range. Until the spell ends, a 30-foot-radius, 40-foot-high cylinder of bright light glimmers there. This light is sunlight. When the cylinder appears, each creature in it must make a Constitution saving throw, taking 4d10 radiant damage on a failed save, or half as much damage on a successful one. A creature must also make this saving throw whenever it ends its turn in the cylinder. If you're within 60 feet of the cylinder, you can move it up to 60 feet as a bonus action on your turn.",
         usage_tags=("control", "damage"),
         target=FeatureTarget.AREA,
+        area=CombatArea(
+            CombatAreaShape.CYLINDER,
+            30,
+            acts=(AreaTiming.ENDS,),
+            move_ft=60,
+            move_action=ActionType.BONUS_ACTION,
+        ),
     )
     converted_from = RecordStamp("spells_dnd5e.json", "7445f107e7850ede")
 
@@ -1469,6 +1501,7 @@ class DestructiveWave(ClassSpell):
         description="Destructive energy ripples outward from you in a 30-foot Emanation. Each creature you choose in the Emanation makes a Constitution saving throw. On a failed save, a target takes 5d6 Thunder damage and 5d6 Radiant or Necrotic damage (your choice) and has the Prone condition. On a successful save, a target takes half as much damage only.",
         usage_tags=("control", "damage"),
         target=FeatureTarget.ENEMY,
+        area=CombatArea(CombatAreaShape.EMANATION, 30),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "8cded48cee015ab1")
 
@@ -1897,6 +1930,7 @@ class FlameStrike(ClassSpell):
         ),
         usage_tags=("damage",),
         target=FeatureTarget.AREA,
+        area=CombatArea(CombatAreaShape.CYLINDER, 10),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "2521210fd9adf82d")
 
@@ -2302,6 +2336,7 @@ class HolyWeapon(ClassSpell):
         description="You imbue a weapon you touch with holy power. Until the spell ends, the weapon emits bright light in a 30-foot radius and dim light for an additional 30 feet. In addition, weapon attacks made with it deal an extra 2d8 radiant damage on a hit. If the weapon isn't already a magic weapon, it becomes one for the duration. As a bonus action on your turn, you can dismiss this spell and cause the weapon to emit a burst of radiance. Each creature of your choice that you can see within 30 feet of the weapon must make a Constitution saving throw. On a failed save, a creature takes 4d8 radiant damage, and it is blinded for 1 minute. On a successful save, a creature takes half as much damage and isn't blinded. At the end of each of its turns, a blinded creature can make a Constitution saving throw, ending the effect on itself on a success.",
         usage_tags=("buff", "damage", "utility"),
         target=FeatureTarget.OBJECT,
+        area=CombatArea(CombatAreaShape.EMANATION, 30),
     )
     converted_from = RecordStamp("spells_dnd5e.json", "c1c756c942b894b3")
 
@@ -2584,6 +2619,11 @@ class InsectPlague(ClassSpell):
         ),
         usage_tags=("control", "damage"),
         target=FeatureTarget.AREA,
+        area=CombatArea(
+            CombatAreaShape.SPHERE,
+            20,
+            acts=(AreaTiming.ENTERS, AreaTiming.MOVED_ONTO, AreaTiming.ENDS),
+        ),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "76081d23a0970aa3")
 
@@ -2637,6 +2677,11 @@ class JallarzisStormOfRadiance(ClassSpell):
         ),
         usage_tags=("damage",),
         target=FeatureTarget.AREA,
+        area=CombatArea(
+            CombatAreaShape.CYLINDER,
+            10,
+            acts=(AreaTiming.ENTERS, AreaTiming.MOVED_ONTO, AreaTiming.ENDS),
+        ),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "1a4504f5d60bb069")
 
@@ -2763,6 +2808,7 @@ class Maelstrom(ClassSpell):
         description="A mass of 5-foot-deep water appears and swirls in a 30-foot radius centered on a point you can see within range. The point must be on ground or in a body of water. Until the spell ends, that area is difficult terrain, and any creature that starts its turn there must succeed on a Strength saving throw or take 6d6 bludgeoning damage and be pulled 10 feet toward the center.",
         usage_tags=("control", "damage", "utility"),
         target=FeatureTarget.AREA,
+        area=CombatArea(CombatAreaShape.SPHERE, 30, acts=(AreaTiming.STARTS,)),
     )
     converted_from = RecordStamp("spells_dnd5e.json", "72fdef494c2ea26e")
 
@@ -2811,6 +2857,7 @@ class MassCureWounds(ClassSpell):
         ),
         usage_tags=("heal",),
         target=FeatureTarget.ALLY,
+        area=CombatArea(CombatAreaShape.SPHERE, 30),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "256c4d654aaa718d")
 
@@ -3689,6 +3736,7 @@ class SongalsElementalSuffusion(ClassSpell):
         ),
         usage_tags=("buff", "control", "damage"),
         target=FeatureTarget.SELF,
+        area=CombatArea(CombatAreaShape.EMANATION, 15),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "ed5c5db86f76dd2f")
 
@@ -4332,6 +4380,7 @@ class SynapticStatic(ClassSpell):
         ),
         usage_tags=("buff", "control", "damage"),
         target=FeatureTarget.AREA,
+        area=CombatArea(CombatAreaShape.SPHERE, 20),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "403f6a47542ff256")
 
@@ -4494,6 +4543,7 @@ class TeleportationCircle(ClassSpell):
         ),
         usage_tags=("buff",),
         target=FeatureTarget.OBJECT,
+        area=CombatArea(CombatAreaShape.SPHERE, 5),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "e9ad6dd84ecc50ef")
 
@@ -4562,6 +4612,11 @@ class TransmuteRock(ClassSpell):
         ),
         usage_tags=("control", "damage", "utility"),
         target=FeatureTarget.AREA,
+        area=CombatArea(
+            CombatAreaShape.CUBE,
+            40,
+            acts=(AreaTiming.ENTERS, AreaTiming.MOVED_ONTO, AreaTiming.ENDS),
+        ),
     )
     converted_from = RecordStamp("spells_dnd5e.json", "fbde1e7640530b4e")
 
@@ -4716,6 +4771,14 @@ class WallOfForce(ClassSpell):
         ),
         usage_tags=("buff", "control"),
         target=FeatureTarget.OBJECT,
+        area=CombatArea(
+            CombatAreaShape.WALL,
+            100,
+            width_ft=1,
+            ring_ft=20,
+            blocks=True,
+            cover=AreaCover.TOTAL,
+        ),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "58e67a44e2bc247c")
 
@@ -4787,6 +4850,7 @@ class WallOfLight(ClassSpell):
         ),
         usage_tags=("damage", "utility"),
         target=FeatureTarget.AREA,
+        area=CombatArea(CombatAreaShape.WALL, 60, acts=(AreaTiming.ENDS,)),
     )
     converted_from = RecordStamp("spells_dnd5e.json", "083dfc548f6f4700")
 
@@ -4899,6 +4963,7 @@ class WallOfStone(ClassSpell):
         ),
         usage_tags=("control",),
         target=FeatureTarget.OBJECT,
+        area=CombatArea(CombatAreaShape.WALL, 100, width_ft=1),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "0bdfae87c153ee07")
 
@@ -5010,6 +5075,7 @@ class WavesOfExhaustion(ClassSpell):
         ),
         usage_tags=("control",),
         target=FeatureTarget.AREA,
+        area=CombatArea(CombatAreaShape.CONE, 60),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "e880d26954686d6d")
 
@@ -5034,6 +5100,7 @@ class WrathOfNature(ClassSpell):
         ),
         usage_tags=("control", "damage", "utility"),
         target=FeatureTarget.ENEMY,
+        area=CombatArea(CombatAreaShape.CUBE, 60),
     )
     converted_from = RecordStamp("spells_dnd5e.json", "a56da068c1e41b35")
 
@@ -5143,6 +5210,11 @@ class YolandesRegalPresence(ClassSpell):
         description="You surround yourself with unearthly majesty in a 10-foot Emanation. Whenever the Emanation enters the space of a creature you can see and whenever a creature you can see enters the Emanation or ends its turn there, you can force that creature to make a Wisdom saving throw. On a failed save, the target takes 4d6 Psychic damage and has the Prone condition, and you can push it up to 10 feet away. On a successful save, the target takes half as much damage only. A creature makes this save only once per turn.",
         usage_tags=("control", "damage", "heal"),
         target=FeatureTarget.AREA,
+        area=CombatArea(
+            CombatAreaShape.EMANATION,
+            10,
+            acts=(AreaTiming.ENTERS, AreaTiming.MOVED_ONTO, AreaTiming.ENDS),
+        ),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "7df03f6281e18804")
 
@@ -5258,6 +5330,7 @@ class Bonestorm(ClassSpell):
         source="World of Warcraft",
         description="You conjure a whirl of battering bone and gore around yourself. You regain 4d6 Hit Points, and each creature in a 10-foot Emanation originating from you makes a Constitution saving throw. A target takes 4d8 Necrotic damage on a failed save or half as much damage on a successful one.",
         usage_tags=("damage", "heal"),
+        area=CombatArea(CombatAreaShape.EMANATION, 10),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "92e10b0c9332b688")
 
@@ -5296,6 +5369,7 @@ class ExplosiveTrap(ClassSpell):
         source="World of Warcraft",
         description="An Invisible, intangible trap appears on the ground at a point you choose within range. The first time a creature comes within 5 feet of the trap, the trap explodes in a fiery burst that fills a 20-foot-radius Sphere centered on the trap. The spell ends, and each creature within the Sphere makes a Dexterity saving throw. On a failed save, a creature takes 8d6 Fire damage and, if it is Huge or smaller, is pushed 20 feet straight away from the trap’s location.",
         usage_tags=("control", "damage"),
+        area=CombatArea(CombatAreaShape.SPHERE, 20),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "5c30e2ee8617ab02")
 
@@ -5370,6 +5444,7 @@ class SigilOfChains(ClassSpell):
         source="World of Warcraft",
         description="A sigil appears at a point on the ground you can see within range, then erupts in a 20-foot-radius Sphere. Each creature in the Sphere makes a Dexterity saving throw. On a failed save, a creature takes 5d6 Force damage, is pulled up to 10 feet straight toward the sigil, and has the Restrained condition until the end of your next turn. On a successful save, the creature takes half as much damage, and its Speed is reduced by 10 feet until the end of your next turn.",
         usage_tags=("control", "damage"),
+        area=CombatArea(CombatAreaShape.SPHERE, 20),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "3c11a0cea518e1e5")
 
@@ -5391,6 +5466,7 @@ class VoidEruption(ClassSpell):
             "Void Stealth. While you are in an area of Dim Light or Darkness, you have the Invisible condition."
         ),
         usage_tags=("buff", "damage"),
+        area=CombatArea(CombatAreaShape.SPHERE, 20),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "52dad98edc37fc1c")
 

@@ -14,6 +14,7 @@ from Combat.Effects.modifiers import (
     save_plan,
 )
 from Core.Rules import SPELL_SAVE_DC_BASE, ability_modifier
+from Model.Content.CombatArea import CombatArea
 from Model.Content.CombatEffect import CombatPush, CombatRegain
 from Model.Content.CombatModifiers import Modifier
 from Model.Content.CombatTriggers import CombatTrigger
@@ -260,6 +261,14 @@ class EffectOption:
     # How far it moves each target its conditions would land on, on the
     # battle map (CombatEffect.push: Thunderwave's 10 feet away).
     push: CombatPush | None = None
+    # Its area of effect on the battle map and what that does while it lasts
+    # (Model/Content/CombatArea.py): its CombatEffect's, else its spell's
+    # SpellRules.area. None: it has none, and the area bar starts from the
+    # last area used.
+    area: CombatArea | None = None
+    # What it rolls takes no benefit from Half Cover or Three-Quarters Cover
+    # (CombatEffect.ignores_cover: Sacred Flame).
+    ignores_cover: bool = False
 
     def duration_for(self, condition: str, duration: dict | None) -> dict | None:
         """The duration `condition` gets when the dialog gives `duration`:

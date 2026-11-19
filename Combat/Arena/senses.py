@@ -7,10 +7,10 @@ Rules Glossary's Vision and Senses:
   cell of which is in such a space isn't seen; one partly out of it is.
   Darkvision sees in Darkness within its range "as if it were Dim Light"
   (seen, then), and Truesight in "normal and magical Darkness".
-- A kept area whose text makes it so is the same (`area_obscures`): the
-  Darkness spell's "magical Darkness" ("Darkvision can't see through it":
-  only Truesight does), Fog Cloud's "The Sphere is Heavily Obscured" (no
-  sight sees through a fog).
+- A kept area whose rules make it so is the same (`area_obscures`, its
+  CombatArea's `obscures`): the Darkness spell's "magical Darkness"
+  ("Darkvision can't see through it": only Truesight does), Fog Cloud's
+  "The Sphere is Heavily Obscured" (no sight sees through a fog).
 - Blindsight sees "anything that isn't behind Total Cover" within its range,
   Blinded, in Darkness or Invisible; a stat block's "(blind beyond this
   radius)" sees nothing farther.
@@ -34,24 +34,27 @@ from collections.abc import Iterable
 from Combat.Arena.arena import ArenaSettings, distance_ft, footprint
 from Combat.Arena.cover import cover_from
 from Combat.Arena.geometry import Cell
-from Combat.Arena.lasting import ACTIVE_SPELLS_KEY, AREA_KEY, record_cells
+from Combat.Arena.lasting import (
+    ACTIVE_SPELLS_KEY,
+    AREA_KEY,
+    record_cells,
+    record_rules,
+)
 from Combat.Arena.terrain import DARK as PAINTED_DARK
 from Combat.Effects.modifiers import has_condition, modifiers_on
 from Combat.Effects.sight import UNKNOWN, Seen
 from Core.Definitions import Condition, Sense
+from Model.Content.CombatArea import AreaSight, CombatArea
 from Model.Content.CombatModifiers import Vision
 
 # What a space is to sight, from the least hidden: Darkness (Darkvision and
 # Truesight see in it), magical Darkness Darkvision can't see through
 # (Truesight only) and a Heavily Obscured fog (no sight but Blindsight).
-DARKNESS = "Darkness"
-DEEP_DARKNESS = "magical Darkness"
-FOG = "Heavily Obscured"
+DARKNESS = AreaSight.DARKNESS.value
+DEEP_DARKNESS = AreaSight.DEEP_DARKNESS.value
+FOG = AreaSight.HEAVILY_OBSCURED.value
 _STRENGTH = (DARKNESS, DEEP_DARKNESS, FOG)
 
-_DARKVISION_CANT = re.compile(r"\bdarkvision can['’]t see through\b", re.IGNORECASE)
-_DARKNESS = re.compile(r"\bmagical darkness\b|\bsphere of darkness\b", re.IGNORECASE)
-_HEAVILY_OBSCURED = re.compile(r"\bHeavily Obscured\b", re.IGNORECASE)
 _SENSE = re.compile(
     r"\b(Blindsight|Darkvision|Truesight|Tremorsense)\s+(\d+)\s*ft\.?"
     r"(\s*\(blind beyond this radius\))?",
@@ -65,18 +68,14 @@ _VISION_FIELDS = {
 }
 
 
-def area_obscures(text: str) -> str | None:
-    """What a kept area's rules text makes its space to sight: DEEP_DARKNESS
-    (the Darkness spell: "Darkvision can't see through it"), DARKNESS
-    ("magical Darkness" otherwise, Hunger of Hadar's "Sphere of Darkness"),
-    FOG ("Heavily Obscured": Fog Cloud, Stinking Cloud), or None."""
-    if _DARKVISION_CANT.search(text):
-        return DEEP_DARKNESS
-    if _DARKNESS.search(text):
-        return DARKNESS
-    if _HEAVILY_OBSCURED.search(text):
-        return FOG
-    return None
+def area_obscures(rules: CombatArea | None) -> str | None:
+    """What an area with `rules` makes its space to sight (its `obscures`):
+    DEEP_DARKNESS (the Darkness spell: "Darkvision can't see through it"),
+    DARKNESS (Hunger of Hadar's "Sphere of Darkness"), FOG (Fog Cloud,
+    Stinking Cloud), or None."""
+    if rules is None or rules.obscures is None:
+        return None
+    return rules.obscures.value
 
 
 def _stronger(a: str | None, b: str) -> str:
@@ -101,7 +100,7 @@ def obscured_cells(
             record = entry.get(AREA_KEY)
             if not record:
                 continue
-            kind = area_obscures(record.get("about") or "")
+            kind = area_obscures(record_rules(record, entry["name"]))
             if kind is None:
                 continue
             what = f"{char['name']}'s {entry['name']}"

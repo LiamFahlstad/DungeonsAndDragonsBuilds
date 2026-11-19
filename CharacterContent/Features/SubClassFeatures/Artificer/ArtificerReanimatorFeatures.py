@@ -20,6 +20,7 @@ from Model.Content.Feature import (
     ActionType,
     RegainedOn,
 )
+from Model.Content.CombatArea import CombatArea, CombatAreaShape
 from Model.Content.CombatEffect import (
     CombatDamage,
     CombatEffect,
@@ -125,6 +126,8 @@ class ReanimatorSkillSet(Feature):
                 # It's a casting of Spare the Dying, which takes the Action.
                 action_type=ActionType.ACTION,
                 spell="Spare the Dying",
+                # Around the creature revived, at Spare the Dying's range.
+                area=CombatArea(CombatAreaShape.SPHERE, 10),
                 notes=(
                     "Target the creatures of your choice within 10 feet of the"
                     " creature you revive.",

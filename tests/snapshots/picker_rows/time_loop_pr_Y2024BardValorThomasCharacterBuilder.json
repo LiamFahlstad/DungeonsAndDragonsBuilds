@@ -642,6 +642,10 @@
    "ability": "DEX",
    "action_cost": "Action",
    "amount_kind": "Damage",
+   "area": {
+    "shape": "Cube",
+    "size_ft": 20
+   },
    "badge_modifiers": {
     "Faerie Fire": [
      {

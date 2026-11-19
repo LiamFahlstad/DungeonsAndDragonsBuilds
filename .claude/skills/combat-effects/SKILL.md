@@ -533,6 +533,19 @@ Names are the Python ones; `Ability`, `Condition` and `DamageType` come from
   write "pushed 10 feet" in `notes`. A push from somewhere else than its
   user (Force Ballista's cannon), a direction of the user's choice (Gust
   of Wind's Line) or one that grows with the slot stays in `notes`.
+- **`area`.** `CombatArea(shape, size_ft, ...)` (Model/Content/CombatArea.py)
+  when the use covers an area on the battle map: Radiance of the Dawn
+  `CombatArea(CombatAreaShape.EMANATION, 30)`. A spell says its area once,
+  in `SpellRules.area` (the converter drafts it from the text with
+  Model/Content/CombatAreaText.py: check it); give a row its own `area` only
+  where it differs from the spell's. The fields are what the map acts on,
+  never the text: `point_within_ft` (when the point isn't at the spell's
+  range), `acts` (when a kept area acts: `AreaTiming.ENTERS`, `MOVED_ONTO`,
+  `STARTS`, `ENDS`; empty is enters or starts), `move_ft` and `move_action`
+  (Moonbeam's 60 feet for an Action), `obscures` (`AreaSight`), and a
+  Wall's `ring_ft`, `side_ft`, `blocks`, `cover`, `difficult`.
+- **`ignores_cover`**: what it rolls takes no benefit from Half or
+  Three-Quarters Cover (Sacred Flame). Don't also say so in `notes`.
 - **Not for spells:** `dc`, `attack_bonus` (the caster's), `action_type` and
   `concentration` (the spell's casting time and duration say them), and
   `spell` (for a feature's use that casts one).

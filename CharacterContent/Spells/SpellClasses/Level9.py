@@ -21,6 +21,7 @@ from CharacterContent.Spells.SpellFactory.SpellFields import (
     Range,
 )
 from Core.Definitions import CharacterClass
+from Model.Content.CombatArea import AreaTiming, CombatArea, CombatAreaShape
 from Model.Content.Feature import FeatureTarget
 
 
@@ -100,6 +101,7 @@ class Detonate(ClassSpell):
         ),
         usage_tags=("damage",),
         target=FeatureTarget.ENEMY,
+        area=CombatArea(CombatAreaShape.EMANATION, 60),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "521fc927bb4d88da")
 
@@ -296,6 +298,7 @@ class MeteorSwarm(ClassSpell):
         ),
         usage_tags=("damage",),
         target=FeatureTarget.AREA,
+        area=CombatArea(CombatAreaShape.SPHERE, 40),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "c7fa120f397fc636")
 
@@ -360,6 +363,7 @@ class PrismaticWall(ClassSpell):
         ),
         usage_tags=("control",),
         target=FeatureTarget.AREA,
+        area=CombatArea(CombatAreaShape.WALL, 90, acts=(AreaTiming.STARTS,)),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "fb29a547dc3db2f4")
 
@@ -584,6 +588,7 @@ class Weird(ClassSpell):
         ),
         usage_tags=("control", "damage"),
         target=FeatureTarget.ENEMY,
+        area=CombatArea(CombatAreaShape.SPHERE, 30),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "56d10de5d1bc12da")
 
@@ -641,6 +646,11 @@ class RavenousVoid(ClassSpell):
         usage_tags=("control", "damage", "utility"),
         target=FeatureTarget.AREA,
         school_note="Dunamancy:Graviturgy",
+        area=CombatArea(
+            CombatAreaShape.SPHERE,
+            20,
+            acts=(AreaTiming.ENTERS, AreaTiming.MOVED_ONTO, AreaTiming.STARTS),
+        ),
     )
     converted_from = RecordStamp("spells_dnd5e.json", "d7dc0f46a7b36e4f")
 

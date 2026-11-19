@@ -38,8 +38,6 @@ from Combat.Arena.arena import (
     stand_up_ft,
     walking_speed_ft,
 )
-from Combat.Arena.areas import parse_area
-from Combat.Arena.cover import ignores_cover
 from Combat.Arena.ranges import (
     NO_RANGE_CHECK,
     RangeCheck,
@@ -395,9 +393,10 @@ def _with_shield(target: dict, wielding: bool | None) -> dict:
 
 
 def _ignores_cover(pick: EffectOption | None) -> bool:
-    """Whether a pick's rules text takes Half and Three-Quarters Cover away
-    (Sacred Flame), so only the map's Total Cover is left."""
-    return pick is not None and ignores_cover(pick.tooltip)
+    """Whether a pick takes Half and Three-Quarters Cover away
+    (EffectOption.ignores_cover: Sacred Flame), so only the map's Total
+    Cover is left."""
+    return pick is not None and pick.ignores_cover
 
 
 def _armor_text(target: dict, wielding: bool | None = None) -> str:
@@ -2161,7 +2160,7 @@ class ConditionsMixin(CombatWindowState):
             option = picked["option"]
             if aimed is not None or not self.arena_settings.in_use:
                 return ""
-            if option is None or parse_area(option.tooltip) is not None:
+            if option is None or option.area is not None:
                 return ""
             warning = spell_range_warning(
                 pick_spell_range_ft(option), source, target, self.arena_settings

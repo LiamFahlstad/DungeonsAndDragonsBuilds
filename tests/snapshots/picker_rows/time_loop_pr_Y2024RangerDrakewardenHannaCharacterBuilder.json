@@ -605,6 +605,11 @@
    "ability": null,
    "action_cost": "Action",
    "amount_kind": "Damage",
+   "area": {
+    "obscures": "Heavily Obscured",
+    "shape": "Sphere",
+    "size_ft": 20
+   },
    "bonus": null,
    "concentration": true,
    "condition": "",

@@ -22,7 +22,6 @@ from Combat.Arena.cover import (
     NO_COVER_READING,
     cover_between,
     cover_from,
-    ignores_cover,
     reaches,
     with_cover,
 )
@@ -37,6 +36,7 @@ from Combat.Arena.terrain import (
     MapObject,
     Spot,
 )
+from Combat.CombatUIQt.effect_options import _spell_named, read_effect_text
 from Combat.Effects.modifiers import armor_class, save_plan
 
 BARREL = Spot(thing=MapObject("Barrel", blocks=True, cover=HALF))
@@ -230,7 +230,15 @@ def test_total_cover_adds_nothing_to_the_ac():
     assert armor_class(with_cover(goblin, reading), 15) == 15
 
 
+def ignores_cover(text: str) -> bool:
+    """What the text reading (a spell or feature without combat effects)
+    makes of it."""
+    return read_effect_text(text).ignores_cover
+
+
 def test_sacred_flame_and_the_bypass_cover_feats_ignore_cover():
+    sacred_flame = _spell_named("Sacred Flame").combat_effects()
+    assert [effect.ignores_cover for effect in sacred_flame] == [True]
     assert ignores_cover(
         "The target gains no benefit from Half Cover or Three-Quarters Cover"
         " for this save."

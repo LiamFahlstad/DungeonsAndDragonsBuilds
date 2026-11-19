@@ -23,6 +23,7 @@ from CharacterContent.Spells.SpellFactory.SpellFields import (
     Range,
 )
 from Core.Definitions import Ability, CharacterClass, Condition, DamageType
+from Model.Content.CombatArea import AreaTiming, CombatArea, CombatAreaShape
 from Model.Content.CombatEffect import (
     CombatCondition,
     CombatDamage,
@@ -376,6 +377,7 @@ class MinorIllusion(ClassSpell):
         ),
         usage_tags=("utility",),
         target=FeatureTarget.OBJECT,
+        area=CombatArea(CombatAreaShape.CUBE, 5),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "aed6bc67bb8fbc1b")
 
@@ -642,9 +644,7 @@ class SacredFlame(ClassSpell):
                         cantrip=((5, "2d8"), (11, "3d8"), (17, "4d8")),
                     ),
                 ),
-                notes=(
-                    "The target gains no benefit from Half Cover or Three-Quarters Cover for this save.",
-                ),
+                ignores_cover=True,
             )
         ]
 
@@ -1130,6 +1130,7 @@ class AcidSplash(ClassSpell):
         ),
         usage_tags=("damage",),
         target=FeatureTarget.AREA,
+        area=CombatArea(CombatAreaShape.SPHERE, 5),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "a9f2cfe794b06bcc")
 
@@ -1221,6 +1222,7 @@ class BoomingBlade(ClassSpell):
         ),
         usage_tags=("damage",),
         target=FeatureTarget.ENEMY,
+        area=CombatArea(CombatAreaShape.SPHERE, 5, from_source=True),
     )
     converted_from = RecordStamp("spells_dnd5e.json", "a61fd60b1fc090e5")
 
@@ -1320,6 +1322,7 @@ class ControlFlames(ClassSpell):
         ),
         usage_tags=("utility",),
         target=FeatureTarget.OBJECT,
+        area=CombatArea(CombatAreaShape.CUBE, 5),
     )
     converted_from = RecordStamp("spells_dnd5e.json", "418b4d57625fc757")
 
@@ -1382,6 +1385,11 @@ class CreateBonfire(ClassSpell):
         ),
         usage_tags=("damage", "utility"),
         target=FeatureTarget.AREA,
+        area=CombatArea(
+            CombatAreaShape.CUBE,
+            5,
+            acts=(AreaTiming.ENTERS, AreaTiming.MOVED_ONTO, AreaTiming.ENDS),
+        ),
     )
     converted_from = RecordStamp("spells_dnd5e.json", "2ee33dfa25d64b8b")
 
@@ -1491,6 +1499,7 @@ class Druidcraft(ClassSpell):
         ),
         usage_tags=("utility",),
         target=FeatureTarget.OBJECT,
+        area=CombatArea(CombatAreaShape.CUBE, 5),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "ae5abb2563dc54f9")
 
@@ -1555,6 +1564,7 @@ class Elementalism(ClassSpell):
         ),
         usage_tags=("control",),
         target=FeatureTarget.OBJECT,
+        area=CombatArea(CombatAreaShape.CUBE, 5),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "b693df7d35930306")
 
@@ -1780,6 +1790,7 @@ class GreenFlameBlade(ClassSpell):
         ),
         usage_tags=("damage", "utility"),
         target=FeatureTarget.ENEMY,
+        area=CombatArea(CombatAreaShape.SPHERE, 5, from_source=True),
     )
     converted_from = RecordStamp("spells_dnd5e.json", "884757d409fa65f8")
 
@@ -2084,6 +2095,7 @@ class LightningLure(ClassSpell):
         ),
         usage_tags=("damage", "utility"),
         target=FeatureTarget.ENEMY,
+        area=CombatArea(CombatAreaShape.SPHERE, 15, from_source=True),
     )
     converted_from = RecordStamp("spells_dnd5e.json", "3faa8aad4f28f3e1")
 
@@ -2362,6 +2374,7 @@ class MoldEarth(ClassSpell):
         ),
         usage_tags=("control", "utility"),
         target=FeatureTarget.OBJECT,
+        area=CombatArea(CombatAreaShape.CUBE, 5, move_ft=5),
     )
     converted_from = RecordStamp("spells_dnd5e.json", "0c2177e407bf27f1")
 
@@ -2663,6 +2676,7 @@ class ShapeWater(ClassSpell):
         ),
         usage_tags=("utility",),
         target=FeatureTarget.OBJECT,
+        area=CombatArea(CombatAreaShape.CUBE, 5),
     )
     converted_from = RecordStamp("spells_dnd5e.json", "75b86714fab73a8f")
 
@@ -2898,6 +2912,7 @@ class SwordBurst(ClassSpell):
         ),
         usage_tags=("damage", "utility"),
         target=FeatureTarget.AREA,
+        area=CombatArea(CombatAreaShape.SPHERE, 5, from_source=True),
     )
     converted_from = RecordStamp("spells_dnd5e.json", "e727e4cb84c90deb")
 
@@ -3004,6 +3019,7 @@ class Thunderclap(ClassSpell):
         ),
         usage_tags=("damage",),
         target=FeatureTarget.AREA,
+        area=CombatArea(CombatAreaShape.EMANATION, 5),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "0b27c78bab05abeb")
 
@@ -3048,6 +3064,7 @@ class WordOfRadiance(ClassSpell):
         ),
         usage_tags=("damage",),
         target=FeatureTarget.ENEMY,
+        area=CombatArea(CombatAreaShape.EMANATION, 5),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "402a90476c41d0a7")
 
@@ -3143,6 +3160,7 @@ class ArcanePulse(ClassSpell):
         source="World of Warcraft",
         description="You create a pulse of arcane energy in a 10-foot Emanation originating from yourself. Each creature of your choice within this area makes a Constitution saving throw. On a failed save, it takes 1d8 Force damage, and its Speed is reduced by 10 feet (to a minimum of 0 feet) until the end of your next turn.",
         usage_tags=("control", "damage"),
+        area=CombatArea(CombatAreaShape.EMANATION, 10),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "5d91e2becfbce623")
 

@@ -23,6 +23,8 @@ from CharacterContent.Spells.SpellFactory.SpellFields import (
     Range,
 )
 from Core.Definitions import Ability, CharacterClass, Condition, DamageType
+from Model.Content.ActionType import ActionType
+from Model.Content.CombatArea import AreaSight, AreaTiming, CombatArea, CombatAreaShape
 from Model.Content.CombatEffect import (
     CombatCondition,
     CombatDamage,
@@ -204,6 +206,13 @@ class Moonbeam(ClassSpell):
         ),
         usage_tags=("damage",),
         target=FeatureTarget.AREA,
+        area=CombatArea(
+            CombatAreaShape.CYLINDER,
+            5,
+            acts=(AreaTiming.ENTERS, AreaTiming.MOVED_ONTO, AreaTiming.ENDS),
+            move_ft=60,
+            move_action=ActionType.ACTION,
+        ),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "bf4a8c6b9fcf2844")
 
@@ -332,6 +341,7 @@ class Shatter(ClassSpell):
         ),
         usage_tags=("damage",),
         target=FeatureTarget.AREA,
+        area=CombatArea(CombatAreaShape.SPHERE, 10),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "16af3f49d3981c24")
 
@@ -403,6 +413,7 @@ class SpikeGrowth(ClassSpell):
         ),
         usage_tags=("control", "damage"),
         target=FeatureTarget.AREA,
+        area=CombatArea(CombatAreaShape.SPHERE, 20),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "9299701c05a229b5")
 
@@ -607,6 +618,7 @@ class AganazzarsScorcher(ClassSpell):
         ),
         usage_tags=("damage",),
         target=FeatureTarget.AREA,
+        area=CombatArea(CombatAreaShape.LINE, 30),
     )
     converted_from = RecordStamp("spells_dnd5e.json", "c35d0d674101dcc6")
 
@@ -1380,6 +1392,7 @@ class CalmEmotions(ClassSpell):
         ),
         usage_tags=("heal",),
         target=FeatureTarget.AREA,
+        area=CombatArea(CombatAreaShape.SPHERE, 20),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "4c9011d45a0f865d")
 
@@ -1460,6 +1473,11 @@ class CloudOfDaggers(ClassSpell):
         ),
         usage_tags=("buff", "damage"),
         target=FeatureTarget.AREA,
+        area=CombatArea(
+            CombatAreaShape.CUBE,
+            5,
+            acts=(AreaTiming.ENTERS, AreaTiming.MOVED_ONTO, AreaTiming.ENDS),
+        ),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "2894f5c3c00a3d0f")
 
@@ -1722,6 +1740,7 @@ class Darkness(ClassSpell):
         ),
         usage_tags=("buff", "control"),
         target=FeatureTarget.AREA,
+        area=CombatArea(CombatAreaShape.SPHERE, 15, obscures=AreaSight.DEEP_DARKNESS),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "edfb5807bfcd8471")
 
@@ -2001,6 +2020,7 @@ class DisruptiveTune(ClassSpell):
         description="A distracting melody momentarily fills a 20-foot-radius Sphere centered on a point you choose within range. Each creature in the Sphere makes a Constitution saving throw. On a failed save, a target loses Concentration, and it has Disadvantage on Constitution saving throws to maintain Concentration for the spell’s duration.",
         usage_tags=("control",),
         target=FeatureTarget.AREA,
+        area=CombatArea(CombatAreaShape.SPHERE, 20),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "200a6f2de32fe121")
 
@@ -2026,6 +2046,7 @@ class DragonsBreath(ClassSpell):
         ),
         usage_tags=("damage",),
         target=FeatureTarget.ALLY,
+        area=CombatArea(CombatAreaShape.CONE, 15),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "2a732c335cc8cbc8")
 
@@ -2089,6 +2110,9 @@ class DuelingGround(ClassSpell):
         ),
         usage_tags=("buff", "heal"),
         target=FeatureTarget.ALLY,
+        area=CombatArea(
+            CombatAreaShape.SPHERE, 15, acts=(AreaTiming.ENTERS, AreaTiming.MOVED_ONTO)
+        ),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "ff05e9008f17fbb7")
 
@@ -2112,6 +2136,13 @@ class DustDevil(ClassSpell):
         ),
         usage_tags=("damage", "utility"),
         target=FeatureTarget.AREA,
+        area=CombatArea(
+            CombatAreaShape.CUBE,
+            5,
+            acts=(AreaTiming.ENDS,),
+            move_ft=30,
+            move_action=ActionType.BONUS_ACTION,
+        ),
     )
     converted_from = RecordStamp("spells_dnd5e.json", "f811bb50df455e62")
 
@@ -2740,6 +2771,13 @@ class FlamingSphere(ClassSpell):
         ),
         usage_tags=("buff", "damage"),
         target=FeatureTarget.AREA,
+        area=CombatArea(
+            CombatAreaShape.SPHERE,
+            5,
+            acts=(AreaTiming.MOVED_ONTO, AreaTiming.ENDS),
+            move_ft=30,
+            move_action=ActionType.BONUS_ACTION,
+        ),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "ae3d70b8c077f9ad")
 
@@ -2918,6 +2956,7 @@ class GiftOfGab(ClassSpell):
         description="When you cast this spell, you skillfully reshape the memories of listeners in your immediate area, so that each creature of your choice within 5 feet of you forgets everything you said within the last 6 seconds. Those creatures then remember that you actually said the words you speak as the verbal component of the spell.",
         usage_tags=("utility",),
         target=FeatureTarget.CREATURE,
+        area=CombatArea(CombatAreaShape.EMANATION, 5),
     )
     converted_from = RecordStamp("spells_dnd5e.json", "31c461204a5f84a4")
 
@@ -2965,6 +3004,7 @@ class GustOfWind(ClassSpell):
         ),
         usage_tags=("control",),
         target=FeatureTarget.AREA,
+        area=CombatArea(CombatAreaShape.LINE, 60, width_ft=10, acts=(AreaTiming.ENDS,)),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "fa7d2c487d270740")
 
@@ -3022,6 +3062,13 @@ class HealingSpirit(ClassSpell):
         ),
         usage_tags=("heal", "utility", "summon"),
         target=FeatureTarget.ALLY,
+        area=CombatArea(
+            CombatAreaShape.CUBE,
+            5,
+            acts=(AreaTiming.ENTERS, AreaTiming.MOVED_ONTO, AreaTiming.STARTS),
+            move_ft=30,
+            move_action=ActionType.BONUS_ACTION,
+        ),
     )
     converted_from = RecordStamp("spells_dnd5e.json", "ee9dbda52a6226d4")
 
@@ -3221,6 +3268,7 @@ class JimsGlowingCoin(ClassSpell):
         description="When you cast the spell, you hurl the coin that is the spell's material component to any spot within range. The coin lights up as if under the effect of a light spell. Each creature of your choice that you can see within 30 feet of the coin must succeed on a Wisdom saving throw or be distracted for the duration. While distracted, a creature has disadvantage on Wisdom (Perception) checks and initiative rolls.",
         usage_tags=("buff", "utility"),
         target=FeatureTarget.ENEMY,
+        area=CombatArea(CombatAreaShape.EMANATION, 30),
     )
     converted_from = RecordStamp("spells_dnd5e.json", "6f51d9bffcc00b4d")
 
@@ -4000,6 +4048,7 @@ class NathairsMischief(ClassSpell):
         description="You fill a 20-foot cube you can see within range with fey and draconic magic. Roll on the Mischievous Surge table to determine the magical effect produced, and roll again at the start of each of your turns until the spell ends. You can move the cube up to 10 feet before you roll.",
         usage_tags=("utility",),
         target=FeatureTarget.AREA,
+        area=CombatArea(CombatAreaShape.CUBE, 20, move_ft=10),
     )
     converted_from = RecordStamp("spells_dnd5e.json", "126bd708d10b3631")
 
@@ -4113,6 +4162,7 @@ class PassWithoutTrace(ClassSpell):
         description="You radiate a concealing aura in a 30-foot Emanation for the duration. While in the aura, you and each creature you choose have a +10 bonus to Dexterity (Stealth) checks and leave no tracks.",
         usage_tags=("buff",),
         target=FeatureTarget.ALLY,
+        area=CombatArea(CombatAreaShape.EMANATION, 30),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "607a07f6e6d5cea0")
 
@@ -4151,6 +4201,7 @@ class PhantasmalForce(ClassSpell):
         ),
         usage_tags=("damage",),
         target=FeatureTarget.ENEMY,
+        area=CombatArea(CombatAreaShape.CUBE, 10),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "75fe37c2333cc44b")
 
@@ -4324,6 +4375,7 @@ class Pyrotechnics(ClassSpell):
         ),
         usage_tags=("utility",),
         target=FeatureTarget.OBJECT,
+        area=CombatArea(CombatAreaShape.CUBE, 5, obscures=AreaSight.HEAVILY_OBSCURED),
     )
     converted_from = RecordStamp("spells_dnd5e.json", "69035e49d7126703")
 
@@ -4444,6 +4496,7 @@ class RimesBindingIce(ClassSpell):
         ),
         usage_tags=("control", "damage"),
         target=FeatureTarget.AREA,
+        area=CombatArea(CombatAreaShape.CONE, 30),
     )
     converted_from = RecordStamp("spells_dnd5e.json", "3b36f53886801278")
 
@@ -4549,6 +4602,7 @@ class SearingOrb(ClassSpell):
         ),
         usage_tags=("control", "damage"),
         target=FeatureTarget.ENEMY,
+        area=CombatArea(CombatAreaShape.EMANATION, 10),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "1cb060299f20996f")
 
@@ -4777,6 +4831,7 @@ class Silence(ClassSpell):
         description="For the duration, no sound can be created within or pass through a 20-foot-radius Sphere centered on a point you choose within range. Any creature or object entirely inside the Sphere has Immunity to Thunder damage, and creatures have the Deafened condition while entirely inside it. Casting a spell that includes a Verbal component is impossible there.",
         usage_tags=("control",),
         target=FeatureTarget.AREA,
+        area=CombatArea(CombatAreaShape.SPHERE, 20),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "218da00b7cebf64a")
 
@@ -4890,6 +4945,7 @@ class SnillocsSnowballSwarm(ClassSpell):
         ),
         usage_tags=("damage",),
         target=FeatureTarget.AREA,
+        area=CombatArea(CombatAreaShape.SPHERE, 5),
     )
     converted_from = RecordStamp("spells_dnd5e.json", "b2d91320f462223d")
 
@@ -5014,6 +5070,7 @@ class SprayOfCards(ClassSpell):
         ),
         usage_tags=("damage",),
         target=FeatureTarget.AREA,
+        area=CombatArea(CombatAreaShape.CONE, 15),
     )
     converted_from = RecordStamp("spells_dnd5e.json", "d35379f9c183c642")
 
@@ -5440,6 +5497,7 @@ class WardingWind(ClassSpell):
         ),
         usage_tags=("control", "damage"),
         target=FeatureTarget.SELF,
+        area=CombatArea(CombatAreaShape.SPHERE, 10, from_source=True),
     )
     converted_from = RecordStamp("spells_dnd5e.json", "6d6e38fc09883836")
 
@@ -5547,6 +5605,11 @@ class Web(ClassSpell):
         ),
         usage_tags=("control",),
         target=FeatureTarget.AREA,
+        area=CombatArea(
+            CombatAreaShape.CUBE,
+            20,
+            acts=(AreaTiming.ENTERS, AreaTiming.MOVED_ONTO, AreaTiming.STARTS),
+        ),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "9bd51f3fe06ecc79")
 
@@ -5611,6 +5674,7 @@ class WitherAndBloom(ClassSpell):
         ),
         usage_tags=("damage", "heal"),
         target=FeatureTarget.ENEMY,
+        area=CombatArea(CombatAreaShape.SPHERE, 10),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "347bc9238e433ef3")
 
@@ -5694,6 +5758,11 @@ class ZoneOfTruth(ClassSpell):
         ),
         usage_tags=("control",),
         target=FeatureTarget.AREA,
+        area=CombatArea(
+            CombatAreaShape.SPHERE,
+            15,
+            acts=(AreaTiming.ENTERS, AreaTiming.MOVED_ONTO, AreaTiming.STARTS),
+        ),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "fc6262943de4ffc9")
 
@@ -5922,6 +5991,7 @@ class Consecration(ClassSpell):
         source="World of Warcraft",
         description="You consecrate the area in a 15-foot Emanation originating from you. Creatures of your choice that start their turn in the Emanation take 1d8 Radiant damage. The Emanation is Difficult Terrain for Fiends and Undead.",
         usage_tags=("control", "damage"),
+        area=CombatArea(CombatAreaShape.EMANATION, 15, acts=(AreaTiming.STARTS,)),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "9be47dc7e44c4440")
 
@@ -5956,6 +6026,7 @@ class DeathAndDecay(ClassSpell):
         source="World of Warcraft",
         description="Corruption ripples out in a 20-foot-radius Sphere from a point on the ground you can see within range. Each creature in that area makes a Wisdom saving throw. On a failed save, a target takes 2d6 Necrotic damage and is cursed until the end of your next turn. If you deal damage to a cursed target with an attack roll, the target takes an extra 1d6 Necrotic damage. On a successful save, the target takes half as much damage only.",
         usage_tags=("damage",),
+        area=CombatArea(CombatAreaShape.SPHERE, 20),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "81430137750e2684")
 
@@ -5976,6 +6047,7 @@ class DreamBreath(ClassSpell):
             "Using a Higher-Level Spell Slot. The healing increases by 2d6 for each spell slot level above 2."
         ),
         usage_tags=("heal",),
+        area=CombatArea(CombatAreaShape.CONE, 15),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "12834cef3528a4b9")
 
@@ -5997,6 +6069,7 @@ class Eruption(ClassSpell):
             "Using a Higher-Level Spell Slot. The damage increases by 1d8 for each spell slot level above 2."
         ),
         usage_tags=("control", "damage"),
+        area=CombatArea(CombatAreaShape.SPHERE, 20),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "1d749683e74b48dc")
 
@@ -6017,6 +6090,7 @@ class EyeBeam(ClassSpell):
             "Using a Higher-Level Spell Slot. The damage increases by 1d6 for each spell slot level above 1."
         ),
         usage_tags=("damage",),
+        area=CombatArea(CombatAreaShape.CONE, 15),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "82302b52bbd0a1d0")
 
@@ -6074,6 +6148,7 @@ class Frostscythe(ClassSpell):
             "Using a Higher-Level Spell Slot. The damage increases by 1d8 for each spell slot level above 2."
         ),
         usage_tags=("control", "damage"),
+        area=CombatArea(CombatAreaShape.CONE, 20),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "7a8a4f1ce71af28b")
 
@@ -6111,6 +6186,7 @@ class SigilOfFlame(ClassSpell):
             "Using a Higher-Level Spell Slot. The damage (both initial and later) increases by 1d8 for each spell slot level above 2."
         ),
         usage_tags=("damage",),
+        area=CombatArea(CombatAreaShape.EMANATION, 10),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "f269ef1d2564d287")
 

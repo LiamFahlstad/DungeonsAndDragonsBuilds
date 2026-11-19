@@ -625,6 +625,16 @@ Since step 28 the Invisible visibility state is the Invisible condition (DI-068)
 **History**
 - 2026-11-18 claude-opus-5-5: found
 
+### DI-103 · test_the_target_label_says_when_a_target_is_obscured fails on HEAD: the label now adds the viewer's Darkvision
+- **Status:** open
+- **Area:** combat-simulator
+- **Where:** `tests/test_combat_ui_map_painter.py:371`
+
+On HEAD (dbf889cd) the target label reads 'Target: Pirate (30 ft., Heavily Obscured, Tiger sees it by Darkvision 60 ft.)' but the test expects 'Target: Pirate (30 ft., Heavily Obscured)'. The Tiger's Darkvision sees into the painted Darkness, so either the label is right and the test is stale, or the Darkness cell should be out of the Tiger's Darkvision. Found while running the suite for explicit-attributes Phase 3; not caused by it (fails on a clean export of HEAD).
+
+**History**
+- 2026-11-19 main-session: found
+
 ## Fixed
 
 ### DI-001 · Temporary Hit Points stack instead of keeping one amount

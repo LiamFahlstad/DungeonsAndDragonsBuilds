@@ -23,6 +23,13 @@ from CharacterContent.Spells.SpellFactory.SpellFields import (
     Range,
 )
 from Core.Definitions import CharacterClass, Condition, DamageType
+from Model.Content.CombatArea import (
+    AreaCover,
+    AreaSight,
+    AreaTiming,
+    CombatArea,
+    CombatAreaShape,
+)
 from Model.Content.CombatEffect import CombatCondition, CombatEffect
 from Model.Content.CombatModifiers import ConditionImmunity, HitPointMaximum, Resistance
 from Model.Content.Feature import FeatureTarget
@@ -107,6 +114,14 @@ class BladeBarrier(ClassSpell):
         ),
         usage_tags=("control",),
         target=FeatureTarget.AREA,
+        area=CombatArea(
+            CombatAreaShape.WALL,
+            100,
+            acts=(AreaTiming.ENTERS, AreaTiming.MOVED_ONTO),
+            ring_ft=60,
+            cover=AreaCover.THREE_QUARTERS,
+            difficult=True,
+        ),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "b739853f9b47b24f")
 
@@ -338,6 +353,7 @@ class CircleOfDeath(ClassSpell):
         ),
         usage_tags=("damage",),
         target=FeatureTarget.AREA,
+        area=CombatArea(CombatAreaShape.SPHERE, 60),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "8c59227a86b5a64f")
 
@@ -705,6 +721,11 @@ class Dirge(ClassSpell):
         ),
         usage_tags=("control", "damage", "heal"),
         target=FeatureTarget.AREA,
+        area=CombatArea(
+            CombatAreaShape.EMANATION,
+            60,
+            acts=(AreaTiming.ENTERS, AreaTiming.MOVED_ONTO, AreaTiming.ENDS),
+        ),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "69700a1c2ade5a3a")
 
@@ -925,6 +946,7 @@ class DruidGrove(ClassSpell):
         ),
         usage_tags=("control", "utility"),
         target=FeatureTarget.AREA,
+        area=CombatArea(CombatAreaShape.CUBE, 30, obscures=AreaSight.HEAVILY_OBSCURED),
     )
     converted_from = RecordStamp("spells_dnd5e.json", "ccbfe6b66ecf65a7")
 
@@ -1528,6 +1550,7 @@ class GlobeOfInvulnerability(ClassSpell):
         ),
         usage_tags=("buff",),
         target=FeatureTarget.SELF,
+        area=CombatArea(CombatAreaShape.EMANATION, 10),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "e59062ef3d72f3d8")
 
@@ -1599,6 +1622,12 @@ class GuardsAndWards(ClassSpell):
         ),
         usage_tags=("control",),
         target=FeatureTarget.AREA,
+        area=CombatArea(
+            CombatAreaShape.CUBE,
+            50,
+            acts=(AreaTiming.ENTERS, AreaTiming.MOVED_ONTO),
+            obscures=AreaSight.HEAVILY_OBSCURED,
+        ),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "713dd85dfc0c9053")
 
@@ -1839,6 +1868,7 @@ class HeroesFeast(ClassSpell):
         ),
         usage_tags=("buff", "damage", "heal"),
         target=FeatureTarget.ALLY,
+        area=CombatArea(CombatAreaShape.CUBE, 10),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "f3fcf9f13c46f3ba")
 
@@ -1921,6 +1951,11 @@ class InvestitureOfFlame(ClassSpell):
         ),
         usage_tags=("buff", "damage", "utility"),
         target=FeatureTarget.SELF,
+        area=CombatArea(
+            CombatAreaShape.LINE,
+            15,
+            acts=(AreaTiming.ENTERS, AreaTiming.MOVED_ONTO, AreaTiming.ENDS),
+        ),
     )
     converted_from = RecordStamp("spells_dnd5e.json", "fce3aa5cdfeee871")
 
@@ -1995,6 +2030,7 @@ class InvestitureOfIce(ClassSpell):
         ),
         usage_tags=("buff", "control", "damage", "utility"),
         target=FeatureTarget.SELF,
+        area=CombatArea(CombatAreaShape.SPHERE, 10),
     )
     converted_from = RecordStamp("spells_dnd5e.json", "cd5f3dba00842302")
 
@@ -2072,6 +2108,7 @@ class InvestitureOfStone(ClassSpell):
         ),
         usage_tags=("buff", "control", "utility"),
         target=FeatureTarget.SELF,
+        area=CombatArea(CombatAreaShape.SPHERE, 15, from_source=True),
     )
     converted_from = RecordStamp("spells_dnd5e.json", "c622ef44d2086ddd")
 
@@ -2147,6 +2184,7 @@ class InvestitureOfWind(ClassSpell):
         ),
         usage_tags=("buff", "damage", "utility"),
         target=FeatureTarget.SELF,
+        area=CombatArea(CombatAreaShape.CUBE, 15, point_within_ft=60),
     )
     converted_from = RecordStamp("spells_dnd5e.json", "b016f7447b9d5604")
 
@@ -2218,6 +2256,7 @@ class LeomundsLamentableBelaborment(ClassSpell):
         ),
         usage_tags=("control",),
         target=FeatureTarget.AREA,
+        area=CombatArea(CombatAreaShape.SPHERE, 10),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "2cd924072240323c")
 
@@ -2553,6 +2592,7 @@ class MoveEarth(ClassSpell):
         ),
         usage_tags=("control", "heal"),
         target=FeatureTarget.AREA,
+        area=CombatArea(CombatAreaShape.CUBE, 40),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "854e652e7fe896d7")
 
@@ -2628,6 +2668,7 @@ class OtilukesFreezingSphere(ClassSpell):
         ),
         usage_tags=("control", "damage"),
         target=FeatureTarget.AREA,
+        area=CombatArea(CombatAreaShape.SPHERE, 60),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "4fef1f387320853c")
 
@@ -2954,6 +2995,7 @@ class ProgrammedIllusion(ClassSpell):
         ),
         usage_tags=("control",),
         target=FeatureTarget.OBJECT,
+        area=CombatArea(CombatAreaShape.CUBE, 30),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "849a2e5e6515b220")
 
@@ -3380,6 +3422,7 @@ class Sunbeam(ClassSpell):
         ),
         usage_tags=("control", "damage"),
         target=FeatureTarget.AREA,
+        area=CombatArea(CombatAreaShape.LINE, 60),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "105ee61b20440215")
 
@@ -3765,6 +3808,13 @@ class WallOfIce(ClassSpell):
         ),
         usage_tags=("control", "damage"),
         target=FeatureTarget.AREA,
+        area=CombatArea(
+            CombatAreaShape.WALL,
+            100,
+            width_ft=1,
+            acts=(AreaTiming.ENTERS, AreaTiming.MOVED_ONTO),
+            ring_ft=20,
+        ),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "182502bea5890462")
 
@@ -3882,6 +3932,7 @@ class WallOfThorns(ClassSpell):
         ),
         usage_tags=("buff", "control", "damage"),
         target=FeatureTarget.AREA,
+        area=CombatArea(CombatAreaShape.WALL, 60, acts=(AreaTiming.ENDS,), ring_ft=20),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "885e1cb3fbfd3136")
 
@@ -4085,6 +4136,7 @@ class GravityFissure(ClassSpell):
         usage_tags=("damage",),
         target=FeatureTarget.AREA,
         school_note="Dunamancy:Graviturgy",
+        area=CombatArea(CombatAreaShape.LINE, 100),
     )
     converted_from = RecordStamp("spells_dnd5e.json", "d61683569d02ac66")
 
@@ -4159,6 +4211,7 @@ class AzureSweep(ClassSpell):
         source="World of Warcraft",
         description="Pure magic sweeps out from you in a 30-foot Emanation. Creatures of your choice in the Emanation make a Constitution saving throw. On a failed save, a creature takes 7d8 Force damage, and its Speed is reduced by 20 feet for the duration. On a successful save, the target takes half as much damage only.",
         usage_tags=("control", "damage"),
+        area=CombatArea(CombatAreaShape.EMANATION, 30),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "026f6c515f08095a")
 
@@ -4179,6 +4232,7 @@ class Combustion(ClassSpell):
             "At the end of each of your turns, each creature of your choice in a 5-foot Emanation originating from you takes 3d8 Fire damage."
         ),
         usage_tags=("buff", "damage"),
+        area=CombatArea(CombatAreaShape.EMANATION, 5),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "fc7016226daeb2a9")
 
@@ -4199,6 +4253,7 @@ class Tranquility(ClassSpell):
             "Using a Higher-Level Spell Slot. Creatures regain 1d8 additional Hit Points for each spell slot level above 6."
         ),
         usage_tags=("buff", "heal"),
+        area=CombatArea(CombatAreaShape.EMANATION, 60),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "8fc2cc3d43fe0891")
 

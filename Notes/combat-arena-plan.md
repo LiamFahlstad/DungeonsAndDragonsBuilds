@@ -1866,7 +1866,18 @@ Taken in step 28 (2026-11-18), for the user to overrule:
     area's text says what its space is: magical Darkness Darkvision "can't
     see through" (only Truesight and Blindsight see in it), other
     Darkness (Darkvision too), "Heavily Obscured" (only Blindsight).
-    Painted Darkness is the ordinary kind.
+    Painted Darkness is the ordinary kind. *Since Decision 54, a kept
+    area's rules (its CombatArea's `obscures`) say what its space is, not
+    its text.*
+54. **An area is fields, not text** (the user, 2026-11-19, answering Q10;
+    Notes/explicit-attributes-plan.md, Phase 3). A spell's area is
+    `SpellRules.area` and a feature's use's is `CombatEffect.area`, a
+    `CombatArea` (Model/Content/CombatArea.py): its shape and size, how far
+    its point may be, when a kept area acts, how it's moved, what it hides
+    and a wall's ring, damaging side and terrain. The bar starts from it and
+    a kept record keeps it as "rules"; nothing reads the rules text while a
+    fight runs. A monster ability's area is still read from its description
+    until stat blocks get fields (that plan's Phase 4).
 
 ## Open questions
 
@@ -1938,7 +1949,8 @@ Each has a *Suggestion*: what gets built if nobody says otherwise.
   662 spells and the stat blocks' "each creature in a 15-foot Cone"; the
   bar shows what was read, to change. *Suggestion:* not until a reading
   turns out wrong often enough; then an `area` field on `CombatEffect`,
-  filled where the text misleads.
+  filled where the text misleads. *Answered (Decision 54, 2026-11-19): yes,
+  `SpellRules.area` and `CombatEffect.area`, for every spell with one.*
 - **Q11. Should the Custom Effect open with no targets when the source is
   on the map?** *Blocks nothing.* Today it needs a target first
   (`test_dialog_needs_a_target`), so aiming an area starts with a

@@ -30,6 +30,10 @@
    "ability": "STR",
    "action_cost": null,
    "amount_kind": "Damage",
+   "area": {
+    "shape": "Cone",
+    "size_ft": 15
+   },
    "bonus": null,
    "concentration": false,
    "condition": "Prone",

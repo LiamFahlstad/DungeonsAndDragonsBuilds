@@ -45,28 +45,16 @@ centres, never from a cell's coordinates.
 from __future__ import annotations
 
 import math
-import re
 from dataclasses import dataclass
-from enum import Enum
 from typing import Iterable
 
 from Combat.Arena.arena import ArenaSettings, footprint
 from Combat.Arena.cover import reaches
 from Combat.Arena.geometry import Cell
+from Model.Content.CombatArea import CombatArea
+from Model.Content.CombatArea import CombatAreaShape as AreaShape
 
 _EPSILON = 1e-9
-
-
-class AreaShape(str, Enum):
-    SPHERE = "Sphere"
-    CYLINDER = "Cylinder"
-    CUBE = "Cube"
-    CONE = "Cone"
-    LINE = "Line"
-    EMANATION = "Emanation"
-    # Not one of the glossary's six: a wall, aimed by its two ends or, as a
-    # ring, by its middle (step 25).
-    WALL = "Wall"
 
 
 # Shapes whose size is a radius ("20-foot-radius Sphere").
@@ -77,12 +65,14 @@ _FROM_SOURCE = (AreaShape.CONE, AreaShape.LINE, AreaShape.EMANATION)
 
 @dataclass(frozen=True)
 class AreaOfEffect:
-    """An area: its shape and size in feet (a Sphere's or Cylinder's radius,
-    a Cone's or Line's length, a Cube's side, an Emanation's distance, a
-    Wall's length or a ring's distance across), a Line's width (a Wall's
-    thickness), whether a Sphere, Cylinder or Cube starts at the source
-    rather than at a point (Cones, Lines and Emanations always do), and
-    whether a Wall is a ring."""
+    """An area as the map aims it: its shape and size in feet (a Sphere's or
+    Cylinder's radius, a Cone's or Line's length, a Cube's side, an
+    Emanation's distance, a Wall's length or a ring's distance across), a
+    Line's width (a Wall's thickness), whether a Sphere, Cylinder or Cube
+    starts at the source rather than at a point (Cones, Lines and
+    Emanations always do), and whether a Wall is a ring. The shape is the
+    model's CombatAreaShape (Model/Content/CombatArea.py); a spell's or a
+    feature's CombatArea gives one with area_of."""
 
     shape: AreaShape
     size_ft: int
@@ -127,241 +117,13 @@ class AreaOfEffect:
         return text
 
 
-_SHAPES = "|".join(s.value for s in AreaShape)
-_NUMBER = r"(\d[\d,]*)"
-_FOOT = r"[- ](?:foot|feet|ft\.?)"
-# "20-foot-radius Sphere", "10-foot-radius, 40-foot-high Cylinder",
-# "Self (10-foot-radius sphere)", "20-foot radius sphere".
-_RADIUS = re.compile(
-    rf"{_NUMBER}{_FOOT}[- ]radius,?(?:\s+{_NUMBER}{_FOOT}[- ]high,?)?\s+"
-    r"(sphere|cylinder|emanation)?",
-    re.IGNORECASE,
-)
-# "100-foot-long, 5-foot-wide Line", "Line 100 feet long and 5 feet wide".
-_LONG_LINE = re.compile(
-    rf"{_NUMBER}{_FOOT}[- ]long,?\s+{_NUMBER}{_FOOT}[- ]wide\s+line",
-    re.IGNORECASE,
-)
-# "5-foot-wide, 60-foot-long Line" (Sunbeam).
-_WIDE_LINE = re.compile(
-    rf"{_NUMBER}{_FOOT}[- ]wide,?\s+{_NUMBER}{_FOOT}[- ]long\s+line",
-    re.IGNORECASE,
-)
-# A 2014 range of "Self (10-foot radius)": a Sphere around the source.
-_SELF_RADIUS = re.compile(
-    rf"self\s*\(\s*{_NUMBER}{_FOOT}[- ]radius(?:\s+sphere)?\s*\)", re.IGNORECASE
-)
-# How far away the point an area is centred on may be: "a point you can see
-# within 60 feet of you", "centered on a point within 120 feet".
-_POINT_WITHIN = re.compile(
-    rf"\bpoint\b[^.]{{0,30}}?within {_NUMBER}{_FOOT}", re.IGNORECASE
-)
-# A spell's range: "150 feet", "1,000 feet", "1 mile", "Touch".
-_RANGE_FEET = re.compile(rf"^\s*{_NUMBER}\s+(?:foot|feet)\b", re.IGNORECASE)
-_RANGE_MILES = re.compile(rf"^\s*{_NUMBER}\s+miles?\b", re.IGNORECASE)
-FEET_PER_MILE = 5280
-TOUCH_FT = 5
-_LINE_LONG = re.compile(
-    rf"\bline\b(?:\s+of\s+[a-z ]{{1,30}}?)?\s+{_NUMBER}\s+(?:foot|feet)\s+long"
-    rf"(?:\s+and\s+{_NUMBER}\s+"
-    r"(?:foot|feet)\s+wide)?",
-    re.IGNORECASE,
-)
-# "15-foot Cone", "30-foot Emanation", "15-foot cube", "60-foot line", and
-# "20-foot square" (Entangle, Grease): a Cube on the ground.
-_SIZED = re.compile(rf"{_NUMBER}{_FOOT}\s+({_SHAPES}|square)\b", re.IGNORECASE)
-# "Each creature within 5 feet of that point" (Call Lightning): a Sphere.
-_WITHIN_POINT = re.compile(
-    rf"(?:each|every|all)(?: other)? creatures?[^.]{{0,40}}?within {_NUMBER}"
-    rf"{_FOOT} of (?:that|the|a) point\b",
-    re.IGNORECASE,
-)
-# "each creature within 5 feet of you", "All other creatures within 5 feet of
-# you" (Sword Burst), "within 10 feet of it": an Emanation.
-_WITHIN = re.compile(
-    rf"(?:each|every|all)(?: other)? creatures?[^.]{{0,40}}?within {_NUMBER}"
-    rf"{_FOOT} of (?!(?:that|the|a) point\b)"
-    r"(?:you|it|itself|the \w+|him|her|them)\b",
-    re.IGNORECASE,
-)
-# What says the area is the source's own: "Self (15-foot cube)", "centered on
-# you", "originating from you".
-_AROUND_SOURCE = re.compile(
-    r"\bself\s*\(|centered on (?:you|yourself|itself|himself|herself)\b"
-    r"|originat\w* from (?:you|yourself|itself)\b",
-    re.IGNORECASE,
-)
-# A light's reach isn't an area: Flaming Sphere "sheds Bright Light in a
-# 20-foot radius" (DI-096).
-_LIGHT_BEFORE = re.compile(r"\blight\s+(?:in|for)\s+(?:a|an)?\s*$", re.IGNORECASE)
-# Flaming Sphere's "Any creature that ends its turn within 5 feet of the
-# sphere": a Sphere that far around the cell it's on (DI-096).
-_WITHIN_SPHERE = re.compile(
-    rf"\bwithin {_NUMBER}{_FOOT} of (?:the|that) sphere\b", re.IGNORECASE
-)
-# A wall (step 25): "make the wall up to 60 feet long, 20 feet high, and 1
-# foot thick" (Wall of Fire, Wall of Thorns), "a straight wall up to 100
-# feet long" (Blade Barrier).
-_WALL_LONG = re.compile(
-    rf"\bwall\b[^.]{{0,40}}?\bup to {_NUMBER}{_FOOT} long", re.IGNORECASE
-)
-_THICK = re.compile(rf"{_NUMBER}{_FOOT}\s+thick", re.IGNORECASE)
-# Wall of Force's "a flat surface made up of ten 10-foot-by-10-foot panels".
-_COUNTS = {
-    "one": 1,
-    "two": 2,
-    "three": 3,
-    "four": 4,
-    "five": 5,
-    "six": 6,
-    "seven": 7,
-    "eight": 8,
-    "nine": 9,
-    "ten": 10,
-}
-_PANELS = re.compile(
-    rf"\b({'|'.join(_COUNTS)}|\d+) {_NUMBER}-foot(?:-by-\d+-foot|-square) panels\b",
-    re.IGNORECASE,
-)
-# A wall's ring, as its text gives the choice: "a ringed wall up to 20 feet
-# in diameter", "a circle that has a 20-foot diameter", "a globe with a
-# radius of up to 10 feet" (twice that across).
-_RING_ACROSS = re.compile(
-    rf"\bring(?:ed)? wall up to {_NUMBER}{_FOOT} in diameter"
-    rf"|\bcircle that has an? {_NUMBER}{_FOOT} diameter",
-    re.IGNORECASE,
-)
-_RING_RADIUS = re.compile(
-    rf"\b(?:dome|globe)\b[^.]{{0,30}}?\bradius of up to {_NUMBER}{_FOOT}",
-    re.IGNORECASE,
-)
-# Wall of Fire's "One side of the wall ... deals 5d8 Fire damage to each
-# creature that ends its turn within 10 feet of that side".
-_SIDE_WITHIN = re.compile(
-    rf"\bone side of the wall\b[^.]*?\bwithin {_NUMBER}{_FOOT} of that side",
-    re.IGNORECASE,
-)
-
-
-def _feet(text: str | None) -> int:
-    return int((text or "0").replace(",", ""))
-
-
-def _walls(text: str) -> list[tuple[int, AreaOfEffect]]:
-    """The walls `text` states, by where each is said: a straight one, as
-    long and (when it says) as thick as its text, or Wall of Force's
-    panels side by side."""
-    found = []
-    for match in _WALL_LONG.finditer(text):
-        sentence_end = text.find(".", match.end())
-        rest = text[match.end() : sentence_end if sentence_end >= 0 else None]
-        thick = _THICK.search(rest)
-        width = max(1, _feet(thick.group(1))) if thick else 5
-        found.append(
-            (match.start(), AreaOfEffect(AreaShape.WALL, _feet(match.group(1)), width))
-        )
-    for match in _PANELS.finditer(text):
-        count = match.group(1).lower()
-        panels = _COUNTS.get(count) or int(count)
-        found.append(
-            (
-                match.start(),
-                AreaOfEffect(AreaShape.WALL, panels * _feet(match.group(2)), 1),
-            )
-        )
-    return found
-
-
-def wall_ring_ft(text: str) -> int | None:
-    """How far across a wall's ring may be, as its text offers one (Wall of
-    Fire's "ringed wall up to 20 feet in diameter", Wall of Force's globe
-    "with a radius of up to 10 feet"); None when it offers none."""
-    match = _RING_ACROSS.search(text)
-    if match:
-        return _feet(match.group(1) or match.group(2))
-    match = _RING_RADIUS.search(text)
-    return 2 * _feet(match.group(1)) if match else None
-
-
-def damaging_side_ft(text: str) -> int | None:
-    """How far from a wall's damaging side it reaches (Wall of Fire's 10
-    feet "of that side"), or None for a wall without one."""
-    match = _SIDE_WITHIN.search(text)
-    return _feet(match.group(1)) if match else None
-
-
-def parse_area(text: str) -> AreaOfEffect | None:
-    """The first area of effect `text` states ("Each creature in a
-    20-foot-radius Sphere centered on that point"), or None when it states
+def area_of(rules: CombatArea | None) -> AreaOfEffect | None:
+    """The area a spell's or a feature's CombatArea aims on the map (its
+    shape, size, width and whether it starts at the source); None for
     none."""
-    found: list[tuple[int, AreaOfEffect]] = _walls(text)
-    for match in _WITHIN_SPHERE.finditer(text):
-        size = _feet(match.group(1))
-        if size:
-            found.append((match.start(), AreaOfEffect(AreaShape.SPHERE, size)))
-    for match in _RADIUS.finditer(text):
-        if _LIGHT_BEFORE.search(text[max(0, match.start() - 20) : match.start()]):
-            continue
-        shape_name = (match.group(3) or "sphere").title()
-        shape = AreaShape(shape_name)
-        size = _feet(match.group(1))
-        if size:
-            found.append((match.start(), AreaOfEffect(shape, size)))
-    for match in _LONG_LINE.finditer(text):
-        found.append(
-            (
-                match.start(),
-                AreaOfEffect(
-                    AreaShape.LINE, _feet(match.group(1)), _feet(match.group(2))
-                ),
-            )
-        )
-    for match in _WIDE_LINE.finditer(text):
-        found.append(
-            (
-                match.start(),
-                AreaOfEffect(
-                    AreaShape.LINE, _feet(match.group(2)), _feet(match.group(1))
-                ),
-            )
-        )
-    for match in _SELF_RADIUS.finditer(text):
-        found.append(
-            (
-                match.start(),
-                AreaOfEffect(AreaShape.SPHERE, _feet(match.group(1)), from_source=True),
-            )
-        )
-    for match in _LINE_LONG.finditer(text):
-        width = _feet(match.group(2)) or 5
-        found.append(
-            (match.start(), AreaOfEffect(AreaShape.LINE, _feet(match.group(1)), width))
-        )
-    for match in _SIZED.finditer(text):
-        size = _feet(match.group(1))
-        if size:
-            name = match.group(2).title()
-            shape = AreaShape.CUBE if name == "Square" else AreaShape(name)
-            found.append((match.start(), AreaOfEffect(shape, size)))
-    for match in _WITHIN_POINT.finditer(text):
-        size = _feet(match.group(1))
-        if size:
-            found.append((match.start(), AreaOfEffect(AreaShape.SPHERE, size)))
-    for match in _WITHIN.finditer(text):
-        size = _feet(match.group(1))
-        if size:
-            found.append((match.start(), AreaOfEffect(AreaShape.EMANATION, size)))
-    if not found:
+    if rules is None:
         return None
-    start, area = min(found, key=lambda item: item[0])
-    if area.shape in (AreaShape.SPHERE, AreaShape.CYLINDER, AreaShape.CUBE):
-        # "Self (15-foot cube)", or the area's own sentence says so.
-        end = text.find(".", start)
-        sentence = text[text.rfind(".", 0, start) + 1 : end if end >= 0 else None]
-        before = text[max(0, start - 8) : start]
-        if _AROUND_SOURCE.search(sentence) or _AROUND_SOURCE.search(before):
-            area = AreaOfEffect(area.shape, area.size_ft, area.width_ft, True)
-    return area
+    return AreaOfEffect(rules.shape, rules.size_ft, rules.width_ft, rules.from_source)
 
 
 def _centre(cells: Iterable[Cell], settings: ArenaSettings) -> tuple[float, float]:
@@ -661,26 +423,3 @@ def creatures_in(
     space in them (a creature is in an area that touches any of it)."""
     rule = settings.distance_rule
     return [c for c in chars if cells.intersection(footprint(c, rule))]
-
-
-def spell_range_ft(range_text: str) -> int | None:
-    """How far a spell reaches, from its range ("150 feet", "1 mile",
-    "Touch"); None for Self, Sight, Unlimited and Special, which a point
-    can't be checked against."""
-    match = _RANGE_FEET.match(range_text)
-    if match:
-        return _feet(match.group(1))
-    match = _RANGE_MILES.match(range_text)
-    if match:
-        return _feet(match.group(1)) * FEET_PER_MILE
-    if range_text.strip().lower() == "touch":
-        return TOUCH_FT
-    return None
-
-
-def point_range_ft(text: str) -> int | None:
-    """How far away a rules text lets the point an area is centred on be
-    ("a 20-foot-radius Sphere centered on a point within 120 feet"), or
-    None when it doesn't say."""
-    match = _POINT_WITHIN.search(text)
-    return _feet(match.group(1)) if match else None

@@ -52,6 +52,7 @@ from typing import Any
 
 from Core.Definitions import Ability, Condition, CreatureSize, DamageType
 from Model.Content.ActionType import ActionType
+from Model.Content.CombatArea import CombatArea
 from Model.Content.CombatModifiers import (
     MODIFIER_CLASSES,
     AttackKind,
@@ -432,8 +433,21 @@ class CombatEffect:
     # Each target its conditions would land on is moved straight away from
     # its user (or toward it), on the battle map: Thunderwave's 10 feet.
     push: CombatPush | None = None
+    # Its area of effect on the battle map (Model/Content/CombatArea.py):
+    # a feature's use (Radiance of the Dawn's 30-foot Emanation), or a
+    # spell's row whose area isn't its spell's (SpellRules.area). None: its
+    # spell's, or none.
+    area: CombatArea | None = None
+    # What it rolls takes no benefit from Half Cover or Three-Quarters
+    # Cover (Sacred Flame); Total Cover still counts.
+    ignores_cover: bool = False
 
     def __post_init__(self):
+        if self.area is not None and not isinstance(self.area, CombatArea):
+            raise ValueError(
+                f"area is a CombatArea, like CombatArea(CombatAreaShape.SPHERE, 20),"
+                f" not {self.area!r}"
+            )
         if self.push is not None:
             if not isinstance(self.push, CombatPush):
                 raise ValueError(
@@ -619,7 +633,7 @@ def _compact(value: Any) -> Any:
         return value.value
     if isinstance(value, MODIFIER_CLASSES):
         return modifier_to_dict(value)
-    if isinstance(value, CombatTrigger):
+    if isinstance(value, (CombatTrigger, CombatArea)):
         return value.to_dict()
     if isinstance(
         value,
@@ -963,4 +977,17 @@ class _Reader:
             regains=self.regains(data.get("regains")),
             reroll_save=self.kind(data.get("reroll_save"), "reroll_save", (int,)),
             push=self.push(data.get("push")),
+            area=self.area(data.get("area")),
+            ignores_cover=self.kind(
+                data.get("ignores_cover"), "ignores_cover", (bool,), False
+            ),
         )
+
+    def area(self, value: Any) -> CombatArea | None:
+        """Its area of effect; none in data from before."""
+        if value is None:
+            return None
+        try:
+            return CombatArea.from_dict(value, self.where)
+        except ValueError as error:
+            self.fail("area", str(error))

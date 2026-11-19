@@ -21,6 +21,8 @@ from CharacterContent.Spells.SpellFactory.SpellFields import (
     Range,
 )
 from Core.Definitions import CharacterClass
+from Model.Content.ActionType import ActionType
+from Model.Content.CombatArea import AreaSight, AreaTiming, CombatArea, CombatAreaShape
 from Model.Content.Feature import FeatureTarget
 
 
@@ -41,6 +43,7 @@ class AbiDalzimsHorridWilting(ClassSpell):
         ),
         usage_tags=("damage",),
         target=FeatureTarget.AREA,
+        area=CombatArea(CombatAreaShape.CUBE, 30),
     )
     converted_from = RecordStamp("spells_dnd5e.json", "4a63fb9fc9b15a2b")
 
@@ -86,6 +89,7 @@ class AntimagicField(ClassSpell):
         ),
         usage_tags=("buff",),
         target=FeatureTarget.AREA,
+        area=CombatArea(CombatAreaShape.EMANATION, 10),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "f4803e028b0647aa")
 
@@ -266,6 +270,7 @@ class Earthquake(ClassSpell):
         ),
         usage_tags=("control", "damage"),
         target=FeatureTarget.AREA,
+        area=CombatArea(CombatAreaShape.SPHERE, 100),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "ae1a7f756eb75dfa")
 
@@ -362,6 +367,7 @@ class HolyAura(ClassSpell):
         description="For the duration, you emit an aura in a 30-foot Emanation. While in the aura, creatures of your choice have Advantage on all saving throws, and other creatures have Disadvantage on attack rolls against them. In addition, when a Fiend or an Undead hits an affected creature with a melee attack roll, the attacker must succeed on a Constitution saving throw or have the Blinded condition until the end of its next turn.",
         usage_tags=("buff", "control", "damage"),
         target=FeatureTarget.ALLY,
+        area=CombatArea(CombatAreaShape.EMANATION, 30),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "36102c80463cc3fc")
 
@@ -407,6 +413,13 @@ class IllusoryDragon(ClassSpell):
         ),
         usage_tags=("control", "damage"),
         target=FeatureTarget.AREA,
+        area=CombatArea(
+            CombatAreaShape.CONE,
+            60,
+            acts=(AreaTiming.ENDS,),
+            move_ft=60,
+            move_action=ActionType.BONUS_ACTION,
+        ),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "c0db74d15671dc42")
 
@@ -429,6 +442,12 @@ class IncendiaryCloud(ClassSpell):
         ),
         usage_tags=("control", "damage"),
         target=FeatureTarget.AREA,
+        area=CombatArea(
+            CombatAreaShape.SPHERE,
+            20,
+            acts=(AreaTiming.ENTERS, AreaTiming.MOVED_ONTO, AreaTiming.ENDS),
+            obscures=AreaSight.HEAVILY_OBSCURED,
+        ),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "cb8ce875d34e048a")
 
@@ -483,6 +502,11 @@ class LightningRing(ClassSpell):
         ),
         usage_tags=("control", "damage"),
         target=FeatureTarget.AREA,
+        area=CombatArea(
+            CombatAreaShape.EMANATION,
+            10,
+            acts=(AreaTiming.ENTERS, AreaTiming.MOVED_ONTO, AreaTiming.ENDS),
+        ),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "b7b8c05f30af7d3d")
 
@@ -503,6 +527,12 @@ class MaddeningDarkness(ClassSpell):
         description="Magical darkness spreads from a point you choose within range to fill a 60-foot-radius sphere until the spell ends. The darkness spreads around corners. A creature with darkvision can't see through this darkness. Nonmagical light, as well as light created by spells of 8th level or lower, can't illuminate the area. Shrieks, gibbering, and mad laughter can be heard within the sphere. Whenever a creature starts its turn in the sphere, it must make a Wisdom saving throw, taking 8d8 psychic damage on a failed save, or half as much damage on a successful one.",
         usage_tags=("damage", "utility"),
         target=FeatureTarget.AREA,
+        area=CombatArea(
+            CombatAreaShape.SPHERE,
+            60,
+            acts=(AreaTiming.STARTS,),
+            obscures=AreaSight.DEEP_DARKNESS,
+        ),
     )
     converted_from = RecordStamp("spells_dnd5e.json", "abed6933b216d8a7")
 
@@ -649,6 +679,7 @@ class Sunburst(ClassSpell):
         ),
         usage_tags=("control", "damage"),
         target=FeatureTarget.AREA,
+        area=CombatArea(CombatAreaShape.SPHERE, 60),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "e846020f7270959e")
 
@@ -695,6 +726,7 @@ class Tsunami(ClassSpell):
         ),
         usage_tags=("damage",),
         target=FeatureTarget.AREA,
+        area=CombatArea(CombatAreaShape.WALL, 300, width_ft=50),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "d36fd76542b48c5a")
 

@@ -75,6 +75,7 @@ def _spell(name: str) -> EffectOption:
         kind=SPELL,
         tooltip=spell.description,
         concentration=spell.is_concentration,
+        area=spell.combat_area,
     )
 
 

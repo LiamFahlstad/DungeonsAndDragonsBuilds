@@ -21,6 +21,8 @@ from CharacterContent.Spells.SpellFactory.SpellFields import (
     Range,
 )
 from Core.Definitions import Ability, CharacterClass, DamageType
+from Model.Content.ActionType import ActionType
+from Model.Content.CombatArea import AreaSight, AreaTiming, CombatArea, CombatAreaShape
 from Model.Content.CombatEffect import (
     CombatCondition,
     CombatDamage,
@@ -52,6 +54,7 @@ class IceStorm(ClassSpell):
         ),
         usage_tags=("damage",),
         target=FeatureTarget.AREA,
+        area=CombatArea(CombatAreaShape.CYLINDER, 20),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "6520a2bfa5cb77f9")
 
@@ -178,6 +181,7 @@ class AuraOfLife(ClassSpell):
         description="An aura radiates from you in a 30-foot Emanation for the duration. While in the aura, you and your allies have Resistance to Necrotic damage, and your Hit Point maximums can’t be reduced. If an ally with 0 Hit Points starts its turn in the aura, that ally regains 1 Hit Point.",
         usage_tags=("buff", "heal"),
         target=FeatureTarget.ALLY,
+        area=CombatArea(CombatAreaShape.EMANATION, 30, acts=(AreaTiming.STARTS,)),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "80c6ac7ed3e6ed01")
 
@@ -218,6 +222,7 @@ class AuraOfPurity(ClassSpell):
         description="An aura radiates from you in a 30-foot Emanation for the duration. While in the aura, you and your allies have Resistance to Poison damage and Advantage on saving throws to avoid or end effects that include the Blinded, Charmed, Deafened, Frightened, Paralyzed, Poisoned, or Stunned condition.",
         usage_tags=("buff",),
         target=FeatureTarget.ALLY,
+        area=CombatArea(CombatAreaShape.EMANATION, 30),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "ed814672a87ce28b")
 
@@ -551,6 +556,7 @@ class Confusion(ClassSpell):
         ),
         usage_tags=("control",),
         target=FeatureTarget.AREA,
+        area=CombatArea(CombatAreaShape.SPHERE, 10),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "64d2185f65f57d15")
 
@@ -614,6 +620,7 @@ class ConjureMinorElementals(ClassSpell):
         ),
         usage_tags=("control",),
         target=FeatureTarget.SELF,
+        area=CombatArea(CombatAreaShape.EMANATION, 15),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "441e741d912c26a2")
 
@@ -666,6 +673,11 @@ class ConjureWoodlandBeings(ClassSpell):
         ),
         usage_tags=("damage",),
         target=FeatureTarget.ENEMY,
+        area=CombatArea(
+            CombatAreaShape.EMANATION,
+            10,
+            acts=(AreaTiming.ENTERS, AreaTiming.MOVED_ONTO, AreaTiming.ENDS),
+        ),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "f8d2737c05251924")
 
@@ -728,6 +740,11 @@ class ControlWater(ClassSpell):
         ),
         usage_tags=("control", "damage"),
         target=FeatureTarget.AREA,
+        area=CombatArea(
+            CombatAreaShape.CUBE,
+            50,
+            acts=(AreaTiming.ENTERS, AreaTiming.MOVED_ONTO, AreaTiming.ENDS),
+        ),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "b5ee63f3c459a277")
 
@@ -962,6 +979,11 @@ class DistortedDistance(ClassSpell):
         ),
         usage_tags=("buff", "control", "damage"),
         target=FeatureTarget.AREA,
+        area=CombatArea(
+            CombatAreaShape.SPHERE,
+            60,
+            acts=(AreaTiming.ENTERS, AreaTiming.MOVED_ONTO, AreaTiming.ENDS),
+        ),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "b4cf78869efcdc59")
 
@@ -1124,6 +1146,12 @@ class Doomtide(ClassSpell):
         ),
         usage_tags=("buff", "control", "damage"),
         target=FeatureTarget.AREA,
+        area=CombatArea(
+            CombatAreaShape.SPHERE,
+            20,
+            acts=(AreaTiming.ENTERS, AreaTiming.MOVED_ONTO, AreaTiming.ENDS),
+            obscures=AreaSight.DARKNESS,
+        ),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "9d2026570d38e7d4")
 
@@ -1271,6 +1299,9 @@ class EvardsBlackTentacles(ClassSpell):
         ),
         usage_tags=("control", "damage"),
         target=FeatureTarget.AREA,
+        area=CombatArea(
+            CombatAreaShape.CUBE, 20, acts=(AreaTiming.ENTERS, AreaTiming.MOVED_ONTO)
+        ),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "e37398b370b05b09")
 
@@ -1324,6 +1355,7 @@ class Fabricate(ClassSpell):
         ),
         usage_tags=("utility",),
         target=FeatureTarget.OBJECT,
+        area=CombatArea(CombatAreaShape.CUBE, 10),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "faddbb672c946e00")
 
@@ -1381,6 +1413,7 @@ class FesteringBlast(ClassSpell):
         ),
         usage_tags=("control", "damage"),
         target=FeatureTarget.AREA,
+        area=CombatArea(CombatAreaShape.LINE, 60, width_ft=10),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "a57ee220612740c4")
 
@@ -2200,6 +2233,7 @@ class HallucinatoryTerrain(ClassSpell):
         ),
         usage_tags=("utility",),
         target=FeatureTarget.AREA,
+        area=CombatArea(CombatAreaShape.CUBE, 150),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "a8ae8dba6150d426")
 
@@ -2844,6 +2878,11 @@ class SickeningRadiance(ClassSpell):
         ),
         usage_tags=("control", "damage"),
         target=FeatureTarget.AREA,
+        area=CombatArea(
+            CombatAreaShape.SPHERE,
+            30,
+            acts=(AreaTiming.ENTERS, AreaTiming.MOVED_ONTO, AreaTiming.STARTS),
+        ),
     )
     converted_from = RecordStamp("spells_dnd5e.json", "dd413a59dc27fcef")
 
@@ -2903,6 +2942,11 @@ class SpellfireStorm(ClassSpell):
         ),
         usage_tags=("damage",),
         target=FeatureTarget.AREA,
+        area=CombatArea(
+            CombatAreaShape.CYLINDER,
+            20,
+            acts=(AreaTiming.ENTERS, AreaTiming.MOVED_ONTO, AreaTiming.ENDS),
+        ),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "45e3a14b646a3289")
 
@@ -3309,6 +3353,7 @@ class StormSphere(ClassSpell):
         ),
         usage_tags=("buff", "control", "damage"),
         target=FeatureTarget.AREA,
+        area=CombatArea(CombatAreaShape.SPHERE, 20, acts=(AreaTiming.ENDS,)),
     )
     converted_from = RecordStamp("spells_dnd5e.json", "a21c2257957051ae")
 
@@ -3858,6 +3903,7 @@ class VitriolicSphere(ClassSpell):
         ),
         usage_tags=("damage",),
         target=FeatureTarget.AREA,
+        area=CombatArea(CombatAreaShape.SPHERE, 20),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "fbd162601f048d72")
 
@@ -3918,6 +3964,14 @@ class WallOfFire(ClassSpell):
         ),
         usage_tags=("control", "damage"),
         target=FeatureTarget.AREA,
+        area=CombatArea(
+            CombatAreaShape.WALL,
+            60,
+            width_ft=1,
+            acts=(AreaTiming.ENTERS, AreaTiming.MOVED_ONTO, AreaTiming.ENDS),
+            ring_ft=20,
+            side_ft=10,
+        ),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "2b05be8222f8ff37")
 
@@ -3990,6 +4044,9 @@ class WaterySphere(ClassSpell):
         ),
         usage_tags=("control", "utility"),
         target=FeatureTarget.ENEMY,
+        area=CombatArea(
+            CombatAreaShape.SPHERE, 5, move_ft=30, move_action=ActionType.ACTION
+        ),
     )
     converted_from = RecordStamp("spells_dnd5e.json", "0618b70717f3dc3f")
 
@@ -4081,6 +4138,7 @@ class ZoneOfAmicability(ClassSpell):
         description="A magical zone of amicability radiates from you in a 60-foot Emanation for the duration. When you make an ability check to influence a creature in that area, you can treat a d20 roll of 9 or lower as a 10.",
         usage_tags=("buff",),
         target=FeatureTarget.SELF,
+        area=CombatArea(CombatAreaShape.EMANATION, 60),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "ffa4bfc51dba91e8")
 
@@ -4103,6 +4161,7 @@ class GravitySinkhole(ClassSpell):
         usage_tags=("damage", "utility"),
         target=FeatureTarget.AREA,
         school_note="Dunamancy:Graviturgy",
+        area=CombatArea(CombatAreaShape.SPHERE, 20),
     )
     converted_from = RecordStamp("spells_dnd5e.json", "9d80f9c6f920c671")
 
@@ -4160,6 +4219,7 @@ class GateSeal(ClassSpell):
         description="You fortify the fabric of the planes within a 30-foot cube you can see within range. Within that area, portals close and can't be opened for the duration. Spells and other effects that allow planar travel or open portals such as gate or plane shift, fail if used to enter or leave the area. The cube is stationary. At Higher Levels . When you cast this spell using a spell slot of 6th level or higher, the spell lasts until dispelled.",
         usage_tags=("control", "utility"),
         target=FeatureTarget.AREA,
+        area=CombatArea(CombatAreaShape.CUBE, 30),
     )
     converted_from = RecordStamp("spells_dnd5e.json", "a16f09f3e1252fb4")
 
@@ -4227,6 +4287,7 @@ class ChaosNova(ClassSpell):
         source="World of Warcraft",
         description="Chaos energy bursts out in a 20-foot Emanation originating from you. Each creature of your choice in the Emanation takes 2d6 Force damage and must succeed on a Wisdom saving throw or have the Stunned condition until the end of your next turn.",
         usage_tags=("control", "damage"),
+        area=CombatArea(CombatAreaShape.EMANATION, 20),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "be5aea51bd1805c9")
 
@@ -4244,6 +4305,7 @@ class CollapsingStar(ClassSpell):
         source="World of Warcraft",
         description="You channel Void energy into a cataclysmic blast that fills a 20-foot-radius Sphere centered on a point you can see within range. Each creature of your choice within the Sphere makes a Constitution saving throw, taking 4d12 Force damage on a failed save or half as much damage on a successful one.",
         usage_tags=("damage",),
+        area=CombatArea(CombatAreaShape.SPHERE, 20),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "78ac6457441ee672")
 
@@ -4284,6 +4346,7 @@ class Emberstorm(ClassSpell):
             "Using a Higher-Level Spell Slot. The damage increases by 1d8 for each spell slot level above 4."
         ),
         usage_tags=("damage",),
+        area=CombatArea(CombatAreaShape.SPHERE, 20),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "fc61dc1d554aed22")
 
@@ -4304,6 +4367,7 @@ class HolyNova(ClassSpell):
             "Using a Higher-Level Spell Slot. The damage and healing each increase by 1d6 for each spell slot level above 4."
         ),
         usage_tags=("damage", "heal"),
+        area=CombatArea(CombatAreaShape.EMANATION, 30),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "fe9f042e9ad25f21")
 
@@ -4346,6 +4410,11 @@ class Starfall(ClassSpell):
             "Until the start of your next turn, a creature that enters the Cylinder for the first time on a turn or ends its turn there takes Radiant damage equal to your Druid level. A creature takes this damage only once per turn."
         ),
         usage_tags=("damage",),
+        area=CombatArea(
+            CombatAreaShape.CYLINDER,
+            30,
+            acts=(AreaTiming.ENTERS, AreaTiming.MOVED_ONTO, AreaTiming.ENDS),
+        ),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "ecd4c76f1e80a352")
 
@@ -4387,6 +4456,7 @@ class Upheaval(ClassSpell):
             "Using a Higher-Level Spell Slot. The Bludgeoning damage increases by 1d12 for each spell slot level above 4."
         ),
         usage_tags=("control", "damage"),
+        area=CombatArea(CombatAreaShape.SPHERE, 20),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "86e32b138925318d")
 

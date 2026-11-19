@@ -39,6 +39,7 @@ from dataclasses import dataclass
 from typing import ClassVar, Optional
 
 from Core.Definitions import CharacterClass
+from Model.Content.CombatArea import CombatArea
 from Model.Content.Feature import FeatureTarget, UsageTag
 
 from .Enums import School
@@ -67,8 +68,14 @@ class SpellRules:
     # What the card shows in brackets after the school: Wildemount's
     # "Dunamancy" or "Dunamancy:Graviturgy" (Evocation (Dunamancy:Graviturgy)).
     school_note: str = ""
+    # Its area of effect on the battle map, and what that does while it
+    # lasts (Model/Content/CombatArea.py); None for a spell without one. A
+    # row of combat_effects() whose area differs says its own.
+    area: Optional[CombatArea] = None
 
     def __post_init__(self):
+        if self.area is not None and not isinstance(self.area, CombatArea):
+            raise ValueError(f"{self.name}: area is a CombatArea, not {self.area!r}")
         if not self.name.strip():
             raise ValueError("A spell needs a name")
         if not 0 <= self.level <= 9:
@@ -182,3 +189,7 @@ class ClassSpell(Spell):
     @property
     def target(self) -> Optional[FeatureTarget]:
         return self.rules.target
+
+    @property
+    def combat_area(self) -> Optional[CombatArea]:
+        return self.rules.area

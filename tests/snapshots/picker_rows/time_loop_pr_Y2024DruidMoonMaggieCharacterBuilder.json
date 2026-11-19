@@ -188,6 +188,10 @@
    "ability": "STR",
    "action_cost": "Action",
    "amount_kind": "Damage",
+   "area": {
+    "shape": "Cube",
+    "size_ft": 20
+   },
    "bonus": null,
    "concentration": true,
    "condition": "Restrained",
@@ -214,6 +218,10 @@
    "ability": "DEX",
    "action_cost": "Action",
    "amount_kind": "Damage",
+   "area": {
+    "shape": "Cube",
+    "size_ft": 20
+   },
    "badge_modifiers": {
     "Faerie Fire": [
      {
@@ -253,6 +261,11 @@
    "ability": null,
    "action_cost": "Action",
    "amount_kind": "Damage",
+   "area": {
+    "obscures": "Heavily Obscured",
+    "shape": "Sphere",
+    "size_ft": 20
+   },
    "bonus": null,
    "concentration": true,
    "condition": "",
@@ -333,6 +346,17 @@
    "ability": "CON",
    "action_cost": "Action",
    "amount_kind": "Damage",
+   "area": {
+    "acts": [
+     "enters",
+     "moved onto",
+     "ends"
+    ],
+    "move_action": "action",
+    "move_ft": 60,
+    "shape": "Cylinder",
+    "size_ft": 5
+   },
    "bonus": null,
    "concentration": true,
    "condition": "",
@@ -413,6 +437,10 @@
    "ability": null,
    "action_cost": "Action",
    "amount_kind": "Damage",
+   "area": {
+    "shape": "Sphere",
+    "size_ft": 20
+   },
    "bonus": null,
    "concentration": true,
    "condition": "",
@@ -465,6 +493,11 @@
    "ability": "CON",
    "action_cost": "Action",
    "amount_kind": "Damage",
+   "area": {
+    "from_source": true,
+    "shape": "Cube",
+    "size_ft": 15
+   },
    "bonus": null,
    "concentration": false,
    "condition": "",

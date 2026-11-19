@@ -1,23 +1,34 @@
 """Areas of effect on the battle map (Notes/combat-arena-plan.md, step 10),
-with no Qt: the area a rules text states, the cells each shape covers on
+with no Qt: the area a rules text states (drafted for a spell's class by
+Model/Content/CombatAreaText.py), the cells each shape covers on
 squares with the Manhattan rule, and who stands in them. The shapes are the
 Rules Glossary's (Areas of Effect); how they sit on the grid is
 Combat/Arena/areas.py's docstring."""
 
+from types import SimpleNamespace
+
 import pytest
 
+from CharacterContent.Spells.SpellFactory.SpellFields import Range
 from Combat.Arena.areas import (
     AreaOfEffect,
     AreaShape,
     area_cells,
+    area_of,
     creatures_in,
-    parse_area,
-    point_range_ft,
-    spell_range_ft,
 )
 from Combat.Arena.arena import ArenaSettings
 from Combat.Arena.geometry import Cell
+from Combat.CombatUIQt.effect_options import spell_range_ft
 from Core.Definitions import CreatureSize
+from Model.Content.CombatAreaText import parse_area as read_area
+from Model.Content.CombatAreaText import point_range_ft
+
+
+def parse_area(text: str) -> AreaOfEffect | None:
+    """The area a text states, as the map aims it."""
+    return area_of(read_area(text))
+
 
 SETTINGS = ArenaSettings()  # 24 x 16 cells of 5 ft.
 SOURCE = {"name": "Caster", "position": [5, 5]}
@@ -291,7 +302,8 @@ def test_an_areas_text(area, text):
     ],
 )
 def test_a_spells_range_in_feet(range_text, feet):
-    assert spell_range_ft(range_text) == feet
+    spell = SimpleNamespace(range_spec=Range.from_text(range_text))
+    assert spell_range_ft(spell) == feet
 
 
 @pytest.mark.parametrize(

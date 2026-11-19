@@ -18,17 +18,24 @@ with the entry, as plain JSON (the plan's Decision 4):
         "key": "3f9a01c2",           # which area it is, to select it by
         "pick": "Moonbeam",          # what it was picked as, and its rules text
         "about": "A silvery beam of pale light shines down ...",
+        "rules": {"shape": "Cylinder", "size_ft": 5, "acts": [...], ...},
     }
 
 Clicking an area on the map selects it (step 12): its key says which.
 
-An area acts (step 24): its rules text says when (`area_timing`: as a
-creature enters it, as it moves onto one, as a turn starts or ends there),
-and each time is an `AreaPrompt`, a turn-column button that opens its
-effect again on that creature. Moonbeam and Flaming Sphere can be moved
-(`move_rule`: how far, and what it costs); the record keeps its key, time
-and concentration, with its "aim" and "cells" set anew. A record also
-keeps the "slot_level" it was cast with, for its damage when it acts.
+What the area does while it lasts is its pick's CombatArea
+(Model/Content/CombatArea.py), kept as "rules" (None for a pick without
+one): never read from "about", which is only shown. A record kept before
+2026-11-19 has no "rules"; record_rules takes them from the spell it was
+picked as.
+
+An area acts (step 24): its rules say when (`record_timing`: as a creature
+enters it, as it moves onto one, as a turn starts or ends there), and each
+time is an `AreaPrompt`, a turn-column button that opens its effect again
+on that creature. Moonbeam and Flaming Sphere can be moved (`record_move`:
+how far, and what it costs); the record keeps its key, time and
+concentration, with its "aim" and "cells" set anew. A record also keeps the
+"slot_level" it was cast with, for its damage when it acts.
 
 An area that isn't aimed (an Emanation, a Sphere around the source) follows
 its caster, worked out from where the caster is now; any other stays on the
@@ -38,9 +45,9 @@ doesn't swing round as the caster walks on).
 A wall (step 25) keeps its other "end" (none for a ring, aimed at its
 middle), "ring", and, for one with a damaging side (Wall of Fire), the
 "side" picked and its "side_cells", where a turn ending acts too. A wall
-its text calls a barrier (Wall of Force: "Nothing can physically pass
-through the wall"), or one that gives cover or makes its space Difficult
-Terrain (Blade Barrier), keeps that as "terrain", a MapObject's dict:
+whose rules block movement (Wall of Force), or give cover or make its space
+Difficult Terrain (Blade Barrier), keeps that as "terrain", a MapObject's
+dict:
 `with_kept_walls` lays it over the painted terrain for the rules to read
 while the wall lasts, never into the painted map or the log's terrain.
 """
@@ -48,7 +55,6 @@ while the wall lasts, never into the painted map or the log's terrain.
 from __future__ import annotations
 
 import math
-import re
 import uuid
 from dataclasses import dataclass
 from typing import Iterable
@@ -60,12 +66,14 @@ from Combat.Arena.areas import (
     AreaOfEffect,
     AreaShape,
     area_cells,
-    damaging_side_ft,
     side_cells,
     wall_end,
 )
 from Combat.Arena.geometry import Cell
-from Combat.Arena.terrain import COVERS, NO_COVER, TOTAL, WALL, MapObject, Terrain
+from Combat.Arena.terrain import NO_COVER, WALL, MapObject, Terrain
+from Model.Content.ActionType import ActionType
+from Model.Content.CombatArea import DEFAULT_TIMING as _DEFAULT_ACTS
+from Model.Content.CombatArea import AreaTiming, CombatArea
 
 AREA_KEY = "area"
 ACTIVE_SPELLS_KEY = "active_spells"
@@ -105,12 +113,15 @@ def area_record(
     about: str = "",
     end: Cell | None = None,
     side: int = 0,
+    rules: CombatArea | None = None,
 ) -> dict:
     """The "area" an active spell keeps for `area` aimed at `aim` by
     `source`: its cells now, unless it follows its caster, with a key of
-    its own, and what it was picked as and its rules text (`pick`,
-    `about`). A Wall's other `end` and its damaging `side` (areas.side_of)
-    are kept too, with the terrain its text gives it (wall_terrain)."""
+    its own, what it was picked as and its rules text (`pick`, `about`,
+    shown only), and its pick's CombatArea (`rules`: when it acts, how it's
+    moved, what it hides). A Wall's other `end` and its damaging `side`
+    (areas.side_of) are kept too, with the terrain its rules give it
+    (wall_terrain)."""
     follows = not area.is_aimed
     if area.is_wall and aim is not None:
         end = wall_end(area, aim, end, settings)  # where its length stops it
@@ -127,52 +138,53 @@ def area_record(
         "key": uuid.uuid4().hex[:8],
         "pick": pick,
         "about": about,
+        "rules": rules.to_dict() if rules is not None else None,
     }
     if area.is_wall and aim is not None:
         record["end"] = end.to_list() if end is not None and not area.ring else None
         record["ring"] = area.ring
-        reach = damaging_side_ft(about)
+        reach = rules.side_ft if rules is not None else None
         if side and reach is not None:
             near = side_cells(area, aim, end, side, reach, settings)
             record["side"] = side
             record["side_cells"] = [cell.to_list() for cell in sorted(near)]
-        thing = wall_terrain(pick or "Wall", about)
+        thing = wall_terrain(pick or "Wall", rules)
         if thing is not None:
             record["terrain"] = thing.to_dict()
     return record
 
 
-# A wall its text calls a barrier, or says nothing passes through (Wall of
-# Force); the cover a wall "provides", and a space that "is Difficult
-# Terrain" (Blade Barrier).
-_BARRIER = re.compile(
-    r"\bbarrier\b|\bnothing can (?:physically )?pass through\b", re.IGNORECASE
-)
-_PROVIDES_COVER = re.compile(
-    r"\bprovides (Half|Three-Quarters|Total) Cover\b", re.IGNORECASE
-)
-_COVER_KEYS = {name.lower(): key for key, name in COVERS.items()}
-_SPACE_DIFFICULT = re.compile(r"\bspace is Difficult Terrain\b", re.IGNORECASE)
-
-
-def wall_terrain(name: str, text: str) -> MapObject | None:
-    """What a wall is as terrain while it lasts, from its rules text: one it
-    calls a barrier (Wall of Force) blocks movement and is Total Cover, as
-    a painted wall is; one that "provides Three-Quarters Cover" and whose
-    "space is Difficult Terrain" (Blade Barrier) is that; None for one that
-    says neither (Wall of Fire, Wall of Thorns)."""
-    if _BARRIER.search(text):
-        return MapObject(name, blocks=True, cover=TOTAL)
-    cover = _PROVIDES_COVER.search(text)
-    degree = (
-        _COVER_KEYS.get(f"{cover.group(1)} cover".lower(), NO_COVER)
-        if cover
-        else NO_COVER
-    )
-    difficult = bool(_SPACE_DIFFICULT.search(text))
-    if degree == NO_COVER and not difficult:
+def wall_terrain(name: str, rules: CombatArea | None) -> MapObject | None:
+    """What a wall is as terrain while it lasts, as its rules say: one that
+    blocks movement (Wall of Force) is Total Cover too, as a painted wall
+    is; one that gives Three-Quarters Cover and makes its space Difficult
+    Terrain (Blade Barrier) is that; None for one that does neither (Wall
+    of Fire, Wall of Thorns), or with no rules."""
+    if rules is None or not rules.is_wall:
         return None
-    return MapObject(name, difficult=difficult, cover=degree)
+    if not (rules.blocks or rules.cover or rules.difficult):
+        return None
+    cover = rules.cover.value if rules.cover is not None else NO_COVER
+    return MapObject(name, blocks=rules.blocks, difficult=rules.difficult, cover=cover)
+
+
+def record_rules(record: dict, name: str = "") -> CombatArea | None:
+    """The CombatArea a kept record's pick has ("rules"). A record kept
+    before 2026-11-19 has none: those of the spell it was picked as (its
+    "pick", or `name`, its active spell's), if there's one by that name."""
+    if "rules" in record:
+        data = record["rules"]
+        return CombatArea.from_dict(data, "a kept area") if data else None
+    # Imported here: the map's rules don't otherwise need the spells.
+    from CharacterContent.Spells.SpellFactory import SpellFactory
+
+    for wanted in (record.get("pick"), name):
+        if wanted:
+            try:
+                return SpellFactory.create(wanted).combat_area
+            except ValueError:
+                continue
+    return None
 
 
 def with_kept_walls(settings: ArenaSettings, chars: Iterable[dict]) -> ArenaSettings:
@@ -358,77 +370,45 @@ def entered(
     ]
 
 
-# When a kept area acts on a creature (area_timing): as it enters the area,
-# as the area moves onto it (moved, or an Emanation following its caster),
-# and as its turn starts or ends there.
-ENTERS = "enters"
-MOVED_ONTO = "moved onto"
-STARTS = "starts"
-ENDS = "ends"
-# What an area whose text says none of these does: what the reminders said
+# When a kept area acts on a creature (record_timing): as it enters the
+# area, as the area moves onto it (moved, or an Emanation following its
+# caster), and as its turn starts or ends there (CombatArea.acts).
+ENTERS = AreaTiming.ENTERS.value
+MOVED_ONTO = AreaTiming.MOVED_ONTO.value
+STARTS = AreaTiming.STARTS.value
+ENDS = AreaTiming.ENDS.value
+# What an area whose rules say none of these does: what the reminders said
 # before step 24, a creature entering it or starting its turn in it.
-DEFAULT_TIMING = frozenset({ENTERS, STARTS})
-# What the area is called in a spell's text, after "enters the ...".
-_AREA_WORDS = (
-    r"(?:spell's |spell’s )?(?:area|cylinder|emanation|sphere|cube|cloud|fog|"
-    r"wall|square|line|ring|aura|vortex|mist|smoke|storm|zone|webs?)"
-)
-_ENTERS = re.compile(
-    rf"\benters? (?:the |that |its |this )?{_AREA_WORDS}|\benters? it for the first"
-    r" time|\bfirst time on a turn\b",
-    re.IGNORECASE,
-)
-# Moonbeam's "when the spell's area moves into its space", Spirit Guardians'
-# "whenever the Emanation enters a creature's space", Flaming Sphere's "If
-# you move the sphere into a creature's space".
-_MOVED_ONTO = re.compile(
-    rf"\b{_AREA_WORDS} (?:moves |enters )(?:in)?(?:to )?(?:a creature's |a creature’s"
-    r" |its |their )space|\bmove (?:the|it) \w* ?into a creature's space"
-    r"|\bmove (?:the|it) \w* ?into a creature’s space",
-    re.IGNORECASE,
-)
-_STARTS = re.compile(r"\bstarts? (?:its|their) turns?\b", re.IGNORECASE)
-_ENDS = re.compile(r"\bends? (?:its|their) turns?\b", re.IGNORECASE)
-# How a kept area is moved, in its text: Moonbeam's "take a Magic action on
-# later turns to move the Cylinder up to 60 feet", Flaming Sphere's "As a
-# Bonus Action, you can move the sphere up to 30 feet".
-_MOVE_SENTENCE = re.compile(r"[^.]*\bmove (?:the|it)\b[^.]*", re.IGNORECASE)
-_MOVE_FEET = re.compile(r"\bup to (\d+) (?:feet|foot|ft\.?)", re.IGNORECASE)
+DEFAULT_TIMING = frozenset(when.value for when in _DEFAULT_ACTS)
 BONUS_ACTION = "Bonus Action"
 ACTION = "Action"
+_ACTION_NAMES = {ActionType.ACTION: ACTION, ActionType.BONUS_ACTION: BONUS_ACTION}
 
 
-def area_timing(text: str) -> frozenset[str]:
-    """When a kept area with rules text `text` acts on a creature: ENTERS,
-    MOVED_ONTO, STARTS and ENDS as the text says them (Moonbeam's "when the
-    spell's area moves into its space and when it enters the spell's area
-    or ends its turn there"), DEFAULT_TIMING for a text that says none (or
-    no text). An area that acts on who enters it acts on who it's moved
-    onto too, as its record can't tell the two apart at a table."""
-    found = set()
-    if _ENTERS.search(text):
-        found |= {ENTERS, MOVED_ONTO}
-    if _MOVED_ONTO.search(text):
-        found.add(MOVED_ONTO)
-    if _STARTS.search(text):
-        found.add(STARTS)
-    if _ENDS.search(text):
-        found.add(ENDS)
-    return frozenset(found) or DEFAULT_TIMING
+def area_timing(rules: CombatArea | None) -> frozenset[str]:
+    """When an area with `rules` acts on a creature: ENTERS, MOVED_ONTO,
+    STARTS and ENDS as its `acts` say (Moonbeam's ENTERS, MOVED_ONTO and
+    ENDS), DEFAULT_TIMING for rules that say none, or none."""
+    return rules.timing if rules is not None else DEFAULT_TIMING
+
+
+def record_timing(record: dict, name: str = "") -> frozenset[str]:
+    """When a kept area acts on a creature, as its rules say (record_rules)."""
+    return area_timing(record_rules(record, name))
 
 
 @dataclass(frozen=True)
 class MoveRule:
-    """How a kept area is moved, from its text: up to `feet` (None: it
-    doesn't say), costing its caster `action` (None: nothing, or the text
-    doesn't say)."""
+    """How a kept area is moved: up to `feet` (None: its rules don't say),
+    costing its caster `action` (ACTION or BONUS_ACTION; None: nothing, or
+    its rules don't say)."""
 
     feet: int | None = None
     action: str | None = None
 
     @property
     def text(self) -> str:
-        """ "up to 60 ft., an Action"; "" when the text says neither."""
+        """ "up to 60 ft., an Action"; "" when its rules say neither."""
         parts = []
         if self.feet is not None:
             parts.append(f"up to {self.feet} ft.")
@@ -437,21 +417,19 @@ class MoveRule:
         return ", ".join(parts)
 
 
-def move_rule(text: str) -> MoveRule:
-    """How far and at what cost a kept area moves, read from the first
-    sentence of `text` that moves it: a Bonus Action (Flaming Sphere) or an
-    Action ("a Magic action", Moonbeam), and its "up to N feet"."""
-    sentence = _MOVE_SENTENCE.search(text)
-    if sentence is None:
+def move_rule(rules: CombatArea | None) -> MoveRule:
+    """How far and at what cost an area with `rules` moves: its `move_ft`
+    and `move_action` (Flaming Sphere's 30 feet for a Bonus Action,
+    Moonbeam's 60 for an Action)."""
+    if rules is None:
         return MoveRule()
-    words = sentence.group(0)
-    feet = _MOVE_FEET.search(words)
-    action = None
-    if re.search(r"\bBonus Action\b", words, re.IGNORECASE):
-        action = BONUS_ACTION
-    elif re.search(r"\baction\b", words, re.IGNORECASE):
-        action = ACTION
-    return MoveRule(int(feet.group(1)) if feet else None, action)
+    action = _ACTION_NAMES.get(rules.move_action) if rules.move_action else None
+    return MoveRule(rules.move_ft, action)
+
+
+def record_move(record: dict, name: str = "") -> MoveRule:
+    """How a kept area moves, as its rules say (record_rules)."""
+    return move_rule(record_rules(record, name))
 
 
 # What each time an area acts is called on its button.

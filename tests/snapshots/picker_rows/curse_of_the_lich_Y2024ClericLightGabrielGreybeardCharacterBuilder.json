@@ -264,6 +264,10 @@
    "ability": "CON",
    "action_cost": "Action",
    "amount_kind": "Damage",
+   "area": {
+    "shape": "Emanation",
+    "size_ft": 30
+   },
    "bonus": null,
    "concentration": false,
    "condition": "",
@@ -404,6 +408,10 @@
    "ability": "DEX",
    "action_cost": "Action",
    "amount_kind": "Damage",
+   "area": {
+    "shape": "Cone",
+    "size_ft": 15
+   },
    "bonus": null,
    "concentration": false,
    "condition": "",
@@ -460,6 +468,10 @@
    "ability": "DEX",
    "action_cost": "Action",
    "amount_kind": "Damage",
+   "area": {
+    "shape": "Cube",
+    "size_ft": 20
+   },
    "badge_modifiers": {
     "Faerie Fire": [
      {
@@ -628,9 +640,10 @@
    "duration_seconds": 0,
    "feature_name": "",
    "half_on_save": false,
+   "ignores_cover": true,
    "is_described": true,
    "is_unavailable": false,
-   "note": "The target gains no benefit from Half Cover or Three-Quarters Cover for this save.",
+   "note": "",
    "repeat_save": false,
    "roll": "Saving throw",
    "row_name": "",
@@ -740,6 +753,10 @@
    "ability": null,
    "action_cost": "Action",
    "amount_kind": "Damage",
+   "area": {
+    "shape": "Sphere",
+    "size_ft": 20
+   },
    "badge_modifiers": {
     "Silence": [
      {
@@ -802,6 +819,15 @@
    "ability": null,
    "action_cost": "Action",
    "amount_kind": "Damage",
+   "area": {
+    "acts": [
+     "enters",
+     "moved onto",
+     "starts"
+    ],
+    "shape": "Sphere",
+    "size_ft": 15
+   },
    "bonus": null,
    "concentration": false,
    "condition": "",

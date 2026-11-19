@@ -3,6 +3,7 @@ from typing import Optional
 
 import Core.Definitions as Definitions
 from CharacterContent.Summons.SpellSummons import SPELL_SUMMONS
+from Model.Content.CombatArea import CombatArea
 from Model.Content.CombatEffect import CombatEffect
 from Model.Content.Feature import FeatureTarget
 from Model.Content.FeatureText import Block, Option
@@ -117,6 +118,12 @@ class Spell(ABC):
         object, area - see FeatureTarget), as stated in the spell's own description.
         Defaults to None for any Spell subclass that doesn't provide its own data for this.
         """
+        return None
+
+    @property
+    def combat_area(self) -> Optional[CombatArea]:
+        """Its area of effect on the battle map (SpellRules.area), or None
+        for a spell without one."""
         return None
 
     def combat_effects(

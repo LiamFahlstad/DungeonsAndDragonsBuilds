@@ -973,6 +973,11 @@
    "ability": null,
    "action_cost": "Action",
    "amount_kind": "Damage",
+   "area": {
+    "from_source": true,
+    "shape": "Sphere",
+    "size_ft": 5
+   },
    "bonus": 6,
    "concentration": false,
    "condition": "Booming Blade",
@@ -1002,6 +1007,11 @@
    "ability": null,
    "action_cost": null,
    "amount_kind": "Damage",
+   "area": {
+    "from_source": true,
+    "shape": "Sphere",
+    "size_ft": 5
+   },
    "bonus": null,
    "concentration": false,
    "condition": "",
@@ -1080,6 +1090,11 @@
    "ability": null,
    "action_cost": "Action",
    "amount_kind": "Damage",
+   "area": {
+    "obscures": "Heavily Obscured",
+    "shape": "Sphere",
+    "size_ft": 20
+   },
    "bonus": null,
    "concentration": true,
    "condition": "",
@@ -1132,6 +1147,10 @@
    "ability": null,
    "action_cost": "Action",
    "amount_kind": "Damage",
+   "area": {
+    "shape": "Cube",
+    "size_ft": 5
+   },
    "bonus": null,
    "concentration": false,
    "condition": "",
@@ -1184,6 +1203,10 @@
    "ability": null,
    "action_cost": "Action",
    "amount_kind": "Damage",
+   "area": {
+    "shape": "Cube",
+    "size_ft": 15
+   },
    "bonus": null,
    "concentration": true,
    "condition": "",
@@ -1210,6 +1233,10 @@
    "ability": "WIS",
    "action_cost": "Action",
    "amount_kind": "Damage",
+   "area": {
+    "shape": "Sphere",
+    "size_ft": 5
+   },
    "bonus": null,
    "concentration": true,
    "condition": "Incapacitated",

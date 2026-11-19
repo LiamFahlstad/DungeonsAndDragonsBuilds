@@ -536,6 +536,10 @@
    "ability": null,
    "action_cost": "Action",
    "amount_kind": "Damage",
+   "area": {
+    "shape": "Cube",
+    "size_ft": 5
+   },
    "bonus": null,
    "concentration": false,
    "condition": "",

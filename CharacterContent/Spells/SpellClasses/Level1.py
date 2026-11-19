@@ -23,6 +23,7 @@ from CharacterContent.Spells.SpellFactory.SpellFields import (
     Range,
 )
 from Core.Definitions import Ability, CharacterClass, Condition, DamageType
+from Model.Content.CombatArea import AreaSight, AreaTiming, CombatArea, CombatAreaShape
 from Model.Content.CombatEffect import (
     CombatCondition,
     CombatDamage,
@@ -169,6 +170,7 @@ class Alarm(ClassSpell):
         ),
         usage_tags=("control",),
         target=FeatureTarget.AREA,
+        area=CombatArea(CombatAreaShape.CUBE, 20),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "9151fbdb9c5675f3")
 
@@ -298,6 +300,7 @@ class BurningHands(ClassSpell):
         ),
         usage_tags=("damage",),
         target=FeatureTarget.AREA,
+        area=CombatArea(CombatAreaShape.CONE, 15),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "1f0c7425a4ac2d3b")
 
@@ -990,6 +993,7 @@ class Entangle(ClassSpell):
         ),
         usage_tags=("control",),
         target=FeatureTarget.AREA,
+        area=CombatArea(CombatAreaShape.CUBE, 20),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "b85481a70449b4b3")
 
@@ -1053,6 +1057,7 @@ class FaerieFire(ClassSpell):
         ),
         usage_tags=("control",),
         target=FeatureTarget.AREA,
+        area=CombatArea(CombatAreaShape.CUBE, 20),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "218f38789348b8e6")
 
@@ -1243,6 +1248,9 @@ class FogCloud(ClassSpell):
         ),
         usage_tags=("control",),
         target=FeatureTarget.AREA,
+        area=CombatArea(
+            CombatAreaShape.SPHERE, 20, obscures=AreaSight.HEAVILY_OBSCURED
+        ),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "b0d4e6ce3bcf2baa")
 
@@ -1295,6 +1303,11 @@ class Grease(ClassSpell):
         ),
         usage_tags=("control",),
         target=FeatureTarget.AREA,
+        area=CombatArea(
+            CombatAreaShape.CUBE,
+            10,
+            acts=(AreaTiming.ENTERS, AreaTiming.MOVED_ONTO, AreaTiming.ENDS),
+        ),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "93a54aabccf31cb9")
 
@@ -1534,6 +1547,7 @@ class IceKnife(ClassSpell):
         ),
         usage_tags=("damage",),
         target=FeatureTarget.ENEMY,
+        area=CombatArea(CombatAreaShape.EMANATION, 5),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "80932f05b1ec0493")
 
@@ -1904,6 +1918,7 @@ class Sleep(ClassSpell):
         ),
         usage_tags=("control",),
         target=FeatureTarget.ENEMY,
+        area=CombatArea(CombatAreaShape.SPHERE, 5),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "a38f7b26bd801179")
 
@@ -2110,6 +2125,7 @@ class Thunderwave(ClassSpell):
         ),
         usage_tags=("control", "damage"),
         target=FeatureTarget.AREA,
+        area=CombatArea(CombatAreaShape.CUBE, 15, from_source=True),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "5232861c80b1697f")
 
@@ -2374,6 +2390,7 @@ class ArmsOfHadar(ClassSpell):
         ),
         usage_tags=("damage",),
         target=FeatureTarget.AREA,
+        area=CombatArea(CombatAreaShape.EMANATION, 10),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "ffe9467d22b1e290")
 
@@ -2865,6 +2882,7 @@ class ColorSpray(ClassSpell):
         description="You launch a dazzling array of flashing, colorful light. Each creature in a 15-foot Cone originating from you must succeed on a Constitution saving throw or have the Blinded condition until the end of your next turn.",
         usage_tags=("control",),
         target=FeatureTarget.AREA,
+        area=CombatArea(CombatAreaShape.CONE, 15),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "2d55aeeb36e030ed")
 
@@ -3018,6 +3036,7 @@ class CreateOrDestroyWater(ClassSpell):
         ),
         usage_tags=("utility",),
         target=FeatureTarget.OBJECT,
+        area=CombatArea(CombatAreaShape.CUBE, 30),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "7a286ba03547515d")
 
@@ -3353,6 +3372,7 @@ class EarthTremor(ClassSpell):
         ),
         usage_tags=("control", "damage"),
         target=FeatureTarget.AREA,
+        area=CombatArea(CombatAreaShape.SPHERE, 10, from_source=True),
     )
     converted_from = RecordStamp("spells_dnd5e.json", "51b04719232d3d85")
 
@@ -3573,6 +3593,7 @@ class FrostFingers(ClassSpell):
         ),
         usage_tags=("damage",),
         target=FeatureTarget.AREA,
+        area=CombatArea(CombatAreaShape.CONE, 15),
     )
     converted_from = RecordStamp("spells_dnd5e.json", "4d26dcf6f16cdc40")
 
@@ -3669,6 +3690,7 @@ class HailOfThorns(ClassSpell):
         ),
         usage_tags=("damage",),
         target=FeatureTarget.ENEMY,
+        area=CombatArea(CombatAreaShape.EMANATION, 5),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "fbe5ccebb22560a1")
 
@@ -4381,6 +4403,7 @@ class PurifyFoodAndDrink(ClassSpell):
         description="You remove poison and rot from nonmagical food and drink in a 5-foot-radius Sphere centered on a point within range.",
         usage_tags=("heal",),
         target=FeatureTarget.OBJECT,
+        area=CombatArea(CombatAreaShape.SPHERE, 5),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "e4d56cab404ed8a0")
 
@@ -4537,6 +4560,7 @@ class SilentImage(ClassSpell):
         ),
         usage_tags=("utility",),
         target=FeatureTarget.OBJECT,
+        area=CombatArea(CombatAreaShape.CUBE, 15),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "fe531cc89a3c70d3")
 
@@ -4655,6 +4679,7 @@ class Snare(ClassSpell):
         ),
         usage_tags=("control", "utility"),
         target=FeatureTarget.AREA,
+        area=CombatArea(CombatAreaShape.SPHERE, 5),
     )
     converted_from = RecordStamp("spells_dnd5e.json", "4d3180354c897535")
 
@@ -4775,6 +4800,7 @@ class TashasCausticBrew(ClassSpell):
         ),
         usage_tags=("control", "damage"),
         target=FeatureTarget.AREA,
+        area=CombatArea(CombatAreaShape.LINE, 30),
     )
     converted_from = RecordStamp("spells_dnd5e.json", "e9247773458cc48c")
 
@@ -5232,6 +5258,7 @@ class MagnifyGravity(ClassSpell):
         usage_tags=("damage", "utility"),
         target=FeatureTarget.AREA,
         school_note="Dunamancy:Graviturgy",
+        area=CombatArea(CombatAreaShape.SPHERE, 10),
     )
     converted_from = RecordStamp("spells_dnd5e.json", "3b8332b67998db4a")
 
@@ -5368,6 +5395,7 @@ class EbonMight(ClassSpell):
         source="World of Warcraft",
         description="As you invoke the black dragonflight, draconic might erupts from you. Each creature of your choice in a 10-foot Emanation originating from you is empowered until the end of your next turn. While a creature is empowered, when it hits a target with an attack roll, the attack deals an extra 1d4 Force damage.",
         usage_tags=("buff", "damage"),
+        area=CombatArea(CombatAreaShape.EMANATION, 10),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "6fc5cc0e9d4289ab")
 
@@ -5452,6 +5480,7 @@ class FrostNova(ClassSpell):
             "Using a Higher-Level Spell Slot. The damage increases by 1d6 for each spell slot level above 1."
         ),
         usage_tags=("control", "damage"),
+        area=CombatArea(CombatAreaShape.EMANATION, 15),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "dbe1b50a17291031")
 
@@ -5472,6 +5501,7 @@ class InfernalStrike(ClassSpell):
             "Using a Higher-Level Spell Slot. The damage increases by 1d6 for each spell slot level above 1."
         ),
         usage_tags=("buff", "control", "damage"),
+        area=CombatArea(CombatAreaShape.EMANATION, 10),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "0d950aed35775b05")
 

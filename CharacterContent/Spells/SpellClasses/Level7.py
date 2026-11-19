@@ -21,6 +21,8 @@ from CharacterContent.Spells.SpellFactory.SpellFields import (
     Range,
 )
 from Core.Definitions import CharacterClass
+from Model.Content.ActionType import ActionType
+from Model.Content.CombatArea import AreaTiming, CombatArea, CombatAreaShape
 from Model.Content.Feature import FeatureTarget
 from Model.Content.FeatureText import Block, Facts, Option, Table
 
@@ -43,6 +45,7 @@ class AuraOfEvasion(ClassSpell):
         description="An aura of alacrity radiates from you in a 30-foot Emanation for the duration. While in the aura, you and your allies have Advantage on Dexterity saving throws. When an affected creature is subjected to an effect that allows it to make a Dexterity saving throw to take only half damage, it takes no damage if it succeeds on the save and only half damage if it fails. A creature with the Incapacitated condition doesn’t gain any benefit from being in the aura.",
         usage_tags=("buff",),
         target=FeatureTarget.ALLY,
+        area=CombatArea(CombatAreaShape.EMANATION, 30),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "e355e5f53bdb4d13")
 
@@ -305,6 +308,7 @@ class DelayedBlastFireball(ClassSpell):
         ),
         usage_tags=("damage",),
         target=FeatureTarget.AREA,
+        area=CombatArea(CombatAreaShape.SPHERE, 20),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "f0d99b03a0e1eb4f")
 
@@ -481,6 +485,7 @@ class DraconicTransformation(ClassSpell):
         ),
         usage_tags=("damage", "utility"),
         target=FeatureTarget.SELF,
+        area=CombatArea(CombatAreaShape.CONE, 60),
     )
     converted_from = RecordStamp("spells_dnd5e.json", "7705d2e4530820f1")
 
@@ -1400,6 +1405,7 @@ class PrismaticSpray(ClassSpell):
         description="Eight rays of light flash from you in a 60-foot Cone. Each creature in the Cone makes a Dexterity saving throw. For each target, roll 1d8 to determine which color ray affects it, consulting the Prismatic Rays table.",
         usage_tags=("damage", "control"),
         target=FeatureTarget.AREA,
+        area=CombatArea(CombatAreaShape.CONE, 60),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "90a5f51c81ed5be0")
 
@@ -1694,6 +1700,7 @@ class ReverseGravity(ClassSpell):
         ),
         usage_tags=("damage", "control"),
         target=FeatureTarget.AREA,
+        area=CombatArea(CombatAreaShape.CYLINDER, 50),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "4f070af71d52bc03")
 
@@ -1984,6 +1991,11 @@ class Symbol(ClassSpell):
         ),
         usage_tags=("buff", "control"),
         target=FeatureTarget.AREA,
+        area=CombatArea(
+            CombatAreaShape.SPHERE,
+            60,
+            acts=(AreaTiming.ENTERS, AreaTiming.MOVED_ONTO, AreaTiming.ENDS),
+        ),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "805a573823a5c3a3")
 
@@ -2550,6 +2562,13 @@ class Whirlwind(ClassSpell):
         ),
         usage_tags=("control", "damage"),
         target=FeatureTarget.AREA,
+        area=CombatArea(
+            CombatAreaShape.CYLINDER,
+            10,
+            acts=(AreaTiming.ENTERS, AreaTiming.MOVED_ONTO, AreaTiming.STARTS),
+            move_ft=30,
+            move_action=ActionType.ACTION,
+        ),
     )
     converted_from = RecordStamp("spells_dnd5e.json", "c7f7456194237b01")
 
@@ -2701,6 +2720,7 @@ class LayWaste(ClassSpell):
             "You then teleport to an unoccupied space within 5 feet of the end of the Line."
         ),
         usage_tags=("buff", "damage"),
+        area=CombatArea(CombatAreaShape.LINE, 120, width_ft=10),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "2743a2935ccce2ca")
 

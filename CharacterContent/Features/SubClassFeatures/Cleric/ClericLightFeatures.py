@@ -1,4 +1,5 @@
 from Core.Definitions import Ability, CharacterClass, DamageType
+from Model.Content.CombatArea import CombatArea, CombatAreaShape
 from Model.Content.CombatEffect import (
     CombatCondition,
     CombatDamage,
@@ -99,6 +100,7 @@ class RadianceOfTheDawn(Feature):
                 save_ability=Ability.CONSTITUTION,
                 half_on_success=True,
                 damage=(CombatDamage(f"2d10 + {level}", DamageType.RADIANT),),
+                area=CombatArea(CombatAreaShape.EMANATION, 30),
                 notes=(
                     "Each creature of your choice in a 30-foot Emanation from"
                     " you. Magical Darkness in it is dispelled.",

@@ -15,7 +15,7 @@ from dataclasses import dataclass, fields, replace
 from functools import lru_cache
 
 from CharacterContent.Spells.SpellFactory import SpellFactory
-from Combat.Arena.areas import spell_range_ft
+from CharacterContent.Spells.SpellFactory.Enums import RangeType
 from Combat.Arena.ranges import (
     AttackRange,
     action_range,
@@ -24,6 +24,8 @@ from Combat.Arena.ranges import (
 )
 from Combat.Effects.triggers import TriggerRow
 from Core.Definitions import Condition
+from Model.Content.CombatArea import CombatArea
+from Model.Content.CombatAreaText import read_combat_area
 from Model.Content.CombatEffect import (
     CombatCondition,
     CombatDamage,
@@ -223,6 +225,12 @@ _TEMP_HP_UPCAST = re.compile(
 # "You gain 2d4 + 4 Temporary Hit Points": the caster's, not a target's. It's
 # what comes before the amount in its sentence.
 _JUST_YOU = re.compile(r"\s*You\s*")
+# A rules text that takes cover away from what it rolls ("The target gains
+# no benefit from Half Cover or Three-Quarters Cover for this save").
+_IGNORES_COVER = re.compile(
+    r"(?:no benefit from|ignores?) Half Cover (?:or|and) Three-Quarters Cover",
+    re.IGNORECASE,
+)
 # Where a monster's hit stops and a save it forces begins.
 _HIT_ENDS = re.compile(r"\b\w+ Saving Throw:|\bFailure:")
 _FLAT_ONE = "1d1"  # how a weapon writes an Unarmed Strike's damage
@@ -264,6 +272,9 @@ class EffectText:
     gain: HitPointGain | None = None
     # The upcasting and cantrip paragraphs, for working out higher levels.
     upgrades: tuple[str, ...] = ()
+    # What it rolls takes no benefit from Half Cover or Three-Quarters Cover
+    # (Spellfire Flare's "no benefit from Half Cover or Three-Quarters Cover").
+    ignores_cover: bool = False
 
 
 def _at_cantrip_level(dice: str, steps: tuple[tuple[int, str], ...], level: int) -> str:
@@ -471,6 +482,7 @@ def read_effect_text(text: str) -> EffectText:
         until=until,
         upgrades=upgrades,
         gain=_read_gain(body, upgrades),
+        ignores_cover=bool(_IGNORES_COVER.search(body)),
     )
 
 
@@ -738,6 +750,7 @@ def _described_spell_option(spell, who: dict, effect: CombatEffect) -> EffectOpt
         slot_level=slot,
         spell_level=spell.level,
         counts_uses=casts,
+        default_area=spell.combat_area,
     )
 
 
@@ -814,6 +827,8 @@ def _text_spell_option(spell, who: dict) -> EffectOption:
         spell_level=spell.level,
         spell_name=spell.name,
         counts_uses=True,
+        area=spell.combat_area,
+        ignores_cover=text.ignores_cover,
     )
 
 
@@ -926,6 +941,7 @@ def _rider_options(char: dict, action: MonsterAction) -> list[EffectOption]:
             name=action.name,
             kind=MONSTER_ACTION,
             tooltip=action.description,
+            default_area=_monster_area(action),
         )
         # Its row says when, not again what: "Tree Club: Prone  on a hit,
         # Large or smaller".
@@ -963,7 +979,16 @@ def _described_monster_option(
         row_name=row_name,
         monster_action=action,
         is_unavailable=unavailable,
+        default_area=_monster_area(action),
     )
+
+
+def _monster_area(action: MonsterAction) -> CombatArea | None:
+    """A monster ability's area ("each creature in a 15-foot Cone"), read
+    from its description: stat blocks don't say it as a field yet
+    (Notes/explicit-attributes-plan.md, Phase 4). A CombatEffect written on
+    the ability can say its own `area` instead."""
+    return read_combat_area(action.description)
 
 
 # "The lich casts Fear, using ...", "uses Spellcasting to cast Mind Spike
@@ -1135,6 +1160,7 @@ def _as_other_action(
         tooltip=action.description,
         monster_action=action,
         is_unavailable=unavailable,
+        area=_monster_area(action),
     )
 
 
@@ -1178,6 +1204,7 @@ def _monster_action_option(char: dict, action: MonsterAction) -> EffectOption:
         until=until,
         monster_action=action,
         is_unavailable=unavailable,
+        area=_monster_area(action),
     )
 
 
@@ -1368,6 +1395,7 @@ def _feature_option(char: dict, feature) -> EffectOption:
         until=text.until if text.condition else None,
         action_cost=feature_action_cost(feature),
         counts_uses=feature.uses is not None,
+        ignores_cover=text.ignores_cover,
     )
 
 
@@ -1466,6 +1494,7 @@ def _described_feature_option(
         counts_uses=counts_uses,
         uses_spent=spent,
         feature_name=counted_as,
+        default_area=spell.combat_area if spell is not None else None,
     )
 
 
@@ -1514,13 +1543,14 @@ def _described_option(
     spell_name: str = "",
     lead: Iterable[str] = (),
     lead_notes: Iterable[str] = (),
+    default_area: CombatArea | None = None,
     **fields,
 ) -> EffectOption:
     """What a CombatEffect fills in, for a spell, a feature's use or a
     monster's ability: exactly what it says, and for what it leaves unset, its
     source's defaults (`default_dc`, `default_bonus`, `duration_seconds`,
-    `action_cost`, `concentration`), then char's own known DC and spell
-    attack bonus. `modifier` is the spellcasting ability modifier an amount
+    `action_cost`, `concentration`, `default_area`: its spell's area), then
+    char's own known DC and spell attack bonus. `modifier` is the spellcasting ability modifier an amount
     adds (None: not known), `level` the spell's (0: nothing upcasts). `lead`
     goes before its numbers in the row (a feature's uses), `lead_notes` after
     its own notes, and `fields` straight onto the EffectOption."""
@@ -1648,6 +1678,8 @@ def _described_option(
         regains=effect.regains,
         reroll_save=effect.reroll_save,
         push=effect.push,
+        area=effect.area or default_area,
+        ignores_cover=effect.ignores_cover,
         **fields,
     )
 
@@ -1894,6 +1926,20 @@ def area_effect_row(char: dict, pick: str) -> str:
     return pick
 
 
+# Touch, as a distance: a target next to the caster.
+TOUCH_FT = 5
+
+
+def spell_range_ft(spell) -> int | None:
+    """How far `spell` reaches, from its Range: its feet ("150 feet", "1
+    mile" in feet), 5 for Touch; None for Self, Sight, Unlimited and
+    Special, which a point can't be checked against."""
+    spec = spell.range_spec
+    if spec.kind is RangeType.TOUCH:
+        return TOUCH_FT
+    return spec.feet
+
+
 def _pick_spell(option: EffectOption):
     """The spell a pick casts (its own row, or a feature's or a monster's
     use of one), or None."""
@@ -1913,7 +1959,7 @@ def pick_attack_range(
     spell = _pick_spell(option)
     if spell is not None:
         text = f"{option.tooltip} {getattr(spell, 'description', '')}"
-        return spell_attack_range(spell_range_ft(spell.range), text, spell.name)
+        return spell_attack_range(spell_range_ft(spell), text, spell.name)
     if option.monster_action is not None:
         return action_range(option.monster_action.description, option.name)
     if option.kind == WEAPON:
@@ -1928,7 +1974,7 @@ def pick_spell_range_ft(option: EffectOption | None) -> int | None:
     """How far the spell a pick casts reaches ("60 feet", Touch as 5), for a
     target it's aimed at; None for no spell, or one of Self or Sight."""
     spell = _pick_spell(option) if option is not None else None
-    return spell_range_ft(spell.range) if spell is not None else None
+    return spell_range_ft(spell) if spell is not None else None
 
 
 def trigger_option(

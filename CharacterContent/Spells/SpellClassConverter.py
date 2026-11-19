@@ -71,6 +71,7 @@ from CharacterContent.Spells.SpellFactory.SpellFields import (  # noqa: E402
     Range,
 )
 from Core.Definitions import CharacterClass, Condition  # noqa: E402
+from Model.Content.CombatAreaText import read_combat_area  # noqa: E402
 from Model.Content.CombatEffect import CombatEffect  # noqa: E402
 
 CLASSES_DIR = ROOT / "CharacterContent" / "Spells" / "SpellClasses"
@@ -93,6 +94,11 @@ _IMPORTS = {
     "Duration": "CharacterContent.Spells.SpellFactory.SpellFields",
     "Range": "CharacterContent.Spells.SpellFactory.SpellFields",
     "ActionType": "Model.Content.ActionType",
+    "AreaCover": "Model.Content.CombatArea",
+    "AreaSight": "Model.Content.CombatArea",
+    "AreaTiming": "Model.Content.CombatArea",
+    "CombatArea": "Model.Content.CombatArea",
+    "CombatAreaShape": "Model.Content.CombatArea",
     "CombatCondition": "Model.Content.CombatEffect",
     "CombatDamage": "Model.Content.CombatEffect",
     "CombatEffect": "Model.Content.CombatEffect",
@@ -253,6 +259,9 @@ def class_source(spell: DataSpell, effects: Optional[list[CombatEffect]] = None)
         description=spell.description,
         usage_tags=tuple(spell.usage_tags),  # type: ignore[arg-type]
         target=spell.target,
+        # Drafted from the text, for a person to check: the class keeps it
+        # as fields from then on (Notes/explicit-attributes-plan.md).
+        area=read_combat_area(spell.description, spell.range),
     )
     lines = [
         f"class {class_name(spell.name)}(ClassSpell):",

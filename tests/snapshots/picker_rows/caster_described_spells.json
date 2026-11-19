@@ -384,6 +384,11 @@
    "ability": null,
    "action_cost": "Action",
    "amount_kind": "Damage",
+   "area": {
+    "from_source": true,
+    "shape": "Sphere",
+    "size_ft": 5
+   },
    "bonus": 7,
    "concentration": false,
    "condition": "Booming Blade",
@@ -413,6 +418,11 @@
    "ability": null,
    "action_cost": null,
    "amount_kind": "Damage",
+   "area": {
+    "from_source": true,
+    "shape": "Sphere",
+    "size_ft": 5
+   },
    "bonus": null,
    "concentration": false,
    "condition": "",
@@ -439,6 +449,10 @@
    "ability": "DEX",
    "action_cost": "Action",
    "amount_kind": "Damage",
+   "area": {
+    "shape": "Cone",
+    "size_ft": 15
+   },
    "bonus": null,
    "concentration": false,
    "condition": "",
@@ -1020,6 +1034,10 @@
    "ability": "STR",
    "action_cost": "Action",
    "amount_kind": "Damage",
+   "area": {
+    "shape": "Cube",
+    "size_ft": 20
+   },
    "bonus": null,
    "concentration": true,
    "condition": "Restrained",
@@ -1046,6 +1064,10 @@
    "ability": "DEX",
    "action_cost": "Action",
    "amount_kind": "Damage",
+   "area": {
+    "shape": "Cube",
+    "size_ft": 20
+   },
    "badge_modifiers": {
     "Faerie Fire": [
      {
@@ -1276,6 +1298,10 @@
    "ability": "DEX",
    "action_cost": "Action",
    "amount_kind": "Damage",
+   "area": {
+    "shape": "Sphere",
+    "size_ft": 20
+   },
    "bonus": null,
    "concentration": false,
    "condition": "",
@@ -1411,6 +1437,15 @@
    "ability": "DEX",
    "action_cost": "Action",
    "amount_kind": "Damage",
+   "area": {
+    "acts": [
+     "enters",
+     "moved onto",
+     "ends"
+    ],
+    "shape": "Cube",
+    "size_ft": 10
+   },
    "bonus": null,
    "concentration": false,
    "condition": "Prone",
@@ -1437,6 +1472,11 @@
    "ability": null,
    "action_cost": "Action",
    "amount_kind": "Damage",
+   "area": {
+    "from_source": true,
+    "shape": "Sphere",
+    "size_ft": 5
+   },
    "bonus": 7,
    "concentration": false,
    "condition": "",
@@ -1463,6 +1503,11 @@
    "ability": null,
    "action_cost": null,
    "amount_kind": "Damage",
+   "area": {
+    "from_source": true,
+    "shape": "Sphere",
+    "size_ft": 5
+   },
    "bonus": null,
    "concentration": false,
    "condition": "",
@@ -1710,6 +1755,10 @@
    "ability": null,
    "action_cost": null,
    "amount_kind": "Damage",
+   "area": {
+    "shape": "Cube",
+    "size_ft": 10
+   },
    "badge_modifiers": {
     "Heroes' Feast": [
      {
@@ -1892,6 +1941,10 @@
    "ability": "DEX",
    "action_cost": null,
    "amount_kind": "Damage",
+   "area": {
+    "shape": "Emanation",
+    "size_ft": 5
+   },
    "bonus": null,
    "concentration": false,
    "condition": "",
@@ -1926,6 +1979,10 @@
    "ability": null,
    "action_cost": "Action",
    "amount_kind": "Damage",
+   "area": {
+    "shape": "Emanation",
+    "size_ft": 5
+   },
    "bonus": 7,
    "concentration": false,
    "condition": "",
@@ -1952,6 +2009,10 @@
    "ability": "DEX",
    "action_cost": "Action",
    "amount_kind": "Damage",
+   "area": {
+    "shape": "Cylinder",
+    "size_ft": 20
+   },
    "bonus": null,
    "concentration": false,
    "condition": "",
@@ -2127,6 +2188,10 @@
    "ability": "DEX",
    "action_cost": "Action",
    "amount_kind": "Damage",
+   "area": {
+    "shape": "Line",
+    "size_ft": 100
+   },
    "bonus": null,
    "concentration": false,
    "condition": "",
@@ -2256,6 +2321,17 @@
    "ability": "CON",
    "action_cost": "Action",
    "amount_kind": "Damage",
+   "area": {
+    "acts": [
+     "enters",
+     "moved onto",
+     "ends"
+    ],
+    "move_action": "action",
+    "move_ft": 60,
+    "shape": "Cylinder",
+    "size_ft": 5
+   },
    "bonus": null,
    "concentration": true,
    "condition": "",
@@ -2591,9 +2667,10 @@
    "duration_seconds": 0,
    "feature_name": "",
    "half_on_save": false,
+   "ignores_cover": true,
    "is_described": true,
    "is_unavailable": false,
-   "note": "The target gains no benefit from Half Cover or Three-Quarters Cover for this save.",
+   "note": "",
    "repeat_save": false,
    "roll": "Saving throw",
    "row_name": "",
@@ -2669,6 +2746,10 @@
    "ability": "CON",
    "action_cost": "Action",
    "amount_kind": "Damage",
+   "area": {
+    "shape": "Sphere",
+    "size_ft": 10
+   },
    "bonus": null,
    "concentration": false,
    "condition": "",
@@ -2772,6 +2853,10 @@
    "ability": null,
    "action_cost": "Action",
    "amount_kind": "Damage",
+   "area": {
+    "shape": "Sphere",
+    "size_ft": 20
+   },
    "badge_modifiers": {
     "Silence": [
      {
@@ -2808,6 +2893,10 @@
    "ability": "WIS",
    "action_cost": "Action",
    "amount_kind": "Damage",
+   "area": {
+    "shape": "Sphere",
+    "size_ft": 5
+   },
    "bonus": null,
    "concentration": true,
    "condition": "Incapacitated",
@@ -2905,6 +2994,10 @@
    "ability": null,
    "action_cost": "Action",
    "amount_kind": "Damage",
+   "area": {
+    "shape": "Sphere",
+    "size_ft": 20
+   },
    "bonus": null,
    "concentration": true,
    "condition": "",
@@ -2931,6 +3024,15 @@
    "ability": null,
    "action_cost": "Action",
    "amount_kind": "Damage",
+   "area": {
+    "acts": [
+     "enters",
+     "moved onto",
+     "ends"
+    ],
+    "shape": "Emanation",
+    "size_ft": 15
+   },
    "badge_modifiers": {
     "Spirit Guardians": [
      {
@@ -2967,6 +3069,15 @@
    "ability": "WIS",
    "action_cost": null,
    "amount_kind": "Damage",
+   "area": {
+    "acts": [
+     "enters",
+     "moved onto",
+     "ends"
+    ],
+    "shape": "Emanation",
+    "size_ft": 15
+   },
    "bonus": null,
    "concentration": false,
    "condition": "",
@@ -3143,6 +3254,11 @@
    "ability": "CON",
    "action_cost": "Action",
    "amount_kind": "Damage",
+   "area": {
+    "from_source": true,
+    "shape": "Cube",
+    "size_ft": 15
+   },
    "bonus": null,
    "concentration": false,
    "condition": "",

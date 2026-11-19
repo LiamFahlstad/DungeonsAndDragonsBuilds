@@ -186,6 +186,10 @@
    "ability": "DEX",
    "action_cost": "Action",
    "amount_kind": "Damage",
+   "area": {
+    "shape": "Cube",
+    "size_ft": 20
+   },
    "badge_modifiers": {
     "Faerie Fire": [
      {
@@ -280,6 +284,15 @@
    "ability": "DEX",
    "action_cost": "Action",
    "amount_kind": "Damage",
+   "area": {
+    "acts": [
+     "enters",
+     "moved onto",
+     "ends"
+    ],
+    "shape": "Cube",
+    "size_ft": 10
+   },
    "bonus": null,
    "concentration": false,
    "condition": "Prone",
@@ -358,6 +371,10 @@
    "ability": null,
    "action_cost": "Action",
    "amount_kind": "Damage",
+   "area": {
+    "shape": "Cube",
+    "size_ft": 5
+   },
    "bonus": null,
    "concentration": false,
    "condition": "",
@@ -505,6 +522,10 @@
    "ability": "DEX",
    "action_cost": "Action",
    "amount_kind": "Damage",
+   "area": {
+    "shape": "Sphere",
+    "size_ft": 10
+   },
    "bonus": null,
    "concentration": false,
    "condition": "",

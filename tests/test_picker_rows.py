@@ -112,6 +112,12 @@ def _row(option) -> dict:
     # Likewise only the rows that take damage off a hit (Deflect Attacks).
     if option.damage_reduction:
         row["damage_reduction"] = option.damage_reduction
+    # Likewise only the rows with an area (Fireball's Sphere), and those
+    # that take cover away (Sacred Flame).
+    if option.area is not None:
+        row["area"] = option.area.to_dict()
+    if option.ignores_cover:
+        row["ignores_cover"] = True
     return row
 
 

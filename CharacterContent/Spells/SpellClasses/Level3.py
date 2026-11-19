@@ -23,6 +23,8 @@ from CharacterContent.Spells.SpellFactory.SpellFields import (
     Range,
 )
 from Core.Definitions import Ability, CharacterClass, Condition, DamageType
+from Model.Content.ActionType import ActionType
+from Model.Content.CombatArea import AreaSight, AreaTiming, CombatArea, CombatAreaShape
 from Model.Content.CombatEffect import (
     CombatCondition,
     CombatDamage,
@@ -69,6 +71,7 @@ class Fireball(ClassSpell):
         ),
         usage_tags=("damage",),
         target=FeatureTarget.AREA,
+        area=CombatArea(CombatAreaShape.SPHERE, 20),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "315e1e81cac3d7f1")
 
@@ -138,6 +141,7 @@ class LightningBolt(ClassSpell):
         ),
         usage_tags=("damage",),
         target=FeatureTarget.AREA,
+        area=CombatArea(CombatAreaShape.LINE, 100),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "56b7a047f62896ae")
 
@@ -449,6 +453,7 @@ class AstralFlood(ClassSpell):
         ),
         usage_tags=("control", "damage"),
         target=FeatureTarget.AREA,
+        area=CombatArea(CombatAreaShape.CONE, 30),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "ceea7e0269a78610")
 
@@ -521,6 +526,7 @@ class AuraOfVitality(ClassSpell):
         description="An aura radiates from you in a 30-foot Emanation for the duration. When you create the aura and at the start of each of your turns while it persists, you can restore 2d6 Hit Points to one creature in it.",
         usage_tags=("buff", "heal"),
         target=FeatureTarget.ALLY,
+        area=CombatArea(CombatAreaShape.EMANATION, 30),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "46852f5fc8be61cf")
 
@@ -800,6 +806,11 @@ class CacophonicShield(ClassSpell):
         ),
         usage_tags=("buff", "control", "damage", "heal"),
         target=FeatureTarget.AREA,
+        area=CombatArea(
+            CombatAreaShape.EMANATION,
+            10,
+            acts=(AreaTiming.ENTERS, AreaTiming.MOVED_ONTO, AreaTiming.ENDS),
+        ),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "f04197480e617622")
 
@@ -867,6 +878,7 @@ class CallLightning(ClassSpell):
         ),
         usage_tags=("damage",),
         target=FeatureTarget.AREA,
+        area=CombatArea(CombatAreaShape.SPHERE, 5),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "0fa9f6c614fd7175")
 
@@ -1137,6 +1149,7 @@ class ConjureBarrage(ClassSpell):
         ),
         usage_tags=("damage",),
         target=FeatureTarget.ENEMY,
+        area=CombatArea(CombatAreaShape.CONE, 60),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "c5484f373a623d52")
 
@@ -1362,6 +1375,7 @@ class CrusadersMantle(ClassSpell):
         description="You radiate a magical aura in a 30-foot Emanation. While in the aura, you and your allies each deal an extra 1d4 Radiant damage when hitting with a weapon or an Unarmed Strike.",
         usage_tags=("buff", "damage"),
         target=FeatureTarget.ALLY,
+        area=CombatArea(CombatAreaShape.EMANATION, 30),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "6877e4c35803156f")
 
@@ -1407,6 +1421,7 @@ class Daylight(ClassSpell):
         ),
         usage_tags=("utility",),
         target=FeatureTarget.AREA,
+        area=CombatArea(CombatAreaShape.SPHERE, 60),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "70066e113bcd274d")
 
@@ -1630,6 +1645,7 @@ class EruptingEarth(ClassSpell):
         ),
         usage_tags=("buff", "control", "damage", "utility"),
         target=FeatureTarget.AREA,
+        area=CombatArea(CombatAreaShape.CUBE, 20),
     )
     converted_from = RecordStamp("spells_dnd5e.json", "557faf75b1164e3a")
 
@@ -1754,6 +1770,7 @@ class Fear(ClassSpell):
         ),
         usage_tags=("control",),
         target=FeatureTarget.AREA,
+        area=CombatArea(CombatAreaShape.CONE, 30, acts=(AreaTiming.ENDS,)),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "5e6e1a387b8b0920")
 
@@ -2161,6 +2178,7 @@ class GlyphOfWarding(ClassSpell):
         ),
         usage_tags=("damage",),
         target=FeatureTarget.OBJECT,
+        area=CombatArea(CombatAreaShape.SPHERE, 20),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "d0febe59f443bb22")
 
@@ -2388,6 +2406,12 @@ class HungerOfHadar(ClassSpell):
         ),
         usage_tags=("control", "damage"),
         target=FeatureTarget.AREA,
+        area=CombatArea(
+            CombatAreaShape.SPHERE,
+            20,
+            acts=(AreaTiming.STARTS, AreaTiming.ENDS),
+            obscures=AreaSight.DARKNESS,
+        ),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "496550e6532b9cdf")
 
@@ -2466,6 +2490,7 @@ class HypnoticPattern(ClassSpell):
         ),
         usage_tags=("control",),
         target=FeatureTarget.AREA,
+        area=CombatArea(CombatAreaShape.CUBE, 30),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "0719d025dab9bcf1")
 
@@ -2645,6 +2670,7 @@ class LaeralsSilverLance(ClassSpell):
         ),
         usage_tags=("control", "damage"),
         target=FeatureTarget.ENEMY,
+        area=CombatArea(CombatAreaShape.LINE, 120),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "ef2b6ba6ed468689")
 
@@ -2699,6 +2725,7 @@ class LeomundsTinyHut(ClassSpell):
         ),
         usage_tags=("buff",),
         target=FeatureTarget.SELF,
+        area=CombatArea(CombatAreaShape.EMANATION, 10),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "d03395ed0f4dd7ac")
 
@@ -2815,6 +2842,7 @@ class LightningArrow(ClassSpell):
         ),
         usage_tags=("damage",),
         target=FeatureTarget.ENEMY,
+        area=CombatArea(CombatAreaShape.EMANATION, 10),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "a5cafb7bb5bc9cf6")
 
@@ -2900,6 +2928,9 @@ class MagicCircle(ClassSpell):
         ),
         usage_tags=("buff", "control"),
         target=FeatureTarget.AREA,
+        area=CombatArea(
+            CombatAreaShape.SPHERE, 10, acts=(AreaTiming.ENTERS, AreaTiming.MOVED_ONTO)
+        ),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "045f35b90ccf86b4")
 
@@ -2981,6 +3012,7 @@ class MajorImage(ClassSpell):
         ),
         usage_tags=("utility",),
         target=FeatureTarget.OBJECT,
+        area=CombatArea(CombatAreaShape.CUBE, 20),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "bc78d6452c116e79")
 
@@ -3175,6 +3207,7 @@ class MelfsMinuteMeteors(ClassSpell):
         ),
         usage_tags=("damage", "utility"),
         target=FeatureTarget.AREA,
+        area=CombatArea(CombatAreaShape.SPHERE, 5, point_within_ft=120),
     )
     converted_from = RecordStamp("spells_dnd5e.json", "31d4cd9e18b1a1d2")
 
@@ -3387,6 +3420,7 @@ class PlantGrowth(ClassSpell):
         ),
         usage_tags=("control",),
         target=FeatureTarget.AREA,
+        area=CombatArea(CombatAreaShape.SPHERE, 100),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "41a28aaddf891720")
 
@@ -3688,6 +3722,12 @@ class SleetStorm(ClassSpell):
         ),
         usage_tags=("control",),
         target=FeatureTarget.AREA,
+        area=CombatArea(
+            CombatAreaShape.CYLINDER,
+            20,
+            acts=(AreaTiming.ENTERS, AreaTiming.MOVED_ONTO, AreaTiming.STARTS),
+            obscures=AreaSight.HEAVILY_OBSCURED,
+        ),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "0bc838633fd3162e")
 
@@ -3734,6 +3774,7 @@ class Slow(ClassSpell):
         ),
         usage_tags=("control",),
         target=FeatureTarget.ENEMY,
+        area=CombatArea(CombatAreaShape.CUBE, 40),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "5e21b6574b64ec6c")
 
@@ -3855,6 +3896,7 @@ class SpeakWithPlants(ClassSpell):
         ),
         usage_tags=("control",),
         target=FeatureTarget.AREA,
+        area=CombatArea(CombatAreaShape.EMANATION, 30),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "372f0407527bac06")
 
@@ -3911,6 +3953,11 @@ class SpiritGuardians(ClassSpell):
         ),
         usage_tags=("damage",),
         target=FeatureTarget.ENEMY,
+        area=CombatArea(
+            CombatAreaShape.EMANATION,
+            15,
+            acts=(AreaTiming.ENTERS, AreaTiming.MOVED_ONTO, AreaTiming.ENDS),
+        ),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "e65a14ffc2403fdc")
 
@@ -4078,6 +4125,12 @@ class StinkingCloud(ClassSpell):
         ),
         usage_tags=("control",),
         target=FeatureTarget.AREA,
+        area=CombatArea(
+            CombatAreaShape.SPHERE,
+            20,
+            acts=(AreaTiming.STARTS,),
+            obscures=AreaSight.HEAVILY_OBSCURED,
+        ),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "810d156dc4bae4f7")
 
@@ -4636,6 +4689,7 @@ class ThunderStep(ClassSpell):
         ),
         usage_tags=("damage", "utility"),
         target=FeatureTarget.SELF,
+        area=CombatArea(CombatAreaShape.EMANATION, 10),
     )
     converted_from = RecordStamp("spells_dnd5e.json", "7e0fa6fae04ac912")
 
@@ -4922,6 +4976,7 @@ class WallOfSand(ClassSpell):
         description="You conjure up a wall of swirling sand on the ground at a point you can see within range. You can make the wall up to 30 feet long, 10 feet high, and 10 feet thick, and it vanishes when the spell ends. It blocks line of sight but not movement. A creature is blinded while in the wall's space and must spend 3 feet of movement for every 1 foot it moves there.",
         usage_tags=("control", "utility"),
         target=FeatureTarget.OBJECT,
+        area=CombatArea(CombatAreaShape.WALL, 30, width_ft=10),
     )
     converted_from = RecordStamp("spells_dnd5e.json", "cba5420c92fdaf59")
 
@@ -4964,6 +5019,14 @@ class WallOfWater(ClassSpell):
         ),
         usage_tags=("control", "damage", "utility"),
         target=FeatureTarget.OBJECT,
+        area=CombatArea(
+            CombatAreaShape.WALL,
+            30,
+            width_ft=1,
+            acts=(AreaTiming.ENTERS, AreaTiming.MOVED_ONTO),
+            ring_ft=20,
+            difficult=True,
+        ),
     )
     converted_from = RecordStamp("spells_dnd5e.json", "6d782b1d1afaf195")
 
@@ -5116,6 +5179,7 @@ class WindWall(ClassSpell):
         ),
         usage_tags=("control", "damage"),
         target=FeatureTarget.AREA,
+        area=CombatArea(CombatAreaShape.WALL, 50, width_ft=1),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "357a1ac7efb15592")
 
@@ -5189,6 +5253,7 @@ class PulseWave(ClassSpell):
         usage_tags=("damage", "utility"),
         target=FeatureTarget.AREA,
         school_note="Dunamancy",
+        area=CombatArea(CombatAreaShape.CONE, 30),
     )
     converted_from = RecordStamp("spells_dnd5e.json", "7be9195f99eaabff")
 
@@ -5294,6 +5359,7 @@ class EmeraldBlossom(ClassSpell):
             "Using a Higher-Level Spell Slot. The total Hit Points the bulb can restore increases by 5 for each spell slot level above 3."
         ),
         usage_tags=("heal",),
+        area=CombatArea(CombatAreaShape.EMANATION, 10),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "7f19f4958e02b930")
 
@@ -5354,6 +5420,11 @@ class HandOfGuldan(ClassSpell):
             "Demonic spirits resembling fel imps flit about the Sphere for the duration. A creature that enters the Sphere or ends its turn there makes a Dexterity saving throw, taking 1d8 Fire damage plus 1d8 Necrotic damage on a failed save or half as much damage on a successful one. A creature can be affected by this spell only once per turn."
         ),
         usage_tags=("damage",),
+        area=CombatArea(
+            CombatAreaShape.SPHERE,
+            20,
+            acts=(AreaTiming.ENTERS, AreaTiming.MOVED_ONTO, AreaTiming.ENDS),
+        ),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "9ea60ff2f5db043f")
 
@@ -5445,6 +5516,13 @@ class RainOfFire(ClassSpell):
             "Using a Higher-Level Spell Slot. The Fire damage increases by 1d8 for each spell slot level above 3."
         ),
         usage_tags=("buff", "damage"),
+        area=CombatArea(
+            CombatAreaShape.CYLINDER,
+            20,
+            acts=(AreaTiming.ENTERS, AreaTiming.MOVED_ONTO, AreaTiming.ENDS),
+            move_ft=60,
+            move_action=ActionType.ACTION,
+        ),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "6f8797a4bb42ebdd")
 
@@ -5482,6 +5560,7 @@ class RemorselessWinter(ClassSpell):
             "Using a Higher-Level Spell Slot. The damage increases by 1d6 for each spell slot level above 3."
         ),
         usage_tags=("control", "damage"),
+        area=CombatArea(CombatAreaShape.EMANATION, 30),
     )
     converted_from = RecordStamp("spells_dnd2024.json", "c9b942788bf593a7")
 

@@ -1,6 +1,6 @@
 """Walls on the battle map, with no Qt (Notes/combat-arena-plan.md, step
-25): the Wall shape (Combat/Arena/areas.py) read from the wall spells' own
-text, its cells straight or in a ring, its sides and Wall of Fire's
+25): the Wall shape (Combat/Arena/areas.py) the wall spells' classes give
+(SpellRules.area), its cells straight or in a ring, its sides and Wall of Fire's
 damaging side; and what a kept wall is as terrain while it lasts
 (Combat/Arena/lasting.py: Wall of Force blocks movement and is Total Cover,
 Blade Barrier is Three-Quarters Cover and Difficult Terrain), laid over the
@@ -15,14 +15,12 @@ from Combat.Arena.areas import (
     AreaOfEffect,
     AreaShape,
     area_cells,
-    damaging_side_ft,
-    parse_area,
+    area_of,
     side_cells,
     side_name,
     side_of,
     wall_cells,
     wall_end,
-    wall_ring_ft,
 )
 from Combat.Arena.arena import ArenaSettings, reachable
 from Combat.Arena.cover import cover_from
@@ -42,16 +40,19 @@ from Combat.Arena.lasting import (
 )
 from Combat.Arena.terrain import HALF, THREE_QUARTERS, TOTAL, WALL, MapObject, Spot
 from Combat.CombatUIQt.effect_options import _spell_named
+from Model.Content.CombatArea import CombatArea
+from Model.Content.CombatAreaText import parse_area as read_area
 
 SETTINGS = ArenaSettings()  # 24 x 16 cells of 5 ft., Manhattan
 WALL_OF_FIRE = AreaOfEffect(AreaShape.WALL, 60, 1)
 RING = AreaOfEffect(AreaShape.WALL, 20, 1, ring=True)
 
 
-def _text(name: str) -> str:
+def _rules(name: str) -> CombatArea | None:
+    """The area the spell `name`'s class gives (SpellRules.area)."""
     spell = _spell_named(name)
     assert spell is not None, name
-    return spell.description
+    return spell.combat_area
 
 
 def _creature(name: str, at, **keys: Any) -> dict:
@@ -82,7 +83,7 @@ def _caster_with(record: dict, at=(0, 0), name: str = "Wall of Force") -> dict:
     ],
 )
 def test_the_wall_spells_read_as_walls(spell, length, thick):
-    assert parse_area(_text(spell)) == AreaOfEffect(AreaShape.WALL, length, thick)
+    assert area_of(_rules(spell)) == AreaOfEffect(AreaShape.WALL, length, thick)
 
 
 @pytest.mark.parametrize(
@@ -95,30 +96,30 @@ def test_the_wall_spells_read_as_walls(spell, length, thick):
     ],
 )
 def test_each_reads_its_ring(spell, across):
-    assert wall_ring_ft(_text(spell)) == across
+    assert _rules(spell).ring_ft == across
 
 
 def test_only_wall_of_fire_has_a_damaging_side():
-    assert damaging_side_ft(_text("Wall of Fire")) == 10
+    assert _rules("Wall of Fire").side_ft == 10
     for spell in ("Wall of Force", "Blade Barrier", "Wall of Thorns"):
-        assert damaging_side_ft(_text(spell)) is None
+        assert _rules(spell).side_ft is None
 
 
 def test_wall_of_fire_acts_as_a_creature_enters_it_or_ends_its_turn():
-    timing = area_timing(_text("Wall of Fire"))
+    timing = area_timing(_rules("Wall of Fire"))
     assert ENTERS in timing and ENDS in timing
 
 
 def test_a_lights_radius_is_no_area():
     """DI-096: Flaming Sphere "sheds Bright Light in a 20-foot radius"."""
-    assert parse_area(_text("Light")) is None
-    assert parse_area("It sheds Bright Light in a 20-foot radius.") is None
+    assert _rules("Light") is None
+    assert read_area("It sheds Bright Light in a 20-foot radius.") is None
 
 
 def test_flaming_sphere_reaches_5_feet_around_it():
     """DI-096: "Any creature that ends its turn within 5 feet of the
     sphere": its cell and the cells beside it."""
-    area = parse_area(_text("Flaming Sphere"))
+    area = area_of(_rules("Flaming Sphere"))
     assert area == AreaOfEffect(AreaShape.SPHERE, 5)
     cells = area_cells(AreaOfEffect(AreaShape.SPHERE, 5), None, Cell(6, 2), SETTINGS)
     assert cells == {Cell(6, 2), Cell(5, 2), Cell(7, 2), Cell(6, 1), Cell(6, 3)}
@@ -147,7 +148,7 @@ def test_a_diagonal_wall_leaves_no_gap_to_walk_through():
     force = AreaOfEffect(AreaShape.WALL, 100, 1)
     # Across the map's top-left corner, A7 to G1: 60 ft. by the map's rule.
     record = area_record(
-        force, None, Cell(0, 6), SETTINGS, about=_text("Wall of Force"), end=Cell(6, 0)
+        force, None, Cell(0, 6), SETTINGS, rules=_rules("Wall of Force"), end=Cell(6, 0)
     )
     caster = _caster_with(record, at=(23, 0))
     walker = _creature("Goblin", (1, 1), speed_ground_ft=200)
@@ -215,7 +216,7 @@ def test_wall_of_fire_keeps_its_side_and_who_ends_a_turn_by_it():
         aim,
         SETTINGS,
         pick="Wall of Fire",
-        about=_text("Wall of Fire"),
+        rules=_rules("Wall of Fire"),
         end=end,
         side=south,
     )
@@ -248,12 +249,12 @@ def test_a_walls_cover_origin_is_itself():
 
 
 def test_what_each_wall_is_as_terrain():
-    force = wall_terrain("Wall of Force", _text("Wall of Force"))
+    force = wall_terrain("Wall of Force", _rules("Wall of Force"))
     assert force == MapObject("Wall of Force", blocks=True, cover=TOTAL)
-    blades = wall_terrain("Blade Barrier", _text("Blade Barrier"))
+    blades = wall_terrain("Blade Barrier", _rules("Blade Barrier"))
     assert blades == MapObject("Blade Barrier", difficult=True, cover=THREE_QUARTERS)
-    assert wall_terrain("Wall of Fire", _text("Wall of Fire")) is None
-    assert wall_terrain("Wall of Thorns", _text("Wall of Thorns")) is None
+    assert wall_terrain("Wall of Fire", _rules("Wall of Fire")) is None
+    assert wall_terrain("Wall of Thorns", _rules("Wall of Thorns")) is None
 
 
 def _force_down_column_6(settings: ArenaSettings = SETTINGS) -> dict:
@@ -264,7 +265,7 @@ def _force_down_column_6(settings: ArenaSettings = SETTINGS) -> dict:
         Cell(6, 0),
         settings,
         pick="Wall of Force",
-        about=_text("Wall of Force"),
+        rules=_rules("Wall of Force"),
         end=Cell(6, 15),
     )
     return _caster_with(record)
@@ -288,7 +289,7 @@ def test_no_wall_leaves_the_map_as_it_is():
     plain = _creature("Goblin", (4, 5))
     assert with_kept_walls(SETTINGS, [plain]) is SETTINGS
     fire = area_record(
-        WALL_OF_FIRE, None, Cell(2, 5), SETTINGS, about=_text("Wall of Fire")
+        WALL_OF_FIRE, None, Cell(2, 5), SETTINGS, rules=_rules("Wall of Fire")
     )
     assert (
         with_kept_walls(SETTINGS, [_caster_with(fire, name="Wall of Fire")]) is SETTINGS
@@ -308,7 +309,7 @@ def test_what_is_painted_under_a_wall_stays_painted():
         Cell(6, 0),
         settings,
         pick="Blade Barrier",
-        about=_text("Blade Barrier"),
+        rules=_rules("Blade Barrier"),
         end=Cell(6, 15),
     )
     ruled = with_kept_walls(settings, [_caster_with(record, name="Blade Barrier")])

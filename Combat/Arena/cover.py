@@ -32,7 +32,6 @@ Cells are reached through geometry's GridShape only (the plan's Decision 3).
 
 from __future__ import annotations
 
-import re
 from dataclasses import dataclass
 from typing import Iterable
 
@@ -55,15 +54,6 @@ BENEFITS = {
     THREE_QUARTERS: "+5 AC and DEX saves",
     TOTAL: "can't be targeted directly",
 }
-
-# A rules text that takes cover away (Sacred Flame: "The target gains no
-# benefit from Half Cover or Three-Quarters Cover for this save"; the
-# Sharpshooter and Spell Sniper feats: "ignore Half Cover and Three-Quarters
-# Cover").
-_IGNORES_COVER = re.compile(
-    r"(?:no benefit from|ignores?) Half Cover (?:or|and) Three-Quarters Cover",
-    re.IGNORECASE,
-)
 
 
 @dataclass(frozen=True)
@@ -228,9 +218,3 @@ def with_cover(target: dict, reading: CoverReading) -> dict:
     if state in states:
         return target
     return {**target, "visibility_states": [*states, state]}
-
-
-def ignores_cover(text: str) -> bool:
-    """Whether a rules text takes Half and Three-Quarters Cover away (Sacred
-    Flame's save, Sharpshooter's and Spell Sniper's attacks)."""
-    return bool(_IGNORES_COVER.search(text or ""))
