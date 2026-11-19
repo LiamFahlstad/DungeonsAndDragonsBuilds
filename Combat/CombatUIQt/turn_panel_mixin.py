@@ -28,7 +28,7 @@ import Combat.PlayerLog as PlayerLog
 from Model.Content.CombatModifiers import WhenHit
 from Model.Content.CombatTriggers import TriggerAim
 from Combat.Arena.lasting import AreaPrompt
-from Combat.Arena.ranges import action_range
+from Combat.Arena.ranges import monster_action_range
 from Combat.Effects.active_effects import ActiveEffect
 from Combat.Effects.modifiers import attack_plan, hit_notes, hit_plan, hit_point_maximum
 from Combat.Effects.triggers import (
@@ -411,7 +411,7 @@ class TurnPanelMixin(CombatWindowState):
             # Its reach or range on the map: Long range's Disadvantage
             # counted, past its reach warned about.
             reach = self._range_check(
-                char, target, action_range(action.description, action.name)
+                char, target, monster_action_range(action, action.name)
             )
             plan = attack_plan(
                 char,

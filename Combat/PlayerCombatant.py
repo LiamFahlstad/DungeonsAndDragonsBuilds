@@ -22,6 +22,10 @@ from Model.Character import Character
 from Model.Content.Weapon import AbstractWeapon
 from Model.Creatures.Combatants import BasicCombatantData, ExtendedCombatantData
 
+# A player's AC without the Shield they wield (None: they wield none), for
+# the Custom Effect dialog's Shield box (attack_rolls.armor_without_shield).
+AC_WITHOUT_SHIELD_KEY = "ac_without_shield"
+
 
 def combatant_from_stat_block(combatant: BasicCombatantData) -> dict:
     """The combat UI's dict for a monster, NPC or other stat-block combatant,
@@ -122,6 +126,7 @@ def combatant_from_character(character: Character) -> dict:
         "hp": hp,
         "max_hp": hp,
         "ac": _armor_class_text(character),
+        AC_WITHOUT_SHIELD_KEY: _armor_class_without_shield(character),
         "temp_hp": 0,
         "conditions": [],
         "visibility_states": [],
@@ -171,13 +176,22 @@ def _damage_entries(damage_types) -> list[dict]:
     return [{"damage_types": [damage_type.value]} for damage_type in damage_types]
 
 
-def _armor_class_text(character: Character) -> str:
-    """The AC, and while wielding a Shield also the AC without it (worked
-    out by the rules, not as "minus 2": a +1 Shield, or Unarmored Defense
-    that the Shield turns off, change it by more)."""
-    ac = character.calculate_armor_class()
+def _armor_class_without_shield(character: Character) -> int | None:
+    """The AC without the Shield the character wields (worked out by the
+    rules, not as "minus 2": a +1 Shield, or Unarmored Defense that the
+    Shield turns off, change it by more); None when they wield none."""
     if any(armor.is_shield and armor.is_wearing for armor in character.armors):
-        without = character.calculate_armor_class(ignore_shield=True)
+        return character.calculate_armor_class(ignore_shield=True)
+    return None
+
+
+def _armor_class_text(character: Character) -> str:
+    """The AC, and while wielding a Shield also the AC without it, as the
+    card shows it. Only shown: the number without it is its own key
+    (AC_WITHOUT_SHIELD_KEY)."""
+    ac = character.calculate_armor_class()
+    without = _armor_class_without_shield(character)
+    if without is not None:
         return f"{ac} (with Shield) and {without} (without Shield)"
     return f"{ac} (no Shield)"
 

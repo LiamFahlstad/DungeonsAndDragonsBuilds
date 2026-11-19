@@ -25,12 +25,20 @@ from Combat.Arena.ranges import (
     AttackRange,
     action_range,
     check_attack_range,
+    monster_action_range,
     spell_attack_range,
     spell_range_warning,
     weapon_range,
 )
 from Combat.Effects.modifiers import attack_plan
+from Combat.CombatUIQt.monster_actions import parse_action
 from Combat.Effects.sight import NO_SIGHT
+from Model.Creatures.MonsterAbilities import (
+    MeleeAttack,
+    MeleeOrRangedAttack,
+    MonsterAbility,
+    RangedAttack,
+)
 
 BOW = AttackRange(normal_ft=150, long_ft=600, what="Longbow")
 SWORD = AttackRange(reach_ft=5, what="Longsword")
@@ -73,6 +81,31 @@ def test_a_stat_blocks_attack_says_its_reach_or_range():
     assert old == AttackRange(normal_ft=150, long_ft=600)
     assert both == AttackRange(reach_ft=5, normal_ft=20, long_ft=60)
     assert action_range("The dragon exhales fire in a 60-foot Cone.") is None
+
+
+def test_a_structured_attack_gives_its_fields():
+    """Explicit-attributes plan 1.1: a MeleeAttack's `reach_ft` and a
+    RangedAttack's `range_ft` / `long_range_ft` are read as fields, in the
+    stat block and in the dict a saved log keeps; only a freeform ability's
+    text is read."""
+    pike = parse_action(MeleeAttack(name="Pike", attack_bonus=5, reach_ft=10))
+    bow = parse_action(
+        RangedAttack(name="Longbow", attack_bonus=4, range_ft=150, long_range_ft=600)
+    )
+    spear = parse_action(
+        MeleeOrRangedAttack(name="Spear", attack_bonus=4, range_ft=20, long_range_ft=60)
+    )
+    assert monster_action_range(pike, "Pike") == AttackRange(10, what="Pike")
+    assert monster_action_range(bow) == AttackRange(normal_ft=150, long_ft=600)
+    assert monster_action_range(spear) == AttackRange(5, 20, 60)
+    # A logged dict's fields win over its text, which is only shown.
+    logged = {"name": "Pike", "description": "reach 10 ft.", "reach_ft": 15}
+    assert monster_action_range(parse_action(logged)) == AttackRange(15)
+    freeform = MonsterAbility(
+        name="Claw", description="Melee Attack Roll: +6, reach 10 ft. Hit: 9."
+    )
+    assert monster_action_range(parse_action(freeform)) == AttackRange(10)
+    assert monster_action_range(parse_action(MonsterAbility("Roar", "Roars."))) is None
 
 
 def test_a_weapon_has_the_weapons_tables_range():

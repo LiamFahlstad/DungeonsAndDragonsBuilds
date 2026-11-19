@@ -30,6 +30,7 @@ from CharacterContent.Features.SubClassFeatures.Druid.DruidMoonFeatures import (
     ImprovedCircleForms,
 )
 from CharacterContent.Spells.SpellFactory import SpellFactory
+from Combat.PlayerCombatant import AC_WITHOUT_SHIELD_KEY
 from Core.Definitions import Ability, Skill
 from Core.Rules import ability_modifier
 from Model.Character import Character
@@ -174,6 +175,8 @@ def _form_statistics(
     statistics.update(
         {
             "ac": form.ac,
+            # A beast wields no Shield: the Druid's is part of the form.
+            AC_WITHOUT_SHIELD_KEY: None,
             "speed": form.speed_ground_ft or 0,
             "size": form.size.value if form.size else char.get("size"),
             "Ability Scores": scores,

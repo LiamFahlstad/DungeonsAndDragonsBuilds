@@ -328,6 +328,9 @@ def test_reach_comes_from_the_stat_block():
     long_arm = {"actions": [{"description": "Melee Attack Roll: +5, reach 10 ft."}]}
     assert reach_ft(long_arm) == 10
     assert reach_ft({"actions": []}) == 5
+    # A MeleeAttack's field, as a saved log keeps it: its text isn't read.
+    logged = {"actions": [{"description": "reach 5 ft.", "reach_ft": 15}]}
+    assert reach_ft(logged) == 15
 
 
 def test_leaving_a_10_foot_reach_takes_two_cells(tmp_path):

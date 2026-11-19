@@ -13,6 +13,8 @@ from Combat.Effects.modifiers import (
     armor_class_text,
     cover_armor_bonus,
 )
+from Combat.PlayerCombatant import AC_WITHOUT_SHIELD_KEY
+
 from .amounts import parse_amount
 from .monster_actions import first_number
 
@@ -21,10 +23,9 @@ _ALWAYS_HITS = 20
 _ALWAYS_MISSES = 1
 
 # True on a combatant with a Shield while it isn't wielding it (the Custom
-# Effect dialog's Shield box): its AC is then the one its stored text gives
-# "(without Shield)". A public key, so undo and a saved fight keep it.
+# Effect dialog's Shield box): its AC is then its AC_WITHOUT_SHIELD_KEY. A
+# public key, so undo and a saved fight keep it.
 SHIELD_OFF = "shield_off"
-_WITHOUT_SHIELD = re.compile(r"(\d+)\s*\(without Shield\)")
 
 
 @dataclass(frozen=True)
@@ -72,15 +73,17 @@ def cover_bonus(char: dict) -> int:
 
 
 def armor_without_shield(char: dict) -> int | None:
-    """Char's AC without its Shield, from a player's stored "18 (with
-    Shield) and 16 (without Shield)"; None for one without a Shield."""
-    match = _WITHOUT_SHIELD.search(str(char.get("ac", "")))
-    return int(match[1]) if match else None
+    """Char's AC without its Shield (a player's AC_WITHOUT_SHIELD_KEY, from
+    their sheet); None for one without a Shield."""
+    without = char.get(AC_WITHOUT_SHIELD_KEY)
+    return (
+        without if isinstance(without, int) and not isinstance(without, bool) else None
+    )
 
 
 def has_shield(char: dict) -> bool:
     """Whether char has a Shield it can wield or set down (a player's AC
-    sentence says what it is without one)."""
+    without one is known)."""
     return armor_without_shield(char) is not None
 
 

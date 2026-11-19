@@ -83,10 +83,33 @@ class AttackRange:
         return " or ".join(parts)
 
 
+def stated_range(
+    stated: tuple[int | None, int | None, int | None] | None, name: str = ""
+) -> AttackRange | None:
+    """The AttackRange of a structured attack's (reach_ft, range_ft,
+    long_range_ft) fields (MonsterAbilities.stated_reach_and_range); None
+    for an ability without them."""
+    if stated is None:
+        return None
+    reach, normal, far = stated
+    return AttackRange(reach_ft=reach, normal_ft=normal, long_ft=far, what=name)
+
+
+def monster_action_range(action, name: str = "") -> AttackRange | None:
+    """A stat block's attack's reach and range (a MonsterAction): its
+    fields, for a MeleeAttack, RangedAttack or MeleeOrRangedAttack; else
+    read from a freeform ability's text (action_range)."""
+    found = stated_range(getattr(action, "stated_range", None), name)
+    if found is not None:
+        return found
+    return action_range(action.description, name)
+
+
 def action_range(description: str, name: str = "") -> AttackRange | None:
-    """A stat block's attack's reach and range, from its text ("Melee
-    Attack Roll: +6, reach 10 ft.", "Ranged Attack Roll: +4, range 80/320
-    ft."); None when it says neither."""
+    """A freeform stat block attack's reach and range, from its text
+    ("Melee Attack Roll: +6, reach 10 ft.", "Ranged Attack Roll: +4, range
+    80/320 ft."); None when it says neither. A structured attack has them
+    as fields (monster_action_range)."""
     reach = _REACH.search(description or "")
     ranged = _RANGE.search(description or "")
     if reach is None and ranged is None:

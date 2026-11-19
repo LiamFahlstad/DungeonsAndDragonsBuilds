@@ -35,6 +35,26 @@ class MonsterAbility:
     combat_effects: tuple[CombatEffect, ...] = field(default=(), kw_only=True)
 
 
+def stated_reach_and_range(
+    ability,
+) -> tuple[Optional[int], Optional[int], Optional[int]] | None:
+    """(reach_ft, range_ft, long_range_ft) a structured attack has as fields
+    (MeleeAttack, RangedAttack, MeleeOrRangedAttack), a None for each it
+    doesn't have; from the ability, or the dict it becomes in a saved combat
+    log. None for an ability with neither field, whose text is all there is
+    (a freeform MonsterAbility)."""
+
+    def get(key: str):
+        if isinstance(ability, dict):
+            return ability.get(key)
+        return getattr(ability, key, None)
+
+    reach, normal = get("reach_ft"), get("range_ft")
+    if reach is None and normal is None:
+        return None
+    return reach, normal, get("long_range_ft")
+
+
 _DC_PATTERN = re.compile(r"\bDC\s*(\d+)", re.IGNORECASE)
 
 

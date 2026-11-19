@@ -64,6 +64,7 @@ from Core.Definitions import Condition, CreatureSize
 from Core.Weapons import WeaponProperty
 from Model.Content.CombatModifiers import Movement
 from Model.Content.StandardActions import DISENGAGE
+from Model.Creatures.MonsterAbilities import stated_reach_and_range
 
 POSITION_KEY = "position"
 MOVED_KEY = "moved_ft"
@@ -681,11 +682,17 @@ _STAT_BLOCK_SECTIONS = ("actions", "bonus_actions", "reactions", "legendary_acti
 
 def reach_ft(char: dict) -> int:
     """How far char's melee attacks reach (Rules Glossary, Reach: 5 feet,
-    10 with a Reach weapon): a monster's longest "reach 10 ft." in its stat
-    block, a player's 10 feet with a Reach weapon; else 5 feet."""
+    10 with a Reach weapon): a monster's longest reach in its stat block
+    (a MeleeAttack's `reach_ft`, or a freeform ability's "reach 10 ft."), a
+    player's 10 feet with a Reach weapon; else 5 feet."""
     reaches = [5]
     for key in _STAT_BLOCK_SECTIONS:
         for ability in char.get(key) or ():
+            stated = stated_reach_and_range(ability)
+            if stated is not None:
+                if stated[0] is not None:
+                    reaches.append(int(stated[0]))
+                continue
             text = (
                 ability.get("description", "")
                 if isinstance(ability, dict)

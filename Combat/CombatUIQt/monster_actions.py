@@ -11,6 +11,7 @@ from dataclasses import dataclass, field
 from Core.Definitions import Condition, CreatureSize, DamageType
 from Model.Content.CombatEffect import CombatEffect
 from Model.Content.CombatModifiers import AttackKind
+from Model.Creatures.MonsterAbilities import stated_reach_and_range
 
 # The stat blocks don't record this; nearly every legendary creature has 3.
 LEGENDARY_ACTIONS_PER_ROUND = 3
@@ -214,6 +215,9 @@ class MonsterAction:
     # What its stat block says using it does (MonsterAbility.combat_effects),
     # one per way to use it; () to read its text.
     effects: tuple[CombatEffect, ...] = ()
+    # A structured attack's (reach_ft, range_ft, long_range_ft) fields
+    # (stated_reach_and_range); None for a freeform one, read from its text.
+    stated_range: tuple[int | None, int | None, int | None] | None = None
 
     @property
     def is_limited(self) -> bool:
@@ -303,6 +307,7 @@ def parse_action(ability, legendary: bool = False) -> MonsterAction:
     uses_per_day = int(per_day.group(1)) if per_day else None
     legendary_cost = (int(cost.group(1)) if cost else 1) if legendary else 0
     effects = ability_effects(ability)
+    stated = stated_reach_and_range(ability)
     if effects:
         first = effects[0]
         return MonsterAction(
@@ -320,6 +325,7 @@ def parse_action(ability, legendary: bool = False) -> MonsterAction:
             recharge_on=recharge_on,
             per_day=uses_per_day,
             legendary_cost=legendary_cost,
+            stated_range=stated,
         )
     attack = _ATTACK.search(description)
     save = _SAVE.search(description)
@@ -340,6 +346,7 @@ def parse_action(ability, legendary: bool = False) -> MonsterAction:
         recharge_on=recharge_on,
         per_day=uses_per_day,
         legendary_cost=legendary_cost,
+        stated_range=stated,
     )
 
 
