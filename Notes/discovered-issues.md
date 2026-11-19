@@ -654,6 +654,7 @@ Found writing explicit areas (explicit-attributes-plan R9). (1) Difficult Terrai
 
 **History**
 - 2026-11-19 main session (Claude Opus 5.5): found
+- 2026-11-19 main session (Claude Opus 5.5): Plan written: Notes/combat-area-gaps-plan.md (7 steps, one per gap)
 
 ## Fixed
 
