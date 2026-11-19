@@ -43,6 +43,8 @@ TEXT_READERS: dict[tuple[str, str], str] = {
     ("Combat/CombatUIQt/public_log.py", "_ATTACK"): "log",
     ("Combat/CombatUIQt/public_log.py", "_event_lines"): "log",
     ("Combat/CombatUIQt/effect_options.py", "_without_slot_note"): "log",
+    # An ability's name without its "(Recharge 5-6)", for its row's name.
+    ("Combat/CombatUIQt/effect_options.py", "_NAME_ALONE"): "log",
     ("Combat/EncounterLogs.py", "TURN_PREFIX"): "log",
     # A Wild Shape form's shown senses say the Druid's Passive Perception.
     ("Combat/WildShape.py", "_PASSIVE_PERCEPTION"): "log",
@@ -52,30 +54,16 @@ TEXT_READERS: dict[tuple[str, str], str] = {
     ("Combat/Arena/arena.py", "_REACH"): "phase 4",
     ("Combat/Arena/ranges.py", "_REACH"): "phase 4",
     ("Combat/Arena/ranges.py", "_RANGE"): "phase 4",
-    # Spellcasting
-    ("Combat/CombatUIQt/effect_options.py", "_CASTS"): "phase 4",
-    ("Combat/CombatUIQt/effect_options.py", "_LIST_ITEM"): "phase 4",
-    ("Combat/CombatUIQt/effect_options.py", "_AT_LEVEL"): "phase 4",
-    ("Combat/CombatUIQt/effect_options.py", "_FOLLOWING"): "phase 4",
-    ("Combat/CombatUIQt/effect_options.py", "_SPELL_LIST"): "phase 4",
-    # An action that uses another, or moves
-    ("Combat/CombatUIQt/effect_options.py", "_MAKES_ONE"): "phase 4",
-    ("Combat/CombatUIQt/effect_options.py", "_USES"): "phase 4",
-    ("Combat/CombatUIQt/effect_options.py", "_NAME_ALONE"): "phase 4",
-    ("Combat/CombatUIQt/effect_options.py", "_MOVES"): "phase 4",
+    # The condition a freeform ability's hit gives
     ("Combat/CombatUIQt/effect_options.py", "_HIT_ENDS"): "phase 4",
     ("Combat/CombatUIQt/effect_options.py", "_monster_action_condition"): "phase 4",
-    # Attacks, saves, damage, riders, recharge and uses
+    # Attacks, saves, damage and riders
     ("Combat/CombatUIQt/monster_actions.py", "_ATTACK"): "phase 4",
     ("Combat/CombatUIQt/monster_actions.py", "_SAVE"): "phase 4",
     ("Combat/CombatUIQt/monster_actions.py", "DAMAGE"): "phase 4",
     ("Combat/CombatUIQt/monster_actions.py", "JOINED"): "phase 4",
     ("Combat/CombatUIQt/monster_actions.py", "DIE"): "phase 4",
     ("Combat/CombatUIQt/monster_actions.py", "_CONDITIONAL"): "phase 4",
-    ("Combat/CombatUIQt/monster_actions.py", "_RECHARGE"): "phase 4",
-    ("Combat/CombatUIQt/monster_actions.py", "_PER_DAY"): "phase 4",
-    ("Combat/CombatUIQt/monster_actions.py", "_LEGENDARY_COST"): "phase 4",
-    ("Combat/CombatUIQt/monster_actions.py", "_START_OF_TURN"): "phase 4",
     ("Combat/CombatUIQt/monster_actions.py", "_JOINED_RIDER"): "phase 4",
     ("Combat/CombatUIQt/monster_actions.py", "_IF_RIDER"): "phase 4",
     ("Combat/CombatUIQt/monster_actions.py", "_GATES"): "phase 4",
@@ -86,7 +74,6 @@ TEXT_READERS: dict[tuple[str, str], str] = {
     ("Combat/CombatUIQt/monster_actions.py", "parse_action"): "phase 4",
     ("Combat/CombatUIQt/monster_actions.py", "_damage_rolls"): "phase 4",
     ("Combat/CombatUIQt/monster_actions.py", "tidy_dice"): "phase 4",
-    ("Combat/CombatUIQt/monster_actions.py", "start_of_turn_traits"): "phase 4",
     # Phase 5: EffectText, an undescribed spell's or feature's text. Frozen.
     ("Combat/CombatUIQt/effect_options.py", "_UPGRADE_PARAGRAPH"): "phase 5",
     ("Combat/CombatUIQt/effect_options.py", "_SENTENCE_END"): "phase 5",

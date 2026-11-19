@@ -155,11 +155,12 @@ def test_a_log_from_before_hit_points_had_a_type_still_reads():
 
 
 def test_a_written_effect_sets_the_turn_buttons_numbers():
-    """The turn column rolls its first effect; its cost is still its name's."""
+    """The turn column rolls its first effect; its cost is its field."""
     ability = MonsterAbility(
         "Stutter Time (Recharge 5-6)",
         "unreadable prose",
         combat_effects=(STUTTER,),
+        recharge=5,
     )
     for form in (ability, json.loads(json.dumps(ability, cls=LogJSONEncoder))):
         action = parse_action(form)
@@ -459,5 +460,5 @@ def test_a_spellcasting_list_has_a_row_per_spell():
     }
     hold = rows["Spellcasting: Hold Person"]
     assert (hold.ability, hold.dc, hold.condition) == ("WIS", 12, "Paralyzed")
-    assert "(2/Day each)" in hold.note
+    assert "(2/Day)" in hold.note
     assert "(At will)" not in rows["Spellcasting: Thaumaturgy"].note

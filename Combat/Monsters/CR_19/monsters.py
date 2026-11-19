@@ -78,6 +78,7 @@ class Balor(ExtendedCombatantData):
                 MonsterAbility(
                     name="Legendary Resistance (3/Day)",
                     description="If the balor fails a saving throw, it can choose to succeed instead.",
+                    per_day=3,
                 ),
                 MonsterAbility(
                     name="Magic Resistance",
@@ -88,6 +89,7 @@ class Balor(ExtendedCombatantData):
                 MonsterAbility(
                     name="Multiattack",
                     description="The balor makes one Flame Whip attack and one Lightning Blade attack.",
+                    uses_ability="Flame Whip",
                 ),
                 MonsterAbility(
                     name="Flame Whip",

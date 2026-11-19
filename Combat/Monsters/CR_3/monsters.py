@@ -18,7 +18,11 @@ from Model.Creatures.Combatants import (
     ExtendedCombatantData,
     MonsterType,
 )
-from Model.Creatures.MonsterAbilities import DcMonsterAbility, MonsterAbility
+from Model.Creatures.MonsterAbilities import (
+    DcMonsterAbility,
+    MonsterAbility,
+    MonsterCast,
+)
 from Core.Definitions import Ability
 
 
@@ -128,6 +132,7 @@ class Basilisk(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Petrifying Gaze (Recharge 4–6)",
                     description="Constitution Saving Throw: DC 12, each creature in a 30-foot Cone. If the basilisk sees its reflection in the Cone, the basilisk must make this save. First Failure: The target has the Restrained condition and repeats the save at the end of its next turn if it is still Restrained, ending the effect on itself on a success. Second Failure: The target has the Petrified condition instead of the Restrained condition.",
+                    recharge=4,
                 ),
             ],
             reactions=[],
@@ -195,6 +200,7 @@ class BeardedDevil(ExtendedCombatantData):
                 MonsterAbility(
                     name="Multiattack",
                     description="The devil makes one Beard attack and one Infernal Glaive attack.",
+                    uses_ability="Beard",
                 ),
                 MonsterAbility(
                     name="Beard",
@@ -268,6 +274,7 @@ class BlueDragonWyrmling(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Lightning Breath (Recharge 5–6)",
                     description="Dexterity Saving Throw: DC 12, each creature in a 30-foot-long, 5-foot-wide Line. Failure: 21 (6d6) Lightning damage. Success: Half damage.",
+                    recharge=5,
                 ),
             ],
             bonus_actions=[],
@@ -403,6 +410,7 @@ class DisplacerBeast(ExtendedCombatantData):
                 MonsterAbility(
                     name="Multiattack",
                     description="The displacer beast makes one Rend attack and one Tentacle attack.",
+                    uses_ability="Rend",
                 ),
                 MonsterAbility(
                     name="Rend",
@@ -474,10 +482,12 @@ class Doppelganger(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Read Thoughts",
                     description="The doppelganger casts Detect Thoughts, requiring no spell components and using Charisma as the spellcasting ability (spell save DC 12).",
+                    casts=(MonsterCast("Detect Thoughts"),),
                 ),
                 DcMonsterAbility(
                     name="Unsettling Visage (Recharge 6)",
                     description="Wisdom Saving Throw: DC 12, each creature in a 15-foot Emanation originating from the doppelganger that can see the doppelganger. Failure: The target has the Frightened condition and repeats the save at the end of each of its turns, ending the effect on itself on a success. After 1 minute, it succeeds automatically.",
+                    recharge=6,
                 ),
             ],
             bonus_actions=[
@@ -692,6 +702,8 @@ class GithyankiWarrior(ExtendedCombatantData):
                 MonsterAbility(
                     name="Misty Step (2/Day)",
                     description="The githyanki casts Misty Step, requiring no spell components and using the same spellcasting ability as Spellcasting.",
+                    per_day=2,
+                    casts=(MonsterCast("Misty Step"),),
                 ),
             ],
             reactions=[],
@@ -829,6 +841,7 @@ class GoldDragonWyrmling(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Fire Breath (Recharge 5–6)",
                     description="Dexterity Saving Throw: DC 13, each creature in a 15-foot Cone. Failure: 22 (4d10) Fire damage. Success: Half damage.",
+                    recharge=5,
                 ),
                 DcMonsterAbility(
                     name="Weakening Breath",
@@ -976,6 +989,7 @@ class Grell(ExtendedCombatantData):
                 MonsterAbility(
                     name="Multiattack",
                     description="The grell makes one Beak attack and one Paralyzing Tentacles attack.",
+                    uses_ability="Beak",
                 ),
                 MonsterAbility(
                     name="Beak",
@@ -1052,6 +1066,7 @@ class HellHound(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Fire Breath (Recharge 5–6)",
                     description="Dexterity Saving Throw: DC 12, each creature in a 15-foot Cone. Failure: 17 (5d6) Fire damage. Success: Half damage.",
+                    recharge=5,
                 ),
             ],
             bonus_actions=[],
@@ -1493,6 +1508,7 @@ class MinotaurOfBaphomet(ExtendedCombatantData):
                 MonsterAbility(
                     name="Gore (Recharge 5–6)",
                     description="Melee Attack Roll: +6, reach 5 ft. Hit: 18 (4d6 + 4) Piercing damage. If the target is a Large or smaller creature and the minotaur moved 10+ feet straight toward it immediately before the hit, the target takes an extra 10 (3d6) Piercing damage and has the Prone condition.",
+                    recharge=5,
                 ),
             ],
             bonus_actions=[],
@@ -1558,6 +1574,7 @@ class Mummy(ExtendedCombatantData):
                 MonsterAbility(
                     name="Multiattack",
                     description="The mummy makes two Rotting Fist attacks and uses Dreadful Glare.",
+                    uses_ability="Dreadful Glare",
                 ),
                 MonsterAbility(
                     name="Rotting Fist",
@@ -1845,6 +1862,8 @@ class QuaggothThonot(ExtendedCombatantData):
                 MonsterAbility(
                     name="Psionic Defense (3/Day)",
                     description="The quaggoth casts Feather Fall or Shield in response to the spell's trigger, requiring no spell components and using the same spellcasting ability as Spellcasting.",
+                    per_day=3,
+                    casts=(MonsterCast("Feather Fall"), MonsterCast("Shield")),
                 ),
             ],
             legendary_actions=[],
@@ -2592,6 +2611,7 @@ class WinterWolf(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Cold Breath (Recharge 5–6)",
                     description="Constitution Saving Throw: DC 12, each creature in a 15-foot Cone. Failure: 18 (4d8) Cold damage. Success: Half damage.",
+                    recharge=5,
                 ),
             ],
             bonus_actions=[],

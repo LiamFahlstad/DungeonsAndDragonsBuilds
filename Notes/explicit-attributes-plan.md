@@ -55,7 +55,7 @@ About 160 `re.` calls in `Combat/`. Sorted by what they read:
 | 1 | Read the fields that already exist (group A) | **Done** (2026-11-19): 1.2 with Phase 3 (R3), 1.1 and 1.3 (R10) |
 | 2 | Our own `when` strings become fields (group B) | **Done** (2026-11-19, R11) |
 | 3 | `CombatArea` for spells and features (group C) | **Done** (2026-11-19, R1-R8). 3.5 done for described spells; Sharpshooter and Spell Sniper not (R6) |
-| 4 | Monster stat-block fields at generation time (group D) | In progress (Decision 3): **4.1 done** (2026-11-19, R13); 4.2-4.4 not started |
+| 4 | Monster stat-block fields at generation time (group D) | In progress (Decision 3): **4.1 done** (2026-11-19, R13), **4.2 done** (2026-11-19, R14; 4.4's upgrade for them came along); 4.3 not started |
 | 5 | Retire `EffectText` (group E) | Not started; waits on the content rollout |
 | G | A guard test that lists every remaining text regex | **Done** (2026-11-19, R12) |
 
@@ -149,7 +149,7 @@ writes fields. Homebrew files get the same fields by hand, or through the
   stay for display only.
 - **4.2** `MonsterAbility`: `recharge: int | None` (5 for "Recharge 5-6"),
   `per_day: int | None`, `legendary_cost: int = 1`, `at_turn_start: bool`,
-  `casts: tuple[MonsterCast, ...]` and `uses: str`. The name keeps its
+  `casts: tuple[MonsterCast, ...]` and `uses: str` (as built: R14). The name keeps its
   "(Recharge 5-6)" for display, but the UI spends from the fields. This
   replaces the docstring rule "its recharge or uses per day stay in its
   name, which is what the combat UI spends".
@@ -411,11 +411,58 @@ group D (Phase 4, including `_monster_area` and `ranges.py`'s
   - `WildShape._PASSIVE_PERCEPTION` stays, now as display: it rewrites the
     shown senses to match the field.
 
+- **R14. Phase 4.2 (2026-11-19).**
+  - *Fields* (`Model/Creatures/MonsterAbilities.py`, keyword-only on
+    `MonsterAbility`): `recharge`, `per_day`, `legendary_cost` (1),
+    `at_turn_start`, `casts` (`MonsterCast(spell, level, per_day)`),
+    `uses_ability` and `moves_first`. Three differ from the plan:
+    `at_turn_start` is the sentence the turn column reminds of, not a bool
+    (a bool would have meant finding the sentence in the text again);
+    `uses` is `uses_ability`, as `LegendaryResistance` already has a
+    `uses: int`; and `moves_first` is new ("moves up to half its Speed,
+    and it makes one Rend attack": the row's note says to move it first).
+    `ability_field(ability, name)` reads one from an ability or its log
+    dict.
+  - *Readers:* `Model/Creatures/MonsterAbilityText.py` (`read_ability`)
+    holds the regexes that were in `monster_actions.py` (`_RECHARGE`,
+    `_PER_DAY`, `_LEGENDARY_COST`, `_START_OF_TURN`) and `effect_options.py`
+    (`_CASTS`, `_LIST_ITEM`, `_AT_LEVEL`, `_FOLLOWING`, `_SPELL_LIST`,
+    `_MAKES_ONE`, `_USES`, `_MOVES`). `monster_actions.read_ability_fields`
+    gives it what only a whole stat block knows (the names another ability
+    can use, whether this one rolls of its own). It's used by
+    `generate_monsters.py` (`format_ability_list` writes the keywords), a
+    one-off scratch script that wrote them into the existing files
+    (Decision 3: 37 files, 544 fields: 148 recharge, 118 per day, 4
+    legendary costs, 18 turn starts, 101 casts, 128 uses, 27 moves first),
+    and `upgrade_ability_keys` as a log loads. Two summons got `per_day`
+    by hand (the Steel Defender's Repair, the Vestige's Divine Power).
+  - *Logs:* `EncounterLogs._encode` leaves the fields out at their
+    defaults, as it does `combat_effects`, so a log reads as before. An
+    ability dict with none of them is read once as it loads (Q3); for a new
+    log's that gives the defaults again, since
+    `tests/test_monster_ability_text.py::test_every_abilitys_fields_say_what_its_text_says`
+    holds every catalog and homebrew ability's fields to its text.
+  - *Parity:* every picker row, parsed action and turn-start reminder of
+    all 554 stat blocks was dumped before and after, and again after a
+    round trip through an old-style log: the same, apart from three notes.
+    Priest of the Black Tongues' Hold Person and Silence say "(2/Day)",
+    not "(2/Day each)". The Mummy Lord's Multiattack ("makes one Rotting
+    Fist or Channel Negative Energy attack, and it uses Dreadful Glare")
+    says "It uses Dreadful Glare", not "It makes one Dreadful Glare
+    attack": the verb now comes from whether the used ability is an
+    attack, not from any "makes one" in the text. Picker goldens
+    unchanged. A fresh generator run writes the same fields as the files.
+  - *Found:* DI-107, abilities that recharge after a rest have no
+    `per_day`, as before.
+  - The name still says "(Recharge 5-6)", which `effect_options._NAME_ALONE`
+    takes off for a row's name (now listed as "log").
+
 ## Discovered issues
 
 - DI-103: `test_the_target_label_says_when_a_target_is_obscured` fails on
   HEAD (dbf889cd), before this plan's changes.
 - DI-104: a test asserts Lightning Lure's false area (R9).
 - DI-106: a summoned spirit's form-only speeds (R13).
+- DI-107: abilities that recharge after a rest aren't spent (R14).
 - DI-105: what `CombatArea` can't say yet, found writing R9's areas. Its
   plan: [combat-area-gaps-plan.md](combat-area-gaps-plan.md).

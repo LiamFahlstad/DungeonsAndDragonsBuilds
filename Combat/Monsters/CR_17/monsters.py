@@ -24,6 +24,7 @@ from Model.Creatures.Combatants import (
     MonsterType,
 )
 from Model.Creatures.MonsterAbilities import (
+    MonsterCast,
     Amphibious,
     CastSpellLegendaryAction,
     DcMonsterAbility,
@@ -91,13 +92,16 @@ class AdultGoldDragon(ExtendedCombatantData):
             languages="Common, Draconic",
             traits=[
                 Amphibious(creature_name="dragon"),
-                LegendaryResistance(creature_name="dragon", uses=3, lair_uses=4),
+                LegendaryResistance(
+                    creature_name="dragon", uses=3, lair_uses=4, per_day=3
+                ),
             ],
             actions=[
                 Multiattack(
                     creature_name="dragon",
                     attacks_text="three Rend attacks",
                     extra_ruling="It can replace one attack with a use of (A) Spellcasting to cast Guiding Bolt (level 2 version) or (B) Weakening Breath.",
+                    casts=(MonsterCast("Guiding Bolt", level=2),),
                 ),
                 MeleeAttack(
                     name="Rend",
@@ -120,6 +124,7 @@ class AdultGoldDragon(ExtendedCombatantData):
                     dice_type=DiceType.D10,
                     damage_type=DamageType.FIRE,
                     success_effect="Half damage.",
+                    recharge=5,
                 ),
                 DcMonsterAbility(
                     name="Spellcasting",
@@ -151,8 +156,10 @@ class AdultGoldDragon(ExtendedCombatantData):
                     name="Guiding Light",
                     creature_name="dragon",
                     spell="Guiding Bolt (level 2 version)",
+                    casts=(MonsterCast("Guiding Bolt", level=2),),
+                    uses_ability="Spellcasting",
                 ),
-                Pounce(creature_name="dragon"),
+                Pounce(creature_name="dragon", uses_ability="Rend", moves_first=True),
             ],
             legendary_resistances=3,
             lair_actions=[],
@@ -204,13 +211,16 @@ class AdultRedDragon(ExtendedCombatantData):
             spell_attack_bonus=12,
             languages="Common, Draconic",
             traits=[
-                LegendaryResistance(creature_name="dragon", uses=3, lair_uses=4),
+                LegendaryResistance(
+                    creature_name="dragon", uses=3, lair_uses=4, per_day=3
+                ),
             ],
             actions=[
                 Multiattack(
                     creature_name="dragon",
                     attacks_text="three Rend attacks",
                     extra_ruling="It can replace one attack with a use of Spellcasting to cast Scorching Ray.",
+                    casts=(MonsterCast("Scorching Ray"),),
                 ),
                 MeleeAttack(
                     name="Rend",
@@ -233,6 +243,7 @@ class AdultRedDragon(ExtendedCombatantData):
                     dice_type=DiceType.D6,
                     damage_type=DamageType.FIRE,
                     success_effect="Half damage.",
+                    recharge=5,
                 ),
                 DcMonsterAbility(
                     name="Spellcasting",
@@ -246,13 +257,17 @@ class AdultRedDragon(ExtendedCombatantData):
                     name="Commanding Presence",
                     creature_name="dragon",
                     spell="Command (level 2 version)",
+                    casts=(MonsterCast("Command", level=2),),
+                    uses_ability="Spellcasting",
                 ),
                 CastSpellLegendaryAction(
                     name="Fiery Rays",
                     creature_name="dragon",
                     spell="Scorching Ray",
+                    casts=(MonsterCast("Scorching Ray"),),
+                    uses_ability="Spellcasting",
                 ),
-                Pounce(creature_name="dragon"),
+                Pounce(creature_name="dragon", uses_ability="Rend", moves_first=True),
             ],
             legendary_resistances=3,
             lair_actions=[],
@@ -307,7 +322,7 @@ class DeathKnight(ExtendedCombatantData):
             spell_save_dc=18,
             languages="Abyssal, Common",
             traits=[
-                LegendaryResistance(creature_name="death knight", uses=3),
+                LegendaryResistance(creature_name="death knight", uses=3, per_day=3),
                 MagicResistance(creature_name="death knight"),
                 MonsterAbility(
                     name="Marshal Undead",
@@ -338,6 +353,7 @@ class DeathKnight(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Hellfire Orb (Recharge 5–6)",
                     description="Dexterity Saving Throw: DC 18, each creature in a 20-foot-radius Sphere centered on a point the death knight can see within 120 feet. Failure: 35 (10d6) Fire damage plus 35 (10d6) Necrotic damage. Success: Half damage.",
+                    recharge=5,
                 ),
                 DcMonsterAbility(
                     name="Spellcasting",
@@ -356,6 +372,8 @@ class DeathKnight(ExtendedCombatantData):
                     name="Dread Authority",
                     creature_name="death knight",
                     spell="Command",
+                    casts=(MonsterCast("Command"),),
+                    uses_ability="Spellcasting",
                 ),
                 SavingThrowEffect(
                     name="Fell Word",
@@ -371,6 +389,8 @@ class DeathKnight(ExtendedCombatantData):
                 MonsterAbility(
                     name="Lunge",
                     description="The death knight moves up to half its Speed, and it makes one Dread Blade attack.",
+                    uses_ability="Dread Blade",
+                    moves_first=True,
                 ),
             ],
             legendary_resistances=3,
@@ -431,7 +451,9 @@ class Dracolich(ExtendedCombatantData):
             spell_attack_bonus=11,
             languages="Common, Draconic",
             traits=[
-                LegendaryResistance(creature_name="dracolich", uses=3, lair_uses=4),
+                LegendaryResistance(
+                    creature_name="dracolich", uses=3, lair_uses=4, per_day=3
+                ),
                 MonsterAbility(
                     name="Life Suppression",
                     description="Creatures within 60 feet of the dracolich can't regain Hit Points.",
@@ -447,6 +469,7 @@ class Dracolich(ExtendedCombatantData):
                     creature_name="dracolich",
                     attacks_text="three Rend attacks",
                     extra_ruling="It can replace one attack with a use of Spellcasting to cast Ray of Sickness (level 2 version).",
+                    casts=(MonsterCast("Ray of Sickness", level=2),),
                 ),
                 MeleeAttack(
                     name="Rend",
@@ -469,6 +492,7 @@ class Dracolich(ExtendedCombatantData):
                     dice_type=DiceType.D12,
                     damage_type=DamageType.NECROTIC,
                     success_effect="Half damage.",
+                    recharge=5,
                 ),
                 DcMonsterAbility(
                     name="Spellcasting",
@@ -478,11 +502,15 @@ class Dracolich(ExtendedCombatantData):
             bonus_actions=[],
             reactions=[],
             legendary_actions=[
-                Pounce(creature_name="dracolich"),
+                Pounce(
+                    creature_name="dracolich", uses_ability="Rend", moves_first=True
+                ),
                 CastSpellLegendaryAction(
                     name="Sickening Ray",
                     creature_name="dracolich",
                     spell="Ray of Sickness (level 2 version)",
+                    casts=(MonsterCast("Ray of Sickness", level=2),),
+                    uses_ability="Spellcasting",
                 ),
                 SavingThrowEffect(
                     name="Terrifying Presence",
@@ -585,6 +613,7 @@ class DragonTurtle(ExtendedCombatantData):
                     damage_type=DamageType.FIRE,
                     success_effect="Half damage.",
                     extra_ruling="Failure or Success: Being underwater doesn't grant Resistance to this Fire damage.",
+                    recharge=5,
                 ),
             ],
             bonus_actions=[],
@@ -657,6 +686,7 @@ class Goristro(ExtendedCombatantData):
                 Multiattack(
                     creature_name="goristro",
                     attacks_text="one Brutal Gore attack and two Slam attacks",
+                    uses_ability="Brutal Gore",
                 ),
                 MeleeAttack(
                     name="Brutal Gore",
@@ -746,12 +776,15 @@ class SphinxOfValor(ExtendedCombatantData):
                     name="Inscrutable",
                     description="No magic can observe the sphinx remotely or detect its thoughts without its permission. Wisdom (Insight) checks made to ascertain its intentions or sincerity are made with Disadvantage.",
                 ),
-                LegendaryResistance(creature_name="sphinx", uses=3, lair_uses=4),
+                LegendaryResistance(
+                    creature_name="sphinx", uses=3, lair_uses=4, per_day=3
+                ),
             ],
             actions=[
                 Multiattack(
                     creature_name="sphinx",
                     attacks_text="two Claw attacks and uses Roar",
+                    uses_ability="Roar",
                 ),
                 MeleeAttack(
                     name="Claw",
@@ -765,6 +798,7 @@ class SphinxOfValor(ExtendedCombatantData):
                 MonsterAbility(
                     name="Roar (3/Day)",
                     description="The sphinx emits a magical roar. Whenever it roars, the roar has a different effect, as detailed below (the sequence resets when it takes a Long Rest):",
+                    per_day=3,
                 ),
                 DcMonsterAbility(
                     name="First Roar",
@@ -789,6 +823,7 @@ class SphinxOfValor(ExtendedCombatantData):
                 MonsterAbility(
                     name="Arcane Prowl",
                     description="The sphinx can teleport up to 30 feet to an unoccupied space it can see, and it makes one Claw attack.",
+                    uses_ability="Claw",
                 ),
                 SavingThrowEffect(
                     name="Weight of Years",

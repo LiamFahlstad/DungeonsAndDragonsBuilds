@@ -66,7 +66,7 @@ class TheHeadlessDragon(ExtendedCombatantData):
             passive_perception=11,
             languages="understands Draconic and Common but can't speak",
             traits=[
-                LegendaryResistance(creature_name="dragon", uses=3),
+                LegendaryResistance(creature_name="dragon", uses=3, per_day=3),
                 MonsterAbility(
                     name="Sigil of Silence",
                     description="The dragon can't be Blinded or Deafened by nonmagical means, and it can't be surprised.",
@@ -74,6 +74,7 @@ class TheHeadlessDragon(ExtendedCombatantData):
                 MonsterAbility(
                     name="Cursed Regeneration",
                     description="The dragon regains 15 Hit Points at the start of its turn if it has at least 1 Hit Point and hasn't taken Radiant damage since the start of its last turn.",
+                    at_turn_start="The dragon regains 15 Hit Points at the start of its turn if it has at least 1 Hit Point and hasn't taken Radiant damage since the start of its last turn.",
                 ),
             ],
             actions=[
@@ -102,6 +103,7 @@ class TheHeadlessDragon(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Sigil Breath (Recharge 5-6)",
                     description="The metal sigil erupts with corrosive void-acid in a 60-foot line. Each creature in the line makes a DC 18 Dexterity saving throw, taking 54 (12d8) Acid damage on a failed save, or half as much on a success. A creature that fails the save also can't speak or make any sound (as the Silence spell centered on it) for 1 minute.",
+                    recharge=5,
                 ),
                 DcMonsterAbility(
                     name="Frightful Presence",
@@ -116,11 +118,15 @@ class TheHeadlessDragon(ExtendedCombatantData):
                     description="The dragon makes a Wisdom (Perception) check.",
                 ),
                 NamedAttackAction(
-                    name="Tail Attack", creature_name="dragon", attack_name="Tail"
+                    name="Tail Attack",
+                    creature_name="dragon",
+                    attack_name="Tail",
+                    uses_ability="Tail",
                 ),
                 DcMonsterAbility(
                     name="Wing Buffet (Costs 2 Actions)",
                     description="The dragon beats its wings. Each creature within 15 feet must succeed on a DC 18 Dexterity saving throw or take 13 (2d6 + 6) Bludgeoning damage and be knocked prone. The dragon can then fly up to half its flying speed.",
+                    legendary_cost=2,
                 ),
             ],
             legendary_resistances=3,

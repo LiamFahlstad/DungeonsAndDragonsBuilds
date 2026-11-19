@@ -26,6 +26,7 @@ from Model.Creatures.Combatants import (
     MonsterType,
 )
 from Model.Creatures.MonsterAbilities import (
+    MonsterCast,
     Amphibious,
     DcMonsterAbility,
     DiceType,
@@ -153,10 +154,12 @@ class AberrantSpirit(ExtendedCombatantData):
                 MonsterAbility(
                     name="Regeneration (Slaad Only)",
                     description="The spirit regains 5 Hit Points at the start of its turn if it has at least 1 Hit Point.",
+                    at_turn_start="The spirit regains 5 Hit Points at the start of its turn if it has at least 1 Hit Point.",
                 ),
                 MonsterAbility(
                     name="Whispering Aura (Mind Flayer Only)",
                     description="At the start of each of the spirit's turns, the spirit emits psionic energy if it doesn't have the Incapacitated condition. Wisdom Saving Throw: DC equals your spell save DC, each creature (other than you) within 5 feet of the spirit. Failure: 2d6 Psychic damage.",
+                    at_turn_start="At the start of each of the spirit's turns, the spirit emits psionic energy if it doesn't have the Incapacitated condition.",
                 ),
             ],
             actions=[
@@ -454,6 +457,7 @@ class Ape(ExtendedCombatantData):
                     dice_type=DiceType.D6,
                     damage_bonus=3,
                     damage_type=DamageType.BLUDGEONING,
+                    recharge=6,
                 ),
             ],
             bonus_actions=[],
@@ -1174,6 +1178,7 @@ class BlinkDog(ExtendedCombatantData):
                 MonsterAbility(
                     name="Teleport (Recharge 4-6)",
                     description="The dog teleports up to 40 feet to an unoccupied space it can see.",
+                    recharge=4,
                 ),
             ],
             reactions=[],
@@ -1550,6 +1555,7 @@ class CelestialSpirit(ExtendedCombatantData):
                 MonsterAbility(
                     name="Healing Touch (1/Day)",
                     description="The spirit touches another creature. The target regains Hit Points equal to 2d8 + the spell's level.",
+                    per_day=1,
                 ),
             ],
             bonus_actions=[],
@@ -2120,6 +2126,7 @@ class Darkmantle(ExtendedCombatantData):
                 MonsterAbility(
                     name="Darkness Aura (1/Day)",
                     description="Magical Darkness fills a 15-foot Emanation originating from the darkmantle. This effect lasts while the darkmantle maintains Concentration on it, up to 10 minutes. Darkvision can't penetrate this area, and no light can illuminate it.",
+                    per_day=1,
                 ),
             ],
             bonus_actions=[],
@@ -2255,6 +2262,7 @@ class DraconicSpirit(ExtendedCombatantData):
                 Multiattack(
                     creature_name="spirit",
                     attacks_text="a number of Rend attacks equal to half the spell's level (round down), and it uses Breath Weapon",
+                    uses_ability="Breath Weapon",
                 ),
                 MonsterAbility(
                     name="Rend",
@@ -2401,6 +2409,7 @@ class Dretch(ExtendedCombatantData):
                     dice_count=0,
                     damage_type=None,
                     failure_effect="The target has the Poisoned condition until the end of its next turn. While Poisoned, the creature can take either an action or a Bonus Action on its turn, not both, and it can't take Reactions.",
+                    per_day=1,
                 ),
             ],
             bonus_actions=[],
@@ -2479,10 +2488,12 @@ class DustMephit(ExtendedCombatantData):
                     dice_count=0,
                     damage_type=None,
                     failure_effect="The target has the Blinded condition until the end of the mephit's next turn.",
+                    recharge=6,
                 ),
                 DcMonsterAbility(
                     name="Sleep (1/Day)",
                     description="The mephit casts the Sleep spell, requiring no spell components and using Charisma as the spellcasting ability (spell save DC 10).",
+                    per_day=1,
                 ),
             ],
             bonus_actions=[],
@@ -2917,6 +2928,7 @@ class Flumph(ExtendedCombatantData):
                     dice_count=0,
                     damage_type=None,
                     failure_effect="The target is coated in a foul-smelling liquid, exudes a stench for 1d4 hours, and has the Poisoned condition while the stench lasts. Other creatures have the Poisoned condition while in a 5-foot Emanation originating from the coated target. The target can remove the stench on itself if it bathes during a Short or Long Rest.",
+                    per_day=1,
                 ),
             ],
             bonus_actions=[],
@@ -4181,7 +4193,14 @@ class GnollWarrior(ExtendedCombatantData):
                 ),
             ],
             bonus_actions=[
-                Rampage(creature_name="gnoll", attack_name="Rend", uses_per_day=1),
+                Rampage(
+                    creature_name="gnoll",
+                    attack_name="Rend",
+                    uses_per_day=1,
+                    per_day=1,
+                    uses_ability="Rend",
+                    moves_first=True,
+                ),
             ],
             reactions=[],
             legendary_actions=[],
@@ -4882,6 +4901,8 @@ class IceMephit(ExtendedCombatantData):
                 MonsterAbility(
                     name="Fog Cloud (1/Day)",
                     description="The mephit casts Fog Cloud, requiring no spell components and using Charisma as the spellcasting ability.",
+                    per_day=1,
+                    casts=(MonsterCast("Fog Cloud"),),
                 ),
                 SavingThrowEffect(
                     name="Frost Breath (Recharge 6)",
@@ -4893,6 +4914,7 @@ class IceMephit(ExtendedCombatantData):
                     damage_bonus=0,
                     damage_type=DamageType.COLD,
                     success_effect="Half damage.",
+                    recharge=6,
                 ),
             ],
             bonus_actions=[],
@@ -5030,6 +5052,7 @@ class Jackalwere(ExtendedCombatantData):
                     damage_type=None,
                     failure_effect="The target has the Unconscious condition for 10 minutes or until it takes damage or a creature within 5 feet of it takes an action to wake it.",
                     success_effect="The target is immune to this jackalwere's Sleep Gaze for 24 hours.",
+                    recharge=5,
                 ),
             ],
             bonus_actions=[
@@ -5106,6 +5129,8 @@ class Kenku(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Eldritch Lantern (Recharge 4–6)",
                     description="The kenku casts Faerie Fire, using Intelligence as the spellcasting ability (spell save DC 10).",
+                    recharge=4,
+                    casts=(MonsterCast("Faerie Fire"),),
                 ),
             ],
             reactions=[],
@@ -5242,6 +5267,7 @@ class Kuotoa(ExtendedCombatantData):
                     dice_count=0,
                     damage_type=None,
                     failure_effect="The target has the Restrained condition until the net is destroyed (AC 10; HP 5; Immunity to Bludgeoning, Poison, and Psychic damage). A creature can take an action to make a DC 10 Strength (Athletics) check to free itself or another creature in a net within 5 feet, destroying the net on a success.",
+                    per_day=1,
                 ),
             ],
             bonus_actions=[],
@@ -5517,6 +5543,7 @@ class MagmaMephit(ExtendedCombatantData):
                     damage_bonus=0,
                     damage_type=DamageType.FIRE,
                     success_effect="Half damage.",
+                    recharge=6,
                 ),
             ],
             bonus_actions=[],
@@ -5850,6 +5877,7 @@ class MudMephit(ExtendedCombatantData):
                     dice_count=0,
                     damage_type=None,
                     failure_effect="The target has the Restrained condition until the end of the mephit's next turn.",
+                    recharge=6,
                 ),
             ],
             bonus_actions=[],
@@ -5987,6 +6015,7 @@ class MyconidAdult(ExtendedCombatantData):
                     dice_count=0,
                     damage_type=None,
                     failure_effect="The target has the Stunned condition and repeats the save at the end of each of its turns, ending the effect on itself on a success. After 1 minute, it succeeds automatically.",
+                    per_day=1,
                 ),
                 MonsterAbility(
                     name="Rapport Spores",
@@ -6261,6 +6290,7 @@ class Octopus(ExtendedCombatantData):
                 MonsterAbility(
                     name="Ink Cloud (1/Day)",
                     description="Trigger: A creature ends its turn within 5 feet of the octopus while underwater. Response: The octopus releases ink that fills a 5-foot Cube centered on itself, and the octopus moves up to its Swim Speed. The Cube is Heavily Obscured for 1 minute or until a strong current or similar effect disperses the ink.",
+                    per_day=1,
                 ),
             ],
             legendary_actions=[],
@@ -6838,6 +6868,12 @@ class PriestAcolyte(ExtendedCombatantData):
                 MonsterAbility(
                     name="Divine Aid (1/Day)",
                     description="The priest casts Bless, Healing Word, or Sanctuary, using the same spellcasting ability as Spellcasting.",
+                    per_day=1,
+                    casts=(
+                        MonsterCast("Bless"),
+                        MonsterCast("Healing Word"),
+                        MonsterCast("Sanctuary"),
+                    ),
                 ),
             ],
             reactions=[],
@@ -7273,6 +7309,7 @@ class RustMonster(ExtendedCombatantData):
                 Multiattack(
                     creature_name="rust monster",
                     attacks_text="one Bite attack and uses Antennae twice",
+                    uses_ability="Bite",
                 ),
                 MeleeAttack(
                     name="Bite",
@@ -7297,6 +7334,7 @@ class RustMonster(ExtendedCombatantData):
                 MonsterAbility(
                     name="Reflexive Antennae",
                     description="Trigger: An attack roll hits the rust monster. Response: The rust monster uses Antennae.",
+                    uses_ability="Antennae",
                 ),
             ],
             legendary_actions=[],
@@ -8000,6 +8038,7 @@ class SmokeMephit(ExtendedCombatantData):
                     dice_count=0,
                     damage_type=None,
                     failure_effect="The target has the Blinded condition until the end of the mephit's next turn.",
+                    recharge=6,
                 ),
             ],
             bonus_actions=[],
@@ -8216,6 +8255,7 @@ class SteamMephit(ExtendedCombatantData):
                     failure_effect="and the target's Speed decreases by 10 feet until the end of the mephit's next turn",
                     success_effect="Half damage only.",
                     extra_ruling="Failure or Success: Being underwater doesn't grant Resistance to this Fire damage.",
+                    recharge=6,
                 ),
             ],
             bonus_actions=[],
@@ -8558,6 +8598,7 @@ class SwarmOfRavens(ExtendedCombatantData):
                     dice_count=0,
                     damage_type=None,
                     failure_effect="The target has the Deafened condition until the start of the swarm's next turn. While Deafened, the target also has Disadvantage on ability checks and attack rolls.",
+                    recharge=6,
                 ),
             ],
             bonus_actions=[],
@@ -8752,6 +8793,7 @@ class TrollLimb(ExtendedCombatantData):
                 MonsterAbility(
                     name="Regeneration",
                     description="The limb regains 5 Hit Points at the start of each of its turns. If the limb takes Acid or Fire damage, this trait doesn't function on the limb's next turn. The limb dies only if it starts its turn with 0 Hit Points and doesn't regenerate.",
+                    at_turn_start="The limb regains 5 Hit Points at the start of each of its turns.",
                 ),
                 MonsterAbility(
                     name="Troll Spawn",
@@ -9046,6 +9088,7 @@ class VineBlight(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Entangling Plants (Recharge 5–6)",
                     description="The blight casts the Entangle spell, using Constitution as the spellcasting ability (spell save DC 12).",
+                    recharge=5,
                 ),
             ],
             bonus_actions=[],

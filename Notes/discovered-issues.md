@@ -666,6 +666,17 @@ Four CR_0 stat blocks scrape a per-form speed into speed_special_rules (e.g. 'La
 **History**
 - 2026-11-19 main-session: found
 
+### DI-107 · Combat UI: monster abilities that recharge after a rest aren't spent (no per_day)
+- **Status:** open
+- **Area:** combat-simulator
+- **Where:** `Model/Creatures/MonsterAbilityText.py read_costs; Combat/Monsters/CR_0/monsters.py, CR_5/monsters.py`
+
+Four catalog abilities say '(... Recharges after a Long Rest)' or '(Recharge after a Short or Long Rest)' in their name (Fell Glare, Fey Step, Healing Touch: the CR 0 spirits' forms; Phantasms). read_costs takes only 'Recharge N-6' and 'N/Day', so they get neither recharge nor per_day and the turn column never marks them spent. Within one fight they are once per fight: per_day=1 would track them. Found writing Phase 4.2 of Notes/explicit-attributes-plan.md; left as before (parity).
+
+**History**
+- 2026-11-19 main session (Opus 5.5): found
+- 2026-11-19 main session (Opus 5.5): Where: the three spirit forms are in the files listed by grep 'Recharges after a Long Rest' Combat/Monsters; Phantasms is CR_8/monsters.py (not CR_5).
+
 ## Fixed
 
 ### DI-001 · Temporary Hit Points stack instead of keeping one amount

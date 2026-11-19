@@ -18,7 +18,11 @@ from Model.Creatures.Combatants import (
     ExtendedCombatantData,
     MonsterType,
 )
-from Model.Creatures.MonsterAbilities import DcMonsterAbility, MonsterAbility
+from Model.Creatures.MonsterAbilities import (
+    DcMonsterAbility,
+    MonsterAbility,
+    MonsterCast,
+)
 from Core.Definitions import Ability
 
 
@@ -85,6 +89,8 @@ class AberrantCultist(ExtendedCombatantData):
                 MonsterAbility(
                     name="Counterspell (2/Day)",
                     description="The cultist casts Counterspell in response to that spell's trigger, using the same spellcasting ability as Spellcasting.",
+                    per_day=2,
+                    casts=(MonsterCast("Counterspell"),),
                 ),
             ],
             legendary_actions=[],
@@ -298,6 +304,7 @@ class ChainDevil(ExtendedCombatantData):
                 MonsterAbility(
                     name="Multiattack",
                     description="The devil makes two Chain attacks and uses Conjure Infernal Chain.",
+                    uses_ability="Conjure Infernal Chain",
                 ),
                 DcMonsterAbility(
                     name="Chain",
@@ -370,6 +377,7 @@ class Cloaker(ExtendedCombatantData):
                 MonsterAbility(
                     name="Multiattack",
                     description="The cloaker makes one Attach attack and two Tail attacks.",
+                    uses_ability="Attach",
                 ),
                 DcMonsterAbility(
                     name="Attach",
@@ -446,6 +454,7 @@ class CockatriceRegent(ExtendedCombatantData):
                 MonsterAbility(
                     name="Multiattack",
                     description="The cockatrice makes one Petrifying Bite attack and two Talons attacks.",
+                    uses_ability="Petrifying Bite",
                 ),
                 DcMonsterAbility(
                     name="Petrifying Bite",
@@ -531,6 +540,7 @@ class DeathCultist(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Spirit Wail (Recharge 5–6)",
                     description="Wisdom Saving Throw: DC 14, each creature in a 20-foot Emanation originating from the cultist. Failure: 14 (4d6) Psychic damage, and the target has the Frightened condition until the end of its next turn. Success: Half damage only.",
+                    recharge=5,
                 ),
             ],
             reactions=[],
@@ -603,6 +613,7 @@ class ElementalCultist(ExtendedCombatantData):
                 MonsterAbility(
                     name="Elemental Absorption (1/Day)",
                     description="Trigger: The cultist takes Acid, Cold, Fire, Lightning, or Thunder damage. Response: The cultist gives itself Resistance to that instance of damage and gains 10 Temporary Hit Points.",
+                    per_day=1,
                 ),
             ],
             legendary_actions=[],
@@ -672,6 +683,7 @@ class FiendCultist(ExtendedCombatantData):
                 MonsterAbility(
                     name="Hellish Rebuke",
                     description="The cultist casts Hellish Rebuke in response to that spell's trigger, using the same spellcasting ability as Spellcasting.",
+                    casts=(MonsterCast("Hellish Rebuke"),),
                 ),
             ],
             legendary_actions=[],
@@ -732,6 +744,7 @@ class Fomorian(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Warping Hex (Recharge 4–6)",
                     description="Wisdom Saving Throw: DC 16, one creature the fomorian can see within 120 feet. Failure: 21 (6d6) Psychic damage, and the target gains 1 Exhaustion level. Success: Half damage only.",
+                    recharge=4,
                 ),
             ],
             bonus_actions=[],
@@ -805,6 +818,7 @@ class FrostGiant(ExtendedCombatantData):
                 MonsterAbility(
                     name="War Cry (Recharge 5–6)",
                     description="The giant or one creature of its choice that can see or hear it gains 16 (2d10 + 5) Temporary Hit Points and has Advantage on attack rolls until the start of the giant's next turn.",
+                    recharge=5,
                 ),
             ],
             reactions=[],
@@ -876,6 +890,8 @@ class GithyankiKnight(ExtendedCombatantData):
                 MonsterAbility(
                     name="Misty Step (2/Day)",
                     description="The githyanki casts Misty Step, requiring no spell components and using the same spellcasting ability as Spellcasting.",
+                    per_day=2,
+                    casts=(MonsterCast("Misty Step"),),
                 ),
             ],
             reactions=[],
@@ -942,12 +958,16 @@ class GnollDemoniac(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Hunger of Yeenoghu (Recharge 5–6)",
                     description="The gnoll conjures a 30-foot Cube of magical Darkness originating from a point it can see within 60 feet, which lasts for 1 minute or until the gnoll's Concentration ends on it. This area is Difficult Terrain. Dexterity Saving Throw: DC 14, any creature that starts its turn in this area or enters it for the first time on a turn. Failure: 28 (8d6) Necrotic damage, and the gnoll or a creature of its choice it can see gains 10 Temporary Hit Points. Success: Half damage only.",
+                    recharge=5,
                 ),
             ],
             bonus_actions=[
                 MonsterAbility(
                     name="Rampage (2/Day)",
                     description="Immediately after dealing damage to a creature that is already Bloodied, the gnoll moves up to half its Speed, and it makes one Abyssal Strike attack.",
+                    per_day=2,
+                    uses_ability="Abyssal Strike",
+                    moves_first=True,
                 ),
             ],
             reactions=[],
@@ -1013,6 +1033,7 @@ class GreenSlaad(ExtendedCombatantData):
                 MonsterAbility(
                     name="Regeneration",
                     description="The slaad regains 10 Hit Points at the start of each of its turns if it has at least 1 Hit Point.",
+                    at_turn_start="The slaad regains 10 Hit Points at the start of each of its turns if it has at least 1 Hit Point.",
                 ),
             ],
             actions=[
@@ -1481,6 +1502,7 @@ class TyrannosaurusRex(ExtendedCombatantData):
                 MonsterAbility(
                     name="Multiattack",
                     description="The tyrannosaurus makes one Bite attack and one Tail attack.",
+                    uses_ability="Bite",
                 ),
                 DcMonsterAbility(
                     name="Bite",
@@ -1556,6 +1578,7 @@ class VampireNightbringer(ExtendedCombatantData):
                 MonsterAbility(
                     name="Multiattack",
                     description="The vampire makes one Bite attack and one Shadow Strike attack.",
+                    uses_ability="Bite",
                 ),
                 MonsterAbility(
                     name="Bite",
@@ -1640,6 +1663,7 @@ class YoungBronzeDragon(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Lightning Breath (Recharge 5–6)",
                     description="Dexterity Saving Throw: DC 15, each creature in a 60-foot-long, 5-foot-wide Line. Failure: 49 (9d10) Lightning damage. Success: Half damage.",
+                    recharge=5,
                 ),
                 DcMonsterAbility(
                     name="Repulsion Breath",
@@ -1715,6 +1739,7 @@ class YoungGreenDragon(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Poison Breath (Recharge 5–6)",
                     description="Constitution Saving Throw: DC 14, each creature in a 30-foot Cone. Failure: 42 (12d6) Poison damage. Success: Half damage.",
+                    recharge=5,
                 ),
             ],
             bonus_actions=[],

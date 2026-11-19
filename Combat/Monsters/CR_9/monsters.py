@@ -15,7 +15,11 @@ from Model.Creatures.Combatants import (
     ExtendedCombatantData,
     MonsterType,
 )
-from Model.Creatures.MonsterAbilities import DcMonsterAbility, MonsterAbility
+from Model.Creatures.MonsterAbilities import (
+    DcMonsterAbility,
+    MonsterAbility,
+    MonsterCast,
+)
 from Core.Definitions import Ability
 
 
@@ -85,6 +89,7 @@ class AbominableYeti(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Cold Breath (Recharge 6)",
                     description="Constitution Saving Throw: DC 18, each creature in a 30-foot Cone. Failure: 45 (10d8) Cold damage. Success: Half damage.",
+                    recharge=6,
                 ),
             ],
             bonus_actions=[],
@@ -238,6 +243,7 @@ class BrazenGorgon(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Smelting Charge (Recharge 5–6)",
                     description="The gorgon moves up to its Speed without provoking Opportunity Attacks and can move through the spaces of Medium or smaller creatures. Each time the gorgon enters a creature's space for the first time during this move, that target is subjected to the following effect. Dexterity Saving Throw: DC 16. Failure: 13 (2d8 + 4) Piercing damage plus 13 (3d8) Fire damage, and the target is pulled into the gorgon's space and has the Grappled condition (escape DC 14); if the gorgon already has a creature Grappled, the target has the Prone condition instead. Until the grapple ends, the target has the Restrained condition. When the gorgon moves, the Grappled target moves with it, costing no extra movement.",
+                    recharge=5,
                 ),
             ],
             bonus_actions=[],
@@ -333,6 +339,7 @@ class ClayGolem(ExtendedCombatantData):
                 MonsterAbility(
                     name="Hasten (Recharge 5–6)",
                     description="The golem takes the Dash and Disengage actions.",
+                    recharge=5,
                 ),
             ],
             reactions=[],
@@ -387,6 +394,7 @@ class CloudGiant(ExtendedCombatantData):
                 MonsterAbility(
                     name="Multiattack",
                     description="The giant makes two attacks, using Thunderous Mace or Thundercloud in any combination. It can replace one attack with a use of Spellcasting to cast Fog Cloud.",
+                    casts=(MonsterCast("Fog Cloud"),),
                 ),
                 MonsterAbility(
                     name="Thunderous Mace",
@@ -623,6 +631,7 @@ class GraySlaad(ExtendedCombatantData):
                 MonsterAbility(
                     name="Regeneration",
                     description="The slaad regains 10 Hit Points at the start of each of its turns if it has at least 1 Hit Point.",
+                    at_turn_start="The slaad regains 10 Hit Points at the start of each of its turns if it has at least 1 Hit Point.",
                 ),
             ],
             actions=[
@@ -795,6 +804,7 @@ class Treant(ExtendedCombatantData):
                 MonsterAbility(
                     name="Animate Trees (1/Day)",
                     description="The treant magically animates up to two trees it can see within 60 feet of itself. Each tree uses the Treant stat block, except it has Intelligence and Charisma scores of 1, it can't speak, and it lacks this action. The tree takes its turn immediately after the treant on the same Initiative count, and it obeys the treant. A tree remains animate for 1 day or until it dies, the treant dies, or it is more than 120 feet from the treant. The tree then takes root if possible.",
+                    per_day=1,
                 ),
             ],
             bonus_actions=[],
@@ -861,6 +871,7 @@ class YoungBlueDragon(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Lightning Breath (Recharge 5–6)",
                     description="Dexterity Saving Throw: DC 16, each creature in a 60-foot-long, 5-foot-wide Line. Failure: 55 (10d10) Lightning damage. Success: Half damage.",
+                    recharge=5,
                 ),
             ],
             bonus_actions=[],
@@ -926,6 +937,7 @@ class YoungSilverDragon(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Cold Breath (Recharge 5–6)",
                     description="Constitution Saving Throw: DC 17, each creature in a 30-foot Cone. Failure: 49 (11d8) Cold damage. Success: Half damage.",
+                    recharge=5,
                 ),
                 DcMonsterAbility(
                     name="Paralyzing Breath",

@@ -123,13 +123,17 @@ def generate_monster_class(monster: dict) -> str:
         f"MonsterType.{creature_type_name}" if creature_type_name else "None"
     )
 
-    traits_str = format_ability_list(monster.get("traits", []))
-    actions_str = format_ability_list(monster.get("actions", []))
-    bonus_actions_str = format_ability_list(monster.get("bonus_actions", []))
-    reactions_str = format_ability_list(monster.get("reactions", []))
-    legendary_actions_str = format_ability_list(monster.get("legendary_actions", []))
-    lair_actions_str = format_ability_list(monster.get("lair_actions", []))
-    mythic_actions_str = format_ability_list(monster.get("mythic_actions", []))
+    # Each ability's recharge, uses, cost, casts, ... as fields (Phase 4.2).
+    def abilities(section: str) -> str:
+        return format_ability_list(monster.get(section, []), section, monster)
+
+    traits_str = abilities("traits")
+    actions_str = abilities("actions")
+    bonus_actions_str = abilities("bonus_actions")
+    reactions_str = abilities("reactions")
+    legendary_actions_str = abilities("legendary_actions")
+    lair_actions_str = abilities("lair_actions")
+    mythic_actions_str = abilities("mythic_actions")
 
     legendary_resistances = monster.get("legendary_resistances", 0)
 
@@ -214,6 +218,10 @@ from Model.Creatures.MonsterAbilities import MonsterAbility
 
 
 """
+    if any("MonsterCast(" in code for code in class_codes):
+        file_content = file_content.replace(
+            "import MonsterAbility\n", "import MonsterAbility, MonsterCast\n"
+        )
     file_content += "\n\n".join(class_codes)
     file_content += f"\n\n__all__ = {class_names}\n"
 

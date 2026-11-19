@@ -1972,17 +1972,20 @@ BREATH = {
     "name": "Fire Breath (Recharge 5–6)",
     "description": "Dexterity Saving Throw: DC 13, each creature in a 15-foot Cone."
     " Failure: 14 (4d6) Fire damage. Success: Half damage.",
+    "recharge": 5,
 }
 REND = {
     "name": "Rend (Recharge 6)",
     "description": "Melee Attack Roll: +6, reach 5 ft. Hit: 9 (2d6 + 2) Slashing"
     " damage, and the target can't take Reactions until the start of its next turn"
     " while it's bleeding badly from the wound the claws leave in it.",
+    "recharge": 6,
 }
 GAZE = {
     "name": "Gaze (Costs 2 Actions)",
     "description": "Wisdom Saving Throw: DC 14, one creature. Failure: The target has"
     " the Frightened condition, and it repeats the save at the end of each of its turns.",
+    "legendary_cost": 2,
 }
 
 

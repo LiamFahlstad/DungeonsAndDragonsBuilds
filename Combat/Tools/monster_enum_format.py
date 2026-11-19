@@ -351,14 +351,28 @@ def parse_speed(raw: str) -> tuple[int | None, int | None, int | None, str, list
     return ground, fly, climb, "; ".join(notes), flags
 
 
-def format_ability_list(abilities: list) -> str:
-    """[{"name": ..., "description": ...}] -> '[MonsterAbility(name=..., description=...), ...]'."""
+def format_ability_list(abilities: list, section: str = "", monster=None) -> str:
+    """[{"name": ..., "description": ...}] -> '[MonsterAbility(name=..., description=...), ...]'.
+
+    Given the monster (its raw dict) and which of its sections these are,
+    each ability also gets the fields its name and text give (recharge=5,
+    casts=(MonsterCast("Fear"),), ...: Model/Creatures/MonsterAbilityText.py),
+    which the combat UI reads instead of the text."""
     if not abilities:
         return "[]"
     lines = ["["]
     for ab in abilities:
         name = ab.get("name", "")
         desc = ab.get("description", "")
-        lines.append(f"        MonsterAbility(name={name!r}, description={desc!r}),")
+        fields = ""
+        if monster is not None:
+            from Combat.CombatUIQt.monster_actions import read_ability_fields
+            from Model.Creatures.MonsterAbilityText import keyword_source
+
+            read = read_ability_fields(monster, ab, section)
+            fields = "".join(f", {kw}" for kw in keyword_source(read))
+        lines.append(
+            f"        MonsterAbility(name={name!r}, description={desc!r}{fields}),"
+        )
     lines.append("    ]")
     return "\n    ".join(lines)

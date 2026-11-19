@@ -72,6 +72,7 @@ class BanditDeceiver(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Blinding Flash (Recharge 4–6)",
                     description="Constitution Saving Throw: DC 14, each creature in a 10-foot-radius Sphere centered on a point the bandit can see within 120 feet. Failure: 13 (3d6 + 3) Radiant damage, and the target has the Blinded condition until the start of the bandit's next turn. Success: Half damage only.",
+                    recharge=4,
                 ),
                 DcMonsterAbility(
                     name="Spellcasting",
@@ -139,6 +140,7 @@ class BlueSlaad(ExtendedCombatantData):
                 MonsterAbility(
                     name="Regeneration",
                     description="The slaad regains 10 Hit Points at the start of each of its turns if it has at least 1 Hit Point.",
+                    at_turn_start="The slaad regains 10 Hit Points at the start of each of its turns if it has at least 1 Hit Point.",
                 ),
             ],
             actions=[
@@ -221,6 +223,7 @@ class CentaurWarden(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Entangling Trail (Recharge 5–6)",
                     description="The centaur moves up to its Speed without provoking Opportunity Attacks. Each creature within 5 feet of the centaur as it moves is targeted once by the following effect. Strength Saving Throw: DC 15. Failure: 11 (2d6 + 4) Bludgeoning damage, and the target has the Restrained condition until the end of its next turn.",
+                    recharge=5,
                 ),
             ],
             reactions=[],
@@ -280,6 +283,7 @@ class GiantApe(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Boulder Toss (Recharge 6)",
                     description="The ape hurls a boulder at a point it can see within 90 feet. Dexterity Saving Throw: DC 17, each creature in a 5-foot-radius Sphere centered on that point. Failure: 24 (7d6) Bludgeoning damage. If the target is a Large or smaller creature, it has the Prone condition. Success: Half damage only.",
+                    recharge=6,
                 ),
             ],
             bonus_actions=[
@@ -371,6 +375,7 @@ class GraveyardRevenant(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Haunting Glare (Recharge 5–6)",
                     description="Wisdom Saving Throw: DC 15, each creature in a 30-foot Emanation originating from the revenant. Failure: The target has the Paralyzed condition and repeats the save at the end of each of its turns, ending the effect on itself on a success. After 1 minute, it succeeds automatically.",
+                    recharge=5,
                 ),
             ],
             bonus_actions=[],
@@ -425,6 +430,7 @@ class GrickAncient(ExtendedCombatantData):
                 MonsterAbility(
                     name="Multiattack",
                     description="The grick makes one Beak attack, one Slam attack, and one Tentacles attack.",
+                    uses_ability="Beak",
                 ),
                 MonsterAbility(
                     name="Beak",
@@ -518,6 +524,7 @@ class MindFlayer(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Mind Blast (Recharge 5–6)",
                     description="Intelligence Saving Throw: DC 15, each creature in a 60-foot Cone. Failure: 31 (6d8 + 4) Psychic damage, and the target has the Stunned condition until the end of the mind flayer's next turn. Success: Half damage only.",
+                    recharge=5,
                 ),
                 DcMonsterAbility(
                     name="Spellcasting",
@@ -584,6 +591,7 @@ class Oni(ExtendedCombatantData):
                 MonsterAbility(
                     name="Regeneration",
                     description="The oni regains 10 Hit Points at the start of each of its turns if it has at least 1 Hit Point.",
+                    at_turn_start="The oni regains 10 Hit Points at the start of each of its turns if it has at least 1 Hit Point.",
                 ),
             ],
             actions=[
@@ -727,6 +735,7 @@ class ShieldGuardian(ExtendedCombatantData):
                 MonsterAbility(
                     name="Regeneration",
                     description="The guardian regains 10 Hit Points at the start of each of its turns if it has at least 1 Hit Point.",
+                    at_turn_start="The guardian regains 10 Hit Points at the start of each of its turns if it has at least 1 Hit Point.",
                 ),
                 MonsterAbility(
                     name="Spell Storing",
@@ -819,6 +828,7 @@ class StoneGiant(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Deflect Missile (Recharge 5–6)",
                     description="Trigger: The giant is hit by a ranged attack roll and takes Bludgeoning, Piercing, or Slashing damage from it. Response: The giant reduces the damage it takes from the attack by 11 (1d10 + 6), and if that damage is reduced to 0, the giant can redirect some of the attack's force. Dexterity Saving Throw: DC 17, one creature the giant can see within 60 feet. Failure: 11 (1d10 + 6) Force damage.",
+                    recharge=5,
                 ),
             ],
             legendary_actions=[],
@@ -871,6 +881,7 @@ class TreeBlight(ExtendedCombatantData):
                 MonsterAbility(
                     name="Multiattack",
                     description="The blight makes two Branch attacks and uses Grasping Root.",
+                    uses_ability="Grasping Root",
                 ),
                 MonsterAbility(
                     name="Branch",
@@ -955,6 +966,7 @@ class VioletFungusNecrohulk(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Spore Bomb (Recharge 5-6)",
                     description="Constitution Saving Throw: DC 15, each creature in a 20-foot-radius Sphere centered on a point the necrohulk can see within 60 feet. Failure: 28 (8d6) Necrotic damage, and the target has the Poisoned condition until the start of the necrohulk's next turn. While Poisoned, the target can't regain Hit Points. Success: Half damage only.",
+                    recharge=5,
                 ),
             ],
             bonus_actions=[
@@ -1031,6 +1043,7 @@ class YoungBlackDragon(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Acid Breath (Recharge 5–6)",
                     description="Dexterity Saving Throw: DC 14, each creature in a 30-foot-long, 5-foot-wide Line. Failure: 49 (14d6) Acid damage. Success: Half damage.",
+                    recharge=5,
                 ),
             ],
             bonus_actions=[],
@@ -1096,6 +1109,7 @@ class YoungCopperDragon(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Acid Breath (Recharge 5–6)",
                     description="Dexterity Saving Throw: DC 14, each creature in a 40-foot-long, 5-foot-wide Line. Failure: 40 (9d8) Acid damage. Success: Half damage.",
+                    recharge=5,
                 ),
                 DcMonsterAbility(
                     name="Slowing Breath",
@@ -1174,6 +1188,7 @@ class YuantiAbomination(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Poison Spray (Recharge 5–6)",
                     description="Constitution Saving Throw: DC 14, each creature in a 30-foot Cone. Failure: 21 (6d6) Poison damage, and the target has the Poisoned condition until the end of the yuan-ti's next turn. While Poisoned, the target has the Blinded condition. Success: Half damage only.",
+                    recharge=5,
                 ),
                 DcMonsterAbility(
                     name="Spellcasting (Yuan-ti Form Only)",

@@ -16,7 +16,11 @@ from Model.Creatures.Combatants import (
     ExtendedCombatantData,
     MonsterType,
 )
-from Model.Creatures.MonsterAbilities import DcMonsterAbility, MonsterAbility
+from Model.Creatures.MonsterAbilities import (
+    DcMonsterAbility,
+    MonsterAbility,
+    MonsterCast,
+)
 from Core.Definitions import Ability
 
 
@@ -136,6 +140,7 @@ class Behir(ExtendedCombatantData):
                 MonsterAbility(
                     name="Multiattack",
                     description="The behir makes one Bite attack and uses Constrict.",
+                    uses_ability="Bite",
                 ),
                 MonsterAbility(
                     name="Bite",
@@ -148,6 +153,7 @@ class Behir(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Lightning Breath (Recharge 5–6)",
                     description="Dexterity Saving Throw: DC 16, each creature in a 90-foot-long, 5-foot-wide Line. Failure: 66 (12d10) Lightning damage. Success: Half damage.",
+                    recharge=5,
                 ),
             ],
             bonus_actions=[
@@ -318,6 +324,7 @@ class DeathKnightAspirant(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Hellfire Orb (Recharge 5–6)",
                     description="Dexterity Saving Throw: DC 15, each creature in a 20-foot-radius Sphere centered on a point the aspirant can see within 120 feet of itself. Failure: 21 (6d6) Fire damage plus 21 (6d6) Necrotic damage. Success: Half damage.",
+                    recharge=5,
                 ),
                 DcMonsterAbility(
                     name="Spellcasting",
@@ -673,6 +680,8 @@ class Marid(ExtendedCombatantData):
                 MonsterAbility(
                     name="Misty Veil (Recharge 5–6)",
                     description="The marid casts Fog Cloud, using the same spellcasting ability as Spellcasting.",
+                    recharge=5,
+                    casts=(MonsterCast("Fog Cloud"),),
                 ),
             ],
             reactions=[],
@@ -753,6 +762,7 @@ class MindFlayerArcanist(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Mind Burst (Recharge 5–6)",
                     description="Intelligence Saving Throw: DC 17, each creature in a 40-foot Emanation originating from the mind flayer. Failure: 41 (8d8 + 5) Psychic damage, and the target has the Stunned condition until the end of the mind flayer's next turn. Success: Half damage only.",
+                    recharge=5,
                 ),
                 DcMonsterAbility(
                     name="Spellcasting",
@@ -764,6 +774,8 @@ class MindFlayerArcanist(ExtendedCombatantData):
                 MonsterAbility(
                     name="Shield (2/Day)",
                     description="The mind flayer casts Shield in response to that spell's trigger, using the same spellcasting ability as Spellcasting.",
+                    per_day=2,
+                    casts=(MonsterCast("Shield"),),
                 ),
             ],
             legendary_actions=[],
@@ -898,6 +910,7 @@ class Roc(ExtendedCombatantData):
                 MonsterAbility(
                     name="Swoop (Recharge 5–6)",
                     description="If the roc has a creature Grappled, the roc flies up to half its Fly Speed without provoking Opportunity Attacks and drops that creature.",
+                    recharge=5,
                 ),
             ],
             reactions=[],
@@ -965,6 +978,7 @@ class SphinxOfLore(ExtendedCombatantData):
                 MonsterAbility(
                     name="Legendary Resistance (3/Day, or 4/Day in Lair)",
                     description="If the sphinx fails a saving throw, it can choose to succeed instead.r).",
+                    per_day=3,
                 ),
             ],
             actions=[
@@ -979,6 +993,7 @@ class SphinxOfLore(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Mind-Rending Roar (Recharge 5–6)",
                     description="Wisdom Saving Throw: DC 16, each enemy in a 300-foot Emanation originating from the sphinx. Failure: 35 (10d6) Psychic damage, and the target has the Incapacitated condition until the start of the sphinx's next turn.",
+                    recharge=5,
                 ),
                 DcMonsterAbility(
                     name="Spellcasting",
@@ -991,6 +1006,7 @@ class SphinxOfLore(ExtendedCombatantData):
                 MonsterAbility(
                     name="Arcane Prowl",
                     description="The sphinx can teleport up to 30 feet to an unoccupied space it can see, and it makes one Claw attack.",
+                    uses_ability="Claw",
                 ),
                 DcMonsterAbility(
                     name="Weight of Years",

@@ -17,7 +17,11 @@ from Model.Creatures.Combatants import (
     ExtendedCombatantData,
     MonsterType,
 )
-from Model.Creatures.MonsterAbilities import DcMonsterAbility, MonsterAbility
+from Model.Creatures.MonsterAbilities import (
+    DcMonsterAbility,
+    MonsterAbility,
+    MonsterCast,
+)
 from Core.Definitions import Ability
 
 
@@ -67,6 +71,7 @@ class AarakocraAeromancer(ExtendedCombatantData):
                 MonsterAbility(
                     name="Multiattack",
                     description="The aarakocra makes two Wind Staff attacks, and it can use Spellcasting to cast Gust of Wind.",
+                    casts=(MonsterCast("Gust of Wind"),),
                 ),
                 DcMonsterAbility(
                     name="Spellcasting",
@@ -82,6 +87,8 @@ class AarakocraAeromancer(ExtendedCombatantData):
                 MonsterAbility(
                     name="Feather Fall (1/Day)",
                     description="The aarakocra casts Feather Fall in response to that spell's trigger, using the same spellcasting ability as Spellcasting.",
+                    per_day=1,
+                    casts=(MonsterCast("Feather Fall"),),
                 ),
             ],
             legendary_actions=[],
@@ -229,6 +236,7 @@ class Banshee(ExtendedCombatantData):
                 MonsterAbility(
                     name="Multiattack",
                     description="The banshee makes two Corrupting Touch attacks and uses Horrify.",
+                    uses_ability="Horrify",
                 ),
                 MonsterAbility(
                     name="Corrupting Touch",
@@ -241,6 +249,7 @@ class Banshee(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Deathly Wail (1/Day)",
                     description="The banshee releases a mournful wail if it isn't in sunlight. Constitution Saving Throw: DC 13, each creature within 30 feet that can hear the wail and isn't a Construct or an Undead. Failure: If the target has 25 Hit Points or fewer, it drops to 0 Hit Points. Otherwise, the target takes 10 (3d6) Psychic damage.",
+                    per_day=1,
                 ),
             ],
             bonus_actions=[],
@@ -468,6 +477,7 @@ class BullywugBogSage(ExtendedCombatantData):
                 MonsterAbility(
                     name="Multiattack",
                     description="The bullywug makes two Bog Staff attacks. It can replace any attack with a use of Spellcasting to cast Ray of Sickness.",
+                    casts=(MonsterCast("Ray of Sickness"),),
                 ),
                 MonsterAbility(
                     name="Bog Staff",
@@ -547,6 +557,7 @@ class Chuul(ExtendedCombatantData):
                 MonsterAbility(
                     name="Multiattack",
                     description="The chuul makes two Pincer attacks and uses Paralyzing Tentacles.",
+                    uses_ability="Paralyzing Tentacles",
                 ),
                 DcMonsterAbility(
                     name="Pincer",
@@ -639,6 +650,12 @@ class Couatl(ExtendedCombatantData):
                 MonsterAbility(
                     name="Divine Aid (2/Day)",
                     description="The couatl casts Bless, Lesser Restoration, or Sanctuary, requiring no spell components and using the same spellcasting ability as Spellcasting.",
+                    per_day=2,
+                    casts=(
+                        MonsterCast("Bless"),
+                        MonsterCast("Lesser Restoration"),
+                        MonsterCast("Sanctuary"),
+                    ),
                 ),
             ],
             reactions=[],
@@ -761,6 +778,7 @@ class Ettin(ExtendedCombatantData):
                 MonsterAbility(
                     name="Multiattack",
                     description="The ettin makes one Battleaxe attack and one Morningstar attack.",
+                    uses_ability="Battleaxe",
                 ),
                 MonsterAbility(
                     name="Battleaxe",
@@ -959,6 +977,7 @@ class Ghost(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Possession (Recharge 6)",
                     description="Charisma Saving Throw: DC 13, one Humanoid the ghost can see within 5 feet. Failure: The target is possessed by the ghost; the ghost disappears, and the target has the Incapacitated condition and loses control of its body. The ghost now controls the body, but the target retains awareness. The ghost can't be targeted by any attack, spell, or other effect, except ones that specifically target Undead. The ghost's game statistics are the same, except it uses the possessed target's Speed, as well as the target's Strength, Dexterity, and Constitution modifiers. The possession lasts until the body drops to 0 Hit Points or the ghost leaves as a Bonus Action. When the possession ends, the ghost appears in an unoccupied space within 5 feet of the target, and the target is immune to this ghost's Possession for 24 hours. Success: The target is immune to this ghost's Possession for 24 hours.",
+                    recharge=6,
                 ),
             ],
             bonus_actions=[],
@@ -1017,6 +1036,7 @@ class GnollFangOfYeenoghu(ExtendedCombatantData):
                 MonsterAbility(
                     name="Multiattack",
                     description="The gnoll makes one Bite attack and two Bone Flail attacks.",
+                    uses_ability="Bite",
                 ),
                 MonsterAbility(
                     name="Bite",
@@ -1031,6 +1051,9 @@ class GnollFangOfYeenoghu(ExtendedCombatantData):
                 MonsterAbility(
                     name="Rampage (2/Day)",
                     description="Immediately after dealing damage to a creature that is already Bloodied, the gnoll moves up to half its Speed, and it makes one Bite attack.",
+                    per_day=2,
+                    uses_ability="Bite",
+                    moves_first=True,
                 ),
             ],
             reactions=[],
@@ -1320,6 +1343,7 @@ class Incubus(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Nightmare (Recharge 6)",
                     description="Wisdom Saving Throw: DC 15, one creature the incubus can see within 60 feet. Failure: If the target has 20 Hit Points or fewer, it has the Unconscious condition for 1 hour, until it takes damage, or until a creature within 5 feet of it takes an action to wake it. Otherwise, the target takes 18 (4d8) Psychic damage.",
+                    recharge=6,
                 ),
             ],
             reactions=[],
@@ -1394,6 +1418,7 @@ class JuvenileShadowDragon(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Shadow Breath (Recharge 5–6)",
                     description="Dexterity Saving Throw: DC 13, each creature in a 30-foot Cone. Failure: 17 (5d6) Necrotic damage. Success: Half damage. Failure or Success: A Humanoid reduced to 0 Hit Points by this damage dies, and a Shadow rises from its corpse. The shadow is under the dragon's control and shares the dragon's Initiative count but acts immediately after the dragon.",
+                    recharge=5,
                 ),
             ],
             bonus_actions=[
@@ -1530,6 +1555,7 @@ class LizardfolkSovereign(ExtendedCombatantData):
                 MonsterAbility(
                     name="Multiattack",
                     description="The lizardfolk makes one Bite attack and one Earthen Maul attack.",
+                    uses_ability="Bite",
                 ),
                 MonsterAbility(
                     name="Bite",
@@ -1610,6 +1636,7 @@ class RedDragonWyrmling(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Fire Breath (Recharge 5–6)",
                     description="Dexterity Saving Throw: DC 13, each creature in a 15-foot Cone. Failure: 24 (7d6) Fire damage. Success: Half damage.",
+                    recharge=5,
                 ),
             ],
             bonus_actions=[],
@@ -1779,6 +1806,7 @@ class Succubus(ExtendedCombatantData):
                 MonsterAbility(
                     name="Multiattack",
                     description="The succubus makes one Fiendish Touch attack and uses Charm or Draining Kiss.",
+                    uses_ability="Fiendish Touch",
                 ),
                 MonsterAbility(
                     name="Fiendish Touch",
@@ -1787,6 +1815,7 @@ class Succubus(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Charm",
                     description="The succubus casts Dominate Person (level 8 version), requiring no spell components and using Charisma as the spellcasting ability (spell save DC 15).",
+                    casts=(MonsterCast("Dominate Person", level=8),),
                 ),
                 DcMonsterAbility(
                     name="Draining Kiss",

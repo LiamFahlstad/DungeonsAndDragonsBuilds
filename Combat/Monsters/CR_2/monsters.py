@@ -21,7 +21,11 @@ from Model.Creatures.Combatants import (
     ExtendedCombatantData,
     MonsterType,
 )
-from Model.Creatures.MonsterAbilities import DcMonsterAbility, MonsterAbility
+from Model.Creatures.MonsterAbilities import (
+    DcMonsterAbility,
+    MonsterAbility,
+    MonsterCast,
+)
 from Core.Definitions import Ability
 
 
@@ -201,6 +205,7 @@ class Ankheg(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Acid Spray (Recharge 6)",
                     description="Dexterity Saving Throw: DC 12, each creature in a 30-foot-long, 5-foot-wide Line. Failure: 14 (4d6) Acid damage. Success: Half damage.",
+                    recharge=6,
                 ),
             ],
             bonus_actions=[],
@@ -522,6 +527,7 @@ class BlackDragonWyrmling(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Acid Breath (Recharge 5–6)",
                     description="Dexterity Saving Throw: DC 11, each creature in a 15-foot-long, 5-foot-wide Line. Failure: 22 (5d8) Acid damage. Success: Half damage.",
+                    recharge=5,
                 ),
             ],
             bonus_actions=[],
@@ -592,6 +598,7 @@ class BronzeDragonWyrmling(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Lightning Breath (Recharge 5–6)",
                     description="Dexterity Saving Throw: DC 12, each creature in a 40-foot-long, 5-foot-wide Line. Failure: 16 (3d10) Lightning damage. Success: Half damage.",
+                    recharge=5,
                 ),
                 DcMonsterAbility(
                     name="Repulsion Breath",
@@ -706,6 +713,7 @@ class CarrionCrawler(ExtendedCombatantData):
                 MonsterAbility(
                     name="Multiattack",
                     description="The carrion crawler uses Paralyzing Tentacles and makes one Bite attack.",
+                    uses_ability="Bite",
                 ),
                 MonsterAbility(
                     name="Bite",
@@ -781,6 +789,7 @@ class CentaurTrooper(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Trampling Charge (Recharge 5–6)",
                     description="The centaur moves up to its Speed without provoking Opportunity Attacks and can move through the spaces of Medium or smaller creatures. Each creature whose space the centaur enters is targeted once by the following effect. Strength Saving Throw: DC 14. Failure: 7 (1d6 + 4) Bludgeoning damage, and the target has the Prone condition.",
+                    recharge=5,
                 ),
             ],
             reactions=[],
@@ -845,6 +854,7 @@ class CultistFanatic(ExtendedCombatantData):
                 MonsterAbility(
                     name="Spiritual Weapon (2/Day)",
                     description="The cultist casts the Spiritual Weapon spell, using the same spellcasting ability as Spellcasting.",
+                    per_day=2,
                 ),
             ],
             reactions=[],
@@ -973,6 +983,7 @@ class Ettercap(ExtendedCombatantData):
                 MonsterAbility(
                     name="Multiattack",
                     description="The ettercap makes one Bite attack and one Claw attack.",
+                    uses_ability="Bite",
                 ),
                 MonsterAbility(
                     name="Bite",
@@ -985,6 +996,7 @@ class Ettercap(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Web Strand (Recharge 5–6)",
                     description="Dexterity Saving Throw: DC 12, one Large or smaller creature the ettercap can see within 30 feet. Failure: The target has the Restrained condition until the web is destroyed (AC 10; HP 5; Vulnerability to Fire damage; Immunity to Bludgeoning, Poison, and Psychic damage).",
+                    recharge=5,
                 ),
             ],
             bonus_actions=[
@@ -1054,6 +1066,7 @@ class FaerieDragonAdult(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Euphoria Breath (Recharge 5–6)",
                     description="Wisdom Saving Throw: DC 13, each creature in a 15-foot Cone. Failure: The target has the Incapacitated condition and repeats the save at the end of each of its turns, ending the effect on itself on a success. After 1 minute, it succeeds automatically. While Incapacitated, the target uses all its movement on each of its turns to move in a random direction.",
+                    recharge=5,
                 ),
                 DcMonsterAbility(
                     name="Spellcasting",
@@ -1392,6 +1405,7 @@ class GiantConstrictorSnake(ExtendedCombatantData):
                 MonsterAbility(
                     name="Multiattack",
                     description="The snake makes one Bite attack and uses Constrict.",
+                    uses_ability="Bite",
                 ),
                 MonsterAbility(
                     name="Bite",
@@ -1534,6 +1548,7 @@ class GibberingMouther(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Blinding Spittle (Recharge 5–6)",
                     description="Dexterity Saving Throw: DC 10, each creature in a 10-foot-radius Sphere centered on a point within 30 feet. Failure: 7 (2d6) Radiant damage, and the target has the Blinded condition until the end of the mouther's next turn.",
+                    recharge=5,
                 ),
             ],
             bonus_actions=[],
@@ -1606,12 +1621,16 @@ class GithzeraiMonk(ExtendedCombatantData):
                 MonsterAbility(
                     name="Psi-Powered Leap (2/Day)",
                     description="The githzerai casts Jump, requiring no spell components and using the same spellcasting ability as Spellcasting.",
+                    per_day=2,
+                    casts=(MonsterCast("Jump"),),
                 ),
             ],
             reactions=[
                 MonsterAbility(
                     name="Psionic Defense (2/Day)",
                     description="The githzerai casts Feather Fall or Shield in response to the spell's trigger, requiring no spell components and using the same spellcasting ability as Spellcasting.",
+                    per_day=2,
+                    casts=(MonsterCast("Feather Fall"), MonsterCast("Shield")),
                 ),
             ],
             legendary_actions=[],
@@ -1676,12 +1695,16 @@ class GnollPackLord(ExtendedCombatantData):
                 MonsterAbility(
                     name="Incite Rampage (Recharge 5–6)",
                     description="The gnoll targets another creature it can see within 60 feet of itself that has the Rampage Bonus Action. The target can take a Reaction to make one melee attack.",
+                    recharge=5,
                 ),
             ],
             bonus_actions=[
                 MonsterAbility(
                     name="Rampage (2/Day)",
                     description="Immediately after dealing damage to a creature that is already Bloodied, the gnoll moves up to half its Speed, and it makes one Bone Whip attack.",
+                    per_day=2,
+                    uses_ability="Bone Whip",
+                    moves_first=True,
                 ),
             ],
             reactions=[],
@@ -1751,6 +1774,7 @@ class GreenDragonWyrmling(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Poison Breath (Recharge 5–6)",
                     description="Constitution Saving Throw: DC 11, each creature in a 15-foot Cone. Failure: 21 (6d6) Poison damage. Success: Half damage.",
+                    recharge=5,
                 ),
             ],
             bonus_actions=[],
@@ -1805,6 +1829,7 @@ class Grick(ExtendedCombatantData):
                 MonsterAbility(
                     name="Multiattack",
                     description="The grick makes one Beak attack and one Tentacles attack.",
+                    uses_ability="Beak",
                 ),
                 MonsterAbility(
                     name="Beak",
@@ -1992,6 +2017,7 @@ class IntellectDevourer(ExtendedCombatantData):
                 MonsterAbility(
                     name="Multiattack",
                     description="The intellect devourer makes one Claw attack and uses Devour Intellect.",
+                    uses_ability="Claw",
                 ),
                 MonsterAbility(
                     name="Claw",
@@ -2068,6 +2094,7 @@ class LizardfolkGeomancer(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Hail of Stone (Recharge 5–6)",
                     description="Constitution Saving Throw: DC 12, each creature in a 20-foot-radius, 40-foot-high Cylinder centered on a point the lizardfolk can see within 60 feet. Failure: 15 (6d4) Bludgeoning damage, and the target has the Prone condition. Success: Half damage only.",
+                    recharge=5,
                 ),
                 DcMonsterAbility(
                     name="Spellcasting",
@@ -2394,6 +2421,7 @@ class MyconidSovereign(ExtendedCombatantData):
                 MonsterAbility(
                     name="Multiattack",
                     description="The myconid makes one Slam attack and uses Pacifying Spores.",
+                    uses_ability="Slam",
                 ),
                 MonsterAbility(
                     name="Slam",
@@ -2402,6 +2430,7 @@ class MyconidSovereign(ExtendedCombatantData):
                 MonsterAbility(
                     name="Animating Spores (3/Day)",
                     description="The myconid releases spores at a Medium or Small corpse within 5 feet of it that wasn't a Construct or an Undead. In 24 hours, the corpse rises as a Myconid Spore Servant. The corpse stays animate for 1d4 + 1 weeks or until destroyed, and it can't be animated again in this way.",
+                    per_day=3,
                 ),
                 DcMonsterAbility(
                     name="Pacifying Spores",
@@ -2482,6 +2511,7 @@ class Nothic(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Weird Insight (Recharge 6)",
                     description="Wisdom Saving Throw: DC 14, one creature the nothic can see within 120 feet. Failure: The nothic magically learns one fact or secret about the target.",
+                    recharge=6,
                 ),
             ],
             reactions=[],
@@ -2797,6 +2827,7 @@ class Peryton(ExtendedCombatantData):
                 MonsterAbility(
                     name="Multiattack",
                     description="The peryton makes one Gore attack and one Talons attack.",
+                    uses_ability="Gore",
                 ),
                 MonsterAbility(
                     name="Gore",
@@ -3006,6 +3037,7 @@ class Poltergeist(ExtendedCombatantData):
                 MonsterAbility(
                     name="Multiattack",
                     description="The poltergeist makes one Object Slam attack and uses Telekinetic Thrust.",
+                    uses_ability="Object Slam",
                 ),
                 MonsterAbility(
                     name="Object Slam",
@@ -3090,6 +3122,13 @@ class Priest(ExtendedCombatantData):
                 MonsterAbility(
                     name="Divine Aid (3/Day)",
                     description="The priest casts Bless, Dispel Magic, Healing Word, or Lesser Restoration, using the same spellcasting ability as Spellcasting.",
+                    per_day=3,
+                    casts=(
+                        MonsterCast("Bless"),
+                        MonsterCast("Dispel Magic"),
+                        MonsterCast("Healing Word"),
+                        MonsterCast("Lesser Restoration"),
+                    ),
                 ),
             ],
             reactions=[],
@@ -3360,6 +3399,8 @@ class SahuaginPriest(ExtendedCombatantData):
                 MonsterAbility(
                     name="Fiendish Aid (2/Day)",
                     description="The sahuagin casts Bless or Healing Word, using the same spellcasting ability as Spellcasting.",
+                    per_day=2,
+                    casts=(MonsterCast("Bless"), MonsterCast("Healing Word")),
                 ),
             ],
             reactions=[],
@@ -3431,10 +3472,12 @@ class SeaHag(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Death Glare (Recharge 5–6)",
                     description="Wisdom Saving Throw: DC 11, one Frightened creature the hag can see within 30 feet. Failure: If the target has 20 Hit Points or fewer, it drops to 0 Hit Points. Otherwise, the target takes 13 (3d8) Psychic damage.",
+                    recharge=5,
                 ),
                 DcMonsterAbility(
                     name="Illusory Appearance",
                     description="The hag casts Disguise Self, using Constitution as the spellcasting ability (spell save DC 13). The spell's duration is 24 hours.",
+                    casts=(MonsterCast("Disguise Self"),),
                 ),
             ],
             bonus_actions=[],
@@ -3499,6 +3542,7 @@ class SilverDragonWyrmling(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Cold Breath (Recharge 5–6)",
                     description="Constitution Saving Throw: DC 13, each creature in a 15-foot Cone. Failure: 18 (4d8) Cold damage. Success: Half damage.",
+                    recharge=5,
                 ),
                 DcMonsterAbility(
                     name="Paralyzing Breath",
@@ -3866,6 +3910,7 @@ class WhiteDragonWyrmling(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Cold Breath (Recharge 5–6)",
                     description="Constitution Saving Throw: DC 12, each creature in a 15-foot Cone. Failure: 22 (5d8) Cold damage. Success: Half damage.",
+                    recharge=5,
                 ),
             ],
             bonus_actions=[],
@@ -3964,6 +4009,7 @@ class Willowisp(ExtendedCombatantData):
                 MonsterAbility(
                     name="Vanish",
                     description="The wisp and its light have the Invisible condition until the wisp's Concentration ends on this effect, which ends early immediately after the wisp makes an attack roll or uses Consume Life.",
+                    uses_ability="Consume Life",
                 ),
             ],
             reactions=[],

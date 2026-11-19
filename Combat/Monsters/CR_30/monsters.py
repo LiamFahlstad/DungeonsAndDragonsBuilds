@@ -79,6 +79,7 @@ class Tarrasque(ExtendedCombatantData):
                 MonsterAbility(
                     name="Legendary Resistance (6/Day)",
                     description="If the tarrasque fails a saving throw, it can choose to succeed instead.",
+                    per_day=6,
                 ),
                 MonsterAbility(
                     name="Magic Resistance",
@@ -97,6 +98,7 @@ class Tarrasque(ExtendedCombatantData):
                 MonsterAbility(
                     name="Multiattack",
                     description="The tarrasque makes one Bite attack and three other attacks, using Claw or Tail in any combination.",
+                    uses_ability="Bite",
                 ),
                 DcMonsterAbility(
                     name="Bite",
@@ -113,6 +115,7 @@ class Tarrasque(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Thunderous Bellow (Recharge 5–6)",
                     description="Constitution Saving Throw: DC 27, each creature and each object that isn't being worn or carried in a 150-foot Cone. Failure: 78 (12d12) Thunder damage, and the target has the Deafened and Frightened conditions until the end of its next turn. Success: Half damage only.",
+                    recharge=5,
                 ),
             ],
             bonus_actions=[

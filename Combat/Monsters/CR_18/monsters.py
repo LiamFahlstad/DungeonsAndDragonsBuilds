@@ -83,6 +83,7 @@ class Demilich(ExtendedCombatantData):
                 MonsterAbility(
                     name="Legendary Resistance (3/Day, or 4/Day in Lair)",
                     description="If the demilich fails a saving throw, it can choose to succeed instead.",
+                    per_day=3,
                 ),
                 MonsterAbility(
                     name="Undead Restoration",
@@ -101,6 +102,7 @@ class Demilich(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Howl (Recharge 5–6)",
                     description="Constitution Saving Throw: DC 19, each creature in a 30-foot Emanation originating from the demilich. Failure: 70 (20d6) Psychic damage. Failure or Success: The target has the Frightened condition until the start of the demilich's next turn.",
+                    recharge=5,
                 ),
             ],
             bonus_actions=[],
@@ -117,6 +119,7 @@ class Demilich(ExtendedCombatantData):
                 MonsterAbility(
                     name="Necrosis",
                     description="The demilich makes one Necrotic Burst attack.",
+                    uses_ability="Necrotic Burst",
                 ),
             ],
             legendary_resistances=3,

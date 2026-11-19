@@ -73,7 +73,7 @@ class TheBellSaint(ExtendedCombatantData):
             passive_perception=12,
             languages="understands Common but can't speak, communicates only through tolling",
             traits=[
-                LegendaryResistance(creature_name="Bell Saint", uses=1),
+                LegendaryResistance(creature_name="Bell Saint", uses=1, per_day=1),
                 MonsterAbility(
                     name="Undying Vigil",
                     description="The cleric entombed within refuses to release its grip on life. The Bell Saint has advantage on death saving throws, and reviving spells that would restore it to consciousness instead restore 2d10 Hit Points.",
@@ -90,6 +90,7 @@ class TheBellSaint(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Toll of Rising (Recharge 5-6)",
                     description="The bell tolls with unholy force. Each Undead creature within 30 feet of the Bell Saint that isn't already under another creature's control rises to fight for the Bell Saint, acting immediately after the Bell Saint's turn. Each living creature within 30 feet must succeed on a DC 17 Wisdom saving throw or take 10 (3d6) Psychic damage and have its speed halved until the end of its next turn, or take half as much damage on a success and suffer no speed reduction.",
+                    recharge=5,
                 ),
             ],
             bonus_actions=[],
@@ -107,6 +108,7 @@ class TheBellSaint(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Muffled Toll (Costs 2 Actions)",
                     description="One creature the Bell Saint can see within 30 feet must succeed on a DC 17 Wisdom saving throw or be frightened until the end of its next turn.",
+                    legendary_cost=2,
                 ),
             ],
             legendary_resistances=1,

@@ -73,6 +73,7 @@ class CantorOfTheBlackChoir(ExtendedCombatantData):
                 MonsterAbility(
                     name="Brink of the Accursed",
                     description="While Bloodied, the curse strains against the Cantor's failing throat: at the start of each of its turns, the Cantor takes 3 (1d6) Necrotic damage as Noc'tra claws its way outward, but until the start of its next turn, its Curseward Lash and Speak Noc'tra deal an extra 3 (1d6) Necrotic damage and the save DC of Speak Noc'tra increases by 1. If this damage would reduce the Cantor to 0 Hit Points, it instead drops to 1 Hit Point as its ruined throat finally gives out: for the rest of the encounter it can no longer speak, and it loses access to Speak Noc'tra and Conduct the Choir, the last of its will consumed by the curse it served.",
+                    at_turn_start="While Bloodied, the curse strains against the Cantor's failing throat: at the start of each of its turns, the Cantor takes 3 (1d6) Necrotic damage as Noc'tra claws its way outward, but until the start of its next turn, its Curseward Lash and Speak Noc'tra deal an extra 3 (1d6) Necrotic damage and the save DC of Speak Noc'tra increases by 1.",
                 ),
             ],
             actions=[
@@ -87,6 +88,7 @@ class CantorOfTheBlackChoir(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Speak Noc'tra (Recharge 5-6)",
                     description="The Cantor tears a fragment of the black word from its ruined throat in a 30-foot Cone. Each creature in the area makes a DC 11 Wisdom saving throw. Failure: 14 (4d6) Psychic damage, and the target has the Frightened condition until the end of the Cantor's next turn. Success: Half damage only. A half-second later, the word catches up to itself: at the start of the Cantor's next turn, each creature that failed the save must succeed on a DC 11 Wisdom saving throw or take 7 (2d6) Necrotic damage as the echo arrives. Whether or not the word strikes any target, the toll is real: the Cantor takes 3 (1d6) Necrotic damage as it passes through, one utterance closer to its own undoing.",
+                    recharge=5,
                 ),
             ],
             bonus_actions=[
@@ -176,6 +178,7 @@ class GarronTheKindly(ExtendedCombatantData):
                 MonsterAbility(
                     name="Field Dressing (Recharge 5-6)",
                     description="Garron tends to his own wounds or those of one creature within 5 feet of him. The chosen creature regains 13 (2d8 + 4) Hit Points.",
+                    recharge=5,
                 ),
             ],
             reactions=[],
@@ -238,6 +241,7 @@ class SerCaldusTheVowOfSilence(ExtendedCombatantData):
                 MonsterAbility(
                     name="Undying Vow (1/Day)",
                     description="If damage would reduce Ser Caldus to 0 Hit Points, he instead drops to 1 Hit Point, his vow unwilling to let him fall before a rite is complete.",
+                    per_day=1,
                 ),
             ],
             actions=[
@@ -258,6 +262,7 @@ class SerCaldusTheVowOfSilence(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Rite of Silence (3/Day)",
                     description="Immediately after hitting a creature with Silencing Blade, Ser Caldus kneels into the strike and calls the rite complete: the target takes an extra 9 (2d8) Psychic damage. If this damage reduces the target to 0 Hit Points, it dies without a sound, and each other creature within 10 feet that witnessed the kill must succeed on a DC 11 Wisdom saving throw or have the Frightened condition until the end of Ser Caldus's next turn.",
+                    per_day=3,
                 ),
             ],
             bonus_actions=[],
@@ -406,6 +411,7 @@ class MirelleTheGildedKnight(ExtendedCombatantData):
                 MonsterAbility(
                     name="Royal Resolve (1/Day)",
                     description="If Mirelle fails a saving throw, she can choose to succeed instead (Legendary Resistance). When she does, the gold cracks for a moment, and the princess beneath speaks a few words in her own voice before the curse takes her back.",
+                    per_day=1,
                 ),
             ],
             actions=[
@@ -449,6 +455,7 @@ class MirelleTheGildedKnight(ExtendedCombatantData):
                     damage_type=DamageType.SLASHING,
                     failure_effect="and the target has the Prone condition",
                     success_effect="Half damage only.",
+                    recharge=5,
                 ),
             ],
             bonus_actions=[],

@@ -239,6 +239,7 @@ def _build_vestige(
             MonsterAbility(
                 name=f"Divine Power (1/Day): {divine_power_name}",
                 description=divine_power,
+                per_day=1,
             ),
         ],
         reactions=[],

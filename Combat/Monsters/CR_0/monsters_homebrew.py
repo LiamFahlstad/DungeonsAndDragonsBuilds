@@ -612,6 +612,7 @@ class DwarfLifeCleric(ExtendedCombatantData):
                 MonsterAbility(
                     name="Healing Word (2/Day)",
                     description="One creature the cleric can see within 60 feet regains 9 (2d4 + 4) Hit Points.",
+                    per_day=2,
                 ),
             ],
             reactions=[],

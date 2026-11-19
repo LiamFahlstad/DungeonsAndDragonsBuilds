@@ -148,8 +148,8 @@ def test_parse_damage_says_whats_wrong(text, message):
 # Monster abilities
 
 
-def _ability(name: str, description: str) -> MonsterAbility:
-    return MonsterAbility(name=name, description=description)
+def _ability(name: str, description: str, **fields) -> MonsterAbility:
+    return MonsterAbility(name=name, description=description, **fields)
 
 
 def test_an_attack():
@@ -231,6 +231,7 @@ def test_damage_on_a_failed_save():
             "Fire Breath (Recharge 5\N{EN DASH}6)",
             "Dexterity Saving Throw: DC 14, each creature in a 30-foot Cone."
             " Failure: 27 (5d10) Fire damage. Success: Half damage.",
+            recharge=5,
         )
     )
     assert (action.save_ability, action.save_dc) == ("Dexterity", 14)
@@ -247,6 +248,7 @@ def test_a_save_with_no_damage():
             "Blinding Breath (Recharge 6)",
             "Dexterity Saving Throw: DC 10, each creature in a 15-foot Cone."
             " Failure: The target has the Blinded condition.",
+            recharge=6,
         )
     )
     assert action.damage == ()
@@ -266,10 +268,16 @@ def test_success_damage_isnt_read_as_failure_damage():
     assert not action.half_on_save
 
 
-def test_per_day_and_legendary_cost():
-    assert parse_action(_ability("Fetid Cloud (1/Day)", "text")).per_day == 1
+def test_per_day_and_legendary_cost_are_its_fields():
+    """Not its name: Model/Creatures/MonsterAbilityText.py reads that once,
+    where the stat block is written (tests/test_monster_ability_text.py)."""
+    cloud = parse_action(_ability("Fetid Cloud (1/Day)", "text", per_day=1))
+    assert cloud.per_day == 1 and cloud.is_limited
+    assert not parse_action(_ability("Fetid Cloud (1/Day)", "text")).is_limited
     assert parse_action(_ability("Lash", "text"), legendary=True).legendary_cost == 1
-    wing = parse_action(_ability("Wing (Costs 2 Actions)", "text"), legendary=True)
+    wing = parse_action(
+        _ability("Wing (Costs 2 Actions)", "text", legendary_cost=2), legendary=True
+    )
     assert wing.legendary_cost == 2
     assert parse_action(_ability("Lash", "text")).legendary_cost == 0
 
@@ -323,18 +331,24 @@ def test_sections_and_legendary_marking():
 
 
 def test_start_of_turn_traits():
+    """A trait's `at_turn_start`, not its text."""
     char = {
         "traits": [
             _ability(
                 "Regeneration",
                 "The troll regains 15 Hit Points at the start of each of its turns."
                 " If it takes Fire damage, this doesn't work.",
+                at_turn_start="The troll regains 15 Hit Points at the start of"
+                " each of its turns.",
             ),
-            _ability(
-                "Aura",
-                "It glows. At the start of the wight's turn, shadows gather.",
-            ),
+            {
+                "name": "Aura",
+                "description": "It glows. At the start of the wight's turn,"
+                " shadows gather.",
+                "at_turn_start": "At the start of the wight's turn, shadows gather.",
+            },
             _ability("Keen Sight", "It sees far."),
+            _ability("Unwritten", "It heals at the start of its turn."),
         ]
     }
     assert start_of_turn_traits(char) == [

@@ -27,6 +27,7 @@ from Model.Creatures.Combatants import (
     MonsterType,
 )
 from Model.Creatures.MonsterAbilities import (
+    MonsterCast,
     Amphibious,
     DcMonsterAbility,
     DiceType,
@@ -95,7 +96,9 @@ class Aboleth(ExtendedCombatantData):
                     name="Eldritch Restoration",
                     description="If destroyed, the aboleth gains a new body in 5d10 days, reviving with all its Hit Points in the Far Realm or another location chosen by the DM.",
                 ),
-                LegendaryResistance(creature_name="aboleth", uses=3, lair_uses=4),
+                LegendaryResistance(
+                    creature_name="aboleth", uses=3, lair_uses=4, per_day=3
+                ),
                 DcMonsterAbility(
                     name="Mucus Cloud",
                     description="While underwater, the aboleth is surrounded by mucus. Constitution Saving Throw: DC 14, each creature in a 5-foot Emanation originating from the aboleth at the end of the aboleth's turn. Failure: The target is cursed. Until the curse ends, the target's skin becomes slimy, the target can breathe air and water, and it can't regain Hit Points unless it is underwater. While the cursed creature is outside a body of water, the creature takes 6 (1d12) Acid damage at the end of every 10 minutes unless moisture is applied to its skin before those minutes have passed.",
@@ -137,13 +140,16 @@ class Aboleth(ExtendedCombatantData):
                     dc=16,
                     target="one creature the aboleth can see within 30 feet",
                     failure_effect="The target has the Charmed condition until the aboleth dies or is on a different plane of existence from the target. While Charmed, the target acts as an ally to the aboleth and is under its control while within 60 feet of it. In addition, the aboleth and the target can communicate telepathically with each other over any distance. The target repeats the save whenever it takes damage as well as after every 24 hours it spends at least 1 mile away from the aboleth, ending the effect on itself on a success.",
+                    per_day=2,
                 ),
             ],
             bonus_actions=[],
             reactions=[],
             legendary_actions=[
                 MonsterAbility(
-                    name="Lash", description="The aboleth makes one Tentacle attack."
+                    name="Lash",
+                    description="The aboleth makes one Tentacle attack.",
+                    uses_ability="Tentacle",
                 ),
                 MonsterAbility(
                     name="Psychic Drain",
@@ -303,6 +309,7 @@ class CyclopsOracle(ExtendedCombatantData):
                 MonsterAbility(
                     name="Portent (Recharge 4–6)",
                     description="Trigger: The cyclops or an ally it can see makes a D20 Test. Response: The cyclops rolls 1d20 and chooses whether to use that roll in place of the d20 rolled for the D20 Test.",
+                    recharge=4,
                 ),
             ],
             legendary_actions=[],
@@ -360,7 +367,11 @@ class DeathSlaad(ExtendedCombatantData):
             languages="Common, Slaad; telepathy 60 ft",
             traits=[
                 MagicResistance(creature_name="slaad"),
-                Regeneration(creature_name="slaad", hp=10),
+                Regeneration(
+                    creature_name="slaad",
+                    hp=10,
+                    at_turn_start="The slaad regains 10 Hit Points at the start of each of its turns if it has at least 1 Hit Point.",
+                ),
             ],
             actions=[
                 Multiattack(
@@ -478,6 +489,12 @@ class Deva(ExtendedCombatantData):
                 MonsterAbility(
                     name="Divine Aid (2/Day)",
                     description="The deva casts Cure Wounds, Lesser Restoration, or Remove Curse, using the same spellcasting ability as Spellcasting.",
+                    per_day=2,
+                    casts=(
+                        MonsterCast("Cure Wounds"),
+                        MonsterCast("Lesser Restoration"),
+                        MonsterCast("Remove Curse"),
+                    ),
                 ),
             ],
             reactions=[],
@@ -548,6 +565,7 @@ class DireWorg(ExtendedCombatantData):
                     damage_type=DamageType.PSYCHIC,
                     failure_effect="and the target has the Frightened condition until the start of the worg's next turn",
                     success_effect="Half damage only.",
+                    recharge=5,
                 ),
             ],
             bonus_actions=[
@@ -737,6 +755,7 @@ class HauntingRevenant(ExtendedCombatantData):
                 Multiattack(
                     creature_name="revenant",
                     attacks_text="two Object Slam attacks and uses Invitation",
+                    uses_ability="Invitation",
                 ),
                 MeleeOrRangedAttack(
                     name="Object Slam",
@@ -830,6 +849,8 @@ class NobleProdigy(ExtendedCombatantData):
                 MonsterAbility(
                     name="Shield (2/Day)",
                     description="The noble casts Shield in response to that spell's trigger, using the same spellcasting ability as Spellcasting.",
+                    per_day=2,
+                    casts=(MonsterCast("Shield"),),
                 ),
             ],
             legendary_actions=[],
@@ -1020,6 +1041,7 @@ class SpyMaster(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Smoke Bomb (1/Day)",
                     description="The spy throws a bomb to a point it can see within 30 feet of itself. Constitution Saving Throw: DC 16, each creature in a 20-foot-radius Sphere centered on that point. Failure: 28 (8d6) Poison damage, and the target has the Blinded condition until the end of the spy's next turn. Success: Half damage only.",
+                    per_day=1,
                 ),
             ],
             bonus_actions=[
@@ -1120,6 +1142,7 @@ class StoneGolem(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Slow (Recharge 5–6)",
                     description="The golem casts the Slow spell, requiring no spell components and using Constitution as the spellcasting ability (spell save DC 17).",
+                    recharge=5,
                 ),
             ],
             reactions=[],
@@ -1283,6 +1306,7 @@ class Yochlol(ExtendedCombatantData):
                 Multiattack(
                     creature_name="yochlol",
                     attacks_text="two Caustic Lash attacks, and it can use Spellcasting to cast Web or Dominate Person if available",
+                    casts=(MonsterCast("Web"),),
                 ),
                 MeleeOrRangedAttack(
                     name="Caustic Lash",
@@ -1392,6 +1416,7 @@ class YoungGoldDragon(ExtendedCombatantData):
                     dice_type=DiceType.D10,
                     damage_type=DamageType.FIRE,
                     success_effect="Half damage.",
+                    recharge=5,
                 ),
                 SavingThrowEffect(
                     name="Weakening Breath",
@@ -1478,6 +1503,7 @@ class YoungRedDragon(ExtendedCombatantData):
                     dice_type=DiceType.D6,
                     damage_type=DamageType.FIRE,
                     success_effect="Half damage.",
+                    recharge=5,
                 ),
             ],
             bonus_actions=[],

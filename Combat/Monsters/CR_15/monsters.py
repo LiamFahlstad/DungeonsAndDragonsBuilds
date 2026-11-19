@@ -16,7 +16,11 @@ from Model.Creatures.Combatants import (
     ExtendedCombatantData,
     MonsterType,
 )
-from Model.Creatures.MonsterAbilities import DcMonsterAbility, MonsterAbility
+from Model.Creatures.MonsterAbilities import (
+    DcMonsterAbility,
+    MonsterAbility,
+    MonsterCast,
+)
 from Core.Definitions import Ability
 
 
@@ -72,12 +76,14 @@ class AdultBronzeDragon(ExtendedCombatantData):
                 MonsterAbility(
                     name="Legendary Resistance (3/Day, or 4/Day in Lair)",
                     description="If the dragon fails a saving throw, it can choose to succeed instead.",
+                    per_day=3,
                 ),
             ],
             actions=[
                 MonsterAbility(
                     name="Multiattack",
                     description="The dragon makes three Rend attacks. It can replace one attack with a use of (A) Repulsion Breath or (B) Spellcasting to cast Guiding Bolt (level 2 version).",
+                    casts=(MonsterCast("Guiding Bolt", level=2),),
                 ),
                 MonsterAbility(
                     name="Rend",
@@ -86,6 +92,7 @@ class AdultBronzeDragon(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Lightning Breath (Recharge 5–6)",
                     description="Dexterity Saving Throw: DC 19, each creature in a 90-foot-long, 5-foot-wide Line. Failure: 55 (10d10) Lightning damage. Success: Half damage.",
+                    recharge=5,
                 ),
                 DcMonsterAbility(
                     name="Repulsion Breath",
@@ -102,10 +109,14 @@ class AdultBronzeDragon(ExtendedCombatantData):
                 MonsterAbility(
                     name="Guiding Light",
                     description="The dragon uses Spellcasting to cast Guiding Bolt (level 2 version).",
+                    casts=(MonsterCast("Guiding Bolt", level=2),),
+                    uses_ability="Spellcasting",
                 ),
                 MonsterAbility(
                     name="Pounce",
                     description="The dragon moves up to half its Speed, and it makes one Rend attack.",
+                    uses_ability="Rend",
+                    moves_first=True,
                 ),
                 DcMonsterAbility(
                     name="Thunderclap",
@@ -174,12 +185,14 @@ class AdultGreenDragon(ExtendedCombatantData):
                 MonsterAbility(
                     name="Legendary Resistance (3/Day, or 4/Day in Lair)",
                     description="If the dragon fails a saving throw, it can choose to succeed instead.",
+                    per_day=3,
                 ),
             ],
             actions=[
                 MonsterAbility(
                     name="Multiattack",
                     description="The dragon makes three Rend attacks. It can replace one attack with a use of Spellcasting to cast Mind Spike (level 3 version).",
+                    casts=(MonsterCast("Mind Spike", level=3),),
                 ),
                 MonsterAbility(
                     name="Rend",
@@ -188,6 +201,7 @@ class AdultGreenDragon(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Poison Breath (Recharge 5–6)",
                     description="Constitution Saving Throw: DC 18, each creature in a 60-foot Cone. Failure: 56 (16d6) Poison damage. Success: Half damage.",
+                    recharge=5,
                 ),
                 DcMonsterAbility(
                     name="Spellcasting",
@@ -200,6 +214,8 @@ class AdultGreenDragon(ExtendedCombatantData):
                 MonsterAbility(
                     name="Mind Invasion",
                     description="The dragon uses Spellcasting to cast Mind Spike (level 3 version).",
+                    casts=(MonsterCast("Mind Spike", level=3),),
+                    uses_ability="Spellcasting",
                 ),
                 DcMonsterAbility(
                     name="Noxious Miasma",
@@ -208,6 +224,8 @@ class AdultGreenDragon(ExtendedCombatantData):
                 MonsterAbility(
                     name="Pounce",
                     description="The dragon moves up to half its Speed, and it makes one Rend attack.",
+                    uses_ability="Rend",
+                    moves_first=True,
                 ),
             ],
             legendary_resistances=3,
@@ -271,6 +289,7 @@ class MummyLord(ExtendedCombatantData):
                 MonsterAbility(
                     name="Legendary Resistance (3/Day, or 4/Day in Lair)",
                     description="If the mummy fails a saving throw, it can choose to succeed instead.",
+                    per_day=3,
                 ),
                 MonsterAbility(
                     name="Magic Resistance",
@@ -285,6 +304,7 @@ class MummyLord(ExtendedCombatantData):
                 MonsterAbility(
                     name="Multiattack",
                     description="The mummy makes one Rotting Fist or Channel Negative Energy attack, and it uses Dreadful Glare.",
+                    uses_ability="Dreadful Glare",
                 ),
                 MonsterAbility(
                     name="Rotting Fist",
@@ -314,10 +334,12 @@ class MummyLord(ExtendedCombatantData):
                 MonsterAbility(
                     name="Dread Command",
                     description="The mummy casts Command (level 2 version), using the same spellcasting ability as Spellcasting. The mummy can't take this action again until the start of its next turn.",
+                    casts=(MonsterCast("Command", level=2),),
                 ),
                 MonsterAbility(
                     name="Glare",
                     description="The mummy uses Dreadful Glare. The mummy can't take this action again until the start of its next turn.",
+                    uses_ability="Dreadful Glare",
                 ),
                 MonsterAbility(
                     name="Necrotic Strike",
@@ -380,6 +402,7 @@ class PurpleWorm(ExtendedCombatantData):
                 MonsterAbility(
                     name="Multiattack",
                     description="The worm makes one Bite attack and one Tail Stinger attack.",
+                    uses_ability="Bite",
                 ),
                 DcMonsterAbility(
                     name="Bite",
@@ -468,6 +491,7 @@ class SalamanderInfernoMaster(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Inferno Blast (Recharge 5–6)",
                     description="Dexterity Saving Throw: DC 18, each creature in a 30-foot-radius Sphere centered on a point the salamander can see within 120 feet. Failure: 35 (10d6) Fire damage, and the target starts burning, taking 5 (1d10) Fire damage at the start of each of its turns instead of the normal burning damage. The target gains 1 Exhaustion level whenever it takes this burning damage. Success: Half damage only.",
+                    recharge=5,
                 ),
             ],
             bonus_actions=[
@@ -536,6 +560,7 @@ class VampireUmbralLord(ExtendedCombatantData):
                 MonsterAbility(
                     name="Legendary Resistance (3/Day, or 4/Day in Lair)",
                     description="If the vampire fails a saving throw, it can choose to succeed instead.",
+                    per_day=3,
                 ),
                 MonsterAbility(
                     name="Shadow Escape",
@@ -574,6 +599,8 @@ class VampireUmbralLord(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Hunger of Hadar (Recharge 5–6)",
                     description="The vampire casts Hunger of Hadar (level 5 version), requiring no spell components and using Charisma as the spellcasting ability (spell save DC 18).",
+                    recharge=5,
+                    casts=(MonsterCast("Hunger of Hadar", level=5),),
                 ),
                 MonsterAbility(
                     name="Sickening Ray",
@@ -591,6 +618,7 @@ class VampireUmbralLord(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Beguile",
                     description="The vampire casts Command, requiring no spell components and using Charisma as the spellcasting ability (spell save DC 18). The vampire can't take this action again until the start of its next turn.",
+                    casts=(MonsterCast("Command"),),
                 ),
                 MonsterAbility(
                     name="Umbral Strike",

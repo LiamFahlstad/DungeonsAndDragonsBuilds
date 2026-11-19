@@ -992,53 +992,18 @@ def _monster_area(action: MonsterAction) -> CombatArea | None:
     return read_combat_area(action.description)
 
 
-# "The lich casts Fear, using ...", "uses Spellcasting to cast Mind Spike
-# (level 3 version).", "casts Cure Wounds (level 2 version), Lesser
-# Restoration, or Remove Curse, using ...", "casts Counterspell or Shield in
-# response to ...". The names are checked against the spells there are.
-_CASTS = re.compile(
-    r"\bcasts? (?P<spells>[A-Z].*?)"
-    r"(?=, using|\.(?:\s|$)| in response| on that| on the| on a| at will)"
-)
-_LIST_ITEM = re.compile(r",? or |, ")
-_AT_LEVEL = re.compile(r"(?P<name>.+?)(?: \(level (?P<level>\d+) version\))?")
-
-
 def _spells_it_casts(
     action: MonsterAction,
-) -> list[tuple[object, int | None, str]]:
-    """(spell, the level it's cast at if the text says, how often: "2/Day
-    each" or "") for each spell the ability's text casts: named ("casts
-    Fear"), or in a Spellcasting list ("At will: Thaumaturgy. 2/Day each: Hold
-    Person, Silence.")."""
+) -> list[tuple[object, int | None, int | None]]:
+    """(spell, the level it's cast at if the stat block says, its uses per
+    day if its Spellcasting gives them) for each spell the ability casts
+    (its `casts`) that there is."""
     found = []
-    for match in _CASTS.finditer(action.description):
-        for spell, level in _named_spells(match["spells"]):
-            found.append((spell, level, ""))
-    following = _FOLLOWING.search(action.description)
-    if following is not None:
-        for match in _SPELL_LIST.finditer(action.description, following.end()):
-            for spell, level in _named_spells(match["spells"]):
-                found.append((spell, level, match["often"]))
-    return found
-
-
-def _named_spells(text: str) -> list[tuple[object, int | None]]:
-    """The spells "A (level 2 version), B, or C" names that there are."""
-    named = []
-    for item in _LIST_ITEM.split(text):
-        match = _AT_LEVEL.fullmatch(item.strip())
-        if match is None:
-            continue
-        spell = _spell_named(match["name"])
+    for cast in action.casts:
+        spell = _spell_named(cast.spell)
         if spell is not None:
-            named.append((spell, int(match["level"]) if match["level"] else None))
-    return named
-
-
-# "casts one of the following spells, ... (spell save DC 12):" and its lists.
-_FOLLOWING = re.compile(r"following spells[^:]*:")
-_SPELL_LIST = re.compile(r"(?P<often>At will|\d+/Day(?: each)?): (?P<spells>[^.]+)")
+            found.append((spell, cast.level, cast.per_day))
+    return found
 
 
 def _spell_named(name: str):
@@ -1051,18 +1016,22 @@ def _spells_by_name() -> dict:
 
 
 def _monster_spell_options(
-    char: dict, action: MonsterAction, spell, level: int | None, often: str = ""
+    char: dict,
+    action: MonsterAction,
+    spell,
+    level: int | None,
+    per_day: int | None = None,
 ) -> list[EffectOption]:
     """Casting `spell` as `action`, a row per way to cast it, at `level` if
     it's a higher one, with char's spell save DC and attack bonus. It spends
     the action, not a slot or the spell's casting time: the turn column counts
-    the stat block's section. Its condition is the spell's badge. `often` is
-    how often its Spellcasting allows it ("2/Day each"), for the GM to keep
-    count of."""
+    the stat block's section. Its condition is the spell's badge. `per_day`
+    is how often its Spellcasting allows it ("2/Day each"), for the GM to
+    keep count of."""
     options = spell_options(spell, char)
     several = len(_spells_it_casts(action)) > 1 or len(options) > 1
     return [
-        _monster_spell_option(char, action, spell, option, level, often, several)
+        _monster_spell_option(char, action, spell, option, level, per_day, several)
         for option in options
     ]
 
@@ -1073,7 +1042,7 @@ def _monster_spell_option(
     spell,
     option: EffectOption,
     level: int | None,
-    often: str,
+    per_day: int | None,
     several: bool,
 ) -> EffectOption:
     """One row of _monster_spell_options."""
@@ -1086,7 +1055,7 @@ def _monster_spell_option(
     name = f"{action.name}: {option.name}" if several else action.name
     row_name, unavailable = _availability(char, action, name)
     at_level = f" at level {level}" if level and level > spell.level else ""
-    how_often = f" ({often})" if often and often.lower() != "at will" else ""
+    how_often = f" ({per_day}/Day)" if per_day else ""
     note = f"It casts {spell.name}{at_level}{how_often}." + (
         f" {option.note}" if option.note else ""
     )
@@ -1118,26 +1087,21 @@ def _without_slot_note(note: str) -> str:
     return re.sub(r"\s*No slot of level \d+ or higher left\.", "", note).strip()
 
 
-# "The dragon makes one Rend attack.", "The mummy uses Dreadful Glare."
-_MAKES_ONE = re.compile(r"\bmakes one (?P<name>[A-Z][\w'’ -]*?) attack\b")
-_USES = re.compile(r"\buses (?P<name>[A-Z][\w'’ -]*?)(?=[.,]| to | on )")
+# An ability's name without its "(Recharge 5-6)", for its row's name.
 _NAME_ALONE = re.compile(r"\s*\(.*")
 
 
 def _action_it_uses(
     action: MonsterAction, by_name: dict[str, MonsterAction]
 ) -> MonsterAction | None:
-    """The other action this one makes or uses, when its whole point is that
-    (Pounce, Tail Swipe, a lich's Glare), and char has it."""
+    """The other action this one makes or uses (its `uses_ability`), when its
+    whole point is that (Pounce, Tail Swipe, a lich's Glare), and char has
+    it."""
     if action.is_rollable or action.save_ability is not None:
         return None
-    for pattern in (_MAKES_ONE, _USES):
-        match = pattern.search(action.description)
-        if match is None:
-            continue
-        other = by_name.get(match["name"].lower())
-        if other is not None and other.name != action.name:
-            return other
+    other = by_name.get(action.uses_ability.lower())
+    if other is not None and other.name != action.name:
+        return other
     return None
 
 
@@ -1148,10 +1112,9 @@ def _as_other_action(
     used = _monster_action_option(char, other)
     row_name, unavailable = _availability(char, action, action.name)
     base = _NAME_ALONE.sub("", other.name)
-    verb = "makes one" if _MAKES_ONE.search(action.description) else "uses"
-    rest = f"{base} attack" if verb == "makes one" else base
-    note = f"It {verb} {rest}." + (f" {used.note}" if used.note else "")
-    if _MOVES.search(action.description):
+    doing = f"makes one {base} attack" if other.to_hit is not None else f"uses {base}"
+    note = f"It {doing}." + (f" {used.note}" if used.note else "")
+    if action.moves_first:
         note += " It moves first: move it by hand."
     return replace(
         used,
@@ -1163,9 +1126,6 @@ def _as_other_action(
         is_unavailable=unavailable,
         area=_monster_area(action),
     )
-
-
-_MOVES = re.compile(r"\bmoves up to\b")
 
 
 def _monster_action_option(char: dict, action: MonsterAction) -> EffectOption:

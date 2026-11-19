@@ -16,7 +16,11 @@ from Model.Creatures.Combatants import (
     ExtendedCombatantData,
     MonsterType,
 )
-from Model.Creatures.MonsterAbilities import DcMonsterAbility, MonsterAbility
+from Model.Creatures.MonsterAbilities import (
+    DcMonsterAbility,
+    MonsterAbility,
+    MonsterCast,
+)
 from Core.Definitions import Ability
 
 
@@ -72,12 +76,14 @@ class AdultBrassDragon(ExtendedCombatantData):
                 MonsterAbility(
                     name="Legendary Resistance (3/Day, or 4/Day in Lair)",
                     description="If the dragon fails a saving throw, it can choose to succeed instead.",
+                    per_day=3,
                 ),
             ],
             actions=[
                 MonsterAbility(
                     name="Multiattack",
                     description="The dragon makes three Rend attacks. It can replace one attack with a use of (A) Sleep Breath or (B) Spellcasting to cast Scorching Ray.",
+                    casts=(MonsterCast("Scorching Ray"),),
                 ),
                 MonsterAbility(
                     name="Rend",
@@ -86,6 +92,7 @@ class AdultBrassDragon(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Fire Breath (Recharge 5–6)",
                     description="Dexterity Saving Throw: DC 18, each creature in a 60-foot-long, 5-foot-wide Line. Failure: 45 (10d8) Fire damage. Success: Half damage.",
+                    recharge=5,
                 ),
                 DcMonsterAbility(
                     name="Sleep Breath",
@@ -102,10 +109,14 @@ class AdultBrassDragon(ExtendedCombatantData):
                 MonsterAbility(
                     name="Blazing Light",
                     description="The dragon uses Spellcasting to cast Scorching Ray.",
+                    casts=(MonsterCast("Scorching Ray"),),
+                    uses_ability="Spellcasting",
                 ),
                 MonsterAbility(
                     name="Pounce",
                     description="The dragon moves up to half its Speed, and it makes one Rend attack.",
+                    uses_ability="Rend",
+                    moves_first=True,
                 ),
                 DcMonsterAbility(
                     name="Scorching Sands",
@@ -169,6 +180,7 @@ class AdultWhiteDragon(ExtendedCombatantData):
                 MonsterAbility(
                     name="Legendary Resistance (3/Day, or 4/Day in Lair)",
                     description="If the dragon fails a saving throw, it can choose to succeed instead.",
+                    per_day=3,
                 ),
             ],
             actions=[
@@ -183,6 +195,7 @@ class AdultWhiteDragon(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Cold Breath (Recharge 5–6)",
                     description="Constitution Saving Throw: DC 19, each creature in a 60-foot Cone. Failure: 54 (12d8) Cold damage. Success: Half damage.",
+                    recharge=5,
                 ),
             ],
             bonus_actions=[],
@@ -195,10 +208,13 @@ class AdultWhiteDragon(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Frightful Presence",
                     description="The dragon casts Fear, requiring no Material components and using Charisma as the spellcasting ability (spell save DC 14). The dragon can't take this action again until the start of its next turn.",
+                    casts=(MonsterCast("Fear"),),
                 ),
                 MonsterAbility(
                     name="Pounce",
                     description="The dragon moves up to half its Speed, and it makes one Rend attack.",
+                    uses_ability="Rend",
+                    moves_first=True,
                 ),
             ],
             legendary_resistances=3,
@@ -334,12 +350,14 @@ class Nalfeshnee(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Horror Nimbus (Recharge 5–6)",
                     description="Wisdom Saving Throw: DC 15, each creature in a 15-foot Emanation originating from the nalfeshnee. Failure: 28 (8d6) Psychic damage, and the target has the Frightened condition for 1 minute, until it takes damage, or until it ends its turn with the nalfeshnee out of line of sight. Success: The target is immune to this nalfeshnee's Horror Nimbus for 24 hours.",
+                    recharge=5,
                 ),
             ],
             reactions=[
                 MonsterAbility(
                     name="Pursuit",
                     description="Trigger: Another creature the nalfeshnee can see ends its move within 120 feet of the nalfeshnee. Response: The nalfeshnee uses Teleport, but its destination space must be within 10 feet of the triggering creature.",
+                    uses_ability="Teleport",
                 ),
             ],
             legendary_actions=[],
@@ -415,6 +433,7 @@ class Rakshasa(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Baleful Command (Recharge 5–6)",
                     description="Wisdom Saving Throw: DC 18, each enemy in a 30-foot Emanation originating from the rakshasa. Failure: 28 (8d6) Psychic damage, and the target has the Frightened and Incapacitated conditions until the start of the rakshasa's next turn.",
+                    recharge=5,
                 ),
                 DcMonsterAbility(
                     name="Spellcasting",
@@ -477,6 +496,7 @@ class ShadowDragon(ExtendedCombatantData):
                 MonsterAbility(
                     name="Legendary Resistance (3/Day, or 4/Day in Lair)",
                     description="If the dragon fails a saving throw, it can choose to succeed instead.",
+                    per_day=3,
                 ),
                 MonsterAbility(
                     name="Living Shadow",
@@ -499,6 +519,7 @@ class ShadowDragon(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Shadow Breath (Recharge 5–6)",
                     description="Dexterity Saving Throw: DC 17, each creature in a 60-foot Cone. Failure: 35 (10d6) Necrotic damage. Success: Half damage. Failure or Success: A Humanoid reduced to 0 Hit Points by this damage dies, and a Shadow rises from the corpse. The shadow is under the dragon's control and shares the dragon's Initiative count but acts immediately after the dragon.",
+                    recharge=5,
                 ),
             ],
             bonus_actions=[
@@ -512,10 +533,13 @@ class ShadowDragon(ExtendedCombatantData):
                 MonsterAbility(
                     name="Pounce",
                     description="The dragon moves up to half its Speed, and it makes one Rend attack.",
+                    uses_ability="Rend",
+                    moves_first=True,
                 ),
                 MonsterAbility(
                     name="Veil of Shadow",
                     description="The dragon uses Shadow Stealth, and one creature of its choice that it can see within 10 feet of it takes 10 (3d6) Necrotic damage. The dragon can't take this action again until the start of its next turn.",
+                    uses_ability="Shadow Stealth",
                 ),
             ],
             legendary_resistances=3,
@@ -603,6 +627,7 @@ class StormGiant(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Lightning Storm (Recharge 5–6)",
                     description="Dexterity Saving Throw: DC 18, each creature in a 10-foot-radius, 40-foot-high Cylinder originating from a point the giant can see within 500 feet. Failure: 55 (10d10) Lightning damage. Success: Half damage.",
+                    recharge=5,
                 ),
                 DcMonsterAbility(
                     name="Spellcasting",
@@ -701,6 +726,12 @@ class Ultroloth(ExtendedCombatantData):
                 MonsterAbility(
                     name="Fiendish Guile (Recharge 4–6)",
                     description="The ultroloth casts Dispel Magic, Invisibility (self only), Misty Step, or Suggestion, requiring no Material components and using the same spellcasting ability as Spellcasting.",
+                    recharge=4,
+                    casts=(
+                        MonsterCast("Dispel Magic"),
+                        MonsterCast("Misty Step"),
+                        MonsterCast("Suggestion"),
+                    ),
                 ),
             ],
             reactions=[],
@@ -760,10 +791,12 @@ class Vampire(ExtendedCombatantData):
                 MonsterAbility(
                     name="Legendary Resistance (3/Day, or 4/Day in Lair)",
                     description="If the vampire fails a saving throw, it can choose to succeed instead.",
+                    per_day=3,
                 ),
                 MonsterAbility(
                     name="Misty Escape",
                     description="If the vampire drops to 0 Hit Points outside its resting place, the vampire uses Shape-Shift to become mist (no action required). If it can't use Shape-Shift, it is destroyed. While it has 0 Hit Points in mist form, it can't return to its vampire form, and it must reach its resting place within 2 hours or be destroyed. Once in its resting place, it returns to its vampire form and has the Paralyzed condition until it regains any Hit Points, and it regains 1 Hit Point after spending 1 hour there.",
+                    uses_ability="Shape-Shift",
                 ),
                 MonsterAbility(
                     name="Spider Climb",
@@ -794,6 +827,7 @@ class Vampire(ExtendedCombatantData):
                 MonsterAbility(
                     name="Multiattack (Vampire Form Only)",
                     description="The vampire makes two Grave Strike attacks and uses Bite.",
+                    uses_ability="Bite",
                 ),
                 DcMonsterAbility(
                     name="Grave Strike (Vampire Form Only)",
@@ -812,6 +846,8 @@ class Vampire(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Charm (Recharge 5–6)",
                     description="The vampire casts Charm Person, requiring no spell components and using Charisma as the spellcasting ability (spell save DC 17), and the duration is 24 hours. The Charmed target is a willing recipient of the vampire's Bite, the damage of which doesn't end the spell. When the spell ends, the target is unaware it was Charmed by the vampire.",
+                    recharge=5,
+                    casts=(MonsterCast("Charm Person"),),
                 ),
             ],
             reactions=[],
@@ -819,10 +855,13 @@ class Vampire(ExtendedCombatantData):
                 MonsterAbility(
                     name="Deathless Strike",
                     description="The vampire moves up to half its Speed, and it makes one Grave Strike attack.",
+                    uses_ability="Grave Strike",
+                    moves_first=True,
                 ),
                 DcMonsterAbility(
                     name="Beguile",
                     description="The vampire casts Command, requiring no spell components and using Charisma as the spellcasting ability (spell save DC 17). The vampire can't take this action again until the start of its next turn.",
+                    casts=(MonsterCast("Command"),),
                 ),
             ],
             legendary_resistances=3,

@@ -18,7 +18,11 @@ from Model.Creatures.Combatants import (
     ExtendedCombatantData,
     MonsterType,
 )
-from Model.Creatures.MonsterAbilities import DcMonsterAbility, MonsterAbility
+from Model.Creatures.MonsterAbilities import (
+    DcMonsterAbility,
+    MonsterAbility,
+    MonsterCast,
+)
 from Core.Definitions import Ability
 
 
@@ -141,6 +145,7 @@ class BrassDragonWyrmling(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Fire Breath (Recharge 5–6)",
                     description="Dexterity Saving Throw: DC 11, each creature in a 20-foot-long, 5-foot-wide Line. Failure: 14 (4d6) Fire damage. Success: Half damage.",
+                    recharge=5,
                 ),
                 DcMonsterAbility(
                     name="Sleep Breath",
@@ -199,6 +204,7 @@ class BrownBear(ExtendedCombatantData):
                 MonsterAbility(
                     name="Multiattack",
                     description="The bear makes one Bite attack and one Claw attack.",
+                    uses_ability="Bite",
                 ),
                 MonsterAbility(
                     name="Bite",
@@ -331,6 +337,7 @@ class CopperDragonWyrmling(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Acid Breath (Recharge 5–6)",
                     description="Dexterity Saving Throw: DC 11, each creature in a 20-foot-long, 5-foot-wide Line. Failure: 18 (4d8) Acid damage. Success: Half damage.",
+                    recharge=5,
                 ),
                 DcMonsterAbility(
                     name="Slowing Breath",
@@ -523,6 +530,7 @@ class Dryad(ExtendedCombatantData):
                 MonsterAbility(
                     name="Multiattack",
                     description="The dryad makes one Vine Lash or Thorn Burst attack, and it can use Spellcasting to cast Charm Monster.",
+                    casts=(MonsterCast("Charm Monster"),),
                 ),
                 MonsterAbility(
                     name="Vine Lash",
@@ -618,6 +626,8 @@ class EmpyreanIota(ExtendedCombatantData):
                 MonsterAbility(
                     name="Healing Word (1/Day)",
                     description="The empyrean casts Healing Word, using the same spellcasting ability as Spellcasting.",
+                    per_day=1,
+                    casts=(MonsterCast("Healing Word"),),
                 ),
             ],
             reactions=[],
@@ -681,6 +691,7 @@ class FaerieDragonYouth(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Euphoria Breath (Recharge 5–6)",
                     description="Wisdom Saving Throw: DC 12, each creature in a 15-foot Cone. Failure: The target has the Incapacitated condition until the end of its next turn and uses all its movement on its turn to move in a random direction.",
+                    recharge=5,
                 ),
                 DcMonsterAbility(
                     name="Spellcasting",
@@ -876,6 +887,8 @@ class GiantHyena(ExtendedCombatantData):
                 MonsterAbility(
                     name="Rampage (1/Day)",
                     description="Immediately after dealing damage to a creature that was already Bloodied, the hyena can move up to half its Speed, and it makes one Bite attack.",
+                    per_day=1,
+                    uses_ability="Bite",
                 ),
             ],
             reactions=[],
@@ -942,6 +955,7 @@ class GiantOctopus(ExtendedCombatantData):
                 MonsterAbility(
                     name="Ink Cloud (1/Day)",
                     description="Trigger: The octopus takes damage while underwater. Response: The octopus releases ink that fills a 10-foot Cube centered on itself, and the octopus moves up to its Swim Speed. The Cube is Heavily Obscured for 1 minute or until a strong current or similar effect disperses the ink.",
+                    per_day=1,
                 ),
             ],
             legendary_actions=[],
@@ -1007,6 +1021,7 @@ class GiantSpider(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Web (Recharge 5–6)",
                     description="Dexterity Saving Throw: DC 13, one creature the spider can see within 60 feet. Failure: The target has the Restrained condition until the web is destroyed (AC 10; HP 5; Vulnerability to Fire damage; Immunity to Poison and Psychic damage).",
+                    recharge=5,
                 ),
             ],
             bonus_actions=[],
@@ -1473,6 +1488,8 @@ class KuotoaWhip(ExtendedCombatantData):
                 MonsterAbility(
                     name="Shield of Faith (2/Day)",
                     description="The kuo-toa casts Shield of Faith, using Wisdom as the spellcasting ability.",
+                    per_day=2,
+                    casts=(MonsterCast("Shield of Faith"),),
                 ),
             ],
             reactions=[],
@@ -2036,6 +2053,7 @@ class Quasit(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Scare (1/Day)",
                     description="Wisdom Saving Throw: DC 10, one creature within 20 feet. Failure: The target has the Frightened condition. At the end of each of its turns, the target repeats the save, ending the effect on itself on a success. After 1 minute, it succeeds automatically.",
+                    per_day=1,
                 ),
                 MonsterAbility(
                     name="Shape-Shift",
@@ -2329,6 +2347,7 @@ class SphinxOfWonder(ExtendedCombatantData):
                 MonsterAbility(
                     name="Burst of Ingenuity (2/Day)",
                     description="Trigger: The sphinx or another creature within 30 feet makes an ability check or a saving throw. Response: The sphinx adds 2 to the roll.",
+                    per_day=2,
                 ),
             ],
             legendary_actions=[],

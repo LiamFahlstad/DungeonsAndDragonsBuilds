@@ -18,7 +18,11 @@ from Model.Creatures.Combatants import (
     ExtendedCombatantData,
     MonsterType,
 )
-from Model.Creatures.MonsterAbilities import DcMonsterAbility, MonsterAbility
+from Model.Creatures.MonsterAbilities import (
+    DcMonsterAbility,
+    MonsterAbility,
+    MonsterCast,
+)
 from Core.Definitions import Ability
 
 
@@ -96,6 +100,7 @@ class AirElemental(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Whirlwind (Recharge 4–6)",
                     description="Strength Saving Throw: DC 13, one Medium or smaller creature in the elemental's space. Failure: 24 (4d10 + 2) Thunder damage, and the target is pushed up to 20 feet straight away from the elemental and has the Prone condition. Success: Half damage only.",
+                    recharge=4,
                 ),
             ],
             bonus_actions=[],
@@ -159,6 +164,7 @@ class BarbedDevil(ExtendedCombatantData):
                 MonsterAbility(
                     name="Barbed Hide",
                     description="At the start of each of its turns, the devil deals 5 (1d10) Piercing damage to any creature it is grappling or any creature grappling it.",
+                    at_turn_start="At the start of each of its turns, the devil deals 5 (1d10) Piercing damage to any creature it is grappling or any creature grappling it.",
                 ),
                 MonsterAbility(
                     name="Diabolical Restoration",
@@ -173,6 +179,7 @@ class BarbedDevil(ExtendedCombatantData):
                 MonsterAbility(
                     name="Multiattack",
                     description="The devil makes one Claws attack and one Tail attack, or it makes two Hurl Flame attacks.",
+                    uses_ability="Claws",
                 ),
                 DcMonsterAbility(
                     name="Claws",
@@ -252,6 +259,7 @@ class Barlgura(ExtendedCombatantData):
                 MonsterAbility(
                     name="Multiattack",
                     description="The barlgura makes one Tormenting Bite attack and two Thrash attacks.",
+                    uses_ability="Tormenting Bite",
                 ),
                 MonsterAbility(
                     name="Tormenting Bite",
@@ -818,6 +826,7 @@ class GiantAxeBeak(ExtendedCombatantData):
                 MonsterAbility(
                     name="Multiattack",
                     description="The axe beak makes one Sharpened Beak attack and one Talons attack.",
+                    uses_ability="Sharpened Beak",
                 ),
                 MonsterAbility(
                     name="Sharpened Beak",
@@ -885,6 +894,7 @@ class GiantCrocodile(ExtendedCombatantData):
                 MonsterAbility(
                     name="Multiattack",
                     description="The crocodile makes one Bite attack and one Tail attack.",
+                    uses_ability="Bite",
                 ),
                 DcMonsterAbility(
                     name="Bite",
@@ -1085,6 +1095,7 @@ class Gorgon(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Petrifying Breath (Recharge 5–6)",
                     description="Constitution Saving Throw: DC 15, each creature in a 30-foot Cone. First Failure: The target has the Restrained condition and repeats the save at the end of its next turn if it is still Restrained, ending the effect on itself on a success. Second Failure: The target has the Petrified condition instead of the Restrained condition.",
+                    recharge=5,
                 ),
             ],
             bonus_actions=[
@@ -1163,6 +1174,7 @@ class Halfdragon(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Dragon's Breath (Recharge 5-6)",
                     description="Dexterity Saving Throw: DC 14, each creature in a 30-foot Cone. Failure: 28 (8d6) damage of the type chosen for the Draconic Origin trait. Success: Half damage.",
+                    recharge=5,
                 ),
             ],
             bonus_actions=[
@@ -1319,6 +1331,7 @@ class Mezzoloth(ExtendedCombatantData):
                 MonsterAbility(
                     name="Teleport (Recharge 5–6)",
                     description="The mezzoloth teleports up to 60 feet to an unoccupied space it can see. It can teleport one creature it is grappling to an unoccupied space within 5 feet of its destination space.",
+                    recharge=5,
                 ),
             ],
             reactions=[],
@@ -1401,6 +1414,8 @@ class NightHag(ExtendedCombatantData):
                 MonsterAbility(
                     name="Nightmare Haunting (1/Day; Requires Soul Bag)",
                     description="While on the Ethereal Plane, the hag casts Dream, using the same spellcasting ability as Spellcasting. Only the hag can serve as the spell's messenger, and the target must be a creature the hag can see on the Material Plane. The spell fails and is wasted if the target is under the effect of the Protection from Evil and Good spell or within a Magic Circle spell. If the target takes damage from the Dream spell, the target's Hit Point maximum decreases by an amount equal to that damage. If the spell kills the target, its soul is trapped in the hag's soul bag, and the target can't be raised from the dead until its soul is released.",
+                    per_day=1,
+                    casts=(MonsterCast("Dream"),),
                 ),
                 DcMonsterAbility(
                     name="Spellcasting",
@@ -1464,6 +1479,7 @@ class Otyugh(ExtendedCombatantData):
                 MonsterAbility(
                     name="Multiattack",
                     description="The otyugh makes one Bite attack and two Tentacle attacks.",
+                    uses_ability="Bite",
                 ),
                 DcMonsterAbility(
                     name="Bite",
@@ -1549,6 +1565,12 @@ class PixieWonderbringer(ExtendedCombatantData):
                 MonsterAbility(
                     name="Burst of Wonder (Recharge 5–6)",
                     description="The pixie casts Entangle, Polymorph, or Tasha's Hideous Laughter, requiring no Material components and using the same spellcasting ability as Spellcasting.",
+                    recharge=5,
+                    casts=(
+                        MonsterCast("Entangle"),
+                        MonsterCast("Polymorph"),
+                        MonsterCast("Tasha's Hideous Laughter"),
+                    ),
                 ),
             ],
             reactions=[],
@@ -1611,6 +1633,7 @@ class RedSlaad(ExtendedCombatantData):
                 MonsterAbility(
                     name="Regeneration",
                     description="The slaad regains 10 Hit Points at the start of each of its turns if it has at least 1 Hit Point.",
+                    at_turn_start="The slaad regains 10 Hit Points at the start of each of its turns if it has at least 1 Hit Point.",
                 ),
             ],
             actions=[
@@ -1691,6 +1714,7 @@ class Revenant(ExtendedCombatantData):
                 MonsterAbility(
                     name="Regeneration",
                     description="The revenant regains 10 Hit Points at the start of each of its turns. If the revenant takes Fire or Radiant damage, this trait doesn't function at the start of its next turn. Its body is destroyed only if it starts its turn with 0 Hit Points and doesn't regenerate.",
+                    at_turn_start="The revenant regains 10 Hit Points at the start of each of its turns.",
                 ),
                 MonsterAbility(
                     name="Undead Restoration",
@@ -1715,6 +1739,7 @@ class Revenant(ExtendedCombatantData):
                 MonsterAbility(
                     name="Vow of Revenge (1/Day)",
                     description="The revenant curses one creature it can see within 30 feet of itself. The revenant knows the distance to and direction of the cursed target, even if it is on a different plane of existence. The curse ends on the target if the revenant uses this Bonus Action on a different creature.",
+                    per_day=1,
                 ),
             ],
             reactions=[],
@@ -1773,6 +1798,7 @@ class Roper(ExtendedCombatantData):
                 MonsterAbility(
                     name="Multiattack",
                     description="The roper makes two Tentacle attacks, uses Reel, and makes two Bite attacks.",
+                    uses_ability="Reel",
                 ),
                 MonsterAbility(
                     name="Bite",
@@ -2123,10 +2149,12 @@ class Troll(ExtendedCombatantData):
                 MonsterAbility(
                     name="Loathsome Limbs (4/Day)",
                     description="If the troll ends any turn Bloodied and took 15+ Slashing damage during that turn, one of the troll's limbs is severed, falls into the troll's space, and becomes a Troll Limb. The limb acts immediately after the troll's turn. The troll has 1 Exhaustion level for each missing limb, and it grows replacement limbs the next time it regains Hit Points.",
+                    per_day=4,
                 ),
                 MonsterAbility(
                     name="Regeneration",
                     description="The troll regains 15 Hit Points at the start of each of its turns. If the troll takes Acid or Fire damage, this trait doesn't function on the troll's next turn. The troll dies only if it starts its turn with 0 Hit Points and doesn't regenerate.n.",
+                    at_turn_start="The troll regains 15 Hit Points at the start of each of its turns.",
                 ),
             ],
             actions=[
@@ -2213,6 +2241,7 @@ class UmberHulk(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Confusing Gaze (Recharge 5–6)",
                     description="Wisdom Saving Throw: DC 14, each creature in a 30-foot Cone. Failure: The target can't take Reactions until the start of the umber hulk's next turn, and the target rolls 1d8 to determine what it does on its next turn:",
+                    recharge=5,
                 ),
                 MonsterAbility(name="1-4", description=". The target does nothing."),
                 MonsterAbility(
@@ -2281,6 +2310,7 @@ class Unicorn(ExtendedCombatantData):
                 MonsterAbility(
                     name="Legendary Resistance (3/Day)",
                     description="If the unicorn fails a saving throw, it can choose to succeed instead.",
+                    per_day=3,
                 ),
                 MonsterAbility(
                     name="Magic Resistance",
@@ -2291,6 +2321,7 @@ class Unicorn(ExtendedCombatantData):
                 MonsterAbility(
                     name="Multiattack",
                     description="The unicorn makes one Hooves attack and one Radiant Horn attack.",
+                    uses_ability="Hooves",
                 ),
                 MonsterAbility(
                     name="Hooves",
@@ -2309,6 +2340,11 @@ class Unicorn(ExtendedCombatantData):
                 MonsterAbility(
                     name="Unicorn's Blessing (3/Day)",
                     description="The unicorn touches another creature with its horn and casts Cure Wounds or Lesser Restoration on that creature, using the same spellcasting ability as Spellcasting.",
+                    per_day=3,
+                    casts=(
+                        MonsterCast("Cure Wounds"),
+                        MonsterCast("Lesser Restoration"),
+                    ),
                 ),
             ],
             reactions=[],
@@ -2316,6 +2352,8 @@ class Unicorn(ExtendedCombatantData):
                 MonsterAbility(
                     name="Charging Horn",
                     description="The unicorn moves up to half its Speed without provoking Opportunity Attacks, and it makes one Radiant Horn attack.",
+                    uses_ability="Radiant Horn",
+                    moves_first=True,
                 ),
                 MonsterAbility(
                     name="Shimmering Shield",
@@ -2398,6 +2436,7 @@ class VampireSpawn(ExtendedCombatantData):
                 MonsterAbility(
                     name="Multiattack",
                     description="The vampire makes two Claw attacks and uses Bite.",
+                    uses_ability="Bite",
                 ),
                 DcMonsterAbility(
                     name="Claw",
@@ -2497,6 +2536,7 @@ class WaterElemental(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Whelm (Recharge 4–6)",
                     description="Strength Saving Throw: DC 15, each creature in the elemental's space. Failure: 22 (4d8 + 4) Bludgeoning damage. If the target is a Large or smaller creature, it has the Grappled condition (escape DC 14). Until the grapple ends, the target has the Restrained condition, is suffocating unless it can breathe water, and takes 9 (2d8) Bludgeoning damage at the start of each of the elemental's turns. The elemental can grapple one Large creature or up to two Medium or smaller creatures at a time with Whelm. As an action, a creature within 5 feet of the elemental can pull a creature out of it by succeeding on a DC 14 Strength (Athletics) check. Success: Half damage only.",
+                    recharge=4,
                 ),
             ],
             bonus_actions=[],
@@ -2727,6 +2767,7 @@ class Xorn(ExtendedCombatantData):
                 MonsterAbility(
                     name="Multiattack",
                     description="The xorn makes one Bite attack and three Claw attacks.",
+                    uses_ability="Bite",
                 ),
                 MonsterAbility(
                     name="Bite",

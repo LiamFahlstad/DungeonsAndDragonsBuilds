@@ -83,10 +83,12 @@ class TheMouthThatWalks(ExtendedCombatantData):
                     creature_name="Mouth",
                     uses=1,
                     flavor_note="its ruined mind refusing the concept of a true, final death",
+                    per_day=1,
                 ),
                 MonsterAbility(
                     name="The Ceaseless Litany",
                     description="The wound that was once the Mouth's face and chest never stops speaking splintered fragments of Noc'tra, filling a 20-foot Emanation with a droning, layered horror. A creature that ends its turn within the Emanation begins accumulating the toll of Noc'tra: at the start of each of its turns thereafter, it takes 1d6 Psychic damage for every consecutive round it has ended its turn within the Emanation (maximum 6d6), as the broken litany claws deeper into its mind with every passing moment of exposure. A creature that ends its turn outside the Emanation loses all accumulated rounds, the grip fading once it is out of earshot. A creature that is Deafened is immune to this damage.",
+                    at_turn_start="A creature that ends its turn within the Emanation begins accumulating the toll of Noc'tra: at the start of each of its turns thereafter, it takes 1d6 Psychic damage for every consecutive round it has ended its turn within the Emanation (maximum 6d6), as the broken litany claws deeper into its mind with every passing moment of exposure.",
                 ),
                 MonsterAbility(
                     name="Verge of Unmaking",
@@ -101,10 +103,12 @@ class TheMouthThatWalks(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Chain-Wracked Lash (Recharge 5-6)",
                     description="One of the Mouth's anchoring chains tears free of the sanctum floor and lashes out. Melee Attack Roll: +7, reach 15 ft. Hit: 14 (2d10 + 4) Bludgeoning damage, and if the target is Large or smaller, it must succeed on a DC 15 Strength saving throw or be pulled up to 10 feet toward the Mouth.",
+                    recharge=5,
                 ),
                 DcMonsterAbility(
                     name="Noc'tra's Wail (Recharge 5-6)",
                     description="The wound shudders and screams a fragment of Noc'tra outward in a 15-foot Cone. Each creature in the area must succeed on a DC 15 Wisdom saving throw, taking 14 (4d6) Psychic damage and gaining the Frightened condition until the end of the Mouth's next turn on a failed save, or half as much damage only on a successful one.",
+                    recharge=5,
                 ),
             ],
             bonus_actions=[],
@@ -173,6 +177,7 @@ class TheHunter(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Unnerving Calm",
                     description="The Hunter never raises its voice or its guard. It has Advantage on Charisma (Intimidation) checks. In addition, at the start of each of its turns, the Hunter can choose one creature within 10 feet of it that can see it; that creature must succeed on a DC 15 Wisdom saving throw or have Disadvantage on attack rolls against the Hunter until the start of the Hunter's next turn, unnerved by its stillness.",
+                    at_turn_start="In addition, at the start of each of its turns, the Hunter can choose one creature within 10 feet of it that can see it; that creature must succeed on a DC 15 Wisdom saving throw or have Disadvantage on attack rolls against the Hunter until the start of the Hunter's next turn, unnerved by its stillness.",
                 ),
                 MonsterAbility(
                     name="Curse Sense",
@@ -189,12 +194,14 @@ class TheHunter(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Marked for the Hunt (Recharge 5-6)",
                     description="The Hunter fixes its gaze on one creature it can see within 30 feet. Constitution Saving Throw: DC 15, the target. Failure: The target is Marked until the start of the Hunter's next turn. While a creature is Marked this way, the Hunter's attack rolls against it score a Critical Hit on a roll of 19 or 20, and the Marked creature can't benefit from Invisible or Heavily Obscured against the Hunter.",
+                    recharge=5,
                 ),
             ],
             reactions=[
                 MonsterAbility(
                     name="Predator's Reflexes",
                     description="Trigger: A creature the Hunter can see moves within 5 feet of the Hunter. Response: The Hunter makes one Cursed Kris attack against that creature.",
+                    uses_ability="Cursed Kris",
                 ),
             ],
             legendary_actions=[],
@@ -379,6 +386,7 @@ class ManifestationOfDurmor(ExtendedCombatantData):
                             ),
                         ),
                     ),
+                    recharge=6,
                 ),
             ],
             bonus_actions=[],
@@ -392,6 +400,7 @@ class ManifestationOfDurmor(ExtendedCombatantData):
                     name="Molten Strike (Costs 3 Actions)",
                     creature_name="manifestation",
                     attack_name="Molten Strike",
+                    legendary_cost=3,
                 ),
                 MonsterAbility(
                     name="Rally the King (Costs 2 Actions)",
@@ -406,6 +415,7 @@ class ManifestationOfDurmor(ExtendedCombatantData):
                             ),
                         ),
                     ),
+                    legendary_cost=2,
                 ),
             ],
             legendary_resistances=0,

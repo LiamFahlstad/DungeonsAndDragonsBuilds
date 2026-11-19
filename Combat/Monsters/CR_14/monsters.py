@@ -15,7 +15,11 @@ from Model.Creatures.Combatants import (
     ExtendedCombatantData,
     MonsterType,
 )
-from Model.Creatures.MonsterAbilities import DcMonsterAbility, MonsterAbility
+from Model.Creatures.MonsterAbilities import (
+    DcMonsterAbility,
+    MonsterAbility,
+    MonsterCast,
+)
 from Core.Definitions import Ability
 
 
@@ -71,12 +75,14 @@ class AdultBlackDragon(ExtendedCombatantData):
                 MonsterAbility(
                     name="Legendary Resistance (3/Day, or 4/Day in Lair)",
                     description="If the dragon fails a saving throw, it can choose to succeed instead.",
+                    per_day=3,
                 ),
             ],
             actions=[
                 MonsterAbility(
                     name="Multiattack",
                     description="The dragon makes three Rend attacks. It can replace one attack with a use of Spellcasting to cast Melf's Acid Arrow (level 3 version).",
+                    casts=(MonsterCast("Melf's Acid Arrow", level=3),),
                 ),
                 MonsterAbility(
                     name="Rend",
@@ -85,6 +91,7 @@ class AdultBlackDragon(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Acid Breath (Recharge 5–6)",
                     description="Dexterity Saving Throw: DC 18, each creature in a 60-foot-long, 5-foot-wide Line. Failure: 54 (12d8) Acid damage. Success: Half damage.",
+                    recharge=5,
                 ),
                 DcMonsterAbility(
                     name="Spellcasting",
@@ -101,10 +108,14 @@ class AdultBlackDragon(ExtendedCombatantData):
                 MonsterAbility(
                     name="Frightful Presence",
                     description="The dragon uses Spellcasting to cast Fear. The dragon can't take this action again until the start of its next turn.",
+                    casts=(MonsterCast("Fear"),),
+                    uses_ability="Spellcasting",
                 ),
                 MonsterAbility(
                     name="Pounce",
                     description="The dragon moves up to half its Speed, and it makes one Rend attack.",
+                    uses_ability="Rend",
+                    moves_first=True,
                 ),
             ],
             legendary_resistances=3,
@@ -159,12 +170,14 @@ class AdultCopperDragon(ExtendedCombatantData):
                 MonsterAbility(
                     name="Legendary Resistance (3/Day, or 4/Day in Lair)",
                     description="If the dragon fails a saving throw, it can choose to succeed instead.",
+                    per_day=3,
                 ),
             ],
             actions=[
                 MonsterAbility(
                     name="Multiattack",
                     description="The dragon makes three Rend attacks. It can replace one attack with a use of (A) Slowing Breath or (B) Spellcasting to cast Mind Spike (level 4 version).",
+                    casts=(MonsterCast("Mind Spike", level=4),),
                 ),
                 MonsterAbility(
                     name="Rend",
@@ -173,6 +186,7 @@ class AdultCopperDragon(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Acid Breath (Recharge 5–6)",
                     description="Dexterity Saving Throw: DC 18, each creature in an 60-foot-long, 5-foot-wide Line. Failure: 54 (12d8) Acid damage. Success: Half damage.",
+                    recharge=5,
                 ),
                 DcMonsterAbility(
                     name="Slowing Breath",
@@ -193,10 +207,14 @@ class AdultCopperDragon(ExtendedCombatantData):
                 MonsterAbility(
                     name="Mind Jolt",
                     description="The dragon uses Spellcasting to cast Mind Spike (level 4 version). The dragon can't take this action again until the start of its next turn.",
+                    casts=(MonsterCast("Mind Spike", level=4),),
+                    uses_ability="Spellcasting",
                 ),
                 MonsterAbility(
                     name="Pounce",
                     description="The dragon moves up to half its Speed, and it makes one Rend attack.",
+                    uses_ability="Rend",
+                    moves_first=True,
                 ),
             ],
             legendary_resistances=3,
@@ -257,6 +275,7 @@ class DeathTyrant(ExtendedCombatantData):
                 MonsterAbility(
                     name="Legendary Resistance (3/Day, or 4/Day in Lair)",
                     description="If the death tyrant fails a saving throw, it can choose to succeed instead.",
+                    per_day=3,
                 ),
             ],
             actions=[
@@ -325,7 +344,9 @@ class DeathTyrant(ExtendedCombatantData):
                     name="Chomp", description="The death tyrant makes two Bite attacks."
                 ),
                 MonsterAbility(
-                    name="Glare", description="The death tyrant uses Eye Rays."
+                    name="Glare",
+                    description="The death tyrant uses Eye Rays.",
+                    uses_ability="Eye Rays",
                 ),
             ],
             legendary_resistances=3,
@@ -408,6 +429,8 @@ class IceDevil(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Ice Wall (Recharge 6)",
                     description="The devil casts Wall of Ice (level 8 version), requiring no spell components and using Intelligence as the spellcasting ability (spell save DC 17).",
+                    recharge=6,
+                    casts=(MonsterCast("Wall of Ice", level=8),),
                 ),
             ],
             bonus_actions=[],

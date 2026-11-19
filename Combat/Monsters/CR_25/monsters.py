@@ -78,6 +78,7 @@ class Colossus(ExtendedCombatantData):
                 MonsterAbility(
                     name="Legendary Resistance (4/Day)",
                     description="If the colossus fails a saving throw, it can choose to succeed instead.",
+                    per_day=4,
                 ),
                 MonsterAbility(
                     name="Magic Resistance",
@@ -104,6 +105,7 @@ class Colossus(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Divine Beam (Recharge 5–6)",
                     description="Dexterity Saving Throw: DC 26, each creature in a 300-foot-long, 10-foot-wide Line. Failure: 65 (10d12) Radiant damage. Success: Half damage. Failure or Success: A creature reduced to 0 Hit Points by this beam disintegrates into dust, leaving behind any magic items it was wearing or carrying.",
+                    recharge=5,
                 ),
             ],
             bonus_actions=[],
@@ -112,6 +114,7 @@ class Colossus(ExtendedCombatantData):
                 MonsterAbility(
                     name="Smite",
                     description="The colossus makes one Radiant Ray attack.",
+                    uses_ability="Radiant Ray",
                 ),
                 MonsterAbility(
                     name="Stomp",

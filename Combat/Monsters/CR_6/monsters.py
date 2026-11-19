@@ -17,7 +17,11 @@ from Model.Creatures.Combatants import (
     ExtendedCombatantData,
     MonsterType,
 )
-from Model.Creatures.MonsterAbilities import DcMonsterAbility, MonsterAbility
+from Model.Creatures.MonsterAbilities import (
+    DcMonsterAbility,
+    MonsterAbility,
+    MonsterCast,
+)
 from Core.Definitions import Ability
 
 
@@ -91,6 +95,8 @@ class AzerPyromancer(ExtendedCombatantData):
                 MonsterAbility(
                     name="Hellish Rebuke (2/Day)",
                     description="The azer casts Hellish Rebuke in response to that spell's trigger, using the same spellcasting ability as Spellcasting.",
+                    per_day=2,
+                    casts=(MonsterCast("Hellish Rebuke"),),
                 ),
             ],
             legendary_actions=[],
@@ -222,6 +228,7 @@ class Chimera(ExtendedCombatantData):
                 MonsterAbility(
                     name="Multiattack",
                     description="The chimera makes one Ram attack, one Bite attack, and one Claw attack. It can replace the Claw attack with a use of Fire Breath if available.",
+                    uses_ability="Ram",
                 ),
                 MonsterAbility(
                     name="Bite",
@@ -238,6 +245,7 @@ class Chimera(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Fire Breath (Recharge 5–6)",
                     description="Dexterity Saving Throw: DC 15, each creature in a 15-foot Cone. Failure: 31 (7d8) Fire damage. Success: Half damage.",
+                    recharge=5,
                 ),
             ],
             bonus_actions=[],
@@ -306,6 +314,7 @@ class CyclopsSentry(ExtendedCombatantData):
                 MonsterAbility(
                     name="Limited Foresight (Recharge 6)",
                     description="Trigger: A creature the cyclops can see makes an attack roll against it. Response: The cyclops imposes Disadvantage on the roll, and the cyclops gains Advantage on attack rolls against the target until the end of the cyclops's next turn.",
+                    recharge=6,
                 ),
             ],
             legendary_actions=[],
@@ -385,6 +394,12 @@ class Drider(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Magic of the Spider Queen (Recharge 5–6)",
                     description="The drider casts Darkness, Faerie Fire, or Web, requiring no Material components and using Wisdom as the spellcasting ability (spell save DC 14).",
+                    recharge=5,
+                    casts=(
+                        MonsterCast("Darkness"),
+                        MonsterCast("Faerie Fire"),
+                        MonsterCast("Web"),
+                    ),
                 ),
             ],
             reactions=[],
@@ -452,6 +467,7 @@ class GalebDuhr(ExtendedCombatantData):
                 MonsterAbility(
                     name="Animate Boulders (1/Day)",
                     description="The galeb duhr magically animates one or two boulders it can see within 60 feet of itself. Each boulder uses the Galeb Duhr stat block, except it has Intelligence and Charisma scores of 1 and lacks this action. The boulder takes its turn immediately after the galeb duhr on the same Initiative count, and it obeys the galeb duhr. A boulder remains animate for 1 minute or until it or the galeb duhr dies.",
+                    per_day=1,
                 ),
             ],
             bonus_actions=[],
@@ -590,6 +606,7 @@ class GiantSquid(ExtendedCombatantData):
                 MonsterAbility(
                     name="Multiattack",
                     description="The squid makes one Bite attack and one Tentacle attack.",
+                    uses_ability="Bite",
                 ),
                 MonsterAbility(
                     name="Bite",
@@ -605,6 +622,7 @@ class GiantSquid(ExtendedCombatantData):
                 MonsterAbility(
                     name="Ink Cloud (1/Day)",
                     description="Trigger: The squid takes damage while underwater. Response: The squid releases ink that fills a 15-foot Cube centered on itself, and the squid moves up to its Swim Speed. The Cube is Heavily Obscured for 1 minute or until a strong current or similar effect disperses the ink.",
+                    per_day=1,
                 ),
             ],
             legendary_actions=[],
@@ -676,12 +694,16 @@ class GithzeraiZerth(ExtendedCombatantData):
                 MonsterAbility(
                     name="Psi-Powered Leap (2/Day)",
                     description="The githzerai casts Jump, requiring no spell components and using the same spellcasting ability as Spellcasting.",
+                    per_day=2,
+                    casts=(MonsterCast("Jump"),),
                 ),
             ],
             reactions=[
                 MonsterAbility(
                     name="Psionic Defense (2/Day)",
                     description="The githzerai casts Feather Fall or Shield in response to the spell's trigger, requiring no spell components and using the same spellcasting ability as Spellcasting.",
+                    per_day=2,
+                    casts=(MonsterCast("Feather Fall"), MonsterCast("Shield")),
                 ),
             ],
             legendary_actions=[],
@@ -924,6 +946,8 @@ class KuotoaArchpriest(ExtendedCombatantData):
                 MonsterAbility(
                     name="Shield of Faith (2/Day)",
                     description="The kuo-toa casts Shield of Faith, using the same spellcasting ability as Spellcasting.",
+                    per_day=2,
+                    casts=(MonsterCast("Shield of Faith"),),
                 ),
             ],
             reactions=[],
@@ -991,12 +1015,16 @@ class Mage(ExtendedCombatantData):
                 MonsterAbility(
                     name="Misty Step (3/Day)",
                     description="The mage casts Misty Step, using the same spellcasting ability as Spellcasting.",
+                    per_day=3,
+                    casts=(MonsterCast("Misty Step"),),
                 ),
             ],
             reactions=[
                 MonsterAbility(
                     name="Protective Magic (3/Day)",
                     description="The mage casts Counterspell or Shield in response to the spell's trigger, using the same spellcasting ability as Spellcasting.",
+                    per_day=3,
+                    casts=(MonsterCast("Counterspell"), MonsterCast("Shield")),
                 ),
             ],
             legendary_actions=[],
@@ -1129,6 +1157,7 @@ class Medusa(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Petrifying Gaze (Recharge 5–6)",
                     description="Constitution Saving Throw: DC 13, each creature in a 30-foot Cone. If the medusa sees its reflection in the Cone, the medusa must make this save. First Failure: The target has the Restrained condition and repeats the save at the end of its next turn if it is still Restrained, ending the effect on itself on a success. Second Failure: The target has the Petrified condition instead of the Restrained condition.",
+                    recharge=5,
                 ),
             ],
             reactions=[],
@@ -1358,6 +1387,7 @@ class PirateCaptain(ExtendedCombatantData):
                 MonsterAbility(
                     name="Riposte",
                     description="Trigger: The pirate is hit by a melee attack roll while holding a weapon. Response: The pirate adds 3 to its AC against that attack, possibly causing the attack to miss. On a miss, the pirate makes one Rapier attack against the triggering creature if within range.",
+                    uses_ability="Rapier",
                 ),
             ],
             legendary_actions=[],
@@ -1422,6 +1452,7 @@ class SatyrRevelmaster(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Fey Melody (Recharge 4–6)",
                     description="The satyr conjures a charming or frightening song. Wisdom Saving Throw: DC 14, each enemy in a 60-foot Emanation originating from the satyr. Failure: The target is subjected to the song's effect:",
+                    recharge=4,
                 ),
                 MonsterAbility(
                     name="Charming",
@@ -1510,10 +1541,12 @@ class Vrock(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Spores (Recharge 6)",
                     description="Constitution Saving Throw: DC 15, each creature in a 20-foot Emanation originating from the vrock. Failure: The target has the Poisoned condition and repeats the save at the end of each of its turns, ending the effect on itself on a success. While Poisoned, the target takes 5 (1d10) Poison damage at the start of each of its turns. Emptying a flask of Holy Water on the target ends the effect early.",
+                    recharge=6,
                 ),
                 DcMonsterAbility(
                     name="Stunning Screech (1/Day)",
                     description="Constitution Saving Throw: DC 15, each creature in a 20-foot Emanation originating from the vrock (demons succeed automatically). Failure: 10 (3d6) Thunder damage, and the target has the Stunned condition until the end of the vrock's next turn.",
+                    per_day=1,
                 ),
             ],
             bonus_actions=[],
@@ -1568,6 +1601,7 @@ class Wyvern(ExtendedCombatantData):
                 MonsterAbility(
                     name="Multiattack",
                     description="The wyvern makes one Bite attack and one Sting attack.",
+                    uses_ability="Bite",
                 ),
                 MonsterAbility(
                     name="Bite",
@@ -1642,6 +1676,7 @@ class YoungBrassDragon(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Fire Breath (Recharge 5–6)",
                     description="Dexterity Saving Throw: DC 14, each creature in a 40-foot-long, 5-foot-wide Line. Failure: 38 (11d6) Fire damage. Success: Half damage.",
+                    recharge=5,
                 ),
                 DcMonsterAbility(
                     name="Sleep Breath",
@@ -1718,6 +1753,7 @@ class YoungWhiteDragon(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Cold Breath (Recharge 5–6)",
                     description="Constitution Saving Throw: DC 15, each creature in a 30-foot Cone. Failure: 40 (9d8) Cold damage. Success: Half damage.",
+                    recharge=5,
                 ),
             ],
             bonus_actions=[],

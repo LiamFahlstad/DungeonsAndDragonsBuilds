@@ -252,6 +252,7 @@ class CurseCracked(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Cracking Surge (Recharge 5-6)",
                     description="The cracks across the Curse Cracked's body flare with searing light. Each creature within 10 feet of it must make a DC 12 Dexterity saving throw, taking 10 (3d6) Force damage on a failed save, or half as much damage on a successful one.",
+                    recharge=5,
                 ),
             ],
             bonus_actions=[
@@ -339,6 +340,7 @@ class CurseBodyBroken(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Scream of the Trapped (Recharge 5-6)",
                     description="For one horrible instant, the victim's own voice tears free from the curse's grip in a scream of agony. Each creature within 20 feet that can hear the Curse Body Broken must succeed on a DC 12 Wisdom saving throw or have the Frightened condition until the end of the Curse Body Broken's next turn.",
+                    recharge=5,
                 ),
             ],
             bonus_actions=[
@@ -418,6 +420,7 @@ class CurseMindBroken(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Memory Shatter (Recharge 5-6)",
                     description="One creature the Curse Mind Broken can see within 30 feet must succeed on a DC 12 Wisdom saving throw or have the Stunned condition until the end of its next turn, as fragments of stolen memory overwhelm its mind.",
+                    recharge=5,
                 ),
                 MonsterAbility(
                     name="Whispering Madness",
@@ -426,6 +429,7 @@ class CurseMindBroken(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Curse Discharge (Recharge 5-6)",
                     description="Raw curse-magic bursts outward in a wave. Each creature within 15 feet of the Curse Mind Broken must make a DC 12 Dexterity saving throw, taking 16 (3d10) Force damage on a failed save, or half as much damage on a successful one.",
+                    recharge=5,
                 ),
             ],
             bonus_actions=[],
@@ -745,6 +749,7 @@ class HumanPaladinOfDevotion(ExtendedCombatantData):
                             ),
                         ),
                     ),
+                    per_day=2,
                 ),
             ],
             actions=[
@@ -779,6 +784,7 @@ class HumanPaladinOfDevotion(ExtendedCombatantData):
                             ),
                         ),
                     ),
+                    per_day=1,
                 ),
             ],
             bonus_actions=[
@@ -860,6 +866,7 @@ class OrcAssassin(ExtendedCombatantData):
                 MonsterAbility(
                     name="Relentless Endurance (1/Day)",
                     description="When the assassin is reduced to 0 Hit Points but not killed outright, it drops to 1 Hit Point instead.",
+                    per_day=1,
                 ),
             ],
             actions=[

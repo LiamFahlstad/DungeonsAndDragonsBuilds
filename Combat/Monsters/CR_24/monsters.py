@@ -15,7 +15,11 @@ from Model.Creatures.Combatants import (
     ExtendedCombatantData,
     MonsterType,
 )
-from Model.Creatures.MonsterAbilities import DcMonsterAbility, MonsterAbility
+from Model.Creatures.MonsterAbilities import (
+    DcMonsterAbility,
+    MonsterAbility,
+    MonsterCast,
+)
 from Core.Definitions import Ability
 
 
@@ -75,12 +79,14 @@ class AncientGoldDragon(ExtendedCombatantData):
                 MonsterAbility(
                     name="Legendary Resistance (4/Day, or 5/Day in Lair)",
                     description="If the dragon fails a saving throw, it can choose to suc ceed instead.",
+                    per_day=4,
                 ),
             ],
             actions=[
                 MonsterAbility(
                     name="Multiattack",
                     description="The dragon makes three Rend attacks. It can replace one attack with a use of (A) Spellcasting to cast Guiding Bolt (level 4 version) or (B) Weakening Breath.",
+                    casts=(MonsterCast("Guiding Bolt", level=4),),
                 ),
                 MonsterAbility(
                     name="Rend",
@@ -89,6 +95,7 @@ class AncientGoldDragon(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Fire Breath (Recharge 5-6)",
                     description="Dexterity Saving Throw: DC 24, each creature in a 90-foot Cone. Failure: 71 (13d10) Fire damage. Success: Half damage.",
+                    recharge=5,
                 ),
                 DcMonsterAbility(
                     name="Spellcasting",
@@ -109,10 +116,14 @@ class AncientGoldDragon(ExtendedCombatantData):
                 MonsterAbility(
                     name="Guiding Light",
                     description="The dragon uses Spellcasting to cast Guiding Bolt (level 4 version).",
+                    casts=(MonsterCast("Guiding Bolt", level=4),),
+                    uses_ability="Spellcasting",
                 ),
                 MonsterAbility(
                     name="Pounce",
                     description="The dragon moves up to half its Speed, and it makes one Rend attack.",
+                    uses_ability="Rend",
+                    moves_first=True,
                 ),
             ],
             legendary_resistances=4,
@@ -168,12 +179,14 @@ class AncientRedDragon(ExtendedCombatantData):
                 MonsterAbility(
                     name="Legendary Resistance (4/Day, or 5/Day in Lair)",
                     description="If the dragon fails a saving throw, it can choose to succeed instead.",
+                    per_day=4,
                 ),
             ],
             actions=[
                 MonsterAbility(
                     name="Multiattack",
                     description="The dragon makes three Rend attacks. It can replace one attack with a use of Spellcasting to cast Scorching Ray (level 3 version).",
+                    casts=(MonsterCast("Scorching Ray", level=3),),
                 ),
                 MonsterAbility(
                     name="Rend",
@@ -182,6 +195,7 @@ class AncientRedDragon(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Fire Breath (Recharge 5–6)",
                     description="Dexterity Saving Throw: DC 24, each creature in a 90-foot Cone. Failure: 91 (26d6) Fire damage. Success: Half damage.",
+                    recharge=5,
                 ),
                 DcMonsterAbility(
                     name="Spellcasting",
@@ -194,14 +208,20 @@ class AncientRedDragon(ExtendedCombatantData):
                 MonsterAbility(
                     name="Commanding Presence",
                     description="The dragon uses Spellcasting to cast Command (level 2 version). The dragon can't take this action again until the start of its next turn.",
+                    casts=(MonsterCast("Command", level=2),),
+                    uses_ability="Spellcasting",
                 ),
                 MonsterAbility(
                     name="Fiery Rays",
                     description="The dragon uses Spellcasting to cast Scorching Ray (level 3 version). The dragon can't take this action again until the start of its next turn.",
+                    casts=(MonsterCast("Scorching Ray", level=3),),
+                    uses_ability="Spellcasting",
                 ),
                 MonsterAbility(
                     name="Pounce",
                     description="The dragon moves up to half its Speed, and it makes one Rend attack.",
+                    uses_ability="Rend",
+                    moves_first=True,
                 ),
             ],
             legendary_resistances=4,

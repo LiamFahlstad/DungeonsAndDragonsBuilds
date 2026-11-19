@@ -11,7 +11,12 @@ from dataclasses import dataclass, field
 from Core.Definitions import Condition, CreatureSize, DamageType
 from Model.Content.CombatEffect import CombatEffect
 from Model.Content.CombatModifiers import AttackKind
-from Model.Creatures.MonsterAbilities import stated_reach_and_range
+from Model.Creatures.MonsterAbilities import (
+    MonsterCast,
+    ability_field,
+    stated_reach_and_range,
+)
+from Model.Creatures.MonsterAbilityText import ABILITY_FIELDS, name_alone, read_ability
 
 # The stat blocks don't record this; nearly every legendary creature has 3.
 LEGENDARY_ACTIONS_PER_ROUND = 3
@@ -40,10 +45,6 @@ JOINED = re.compile(r",?\s*(?:plus|and)\s+")
 # One kind of die in a roll: "2d6" is (2, 6).
 DIE = re.compile(r"(\d+)d(\d+)")
 _CONDITIONAL = re.compile(r"\s+(?:if|while|when|unless|until|at the|on a)\b")
-_RECHARGE = re.compile(r"\(Recharge\s+(\d)(?:\D\d)?\)")
-_PER_DAY = re.compile(r"\((\d+)/Day")
-_LEGENDARY_COST = re.compile(r"\(Costs\s+(\d+)\s+Actions?\)")
-_START_OF_TURN = re.compile(r"start of (?:each of )?(?:its|the [\w -]+?'s) turns?")
 
 
 # A condition an attack's hit gives, in one sentence of its Hit: text
@@ -218,6 +219,11 @@ class MonsterAction:
     # A structured attack's (reach_ft, range_ft, long_range_ft) fields
     # (stated_reach_and_range); None for a freeform one, read from its text.
     stated_range: tuple[int | None, int | None, int | None] | None = None
+    # The spells it casts, and the other ability it makes or uses
+    # (MonsterAbility's fields of those names).
+    casts: tuple[MonsterCast, ...] = ()
+    uses_ability: str = ""
+    moves_first: bool = False
 
     @property
     def is_limited(self) -> bool:
@@ -297,17 +303,19 @@ def ability_effects(ability) -> tuple[CombatEffect, ...]:
 def parse_action(ability, legendary: bool = False) -> MonsterAction:
     """What an ability rolls and costs: from the combat effects written on it
     (its first, for the turn column's buttons), or else from its text. What it
-    costs is in its name either way: a recharge, uses per day, a legendary
-    action's cost."""
+    costs, casts and uses are its fields either way (MonsterAbility): a
+    recharge, uses per day, a legendary action's cost."""
     name, description = ability_text(ability)
-    recharge = _RECHARGE.search(name)
-    per_day = _PER_DAY.search(name)
-    cost = _LEGENDARY_COST.search(f"{name} {description}")
-    recharge_on = int(recharge.group(1)) if recharge else None
-    uses_per_day = int(per_day.group(1)) if per_day else None
-    legendary_cost = (int(cost.group(1)) if cost else 1) if legendary else 0
+    recharge_on = ability_field(ability, "recharge")
+    uses_per_day = ability_field(ability, "per_day")
+    legendary_cost = ability_field(ability, "legendary_cost") if legendary else 0
     effects = ability_effects(ability)
     stated = stated_reach_and_range(ability)
+    used = dict(
+        casts=ability_field(ability, "casts"),
+        uses_ability=ability_field(ability, "uses_ability"),
+        moves_first=ability_field(ability, "moves_first"),
+    )
     if effects:
         first = effects[0]
         return MonsterAction(
@@ -326,6 +334,7 @@ def parse_action(ability, legendary: bool = False) -> MonsterAction:
             per_day=uses_per_day,
             legendary_cost=legendary_cost,
             stated_range=stated,
+            **used,
         )
     attack = _ATTACK.search(description)
     save = _SAVE.search(description)
@@ -347,6 +356,7 @@ def parse_action(ability, legendary: bool = False) -> MonsterAction:
         per_day=uses_per_day,
         legendary_cost=legendary_cost,
         stated_range=stated,
+        **used,
     )
 
 
@@ -407,18 +417,78 @@ def monster_actions(char: dict) -> list[tuple[str, list[MonsterAction]]]:
 
 def start_of_turn_traits(char: dict) -> list[tuple[str, str]]:
     """char's traits that do something at the start of its turn, as (name,
-    the sentence saying what)."""
+    the sentence saying what: its `at_turn_start`)."""
     found = []
     for trait in char.get("traits") or []:
-        name, description = ability_text(trait)
-        match = _START_OF_TURN.search(description)
-        if match is None:
-            continue
-        sentences = re.split(r"(?<=[.!?])\s+", description)
-        found.append(
-            (name, next(s for s in sentences if _START_OF_TURN.search(s)).strip())
-        )
+        sentence = ability_field(trait, "at_turn_start")
+        if sentence:
+            found.append((ability_text(trait)[0], sentence))
     return found
+
+
+ABILITY_SECTIONS = (
+    "traits",
+    "actions",
+    "bonus_actions",
+    "reactions",
+    "legendary_actions",
+    "lair_actions",
+    "mythic_actions",
+)
+
+
+def picker_names(char) -> set[str]:
+    """The names, lowercased and without their "(Recharge ...)", of the
+    abilities the picker knows by name, which another can use (its action
+    sections' and the traits with combat effects written on them).
+    `char` is a combat dict or a stat block."""
+
+    def get(key):
+        if isinstance(char, dict):
+            return char.get(key) or []
+        return getattr(char, key, None) or []
+
+    abilities = [a for key, _ in ACTION_SECTIONS for a in get(key)]
+    abilities += [t for t in get("traits") if ability_effects(t)]
+    return {name_alone(ability_text(a)[0]).lower() for a in abilities}
+
+
+def read_ability_fields(char, ability, section: str) -> dict:
+    """What `ability`'s name and text say its MonsterAbility fields are
+    (Model/Creatures/MonsterAbilityText.py), as one of char's `section`:
+    only the ones it gives. For writing stat blocks and upgrading old logs,
+    never for the fight."""
+    name, description = ability_text(ability)
+    action = parse_action(ability)
+    return read_ability(
+        name,
+        description,
+        names=picker_names(char),
+        has_own_roll=action.is_rollable or action.save_ability is not None,
+        is_trait=section == "traits",
+    )
+
+
+def upgrade_ability_keys(char: dict) -> dict:
+    """A monster's combat dict from a log saved before its abilities had
+    their recharge, uses, cost, casts and turn-start fields, with them read
+    from their text once, in place. A log leaves out the fields at their
+    defaults (EncounterLogs._encode), so an ability dict with none of them
+    is read: for a stat block that gives what it had, as its fields say what
+    its text does (tests/test_monster_ability_text.py). One with any of them
+    is left as it is."""
+    for section in ABILITY_SECTIONS:
+        for ability in char.get(section) or []:
+            if not isinstance(ability, dict) or any(
+                k in ability for k in ABILITY_FIELDS
+            ):
+                continue
+            read = read_ability_fields(char, ability, section)
+            for key, value in read.items():
+                if key == "casts":
+                    value = [vars(cast) for cast in value]
+                ability[key] = value
+    return char
 
 
 def roll_dice(dice: str, critical: bool = False) -> int:

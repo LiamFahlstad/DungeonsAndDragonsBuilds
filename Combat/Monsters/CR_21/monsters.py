@@ -15,7 +15,11 @@ from Model.Creatures.Combatants import (
     ExtendedCombatantData,
     MonsterType,
 )
-from Model.Creatures.MonsterAbilities import DcMonsterAbility, MonsterAbility
+from Model.Creatures.MonsterAbilities import (
+    DcMonsterAbility,
+    MonsterAbility,
+    MonsterCast,
+)
 from Core.Definitions import Ability
 
 
@@ -75,12 +79,14 @@ class AncientBlackDragon(ExtendedCombatantData):
                 MonsterAbility(
                     name="Legendary Resistance (4/Day, or 5/Day in Lair)",
                     description="If the dragon fails a saving throw, it can choose to succeed instead.",
+                    per_day=4,
                 ),
             ],
             actions=[
                 MonsterAbility(
                     name="Multiattack",
                     description="The dragon makes three Rend attacks. It can replace one attack with a use of Spellcasting to cast Melf's Acid Arrow (level 4 version).",
+                    casts=(MonsterCast("Melf's Acid Arrow", level=4),),
                 ),
                 MonsterAbility(
                     name="Rend",
@@ -89,6 +95,7 @@ class AncientBlackDragon(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Acid Breath (Recharge 5–6)",
                     description="Dexterity Saving Throw: DC 22, each creature in a 90-foot-long, 10-foot-wide Line. Failure: 67 (15d8) Acid damage. Success: Half damage.",
+                    recharge=5,
                 ),
                 DcMonsterAbility(
                     name="Spellcasting",
@@ -105,10 +112,14 @@ class AncientBlackDragon(ExtendedCombatantData):
                 MonsterAbility(
                     name="Frightful Presence",
                     description="The dragon uses Spellcasting to cast Fear. The dragon can't take this action again until the start of its next turn.",
+                    casts=(MonsterCast("Fear"),),
+                    uses_ability="Spellcasting",
                 ),
                 MonsterAbility(
                     name="Pounce",
                     description="The dragon moves up to half its Speed, and it makes one Rend attack.",
+                    uses_ability="Rend",
+                    moves_first=True,
                 ),
             ],
             legendary_resistances=4,
@@ -163,12 +174,14 @@ class AncientCopperDragon(ExtendedCombatantData):
                 MonsterAbility(
                     name="Legendary Resistance (4/Day, or 5/Day in Lair)",
                     description="If the dragon fails a saving throw, it can choose to succeed instead.",
+                    per_day=4,
                 ),
             ],
             actions=[
                 MonsterAbility(
                     name="Multiattack",
                     description="The dragon makes three Rend attacks. It can replace one attack with a use of (A) Slowing Breath or (B) Spellcasting to cast Mind Spike (level 5 version).",
+                    casts=(MonsterCast("Mind Spike", level=5),),
                 ),
                 MonsterAbility(
                     name="Rend",
@@ -177,6 +190,7 @@ class AncientCopperDragon(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Acid Breath (Recharge 5–6)",
                     description="Dexterity Saving Throw: DC 22, each creature in an 90-foot-long, 10-foot-wide Line. Failure: 63 (14d8) Acid damage. Success: Half damage.",
+                    recharge=5,
                 ),
                 DcMonsterAbility(
                     name="Slowing Breath",
@@ -197,10 +211,14 @@ class AncientCopperDragon(ExtendedCombatantData):
                 MonsterAbility(
                     name="Mind Jolt",
                     description="The dragon uses Spellcasting to cast Mind Spike (level 5 version). The dragon can't take this action again until the start of its next turn.",
+                    casts=(MonsterCast("Mind Spike", level=5),),
+                    uses_ability="Spellcasting",
                 ),
                 MonsterAbility(
                     name="Pounce",
                     description="The dragon moves up to half its Speed, and it makes one Rend attack.",
+                    uses_ability="Rend",
+                    moves_first=True,
                 ),
             ],
             legendary_resistances=4,
@@ -264,6 +282,7 @@ class Archhag(ExtendedCombatantData):
                 MonsterAbility(
                     name="Legendary Resistance (4/Day, or 5/Day in Lair)",
                     description="If the hag fails a saving throw, it can choose to succeed instead.",
+                    per_day=4,
                 ),
                 MonsterAbility(
                     name="Magic Resistance",
@@ -278,6 +297,7 @@ class Archhag(ExtendedCombatantData):
                 MonsterAbility(
                     name="Multiattack",
                     description="The hag makes two Spectral Claw attacks and uses Crackling Wave.",
+                    uses_ability="Crackling Wave",
                 ),
                 MonsterAbility(
                     name="Spectral Claw",
@@ -302,16 +322,23 @@ class Archhag(ExtendedCombatantData):
                 MonsterAbility(
                     name="Tongue Twister",
                     description="The hag casts Counterspell in response to that spell's trigger, using the same spellcasting ability as Spellcasting. If the target fails its saving throw, it is cursed until the end of its next turn. Until the curse ends, the target can't cast spells with a Verbal component, and when it speaks, it says the opposite of what it means.",
+                    casts=(MonsterCast("Counterspell"),),
                 ),
             ],
             legendary_actions=[
                 MonsterAbility(
                     name="Hag's Swipe",
                     description="The hag makes one Spectral Claw attack.",
+                    uses_ability="Spectral Claw",
                 ),
                 MonsterAbility(
                     name="Malicious Magic",
                     description="The hag uses Spellcasting to cast Dimension Door or Hypnotic Pattern. The hag can't take this action again until the start of its next turn.",
+                    casts=(
+                        MonsterCast("Dimension Door"),
+                        MonsterCast("Hypnotic Pattern"),
+                    ),
+                    uses_ability="Spellcasting",
                 ),
             ],
             legendary_resistances=4,
@@ -385,6 +412,7 @@ class Lich(ExtendedCombatantData):
                 MonsterAbility(
                     name="Legendary Resistance (4/Day, or 5/Day in Lair)",
                     description="If the lich fails a saving throw, it can choose to succeed instead.",
+                    per_day=4,
                 ),
                 MonsterAbility(
                     name="Spirit Jar",
@@ -414,6 +442,7 @@ class Lich(ExtendedCombatantData):
                 MonsterAbility(
                     name="Protective Magic",
                     description="The lich casts Counterspell or Shield in response to the spell's trigger, using the same spellcasting ability as Spellcasting.",
+                    casts=(MonsterCast("Counterspell"), MonsterCast("Shield")),
                 ),
             ],
             legendary_actions=[
@@ -428,6 +457,7 @@ class Lich(ExtendedCombatantData):
                 MonsterAbility(
                     name="Frightening Gaze",
                     description="The lich casts Fear, using the same spellcasting ability as Spellcasting. The lich can't take this action again until the start of its next turn.",
+                    casts=(MonsterCast("Fear"),),
                 ),
             ],
             legendary_resistances=4,
@@ -496,6 +526,7 @@ class Solar(ExtendedCombatantData):
                 MonsterAbility(
                     name="Legendary Resistance (4/Day)",
                     description="If the solar fails a saving throw, it can choose to succeed instead.",
+                    per_day=4,
                 ),
                 MonsterAbility(
                     name="Magic Resistance",
@@ -524,6 +555,12 @@ class Solar(ExtendedCombatantData):
                 MonsterAbility(
                     name="Divine Aid (3/Day)",
                     description="The solar casts Cure Wounds (level 2 version), Lesser Restoration, or Remove Curse, using the same spellcasting ability as Spellcasting.",
+                    per_day=3,
+                    casts=(
+                        MonsterCast("Cure Wounds", level=2),
+                        MonsterCast("Lesser Restoration"),
+                        MonsterCast("Remove Curse"),
+                    ),
                 ),
             ],
             reactions=[],

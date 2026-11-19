@@ -39,7 +39,7 @@ from Combat.Effects.active_effects import KEY as ACTIVE_EFFECTS_KEY
 from Combat.LogFiles import read_json, write_json
 from Combat.PlayerCombatant import combatant_from_stat_block
 from Combat.PlayerLog import ENCOUNTER, has_round_events, log_ref
-from Model.Creatures.MonsterAbilities import MonsterAbility
+from Model.Creatures.MonsterAbilities import MonsterAbility, ability_field
 
 # When the fight was ended, in an encounter log and in its player-log entry.
 ENDED_KEY = "ended_at"
@@ -100,12 +100,14 @@ class LogJSONEncoder(json.JSONEncoder):
 def _encode(value):
     """`dataclasses.asdict`, but a MonsterAbility's combat effects are written
     by `CombatEffect.to_dict`, at any depth. asdict drops the `type` a badge's
-    modifiers need to be read back (DI-069)."""
+    modifiers need to be read back (DI-069). Its recharge, uses, casts, ...
+    are left out where they are at their defaults, so its log reads as it
+    always has (monster_actions.upgrade_ability_keys)."""
     if isinstance(value, MonsterAbility):
         data = {
             f.name: _encode(getattr(value, f.name))
             for f in dataclasses.fields(value)
-            if f.name != "combat_effects"
+            if f.name != "combat_effects" and not _is_default(value, f.name)
         }
         # Most abilities have no combat effects written on them: leave the
         # key out, so their logs read as they always have.
@@ -121,6 +123,16 @@ def _encode(value):
     if isinstance(value, dict):
         return {k: _encode(v) for k, v in value.items()}
     return value
+
+
+def _is_default(ability: MonsterAbility, name: str) -> bool:
+    """Whether `name` is one of the fields every MonsterAbility has for the
+    combat UI (recharge, per_day, ...), at its default."""
+    try:
+        default = ability_field({}, name)
+    except KeyError:
+        return False
+    return getattr(ability, name) == default
 
 
 def scenario_log_path(combat_log_dir: str | Path, scenario_name: str) -> Path:

@@ -15,7 +15,11 @@ from Model.Creatures.Combatants import (
     ExtendedCombatantData,
     MonsterType,
 )
-from Model.Creatures.MonsterAbilities import DcMonsterAbility, MonsterAbility
+from Model.Creatures.MonsterAbilities import (
+    DcMonsterAbility,
+    MonsterAbility,
+    MonsterCast,
+)
 from Core.Definitions import Ability
 
 
@@ -71,12 +75,14 @@ class AncientBrassDragon(ExtendedCombatantData):
                 MonsterAbility(
                     name="Legendary Resistance (4/Day, or 5/Day in Lair)",
                     description="If the dragon fails a saving throw, it can choose to succeed instead.",
+                    per_day=4,
                 ),
             ],
             actions=[
                 MonsterAbility(
                     name="Multiattack",
                     description="The dragon makes three Rend attacks. It can replace one attack with a use of (A) Sleep Breath or (B) Spellcasting to cast Scorching Ray (level 3 version).",
+                    casts=(MonsterCast("Scorching Ray", level=3),),
                 ),
                 MonsterAbility(
                     name="Rend",
@@ -85,6 +91,7 @@ class AncientBrassDragon(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Fire Breath (Recharge 5–6)",
                     description="Dexterity Saving Throw: DC 21, each creature in a 90-foot-long, 5-foot-wide Line. Failure: 58 (13d8) Fire damage. Success: Half damage.",
+                    recharge=5,
                 ),
                 DcMonsterAbility(
                     name="Sleep Breath",
@@ -101,10 +108,14 @@ class AncientBrassDragon(ExtendedCombatantData):
                 MonsterAbility(
                     name="Blazing Light",
                     description="The dragon uses Spellcasting to cast Scorching Ray (level 3 version).",
+                    casts=(MonsterCast("Scorching Ray", level=3),),
+                    uses_ability="Spellcasting",
                 ),
                 MonsterAbility(
                     name="Pounce",
                     description="The dragon moves up to half its Speed, and it makes one Rend attack.",
+                    uses_ability="Rend",
+                    moves_first=True,
                 ),
                 DcMonsterAbility(
                     name="Scorching Sands",
@@ -168,6 +179,7 @@ class AncientWhiteDragon(ExtendedCombatantData):
                 MonsterAbility(
                     name="Legendary Resistance (4/Day, or 5/Day in Lair)",
                     description="If the dragon fails a saving throw, it can choose to succeed instead.",
+                    per_day=4,
                 ),
             ],
             actions=[
@@ -182,6 +194,7 @@ class AncientWhiteDragon(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Cold Breath (Recharge 5–6)",
                     description="Constitution Saving Throw: DC 22, each creature in a 90-foot Cone. Failure: 63 (14d8) Cold damage. Success: Half damage.",
+                    recharge=5,
                 ),
             ],
             bonus_actions=[],
@@ -194,10 +207,13 @@ class AncientWhiteDragon(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Frightful Presence",
                     description="The dragon casts Fear, requiring no Material components and using Charisma as the spellcasting ability (spell save DC 18). The dragon can't take this action again until the start of its next turn.",
+                    casts=(MonsterCast("Fear"),),
                 ),
                 MonsterAbility(
                     name="Pounce",
                     description="The dragon moves up to half its Speed, and it makes one Rend attack.",
+                    uses_ability="Rend",
+                    moves_first=True,
                 ),
             ],
             legendary_resistances=4,
@@ -328,6 +344,7 @@ class PitFiend(ExtendedCombatantData):
                 MonsterAbility(
                     name="Legendary Resistance (4/Day)",
                     description="If the pit fiend fails a saving throw, it can choose to succeed instead.",
+                    per_day=4,
                 ),
                 MonsterAbility(
                     name="Magic Resistance",
@@ -338,6 +355,7 @@ class PitFiend(ExtendedCombatantData):
                 MonsterAbility(
                     name="Multiattack",
                     description="The pit fiend makes one Bite attack, two Devilish Claw attacks, and one Fiery Mace attack.",
+                    uses_ability="Bite",
                 ),
                 DcMonsterAbility(
                     name="Bite",
@@ -354,6 +372,7 @@ class PitFiend(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Hellfire Spellcasting (Recharge 4–6)",
                     description="The pit fiend casts Fireball (level 5 version) twice, requiring no Material components and using Charisma as the spellcasting ability (spell save DC 21). It can replace one Fireball with Hold Monster (level 7 version) or Wall of Fire.",
+                    recharge=4,
                 ),
             ],
             bonus_actions=[],

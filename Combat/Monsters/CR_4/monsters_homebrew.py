@@ -93,6 +93,7 @@ class MarshalVirel(ExtendedCombatantData):
                     damage_bonus=9,
                     damage_type=DamageType.PIERCING,
                     additional_ruling="The target must succeed on a DC 13 Constitution saving throw or have the Silenced condition (it can't speak or cast spells that require a Verbal component) and can't take Reactions until the end of its next turn.",
+                    recharge=5,
                 ),
             ],
             bonus_actions=[

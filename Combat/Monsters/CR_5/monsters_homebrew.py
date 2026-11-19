@@ -79,6 +79,7 @@ class TheChoirmasterOfHollowHymns(ExtendedCombatantData):
                 MonsterAbility(
                     name="Legendary Resistance (1/Day)",
                     description="If the Choirmaster fails a saving throw, he can choose to succeed instead.",
+                    per_day=1,
                 ),
                 MonsterAbility(
                     name="Curse-Marked",
@@ -101,6 +102,7 @@ class TheChoirmasterOfHollowHymns(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Warding Rasp (Recharge 5-6)",
                     description="The Choirmaster drags the hooked bow across his throat, and a broken fragment of Noc'tra tears free in a 20-foot Cone. Each creature in the area must make a DC 14 Wisdom saving throw, taking 17 (5d6) Psychic damage and gaining the Frightened condition until the end of the Choirmaster's next turn on a failed save, or half as much damage only on a successful one. The Choirmaster then gains one stack of Throat-Strain (see Throat-Strain).",
+                    recharge=5,
                 ),
             ],
             bonus_actions=[
@@ -167,6 +169,7 @@ class MiraPrincessOfTheLoop(ExtendedCombatantData):
                 MonsterAbility(
                     name="Fractured Timeline",
                     description="If Mira fails a saving throw, she rewinds to the moment before and succeeds instead (Legendary Resistance, 2/Day). The first time she is Bloodied, two illusory duplicates of her from other loops appear in unoccupied spaces she can see within 30 feet of her. Each has AC 15 and 1 Hit Point, and vanishes when it takes damage or when Mira dies. At the end of each of Mira's turns, each duplicate makes one Eldritch Blast attack.",
+                    uses_ability="Eldritch Blast",
                 ),
             ],
             actions=[
@@ -249,6 +252,7 @@ class MiraPrincessOfTheLoop(ExtendedCombatantData):
                             ),
                         ),
                     ),
+                    per_day=2,
                 ),
             ],
             legendary_actions=[],

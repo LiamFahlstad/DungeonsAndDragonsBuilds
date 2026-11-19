@@ -8,7 +8,7 @@ import re
 from dataclasses import dataclass as dataclass_decorator
 from dataclasses import field
 from enum import Enum
-from typing import Optional
+from typing import Any, Optional
 
 from Core.Definitions import Ability, DamageType
 from Model.Content.CombatEffect import CombatEffect
@@ -27,12 +27,67 @@ class MonsterAbility:
     text can't be read (an old-style "must succeed on a DC 11 Wisdom saving
     throw or ...", healing from a pool, a badge, a condition the text only
     gives sometimes) or for an ability with several uses (a cleric's Life
-    Domain Magic: Cure Wounds, Bless, ...). Its recharge or uses per day stay
-    in its name, which is what the combat UI spends."""
+    Domain Magic: Cure Wounds, Bless, ...).
+
+    The fields after it are what the combat UI acts on, so it never reads
+    them back out of the text (Notes/explicit-attributes-plan.md, Phase 4.2).
+    generate_monsters.py fills them from the text
+    (Model/Creatures/MonsterAbilityText.py); a hand-written stat block sets
+    them by hand. The name keeps its "(Recharge 5-6)" or "(2/Day)" for
+    display:
+    - `recharge`: the lowest d6 that brings it back (5 for "Recharge 5-6");
+    - `per_day`: its uses per day ("2/Day");
+    - `legendary_cost`: the legendary actions it costs ("Costs 2 Actions");
+    - `at_turn_start`: a trait's sentence saying what it does at the start
+      of the monster's turn, which the turn column reminds of;
+    - `casts`: the spells it casts (MonsterCast), each a picker row;
+    - `uses_ability`: the name of the other ability it makes or uses, when
+      that is its whole point ("The dragon makes one Rend attack"), without that
+      ability's "(Recharge ...)"; `moves_first` if it moves before."""
 
     name: str
     description: str
     combat_effects: tuple[CombatEffect, ...] = field(default=(), kw_only=True)
+    recharge: Optional[int] = field(default=None, kw_only=True)
+    per_day: Optional[int] = field(default=None, kw_only=True)
+    legendary_cost: int = field(default=1, kw_only=True)
+    at_turn_start: str = field(default="", kw_only=True)
+    casts: tuple["MonsterCast", ...] = field(default=(), kw_only=True)
+    uses_ability: str = field(default="", kw_only=True)
+    moves_first: bool = field(default=False, kw_only=True)
+
+
+@dataclass_decorator(frozen=True)
+class MonsterCast:
+    """A spell a MonsterAbility casts: its name as the spell list has it,
+    the level it's cast at when the text says ("level 3 version"), and its
+    uses per day when its Spellcasting gives them ("2/Day each: ..."); None
+    for at will, or as often as the ability is used."""
+
+    spell: str
+    level: Optional[int] = None
+    per_day: Optional[int] = None
+
+
+def ability_field(ability, name: str) -> Any:
+    """A MonsterAbility's field, or the dict key it becomes in a saved
+    combat log; its default when neither has it."""
+    default = _ABILITY_DEFAULTS[name]
+    if isinstance(ability, dict):
+        value = ability.get(name, default)
+        if name == "casts":
+            return tuple(
+                c if isinstance(c, MonsterCast) else MonsterCast(**c) for c in value
+            )
+        return value
+    return getattr(ability, name, default)
+
+
+_ABILITY_DEFAULTS = {
+    f.name: f.default
+    for f in MonsterAbility.__dataclass_fields__.values()
+    if f.name not in ("name", "description", "combat_effects")
+}
 
 
 def stated_reach_and_range(

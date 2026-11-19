@@ -219,6 +219,7 @@ def _build_steel_defender(character: CharacterView) -> ExtendedCombatantData:
                     "The defender, or one Construct or object it can see within 5 feet of it, regains Hit Points "
                     f"equal to 2d8 + {intelligence_modifier} (2d8 plus your Intelligence modifier)."
                 ),
+                per_day=3,
             ),
         ],
         bonus_actions=[],

@@ -52,10 +52,12 @@ BREATH = {
     "name": "Fire Breath (Recharge 5\N{EN DASH}6)",
     "description": "Dexterity Saving Throw: DC 14, each creature in a 30-foot Cone."
     " Failure: 27 (6d8) Fire damage. Success: Half damage.",
+    "recharge": 5,
 }
 SCREECH = {
     "name": "Screech (1/Day)",
     "description": "Wisdom Saving Throw: DC 12, each creature. Failure: Frightened.",
+    "per_day": 1,
 }
 MULTIATTACK = {"name": "Multiattack", "description": "It makes two Bite attacks."}
 LASH = {
@@ -65,10 +67,12 @@ LASH = {
 WING = {
     "name": "Wing Buffet (Costs 2 Actions)",
     "description": "Dexterity Saving Throw: DC 14, each creature. Failure: Prone.",
+    "legendary_cost": 2,
 }
 REGENERATION = {
     "name": "Regeneration",
     "description": "It regains 10 Hit Points at the start of each of its turns.",
+    "at_turn_start": "It regains 10 Hit Points at the start of each of its turns.",
 }
 
 
@@ -1627,7 +1631,9 @@ def test_a_new_concentration_spell_clears_the_old_save(fight, monkeypatch):
 
 def test_giving_a_use_back_is_one_use(dragon):
     ui, pirate, *_ = dragon
-    action = parse_action({"name": "Curse (3/Day)", "description": "text"})
+    action = parse_action(
+        {"name": "Curse (3/Day)", "description": "text", "per_day": 3}
+    )
     pirate["spent_abilities"] = {"Curse (3/Day)": 2}
     ui._restore_ability(pirate, action)
     assert pirate["spent_abilities"] == {"Curse (3/Day)": 1}

@@ -15,7 +15,11 @@ from Model.Creatures.Combatants import (
     ExtendedCombatantData,
     MonsterType,
 )
-from Model.Creatures.MonsterAbilities import DcMonsterAbility, MonsterAbility
+from Model.Creatures.MonsterAbilities import (
+    DcMonsterAbility,
+    MonsterAbility,
+    MonsterCast,
+)
 from Core.Definitions import Ability
 
 
@@ -118,6 +122,7 @@ class Arcanaloth(ExtendedCombatantData):
                 MonsterAbility(
                     name="Counterspell",
                     description="The arcanaloth casts Counterspell in response to that spell's trigger, using the same spellcasting ability as Spellcasting.",
+                    casts=(MonsterCast("Counterspell"),),
                 ),
             ],
             legendary_actions=[],
@@ -191,12 +196,16 @@ class Archmage(ExtendedCombatantData):
                 MonsterAbility(
                     name="Misty Step (3/Day)",
                     description="The mage casts Misty Step, using the same spellcasting ability as Spellcasting.",
+                    per_day=3,
+                    casts=(MonsterCast("Misty Step"),),
                 ),
             ],
             reactions=[
                 MonsterAbility(
                     name="Protective Magic (3/Day)",
                     description="The archmage casts Counterspell or Shield in response to the spell's trigger, using the same spellcasting ability as Spellcasting.",
+                    per_day=3,
+                    casts=(MonsterCast("Counterspell"), MonsterCast("Shield")),
                 ),
             ],
             legendary_actions=[],
@@ -267,6 +276,7 @@ class Archpriest(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Holy Word (Recharge 4–6)",
                     description="Wisdom Saving Throw: DC 17, each enemy in a 20-foot Emanation originating from the archpriest. Failure: 21 (6d6) Radiant damage, and the target has the Stunned condition until the end of the archpriest's next turn. Success: Half damage only.",
+                    recharge=4,
                 ),
                 DcMonsterAbility(
                     name="Spellcasting",
@@ -277,6 +287,13 @@ class Archpriest(ExtendedCombatantData):
                 MonsterAbility(
                     name="Divine Aid (3/Day)",
                     description="The priest casts Bless, Dispel Magic, Healing Word, or Lesser Restoration, using the same spellcasting ability as Spellcasting.",
+                    per_day=3,
+                    casts=(
+                        MonsterCast("Bless"),
+                        MonsterCast("Dispel Magic"),
+                        MonsterCast("Healing Word"),
+                        MonsterCast("Lesser Restoration"),
+                    ),
                 ),
             ],
             reactions=[],
@@ -440,6 +457,7 @@ class GithzeraiPsion(ExtendedCombatantData):
                 MonsterAbility(
                     name="Psionic Defense",
                     description="The githzerai casts Feather Fall or Shield in response to the spell's trigger, requiring no spell components and using the same spellcasting ability as Spellcasting.",
+                    casts=(MonsterCast("Feather Fall"), MonsterCast("Shield")),
                 ),
             ],
             legendary_actions=[],
@@ -518,6 +536,7 @@ class PirateAdmiral(ExtendedCombatantData):
                 MonsterAbility(
                     name="Rally (1/Day)",
                     description="The pirate chooses up to three other creatures it can see within 30 feet. Until the start of the pirate's next turn, the targets have Advantage on attack rolls and saving throws.",
+                    per_day=1,
                 ),
             ],
             reactions=[

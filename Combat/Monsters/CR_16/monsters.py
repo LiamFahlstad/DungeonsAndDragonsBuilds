@@ -16,7 +16,11 @@ from Model.Creatures.Combatants import (
     ExtendedCombatantData,
     MonsterType,
 )
-from Model.Creatures.MonsterAbilities import DcMonsterAbility, MonsterAbility
+from Model.Creatures.MonsterAbilities import (
+    DcMonsterAbility,
+    MonsterAbility,
+    MonsterCast,
+)
 from Core.Definitions import Ability
 
 
@@ -67,12 +71,14 @@ class AdultBlueDragon(ExtendedCombatantData):
                 MonsterAbility(
                     name="Legendary Resistance (3/Day, or 4/Day in Lair)",
                     description="If the dragon fails a saving throw, it can choose to succeed instead.",
+                    per_day=3,
                 ),
             ],
             actions=[
                 MonsterAbility(
                     name="Multiattack",
                     description="The dragon makes three Rend attacks. It can replace one attack with a use of Spellcasting to cast Shatter.",
+                    casts=(MonsterCast("Shatter"),),
                 ),
                 MonsterAbility(
                     name="Rend",
@@ -81,6 +87,7 @@ class AdultBlueDragon(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Lightning Breath (Recharge 5–6)",
                     description="Dexterity Saving Throw: DC 19, each creature in a 90-foot-long, 5-foot-wide Line. Failure: 60 (11d10) Lightning damage. Success: Half damage.",
+                    recharge=5,
                 ),
                 DcMonsterAbility(
                     name="Spellcasting",
@@ -93,13 +100,18 @@ class AdultBlueDragon(ExtendedCombatantData):
                 MonsterAbility(
                     name="Cloaked Flight",
                     description="The dragon uses Spellcasting to cast Invisibility on itself, and it can fly up to half its Fly Speed. The dragon can't take this action again until the start of its next turn.",
+                    uses_ability="Spellcasting",
                 ),
                 MonsterAbility(
                     name="Sonic Boom",
                     description="The dragon uses Spellcasting to cast Shatter. The dragon can't take this action again until the start of its next turn.",
+                    casts=(MonsterCast("Shatter"),),
+                    uses_ability="Spellcasting",
                 ),
                 MonsterAbility(
-                    name="Tail Swipe", description="The dragon makes one Rend attack."
+                    name="Tail Swipe",
+                    description="The dragon makes one Rend attack.",
+                    uses_ability="Rend",
                 ),
             ],
             legendary_resistances=3,
@@ -155,12 +167,14 @@ class AdultSilverDragon(ExtendedCombatantData):
                 MonsterAbility(
                     name="Legendary Resistance (3/Day, or 4/Day in Lair)",
                     description="If the dragon fails a saving throw, it can choose to succeed instead.",
+                    per_day=3,
                 ),
             ],
             actions=[
                 MonsterAbility(
                     name="Multiattack",
                     description="The dragon makes three Rend attacks. It can replace one attack with a use of (A) Paralyzing Breath or (B) Spellcasting to cast Ice Knife.",
+                    casts=(MonsterCast("Ice Knife"),),
                 ),
                 MonsterAbility(
                     name="Rend",
@@ -169,6 +183,7 @@ class AdultSilverDragon(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Cold Breath (Recharge 5–6)",
                     description="Constitution Saving Throw: DC 20, each creature in a 60-foot Cone. Failure: 54 (12d8) Cold damage. Success: Half damage.",
+                    recharge=5,
                 ),
                 DcMonsterAbility(
                     name="Paralyzing Breath",
@@ -185,6 +200,8 @@ class AdultSilverDragon(ExtendedCombatantData):
                 MonsterAbility(
                     name="Chill",
                     description="The dragon uses Spellcasting to cast Hold Monster. The dragon can't take this action again until the start of its next turn.",
+                    casts=(MonsterCast("Hold Monster"),),
+                    uses_ability="Spellcasting",
                 ),
                 DcMonsterAbility(
                     name="Cold Gale",
@@ -193,6 +210,8 @@ class AdultSilverDragon(ExtendedCombatantData):
                 MonsterAbility(
                     name="Pounce",
                     description="The dragon moves up to half its Speed, and it makes one Rend attack.",
+                    uses_ability="Rend",
+                    moves_first=True,
                 ),
             ],
             legendary_resistances=3,
@@ -260,6 +279,7 @@ class GithyankiDracomancer(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Conjured Dragon's Breath (Recharge 5–6)",
                     description="Dexterity Saving Throw: DC 18, each creature in a 90-foot Cone. Failure: 27 (6d8) Fire damage plus 27 (6d8) Force damage. Success: Half damage.",
+                    recharge=5,
                 ),
                 DcMonsterAbility(
                     name="Spellcasting",
@@ -270,6 +290,8 @@ class GithyankiDracomancer(ExtendedCombatantData):
                 MonsterAbility(
                     name="Misty Step (3/Day)",
                     description="The githyanki casts Misty Step, requiring no spell components and using the same spellcasting ability as Spellcasting.",
+                    per_day=3,
+                    casts=(MonsterCast("Misty Step"),),
                 ),
             ],
             reactions=[],
@@ -331,6 +353,7 @@ class GulthiasBlight(ExtendedCombatantData):
                 MonsterAbility(
                     name="Multiattack",
                     description="The blight makes two attacks, using Slam or Thorn Volley in any combination. It also uses Life-Draining Root.",
+                    uses_ability="Life-Draining Root",
                 ),
                 MonsterAbility(
                     name="Slam",
@@ -432,6 +455,7 @@ class IronGolem(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Poison Breath (Recharge 6)",
                     description="Constitution Saving Throw: DC 18, each creature in a 60-foot Cone. Failure: 55 (10d10) Poison damage. Success: Half damage.",
+                    recharge=6,
                 ),
             ],
             bonus_actions=[],
@@ -510,6 +534,7 @@ class Marilith(ExtendedCombatantData):
                 MonsterAbility(
                     name="Multiattack",
                     description="The marilith makes six Pact Blade attacks and uses Constrict.",
+                    uses_ability="Constrict",
                 ),
                 MonsterAbility(
                     name="Pact Blade",
@@ -524,6 +549,7 @@ class Marilith(ExtendedCombatantData):
                 MonsterAbility(
                     name="Teleport (Recharge 5–6)",
                     description="The marilith teleports up to 120 feet to an unoccupied space it can see.",
+                    recharge=5,
                 ),
             ],
             reactions=[
@@ -626,6 +652,13 @@ class Planetar(ExtendedCombatantData):
                 MonsterAbility(
                     name="Divine Aid (2/Day)",
                     description="The planetar casts Cure Wounds, Invisibility, Lesser Restoration, or Remove Curse, using the same spellcasting ability as Spellcasting.",
+                    per_day=2,
+                    casts=(
+                        MonsterCast("Cure Wounds"),
+                        MonsterCast("Invisibility"),
+                        MonsterCast("Lesser Restoration"),
+                        MonsterCast("Remove Curse"),
+                    ),
                 ),
             ],
             reactions=[],

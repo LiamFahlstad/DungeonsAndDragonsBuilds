@@ -15,7 +15,11 @@ from Model.Creatures.Combatants import (
     ExtendedCombatantData,
     MonsterType,
 )
-from Model.Creatures.MonsterAbilities import DcMonsterAbility, MonsterAbility
+from Model.Creatures.MonsterAbilities import (
+    DcMonsterAbility,
+    MonsterAbility,
+    MonsterCast,
+)
 from Core.Definitions import Ability
 
 
@@ -66,12 +70,14 @@ class AncientBlueDragon(ExtendedCombatantData):
                 MonsterAbility(
                     name="Legendary Resistance (4/Day, or 5/Day in Lair)",
                     description="If the dragon fails a saving throw, it can choose to succeed instead.",
+                    per_day=4,
                 ),
             ],
             actions=[
                 MonsterAbility(
                     name="Multiattack",
                     description="The dragon makes three Rend attacks. It can replace one attack with a use of Spellcasting to cast Shatter (level 3 version).",
+                    casts=(MonsterCast("Shatter", level=3),),
                 ),
                 MonsterAbility(
                     name="Rend",
@@ -80,6 +86,7 @@ class AncientBlueDragon(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Lightning Breath (Recharge 5–6)",
                     description="Dexterity Saving Throw: DC 23, each creature in a 120-foot-long, 10-foot-wide Line. Failure: 88 (16d10) Lightning damage. Success: Half damage.",
+                    recharge=5,
                 ),
                 DcMonsterAbility(
                     name="Spellcasting",
@@ -92,13 +99,18 @@ class AncientBlueDragon(ExtendedCombatantData):
                 MonsterAbility(
                     name="Cloaked Flight",
                     description="The dragon uses Spellcasting to cast Invisibility on itself, and it can fly up to half its Fly Speed. The dragon can't take this action again until the start of its next turn.",
+                    uses_ability="Spellcasting",
                 ),
                 MonsterAbility(
                     name="Sonic Boom",
                     description="The dragon uses Spellcasting to cast Shatter (level 3 version). The dragon can't take this action again until the start of its next turn.",
+                    casts=(MonsterCast("Shatter", level=3),),
+                    uses_ability="Spellcasting",
                 ),
                 MonsterAbility(
-                    name="Tail Swipe", description="The dragon makes one Rend attack."
+                    name="Tail Swipe",
+                    description="The dragon makes one Rend attack.",
+                    uses_ability="Rend",
                 ),
             ],
             legendary_resistances=4,
@@ -154,12 +166,14 @@ class AncientSilverDragon(ExtendedCombatantData):
                 MonsterAbility(
                     name="Legendary Resistance (4/Day, or 5/Day in Lair)",
                     description="If the dragon fails a saving throw, it can choose to succeed instead.",
+                    per_day=4,
                 ),
             ],
             actions=[
                 MonsterAbility(
                     name="Multiattack",
                     description="The dragon makes three Rend attacks. It can replace one attack with a use of (A) Paralyzing Breath or (B) Spellcasting to cast Ice Knife (level 2 version).",
+                    casts=(MonsterCast("Ice Knife", level=2),),
                 ),
                 MonsterAbility(
                     name="Rend",
@@ -168,6 +182,7 @@ class AncientSilverDragon(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Cold Breath (Recharge 5–6)",
                     description="Constitution Saving Throw: DC 24, each creature in a 90-foot Cone. Failure: 67 (15d8) Cold damage. Success: Half damage.",
+                    recharge=5,
                 ),
                 DcMonsterAbility(
                     name="Paralyzing Breath",
@@ -184,6 +199,8 @@ class AncientSilverDragon(ExtendedCombatantData):
                 MonsterAbility(
                     name="Chill",
                     description="The dragon uses Spellcasting to cast Hold Monster. The dragon can't take this action again until the start of its next turn.",
+                    casts=(MonsterCast("Hold Monster"),),
+                    uses_ability="Spellcasting",
                 ),
                 DcMonsterAbility(
                     name="Cold Gale",
@@ -192,6 +209,8 @@ class AncientSilverDragon(ExtendedCombatantData):
                 MonsterAbility(
                     name="Pounce",
                     description="The dragon moves up to half its Speed, and it makes one Rend attack.",
+                    uses_ability="Rend",
+                    moves_first=True,
                 ),
             ],
             legendary_resistances=4,
@@ -321,6 +340,7 @@ class Empyrean(ExtendedCombatantData):
                 MonsterAbility(
                     name="Legendary Resistance (4/Day)",
                     description="If the empyrean fails a saving throw, it can choose to succeed instead.",
+                    per_day=4,
                 ),
                 MonsterAbility(
                     name="Magic Resistance",
@@ -359,6 +379,7 @@ class Empyrean(ExtendedCombatantData):
                 MonsterAbility(
                     name="Smite",
                     description="The empyrean makes one Divine Ray attack.",
+                    uses_ability="Divine Ray",
                 ),
             ],
             legendary_resistances=4,
@@ -427,6 +448,7 @@ class Kraken(ExtendedCombatantData):
                 MonsterAbility(
                     name="Legendary Resistance (4/Day, or 5/Day in Lair)",
                     description="If the kraken fails a saving throw, it can choose to succeed instead.",
+                    per_day=4,
                 ),
                 MonsterAbility(
                     name="Siege Monster",
@@ -437,6 +459,7 @@ class Kraken(ExtendedCombatantData):
                 MonsterAbility(
                     name="Multiattack",
                     description="The kraken makes two Tentacle attacks and uses Fling, Lightning Strike, or Swallow.",
+                    uses_ability="Fling",
                 ),
                 DcMonsterAbility(
                     name="Tentacle",
@@ -459,7 +482,9 @@ class Kraken(ExtendedCombatantData):
             reactions=[],
             legendary_actions=[
                 MonsterAbility(
-                    name="Storm Bolt", description="The kraken uses Lightning Strike."
+                    name="Storm Bolt",
+                    description="The kraken uses Lightning Strike.",
+                    uses_ability="Lightning Strike",
                 ),
                 DcMonsterAbility(
                     name="Toxic Ink",

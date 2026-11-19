@@ -15,7 +15,11 @@ from Model.Creatures.Combatants import (
     ExtendedCombatantData,
     MonsterType,
 )
-from Model.Creatures.MonsterAbilities import DcMonsterAbility, MonsterAbility
+from Model.Creatures.MonsterAbilities import (
+    DcMonsterAbility,
+    MonsterAbility,
+    MonsterCast,
+)
 from Core.Definitions import Ability
 
 
@@ -71,12 +75,14 @@ class AncientBronzeDragon(ExtendedCombatantData):
                 MonsterAbility(
                     name="Legendary Resistance (4/Day, or 5/Day in Lair)",
                     description="If the dragon fails a saving throw, it can choose to succeed instead.",
+                    per_day=4,
                 ),
             ],
             actions=[
                 MonsterAbility(
                     name="Multiattack",
                     description="The dragon makes three Rend attacks. It can replace one attack with a use of (A) Repulsion Breath or (B) Spellcasting to cast Guiding Bolt (level 2 version).",
+                    casts=(MonsterCast("Guiding Bolt", level=2),),
                 ),
                 MonsterAbility(
                     name="Rend",
@@ -85,6 +91,7 @@ class AncientBronzeDragon(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Lightning Breath (Recharge 5–6)",
                     description="Dexterity Saving Throw: DC 23, each creature in a 120-foot-long, 10-foot-wide Line. Failure: 82 (15d10) Lightning damage. Success: Half damage.",
+                    recharge=5,
                 ),
                 DcMonsterAbility(
                     name="Repulsion Breath",
@@ -101,10 +108,14 @@ class AncientBronzeDragon(ExtendedCombatantData):
                 MonsterAbility(
                     name="Guiding Light",
                     description="The dragon uses Spellcasting to cast Guiding Bolt (level 2 version).",
+                    casts=(MonsterCast("Guiding Bolt", level=2),),
+                    uses_ability="Spellcasting",
                 ),
                 MonsterAbility(
                     name="Pounce",
                     description="The dragon moves up to half its Speed, and it makes one Rend attack.",
+                    uses_ability="Rend",
+                    moves_first=True,
                 ),
                 DcMonsterAbility(
                     name="Thunderclap",
@@ -173,12 +184,14 @@ class AncientGreenDragon(ExtendedCombatantData):
                 MonsterAbility(
                     name="Legendary Resistance (4/Day, or 5/Day in Lair)",
                     description="If the dragon fails a saving throw, it can choose to succeed instead.",
+                    per_day=4,
                 ),
             ],
             actions=[
                 MonsterAbility(
                     name="Multiattack",
                     description="The dragon makes three Rend attacks. It can replace one attack with a use of Spellcasting to cast Mind Spike (level 5 version).",
+                    casts=(MonsterCast("Mind Spike", level=5),),
                 ),
                 MonsterAbility(
                     name="Rend",
@@ -187,6 +200,7 @@ class AncientGreenDragon(ExtendedCombatantData):
                 DcMonsterAbility(
                     name="Poison Breath (Recharge 5–6)",
                     description="Constitution Saving Throw: DC 22, each creature in a 90-foot Cone. Failure: 77 (22d6) Poison damage. Success: Half damage.",
+                    recharge=5,
                 ),
                 DcMonsterAbility(
                     name="Spellcasting",
@@ -199,6 +213,8 @@ class AncientGreenDragon(ExtendedCombatantData):
                 MonsterAbility(
                     name="Mind Invasion",
                     description="The dragon uses Spellcasting to cast Mind Spike (level 5 version).",
+                    casts=(MonsterCast("Mind Spike", level=5),),
+                    uses_ability="Spellcasting",
                 ),
                 DcMonsterAbility(
                     name="Noxious Miasma",
@@ -207,6 +223,8 @@ class AncientGreenDragon(ExtendedCombatantData):
                 MonsterAbility(
                     name="Pounce",
                     description="The dragon moves up to half its Speed, and it makes one Rend attack.",
+                    uses_ability="Rend",
+                    moves_first=True,
                 ),
             ],
             legendary_resistances=4,
