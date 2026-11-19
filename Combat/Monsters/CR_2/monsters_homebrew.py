@@ -59,6 +59,10 @@ class PriestOfTheBlackTongues(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[Condition.FRIGHTENED],
             senses="darkvision 60 ft., Passive Perception 13",
+            darkvision_ft=60,
+            passive_perception=13,
+            spell_save_dc=12,
+            spell_attack_bonus=3,
             languages="Common, Deep Speech",
             traits=[
                 MonsterAbility(
@@ -140,6 +144,7 @@ class SisterLumenBellWardenOfStillChoirs(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Passive Perception 15",
+            passive_perception=15,
             languages="Common (cannot speak; communicates only through hand signs)",
             traits=[
                 MonsterAbility(
@@ -217,6 +222,8 @@ class AccursedGroupOf5(ExtendedCombatantData):
             ],
             condition_immunities=[Condition.GRAPPLED, Condition.RESTRAINED],
             senses="darkvision 60 ft., Passive Perception 10",
+            darkvision_ft=60,
+            passive_perception=10,
             languages="Understands the languages its bodies knew in life but can't speak",
             traits=[],
             actions=[
@@ -296,6 +303,8 @@ class HaratCR2(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Darkvision 60 ft., Passive Perception 10",
+            darkvision_ft=60,
+            passive_perception=10,
             languages="Common, Dwarvish",
             traits=[
                 MonsterAbility(
@@ -398,6 +407,8 @@ class GreypawCR2(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="darkvision 60 ft., keen smell, Passive Perception 15",
+            darkvision_ft=60,
+            passive_perception=15,
             languages="None",
             traits=[
                 MonsterAbility(

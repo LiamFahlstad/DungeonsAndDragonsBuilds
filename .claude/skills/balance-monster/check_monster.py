@@ -37,15 +37,20 @@ MAX_ABILITIES = 4
 CR_TOLERANCE = 1.0
 # dmg/dpr are shown by monster_score.py but never scored, so they are never "what to tune".
 SCORED_LABELS = {label for _key, label, _invert, scored in ATTRS if scored}
+from Combat.Tools.generate_monsters import FIELDS_AFTER  # noqa: E402
+
 # The order generate_monsters.py emits, plus the optional homebrew-only `description`, which every
-# homebrew monster that has one places right after `combatant_type`.
-OPTIONAL_FIELDS = {"description"}
+# homebrew monster that has one places right after `combatant_type`. The fields read from the
+# speed and senses text (FIELDS_AFTER: speed_swim_ft, darkvision_ft, spell_save_dc, ...) come
+# right after their text's line, only the ones it gives.
+OPTIONAL_FIELDS = {"description", *(n for names in FIELDS_AFTER.values() for n in names)}
 FIELD_ORDER = [
     "combatant_type", "description", "hp", "ac", "temp_hp", "conditions", "ability_scores", "saving_throws",
     "spell_slots", "cr", "monster_type", "monster_type_note", "alignment", "size", "ac_note",
     "hp_formula", "speed_ground_ft", "speed_fly_ft", "speed_climb_ft", "speed_special_rules",
+    *FIELDS_AFTER["speed_special_rules"],
     "skills", "damage_vulnerabilities", "damage_resistances", "damage_immunities",
-    "condition_immunities", "senses", "languages", "traits", "actions",
+    "condition_immunities", "senses", *FIELDS_AFTER["senses"], "languages", "traits", "actions",
     "bonus_actions", "reactions", "legendary_actions", "legendary_resistances", "lair_actions",
     "mythic_actions",
 ]

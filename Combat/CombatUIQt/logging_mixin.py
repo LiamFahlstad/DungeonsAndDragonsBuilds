@@ -28,6 +28,7 @@ from Combat.PlayerLog import has_round_events, is_round_key, session_label
 from Combat.Summons import upgrade_keys
 from Combat.WildShape import assume_form, leave_form
 from Combat.Effects.modifiers import hit_point_maximum
+from Model.Creatures.MonsterStatText import upgrade_stat_block_keys
 
 from .effect_options import row_uses_most
 from .player_view import may_read_log_line
@@ -320,9 +321,11 @@ class LoggingMixin(CombatWindowState):
                 char.update(saved)
             else:
                 # An older log's companion_of / companion_choice, and its
-                # timers, badge tooltips and repeat saves.
+                # timers, badge tooltips and repeat saves, and its stat block's
+                # speeds, senses and spellcasting from before they were fields.
                 upgrade_keys(char)
                 upgrade_old_keys(char)
+                upgrade_stat_block_keys(char)
             stats = char.setdefault("stats", {})
             for key in STAT_KEYS:
                 stats.setdefault(key, 0)

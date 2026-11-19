@@ -51,6 +51,7 @@ class Demilich(ExtendedCombatantData):
             speed_fly_ft=30,
             speed_climb_ft=None,
             speed_special_rules="hover",
+            hover=True,
             skills={},
             damage_vulnerabilities=[],
             damage_resistances=[
@@ -75,6 +76,8 @@ class Demilich(ExtendedCombatantData):
                 Condition.STUNNED,
             ],
             senses="Truesight 120 ft., Passive Perception 13",
+            truesight_ft=120,
+            passive_perception=13,
             languages="None",
             traits=[
                 MonsterAbility(

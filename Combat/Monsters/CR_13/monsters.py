@@ -49,6 +49,7 @@ class AdultBrassDragon(ExtendedCombatantData):
             speed_fly_ft=80,
             speed_climb_ft=None,
             speed_special_rules="burrow 30 ft.",
+            speed_burrow_ft=30,
             skills={
                 Skill.HISTORY: 7,
                 Skill.PERCEPTION: 11,
@@ -62,6 +63,10 @@ class AdultBrassDragon(ExtendedCombatantData):
             ],
             condition_immunities=[],
             senses="Blindsight 60 ft., Darkvision 120 ft., Passive Perception 21",
+            darkvision_ft=120,
+            blindsight_ft=60,
+            passive_perception=21,
+            spell_save_dc=16,
             languages="Common, Draconic",
             traits=[
                 MonsterAbility(
@@ -142,6 +147,8 @@ class AdultWhiteDragon(ExtendedCombatantData):
             speed_fly_ft=80,
             speed_climb_ft=None,
             speed_special_rules="burrow 30 ft.; swim 40 ft.",
+            speed_swim_ft=40,
+            speed_burrow_ft=30,
             skills={Skill.PERCEPTION: 11, Skill.STEALTH: 5},
             damage_vulnerabilities=[],
             damage_resistances=[],
@@ -150,6 +157,9 @@ class AdultWhiteDragon(ExtendedCombatantData):
             ],
             condition_immunities=[],
             senses="Blindsight 60 ft., Darkvision 120 ft., Passive Perception 21",
+            darkvision_ft=120,
+            blindsight_ft=60,
+            passive_perception=21,
             languages="Common, Draconic",
             traits=[
                 MonsterAbility(
@@ -226,12 +236,15 @@ class Beholder(ExtendedCombatantData):
             speed_fly_ft=40,
             speed_climb_ft=None,
             speed_special_rules="hover",
+            hover=True,
             skills={Skill.PERCEPTION: 12},
             damage_vulnerabilities=[],
             damage_resistances=[],
             damage_immunities=[],
             condition_immunities=[Condition.PRONE],
             senses="Darkvision 120 ft., Passive Perception 22",
+            darkvision_ft=120,
+            passive_perception=22,
             languages="Deep Speech, Undercommon",
             traits=[],
             actions=[],
@@ -290,6 +303,8 @@ class Nalfeshnee(ExtendedCombatantData):
             ],
             condition_immunities=[Condition.FRIGHTENED, Condition.POISONED],
             senses="Truesight 120 ft., Passive Perception 11",
+            truesight_ft=120,
+            passive_perception=11,
             languages="Abyssal; telepathy 120 ft",
             traits=[
                 MonsterAbility(
@@ -374,6 +389,9 @@ class Rakshasa(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[Condition.CHARMED, Condition.FRIGHTENED],
             senses="Truesight 60 ft., Passive Perception 18",
+            truesight_ft=60,
+            passive_perception=18,
+            spell_save_dc=18,
             languages="Common, Infernal",
             traits=[
                 MonsterAbility(
@@ -451,6 +469,9 @@ class ShadowDragon(ExtendedCombatantData):
             ],
             condition_immunities=[],
             senses="Blindsight 30 ft., Darkvision 120 ft., Passive Perception 21",
+            darkvision_ft=120,
+            blindsight_ft=30,
+            passive_perception=21,
             languages="Common, Draconic",
             traits=[
                 MonsterAbility(
@@ -537,6 +558,8 @@ class StormGiant(ExtendedCombatantData):
             speed_fly_ft=25,
             speed_climb_ft=None,
             speed_special_rules="hover; swim 50 ft.",
+            speed_swim_ft=50,
+            hover=True,
             skills={
                 Skill.ARCANA: 8,
                 Skill.ATHLETICS: 14,
@@ -553,6 +576,10 @@ class StormGiant(ExtendedCombatantData):
             ],
             condition_immunities=[],
             senses="Darkvision 120 ft., Truesight 30 ft., Passive Perception 20",
+            darkvision_ft=120,
+            truesight_ft=30,
+            passive_perception=20,
+            spell_save_dc=18,
             languages="Common, Giant",
             traits=[
                 MonsterAbility(
@@ -620,6 +647,7 @@ class Ultroloth(ExtendedCombatantData):
             speed_fly_ft=60,
             speed_climb_ft=None,
             speed_special_rules="hover",
+            hover=True,
             skills={Skill.DECEPTION: 9, Skill.PERCEPTION: 7, Skill.STEALTH: 8},
             damage_vulnerabilities=[],
             damage_resistances=[
@@ -637,6 +665,9 @@ class Ultroloth(ExtendedCombatantData):
                 Condition.POISONED,
             ],
             senses="Truesight 120 ft., Passive Perception 17",
+            truesight_ft=120,
+            passive_perception=17,
+            spell_save_dc=17,
             languages="Abyssal, Infernal; telepathy 120 ft",
             traits=[
                 MonsterAbility(
@@ -722,6 +753,8 @@ class Vampire(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Darkvision 120 ft., Passive Perception 17",
+            darkvision_ft=120,
+            passive_perception=17,
             languages="Common plus two other languages",
             traits=[
                 MonsterAbility(

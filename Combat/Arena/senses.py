@@ -19,8 +19,8 @@ Rules Glossary's Vision and Senses:
   benefit from the condition (Faerie Fire). A Blinded viewer sees nothing
   but by Blindsight.
 
-A viewer's senses are its stat block's ("Blindsight 10 ft., Darkvision 60
-ft."), a player's sheet's, and its badges' `Vision` (the Darkvision
+A viewer's senses are its stat block's (`blindsight_ft`, `darkvision_ft`,
+...), a player's sheet's, and its badges' `Vision` (the Darkvision
 spell). Tremorsense isn't sight. Whether a creature behind Total Cover is
 seen by eyes, and Dim Light (Lightly Obscured: Perception only), are the
 GM's: neither changes what's returned. Nothing here does arithmetic on a
@@ -28,7 +28,6 @@ cell's coordinates (Decision 3)."""
 
 from __future__ import annotations
 
-import re
 from collections.abc import Iterable
 
 from Combat.Arena.arena import ArenaSettings, distance_ft, footprint
@@ -55,12 +54,14 @@ DEEP_DARKNESS = AreaSight.DEEP_DARKNESS.value
 FOG = AreaSight.HEAVILY_OBSCURED.value
 _STRENGTH = (DARKNESS, DEEP_DARKNESS, FOG)
 
-_SENSE = re.compile(
-    r"\b(Blindsight|Darkvision|Truesight|Tremorsense)\s+(\d+)\s*ft\.?"
-    r"(\s*\(blind beyond this radius\))?",
-    re.IGNORECASE,
-)
-_SENSES_BY_NAME = {sense.value.lower(): sense for sense in Sense}
+# A stat block's field for each sense's range (its `senses` text is only
+# shown).
+_STAT_BLOCK_FIELDS = {
+    Sense.DARKVISION: "darkvision_ft",
+    Sense.BLINDSIGHT: "blindsight_ft",
+    Sense.TRUESIGHT: "truesight_ft",
+    Sense.TREMORSENSE: "tremorsense_ft",
+}
 _VISION_FIELDS = {
     Sense.DARKVISION: "darkvision_ft",
     Sense.BLINDSIGHT: "blindsight_ft",
@@ -112,16 +113,18 @@ def obscured_cells(
 
 
 def sense_ranges(char: dict) -> dict[Sense, int]:
-    """Char's special senses, each's range in feet: its stat block's senses
-    text, a player's sheet's, and what its badges' Vision gives (the
-    longest of each counts)."""
+    """Char's special senses, each's range in feet: its stat block's fields
+    (`darkvision_ft`, ...), a player's sheet's, and what its badges' Vision
+    gives (the longest of each counts)."""
     ranges: dict[Sense, int] = {}
 
     def add(sense: Sense, feet: int):
         ranges[sense] = max(ranges.get(sense, 0), feet)
 
-    for match in _SENSE.finditer(str(char.get("senses") or "")):
-        add(_SENSES_BY_NAME[match[1].lower()], int(match[2]))
+    for sense, name in _STAT_BLOCK_FIELDS.items():
+        feet = char.get(name)
+        if isinstance(feet, int) and not isinstance(feet, bool) and feet > 0:
+            add(sense, feet)
     sheet_senses = getattr(char.get("_stat_block"), "senses", None)
     if isinstance(sheet_senses, dict):
         for sense, feet in sheet_senses.items():
@@ -137,9 +140,8 @@ def sense_ranges(char: dict) -> dict[Sense, int]:
 
 def blind_beyond_ft(char: dict) -> int | None:
     """The Blindsight range a stat block says it's "blind beyond", if any."""
-    for match in _SENSE.finditer(str(char.get("senses") or "")):
-        if match[3] and match[1].lower() == Sense.BLINDSIGHT.value.lower():
-            return int(match[2])
+    if char.get("blind_beyond") and char.get("blindsight_ft"):
+        return char["blindsight_ft"]
     return None
 
 

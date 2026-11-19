@@ -63,6 +63,7 @@ class MarshalVirel(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Passive Perception 15",
+            passive_perception=15,
             languages="Common (rarely speaks; communicates primarily through hand signs)",
             traits=[
                 MonsterAbility(
@@ -159,6 +160,8 @@ class GoblinKingCR4(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Darkvision 60 ft., Passive Perception 10",
+            darkvision_ft=60,
+            passive_perception=10,
             languages="Common, Goblin",
             traits=[
                 MonsterAbility(

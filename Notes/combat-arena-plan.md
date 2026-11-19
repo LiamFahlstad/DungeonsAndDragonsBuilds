@@ -2272,6 +2272,13 @@ Each has a *Suggestion*: what gets built if nobody says otherwise.
   the attack rows and rolls that already read it needed no new argument.
   *Found:* DI-068 was smaller than logged: the Invisibility spell already
   gave the condition; only the GM's visibility list didn't.
+- **R27** (steps 26 and 28, 2026-11-19; explicit-attributes-plan Phase
+  4.1). The speeds and senses R24 and R26 read from a stat block's text
+  are fields now: `speed_swim_ft`, `speed_burrow_ft`, `hover`,
+  `darkvision_ft`, `blindsight_ft`, `blind_beyond`, `truesight_ft`,
+  `tremorsense_ft` on ExtendedCombatantData. `speeds.py` and `senses.py`
+  read only those; the `speed_special_rules` and `senses` strings are only
+  shown. *Found:* DI-106, a summoned spirit's form-only speeds.
 
 ## Discovered issues
 

@@ -48,6 +48,7 @@ class AncientBronzeDragon(ExtendedCombatantData):
             speed_fly_ft=80,
             speed_climb_ft=None,
             speed_special_rules="swim 40 ft.",
+            speed_swim_ft=40,
             skills={Skill.INSIGHT: 10, Skill.PERCEPTION: 17, Skill.STEALTH: 7},
             damage_vulnerabilities=[],
             damage_resistances=[],
@@ -56,6 +57,11 @@ class AncientBronzeDragon(ExtendedCombatantData):
             ],
             condition_immunities=[],
             senses="Blindsight 60 ft., Darkvision 120 ft., Passive Perception 27",
+            darkvision_ft=120,
+            blindsight_ft=60,
+            passive_perception=27,
+            spell_save_dc=22,
+            spell_attack_bonus=14,
             languages="Common, Draconic",
             traits=[
                 MonsterAbility(
@@ -140,6 +146,7 @@ class AncientGreenDragon(ExtendedCombatantData):
             speed_fly_ft=80,
             speed_climb_ft=None,
             speed_special_rules="swim 40 ft.",
+            speed_swim_ft=40,
             skills={
                 Skill.DECEPTION: 13,
                 Skill.PERCEPTION: 17,
@@ -153,6 +160,10 @@ class AncientGreenDragon(ExtendedCombatantData):
             ],
             condition_immunities=[Condition.POISONED],
             senses="Blindsight 60 ft., Darkvision 120 ft., Passive Perception 27",
+            darkvision_ft=120,
+            blindsight_ft=60,
+            passive_perception=27,
+            spell_save_dc=21,
             languages="Common, Draconic",
             traits=[
                 MonsterAbility(
@@ -238,6 +249,9 @@ class ElementalCataclysm(ExtendedCombatantData):
             speed_fly_ft=80,
             speed_climb_ft=None,
             speed_special_rules="burrow 60 ft.; hover; swim 80 ft.",
+            speed_swim_ft=80,
+            speed_burrow_ft=60,
+            hover=True,
             skills={},
             damage_vulnerabilities=[],
             damage_resistances=[],
@@ -265,6 +279,8 @@ class ElementalCataclysm(ExtendedCombatantData):
                 Condition.UNCONSCIOUS,
             ],
             senses="Truesight 150 ft., Passive Perception 12",
+            truesight_ft=150,
+            passive_perception=12,
             languages="Primordial",
             traits=[],
             actions=[],

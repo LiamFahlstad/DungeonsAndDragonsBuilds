@@ -53,6 +53,7 @@ class Arcanaloth(ExtendedCombatantData):
             speed_fly_ft=30,
             speed_climb_ft=None,
             speed_special_rules="hover",
+            hover=True,
             skills={
                 Skill.ARCANA: 9,
                 Skill.DECEPTION: 7,
@@ -71,6 +72,9 @@ class Arcanaloth(ExtendedCombatantData):
             ],
             condition_immunities=[Condition.CHARMED, Condition.POISONED],
             senses="Truesight 120 ft., Passive Perception 17",
+            truesight_ft=120,
+            passive_perception=17,
+            spell_save_dc=17,
             languages="All; telepathy 120 ft",
             traits=[
                 MonsterAbility(
@@ -160,6 +164,8 @@ class Archmage(ExtendedCombatantData):
             ],
             condition_immunities=["Charmed (with Mind Blank)"],
             senses="Passive Perception 16",
+            passive_perception=16,
+            spell_save_dc=17,
             languages="Common plus five other languages",
             traits=[
                 MonsterAbility(
@@ -245,6 +251,8 @@ class Archpriest(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Passive Perception 19",
+            passive_perception=19,
+            spell_save_dc=17,
             languages="Common plus two other languages",
             traits=[],
             actions=[
@@ -323,6 +331,8 @@ class Erinyes(ExtendedCombatantData):
             ],
             condition_immunities=[Condition.POISONED],
             senses="Truesight 120 ft., Passive Perception 16",
+            truesight_ft=120,
+            passive_perception=16,
             languages="Infernal; telepathy 120 ft",
             traits=[
                 MonsterAbility(
@@ -400,12 +410,15 @@ class GithzeraiPsion(ExtendedCombatantData):
             speed_fly_ft=40,
             speed_climb_ft=None,
             speed_special_rules="hover",
+            hover=True,
             skills={Skill.ARCANA: 8, Skill.INSIGHT: 8, Skill.PERCEPTION: 8},
             damage_vulnerabilities=[],
             damage_resistances=[],
             damage_immunities=[],
             condition_immunities=[],
             senses="Passive Perception 18",
+            passive_perception=18,
+            spell_save_dc=16,
             languages="Common, Gith",
             traits=[],
             actions=[
@@ -476,6 +489,7 @@ class PirateAdmiral(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Passive Perception 16",
+            passive_perception=16,
             languages="Common plus one other language",
             traits=[],
             actions=[
@@ -559,6 +573,8 @@ class QuestingKnight(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[Condition.CHARMED, Condition.FRIGHTENED],
             senses="Passive Perception 15",
+            passive_perception=15,
+            spell_save_dc=16,
             languages="Common plus one other language",
             traits=[
                 MonsterAbility(

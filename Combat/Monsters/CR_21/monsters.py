@@ -52,6 +52,7 @@ class AncientBlackDragon(ExtendedCombatantData):
             speed_fly_ft=80,
             speed_climb_ft=None,
             speed_special_rules="swim 40 ft.",
+            speed_swim_ft=40,
             skills={Skill.PERCEPTION: 16, Skill.STEALTH: 9},
             damage_vulnerabilities=[],
             damage_resistances=[],
@@ -60,6 +61,11 @@ class AncientBlackDragon(ExtendedCombatantData):
             ],
             condition_immunities=[],
             senses="Blindsight 60 ft., Darkvision 120 ft., Passive Perception 26",
+            darkvision_ft=120,
+            blindsight_ft=60,
+            passive_perception=26,
+            spell_save_dc=21,
+            spell_attack_bonus=13,
             languages="Common, Draconic",
             traits=[
                 MonsterAbility(
@@ -148,6 +154,10 @@ class AncientCopperDragon(ExtendedCombatantData):
             ],
             condition_immunities=[],
             senses="Blindsight 60 ft., Darkvision 120 ft., Passive Perception 27",
+            darkvision_ft=120,
+            blindsight_ft=60,
+            passive_perception=27,
+            spell_save_dc=21,
             languages="Common, Draconic",
             traits=[
                 MonsterAbility(
@@ -242,6 +252,9 @@ class Archhag(ExtendedCombatantData):
                 Condition.FRIGHTENED,
             ],
             senses="Truesight 60 ft., Passive Perception 21",
+            truesight_ft=60,
+            passive_perception=21,
+            spell_save_dc=22,
             languages="All",
             traits=[
                 DcMonsterAbility(
@@ -364,6 +377,9 @@ class Lich(ExtendedCombatantData):
                 Condition.POISONED,
             ],
             senses="Truesight 120 ft., Passive Perception 19",
+            truesight_ft=120,
+            passive_perception=19,
+            spell_save_dc=20,
             languages="All",
             traits=[
                 MonsterAbility(
@@ -449,6 +465,7 @@ class Solar(ExtendedCombatantData):
             speed_fly_ft=150,
             speed_climb_ft=None,
             speed_special_rules="hover",
+            hover=True,
             skills={Skill.PERCEPTION: 14},
             damage_vulnerabilities=[],
             damage_resistances=[],
@@ -463,6 +480,9 @@ class Solar(ExtendedCombatantData):
                 Condition.POISONED,
             ],
             senses="Truesight 120 ft., Passive Perception 24",
+            truesight_ft=120,
+            passive_perception=24,
+            spell_save_dc=25,
             languages="All; telepathy 120 ft",
             traits=[
                 MonsterAbility(

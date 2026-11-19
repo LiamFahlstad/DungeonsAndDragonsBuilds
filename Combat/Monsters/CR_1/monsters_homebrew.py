@@ -63,6 +63,7 @@ class CommonCultist(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Passive Perception 10",
+            passive_perception=10,
             languages="Common",
             traits=[
                 MonsterAbility(
@@ -150,6 +151,8 @@ class AccursedGroupOf3(ExtendedCombatantData):
             ],
             condition_immunities=[Condition.GRAPPLED, Condition.RESTRAINED],
             senses="darkvision 60 ft., Passive Perception 10",
+            darkvision_ft=60,
+            passive_perception=10,
             languages="Understands the languages its bodies knew in life but can't speak",
             traits=[],
             actions=[
@@ -227,6 +230,8 @@ class CurseCracked(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="darkvision 60 ft., Passive Perception 10",
+            darkvision_ft=60,
+            passive_perception=10,
             languages="understands Common but can barely speak, its jaw held together by glowing cracks",
             traits=[
                 MonsterAbility(
@@ -309,6 +314,8 @@ class CurseBodyBroken(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="darkvision 60 ft., Passive Perception 10",
+            darkvision_ft=60,
+            passive_perception=10,
             languages="understands Common and can speak, though only through Scream of the Trapped",
             traits=[
                 MonsterAbility(
@@ -385,6 +392,8 @@ class CurseMindBroken(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[Condition.CHARMED, Condition.FRIGHTENED],
             senses="darkvision 60 ft., Passive Perception 6",
+            darkvision_ft=60,
+            passive_perception=6,
             languages="none, save for a ceaseless overlapping whisper of borrowed voices",
             traits=[
                 MonsterAbility(
@@ -471,6 +480,8 @@ class HaratCR1(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Darkvision 60 ft., Passive Perception 10",
+            darkvision_ft=60,
+            passive_perception=10,
             languages="Common, Dwarvish",
             traits=[
                 MonsterAbility(
@@ -555,6 +566,8 @@ class GreypawCR1(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="darkvision 60 ft., keen smell, Passive Perception 13",
+            darkvision_ft=60,
+            passive_perception=13,
             languages="None",
             traits=[
                 MonsterAbility(
@@ -626,6 +639,8 @@ class GoblinKingCR1(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Darkvision 60 ft., Passive Perception 9",
+            darkvision_ft=60,
+            passive_perception=9,
             languages="Common, Goblin",
             traits=[],
             actions=[
@@ -716,6 +731,7 @@ class HumanPaladinOfDevotion(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Passive Perception 10",
+            passive_perception=10,
             languages="Common, Dwarvish",
             traits=[
                 MonsterAbility(
@@ -833,6 +849,8 @@ class OrcAssassin(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Darkvision 120 ft., Passive Perception 12",
+            darkvision_ft=120,
+            passive_perception=12,
             languages="Common, Orc, Thieves' Cant",
             traits=[
                 MonsterAbility(

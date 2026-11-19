@@ -48,6 +48,7 @@ class AncientBrassDragon(ExtendedCombatantData):
             speed_fly_ft=80,
             speed_climb_ft=None,
             speed_special_rules="burrow 40 ft.",
+            speed_burrow_ft=40,
             skills={
                 Skill.HISTORY: 9,
                 Skill.PERCEPTION: 14,
@@ -61,6 +62,10 @@ class AncientBrassDragon(ExtendedCombatantData):
             ],
             condition_immunities=[],
             senses="Blindsight 60 ft., Darkvision 120 ft., Passive Perception 24",
+            darkvision_ft=120,
+            blindsight_ft=60,
+            passive_perception=24,
+            spell_save_dc=20,
             languages="Common, Draconic",
             traits=[
                 MonsterAbility(
@@ -141,6 +146,8 @@ class AncientWhiteDragon(ExtendedCombatantData):
             speed_fly_ft=80,
             speed_climb_ft=None,
             speed_special_rules="burrow 40 ft.; swim 40 ft.",
+            speed_swim_ft=40,
+            speed_burrow_ft=40,
             skills={Skill.PERCEPTION: 13, Skill.STEALTH: 6},
             damage_vulnerabilities=[],
             damage_resistances=[],
@@ -149,6 +156,9 @@ class AncientWhiteDragon(ExtendedCombatantData):
             ],
             condition_immunities=[],
             senses="Blindsight 60 ft., Darkvision 120 ft., Passive Perception 23",
+            darkvision_ft=120,
+            blindsight_ft=60,
+            passive_perception=23,
             languages="Common, Draconic",
             traits=[
                 MonsterAbility(
@@ -225,6 +235,8 @@ class AnimalLord(ExtendedCombatantData):
             speed_fly_ft=60,
             speed_climb_ft=None,
             speed_special_rules="hover; swim 60 ft.",
+            speed_swim_ft=60,
+            hover=True,
             skills={
                 Skill.ACROBATICS: 13,
                 Skill.ATHLETICS: 13,
@@ -246,6 +258,8 @@ class AnimalLord(ExtendedCombatantData):
                 Condition.STUNNED,
             ],
             senses="Truesight 120 ft., Passive Perception 28",
+            truesight_ft=120,
+            passive_perception=28,
             languages="All",
             traits=[],
             actions=[],
@@ -298,6 +312,9 @@ class PitFiend(ExtendedCombatantData):
             ],
             condition_immunities=[Condition.POISONED],
             senses="Truesight 120 ft., Passive Perception 20",
+            truesight_ft=120,
+            passive_perception=20,
+            spell_save_dc=21,
             languages="Infernal; telepathy 120 ft",
             traits=[
                 MonsterAbility(

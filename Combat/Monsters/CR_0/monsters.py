@@ -86,6 +86,7 @@ class AarakocraSkirmisher(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Passive Perception 15",
+            passive_perception=15,
             languages="Aarakocra, Primordial (Auran)",
             traits=[],
             actions=[
@@ -136,6 +137,7 @@ class AberrantSpirit(ExtendedCombatantData):
             speed_fly_ft=30,
             speed_climb_ft=None,
             speed_special_rules="hover; Beholderkin only",
+            hover=True,
             skills={},
             damage_vulnerabilities=[],
             damage_resistances=[],
@@ -144,6 +146,8 @@ class AberrantSpirit(ExtendedCombatantData):
             ],
             condition_immunities=[],
             senses="Darkvision 60 ft., Passive Perception 10",
+            darkvision_ft=60,
+            passive_perception=10,
             languages="Deep Speech, understands the languages you know",
             traits=[
                 MonsterAbility(
@@ -211,6 +215,7 @@ class AnimatedBroom(ExtendedCombatantData):
             speed_fly_ft=50,
             speed_climb_ft=None,
             speed_special_rules="hover",
+            hover=True,
             skills={},
             damage_vulnerabilities=[],
             damage_resistances=[],
@@ -228,6 +233,8 @@ class AnimatedBroom(ExtendedCombatantData):
                 Condition.POISONED,
             ],
             senses="Blindsight 60 ft., Passive Perception 7",
+            blindsight_ft=60,
+            passive_perception=7,
             languages="—",
             traits=[
                 MonsterAbility(
@@ -284,6 +291,7 @@ class AnimatedFlyingSword(ExtendedCombatantData):
             speed_fly_ft=50,
             speed_climb_ft=None,
             speed_special_rules="hover",
+            hover=True,
             skills={},
             damage_vulnerabilities=[],
             damage_resistances=[],
@@ -301,6 +309,8 @@ class AnimatedFlyingSword(ExtendedCombatantData):
                 Condition.POISONED,
             ],
             senses="Blindsight 60 ft., Passive Perception 7",
+            blindsight_ft=60,
+            passive_perception=7,
             languages="—",
             traits=[],
             actions=[
@@ -367,6 +377,8 @@ class AnimatedObject(ExtendedCombatantData):
                 Condition.POISONED,
             ],
             senses="Blindsight 30 ft., Passive Perception 6",
+            blindsight_ft=30,
+            passive_perception=6,
             languages="Understands the languages you know",
             traits=[],
             actions=[
@@ -419,6 +431,7 @@ class Ape(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Passive Perception 13",
+            passive_perception=13,
             languages="None",
             traits=[],
             actions=[
@@ -491,6 +504,7 @@ class AwakenedShrub(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Passive Perception 10",
+            passive_perception=10,
             languages="Common plus one other language",
             traits=[],
             actions=[
@@ -543,6 +557,7 @@ class AxeBeak(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Passive Perception 10",
+            passive_perception=10,
             languages="—",
             traits=[],
             actions=[
@@ -600,6 +615,7 @@ class Baboon(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Passive Perception 11",
+            passive_perception=11,
             languages="None",
             traits=[
                 PackTactics(creature_name="baboon"),
@@ -653,6 +669,7 @@ class Badger(ExtendedCombatantData):
             speed_fly_ft=None,
             speed_climb_ft=None,
             speed_special_rules="burrow 5 ft.",
+            speed_burrow_ft=5,
             skills={Skill.PERCEPTION: 3},
             damage_vulnerabilities=[],
             damage_resistances=[
@@ -661,6 +678,8 @@ class Badger(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Darkvision 30 ft., Passive Perception 13",
+            darkvision_ft=30,
+            passive_perception=13,
             languages="None",
             traits=[],
             actions=[
@@ -713,6 +732,7 @@ class Bandit(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Passive Perception 10",
+            passive_perception=10,
             languages="Common, Thieves' Cant",
             traits=[],
             actions=[
@@ -780,6 +800,8 @@ class Bat(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Blindsight 60 ft., Passive Perception 11",
+            blindsight_ft=60,
+            passive_perception=11,
             languages="None",
             traits=[],
             actions=[
@@ -832,6 +854,8 @@ class BeastOfTheLand(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Darkvision 60 ft., Passive Perception 12",
+            darkvision_ft=60,
+            passive_perception=12,
             languages="Understands the languages you know",
             traits=[
                 PrimalBond(),
@@ -880,12 +904,15 @@ class BeastOfTheSea(ExtendedCombatantData):
             speed_fly_ft=None,
             speed_climb_ft=None,
             speed_special_rules="swim 60 ft.",
+            speed_swim_ft=60,
             skills={},
             damage_vulnerabilities=[],
             damage_resistances=[],
             damage_immunities=[],
             condition_immunities=[],
             senses="Darkvision 90 ft., Passive Perception 12",
+            darkvision_ft=90,
+            passive_perception=12,
             languages="Understands the languages you know",
             traits=[
                 Amphibious(creature_name="beast"),
@@ -941,6 +968,8 @@ class BeastOfTheSky(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Darkvision 60 ft., Passive Perception 12",
+            darkvision_ft=60,
+            passive_perception=12,
             languages="Understands the languages you know",
             traits=[
                 Flyby(creature_name="beast"),
@@ -990,12 +1019,15 @@ class BestialSpirit(ExtendedCombatantData):
             speed_fly_ft=None,
             speed_climb_ft=30,
             speed_special_rules="Land only); Fly 60 ft. (Air only); Swim 30 ft. (Water only",
+            speed_swim_ft=30,
             skills={},
             damage_vulnerabilities=[],
             damage_resistances=[],
             damage_immunities=[],
             condition_immunities=[],
             senses="Darkvision 60 ft., Passive Perception 12",
+            darkvision_ft=60,
+            passive_perception=12,
             languages="understands the languages you know",
             traits=[
                 MonsterAbility(
@@ -1056,12 +1088,15 @@ class BlackBear(ExtendedCombatantData):
             speed_fly_ft=None,
             speed_climb_ft=30,
             speed_special_rules="swim 30 ft.",
+            speed_swim_ft=30,
             skills={Skill.PERCEPTION: 5},
             damage_vulnerabilities=[],
             damage_resistances=[],
             damage_immunities=[],
             condition_immunities=[],
             senses="Darkvision 60 ft., Passive Perception 15",
+            darkvision_ft=60,
+            passive_perception=15,
             languages="None",
             traits=[],
             actions=[
@@ -1120,6 +1155,8 @@ class BlinkDog(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Darkvision 60 ft., Passive Perception 15",
+            darkvision_ft=60,
+            passive_perception=15,
             languages="Blink Dog; understands Elvish and Sylvan but can't speak them",
             traits=[],
             actions=[
@@ -1182,6 +1219,7 @@ class BloodHawk(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Passive Perception 16",
+            passive_perception=16,
             languages="None",
             traits=[
                 PackTactics(creature_name="hawk"),
@@ -1236,6 +1274,7 @@ class Boar(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Passive Perception 9",
+            passive_perception=9,
             languages="None",
             traits=[
                 MonsterAbility(
@@ -1293,12 +1332,14 @@ class BullywugWarrior(ExtendedCombatantData):
             speed_fly_ft=None,
             speed_climb_ft=None,
             speed_special_rules="swim 30 ft.",
+            speed_swim_ft=30,
             skills={Skill.STEALTH: 4},
             damage_vulnerabilities=[],
             damage_resistances=[],
             damage_immunities=[],
             condition_immunities=[],
             senses="Passive Perception 10",
+            passive_perception=10,
             languages="Bullywug, Common",
             traits=[
                 Amphibious(creature_name="bullywug"),
@@ -1369,6 +1410,8 @@ class Camel(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Darkvision 60 ft., Passive Perception 10",
+            darkvision_ft=60,
+            passive_perception=10,
             languages="None",
             traits=[],
             actions=[
@@ -1426,6 +1469,8 @@ class Cat(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Darkvision 60 ft., Passive Perception 13",
+            darkvision_ft=60,
+            passive_perception=13,
             languages="None",
             traits=[
                 MonsterAbility(
@@ -1485,6 +1530,8 @@ class CelestialSpirit(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[Condition.CHARMED, Condition.FRIGHTENED],
             senses="Darkvision 60 ft., Passive Perception 12",
+            darkvision_ft=60,
+            passive_perception=12,
             languages="Celestial, understands the languages you know",
             traits=[],
             actions=[
@@ -1549,6 +1596,8 @@ class Cockatrice(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[Condition.PETRIFIED],
             senses="Darkvision 60 ft., Passive Perception 11",
+            darkvision_ft=60,
+            passive_perception=11,
             languages="None",
             traits=[],
             actions=[
@@ -1607,6 +1656,7 @@ class Commoner(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Passive Perception 10",
+            passive_perception=10,
             languages="Common",
             traits=[
                 MonsterAbility(
@@ -1663,12 +1713,15 @@ class ConstrictorSnake(ExtendedCombatantData):
             speed_fly_ft=None,
             speed_climb_ft=None,
             speed_special_rules="swim 30 ft.",
+            speed_swim_ft=30,
             skills={Skill.PERCEPTION: 2, Skill.STEALTH: 4},
             damage_vulnerabilities=[],
             damage_resistances=[],
             damage_immunities=[],
             condition_immunities=[],
             senses="Blindsight 10 ft., Passive Perception 12",
+            blindsight_ft=10,
+            passive_perception=12,
             languages="None",
             traits=[],
             actions=[
@@ -1745,6 +1798,8 @@ class ConstructSpirit(ExtendedCombatantData):
                 Condition.POISONED,
             ],
             senses="Darkvision 60 ft., Passive Perception 10",
+            darkvision_ft=60,
+            passive_perception=10,
             languages="Understands the languages you know",
             traits=[
                 MonsterAbility(
@@ -1809,12 +1864,15 @@ class Crab(ExtendedCombatantData):
             speed_fly_ft=None,
             speed_climb_ft=None,
             speed_special_rules="swim 20 ft.",
+            speed_swim_ft=20,
             skills={Skill.STEALTH: 2},
             damage_vulnerabilities=[],
             damage_resistances=[],
             damage_immunities=[],
             condition_immunities=[],
             senses="Blindsight 30 ft., Passive Perception 9",
+            blindsight_ft=30,
+            passive_perception=9,
             languages="None",
             traits=[
                 Amphibious(creature_name="crab"),
@@ -1878,6 +1936,8 @@ class CrawlingClaw(ExtendedCombatantData):
                 Condition.POISONED,
             ],
             senses="Blindsight 30 ft., Passive Perception 10",
+            blindsight_ft=30,
+            passive_perception=10,
             languages="Understands Common but can't speak",
             traits=[],
             actions=[
@@ -1924,12 +1984,14 @@ class Crocodile(ExtendedCombatantData):
             speed_fly_ft=None,
             speed_climb_ft=None,
             speed_special_rules="swim 30 ft.",
+            speed_swim_ft=30,
             skills={Skill.STEALTH: 2},
             damage_vulnerabilities=[],
             damage_resistances=[],
             damage_immunities=[],
             condition_immunities=[],
             senses="Passive Perception 10",
+            passive_perception=10,
             languages="None",
             traits=[
                 MonsterAbility(
@@ -1993,6 +2055,7 @@ class Cultist(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Passive Perception 10",
+            passive_perception=10,
             languages="Common",
             traits=[],
             actions=[
@@ -2045,6 +2108,8 @@ class Darkmantle(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Blindsight 60 ft., Passive Perception 10",
+            blindsight_ft=60,
+            passive_perception=10,
             languages="None",
             traits=[],
             actions=[
@@ -2101,6 +2166,8 @@ class Deer(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Darkvision 60 ft., Passive Perception 14",
+            darkvision_ft=60,
+            passive_perception=14,
             languages="None",
             traits=[
                 MonsterAbility(
@@ -2157,6 +2224,7 @@ class DraconicSpirit(ExtendedCombatantData):
             speed_fly_ft=60,
             speed_climb_ft=None,
             speed_special_rules="swim 30 ft.",
+            speed_swim_ft=30,
             skills={},
             damage_vulnerabilities=[],
             damage_resistances=[
@@ -2173,6 +2241,9 @@ class DraconicSpirit(ExtendedCombatantData):
                 Condition.POISONED,
             ],
             senses="Blindsight 30 ft., Darkvision 60 ft., Passive Perception 12",
+            darkvision_ft=60,
+            blindsight_ft=30,
+            passive_perception=12,
             languages="Draconic, understands the languages you know",
             traits=[
                 MonsterAbility(
@@ -2244,6 +2315,7 @@ class DraftHorse(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Passive Perception 10",
+            passive_perception=10,
             languages="None",
             traits=[],
             actions=[
@@ -2307,6 +2379,8 @@ class Dretch(ExtendedCombatantData):
             ],
             condition_immunities=[Condition.POISONED],
             senses="Darkvision 60 ft., Passive Perception 9",
+            darkvision_ft=60,
+            passive_perception=9,
             languages="Abyssal; telepathy 60 ft. (works only with creatures that understand Abyssal)",
             traits=[],
             actions=[
@@ -2377,6 +2451,9 @@ class DustMephit(ExtendedCombatantData):
             ],
             condition_immunities=[Condition.EXHAUSTION, Condition.POISONED],
             senses="Darkvision 60 ft., Passive Perception 12",
+            darkvision_ft=60,
+            passive_perception=12,
+            spell_save_dc=10,
             languages="Primordial (Auran, Terran)",
             traits=[
                 DcMonsterAbility(
@@ -2452,6 +2529,7 @@ class Eagle(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Passive Perception 16",
+            passive_perception=16,
             languages="None",
             traits=[],
             actions=[
@@ -2498,6 +2576,9 @@ class ElementalSpirit(ExtendedCombatantData):
             speed_fly_ft=None,
             speed_climb_ft=None,
             speed_special_rules="burrow 40 ft.; Earth only); Fly 40 ft. (hover; Air only); Swim 40 ft. (Water only",
+            speed_swim_ft=40,
+            speed_burrow_ft=40,
+            hover=True,
             skills={},
             damage_vulnerabilities=[],
             damage_resistances=[
@@ -2520,6 +2601,8 @@ class ElementalSpirit(ExtendedCombatantData):
                 Condition.POISONED,
             ],
             senses="Darkvision 60 ft., Passive Perception 10",
+            darkvision_ft=60,
+            passive_perception=10,
             languages="Primordial, understands the languages you know",
             traits=[
                 MonsterAbility(
@@ -2581,6 +2664,8 @@ class Elk(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Darkvision 60 ft., Passive Perception 12",
+            darkvision_ft=60,
+            passive_perception=12,
             languages="None",
             traits=[],
             actions=[
@@ -2639,6 +2724,8 @@ class FeySpirit(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[Condition.CHARMED],
             senses="Darkvision 60 ft., Passive Perception 10",
+            darkvision_ft=60,
+            passive_perception=10,
             languages="Sylvan, understands the languages you know",
             traits=[],
             actions=[
@@ -2716,6 +2803,8 @@ class FiendishSpirit(ExtendedCombatantData):
             ],
             condition_immunities=[Condition.POISONED],
             senses="Darkvision 60 ft., Passive Perception 10",
+            darkvision_ft=60,
+            passive_perception=10,
             languages="Abyssal, Infernal, Telepathy 60 ft",
             traits=[
                 MonsterAbility(
@@ -2784,6 +2873,7 @@ class Flumph(ExtendedCombatantData):
             speed_fly_ft=30,
             speed_climb_ft=None,
             speed_special_rules="hover",
+            hover=True,
             skills={Skill.ARCANA: 4, Skill.HISTORY: 4, Skill.RELIGION: 4},
             damage_vulnerabilities=[
                 DamageTypeEntry(damage_types=[DamageType.PSYCHIC], note=""),
@@ -2792,6 +2882,8 @@ class Flumph(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Darkvision 60 ft., Passive Perception 12",
+            darkvision_ft=60,
+            passive_perception=12,
             languages="Understands Undercommon but can't speak; telepathy 60 ft",
             traits=[
                 MonsterAbility(
@@ -2865,12 +2957,15 @@ class FlyingSnake(ExtendedCombatantData):
             speed_fly_ft=60,
             speed_climb_ft=None,
             speed_special_rules="swim 30 ft.",
+            speed_swim_ft=30,
             skills={},
             damage_vulnerabilities=[],
             damage_resistances=[],
             damage_immunities=[],
             condition_immunities=[],
             senses="Blindsight 10 ft., Passive Perception 11",
+            blindsight_ft=10,
+            passive_perception=11,
             languages="None",
             traits=[
                 MonsterAbility(
@@ -2922,12 +3017,15 @@ class Frog(ExtendedCombatantData):
             speed_fly_ft=None,
             speed_climb_ft=None,
             speed_special_rules="swim 20 ft.",
+            speed_swim_ft=20,
             skills={Skill.PERCEPTION: 1, Skill.STEALTH: 3},
             damage_vulnerabilities=[],
             damage_resistances=[],
             damage_immunities=[],
             condition_immunities=[],
             senses="Darkvision 30 ft., Passive Perception 11",
+            darkvision_ft=30,
+            passive_perception=11,
             languages="None",
             traits=[
                 Amphibious(creature_name="frog"),
@@ -2980,6 +3078,7 @@ class GasSporeFungus(ExtendedCombatantData):
             speed_fly_ft=10,
             speed_climb_ft=None,
             speed_special_rules="hover",
+            hover=True,
             skills={},
             damage_vulnerabilities=[],
             damage_resistances=[],
@@ -2996,6 +3095,8 @@ class GasSporeFungus(ExtendedCombatantData):
                 Condition.PRONE,
             ],
             senses="Blindsight 30 ft., Passive Perception 5",
+            blindsight_ft=30,
+            passive_perception=5,
             languages="—",
             traits=[
                 DcMonsterAbility(
@@ -3047,6 +3148,7 @@ class GiantBadger(ExtendedCombatantData):
             speed_fly_ft=None,
             speed_climb_ft=None,
             speed_special_rules="burrow 10 ft.",
+            speed_burrow_ft=10,
             skills={Skill.PERCEPTION: 3},
             damage_vulnerabilities=[],
             damage_resistances=[
@@ -3055,6 +3157,8 @@ class GiantBadger(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Darkvision 60 ft., Passive Perception 13",
+            darkvision_ft=60,
+            passive_perception=13,
             languages="None",
             traits=[],
             actions=[
@@ -3112,6 +3216,8 @@ class GiantBat(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Blindsight 120 ft., Passive Perception 11",
+            blindsight_ft=120,
+            passive_perception=11,
             languages="None",
             traits=[],
             actions=[
@@ -3169,6 +3275,8 @@ class GiantCentipede(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Blindsight 30 ft., Passive Perception 8",
+            blindsight_ft=30,
+            passive_perception=8,
             languages="None",
             traits=[],
             actions=[
@@ -3215,12 +3323,15 @@ class GiantCrab(ExtendedCombatantData):
             speed_fly_ft=None,
             speed_climb_ft=None,
             speed_special_rules="swim 30 ft.",
+            speed_swim_ft=30,
             skills={Skill.STEALTH: 3},
             damage_vulnerabilities=[],
             damage_resistances=[],
             damage_immunities=[],
             condition_immunities=[],
             senses="Blindsight 30 ft., Passive Perception 9",
+            blindsight_ft=30,
+            passive_perception=9,
             languages="None",
             traits=[
                 Amphibious(creature_name="crab"),
@@ -3283,6 +3394,8 @@ class GiantFireBeetle(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Blindsight 30 ft., Passive Perception 8",
+            blindsight_ft=30,
+            passive_perception=8,
             languages="None",
             traits=[
                 Illumination(creature_name="beetle", radius_ft=10, dim_radius_ft=10),
@@ -3331,12 +3444,15 @@ class GiantFrog(ExtendedCombatantData):
             speed_fly_ft=None,
             speed_climb_ft=None,
             speed_special_rules="swim 30 ft.",
+            speed_swim_ft=30,
             skills={Skill.PERCEPTION: 2, Skill.STEALTH: 4},
             damage_vulnerabilities=[],
             damage_resistances=[],
             damage_immunities=[],
             condition_immunities=[],
             senses="Darkvision 30 ft., Passive Perception 12",
+            darkvision_ft=30,
+            passive_perception=12,
             languages="None",
             traits=[
                 Amphibious(creature_name="frog"),
@@ -3405,6 +3521,8 @@ class GiantGoat(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Darkvision 60 ft., Passive Perception 13",
+            darkvision_ft=60,
+            passive_perception=13,
             languages="None",
             traits=[],
             actions=[
@@ -3463,6 +3581,8 @@ class GiantInsect(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Darkvision 60 ft., Passive Perception 12",
+            darkvision_ft=60,
+            passive_perception=12,
             languages="Understands the languages you know",
             traits=[
                 SpiderClimb(creature_name="insect"),
@@ -3535,6 +3655,8 @@ class GiantLizard(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Darkvision 60 ft., Passive Perception 10",
+            darkvision_ft=60,
+            passive_perception=10,
             languages="None",
             traits=[
                 SpiderClimb(creature_name="lizard"),
@@ -3597,6 +3719,8 @@ class GiantOwl(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Darkvision 120 ft., Passive Perception 16",
+            darkvision_ft=120,
+            passive_perception=16,
             languages="Celestial; understands Common, Elvish, and Sylvan but can't speak them",
             traits=[
                 MonsterAbility(
@@ -3663,6 +3787,8 @@ class GiantRat(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Darkvision 60 ft., Passive Perception 12",
+            darkvision_ft=60,
+            passive_perception=12,
             languages="None",
             traits=[
                 PackTactics(creature_name="rat"),
@@ -3711,12 +3837,14 @@ class GiantSeahorse(ExtendedCombatantData):
             speed_fly_ft=None,
             speed_climb_ft=None,
             speed_special_rules="swim 40 ft.",
+            speed_swim_ft=40,
             skills={},
             damage_vulnerabilities=[],
             damage_resistances=[],
             damage_immunities=[],
             condition_immunities=[],
             senses="Passive Perception 11",
+            passive_perception=11,
             languages="None",
             traits=[
                 WaterBreathing(creature_name="seahorse"),
@@ -3770,12 +3898,15 @@ class GiantVenomousSnake(ExtendedCombatantData):
             speed_fly_ft=None,
             speed_climb_ft=None,
             speed_special_rules="swim 40 ft.",
+            speed_swim_ft=40,
             skills={Skill.PERCEPTION: 2},
             damage_vulnerabilities=[],
             damage_resistances=[],
             damage_immunities=[],
             condition_immunities=[],
             senses="Blindsight 10 ft., Passive Perception 12",
+            blindsight_ft=10,
+            passive_perception=12,
             languages="None",
             traits=[],
             actions=[
@@ -3836,6 +3967,7 @@ class GiantWasp(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Passive Perception 10",
+            passive_perception=10,
             languages="None",
             traits=[
                 MonsterAbility(
@@ -3900,6 +4032,8 @@ class GiantWeasel(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Darkvision 60 ft., Passive Perception 13",
+            darkvision_ft=60,
+            passive_perception=13,
             languages="None",
             traits=[],
             actions=[
@@ -3957,6 +4091,9 @@ class GiantWolfSpider(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Blindsight 10 ft., Darkvision 60 ft., Passive Perception 13",
+            darkvision_ft=60,
+            blindsight_ft=10,
+            passive_perception=13,
             languages="None",
             traits=[
                 SpiderClimb(creature_name="spider"),
@@ -4018,6 +4155,8 @@ class GnollWarrior(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Darkvision 60 ft., Passive Perception 10",
+            darkvision_ft=60,
+            passive_perception=10,
             languages="Gnoll",
             traits=[],
             actions=[
@@ -4087,6 +4226,8 @@ class Goat(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Darkvision 60 ft., Passive Perception 12",
+            darkvision_ft=60,
+            passive_perception=12,
             languages="None",
             traits=[],
             actions=[
@@ -4139,6 +4280,8 @@ class GoblinMinion(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Darkvision 60 ft., Passive Perception 9",
+            darkvision_ft=60,
+            passive_perception=9,
             languages="Common, Goblin",
             traits=[],
             actions=[
@@ -4199,6 +4342,8 @@ class GoblinWarrior(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Darkvision 60 ft., Passive Perception 9",
+            darkvision_ft=60,
+            passive_perception=9,
             languages="Common, Goblin",
             traits=[],
             actions=[
@@ -4270,6 +4415,8 @@ class GrayOoze(ExtendedCombatantData):
                 Condition.RESTRAINED,
             ],
             senses="Blindsight 60 ft., Passive Perception 8",
+            blindsight_ft=60,
+            passive_perception=8,
             languages="None",
             traits=[
                 MonsterAbility(
@@ -4337,6 +4484,8 @@ class Grimlock(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Blindsight 30 ft., Passive Perception 13",
+            blindsight_ft=30,
+            passive_perception=13,
             languages="—",
             traits=[],
             actions=[
@@ -4396,6 +4545,7 @@ class Guard(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Passive Perception 12",
+            passive_perception=12,
             languages="Common",
             traits=[],
             actions=[
@@ -4454,6 +4604,7 @@ class Hawk(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Passive Perception 16",
+            passive_perception=16,
             languages="None",
             traits=[],
             actions=[
@@ -4506,6 +4657,8 @@ class HobgoblinWarrior(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Darkvision 60 ft., Passive Perception 10",
+            darkvision_ft=60,
+            passive_perception=10,
             languages="Common, Goblin",
             traits=[
                 PackTactics(creature_name="hobgoblin"),
@@ -4580,6 +4733,8 @@ class Homunculus(ExtendedCombatantData):
             ],
             condition_immunities=[Condition.CHARMED, Condition.POISONED],
             senses="Darkvision 60 ft., Passive Perception 10",
+            darkvision_ft=60,
+            passive_perception=10,
             languages="Understands Common plus one other language but can't speak",
             traits=[
                 MonsterAbility(
@@ -4637,6 +4792,8 @@ class Hyena(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Darkvision 60 ft., Passive Perception 13",
+            darkvision_ft=60,
+            passive_perception=13,
             languages="None",
             traits=[
                 PackTactics(creature_name="hyena"),
@@ -4701,6 +4858,8 @@ class IceMephit(ExtendedCombatantData):
             ],
             condition_immunities=[Condition.EXHAUSTION, Condition.POISONED],
             senses="Darkvision 60 ft., Passive Perception 12",
+            darkvision_ft=60,
+            passive_perception=12,
             languages="Primordial (Aquan, Auran)",
             traits=[
                 DcMonsterAbility(
@@ -4780,6 +4939,8 @@ class Jackal(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Darkvision 90 ft., Passive Perception 15",
+            darkvision_ft=90,
+            passive_perception=15,
             languages="None",
             traits=[],
             actions=[
@@ -4832,6 +4993,8 @@ class Jackalwere(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Darkvision 90 ft., Passive Perception 14",
+            darkvision_ft=90,
+            passive_perception=14,
             languages="Common",
             traits=[
                 PackTactics(creature_name="jackalwere"),
@@ -4918,6 +5081,8 @@ class Kenku(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Darkvision 60 ft., Passive Perception 12",
+            darkvision_ft=60,
+            passive_perception=12,
             languages="Common, Primordial (Auran)",
             traits=[
                 DcMonsterAbility(
@@ -4986,6 +5151,8 @@ class KoboldWarrior(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Darkvision 60 ft., Passive Perception 8",
+            darkvision_ft=60,
+            passive_perception=8,
             languages="Common, Draconic",
             traits=[
                 PackTactics(creature_name="kobold"),
@@ -5041,12 +5208,16 @@ class Kuotoa(ExtendedCombatantData):
             speed_fly_ft=None,
             speed_climb_ft=None,
             speed_special_rules="swim 30 ft.",
+            speed_swim_ft=30,
             skills={Skill.PERCEPTION: 4},
             damage_vulnerabilities=[],
             damage_resistances=[],
             damage_immunities=[],
             condition_immunities=[],
             senses="Darkvision 120 ft., Truesight 30 ft., Passive Perception 14",
+            darkvision_ft=120,
+            truesight_ft=30,
+            passive_perception=14,
             languages="Undercommon",
             traits=[
                 Amphibious(creature_name="kuo-toa"),
@@ -5122,6 +5293,8 @@ class Larva(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Darkvision 60 ft., Passive Perception 10",
+            darkvision_ft=60,
+            passive_perception=10,
             languages="Understands Common plus one other language but can't speak",
             traits=[],
             actions=[
@@ -5188,6 +5361,8 @@ class Lemure(ExtendedCombatantData):
                 Condition.POISONED,
             ],
             senses="Darkvision 120 ft. (unimpeded by magical Darkness), Passive Perception 10",
+            darkvision_ft=120,
+            passive_perception=10,
             languages="Understands Infernal but can't speak",
             traits=[
                 MonsterAbility(
@@ -5250,6 +5425,8 @@ class Lizard(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Darkvision 30 ft., Passive Perception 9",
+            darkvision_ft=30,
+            passive_perception=9,
             languages="None",
             traits=[
                 SpiderClimb(creature_name="lizard"),
@@ -5309,6 +5486,8 @@ class MagmaMephit(ExtendedCombatantData):
             ],
             condition_immunities=[Condition.EXHAUSTION, Condition.POISONED],
             senses="Darkvision 60 ft., Passive Perception 10",
+            darkvision_ft=60,
+            passive_perception=10,
             languages="Primordial (Ignan, Terran)",
             traits=[
                 DcMonsterAbility(
@@ -5386,6 +5565,8 @@ class Magmin(ExtendedCombatantData):
             ],
             condition_immunities=[],
             senses="Darkvision 60 ft., Passive Perception 10",
+            darkvision_ft=60,
+            passive_perception=10,
             languages="Primordial (Ignan)",
             traits=[
                 DcMonsterAbility(
@@ -5464,6 +5645,8 @@ class Manes(ExtendedCombatantData):
                 Condition.POISONED,
             ],
             senses="Darkvision 60 ft., Passive Perception 9",
+            darkvision_ft=60,
+            passive_perception=9,
             languages="Understands Abyssal but can't speak",
             traits=[],
             actions=[
@@ -5521,6 +5704,8 @@ class Mastiff(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Darkvision 60 ft., Passive Perception 15",
+            darkvision_ft=60,
+            passive_perception=15,
             languages="None",
             traits=[],
             actions=[
@@ -5573,12 +5758,14 @@ class MerfolkSkirmisher(ExtendedCombatantData):
             speed_fly_ft=None,
             speed_climb_ft=None,
             speed_special_rules="swim 40 ft.",
+            speed_swim_ft=40,
             skills={},
             damage_vulnerabilities=[],
             damage_resistances=[],
             damage_immunities=[],
             condition_immunities=[],
             senses="Passive Perception 12",
+            passive_perception=12,
             languages="Common, Primordial (Aquan)",
             traits=[
                 Amphibious(creature_name="merfolk"),
@@ -5627,6 +5814,7 @@ class MudMephit(ExtendedCombatantData):
             speed_fly_ft=20,
             speed_climb_ft=None,
             speed_special_rules="swim 20 ft.",
+            speed_swim_ft=20,
             skills={Skill.STEALTH: 3},
             damage_vulnerabilities=[],
             damage_resistances=[],
@@ -5635,6 +5823,8 @@ class MudMephit(ExtendedCombatantData):
             ],
             condition_immunities=[Condition.EXHAUSTION, Condition.POISONED],
             senses="Darkvision 60 ft., Passive Perception 10",
+            darkvision_ft=60,
+            passive_perception=10,
             languages="Primordial (Aquan, Terran)",
             traits=[
                 DcMonsterAbility(
@@ -5706,6 +5896,7 @@ class Mule(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Passive Perception 10",
+            passive_perception=10,
             languages="None",
             traits=[
                 MonsterAbility(
@@ -5768,6 +5959,8 @@ class MyconidAdult(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Darkvision 120 ft., Passive Perception 11",
+            darkvision_ft=120,
+            passive_perception=11,
             languages="Telepathy 240 ft",
             traits=[
                 MonsterAbility(
@@ -5844,6 +6037,8 @@ class MyconidSprout(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Darkvision 120 ft., Passive Perception 10",
+            darkvision_ft=120,
+            passive_perception=10,
             languages="Telepathy 240 ft",
             traits=[
                 MonsterAbility(
@@ -5912,6 +6107,8 @@ class NeedleBlight(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[Condition.DEAFENED],
             senses="Blindsight 60 ft., Passive Perception 9",
+            blindsight_ft=60,
+            passive_perception=9,
             languages="Understands Common but can't speak",
             traits=[],
             actions=[
@@ -5979,6 +6176,7 @@ class Noble(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Passive Perception 12",
+            passive_perception=12,
             languages="Common plus two other languages",
             traits=[],
             actions=[
@@ -6035,12 +6233,15 @@ class Octopus(ExtendedCombatantData):
             speed_fly_ft=None,
             speed_climb_ft=None,
             speed_special_rules="swim 30 ft.",
+            speed_swim_ft=30,
             skills={Skill.PERCEPTION: 2, Skill.STEALTH: 6},
             damage_vulnerabilities=[],
             damage_resistances=[],
             damage_immunities=[],
             condition_immunities=[],
             senses="Darkvision 30 ft., Passive Perception 12",
+            darkvision_ft=30,
+            passive_perception=12,
             languages="None",
             traits=[
                 MonsterAbility(
@@ -6104,6 +6305,7 @@ class OtherworldlySteed(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Passive Perception 11",
+            passive_perception=11,
             languages="Telepathy 1 mile (works only with you)",
             traits=[
                 MonsterAbility(
@@ -6179,6 +6381,8 @@ class Owl(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Darkvision 120 ft., Passive Perception 15",
+            darkvision_ft=120,
+            passive_perception=15,
             languages="None",
             traits=[
                 MonsterAbility(
@@ -6236,6 +6440,8 @@ class Panther(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Darkvision 60 ft., Passive Perception 14",
+            darkvision_ft=60,
+            passive_perception=14,
             languages="None",
             traits=[],
             actions=[
@@ -6295,6 +6501,7 @@ class Performer(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Passive Perception 12",
+            passive_perception=12,
             languages="Common plus one other language",
             traits=[],
             actions=[
@@ -6357,6 +6564,9 @@ class Piercer(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Blindsight 30 ft., Darkvision 60 ft., Passive Perception 8",
+            darkvision_ft=60,
+            blindsight_ft=30,
+            passive_perception=8,
             languages="None",
             traits=[
                 SpiderClimb(creature_name="piercer"),
@@ -6414,12 +6624,15 @@ class Piranha(ExtendedCombatantData):
             speed_fly_ft=None,
             speed_climb_ft=None,
             speed_special_rules="swim 40 ft.",
+            speed_swim_ft=40,
             skills={},
             damage_vulnerabilities=[],
             damage_resistances=[],
             damage_immunities=[],
             condition_immunities=[],
             senses="Darkvision 60 ft., Passive Perception 8",
+            darkvision_ft=60,
+            passive_perception=8,
             languages="None",
             traits=[
                 WaterBreathing(creature_name="piranha"),
@@ -6474,6 +6687,8 @@ class Pixie(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Passive Perception 14",
+            passive_perception=14,
+            spell_save_dc=12,
             languages="Sylvan",
             traits=[
                 MagicResistance(creature_name="pixie"),
@@ -6532,6 +6747,7 @@ class Pony(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Passive Perception 10",
+            passive_perception=10,
             languages="None",
             traits=[],
             actions=[
@@ -6589,6 +6805,7 @@ class PriestAcolyte(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Passive Perception 12",
+            passive_perception=12,
             languages="Common",
             traits=[],
             actions=[
@@ -6666,6 +6883,9 @@ class Pseudodragon(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Blindsight 10 ft., Darkvision 60 ft., Passive Perception 15",
+            darkvision_ft=60,
+            blindsight_ft=10,
+            passive_perception=15,
             languages="Understands Common and Draconic but can't speak",
             traits=[
                 MagicResistance(creature_name="pseudodragon"),
@@ -6739,6 +6959,7 @@ class Pteranodon(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Passive Perception 11",
+            passive_perception=11,
             languages="None",
             traits=[
                 MonsterAbility(
@@ -6801,6 +7022,8 @@ class Rat(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Darkvision 30 ft., Passive Perception 12",
+            darkvision_ft=30,
+            passive_perception=12,
             languages="None",
             traits=[
                 MonsterAbility(
@@ -6858,6 +7081,7 @@ class Raven(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Passive Perception 13",
+            passive_perception=13,
             languages="None",
             traits=[
                 DcMonsterAbility(
@@ -6909,12 +7133,15 @@ class ReefShark(ExtendedCombatantData):
             speed_fly_ft=None,
             speed_climb_ft=None,
             speed_special_rules="swim 30 ft.",
+            speed_swim_ft=30,
             skills={Skill.PERCEPTION: 2},
             damage_vulnerabilities=[],
             damage_resistances=[],
             damage_immunities=[],
             condition_immunities=[],
             senses="Blindsight 30 ft., Passive Perception 12",
+            blindsight_ft=30,
+            passive_perception=12,
             languages="None",
             traits=[
                 PackTactics(creature_name="shark"),
@@ -6975,6 +7202,7 @@ class RidingHorse(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Passive Perception 10",
+            passive_perception=10,
             languages="None",
             traits=[],
             actions=[
@@ -7032,6 +7260,8 @@ class RustMonster(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Darkvision 60 ft., Passive Perception 11",
+            darkvision_ft=60,
+            passive_perception=11,
             languages="—",
             traits=[
                 MonsterAbility(
@@ -7105,6 +7335,7 @@ class SahuaginWarrior(ExtendedCombatantData):
             speed_fly_ft=None,
             speed_climb_ft=None,
             speed_special_rules="swim 40 ft.",
+            speed_swim_ft=40,
             skills={Skill.PERCEPTION: 5},
             damage_vulnerabilities=[],
             damage_resistances=[
@@ -7114,6 +7345,8 @@ class SahuaginWarrior(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Darkvision 120 ft., Passive Perception 15",
+            darkvision_ft=120,
+            passive_perception=15,
             languages="Sahuagin",
             traits=[
                 MonsterAbility(
@@ -7190,6 +7423,7 @@ class Satyr(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Passive Perception 12",
+            passive_perception=12,
             languages="Common, Elvish, Sylvan",
             traits=[
                 MagicResistance(creature_name="satyr"),
@@ -7260,6 +7494,8 @@ class Scorpion(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Blindsight 10 ft., Passive Perception 9",
+            blindsight_ft=10,
+            passive_perception=9,
             languages="None",
             traits=[],
             actions=[
@@ -7317,6 +7553,7 @@ class Scout(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Passive Perception 15",
+            passive_perception=15,
             languages="Common plus one other language",
             traits=[],
             actions=[
@@ -7382,12 +7619,14 @@ class Seahorse(ExtendedCombatantData):
             speed_fly_ft=None,
             speed_climb_ft=None,
             speed_special_rules="swim 20 ft.",
+            speed_swim_ft=20,
             skills={Skill.PERCEPTION: 2, Skill.STEALTH: 5},
             damage_vulnerabilities=[],
             damage_resistances=[],
             damage_immunities=[],
             condition_immunities=[],
             senses="Passive Perception 12",
+            passive_perception=12,
             languages="None",
             traits=[
                 WaterBreathing(creature_name="seahorse"),
@@ -7463,6 +7702,8 @@ class Shadow(ExtendedCombatantData):
                 Condition.UNCONSCIOUS,
             ],
             senses="Darkvision 60 ft., Passive Perception 10",
+            darkvision_ft=60,
+            passive_perception=10,
             languages="None",
             traits=[
                 MonsterAbility(
@@ -7534,6 +7775,8 @@ class ShriekerFungus(ExtendedCombatantData):
                 Condition.FRIGHTENED,
             ],
             senses="Blindsight 30 ft., Passive Perception 6",
+            blindsight_ft=30,
+            passive_perception=6,
             languages="—",
             traits=[],
             actions=[],
@@ -7590,6 +7833,8 @@ class Skeleton(ExtendedCombatantData):
             ],
             condition_immunities=[Condition.EXHAUSTION, Condition.POISONED],
             senses="Darkvision 60 ft., Passive Perception 9",
+            darkvision_ft=60,
+            passive_perception=9,
             languages="Understands Common plus one other language but can't speak",
             traits=[],
             actions=[
@@ -7651,6 +7896,7 @@ class SlaadTadpole(ExtendedCombatantData):
             speed_fly_ft=None,
             speed_climb_ft=None,
             speed_special_rules="burrow 10 ft.",
+            speed_burrow_ft=10,
             skills={Skill.STEALTH: 4},
             damage_vulnerabilities=[],
             damage_resistances=[
@@ -7663,6 +7909,8 @@ class SlaadTadpole(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Darkvision 60 ft., Passive Perception 7",
+            darkvision_ft=60,
+            passive_perception=7,
             languages="Understands Slaad but can't speak",
             traits=[
                 MagicResistance(creature_name="slaad"),
@@ -7725,6 +7973,8 @@ class SmokeMephit(ExtendedCombatantData):
             ],
             condition_immunities=[Condition.EXHAUSTION, Condition.POISONED],
             senses="Darkvision 60 ft., Passive Perception 12",
+            darkvision_ft=60,
+            passive_perception=12,
             languages="Primordial (Auran, Ignan)",
             traits=[
                 DcMonsterAbility(
@@ -7796,6 +8046,8 @@ class Spider(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Darkvision 30 ft., Passive Perception 10",
+            darkvision_ft=30,
+            passive_perception=10,
             languages="None",
             traits=[
                 SpiderClimb(creature_name="spider"),
@@ -7851,6 +8103,7 @@ class Sprite(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Passive Perception 13",
+            passive_perception=13,
             languages="Common, Elvish, Sylvan",
             traits=[],
             actions=[
@@ -7928,6 +8181,8 @@ class SteamMephit(ExtendedCombatantData):
             ],
             condition_immunities=[Condition.EXHAUSTION, Condition.POISONED],
             senses="Darkvision 60 ft., Passive Perception 10",
+            darkvision_ft=60,
+            passive_perception=10,
             languages="Primordial (Aquan, Ignan)",
             traits=[
                 MonsterAbility(
@@ -8007,6 +8262,8 @@ class Stirge(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Darkvision 60 ft., Passive Perception 9",
+            darkvision_ft=60,
+            passive_perception=9,
             languages="None",
             traits=[],
             actions=[
@@ -8072,6 +8329,8 @@ class SwarmOfBats(ExtendedCombatantData):
                 Condition.STUNNED,
             ],
             senses="Blindsight 60 ft., Passive Perception 11",
+            blindsight_ft=60,
+            passive_perception=11,
             languages="None",
             traits=[
                 TinySwarm(creature_type="bat"),
@@ -8139,6 +8398,8 @@ class SwarmOfInsects(ExtendedCombatantData):
                 Condition.STUNNED,
             ],
             senses="Blindsight 30 ft., Passive Perception 8",
+            blindsight_ft=30,
+            passive_perception=8,
             languages="None",
             traits=[
                 MonsterAbility(
@@ -8210,6 +8471,8 @@ class SwarmOfRats(ExtendedCombatantData):
                 Condition.STUNNED,
             ],
             senses="Darkvision 30 ft., Passive Perception 10",
+            darkvision_ft=30,
+            passive_perception=10,
             languages="None",
             traits=[
                 TinySwarm(creature_type="rat"),
@@ -8277,6 +8540,7 @@ class SwarmOfRavens(ExtendedCombatantData):
                 Condition.STUNNED,
             ],
             senses="Passive Perception 15",
+            passive_perception=15,
             languages="None",
             traits=[
                 TinySwarm(creature_type="raven"),
@@ -8340,6 +8604,7 @@ class Tough(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Passive Perception 10",
+            passive_perception=10,
             languages="Common",
             traits=[
                 PackTactics(creature_name="tough"),
@@ -8409,6 +8674,8 @@ class Troglodyte(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Darkvision 60 ft., Passive Perception 10",
+            darkvision_ft=60,
+            passive_perception=10,
             languages="Troglodyte",
             traits=[
                 SavingThrowEffect(
@@ -8478,6 +8745,8 @@ class TrollLimb(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Darkvision 60 ft., Passive Perception 9",
+            darkvision_ft=60,
+            passive_perception=9,
             languages="—",
             traits=[
                 MonsterAbility(
@@ -8546,6 +8815,8 @@ class TwigBlight(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[Condition.DEAFENED],
             senses="Blindsight 60 ft., Passive Perception 9",
+            blindsight_ft=60,
+            passive_perception=9,
             languages="Understands Common but can't speak",
             traits=[
                 PackTactics(creature_name="blight"),
@@ -8599,6 +8870,7 @@ class UndeadSpirit(ExtendedCombatantData):
             speed_fly_ft=40,
             speed_climb_ft=None,
             speed_special_rules="hover; Ghostly only",
+            hover=True,
             skills={},
             damage_vulnerabilities=[],
             damage_resistances=[],
@@ -8613,6 +8885,8 @@ class UndeadSpirit(ExtendedCombatantData):
                 Condition.POISONED,
             ],
             senses="Darkvision 60 ft., Passive Perception 10",
+            darkvision_ft=60,
+            passive_perception=10,
             languages="Understands the languages you know",
             traits=[
                 SavingThrowEffect(
@@ -8685,12 +8959,15 @@ class VenomousSnake(ExtendedCombatantData):
             speed_fly_ft=None,
             speed_climb_ft=None,
             speed_special_rules="swim 30 ft.",
+            speed_swim_ft=30,
             skills={},
             damage_vulnerabilities=[],
             damage_resistances=[],
             damage_immunities=[],
             condition_immunities=[],
             senses="Blindsight 10 ft., Passive Perception 10",
+            blindsight_ft=10,
+            passive_perception=10,
             languages="None",
             traits=[],
             actions=[
@@ -8750,6 +9027,9 @@ class VineBlight(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[Condition.DEAFENED],
             senses="Blindsight 60 ft., Passive Perception 10",
+            blindsight_ft=60,
+            passive_perception=10,
+            spell_save_dc=12,
             languages="Common",
             traits=[],
             actions=[
@@ -8817,6 +9097,8 @@ class VioletFungus(ExtendedCombatantData):
                 Condition.FRIGHTENED,
             ],
             senses="Blindsight 30 ft., Passive Perception 6",
+            blindsight_ft=30,
+            passive_perception=6,
             languages="None",
             traits=[],
             actions=[
@@ -8877,6 +9159,7 @@ class Vulture(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Passive Perception 13",
+            passive_perception=13,
             languages="None",
             traits=[
                 PackTactics(creature_name="vulture"),
@@ -8936,6 +9219,7 @@ class Warhorse(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Passive Perception 11",
+            passive_perception=11,
             languages="None",
             traits=[],
             actions=[
@@ -8998,6 +9282,8 @@ class WarhorseSkeleton(ExtendedCombatantData):
             ],
             condition_immunities=[Condition.EXHAUSTION, Condition.POISONED],
             senses="Darkvision 60 ft., Passive Perception 9",
+            darkvision_ft=60,
+            passive_perception=9,
             languages="None",
             traits=[],
             actions=[
@@ -9056,6 +9342,7 @@ class WarriorInfantry(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Passive Perception 10",
+            passive_perception=10,
             languages="Common",
             traits=[
                 PackTactics(creature_name="warrior"),
@@ -9116,6 +9403,8 @@ class Weasel(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Darkvision 60 ft., Passive Perception 13",
+            darkvision_ft=60,
+            passive_perception=13,
             languages="None",
             traits=[],
             actions=[
@@ -9168,6 +9457,8 @@ class WingedKobold(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Darkvision 60 ft., Passive Perception 8",
+            darkvision_ft=60,
+            passive_perception=8,
             languages="Common, Draconic",
             traits=[
                 PackTactics(creature_name="kobold"),
@@ -9232,6 +9523,8 @@ class Wolf(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Darkvision 60 ft., Passive Perception 15",
+            darkvision_ft=60,
+            passive_perception=15,
             languages="None",
             traits=[
                 MonsterAbility(
@@ -9295,6 +9588,8 @@ class Worg(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Darkvision 60 ft., Passive Perception 14",
+            darkvision_ft=60,
+            passive_perception=14,
             languages="Goblin, Worg",
             traits=[],
             actions=[
@@ -9349,6 +9644,8 @@ class Zombie(ExtendedCombatantData):
             ],
             condition_immunities=[Condition.EXHAUSTION, Condition.POISONED],
             senses="darkvision 60 ft., Passive Perception 8",
+            darkvision_ft=60,
+            passive_perception=8,
             languages="Understands Common plus one other language but can't speak",
             traits=[
                 DcMonsterAbility(

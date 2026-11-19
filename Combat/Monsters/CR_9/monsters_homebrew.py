@@ -68,6 +68,9 @@ class TheBellSaint(ExtendedCombatantData):
                 Condition.POISONED,
             ],
             senses="Blindsight 60 ft. (blind beyond this radius), Passive Perception 12",
+            blindsight_ft=60,
+            blind_beyond=True,
+            passive_perception=12,
             languages="understands Common but can't speak, communicates only through tolling",
             traits=[
                 LegendaryResistance(creature_name="Bell Saint", uses=1),

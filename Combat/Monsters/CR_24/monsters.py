@@ -48,6 +48,7 @@ class AncientGoldDragon(ExtendedCombatantData):
             speed_fly_ft=80,
             speed_climb_ft=None,
             speed_special_rules="swim 40 ft.",
+            speed_swim_ft=40,
             skills={
                 Skill.INSIGHT: 10,
                 Skill.PERCEPTION: 17,
@@ -61,6 +62,10 @@ class AncientGoldDragon(ExtendedCombatantData):
             ],
             condition_immunities=[],
             senses="Blindsight 60 ft., Darkvision 120 ft., Passive Perception 27",
+            darkvision_ft=120,
+            blindsight_ft=60,
+            passive_perception=27,
+            spell_save_dc=24,
             languages="Common, Draconic",
             traits=[
                 MonsterAbility(
@@ -153,6 +158,11 @@ class AncientRedDragon(ExtendedCombatantData):
             ],
             condition_immunities=[],
             senses="Blindsight 60 ft., Darkvision 120 ft., Passive Perception 26",
+            darkvision_ft=120,
+            blindsight_ft=60,
+            passive_perception=26,
+            spell_save_dc=23,
+            spell_attack_bonus=15,
             languages="Common, Draconic",
             traits=[
                 MonsterAbility(

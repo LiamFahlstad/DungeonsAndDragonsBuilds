@@ -69,6 +69,7 @@ class AdultGoldDragon(ExtendedCombatantData):
             speed_fly_ft=80,
             speed_climb_ft=None,
             speed_special_rules="swim 40 ft.",
+            speed_swim_ft=40,
             skills={
                 Skill.INSIGHT: 8,
                 Skill.PERCEPTION: 14,
@@ -82,6 +83,11 @@ class AdultGoldDragon(ExtendedCombatantData):
             ],
             condition_immunities=[],
             senses="Blindsight 60 ft., Darkvision 120 ft., Passive Perception 24",
+            darkvision_ft=120,
+            blindsight_ft=60,
+            passive_perception=24,
+            spell_save_dc=21,
+            spell_attack_bonus=13,
             languages="Common, Draconic",
             traits=[
                 Amphibious(creature_name="dragon"),
@@ -191,6 +197,11 @@ class AdultRedDragon(ExtendedCombatantData):
             ],
             condition_immunities=[],
             senses="Blindsight 60 ft., Darkvision 120 ft., Passive Perception 23",
+            darkvision_ft=120,
+            blindsight_ft=60,
+            passive_perception=23,
+            spell_save_dc=20,
+            spell_attack_bonus=12,
             languages="Common, Draconic",
             traits=[
                 LegendaryResistance(creature_name="dragon", uses=3, lair_uses=4),
@@ -291,6 +302,9 @@ class DeathKnight(ExtendedCombatantData):
                 Condition.POISONED,
             ],
             senses="Darkvision 120 ft., Passive Perception 13",
+            darkvision_ft=120,
+            passive_perception=13,
+            spell_save_dc=18,
             languages="Abyssal, Common",
             traits=[
                 LegendaryResistance(creature_name="death knight", uses=3),
@@ -394,6 +408,7 @@ class Dracolich(ExtendedCombatantData):
             speed_fly_ft=80,
             speed_climb_ft=None,
             speed_special_rules="burrow 30 ft.",
+            speed_burrow_ft=30,
             skills={Skill.PERCEPTION: 14, Skill.STEALTH: 6},
             damage_vulnerabilities=[],
             damage_resistances=[],
@@ -409,6 +424,11 @@ class Dracolich(ExtendedCombatantData):
                 Condition.POISONED,
             ],
             senses="Blindsight 60 ft., Darkvision 120 ft., Passive Perception 24",
+            darkvision_ft=120,
+            blindsight_ft=60,
+            passive_perception=24,
+            spell_save_dc=19,
+            spell_attack_bonus=11,
             languages="Common, Draconic",
             traits=[
                 LegendaryResistance(creature_name="dracolich", uses=3, lair_uses=4),
@@ -511,6 +531,7 @@ class DragonTurtle(ExtendedCombatantData):
             speed_fly_ft=None,
             speed_climb_ft=None,
             speed_special_rules="swim 50 ft.",
+            speed_swim_ft=50,
             skills={},
             damage_vulnerabilities=[],
             damage_resistances=[
@@ -519,6 +540,8 @@ class DragonTurtle(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Darkvision 120 ft., Passive Perception 11",
+            darkvision_ft=120,
+            passive_perception=11,
             languages="Draconic, Primordial (Aquan)",
             traits=[
                 Amphibious(creature_name="dragon"),
@@ -619,6 +642,8 @@ class Goristro(ExtendedCombatantData):
             ],
             condition_immunities=[Condition.POISONED],
             senses="Darkvision 120 ft., Passive Perception 17",
+            darkvision_ft=120,
+            passive_perception=17,
             languages="Abyssal",
             traits=[
                 MonsterAbility(
@@ -712,6 +737,9 @@ class SphinxOfValor(ExtendedCombatantData):
             ],
             condition_immunities=[Condition.CHARMED, Condition.FRIGHTENED],
             senses="Truesight 120 ft., Passive Perception 22",
+            truesight_ft=120,
+            passive_perception=22,
+            spell_save_dc=20,
             languages="Celestial, Common",
             traits=[
                 MonsterAbility(

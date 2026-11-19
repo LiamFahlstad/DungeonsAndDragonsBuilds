@@ -54,7 +54,15 @@ _STAT_BLOCK_KEYS = (
     "speed_fly_ft",
     "speed_climb_ft",
     "speed_special_rules",
+    "speed_swim_ft",
+    "speed_burrow_ft",
+    "hover",
     "senses",
+    "darkvision_ft",
+    "blindsight_ft",
+    "blind_beyond",
+    "truesight_ft",
+    "tremorsense_ft",
     "damage_vulnerabilities",
     "condition_immunities",
     "traits",
@@ -182,6 +190,8 @@ def _form_statistics(
             "Ability Scores": scores,
             "Saving Throws": _saving_throws(character, form, scores),
             "skills": skills,
+            "passive_perception": 10 + skills[Skill.PERCEPTION],
+            # The shown text says the same.
             "senses": _PASSIVE_PERCEPTION.sub(
                 f"Passive Perception {10 + skills[Skill.PERCEPTION]}", form.senses
             ),

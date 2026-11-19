@@ -242,6 +242,8 @@ def _build_reanimated_companion(character: CharacterView) -> ExtendedCombatantDa
             Condition.POISONED,
         ],
         senses="Blindsight 60 ft.; Passive Perception 10",
+        blindsight_ft=60,
+        passive_perception=10,
         languages="Understands the languages you know",
         traits=[
             MonsterAbility(

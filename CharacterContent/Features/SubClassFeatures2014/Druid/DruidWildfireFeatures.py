@@ -75,6 +75,7 @@ def _build_wildfire_spirit(
         speed_ground_ft=30,
         speed_fly_ft=30,
         speed_special_rules="hover",
+        hover=True,
         damage_immunities=[DamageTypeEntry(damage_types=[DamageType.FIRE])],
         condition_immunities=[
             Condition.CHARMED,
@@ -84,6 +85,8 @@ def _build_wildfire_spirit(
             Condition.RESTRAINED,
         ],
         senses="Darkvision 60 ft., Passive Perception 12",
+        darkvision_ft=60,
+        passive_perception=12,
         languages="Understands the languages you speak",
         traits=[],
         actions=[

@@ -48,6 +48,7 @@ class AdultBlackDragon(ExtendedCombatantData):
             speed_fly_ft=80,
             speed_climb_ft=None,
             speed_special_rules="swim 40 ft.",
+            speed_swim_ft=40,
             skills={Skill.PERCEPTION: 11, Skill.STEALTH: 7},
             damage_vulnerabilities=[],
             damage_resistances=[],
@@ -56,6 +57,11 @@ class AdultBlackDragon(ExtendedCombatantData):
             ],
             condition_immunities=[],
             senses="Blindsight 60 ft., Darkvision 120 ft., Passive Perception 21",
+            darkvision_ft=120,
+            blindsight_ft=60,
+            passive_perception=21,
+            spell_save_dc=17,
+            spell_attack_bonus=9,
             languages="Common, Draconic",
             traits=[
                 MonsterAbility(
@@ -144,6 +150,10 @@ class AdultCopperDragon(ExtendedCombatantData):
             ],
             condition_immunities=[],
             senses="Blindsight 60 ft., Darkvision 120 ft., Passive Perception 22",
+            darkvision_ft=120,
+            blindsight_ft=60,
+            passive_perception=22,
+            spell_save_dc=17,
             languages="Common, Draconic",
             traits=[
                 MonsterAbility(
@@ -224,6 +234,7 @@ class DeathTyrant(ExtendedCombatantData):
             speed_fly_ft=40,
             speed_climb_ft=None,
             speed_special_rules="hover",
+            hover=True,
             skills={Skill.PERCEPTION: 12},
             damage_vulnerabilities=[],
             damage_resistances=[],
@@ -239,6 +250,8 @@ class DeathTyrant(ExtendedCombatantData):
                 Condition.PRONE,
             ],
             senses="Darkvision 120 ft., Passive Perception 22",
+            darkvision_ft=120,
+            passive_perception=22,
             languages="Deep Speech, Undercommon",
             traits=[
                 MonsterAbility(
@@ -365,6 +378,9 @@ class IceDevil(ExtendedCombatantData):
             ],
             condition_immunities=[Condition.POISONED],
             senses="Blindsight 120 ft., Passive Perception 17",
+            blindsight_ft=120,
+            passive_perception=17,
+            spell_save_dc=17,
             languages="Infernal; telepathy 120 ft",
             traits=[
                 MonsterAbility(

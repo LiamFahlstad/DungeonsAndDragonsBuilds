@@ -66,25 +66,25 @@ def _settings(painted: dict[tuple[int, int], Spot] | None = None) -> ArenaSettin
 # Which speeds
 
 
-def test_a_stat_blocks_speeds_from_its_fields_and_its_speed_text():
+def test_a_stat_blocks_speeds_from_its_fields():
     dragon = _creature(
         "Black Dragon Wyrmling",
         speed_ground_ft=30,
         speed_fly_ft=60,
-        speed_special_rules="swim 30 ft.",
+        speed_swim_ft=30,
     )
     assert speeds(dragon) == {WALK: 30, FLY: 60, SWIM: 30}
     bulette = _creature(
-        "Bulette", speed_ground_ft=40, speed_special_rules="burrow 20 ft.; swim 30 ft."
+        "Bulette", speed_ground_ft=40, speed_burrow_ft=20, speed_swim_ft=30
     )
     assert speeds(bulette) == {WALK: 40, SWIM: 30, BURROW: 20}
     spider = _creature("Spider", speed_ground_ft=30, speed_climb_ft=30)
     assert speeds(spider) == {WALK: 30, CLIMB: 30}
 
 
-def test_hovering_is_read_from_the_speed_text_or_a_movement():
+def test_hovering_is_read_from_the_stat_block_or_a_movement():
     sword = _creature("Flying Sword", speed_ground_ft=5, speed_fly_ft=50)
-    sword["speed_special_rules"] = "hover"
+    sword["hover"] = True
     assert hovers(sword)
     assert not hovers(_creature("Eagle", speed_ground_ft=10, speed_fly_ft=80))
     fly = _creature("Clover", speed=30)
@@ -186,14 +186,14 @@ def test_water_is_swum():
     assert move_cost(walker, [walker], settings, Cell(2, 0)) == 20
     goblin = _creature("Goblin", at=(1, 0))
     assert move_cost(walker, [walker, goblin], settings, Cell(2, 0)) == 15 + 10
-    dragon = _creature("Dragon", speed_ground_ft=30, speed_special_rules="swim 30 ft.")
+    dragon = _creature("Dragon", speed_ground_ft=30, speed_swim_ft=30)
     dragon[MODE_KEY] = SWIM
     assert move_cost(dragon, [dragon], settings, Cell(3, 0)) == 15
 
 
 def test_swimming_stays_in_the_water():
     settings = _settings({(c, 0): Spot(ground=WATER) for c in range(1, 3)})
-    dragon = _creature("Dragon", speed_ground_ft=30, speed_special_rules="swim 30 ft.")
+    dragon = _creature("Dragon", speed_ground_ft=30, speed_swim_ft=30)
     dragon[MODE_KEY] = SWIM
     reach = reachable(dragon, [dragon], settings, 30)
     assert set(reach) == {Cell(0, 0), Cell(1, 0), Cell(2, 0)}
@@ -201,9 +201,7 @@ def test_swimming_stays_in_the_water():
 
 def test_burrowing_goes_under_creatures_and_difficult_terrain():
     settings = _settings({(1, 0): Spot(ground=DIFFICULT)})
-    bulette = _creature(
-        "Bulette", speed_ground_ft=40, speed_special_rules="burrow 20 ft."
-    )
+    bulette = _creature("Bulette", speed_ground_ft=40, speed_burrow_ft=20)
     bulette[MODE_KEY] = BURROW
     knight = _creature("Knight", at=(2, 0), _is_player=True, size="Medium")
     assert move_cost(bulette, [bulette, knight], settings, Cell(3, 0)) == 15
@@ -234,7 +232,7 @@ def test_a_flyer_falls_when_prone_incapacitated_or_its_fly_speed_is_0():
     assert fall_reason(bird) == "Incapacitated"
     bird["conditions"] = ["Grappled"]
     assert fall_reason(bird) == "its Fly Speed is 0"
-    bird["speed_special_rules"] = "hover"
+    bird["hover"] = True
     assert fall_reason(bird) is None, "it hovers"
 
 

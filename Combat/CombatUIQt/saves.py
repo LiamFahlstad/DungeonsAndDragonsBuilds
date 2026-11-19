@@ -25,7 +25,6 @@ from .monster_actions import (
     DIE,
     DamageRoll,
     MonsterAction,
-    ability_text,
     parse_action,
     roll_dice,
 )
@@ -47,8 +46,6 @@ SAVING_THROW = "Saving throw"
 ATTACK_ROLL = "Attack roll"
 
 _DICE = re.compile(r"\d+d[1-9]\d*")
-_SPELL_SAVE_DC = re.compile(r"spell save DC\s+(\d+)")
-_SPELL_ATTACK = re.compile(r"([+-]\d+) to hit with spell attacks")
 
 
 # What the Custom dialog's amount box is: damage, Hit Points regained, or
@@ -501,7 +498,7 @@ def is_immune_to(char: dict, condition: str) -> bool:
 
 def known_save_dc(char: dict | None) -> int | None:
     """The save DC char's own spells use, if that's known: a player's from
-    their character, a monster's from its Spellcasting text."""
+    their character, a monster's from its stat block's `spell_save_dc`."""
     if char is None:
         return None
     sheet = char.get("_stat_block")
@@ -509,12 +506,13 @@ def known_save_dc(char: dict | None) -> int | None:
         if sheet.spell_casting_ability is None:
             return None
         return sheet.calculate_difficulty_class()
-    return _number_in_stat_block(char, _SPELL_SAVE_DC)
+    return _stated_number(char, "spell_save_dc")
 
 
 def known_spell_attack_bonus(char: dict | None) -> int | None:
     """What char adds to its spell attacks, if that's known: a player's from
-    their character, a monster's from its Spellcasting text."""
+    their character, a monster's from its stat block's
+    `spell_attack_bonus`."""
     if char is None:
         return None
     sheet = char.get("_stat_block")
@@ -522,11 +520,11 @@ def known_spell_attack_bonus(char: dict | None) -> int | None:
         if sheet.spell_casting_ability is None:
             return None
         return sheet.calculate_attack_bonus()
-    bonus = _number_in_stat_block(char, _SPELL_ATTACK)
+    bonus = _stated_number(char, "spell_attack_bonus")
     if bonus is None:
         # Many stat blocks give only the DC. It's 8 + the same modifier and
         # Proficiency Bonus the attack adds, so the attack is the DC - 8.
-        dc = _number_in_stat_block(char, _SPELL_SAVE_DC)
+        dc = _stated_number(char, "spell_save_dc")
         bonus = None if dc is None else dc - SPELL_SAVE_DC_BASE
     return bonus
 
@@ -541,14 +539,10 @@ def known_attack_bonus(char: dict | None) -> int | None:
     return next((a.to_hit for a in attacks if a.to_hit is not None), None)
 
 
-def _number_in_stat_block(char: dict, pattern: re.Pattern[str]) -> int | None:
-    """The first match of `pattern` in char's actions and traits."""
-    for key in ("actions", "traits"):
-        for ability in char.get(key) or []:
-            match = pattern.search(ability_text(ability)[1])
-            if match:
-                return int(match.group(1))
-    return None
+def _stated_number(char: dict, key: str) -> int | None:
+    """A number field of char's stat block, None when it states none."""
+    value = char.get(key)
+    return value if isinstance(value, int) and not isinstance(value, bool) else None
 
 
 def rolled_damage(text: str, critical: bool = False) -> list[tuple[int, str | None]]:

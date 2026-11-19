@@ -55,6 +55,7 @@ class BanditCrimeLord(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Passive Perception 20",
+            passive_perception=20,
             languages="Common, Thieves' Cant",
             traits=[
                 MonsterAbility(
@@ -127,6 +128,8 @@ class Behir(ExtendedCombatantData):
             ],
             condition_immunities=[],
             senses="Darkvision 90 ft., Passive Perception 16",
+            darkvision_ft=90,
+            passive_perception=16,
             languages="Draconic",
             traits=[],
             actions=[
@@ -190,12 +193,17 @@ class Dao(ExtendedCombatantData):
             speed_fly_ft=30,
             speed_climb_ft=None,
             speed_special_rules="burrow 30 ft.; hover",
+            speed_burrow_ft=30,
+            hover=True,
             skills={},
             damage_vulnerabilities=[],
             damage_resistances=[],
             damage_immunities=[],
             condition_immunities=[Condition.PETRIFIED],
             senses="Darkvision 120 ft., Passive Perception 11",
+            darkvision_ft=120,
+            passive_perception=11,
+            spell_save_dc=16,
             languages="Primordial (Terran)",
             traits=[
                 MonsterAbility(
@@ -284,6 +292,9 @@ class DeathKnightAspirant(ExtendedCombatantData):
                 Condition.POISONED,
             ],
             senses="Darkvision 120 ft., Passive Perception 11",
+            darkvision_ft=120,
+            passive_perception=11,
+            spell_save_dc=15,
             languages="Abyssal, Common",
             traits=[
                 MonsterAbility(
@@ -356,6 +367,7 @@ class Djinni(ExtendedCombatantData):
             speed_fly_ft=90,
             speed_climb_ft=None,
             speed_special_rules="hover",
+            hover=True,
             skills={},
             damage_vulnerabilities=[],
             damage_resistances=[],
@@ -365,6 +377,9 @@ class Djinni(ExtendedCombatantData):
             ],
             condition_immunities=[],
             senses="Darkvision 120 ft., Passive Perception 13",
+            darkvision_ft=120,
+            passive_perception=13,
+            spell_save_dc=17,
             languages="Primordial (Auran)",
             traits=[
                 MonsterAbility(
@@ -440,6 +455,7 @@ class Efreeti(ExtendedCombatantData):
             speed_fly_ft=60,
             speed_climb_ft=None,
             speed_special_rules="hover",
+            hover=True,
             skills={},
             damage_vulnerabilities=[],
             damage_resistances=[],
@@ -448,6 +464,9 @@ class Efreeti(ExtendedCombatantData):
             ],
             condition_immunities=[],
             senses="Darkvision 120 ft., Passive Perception 12",
+            darkvision_ft=120,
+            passive_perception=12,
+            spell_save_dc=16,
             languages="Primordial (Ignan)",
             traits=[
                 MonsterAbility(
@@ -533,6 +552,8 @@ class HornedDevil(ExtendedCombatantData):
             ],
             condition_immunities=[Condition.POISONED],
             senses="Darkvision 150 ft. (unimpeded by magical Darkness), Passive Perception 13",
+            darkvision_ft=150,
+            passive_perception=13,
             languages="Infernal; telepathy 120 ft",
             traits=[
                 MonsterAbility(
@@ -600,6 +621,7 @@ class Marid(ExtendedCombatantData):
             speed_fly_ft=60,
             speed_climb_ft=None,
             speed_special_rules="swim 90 ft.",
+            speed_swim_ft=90,
             skills={},
             damage_vulnerabilities=[],
             damage_resistances=[
@@ -610,6 +632,10 @@ class Marid(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Blindsight 30 ft., Darkvision 120 ft., Passive Perception 13",
+            darkvision_ft=120,
+            blindsight_ft=30,
+            passive_perception=13,
+            spell_save_dc=16,
             languages="Primordial (Aquan)",
             traits=[
                 MonsterAbility(
@@ -691,6 +717,7 @@ class MindFlayerArcanist(ExtendedCombatantData):
             speed_fly_ft=30,
             speed_climb_ft=None,
             speed_special_rules="hover",
+            hover=True,
             skills={
                 Skill.ARCANA: 13,
                 Skill.INSIGHT: 7,
@@ -704,6 +731,9 @@ class MindFlayerArcanist(ExtendedCombatantData):
             ],
             condition_immunities=[Condition.CHARMED, Condition.FRIGHTENED],
             senses="Darkvision 120 ft., Passive Perception 17",
+            darkvision_ft=120,
+            passive_perception=17,
+            spell_save_dc=17,
             languages="Deep Speech, Undercommon; telepathy 120 ft",
             traits=[
                 MonsterAbility(
@@ -772,6 +802,7 @@ class Remorhaz(ExtendedCombatantData):
             speed_fly_ft=None,
             speed_climb_ft=None,
             speed_special_rules="burrow 30 ft.",
+            speed_burrow_ft=30,
             skills={},
             damage_vulnerabilities=[],
             damage_resistances=[],
@@ -781,6 +812,9 @@ class Remorhaz(ExtendedCombatantData):
             ],
             condition_immunities=[],
             senses="Darkvision 60 ft., Tremorsense 60 ft., Passive Perception 10",
+            darkvision_ft=60,
+            tremorsense_ft=60,
+            passive_perception=10,
             languages="—",
             traits=[
                 MonsterAbility(
@@ -843,6 +877,7 @@ class Roc(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Passive Perception 18",
+            passive_perception=18,
             languages="—",
             traits=[],
             actions=[
@@ -918,6 +953,9 @@ class SphinxOfLore(ExtendedCombatantData):
             ],
             condition_immunities=[Condition.CHARMED, Condition.FRIGHTENED],
             senses="Truesight 120 ft., Passive Perception 18",
+            truesight_ft=120,
+            passive_perception=18,
+            spell_save_dc=16,
             languages="Celestial, Common",
             traits=[
                 MonsterAbility(

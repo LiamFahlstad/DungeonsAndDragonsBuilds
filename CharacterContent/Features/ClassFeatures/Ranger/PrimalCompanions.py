@@ -91,6 +91,8 @@ class BeastOfTheLand(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Darkvision 60 ft., Passive Perception 12",
+            darkvision_ft=60,
+            passive_perception=12,
             languages="Understands the languages you know but can't speak",
             traits=[_PRIMAL_BOND_TRAIT],
             actions=[
@@ -150,12 +152,15 @@ class BeastOfTheSea(ExtendedCombatantData):
             hp_formula=f"5 + five times your Ranger level ({ranger_level} d8 Hit Dice)",
             speed_ground_ft=5,
             speed_special_rules="swim 60 ft.",
+            speed_swim_ft=60,
             skills={},
             damage_vulnerabilities=[],
             damage_resistances=[],
             damage_immunities=[],
             condition_immunities=[],
             senses="Darkvision 90 ft., Passive Perception 12",
+            darkvision_ft=90,
+            passive_perception=12,
             languages="Understands the languages you know but can't speak",
             traits=[
                 MonsterAbility(
@@ -223,6 +228,8 @@ class BeastOfTheSky(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Darkvision 60 ft., Passive Perception 12",
+            darkvision_ft=60,
+            passive_perception=12,
             languages="Understands the languages you know but can't speak",
             traits=[
                 MonsterAbility(

@@ -72,6 +72,8 @@ class TheChoirmasterOfHollowHymns(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[Condition.FRIGHTENED],
             senses="darkvision 60 ft., Passive Perception 16",
+            darkvision_ft=60,
+            passive_perception=16,
             languages="Common, Deep Speech (cannot speak any language aloud)",
             traits=[
                 MonsterAbility(
@@ -159,6 +161,7 @@ class MiraPrincessOfTheLoop(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[Condition.CHARMED],
             senses="Passive Perception 12",
+            passive_perception=12,
             languages="Common and most other languages",
             traits=[
                 MonsterAbility(

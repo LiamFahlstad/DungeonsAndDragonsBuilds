@@ -196,6 +196,8 @@ def _build_steel_defender(character: CharacterView) -> ExtendedCombatantData:
             Condition.POISONED,
         ],
         senses="Darkvision 60 ft., Passive Perception 10",
+        darkvision_ft=60,
+        passive_perception=10,
         languages="Understands the languages you know",
         traits=[
             MonsterAbility(

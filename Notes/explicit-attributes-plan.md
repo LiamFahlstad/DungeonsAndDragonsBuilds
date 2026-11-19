@@ -55,9 +55,9 @@ About 160 `re.` calls in `Combat/`. Sorted by what they read:
 | 1 | Read the fields that already exist (group A) | **Done** (2026-11-19): 1.2 with Phase 3 (R3), 1.1 and 1.3 (R10) |
 | 2 | Our own `when` strings become fields (group B) | **Done** (2026-11-19, R11) |
 | 3 | `CombatArea` for spells and features (group C) | **Done** (2026-11-19, R1-R8). 3.5 done for described spells; Sharpshooter and Spell Sniper not (R6) |
-| 4 | Monster stat-block fields at generation time (group D) | Not started |
+| 4 | Monster stat-block fields at generation time (group D) | In progress (Decision 3): **4.1 done** (2026-11-19, R13); 4.2-4.4 not started |
 | 5 | Retire `EffectText` (group E) | Not started; waits on the content rollout |
-| G | A guard test that lists every remaining text regex | Not started |
+| G | A guard test that lists every remaining text regex | **Done** (2026-11-19, R12) |
 
 ## Phase 1: read the fields that already exist
 
@@ -205,12 +205,28 @@ entries.
   the old parse (the same pattern as `upgrade_old_keys`), so a logged
   fight replays even if the catalog changed since.
 
+- **Q4. How does Phase 4 write fields into the catalog?** Running
+  `generate_monsters.py` today would undo every `monsters.py`'s later
+  edits: a fresh run differs from the files by about 4,000 lines (1,751 in
+  CR_0, 514 in CR_10, 389 in CR_17, 16-172 in the rest), the
+  DcMonsterAbility wrappers in all 27 tiers and the structured subclasses
+  in CR_0, CR_10 and CR_17. *Suggestion:* the generator learns to emit the
+  new fields (so a future run keeps them), and a one-off script inserts
+  the same keyword arguments into the existing files, as Phase 3 did for
+  the spell classes, leaving every other line alone. The alternative,
+  folding the later edits into the generator first, is a project of its
+  own.
+
 ## Decisions
 
 1. **Phase 3 first** (the user, 2026-11-19: "Fix 3 first").
 2. **Q1: a spell's area is `SpellRules.area`**, a row's own or a feature's
    use's is `CombatEffect.area` (the suggestion, taken as the user didn't
    say otherwise).
+3. **Q4: script insert** (the user, 2026-11-19). `generate_monsters.py`
+   emits the new fields, and a one-off script adds the same keyword
+   arguments to the existing `monsters.py` files, leaving every other line
+   as it is. Nothing is regenerated.
 
 ## Revisions
 
@@ -349,10 +365,57 @@ group D (Phase 4, including `_monster_area` and `ranges.py`'s
     the fields instead. Picker goldens changed only in those four rows'
     trigger dicts.
 
+- **R12. Guard test G (2026-11-19).** `tests/test_text_readers.py` lists
+  every `re.` call under `Combat/` (outside `Combat/Tools/`) by the module
+  constant or function it's in: 95 entries, each "input", "log",
+  "validation", "phase 4", "phase 5" or "later: <what it reads>". Five
+  read rules text no phase covers yet ("later"): `ranges._RANGED_SPELL` and
+  `_MELEE_SPELL` (a spell's attack kind; Spiritual Weapon and Flame Blade
+  mean it isn't a function of the range), `effect_options._NOT_ALWAYS` (a
+  weapon's extra damage note), `monster_actions.first_number` (a player's
+  AC is still read from the sheet's sentence by `attack_rolls` and
+  `damage_mixin`, so R10's "`ac` is now only shown" isn't quite true) and
+  `WildShape._MATERIAL_COST` (a spell's costly Material component).
+  `Model/Content/CombatAreaText.py` is outside `Combat/` and authoring-time,
+  so it isn't listed.
+
+- **R13. Phase 4.1 (2026-11-19).**
+  - *Fields:* ExtendedCombatantData has `speed_swim_ft`,
+    `speed_burrow_ft`, `hover`, `darkvision_ft`, `blindsight_ft`,
+    `blind_beyond`, `truesight_ft`, `tremorsense_ft`, `passive_perception`,
+    `spell_save_dc` and `spell_attack_bonus` (None / False by default).
+    `combatant_from_stat_block` puts them on the combat dict, and Wild
+    Shape takes a form's (its `passive_perception` is the Druid's).
+  - *Readers:* `Model/Creatures/MonsterStatText.py` (`read_stat_block`)
+    holds the regexes that were in `speeds.py`, `senses.py` and `saves.py`.
+    It's used by `generate_monsters.py`, which now writes the fields after
+    the `speed_special_rules` and `senses` lines (only the ones the text
+    gives), by a one-off scratch script that wrote the same lines into the
+    existing files (Decision 3: 718 insertions in 27 `monsters.py`, 12
+    `monsters_homebrew.py` and 7 summon builders in CharacterContent), and
+    by `upgrade_stat_block_keys`, which reads an old log's monster once as
+    it loads (Q3's suggestion, taken). `speeds.py`, `senses.py` and
+    `saves.known_save_dc` / `known_spell_attack_bonus` read only fields;
+    the DC - 8 fallback for a stat block that gives only a DC stays.
+  - *Parity:* all 554 catalog and homebrew stat blocks have fields equal
+    to their text's reading (kept as
+    `tests/test_monster_stat_text.py::test_every_stat_blocks_fields_say_what_its_text_says`,
+    which also stops a new homebrew monster from having the text without
+    the fields), and a fresh generator run differs from the files by
+    exactly as many lines as before. Picker goldens unchanged. Tests that
+    built monster dicts from text (arena senses and speeds, the custom
+    effect DCs, the two CASTER fixtures) now set the fields.
+  - *Changed on purpose:* four CR_0 spirits whose speeds are per form
+    ("Fly 60 ft. (Air only)") lost the Fly Speed the old regex read out of
+    the speed text, since a Fly Speed has its own field (DI-106).
+  - `WildShape._PASSIVE_PERCEPTION` stays, now as display: it rewrites the
+    shown senses to match the field.
+
 ## Discovered issues
 
 - DI-103: `test_the_target_label_says_when_a_target_is_obscured` fails on
   HEAD (dbf889cd), before this plan's changes.
 - DI-104: a test asserts Lightning Lure's false area (R9).
+- DI-106: a summoned spirit's form-only speeds (R13).
 - DI-105: what `CombatArea` can't say yet, found writing R9's areas. Its
   plan: [combat-area-gaps-plan.md](combat-area-gaps-plan.md).

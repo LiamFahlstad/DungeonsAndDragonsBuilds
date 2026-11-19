@@ -48,6 +48,7 @@ class AncientBlueDragon(ExtendedCombatantData):
             speed_fly_ft=80,
             speed_climb_ft=None,
             speed_special_rules="burrow 40 ft.",
+            speed_burrow_ft=40,
             skills={Skill.PERCEPTION: 17, Skill.STEALTH: 7},
             damage_vulnerabilities=[],
             damage_resistances=[],
@@ -56,6 +57,10 @@ class AncientBlueDragon(ExtendedCombatantData):
             ],
             condition_immunities=[],
             senses="Blindsight 60 ft., Darkvision 120 ft., Passive Perception 27",
+            darkvision_ft=120,
+            blindsight_ft=60,
+            passive_perception=27,
+            spell_save_dc=22,
             languages="Common, Draconic",
             traits=[
                 MonsterAbility(
@@ -139,6 +144,11 @@ class AncientSilverDragon(ExtendedCombatantData):
             ],
             condition_immunities=[],
             senses="Blindsight 60 ft., Darkvision 120 ft., Passive Perception 26",
+            darkvision_ft=120,
+            blindsight_ft=60,
+            passive_perception=26,
+            spell_save_dc=23,
+            spell_attack_bonus=15,
             languages="Common, Draconic",
             traits=[
                 MonsterAbility(
@@ -245,6 +255,8 @@ class BlobOfAnnihilation(ExtendedCombatantData):
                 Condition.UNCONSCIOUS,
             ],
             senses="Blindsight 120 ft., Passive Perception 13",
+            blindsight_ft=120,
+            passive_perception=13,
             languages="—",
             traits=[],
             actions=[],
@@ -286,6 +298,8 @@ class Empyrean(ExtendedCombatantData):
             speed_fly_ft=50,
             speed_climb_ft=None,
             speed_special_rules="hover; swim 50 ft.",
+            speed_swim_ft=50,
+            hover=True,
             skills={Skill.INSIGHT: 13, Skill.PERCEPTION: 13},
             damage_vulnerabilities=[],
             damage_resistances=[
@@ -299,6 +313,9 @@ class Empyrean(ExtendedCombatantData):
             ],
             condition_immunities=[],
             senses="Truesight 120 ft., Passive Perception 23",
+            truesight_ft=120,
+            passive_perception=23,
+            spell_save_dc=23,
             languages="All",
             traits=[
                 MonsterAbility(
@@ -384,6 +401,7 @@ class Kraken(ExtendedCombatantData):
             speed_fly_ft=None,
             speed_climb_ft=None,
             speed_special_rules="swim 120 ft.",
+            speed_swim_ft=120,
             skills={Skill.HISTORY: 13, Skill.PERCEPTION: 11},
             damage_vulnerabilities=[],
             damage_resistances=[],
@@ -398,6 +416,8 @@ class Kraken(ExtendedCombatantData):
                 Condition.RESTRAINED,
             ],
             senses="Truesight 120 ft., Passive Perception 21",
+            truesight_ft=120,
+            passive_perception=21,
             languages="Understands Abyssal, Celestial, Infernal, and Primordial but can't speak; telepathy 120 ft",
             traits=[
                 MonsterAbility(

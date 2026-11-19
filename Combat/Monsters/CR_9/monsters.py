@@ -56,6 +56,8 @@ class AbominableYeti(ExtendedCombatantData):
             ],
             condition_immunities=[],
             senses="Darkvision 60 ft., Passive Perception 19",
+            darkvision_ft=60,
+            passive_perception=19,
             languages="Yeti",
             traits=[
                 MonsterAbility(
@@ -139,6 +141,8 @@ class BoneDevil(ExtendedCombatantData):
             ],
             condition_immunities=[Condition.POISONED],
             senses="Darkvision 120 ft. (unimpeded by magical Darkness), Passive Perception 12",
+            darkvision_ft=120,
+            passive_perception=12,
             languages="Infernal; telepathy 120 ft",
             traits=[
                 MonsterAbility(
@@ -210,6 +214,8 @@ class BrazenGorgon(ExtendedCombatantData):
             ],
             condition_immunities=[Condition.EXHAUSTION, Condition.PETRIFIED],
             senses="Darkvision 60 ft., Passive Perception 20",
+            darkvision_ft=60,
+            passive_perception=20,
             languages="—",
             traits=[
                 MonsterAbility(
@@ -293,6 +299,8 @@ class ClayGolem(ExtendedCombatantData):
                 Condition.POISONED,
             ],
             senses="Darkvision 60 ft., Passive Perception 9",
+            darkvision_ft=60,
+            passive_perception=9,
             languages="Common plus one other language",
             traits=[
                 MonsterAbility(
@@ -364,12 +372,15 @@ class CloudGiant(ExtendedCombatantData):
             speed_fly_ft=20,
             speed_climb_ft=None,
             speed_special_rules="hover",
+            hover=True,
             skills={Skill.INSIGHT: 7, Skill.PERCEPTION: 11},
             damage_vulnerabilities=[],
             damage_resistances=[],
             damage_immunities=[],
             condition_immunities=[],
             senses="Passive Perception 21",
+            passive_perception=21,
+            spell_save_dc=15,
             languages="Common, Giant",
             traits=[],
             actions=[
@@ -445,6 +456,7 @@ class FireGiant(ExtendedCombatantData):
             ],
             condition_immunities=[],
             senses="Passive Perception 16",
+            passive_perception=16,
             languages="Giant",
             traits=[],
             actions=[
@@ -516,6 +528,9 @@ class Glabrezu(ExtendedCombatantData):
             ],
             condition_immunities=[Condition.POISONED],
             senses="Truesight 120 ft., Passive Perception 17",
+            truesight_ft=120,
+            passive_perception=17,
+            spell_save_dc=16,
             languages="Abyssal; telepathy 120 ft",
             traits=[
                 MonsterAbility(
@@ -595,6 +610,10 @@ class GraySlaad(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Blindsight 60 ft., Darkvision 60 ft., Passive Perception 17",
+            darkvision_ft=60,
+            blindsight_ft=60,
+            passive_perception=17,
+            spell_save_dc=16,
             languages="Common, Slaad; telepathy 60 ft",
             traits=[
                 MonsterAbility(
@@ -676,6 +695,8 @@ class Nycaloth(ExtendedCombatantData):
             ],
             condition_immunities=[Condition.POISONED],
             senses="Blindsight 60 ft., Passive Perception 14",
+            blindsight_ft=60,
+            passive_perception=14,
             languages="Abyssal, Infernal; telepathy 60 ft",
             traits=[
                 MonsterAbility(
@@ -751,6 +772,7 @@ class Treant(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Passive Perception 13",
+            passive_perception=13,
             languages="Common, Druidic, Elvish, Sylvan",
             traits=[
                 MonsterAbility(
@@ -813,6 +835,7 @@ class YoungBlueDragon(ExtendedCombatantData):
             speed_fly_ft=80,
             speed_climb_ft=None,
             speed_special_rules="burrow 20 ft.",
+            speed_burrow_ft=20,
             skills={Skill.PERCEPTION: 9, Skill.STEALTH: 4},
             damage_vulnerabilities=[],
             damage_resistances=[],
@@ -821,6 +844,9 @@ class YoungBlueDragon(ExtendedCombatantData):
             ],
             condition_immunities=[],
             senses="Blindsight 30 ft., Darkvision 120 ft., Passive Perception 19",
+            darkvision_ft=120,
+            blindsight_ft=30,
+            passive_perception=19,
             languages="Common, Draconic",
             traits=[],
             actions=[
@@ -883,6 +909,9 @@ class YoungSilverDragon(ExtendedCombatantData):
             ],
             condition_immunities=[],
             senses="Blindsight 30 ft., Darkvision 120 ft., Passive Perception 18",
+            darkvision_ft=120,
+            blindsight_ft=30,
+            passive_perception=18,
             languages="Common, Draconic",
             traits=[],
             actions=[

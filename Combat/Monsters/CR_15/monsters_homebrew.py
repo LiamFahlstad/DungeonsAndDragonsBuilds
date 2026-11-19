@@ -61,6 +61,9 @@ class TheHeadlessDragon(ExtendedCombatantData):
                 Condition.POISONED,
             ],
             senses="Blindsight 60 ft., Tremorsense 60 ft. (no eyes — senses only through the sigil), Passive Perception 11",
+            blindsight_ft=60,
+            tremorsense_ft=60,
+            passive_perception=11,
             languages="understands Draconic and Common but can't speak",
             traits=[
                 LegendaryResistance(creature_name="dragon", uses=3),

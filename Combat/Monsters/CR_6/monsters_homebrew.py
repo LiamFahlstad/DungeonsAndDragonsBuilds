@@ -74,6 +74,9 @@ class TheMouthThatWalks(ExtendedCombatantData):
                 Condition.POISONED,
             ],
             senses="blindsight 60 ft. (blind beyond this radius), Passive Perception 10",
+            blindsight_ft=60,
+            blind_beyond=True,
+            passive_perception=10,
             languages="understands Common and Undercommon but can speak only in broken, overlapping fragments of Noc'tra",
             traits=[
                 LegendaryResistance(
@@ -159,6 +162,8 @@ class TheHunter(ExtendedCombatantData):
                 Condition.FRIGHTENED,
             ],
             senses="darkvision 60 ft., Passive Perception 15",
+            darkvision_ft=60,
+            passive_perception=15,
             languages="Common, plus a fragment of the old tongue the Curse left behind, which it rarely speaks",
             traits=[
                 MonsterAbility(
@@ -271,6 +276,9 @@ class ManifestationOfDurmor(ExtendedCombatantData):
                 Condition.UNCONSCIOUS,
             ],
             senses="Darkvision 60 ft., Tremorsense 60 ft., Passive Perception 11",
+            darkvision_ft=60,
+            tremorsense_ft=60,
+            passive_perception=11,
             languages="Primordial (Ignan, Terran)",
             traits=[
                 MonsterAbility(

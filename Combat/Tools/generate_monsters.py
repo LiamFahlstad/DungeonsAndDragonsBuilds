@@ -17,6 +17,19 @@ from Combat.Tools.monster_enum_format import (
     parse_monster_type,
     parse_speed,
 )
+from Model.Creatures.MonsterStatText import (
+    SENSE_FIELDS,
+    SPEED_FIELDS,
+    SPELLCASTING_FIELDS,
+    read_stat_block,
+)
+
+# Where the fields read from the text go: each group's after the line its
+# text is on.
+FIELDS_AFTER = {
+    "speed_special_rules": SPEED_FIELDS,
+    "senses": SENSE_FIELDS + SPELLCASTING_FIELDS,
+}
 
 
 def class_name_from_monster_name(name: str) -> str:
@@ -43,6 +56,18 @@ def cr_to_tier(cr: str) -> int:
         return int(cr)
     except ValueError:
         return 0
+
+
+def stat_block_field_lines(fields: dict, after: str, indent: str) -> str:
+    """The keyword lines for the fields read from the text that go after
+    the `after` keyword (FIELDS_AFTER), each on its own line: "" for none.
+    Only the ones the text gives are written; the rest keep their
+    defaults."""
+    return "".join(
+        f"{indent}{name}={fields[name]!r},\n"
+        for name in FIELDS_AFTER[after]
+        if name in fields
+    )
 
 
 def generate_monster_class(monster: dict) -> str:
@@ -108,6 +133,18 @@ def generate_monster_class(monster: dict) -> str:
 
     legendary_resistances = monster.get("legendary_resistances", 0)
 
+    # The fight reads these fields, not the text (Notes/explicit-attributes-
+    # plan.md, Phase 4.1).
+    read = read_stat_block(
+        speed_special,
+        monster.get("senses", ""),
+        monster.get("actions", []),
+        monster.get("traits", []),
+    )
+    indent = " " * 12
+    speed_fields = stat_block_field_lines(read, "speed_special_rules", indent)
+    sense_fields = stat_block_field_lines(read, "senses", indent)
+
     class_code = f"""class {class_name}(ExtendedCombatantData):
     def __init__(self):
         super().__init__(
@@ -130,13 +167,13 @@ def generate_monster_class(monster: dict) -> str:
             speed_fly_ft={fly_ft!r},
             speed_climb_ft={climb_ft!r},
             speed_special_rules={speed_special!r},
-            skills={skills_str},
+{speed_fields}            skills={skills_str},
             damage_vulnerabilities={damage_vuln_str},
             damage_resistances={damage_resist_str},
             damage_immunities={damage_immune_str},
             condition_immunities={cond_immune_str},
             senses="{monster.get('senses', '')}",
-            languages="{monster.get('languages', '')}",
+{sense_fields}            languages="{monster.get('languages', '')}",
             description={monster.get('description', '')!r},
             traits={traits_str},
             actions={actions_str},

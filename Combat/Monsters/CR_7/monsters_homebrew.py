@@ -46,6 +46,7 @@ class TheCrownWithoutAKing(ExtendedCombatantData):
             speed_fly_ft=30,
             speed_climb_ft=None,
             speed_special_rules="hover",
+            hover=True,
             skills={},
             damage_vulnerabilities=[],
             damage_resistances=[
@@ -65,6 +66,8 @@ class TheCrownWithoutAKing(ExtendedCombatantData):
                 Condition.RESTRAINED,
             ],
             senses="Truesight 30 ft., Passive Perception 11",
+            truesight_ft=30,
+            passive_perception=11,
             languages="telepathy 60 ft., understands all languages known by its current or most recent host",
             traits=[
                 LegendaryResistance(
@@ -154,6 +157,9 @@ class TheRoadChoir(ExtendedCombatantData):
                 Condition.PRONE,
             ],
             senses="darkvision 60 ft., tremorsense 30 ft., Passive Perception 14",
+            darkvision_ft=60,
+            tremorsense_ft=30,
+            passive_perception=14,
             languages="understands Common and Undercommon but speaks only in the overlapping, mismatched voices of the dozens fused within it",
             traits=[
                 LegendaryResistance(

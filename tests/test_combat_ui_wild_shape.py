@@ -187,6 +187,7 @@ def test_passive_perception_is_the_druids_in_the_form():
     char = _druid(LAND)
     assume_form(char, "Owl")
     perception = char["skills"][Skill.PERCEPTION]
+    assert char["passive_perception"] == 10 + perception
     assert f"Passive Perception {10 + perception}" in char["senses"]
     assert "Passive Perception 13" not in char["senses"]  # the Owl's own
 

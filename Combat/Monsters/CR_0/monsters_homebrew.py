@@ -58,6 +58,7 @@ class Accursed(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[Condition.EXHAUSTION],
             senses="Passive Perception 10",
+            passive_perception=10,
             languages="Maybe understands the language it knew in life but can't speak",
             traits=[],
             actions=[
@@ -116,6 +117,7 @@ class FreshAccursed(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[Condition.EXHAUSTION],
             senses="Passive Perception 10",
+            passive_perception=10,
             languages="Understands the language it knew in life but can't speak",
             traits=[],
             actions=[
@@ -177,6 +179,7 @@ class PhysicalAccursed(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[Condition.EXHAUSTION],
             senses="Passive Perception 10",
+            passive_perception=10,
             languages="Understands the language it knew in life but can't speak",
             traits=[
                 MonsterAbility(
@@ -240,6 +243,7 @@ class ArmoredAccursed(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[Condition.EXHAUSTION, Condition.POISONED],
             senses="Passive Perception 10",
+            passive_perception=10,
             languages="Maybe understands the language it knew in life but can't speak",
             traits=[
                 MonsterAbility(
@@ -313,6 +317,7 @@ class BrainBloatedAccursed(ExtendedCombatantData):
                 Condition.POISONED,
             ],
             senses="Passive Perception 12",
+            passive_perception=12,
             languages="Maybe understands the language it knew in life but can't speak",
             traits=[
                 MonsterAbility(
@@ -388,6 +393,7 @@ class CurseHighAccursed(ExtendedCombatantData):
                 Condition.CHARMED,
             ],
             senses="Passive Perception 10",
+            passive_perception=10,
             languages="Maybe understands the language it knew in life but can't speak",
             traits=[
                 MonsterAbility(
@@ -472,6 +478,8 @@ class HaratCR1_2(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Darkvision 60 ft., Passive Perception 10",
+            darkvision_ft=60,
+            passive_perception=10,
             languages="Common, Dwarvish",
             traits=[
                 MonsterAbility(
@@ -548,6 +556,8 @@ class DwarfLifeCleric(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Darkvision 120 ft., Passive Perception 11",
+            darkvision_ft=120,
+            passive_perception=11,
             languages="Common, Dwarvish",
             traits=[
                 MonsterAbility(
@@ -655,6 +665,8 @@ class ElfDruidOfTheLand(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Darkvision 60 ft., Passive Perception 13",
+            darkvision_ft=60,
+            passive_perception=13,
             languages="Common, Druidic, Elvish",
             traits=[
                 MonsterAbility(
@@ -727,6 +739,7 @@ class Child(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Passive Perception 10",
+            passive_perception=10,
             languages="Common",
             traits=[
                 MonsterAbility(

@@ -52,6 +52,7 @@ class Tarrasque(ExtendedCombatantData):
             speed_fly_ft=None,
             speed_climb_ft=60,
             speed_special_rules="burrow 40 ft.",
+            speed_burrow_ft=40,
             skills={Skill.PERCEPTION: 9},
             damage_vulnerabilities=[],
             damage_resistances=[
@@ -71,6 +72,8 @@ class Tarrasque(ExtendedCombatantData):
                 Condition.POISONED,
             ],
             senses="Blindsight 120 ft., Passive Perception 19",
+            blindsight_ft=120,
+            passive_perception=19,
             languages="None",
             traits=[
                 MonsterAbility(

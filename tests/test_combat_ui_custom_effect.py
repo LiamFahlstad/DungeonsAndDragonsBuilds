@@ -612,10 +612,12 @@ def test_a_bad_typed_total_says_so(paladin_fight, monkeypatch):
 def test_known_save_dc():
     assert known_save_dc(None) is None
     assert known_save_dc({"name": "Tiger"}) is None
+    assert known_save_dc({"spell_save_dc": 14}) == 14
+    # The text is only shown: the field is what counts.
     text = "It casts using Wisdom (spell save DC 14):"
     assert (
         known_save_dc({"actions": [{"name": "Spellcasting", "description": text}]})
-        == 14
+        is None
     )
 
 
@@ -625,6 +627,7 @@ def test_a_monster_sources_dc_starts_from_its_spellcasting(fight, monkeypatch):
     pirate["actions"] = [
         {"name": "Spellcasting", "description": "Wisdom (spell save DC 16):"}
     ]
+    pirate["spell_save_dc"] = 16
     dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
     assert dlg.findChild(QSpinBox, "saveDc").value() == 16
 
@@ -1499,14 +1502,13 @@ def test_the_turn_column_and_status_sum_up_an_attack(armored, monkeypatch):
 def test_known_attack_bonus():
     assert known_attack_bonus(None) is None
     assert known_attack_bonus({"name": "Tiger"}) is None
-    casting = "using Wisdom (spell save DC 14, +6 to hit with spell attacks):"
     bite = "Melee Attack Roll: +7, reach 5 ft. Hit: 7 (1d8 + 3) Piercing damage."
-    spellcasting = {"name": "Spellcasting", "description": casting}
     claws = {"name": "Bite", "description": bite}
-    assert known_attack_bonus({"actions": [spellcasting]}) == 6
+    assert known_attack_bonus({"spell_attack_bonus": 6}) == 6
     assert known_attack_bonus({"actions": [claws]}) == 7
-    assert known_attack_bonus({"actions": [claws, spellcasting]}) == 6
-    assert known_attack_bonus({"traits": [spellcasting]}) == 6
+    assert known_attack_bonus({"actions": [claws], "spell_attack_bonus": 6}) == 6
+    # Only a DC stated: the attack is the DC - 8.
+    assert known_attack_bonus({"actions": [claws], "spell_save_dc": 14}) == 6
 
 
 def test_a_player_with_no_spellcasting_has_no_attack_bonus():

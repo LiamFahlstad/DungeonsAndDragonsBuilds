@@ -122,6 +122,8 @@ def _build_drake(
         speed_fly_ft=40 if has_wings else None,
         damage_immunities=[DamageTypeEntry(damage_types=[chosen_type])],
         senses="Darkvision 60 ft., Passive Perception 12",
+        darkvision_ft=60,
+        passive_perception=12,
         languages="Draconic",
         traits=traits,
         actions=[MonsterAbility(name="Bite", description=bite_description)],

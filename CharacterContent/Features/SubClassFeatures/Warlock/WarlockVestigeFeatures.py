@@ -210,6 +210,7 @@ def _build_vestige(
         speed_ground_ft=5,
         speed_fly_ft=30,
         speed_special_rules="hover",
+        hover=True,
         damage_resistances=[DamageTypeEntry(damage_types=[damage_type])],
         condition_immunities=[
             Condition.CHARMED,
@@ -217,6 +218,7 @@ def _build_vestige(
             Condition.PRONE,
         ],
         senses="Passive Perception 12",
+        passive_perception=12,
         languages="Speaks the languages you know",
         traits=[
             MonsterAbility(

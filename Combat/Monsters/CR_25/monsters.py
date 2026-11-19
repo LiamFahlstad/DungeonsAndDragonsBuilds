@@ -68,6 +68,8 @@ class Colossus(ExtendedCombatantData):
                 Condition.UNCONSCIOUS,
             ],
             senses="Truesight 300 ft., Passive Perception 10",
+            truesight_ft=300,
+            passive_perception=10,
             languages="Understands Celestial and Common but can't speak",
             traits=[
                 MonsterAbility(

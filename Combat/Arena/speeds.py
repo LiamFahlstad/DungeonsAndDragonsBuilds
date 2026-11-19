@@ -12,8 +12,8 @@ stay aloft in those circumstances if you can hover." Falling: "1d6
 Bludgeoning damage at the end of the fall for every 10 feet it fell, to a
 maximum of 20d6", and Prone unless it takes none.
 
-Where they come from: a stat block's Speed, Fly and Climb fields and its
-speed text ("swim 40 ft.", "burrow 20 ft.; hover"); a player's Speed; and a
+Where they come from: a stat block's Speed, Fly, Climb, Swim and Burrow
+fields and its `hover` (its speed text is only shown); a player's Speed; and a
 Movement on a badge, a feature or a trait (Fly's "a Fly Speed of 60 feet and
 can hover": Movement(fly_ft=60, hovers=True)). The speed a creature moves by
 is kept on it, `char["moving_by"] = "fly"` (none: its Speed), and how high
@@ -22,8 +22,6 @@ into every distance as the ground's height does.
 """
 
 from __future__ import annotations
-
-import re
 
 from Combat.Effects.modifiers import has_condition, modifiers_on, speed_in_use
 from Core.Definitions import Condition
@@ -67,11 +65,6 @@ TRAIT_MOVEMENT = {
     "Swarm": Movement(shares_space=True),
 }
 
-# A stat block's speed text: "swim 40 ft.", "burrow 20 ft.; swim 30 ft.",
-# "hover".
-_SPECIAL = re.compile(r"\b(fly|swim|climb|burrow)\s+(\d+)\s*ft\.?", re.IGNORECASE)
-_HOVER = re.compile(r"\bhover\b", re.IGNORECASE)
-
 
 def _trait_names(char: dict) -> list[str]:
     return [
@@ -108,9 +101,9 @@ def _number(value) -> int | None:
 
 def stored_speeds(char: dict) -> dict[str, int]:
     """Char's own speeds, before anything changes them: its Speed (a
-    monster's speed_ground_ft, a player's speed), its stat block's Fly and
-    Climb Speeds and the ones its speed text gives ("swim 40 ft."), and
-    those a Movement gives (the highest, where several do)."""
+    monster's speed_ground_ft, a player's speed), its stat block's Fly,
+    Climb, Swim and Burrow Speeds, and those a Movement gives (the highest, where several do).
+    """
     found: dict[str, int] = {}
 
     def give(mode: str, feet: int | None):
@@ -123,8 +116,8 @@ def stored_speeds(char: dict) -> dict[str, int]:
     give(WALK, walk)
     give(FLY, _number(char.get("speed_fly_ft")))
     give(CLIMB, _number(char.get("speed_climb_ft")))
-    for mode, feet in _SPECIAL.findall(str(char.get("speed_special_rules") or "")):
-        give(mode.lower(), int(feet))
+    give(SWIM, _number(char.get("speed_swim_ft")))
+    give(BURROW, _number(char.get("speed_burrow_ft")))
     for _, movement in movements(char):
         give(FLY, movement.fly_ft)
         give(SWIM, movement.swim_ft)
@@ -144,9 +137,9 @@ def speeds(char: dict) -> dict[str, int]:
 
 
 def hovers(char: dict) -> bool:
-    """Whether char can hover: its speed text says so ("fly 60 ft.
-    (hover)"), or a Movement does (Fly)."""
-    if _HOVER.search(str(char.get("speed_special_rules") or "")):
+    """Whether char can hover: its stat block's `hover`, or a Movement's
+    (Fly)."""
+    if char.get("hover"):
         return True
     return any(m.hovers for _, m in movements(char))
 

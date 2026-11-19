@@ -84,6 +84,9 @@ CASTER = {
             "description": "It casts a spell (spell save DC 15, +7 to hit with spell attacks).",
         }
     ],
+    # What the text says, as the stat block's fields the fight reads.
+    "spell_save_dc": 15,
+    "spell_attack_bonus": 7,
 }
 
 

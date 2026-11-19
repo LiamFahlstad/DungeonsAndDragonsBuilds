@@ -49,6 +49,7 @@ class AdultBronzeDragon(ExtendedCombatantData):
             speed_fly_ft=80,
             speed_climb_ft=None,
             speed_special_rules="swim 40 ft.",
+            speed_swim_ft=40,
             skills={Skill.INSIGHT: 7, Skill.PERCEPTION: 12, Skill.STEALTH: 5},
             damage_vulnerabilities=[],
             damage_resistances=[],
@@ -57,6 +58,11 @@ class AdultBronzeDragon(ExtendedCombatantData):
             ],
             condition_immunities=[],
             senses="Blindsight 60 ft., Darkvision 120 ft., Passive Perception 22",
+            darkvision_ft=120,
+            blindsight_ft=60,
+            passive_perception=22,
+            spell_save_dc=17,
+            spell_attack_bonus=10,
             languages="Common, Draconic",
             traits=[
                 MonsterAbility(
@@ -141,6 +147,7 @@ class AdultGreenDragon(ExtendedCombatantData):
             speed_fly_ft=80,
             speed_climb_ft=None,
             speed_special_rules="swim 40 ft.",
+            speed_swim_ft=40,
             skills={
                 Skill.DECEPTION: 9,
                 Skill.PERCEPTION: 12,
@@ -154,6 +161,10 @@ class AdultGreenDragon(ExtendedCombatantData):
             ],
             condition_immunities=[Condition.POISONED],
             senses="Blindsight 60 ft., Darkvision 120 ft., Passive Perception 22",
+            darkvision_ft=120,
+            blindsight_ft=60,
+            passive_perception=22,
+            spell_save_dc=17,
             languages="Common, Draconic",
             traits=[
                 MonsterAbility(
@@ -251,6 +262,10 @@ class MummyLord(ExtendedCombatantData):
                 Condition.POISONED,
             ],
             senses="Truesight 60 ft., Passive Perception 19",
+            truesight_ft=60,
+            passive_perception=19,
+            spell_save_dc=17,
+            spell_attack_bonus=9,
             languages="Common plus three other languages",
             traits=[
                 MonsterAbility(
@@ -344,12 +359,16 @@ class PurpleWorm(ExtendedCombatantData):
             speed_fly_ft=None,
             speed_climb_ft=None,
             speed_special_rules="burrow 50 ft.",
+            speed_burrow_ft=50,
             skills={},
             damage_vulnerabilities=[],
             damage_resistances=[],
             damage_immunities=[],
             condition_immunities=[],
             senses="Blindsight 30 ft., Tremorsense 60 ft., Passive Perception 9",
+            blindsight_ft=30,
+            tremorsense_ft=60,
+            passive_perception=9,
             languages="—",
             traits=[
                 MonsterAbility(
@@ -424,6 +443,8 @@ class SalamanderInfernoMaster(ExtendedCombatantData):
             ],
             condition_immunities=[],
             senses="Darkvision 120 ft., Passive Perception 10",
+            darkvision_ft=120,
+            passive_perception=10,
             languages="Primordial (Ignan)",
             traits=[
                 MonsterAbility(
@@ -497,6 +518,7 @@ class VampireUmbralLord(ExtendedCombatantData):
             speed_fly_ft=40,
             speed_climb_ft=40,
             speed_special_rules="hover",
+            hover=True,
             skills={Skill.ARCANA: 9, Skill.PERCEPTION: 13, Skill.STEALTH: 9},
             damage_vulnerabilities=[],
             damage_resistances=[],
@@ -506,6 +528,9 @@ class VampireUmbralLord(ExtendedCombatantData):
             ],
             condition_immunities=[Condition.CHARMED, Condition.EXHAUSTION],
             senses="Blindsight 120 ft., Passive Perception 23",
+            blindsight_ft=120,
+            passive_perception=23,
+            spell_save_dc=18,
             languages="Common plus three other languages",
             traits=[
                 MonsterAbility(

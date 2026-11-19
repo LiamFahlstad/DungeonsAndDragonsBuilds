@@ -56,6 +56,8 @@ class BanditDeceiver(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Passive Perception 14",
+            passive_perception=14,
+            spell_save_dc=14,
             languages="Common, Thieves' Cant",
             traits=[],
             actions=[
@@ -126,6 +128,8 @@ class BlueSlaad(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Darkvision 60 ft., Passive Perception 11",
+            darkvision_ft=60,
+            passive_perception=11,
             languages="Slaad; telepathy 60 ft",
             traits=[
                 MonsterAbility(
@@ -191,6 +195,8 @@ class CentaurWarden(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Passive Perception 17",
+            passive_perception=17,
+            spell_save_dc=15,
             languages="Druidic, Elvish, Sylvan",
             traits=[],
             actions=[
@@ -260,6 +266,7 @@ class GiantApe(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Passive Perception 14",
+            passive_perception=14,
             languages="None",
             traits=[],
             actions=[
@@ -343,6 +350,8 @@ class GraveyardRevenant(ExtendedCombatantData):
                 Condition.UNCONSCIOUS,
             ],
             senses="Darkvision 120 ft., Passive Perception 13",
+            darkvision_ft=120,
+            passive_perception=13,
             languages="Common plus two other languages",
             traits=[
                 MonsterAbility(
@@ -408,6 +417,8 @@ class GrickAncient(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Darkvision 60 ft., Passive Perception 12",
+            darkvision_ft=60,
+            passive_perception=12,
             languages="—",
             traits=[],
             actions=[
@@ -471,6 +482,7 @@ class MindFlayer(ExtendedCombatantData):
             speed_fly_ft=15,
             speed_climb_ft=None,
             speed_special_rules="hover",
+            hover=True,
             skills={
                 Skill.ARCANA: 7,
                 Skill.INSIGHT: 6,
@@ -484,6 +496,9 @@ class MindFlayer(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Darkvision 120 ft., Passive Perception 16",
+            darkvision_ft=120,
+            passive_perception=16,
+            spell_save_dc=15,
             languages="Deep Speech, Undercommon; telepathy 120 ft",
             traits=[
                 MonsterAbility(
@@ -552,6 +567,7 @@ class Oni(ExtendedCombatantData):
             speed_fly_ft=30,
             speed_climb_ft=None,
             speed_special_rules="hover",
+            hover=True,
             skills={Skill.ARCANA: 5, Skill.DECEPTION: 8, Skill.PERCEPTION: 4},
             damage_vulnerabilities=[],
             damage_resistances=[
@@ -560,6 +576,9 @@ class Oni(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Darkvision 60 ft., Passive Perception 14",
+            darkvision_ft=60,
+            passive_perception=14,
+            spell_save_dc=13,
             languages="Common, Giant",
             traits=[
                 MonsterAbility(
@@ -638,6 +657,8 @@ class PrimevalOwlbear(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Darkvision 120 ft., Passive Perception 18",
+            darkvision_ft=120,
+            passive_perception=18,
             languages="—",
             traits=[],
             actions=[],
@@ -694,6 +715,9 @@ class ShieldGuardian(ExtendedCombatantData):
                 Condition.POISONED,
             ],
             senses="Blindsight 10 ft., Darkvision 60 ft., Passive Perception 10",
+            darkvision_ft=60,
+            blindsight_ft=10,
+            passive_perception=10,
             languages="Understands commands given in any language but can't speak",
             traits=[
                 MonsterAbility(
@@ -772,6 +796,8 @@ class StoneGiant(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Darkvision 60 ft., Passive Perception 14",
+            darkvision_ft=60,
+            passive_perception=14,
             languages="Giant",
             traits=[],
             actions=[
@@ -837,6 +863,8 @@ class TreeBlight(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[Condition.DEAFENED],
             senses="Blindsight 60 ft., Passive Perception 10",
+            blindsight_ft=60,
+            passive_perception=10,
             languages="Understands Common and Druidic but can't speak",
             traits=[],
             actions=[
@@ -911,6 +939,8 @@ class VioletFungusNecrohulk(ExtendedCombatantData):
                 Condition.POISONED,
             ],
             senses="Blindsight 60 ft., Passive Perception 12",
+            blindsight_ft=60,
+            passive_perception=12,
             languages="None",
             traits=[],
             actions=[
@@ -970,6 +1000,7 @@ class YoungBlackDragon(ExtendedCombatantData):
             speed_fly_ft=80,
             speed_climb_ft=None,
             speed_special_rules="swim 40 ft.",
+            speed_swim_ft=40,
             skills={Skill.PERCEPTION: 6, Skill.STEALTH: 5},
             damage_vulnerabilities=[],
             damage_resistances=[],
@@ -978,6 +1009,9 @@ class YoungBlackDragon(ExtendedCombatantData):
             ],
             condition_immunities=[],
             senses="Blindsight 30 ft., Darkvision 120 ft., Passive Perception 16",
+            darkvision_ft=120,
+            blindsight_ft=30,
+            passive_perception=16,
             languages="Common, Draconic",
             traits=[
                 MonsterAbility(
@@ -1045,6 +1079,9 @@ class YoungCopperDragon(ExtendedCombatantData):
             ],
             condition_immunities=[],
             senses="Blindsight 30 ft., Darkvision 120 ft., Passive Perception 17",
+            darkvision_ft=120,
+            blindsight_ft=30,
+            passive_perception=17,
             languages="Common, Draconic",
             traits=[],
             actions=[
@@ -1111,6 +1148,9 @@ class YuantiAbomination(ExtendedCombatantData):
             ],
             condition_immunities=[Condition.POISONED],
             senses="Darkvision 60 ft., Passive Perception 17",
+            darkvision_ft=60,
+            passive_perception=17,
+            spell_save_dc=15,
             languages="Abyssal, Common, Draconic",
             traits=[
                 MonsterAbility(

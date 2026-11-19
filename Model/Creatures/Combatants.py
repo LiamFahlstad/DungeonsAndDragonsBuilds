@@ -181,6 +181,11 @@ class ExtendedCombatantData(BasicCombatantData):
     speed_special_rules: str = (
         ""  # e.g. "hover" or any speed text that doesn't fit the fields above
     )
+    # The speeds and hovering the speed text states; that text is only shown.
+    # Model/Creatures/MonsterStatText.py reads it when a stat block is written.
+    speed_swim_ft: Optional[int] = None
+    speed_burrow_ft: Optional[int] = None
+    hover: bool = False
     skills: Optional[dict[Skill, int]] = None
     damage_vulnerabilities: Optional[list[DamageTypeEntry]] = None
     damage_resistances: Optional[list[DamageTypeEntry]] = None
@@ -188,7 +193,17 @@ class ExtendedCombatantData(BasicCombatantData):
     # A str is a qualified immunity the enum can't express, e.g. the
     # Archmage's "Charmed (with Mind Blank)"; it's shown but never enforced.
     condition_immunities: Optional[list[Condition | str]] = None
-    senses: str = ""
+    senses: str = ""  # shown; the fight reads the fields below
+    darkvision_ft: Optional[int] = None
+    blindsight_ft: Optional[int] = None
+    blind_beyond: bool = False  # sees nothing beyond its Blindsight
+    truesight_ft: Optional[int] = None
+    tremorsense_ft: Optional[int] = None
+    passive_perception: Optional[int] = None
+    # What its Spellcasting states ("spell save DC 15", "+7 to hit with spell
+    # attacks"); None where it states none.
+    spell_save_dc: Optional[int] = None
+    spell_attack_bonus: Optional[int] = None
     languages: str = ""
     description: str = ""  # freeform flavor text / notes about the monster
     traits: Optional[list[MonsterAbility]] = None  # special traits / passive abilities

@@ -62,6 +62,8 @@ class CantorOfTheBlackChoir(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[Condition.FRIGHTENED],
             senses="darkvision 60 ft., Passive Perception 13",
+            darkvision_ft=60,
+            passive_perception=13,
             languages="Common, Undercommon (speaks only in broken, layered echoes)",
             traits=[
                 MonsterAbility(
@@ -139,6 +141,7 @@ class GarronTheKindly(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[Condition.FRIGHTENED],
             senses="Passive Perception 12",
+            passive_perception=12,
             languages="understands Common and Goliath but can't speak; communicates by hand signs and a chalkboard he carries strapped to his back",
             traits=[
                 MonsterAbility(
@@ -221,6 +224,7 @@ class SerCaldusTheVowOfSilence(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Passive Perception 12",
+            passive_perception=12,
             languages="understands Common and Orc but speaks only in hand signs, honoring his order's vow",
             traits=[
                 MonsterAbility(
@@ -315,6 +319,8 @@ class GreypawCR3(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="darkvision 60 ft., keen smell, Passive Perception 16",
+            darkvision_ft=60,
+            passive_perception=16,
             languages="None",
             traits=[
                 MonsterAbility(
@@ -394,6 +400,7 @@ class MirelleTheGildedKnight(ExtendedCombatantData):
                 Condition.CHARMED,
             ],
             senses="Passive Perception 11",
+            passive_perception=11,
             languages="Common",
             traits=[
                 MonsterAbility(

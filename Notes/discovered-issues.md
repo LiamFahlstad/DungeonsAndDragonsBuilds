@@ -656,6 +656,16 @@ Found writing explicit areas (explicit-attributes-plan R9). (1) Difficult Terrai
 - 2026-11-19 main session (Claude Opus 5.5): found
 - 2026-11-19 main session (Claude Opus 5.5): Plan written: Notes/combat-area-gaps-plan.md (7 steps, one per gap)
 
+### DI-106 · Form-only speeds of summoned spirits are all granted, and their Fly Speed is lost
+- **Status:** open
+- **Area:** combat-simulator
+- **Where:** `Combat/Monsters/CR_0/monsters.py (Elemental Spirit, Draconic/Fiendish/Elemental-style spirits with 'X only' speeds)`
+
+Four CR_0 stat blocks scrape a per-form speed into speed_special_rules (e.g. 'Land only); Fly 60 ft. (Air only); Swim 30 ft. (Water only'; Elemental Spirit's 'burrow 40 ft.; Earth only); Fly 40 ft. (hover; Air only); Swim 40 ft.'; Swarm of Insects' 'Climb or Fly 20 ft. (DM's choice)'). Since Phase 4.1 of Notes/explicit-attributes-plan.md the fight reads speed_swim_ft / speed_burrow_ft / hover, so each such spirit always has its swim, burrow and hover whatever form it took, and no longer gets the Fly Speed the old speed-text regex gave it (speed_fly_ft is None). Needs speeds per chosen form (the summon's option), not one set.
+
+**History**
+- 2026-11-19 main-session: found
+
 ## Fixed
 
 ### DI-001 · Temporary Hit Points stack instead of keeping one amount

@@ -49,6 +49,7 @@ class AdultBlueDragon(ExtendedCombatantData):
             speed_fly_ft=80,
             speed_climb_ft=None,
             speed_special_rules="burrow 30 ft.",
+            speed_burrow_ft=30,
             skills={Skill.PERCEPTION: 12, Skill.STEALTH: 5},
             damage_vulnerabilities=[],
             damage_resistances=[],
@@ -57,6 +58,10 @@ class AdultBlueDragon(ExtendedCombatantData):
             ],
             condition_immunities=[],
             senses="Blindsight 60 ft., Darkvision 120 ft., Passive Perception 22",
+            darkvision_ft=120,
+            blindsight_ft=60,
+            passive_perception=22,
+            spell_save_dc=18,
             languages="Common, Draconic",
             traits=[
                 MonsterAbility(
@@ -140,6 +145,11 @@ class AdultSilverDragon(ExtendedCombatantData):
             ],
             condition_immunities=[],
             senses="Blindsight 60 ft., Darkvision 120 ft., Passive Perception 21",
+            darkvision_ft=120,
+            blindsight_ft=60,
+            passive_perception=21,
+            spell_save_dc=19,
+            spell_attack_bonus=11,
             languages="Common, Draconic",
             traits=[
                 MonsterAbility(
@@ -225,12 +235,17 @@ class GithyankiDracomancer(ExtendedCombatantData):
             speed_fly_ft=30,
             speed_climb_ft=None,
             speed_special_rules="hover",
+            hover=True,
             skills={Skill.ARCANA: 10, Skill.PERCEPTION: 8},
             damage_vulnerabilities=[],
             damage_resistances=[],
             damage_immunities=[],
             condition_immunities=[],
             senses="Blindsight 30 ft., Passive Perception 18",
+            blindsight_ft=30,
+            passive_perception=18,
+            spell_save_dc=18,
+            spell_attack_bonus=10,
             languages="Common, Draconic, Gith",
             traits=[],
             actions=[
@@ -303,6 +318,8 @@ class GulthiasBlight(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[Condition.DEAFENED],
             senses="Blindsight 120 ft., Passive Perception 19",
+            blindsight_ft=120,
+            passive_perception=19,
             languages="Common, Druidic",
             traits=[
                 MonsterAbility(
@@ -383,6 +400,8 @@ class IronGolem(ExtendedCombatantData):
                 Condition.POISONED,
             ],
             senses="Darkvision 120 ft., Passive Perception 10",
+            darkvision_ft=120,
+            passive_perception=10,
             languages="Understands Common plus two other languages but can't speak",
             traits=[
                 MonsterAbility(
@@ -470,6 +489,8 @@ class Marilith(ExtendedCombatantData):
             ],
             condition_immunities=[Condition.POISONED],
             senses="Truesight 120 ft., Passive Perception 18",
+            truesight_ft=120,
+            passive_perception=18,
             languages="Abyssal; telepathy 120 ft",
             traits=[
                 MonsterAbility(
@@ -552,6 +573,7 @@ class Planetar(ExtendedCombatantData):
             speed_fly_ft=120,
             speed_climb_ft=None,
             speed_special_rules="hover",
+            hover=True,
             skills={Skill.PERCEPTION: 11},
             damage_vulnerabilities=[],
             damage_resistances=[
@@ -564,6 +586,9 @@ class Planetar(ExtendedCombatantData):
                 Condition.FRIGHTENED,
             ],
             senses="Truesight 120 ft., Passive Perception 21",
+            truesight_ft=120,
+            passive_perception=21,
+            spell_save_dc=20,
             languages="All; telepathy 120 ft",
             traits=[
                 MonsterAbility(

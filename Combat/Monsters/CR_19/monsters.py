@@ -63,6 +63,8 @@ class Balor(ExtendedCombatantData):
                 Condition.POISONED,
             ],
             senses="Truesight 120 ft., Passive Perception 19",
+            truesight_ft=120,
+            passive_perception=19,
             languages="Abyssal; telepathy 120 ft",
             traits=[
                 DcMonsterAbility(

@@ -122,7 +122,7 @@ class _Sheet:
 
 def test_senses_from_a_stat_block_a_sheet_and_a_badge():
     monster = _creature(
-        "Ghoul", senses="Blindsight 10 ft., Darkvision 60 ft., Passive Perception 10"
+        "Ghoul", blindsight_ft=10, darkvision_ft=60, passive_perception=10
     )
     assert sense_ranges(monster) == {Sense.BLINDSIGHT: 10, Sense.DARKVISION: 60}
     player = _creature("Elf", _stat_block=_Sheet())
@@ -155,9 +155,9 @@ def test_darkness_hides_from_eyes_but_not_from_darkvision_in_range():
     goblin = _creature("Goblin", (3, 0))
     seen = _sees(_creature("Human", (0, 0)), goblin, settings)
     assert seen == Seen(False, "Darkness at D1", obscured=True)
-    elf = _creature("Elf", (0, 0), senses="Darkvision 60 ft.")
+    elf = _creature("Elf", (0, 0), darkvision_ft=60)
     assert _sees(elf, goblin, settings) == Seen(True, "Darkvision 60 ft.")
-    short = _creature("Mole", (0, 0), senses="Darkvision 10 ft.")
+    short = _creature("Mole", (0, 0), darkvision_ft=10)
     assert _sees(short, goblin, settings).can is False  # 15 ft. away
 
 
@@ -173,19 +173,19 @@ def test_the_viewer_in_darkness_still_sees_out():
 def test_the_darkness_spell_stops_darkvision_not_truesight():
     goblin = _creature("Goblin", (3, 0))
     caster = _area(_creature("Warlock"), "Darkness", AreaSight.DEEP_DARKNESS, (3, 0))
-    elf = _creature("Elf", (0, 0), senses="Darkvision 60 ft.")
+    elf = _creature("Elf", (0, 0), darkvision_ft=60)
     seen = _sees(elf, goblin, None, caster)
     assert seen == Seen(False, "Warlock's Darkness", obscured=True)
-    devil = _creature("Devil", (0, 0), senses="Truesight 30 ft.")
+    devil = _creature("Devil", (0, 0), truesight_ft=30)
     assert _sees(devil, goblin, None, caster) == Seen(True, "Truesight 30 ft.")
 
 
 def test_a_fog_hides_from_every_sight_but_blindsight():
     goblin = _creature("Goblin", (3, 0))
     caster = _area(_creature("Druid"), "Fog Cloud", AreaSight.HEAVILY_OBSCURED, (3, 0))
-    devil = _creature("Devil", (0, 0), senses="Truesight 120 ft.")
+    devil = _creature("Devil", (0, 0), truesight_ft=120)
     assert _sees(devil, goblin, None, caster).can is False
-    bat = _creature("Bat", (0, 0), senses="Blindsight 60 ft.")
+    bat = _creature("Bat", (0, 0), blindsight_ft=60)
     assert _sees(bat, goblin, None, caster) == Seen(True, "Blindsight 60 ft.")
 
 
@@ -193,7 +193,7 @@ def test_a_blinded_viewer_sees_only_by_blindsight_and_not_past_total_cover():
     goblin = _creature("Goblin", (1, 0))
     blinded = _creature("Fighter", (0, 0), conditions=["Blinded"])
     assert _sees(blinded, goblin) == Seen(False, "Fighter is Blinded")
-    blinded["senses"] = "Blindsight 10 ft."
+    blinded["blindsight_ft"] = 10
     assert _sees(blinded, goblin) == Seen(True, "Blindsight 10 ft.")
     settings = ArenaSettings()
     settings.terrain.change(Cell.of((1, 0)), ground=WALL)
@@ -202,9 +202,7 @@ def test_a_blinded_viewer_sees_only_by_blindsight_and_not_past_total_cover():
 
 
 def test_blind_beyond_its_blindsight():
-    ooze = _creature(
-        "Ooze", (0, 0), senses="Blindsight 10 ft. (blind beyond this radius)"
-    )
+    ooze = _creature("Ooze", (0, 0), blindsight_ft=10, blind_beyond=True)
     assert _sees(ooze, _creature("A", (2, 0))).can is True
     far = _sees(ooze, _creature("B", (3, 0)))
     assert far == Seen(False, "blind beyond its Blindsight 10 ft.")
@@ -219,9 +217,9 @@ def test_the_invisible_visibility_state_is_the_invisible_condition():
 
 def test_invisible_is_seen_by_truesight_blindsight_and_see_invisibility():
     ghost = _creature("Ghost", (3, 0), conditions=["Invisible"])
-    devil = _creature("Devil", (0, 0), senses="Truesight 30 ft.")
+    devil = _creature("Devil", (0, 0), truesight_ft=30)
     assert _sees(devil, ghost) == Seen(True, "Truesight 30 ft.")
-    bat = _creature("Bat", (0, 0), senses="Blindsight 60 ft.")
+    bat = _creature("Bat", (0, 0), blindsight_ft=60)
     assert _sees(bat, ghost).can
     wizard = _badge(
         _creature("Wizard", (0, 0)), "See Invisibility", Vision(sees_invisible=True)

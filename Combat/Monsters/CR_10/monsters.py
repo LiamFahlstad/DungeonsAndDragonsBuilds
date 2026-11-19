@@ -79,12 +79,15 @@ class Aboleth(ExtendedCombatantData):
             speed_fly_ft=None,
             speed_climb_ft=None,
             speed_special_rules="swim 40 ft.",
+            speed_swim_ft=40,
             skills={Skill.HISTORY: 12, Skill.PERCEPTION: 10},
             damage_vulnerabilities=[],
             damage_resistances=[],
             damage_immunities=[],
             condition_immunities=[],
             senses="Darkvision 120 ft., Passive Perception 20",
+            darkvision_ft=120,
+            passive_perception=20,
             languages="Deep Speech; telepathy 120 ft",
             traits=[
                 Amphibious(creature_name="aboleth"),
@@ -188,6 +191,8 @@ class CultistHierophant(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Passive Perception 17",
+            passive_perception=17,
+            spell_save_dc=17,
             languages="Celestial, Common",
             traits=[],
             actions=[
@@ -265,6 +270,9 @@ class CyclopsOracle(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Truesight 30 ft., Passive Perception 22",
+            truesight_ft=30,
+            passive_perception=22,
+            spell_save_dc=16,
             languages="Giant",
             traits=[],
             actions=[
@@ -345,6 +353,10 @@ class DeathSlaad(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Blindsight 60 ft., Darkvision 60 ft., Passive Perception 18",
+            darkvision_ft=60,
+            blindsight_ft=60,
+            passive_perception=18,
+            spell_save_dc=16,
             languages="Common, Slaad; telepathy 60 ft",
             traits=[
                 MagicResistance(creature_name="slaad"),
@@ -416,6 +428,7 @@ class Deva(ExtendedCombatantData):
             speed_fly_ft=90,
             speed_climb_ft=None,
             speed_special_rules="hover",
+            hover=True,
             skills={Skill.INSIGHT: 9, Skill.PERCEPTION: 9},
             damage_vulnerabilities=[],
             damage_resistances=[
@@ -428,6 +441,9 @@ class Deva(ExtendedCombatantData):
                 Condition.FRIGHTENED,
             ],
             senses="Darkvision 120 ft., Passive Perception 19",
+            darkvision_ft=120,
+            passive_perception=19,
+            spell_save_dc=17,
             languages="All; telepathy 120 ft",
             traits=[
                 MonsterAbility(
@@ -507,6 +523,8 @@ class DireWorg(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Darkvision 120 ft., Passive Perception 21",
+            darkvision_ft=120,
+            passive_perception=21,
             languages="Goblin, Sylvan, Worg",
             traits=[
                 MagicResistance(creature_name="worg"),
@@ -581,6 +599,7 @@ class GuardianNaga(ExtendedCombatantData):
             speed_fly_ft=None,
             speed_climb_ft=40,
             speed_special_rules="swim 40 ft.",
+            speed_swim_ft=40,
             skills={Skill.ARCANA: 11, Skill.HISTORY: 11, Skill.RELIGION: 11},
             damage_vulnerabilities=[],
             damage_resistances=[],
@@ -594,6 +613,9 @@ class GuardianNaga(ExtendedCombatantData):
                 Condition.RESTRAINED,
             ],
             senses="Darkvision 60 ft., Passive Perception 14",
+            darkvision_ft=60,
+            passive_perception=14,
+            spell_save_dc=16,
             languages="Celestial, Common",
             traits=[
                 MonsterAbility(
@@ -695,6 +717,8 @@ class HauntingRevenant(ExtendedCombatantData):
                 Condition.UNCONSCIOUS,
             ],
             senses="Truesight 60 ft., Passive Perception 14",
+            truesight_ft=60,
+            passive_perception=14,
             languages="Common plus two other languages",
             traits=[
                 SavingThrowEffect(
@@ -783,6 +807,8 @@ class NobleProdigy(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Passive Perception 16",
+            passive_perception=16,
+            spell_save_dc=16,
             languages="Common plus two other languages",
             traits=[],
             actions=[
@@ -859,6 +885,8 @@ class PerformerLegend(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Passive Perception 17",
+            passive_perception=17,
+            spell_save_dc=17,
             languages="Common plus two other languages",
             traits=[],
             actions=[
@@ -956,6 +984,7 @@ class SpyMaster(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Passive Perception 21",
+            passive_perception=21,
             languages="Common plus two other languages",
             traits=[],
             actions=[
@@ -1052,6 +1081,8 @@ class StoneGolem(ExtendedCombatantData):
                 Condition.POISONED,
             ],
             senses="Darkvision 120 ft., Passive Perception 10",
+            darkvision_ft=120,
+            passive_perception=10,
             languages="Understands Common plus two other languages but can't speak",
             traits=[
                 MonsterAbility(
@@ -1139,6 +1170,7 @@ class WarriorCommander(ExtendedCombatantData):
             damage_immunities=[],
             condition_immunities=[],
             senses="Passive Perception 17",
+            passive_perception=17,
             languages="Common plus one other language",
             traits=[],
             actions=[
@@ -1234,6 +1266,9 @@ class Yochlol(ExtendedCombatantData):
             ],
             condition_immunities=[Condition.POISONED],
             senses="Darkvision 120 ft., Passive Perception 12",
+            darkvision_ft=120,
+            passive_perception=12,
+            spell_save_dc=15,
             languages="Abyssal, Elvish, Undercommon",
             traits=[
                 MonsterAbility(
@@ -1312,6 +1347,7 @@ class YoungGoldDragon(ExtendedCombatantData):
             speed_fly_ft=80,
             speed_climb_ft=None,
             speed_special_rules="swim 40 ft.",
+            speed_swim_ft=40,
             skills={
                 Skill.INSIGHT: 5,
                 Skill.PERCEPTION: 9,
@@ -1325,6 +1361,9 @@ class YoungGoldDragon(ExtendedCombatantData):
             ],
             condition_immunities=[],
             senses="Blindsight 30 ft., Darkvision 120 ft., Passive Perception 19",
+            darkvision_ft=120,
+            blindsight_ft=30,
+            passive_perception=19,
             languages="Common, Draconic",
             traits=[
                 Amphibious(creature_name="dragon"),
@@ -1408,6 +1447,9 @@ class YoungRedDragon(ExtendedCombatantData):
             ],
             condition_immunities=[],
             senses="Blindsight 30 ft., Darkvision 120 ft., Passive Perception 18",
+            darkvision_ft=120,
+            blindsight_ft=30,
+            passive_perception=18,
             languages="Common, Draconic",
             traits=[],
             actions=[

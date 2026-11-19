@@ -186,6 +186,7 @@ def _build_dancing_item(
         speed_ground_ft=30,
         speed_fly_ft=30,
         speed_special_rules="hover",
+        hover=True,
         damage_immunities=[
             DamageTypeEntry(damage_types=[DamageType.POISON, DamageType.PSYCHIC])
         ],
@@ -196,6 +197,8 @@ def _build_dancing_item(
             Condition.FRIGHTENED,
         ],
         senses="Darkvision 60 ft., Passive Perception 10",
+        darkvision_ft=60,
+        passive_perception=10,
         languages="Understands the languages you speak",
         traits=[
             MonsterAbility(
