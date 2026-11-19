@@ -214,6 +214,7 @@ class TheRoadChoir(ExtendedCombatantData):
                                 CombatDamage("2d6 + 5", DamageType.BLUDGEONING),
                                 CombatDamage("1d8", DamageType.NECROTIC),
                             ),
+                            reach_ft=10,
                         ),
                     ),
                 ),

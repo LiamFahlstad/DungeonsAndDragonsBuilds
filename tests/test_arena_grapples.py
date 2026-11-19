@@ -110,7 +110,13 @@ def test_a_grapple_reaches_as_far_as_the_grapplers_reach():
     whip = _char(
         "Kraken",
         5,
-        actions=[{"name": "Tentacle", "description": "Melee Attack: reach 10 ft."}],
+        actions=[
+            {
+                "name": "Tentacle",
+                "description": "Melee Attack: reach 10 ft.",
+                "combat_effects": [{"roll": "attack", "reach_ft": 10}],
+            }
+        ],
     )
     assert grapple_range_ft(whip) == 10
     goblin = _held("Goblin", 7, "Kraken")

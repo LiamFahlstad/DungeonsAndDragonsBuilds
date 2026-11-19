@@ -104,6 +104,7 @@ def _build_wildfire_spirit(
                     CombatEffect(
                         roll=EffectRoll.ATTACK,
                         attack_bonus=spell_attack_modifier,
+                        range_ft=60,
                         damage=(
                             CombatDamage(
                                 dice_plus("1d6", proficiency_bonus), DamageType.FIRE

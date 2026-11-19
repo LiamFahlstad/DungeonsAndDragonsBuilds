@@ -18,9 +18,9 @@ from CharacterContent.Spells.SpellFactory import SpellFactory
 from CharacterContent.Spells.SpellFactory.Enums import RangeType
 from Combat.Arena.ranges import (
     AttackRange,
-    action_range,
     monster_action_range,
     spell_attack_range,
+    stated_range,
     weapon_range,
 )
 from Combat.Effects.triggers import TriggerRow
@@ -1537,6 +1537,11 @@ def _described_option(
         push=effect.push,
         area=effect.area or default_area,
         ignores_cover=effect.ignores_cover,
+        reach_and_range=(
+            (effect.reach_ft, effect.range_ft, effect.long_range_ft)
+            if effect.reach_ft is not None or effect.range_ft is not None
+            else None
+        ),
         **fields,
     )
 
@@ -1808,24 +1813,25 @@ def pick_attack_range(
     option: EffectOption | None, char: dict | None
 ) -> AttackRange | None:
     """How far a pick's attack roll reaches (Combat/Arena/ranges.py): a
-    spell's attack by its range, a monster's by its fields (a freeform
-    one's by its text, "reach 10 ft."), char's weapon by the weapon; None
-    for a pick that
-    isn't an attack roll, or one whose reach can't be told."""
+    spell's attack by its range, a row's by its effect's reach and range, a
+    monster's by its attack's fields (a structured attack's own), char's
+    weapon by the weapon; None for a pick that isn't an attack roll, or one
+    whose reach can't be told."""
     if option is None or option.roll != ATTACK_ROLL:
         return None
     spell = _pick_spell(option)
     if spell is not None:
         text = f"{option.tooltip} {getattr(spell, 'description', '')}"
         return spell_attack_range(spell_range_ft(spell), text, spell.name)
+    if option.reach_and_range is not None:
+        return stated_range(option.reach_and_range, option.name)
     if option.monster_action is not None:
         return monster_action_range(option.monster_action, option.name)
     if option.kind == WEAPON:
         for weapon in (char or {}).get("_weapons_objects") or []:
             if weapon.name == option.name:
                 return weapon_range(weapon)
-        return None
-    return action_range(option.tooltip, option.name)
+    return None
 
 
 def pick_spell_range_ft(option: EffectOption | None) -> int | None:

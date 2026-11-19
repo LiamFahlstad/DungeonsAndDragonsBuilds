@@ -12,7 +12,8 @@ from Model.Creatures.Combatants import (
     ExtendedCombatantData,
     MonsterType,
 )
-from Model.Creatures.MonsterAbilities import MonsterAbility
+from Model.Content.CombatEffect import CombatDamage, CombatEffect, EffectRoll
+from Model.Creatures.MonsterAbilities import MonsterAbility, dice_plus
 from Model.View import CharacterView
 from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table, dc_formula
 from Model.Content.Summons import (
@@ -220,6 +221,18 @@ def _build_dancing_item(
                 description=(
                     f"Melee Weapon Attack: {spell_attack:+} to hit (your spell attack modifier), reach 5 ft., "
                     f"one target you can see. Hit: 1d10 + {proficiency_bonus} Force damage (1d10 + PB)."
+                ),
+                combat_effects=(
+                    CombatEffect(
+                        roll=EffectRoll.ATTACK,
+                        attack_bonus=spell_attack,
+                        reach_ft=5,
+                        damage=(
+                            CombatDamage(
+                                dice_plus("1d10", proficiency_bonus), DamageType.FORCE
+                            ),
+                        ),
+                    ),
                 ),
             )
         ],

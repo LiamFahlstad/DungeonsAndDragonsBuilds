@@ -110,6 +110,7 @@ class TheChoirmasterOfHollowHymns(ExtendedCombatantData):
                             notes=(
                                 "Also: as the curse bleeds from his own throat into the wound",
                             ),
+                            reach_ft=5,
                         ),
                     ),
                 ),

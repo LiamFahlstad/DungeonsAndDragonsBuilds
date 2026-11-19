@@ -377,6 +377,7 @@ class CurseBodyBroken(ExtendedCombatantData):
                             notes=(
                                 "Also: and the target must succeed on a DC 12 Strength saving throw or have the Prone condition as the impossibly bent limb wrenches it off balance",
                             ),
+                            reach_ft=10,
                         ),
                     ),
                 ),
@@ -399,6 +400,7 @@ class CurseBodyBroken(ExtendedCombatantData):
                             notes=(
                                 "Also: and the target has the Grappled condition (escape DC 13) if the Curse Body Broken doesn't have another creature grappled with this action",
                             ),
+                            reach_ft=15,
                         ),
                     ),
                 ),

@@ -97,6 +97,7 @@ class PriestOfTheBlackTongues(ExtendedCombatantData):
                             notes=(
                                 "Also: as curse-fire crawls from the wood into the wound",
                             ),
+                            reach_ft=5,
                         ),
                     ),
                 ),
@@ -200,6 +201,7 @@ class SisterLumenBellWardenOfStillChoirs(ExtendedCombatantData):
                             notes=(
                                 "Also: to the throat. The target must succeed on a DC 12 Constitution saving throw or be unable to speak or make sound, including casting spells with a Verbal component, until the end of its next turn",
                             ),
+                            reach_ft=5,
                         ),
                     ),
                 ),

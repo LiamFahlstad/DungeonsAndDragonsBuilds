@@ -112,6 +112,7 @@ class Balor(ExtendedCombatantData):
                             notes=(
                                 "Also: If the target is a Huge or smaller creature, the balor pulls the target up to 25 feet straight toward itself, and the target has the Prone condition",
                             ),
+                            reach_ft=30,
                         ),
                     ),
                 ),
@@ -129,6 +130,7 @@ class Balor(ExtendedCombatantData):
                             notes=(
                                 "Also: and the target can't take Reactions until the start of the balor's next turn",
                             ),
+                            reach_ft=10,
                         ),
                     ),
                 ),

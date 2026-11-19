@@ -222,6 +222,7 @@ def _build_steel_defender(character: CharacterView) -> ExtendedCombatantData:
                     CombatEffect(
                         roll=EffectRoll.ATTACK,
                         attack_bonus=spell_attack,
+                        reach_ft=5,
                         damage=(
                             CombatDamage(
                                 dice_plus("1d8", 2 + intelligence_modifier),

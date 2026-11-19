@@ -32,9 +32,12 @@ class MonsterAbility:
     more than the reader would (an old-style "must succeed on a DC 11 Wisdom
     saving throw or ...", healing from a pool, a badge, a condition the text
     only gives sometimes) or for an ability with several uses (a cleric's
-    Life Domain Magic: Cure Wounds, Bless, ...).
+    Life Domain Magic: Cure Wounds, Bless, ...). An attack's effect says
+    its reach and range (CombatEffect.reach_ft, range_ft, long_range_ft),
+    which a structured attack below has as fields of its own instead.
     tests/test_monster_effect_text.py fails for an ability whose text has a
-    roll and no effects.
+    roll and no effects, or an attack whose reach and range aren't its
+    text's.
 
     The fields after it are what the combat UI acts on, so it never reads
     them back out of the text (Notes/explicit-attributes-plan.md, Phase 4.2).
@@ -100,21 +103,46 @@ _ABILITY_DEFAULTS = {
 def stated_reach_and_range(
     ability,
 ) -> tuple[Optional[int], Optional[int], Optional[int]] | None:
+    """(reach_ft, range_ft, long_range_ft) of an ability's attack, a None for
+    each it doesn't have: its first attack effect's fields
+    (CombatEffect.reach_ft, ...: Notes/explicit-attributes-plan.md, Phase
+    4.5), else a structured attack's own (MeleeAttack, RangedAttack,
+    MeleeOrRangedAttack). From the ability, or the dict it becomes in a
+    saved combat log. None for one that states neither a reach nor a range."""
+    effects = (
+        ability.get("combat_effects") or ()
+        if isinstance(ability, dict)
+        else getattr(ability, "combat_effects", ())
+    )
+    for effect in effects:
+        found = _reach_and_range(effect)
+        if found is not None and _get(effect, "roll") == "attack":
+            return found
+    return own_reach_and_range(ability)
+
+
+def own_reach_and_range(
+    ability,
+) -> tuple[Optional[int], Optional[int], Optional[int]] | None:
     """(reach_ft, range_ft, long_range_ft) a structured attack has as fields
-    (MeleeAttack, RangedAttack, MeleeOrRangedAttack), a None for each it
-    doesn't have; from the ability, or the dict it becomes in a saved combat
-    log. None for an ability with neither field, whose text is all there is
-    (a freeform MonsterAbility)."""
+    of its own (MeleeAttack, RangedAttack, MeleeOrRangedAttack), from the
+    ability or its log dict; None for any other ability."""
+    return _reach_and_range(ability)
 
-    def get(key: str):
-        if isinstance(ability, dict):
-            return ability.get(key)
-        return getattr(ability, key, None)
 
-    reach, normal = get("reach_ft"), get("range_ft")
+def _get(thing, key: str):
+    if isinstance(thing, dict):
+        return thing.get(key)
+    return getattr(thing, key, None)
+
+
+def _reach_and_range(
+    thing,
+) -> tuple[Optional[int], Optional[int], Optional[int]] | None:
+    reach, normal = _get(thing, "reach_ft"), _get(thing, "range_ft")
     if reach is None and normal is None:
         return None
-    return reach, normal, get("long_range_ft")
+    return reach, normal, _get(thing, "long_range_ft")
 
 
 _DC_PATTERN = re.compile(r"\bDC\s*(\d+)", re.IGNORECASE)

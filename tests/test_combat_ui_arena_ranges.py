@@ -21,17 +21,21 @@ from Core.Definitions import DamageType
 from tests._combat_ui import make_ui
 
 PIERCING = DamageType.PIERCING.value
+# Their reach and range are fields (stated_range), as an attack effect's
+# reach_ft / range_ft give them; the text is only shown.
 SHORTBOW = MonsterAction(
     "Shortbow",
     "Ranged Attack Roll: +0, range 20/60 ft. Hit: 5 (1d6 + 2) Piercing damage.",
     to_hit=0,
     damage=(DamageRoll("1d6 + 2", "Piercing"),),
+    stated_range=(None, 20, 60),
 )
 CLAWS = MonsterAction(
     "Claws",
     "Melee Attack Roll: +0, reach 5 ft. Hit: 5 Slashing damage.",
     to_hit=0,
     damage=(DamageRoll("1d6", "Slashing"),),
+    stated_range=(5, None, None),
 )
 
 

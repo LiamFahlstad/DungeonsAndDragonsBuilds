@@ -99,6 +99,8 @@ class CantorOfTheBlackChoir(ExtendedCombatantData):
                             notes=(
                                 "Also: and the target has Disadvantage on the next saving throw it makes against a Wisdom- or Charisma-based effect before the start of the Cantor's next turn, its will already fraying at the edge of the Cantor's voice",
                             ),
+                            reach_ft=5,
+                            range_ft=30,
                         ),
                     ),
                 ),
@@ -212,6 +214,7 @@ class GarronTheKindly(ExtendedCombatantData):
                             roll=EffectRoll.ATTACK,
                             attack_bonus=5,
                             damage=(CombatDamage("2d10 + 3", DamageType.BLUDGEONING),),
+                            reach_ft=10,
                         ),
                     ),
                 ),
@@ -226,6 +229,7 @@ class GarronTheKindly(ExtendedCombatantData):
                             notes=(
                                 "Also: and the target must succeed on a DC 12 Constitution saving throw or Garron's blade finds the throat with surgical precision: until the end of the target's next turn, it can't speak and can't cast spells that require a Verbal component",
                             ),
+                            reach_ft=10,
                         ),
                     ),
                 ),

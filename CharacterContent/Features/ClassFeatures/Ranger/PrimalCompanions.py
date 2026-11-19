@@ -58,6 +58,7 @@ def _strike_action(
     strike = CombatEffect(
         roll=EffectRoll.ATTACK,
         attack_bonus=spell_attack_modifier,
+        reach_ft=5,
         damage=(CombatDamage(dice_plus(damage_die, flat_bonus), damage_type),),
         conditions=conditions,
         notes=notes,

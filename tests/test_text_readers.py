@@ -52,10 +52,6 @@ TEXT_READERS: dict[tuple[str, str], str] = {
     ("Combat/WildShape.py", "_PASSIVE_PERCEPTION"): "log",
     # Validation
     ("Combat/EncounterConfig.py", "ID_PATTERN"): "validation",
-    # Phase 4: monster stat blocks. Freeform abilities' reach and range
-    ("Combat/Arena/arena.py", "_REACH"): "phase 4",
-    ("Combat/Arena/ranges.py", "_REACH"): "phase 4",
-    ("Combat/Arena/ranges.py", "_RANGE"): "phase 4",
     # Phase 5: EffectText, an undescribed spell's or feature's text. Frozen.
     # Its damage reading, which a monster's attacks no longer use (Phase
     # 4.3: Combat/Tools/monster_effect_text.py wrote their effects).

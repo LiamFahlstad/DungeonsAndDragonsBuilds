@@ -15,6 +15,8 @@ refused (Decision 31)."""
 from dataclasses import replace
 from typing import Any
 
+import pytest
+
 from CharacterContent.Items.Weapons.Magic import MarksmansLongbow
 from CharacterContent.Items.Weapons.MartialMelee import Glaive, Longsword
 from CharacterContent.Items.Weapons.Ranged import Longbow
@@ -23,7 +25,6 @@ from Combat.Arena.arena import ArenaSettings
 from Combat.Arena.ranges import (
     NO_RANGE_CHECK,
     AttackRange,
-    action_range,
     check_attack_range,
     monster_action_range,
     spell_attack_range,
@@ -33,6 +34,11 @@ from Combat.Arena.ranges import (
 from Combat.Effects.modifiers import attack_plan
 from Combat.CombatUIQt.monster_actions import parse_action
 from Combat.Effects.sight import NO_SIGHT
+from Combat.EncounterLogs import _plain
+from Combat.Tools.monster_effect_text import read_effects, read_reach_and_range
+from Core.Definitions import Ability
+from Model.Content.CombatEffect import CombatEffect, EffectRoll
+from Model.Content.CombatModifiers import AttackKind
 from Model.Creatures.MonsterAbilities import (
     MeleeAttack,
     MeleeOrRangedAttack,
@@ -67,27 +73,77 @@ def _check(attack, attacker, target, *others):
 # Reading the reach and range
 
 
-def test_a_stat_blocks_attack_says_its_reach_or_range():
-    melee = action_range("Melee Attack Roll: +6, reach 10 ft. Hit: 9 (1d10 + 4).")
-    ranged = action_range("Ranged Attack Roll: +4, range 80/320 ft. Hit: 5.")
-    old = action_range(
-        "Ranged Weapon Attack: +7 to hit, range 150/600 ft., one target."
+def test_a_stat_blocks_attack_text_is_read_for_its_reach_or_range():
+    """Where content is written (generate_monsters.py, an old log as it
+    loads): the reach and range an attack states before its "Hit:"."""
+    read = read_reach_and_range
+    assert read("Melee Attack Roll: +6, reach 10 ft. Hit: 9 (1d10 + 4).") == (
+        10,
+        None,
+        None,
     )
-    both = action_range(
-        "Melee or Ranged Attack Roll: +4, reach 5 ft. or range 20/60 ft."
+    assert read("Ranged Attack Roll: +4, range 80/320 ft. Hit: 5.") == (None, 80, 320)
+    assert read("Ranged Weapon Attack: +7 to hit, range 150/600 ft.") == (
+        None,
+        150,
+        600,
     )
-    assert melee == AttackRange(reach_ft=10)
-    assert ranged == AttackRange(normal_ft=80, long_ft=320)
-    assert old == AttackRange(normal_ft=150, long_ft=600)
-    assert both == AttackRange(reach_ft=5, normal_ft=20, long_ft=60)
-    assert action_range("The dragon exhales fire in a 60-foot Cone.") is None
+    assert read("Melee or Ranged Attack Roll: +4, reach 5 ft. or range 20/60 ft.") == (
+        5,
+        20,
+        60,
+    )
+    assert read("Melee Attack Roll: +5, reach 5 feet. Hit: 5.") == (5, None, None)
+    # What its hit does isn't its reach.
+    assert read(
+        "Melee Attack Roll: +5, reach 5 ft. Hit: 5. It pulls the target up to"
+        " 15 feet, within range 30 ft. of it."
+    ) == (5, None, None)
+    assert read("The dragon exhales fire in a 60-foot Cone.") == (None, None, None)
+
+
+def test_the_reader_writes_an_attacks_reach_and_range_on_its_effect():
+    (bow,) = read_effects(
+        "Longbow",
+        "Ranged Attack Roll: +4, range 150/600 ft. Hit: 6 (1d8 + 2)"
+        " Piercing damage.",
+    )
+    assert (bow.reach_ft, bow.range_ft, bow.long_range_ft) == (None, 150, 600)
+    assert bow.attack_kind is AttackKind.RANGED
+    (save,) = read_effects(
+        "Spit",
+        "Dexterity Saving Throw: DC 12, one creature within range 30 ft."
+        " Failure: 7 (2d6) Acid damage.",
+    )
+    assert save.range_ft is None
+
+
+def test_an_effects_reach_and_range():
+    """Explicit-attributes plan 4.5: an attack effect states how far it
+    goes, and which kind it is follows."""
+    attack = EffectRoll.ATTACK
+    assert CombatEffect(roll=attack, reach_ft=10).attack_kind is AttackKind.MELEE
+    assert CombatEffect(roll=attack, range_ft=80).attack_kind is AttackKind.RANGED
+    either = CombatEffect(roll=attack, reach_ft=5, range_ft=20, long_range_ft=60)
+    assert either.attack_kind is None
+    assert CombatEffect(roll=attack).attack_kind is None
+    assert CombatEffect.from_dict(either.to_dict()) == either
+    for wrong in (
+        {"roll": EffectRoll.SAVE, "save_ability": Ability.DEXTERITY, "reach_ft": 5},
+        {"roll": attack, "long_range_ft": 60},
+        {"roll": attack, "range_ft": 60, "long_range_ft": 60},
+        {"roll": attack, "reach_ft": 0},
+        {"roll": attack, "reach_ft": True},
+    ):
+        with pytest.raises(ValueError):
+            CombatEffect(**wrong)
 
 
 def test_a_structured_attack_gives_its_fields():
-    """Explicit-attributes plan 1.1: a MeleeAttack's `reach_ft` and a
-    RangedAttack's `range_ft` / `long_range_ft` are read as fields, in the
-    stat block and in the dict a saved log keeps; only a freeform ability's
-    text is read."""
+    """Explicit-attributes plan 1.1 and 4.5: a MeleeAttack's `reach_ft` and
+    a RangedAttack's `range_ft` / `long_range_ft` are read as fields, in the
+    stat block and in the dict a saved log keeps; a freeform ability's are
+    its attack effect's. No text is read."""
     pike = parse_action(MeleeAttack(name="Pike", attack_bonus=5, reach_ft=10))
     bow = parse_action(
         RangedAttack(name="Longbow", attack_bonus=4, range_ft=150, long_range_ft=600)
@@ -101,10 +157,23 @@ def test_a_structured_attack_gives_its_fields():
     # A logged dict's fields win over its text, which is only shown.
     logged = {"name": "Pike", "description": "reach 10 ft.", "reach_ft": 15}
     assert monster_action_range(parse_action(logged)) == AttackRange(15)
+    text = "Melee Attack Roll: +6, reach 10 ft. Hit: 9."
     freeform = MonsterAbility(
-        name="Claw", description="Melee Attack Roll: +6, reach 10 ft. Hit: 9."
+        name="Claw",
+        description=text,
+        combat_effects=(
+            CombatEffect(roll=EffectRoll.ATTACK, attack_bonus=6, reach_ft=10),
+        ),
     )
-    assert monster_action_range(parse_action(freeform)) == AttackRange(10)
+    claw = parse_action(freeform)
+    assert monster_action_range(claw) == AttackRange(10)
+    assert claw.attack_kind is AttackKind.MELEE
+    # The same in its log dict.
+    assert monster_action_range(parse_action(_plain({"a": freeform})["a"])) == (
+        AttackRange(10)
+    )
+    # The text alone says nothing to the fight.
+    assert monster_action_range(parse_action(MonsterAbility("Claw", text))) is None
     assert monster_action_range(parse_action(MonsterAbility("Roar", "Roars."))) is None
 
 

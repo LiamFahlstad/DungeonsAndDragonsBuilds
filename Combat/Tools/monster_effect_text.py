@@ -1,7 +1,8 @@
 """A stat-block ability's text read into the CombatEffects the combat UI acts
 on (Notes/explicit-attributes-plan.md, Phase 4.3): its attack or save, the
 damage a hit or failed save deals, the condition it gives and how long for,
-the Hit Points it gives, its area, and a HIT-triggered effect for each
+the Hit Points it gives, its area, an attack's reach and range (Phase
+4.5), and a HIT-triggered effect for each
 condition its hit gives in a sentence of its own and for a save its hit
 forces.
 
@@ -53,6 +54,10 @@ from Model.Creatures.MonsterAbilityText import name_alone, read_ability
 EFFECT_SECTIONS = tuple(key for key, _ in ACTION_SECTIONS)
 
 _ATTACK = re.compile(r"Attack Roll:\s*([+-]\d+)")
+# An attack's reach and range, in what comes before its "Hit:" ("Melee
+# Attack Roll: +6, reach 10 ft.", "range 80/320 ft.", "reach 5 feet").
+_REACH = re.compile(r"\breach (\d+) ?(?:ft\b|feet\b)", re.IGNORECASE)
+_RANGE = re.compile(r"\brange (\d+)(?:/(\d+))? ?(?:ft\b|feet\b)", re.IGNORECASE)
 _SAVE = re.compile(
     r"(Strength|Dexterity|Constitution|Intelligence|Wisdom|Charisma)"
     r"\s+Saving Throw:\s*DC\s*(\d+)?"
@@ -292,6 +297,21 @@ def _damage_rolls(
     return tuple(rolls), text[position:].strip(" ,.")
 
 
+def read_reach_and_range(
+    description: str,
+) -> tuple[int | None, int | None, int | None]:
+    """(reach_ft, range_ft, long_range_ft) an attack's text states before
+    its "Hit:", a None for each it doesn't."""
+    head = description.split("Hit:", 1)[0]
+    reach = _REACH.search(head)
+    ranged = _RANGE.search(head)
+    return (
+        int(reach[1]) if reach else None,
+        int(ranged[1]) if ranged else None,
+        int(ranged[2]) if ranged and ranged[2] else None,
+    )
+
+
 def read_text(description: str) -> AbilityReading:
     """What `description` says the ability rolls and deals."""
     attack = _ATTACK.search(description)
@@ -455,11 +475,20 @@ def read_effects(name: str, description: str) -> tuple[CombatEffect, ...]:
         conditions=(_condition(condition, until),) if condition else (),
         notes=tuple(notes),
         area=area,
+        **(_reach_and_range_fields(description) if is_attack else {}),
     )
     effects = [own, *(_rider_effect(name, r) for r in reading.riders)]
     if forced is not None:
         effects.append(_save_effect(name, description, forced))
     return tuple(effects)
+
+
+def _reach_and_range_fields(description: str) -> dict:
+    """An attack effect's reach_ft, range_ft and long_range_ft keywords, the
+    ones its text states."""
+    reach, normal, far = read_reach_and_range(description)
+    found = {"reach_ft": reach, "range_ft": normal, "long_range_ft": far}
+    return {key: feet for key, feet in found.items() if feet is not None}
 
 
 def reads_effects(ability, section: str) -> bool:

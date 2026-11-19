@@ -325,9 +325,13 @@ def test_no_reminder_for_a_used_reaction_but_one_for_rounding_a_corner(tmp_path)
 
 
 def test_reach_comes_from_the_stat_block():
-    long_arm = {"actions": [{"description": "Melee Attack Roll: +5, reach 10 ft."}]}
+    text = "Melee Attack Roll: +5, reach 10 ft."
+    effect = {"roll": "attack", "attack_bonus": 5, "reach_ft": 10}
+    long_arm = {"actions": [{"description": text, "combat_effects": [effect]}]}
     assert reach_ft(long_arm) == 10
     assert reach_ft({"actions": []}) == 5
+    # Its attack effect's reach_ft: the text alone isn't read.
+    assert reach_ft({"actions": [{"description": text}]}) == 5
     # A MeleeAttack's field, as a saved log keeps it: its text isn't read.
     logged = {"actions": [{"description": "reach 5 ft.", "reach_ft": 15}]}
     assert reach_ft(logged) == 15
@@ -335,7 +339,13 @@ def test_reach_comes_from_the_stat_block():
 
 def test_leaving_a_10_foot_reach_takes_two_cells(tmp_path):
     ui, player, tiger = _fight(tmp_path)
-    tiger["actions"] = [{"name": "Glaive", "description": "reach 10 ft."}]
+    tiger["actions"] = [
+        {
+            "name": "Glaive",
+            "description": "reach 10 ft.",
+            "combat_effects": [{"roll": "attack", "reach_ft": 10}],
+        }
+    ]
     player[POSITION_KEY] = [5, 5]
     tiger[POSITION_KEY] = [7, 5]
     settings = ui.arena_settings

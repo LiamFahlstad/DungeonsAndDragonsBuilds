@@ -134,6 +134,7 @@ def _build_drake(
                     CombatEffect(
                         roll=EffectRoll.ATTACK,
                         attack_bonus=3 + proficiency_bonus,
+                        reach_ft=5,
                         damage=(
                             CombatDamage(
                                 dice_plus("1d6", proficiency_bonus),

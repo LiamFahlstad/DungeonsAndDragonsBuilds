@@ -5,7 +5,7 @@ The rules (Player's Handbook, Making an Attack; Rules Glossary, Reach and
 Range):
 
 - A melee attack reaches 5 feet, 10 with a Reach weapon, or as far as a stat
-  block's "reach 10 ft." says.
+  block's attack says ("reach 10 ft.": its CombatEffect.reach_ft).
 - A ranged attack has a normal and a long range ("Range (80/320)"): it has
   Disadvantage past the normal range and can't reach past the long one. A
   spell's attack has only its range.
@@ -45,8 +45,6 @@ REACH_WEAPON_FT = 10
 # "Ranged Attacks in Close Combat": an enemy within 5 feet.
 CLOSE_COMBAT_FT = 5
 
-_REACH = re.compile(r"\breach (\d+) ?ft", re.IGNORECASE)
-_RANGE = re.compile(r"\brange (\d+)(?:/(\d+))? ?ft", re.IGNORECASE)
 _RANGED_SPELL = re.compile(r"\branged spell attack", re.IGNORECASE)
 _MELEE_SPELL = re.compile(r"\bmelee spell attack", re.IGNORECASE)
 
@@ -86,9 +84,9 @@ class AttackRange:
 def stated_range(
     stated: tuple[int | None, int | None, int | None] | None, name: str = ""
 ) -> AttackRange | None:
-    """The AttackRange of a structured attack's (reach_ft, range_ft,
-    long_range_ft) fields (MonsterAbilities.stated_reach_and_range); None
-    for an ability without them."""
+    """The AttackRange of an attack's (reach_ft, range_ft, long_range_ft)
+    fields (MonsterAbilities.stated_reach_and_range, an EffectOption's
+    reach_and_range); None for an attack without them."""
     if stated is None:
         return None
     reach, normal, far = stated
@@ -96,30 +94,10 @@ def stated_range(
 
 
 def monster_action_range(action, name: str = "") -> AttackRange | None:
-    """A stat block's attack's reach and range (a MonsterAction): its
-    fields, for a MeleeAttack, RangedAttack or MeleeOrRangedAttack; else
-    read from a freeform ability's text (action_range)."""
-    found = stated_range(getattr(action, "stated_range", None), name)
-    if found is not None:
-        return found
-    return action_range(action.description, name)
-
-
-def action_range(description: str, name: str = "") -> AttackRange | None:
-    """A freeform stat block attack's reach and range, from its text
-    ("Melee Attack Roll: +6, reach 10 ft.", "Ranged Attack Roll: +4, range
-    80/320 ft."); None when it says neither. A structured attack has them
-    as fields (monster_action_range)."""
-    reach = _REACH.search(description or "")
-    ranged = _RANGE.search(description or "")
-    if reach is None and ranged is None:
-        return None
-    return AttackRange(
-        reach_ft=int(reach[1]) if reach else None,
-        normal_ft=int(ranged[1]) if ranged else None,
-        long_ft=int(ranged[2]) if ranged and ranged[2] else None,
-        what=name,
-    )
+    """A stat block's attack's reach and range (a MonsterAction): its attack
+    effect's fields, or a structured attack's (stated_range); None when it
+    states neither."""
+    return stated_range(getattr(action, "stated_range", None), name)
 
 
 def _table_range(weapon) -> tuple[int, int] | None:

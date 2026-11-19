@@ -271,6 +271,7 @@ def _build_reanimated_companion(character: CharacterView) -> ExtendedCombatantDa
                     CombatEffect(
                         roll=EffectRoll.ATTACK,
                         attack_bonus=spell_attack,
+                        reach_ft=5,
                         damage=(
                             CombatDamage(
                                 dice_plus("1d4", intelligence_modifier),

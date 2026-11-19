@@ -95,6 +95,7 @@ class TheBellSaint(ExtendedCombatantData):
                             notes=(
                                 "Also: and the target is grappled (escape DC 15) by one of the bell's dragging chains",
                             ),
+                            reach_ft=15,
                         ),
                     ),
                 ),

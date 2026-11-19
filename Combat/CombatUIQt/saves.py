@@ -266,6 +266,9 @@ class EffectOption:
     # What it rolls takes no benefit from Half Cover or Three-Quarters Cover
     # (CombatEffect.ignores_cover: Sacred Flame).
     ignores_cover: bool = False
+    # Its attack's (reach_ft, range_ft, long_range_ft), from its CombatEffect
+    # (CombatEffect.reach_ft, ...); None when that states neither.
+    reach_and_range: tuple[int | None, int | None, int | None] | None = None
 
     def duration_for(self, condition: str, duration: dict | None) -> dict | None:
         """The duration `condition` gets when the dialog gives `duration`:

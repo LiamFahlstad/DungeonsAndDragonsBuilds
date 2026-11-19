@@ -238,6 +238,8 @@ def _build_vestige(
                     CombatEffect(
                         roll=EffectRoll.ATTACK,
                         attack_bonus=spell_attack,
+                        reach_ft=5,
+                        range_ft=60,
                         damage=(
                             CombatDamage(
                                 dice_plus("1d6", 3 + charisma_modifier), damage_type

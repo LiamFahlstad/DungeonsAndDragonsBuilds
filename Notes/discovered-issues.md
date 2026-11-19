@@ -677,6 +677,16 @@ Four catalog abilities say '(... Recharges after a Long Rest)' or '(Recharge aft
 - 2026-11-19 main session (Opus 5.5): found
 - 2026-11-19 main session (Opus 5.5): Where: the three spirit forms are in the files listed by grep 'Recharges after a Long Rest' Combat/Monsters; Phantasms is CR_8/monsters.py (not CR_5).
 
+### DI-108 · Combat UI: the catalog's 2024 spell-summon stat blocks (Giant Insect, Aberrant Spirit, ...) have no combat effects, so their attacks don't roll and their reach isn't known
+- **Status:** open
+- **Area:** combat-simulator
+- **Where:** `Combat/Monsters/CR_0/monsters.py`
+
+The CR_0 catalog has the 2024 summon spells' stat blocks (Aberrant, Bestial, Celestial, Construct, Elemental, Fey, Fiendish, Undead Spirit, Giant Insect, Animated Object, Otherworldly Steed). Their attacks say 'Melee Attack Roll: Bonus equals your spell attack modifier, reach 5 ft. Hit: 1d8 + 3 + the spell's level ...', which the reader (Combat/Tools/monster_effect_text.py) can't turn into numbers, so they have no combat_effects: the turn column shows no to-hit, and since Phase 4.5 the map reads reach only from an attack effect's reach_ft, so Giant Insect's Poison Jab (reach 10 ft.) now counts as 5 ft. for opportunity attacks and grapples (before, its text was read). Fix: build these from the caster like the feature summons (Model/Content/Summons, dice_plus), with attack effects that give reach_ft/range_ft; or give the catalog entries effects with a placeholder bonus. The Accursed Group's Grab ('reach 5 ft.' fragment, no effects) is the same gap at the default 5 ft.
+
+**History**
+- 2026-11-19 main session (explicit-attributes plan 4.5): found
+
 ## Fixed
 
 ### DI-001 · Temporary Hit Points stack instead of keeping one amount

@@ -111,6 +111,7 @@ class TheMouthThatWalks(ExtendedCombatantData):
                             notes=(
                                 "Also: If the target is Medium or smaller and isn't already grappled by the Mouth, the target is also grappled (escape DC 15) and drawn into the wound: while grappled this way, the target is Restrained, and at the start of each of its turns it takes 7 (2d6) Necrotic damage as the wound convulses around it",
                             ),
+                            reach_ft=10,
                         ),
                     ),
                 ),
@@ -126,6 +127,7 @@ class TheMouthThatWalks(ExtendedCombatantData):
                             notes=(
                                 "Also: and if the target is Large or smaller, it must succeed on a DC 15 Strength saving throw or be pulled up to 10 feet toward the Mouth",
                             ),
+                            reach_ft=15,
                         ),
                     ),
                 ),
@@ -224,6 +226,7 @@ class TheHunter(ExtendedCombatantData):
                                 CombatDamage("2d6", DamageType.NECROTIC),
                             ),
                             notes=("Also: as the bound curse feeds through the blade",),
+                            reach_ft=5,
                         ),
                     ),
                 ),

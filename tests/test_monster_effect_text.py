@@ -18,6 +18,7 @@ from Combat.Tools.monster_effect_text import (
     EFFECT_SECTIONS,
     read_ability_effects,
     read_effects,
+    read_reach_and_range,
     reads_effects,
 )
 from Combat.Tools.monster_enum_format import format_ability_list
@@ -49,6 +50,7 @@ def test_an_attack_and_the_condition_its_hit_gives():
         roll=EffectRoll.ATTACK,
         attack_bonus=4,
         damage=(CombatDamage("1d4 + 2", DamageType.PIERCING),),
+        reach_ft=5,
     )
     assert poisoned == CombatEffect(
         name="Bite: Poisoned",
@@ -277,6 +279,48 @@ def test_an_old_logs_abilities_get_their_effects_once():
     assert kept["combat_effects"] == []
 
 
+def test_an_old_logs_attack_gets_its_reach_and_range_once():
+    """A log saved after Phase 4.3 and before 4.5 has an attack's effects
+    without its reach and range: read once as it loads. A structured
+    attack's own fields are its reach, so it isn't."""
+    text = "Melee Attack Roll: +5, reach 10 ft. Hit: 7 (1d8 + 3) Slashing damage."
+    attack = {"roll": "attack", "attack_bonus": 5}
+    old = {"name": "Pike", "description": text, "combat_effects": [dict(attack)]}
+    char = upgrade_ability_keys({"actions": [old]})
+    assert char["actions"][0]["combat_effects"][0]["reach_ft"] == 10
+    assert parse_action(char["actions"][0]).stated_range == (10, None, None)
+    structured = {
+        "name": "Pike",
+        "description": text,
+        "reach_ft": 10,
+        "combat_effects": [dict(attack)],
+    }
+    upgrade_ability_keys({"actions": [structured]})
+    assert structured["combat_effects"] == [attack]
+
+
+def test_every_attack_says_how_far_it_goes():
+    """The fight reads an attack's reach and range from its effect (or a
+    structured attack's own fields), never its text (explicit-attributes
+    plan 4.5): every catalog, homebrew and summon attack states one, and
+    the one its text gives."""
+    blocks = [monster for _, monster in _stat_blocks()] + list(_summons())
+    wrong = []
+    for block in blocks:
+        for section in EFFECT_SECTIONS:
+            for ability in getattr(block, section, None) or []:
+                action = parse_action(ability)
+                if action.to_hit is None:
+                    continue
+                said = read_reach_and_range(ability.description)
+                if action.stated_range != said:
+                    wrong.append(
+                        f"{block.combatant_type}: {ability.name}"
+                        f" {action.stated_range} != {said}"
+                    )
+    assert not wrong, f"Attacks whose reach or range isn't their text's: {wrong}"
+
+
 def test_a_log_keeps_the_effects():
     text = "Melee Attack Roll: +5, reach 5 ft. Hit: 7 (1d8 + 3) Slashing damage."
     claw = MonsterAbility("Claw", text, combat_effects=read_effects("Claw", text))
@@ -299,7 +343,7 @@ def test_the_generator_writes_the_effects():
     written = format_ability_list(monster["actions"], "actions", monster)
     assert (
         "combat_effects=(CombatEffect(roll=EffectRoll.ATTACK, attack_bonus=5,"
-        " damage=(CombatDamage('1d8 + 3', DamageType.SLASHING),)),)"
+        " damage=(CombatDamage('1d8 + 3', DamageType.SLASHING),), reach_ft=5),)"
     ) in written
     # The spell it casts is its row, not effects read from its text.
     assert written.count("combat_effects=") == 1

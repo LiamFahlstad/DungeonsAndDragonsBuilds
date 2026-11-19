@@ -92,6 +92,7 @@ class MarshalVirel(ExtendedCombatantData):
                             notes=(
                                 "Also: If this attack is a critical hit, the target must succeed on a DC 13 Constitution saving throw or have the Silenced condition (it can't speak or cast spells that require a Verbal component) until the end of its next turn",
                             ),
+                            reach_ft=5,
                         ),
                     ),
                 ),

@@ -551,6 +551,14 @@ Names are the Python ones; `Ability`, `Condition` and `DamageType` come from
   Wall's `ring_ft`, `side_ft`, `blocks`, `cover`, `difficult`.
 - **`ignores_cover`**: what it rolls takes no benefit from Half or
   Three-Quarters Cover (Sacred Flame). Don't also say so in `notes`.
+- **`reach_ft`, `range_ft`, `long_range_ft`** (an `attack` only): how far
+  its attack goes, which the battle map checks (past the reach warned
+  about, long range's Disadvantage counted). A melee attack's reach
+  (`reach_ft=10`), a ranged one's range ("range 80/320 ft.":
+  `range_ft=80, long_range_ft=320`), both for "Melee or Ranged". Melee or
+  ranged follows from them (`attack_kind`). Every monster attack gives
+  them (a MeleeAttack / RangedAttack's own fields count); a spell's attack
+  is still checked against the spell's range, so leave them off a spell's.
 - **Not for spells:** `dc`, `attack_bonus` (the caster's), `action_type` and
   `concentration` (the spell's casting time and duration say them), and
   `spell` (for a feature's use that casts one).

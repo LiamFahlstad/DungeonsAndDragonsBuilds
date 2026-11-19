@@ -12,11 +12,12 @@ import re
 from dataclasses import dataclass, field
 
 from Core.Definitions import DamageType
-from Model.Content.CombatEffect import CombatEffect, EffectRoll
+from Model.Content.CombatEffect import CombatEffect, EffectRoll, attack_kind_of
 from Model.Content.CombatModifiers import AttackKind
 from Model.Creatures.MonsterAbilities import (
     MonsterCast,
     ability_field,
+    own_reach_and_range,
     stated_reach_and_range,
 )
 from Model.Creatures.MonsterAbilityText import ABILITY_FIELDS, name_alone
@@ -69,8 +70,9 @@ class MonsterAction:
     # one per way to use it, each a picker row; () for one that has nothing
     # to apply (Multiattack).
     effects: tuple[CombatEffect, ...] = ()
-    # A structured attack's (reach_ft, range_ft, long_range_ft) fields
-    # (stated_reach_and_range); None for a freeform one, read from its text.
+    # Its attack's (reach_ft, range_ft, long_range_ft): its attack effect's
+    # fields, or a structured attack's (stated_reach_and_range); None when
+    # it states neither.
     stated_range: tuple[int | None, int | None, int | None] | None = None
     # The spells it casts, and the other ability it makes or uses
     # (MonsterAbility's fields of those names).
@@ -84,19 +86,13 @@ class MonsterAction:
 
     @property
     def attack_kind(self) -> AttackKind | None:
-        """Whether its attack is melee or ranged, as its text starts ("Melee
-        Attack Roll: +6", the 2014 "Ranged Weapon Attack: +4"); None when it
-        isn't an attack or could be either ("Melee or Ranged Attack Roll")."""
-        if self.to_hit is None:
+        """Whether its attack is melee or ranged, from its reach and range
+        (attack_kind_of: only a reach is melee); None when it isn't an
+        attack, could be either ("Melee or Ranged Attack Roll") or states
+        neither."""
+        if self.to_hit is None or self.stated_range is None:
             return None
-        text = self.description.lstrip().lower()
-        if text.startswith("melee or ranged"):
-            return None
-        if text.startswith("melee"):
-            return AttackKind.MELEE
-        if text.startswith("ranged"):
-            return AttackKind.RANGED
-        return None
+        return attack_kind_of(self.stated_range[0], self.stated_range[1])
 
     @property
     def is_rollable(self) -> bool:
@@ -270,10 +266,14 @@ def upgrade_ability_keys(char: dict) -> dict:
     (EncounterLogs._encode), so an ability dict without them is read: for a
     stat block that gives what it had, as its fields and effects say what
     its text does (tests/test_monster_ability_text.py,
-    tests/test_monster_effect_text.py). One with any is left as it is."""
+    tests/test_monster_effect_text.py). One with any is left as it is. An
+    attack effect logged before it had its reach and range (Phase 4.5) gets
+    them from the text the same way, unless the ability is a structured
+    attack with its own."""
     from Combat.Tools.monster_effect_text import (
         read_ability_effects,
         read_ability_fields,
+        read_reach_and_range,
     )
 
     for section in ABILITY_SECTIONS:
@@ -290,7 +290,22 @@ def upgrade_ability_keys(char: dict) -> dict:
                 effects = read_ability_effects(ability, section)
                 if effects:
                     ability["combat_effects"] = [e.to_dict() for e in effects]
+            elif own_reach_and_range(ability) is None:
+                _upgrade_reach_and_range(ability, read_reach_and_range)
     return char
+
+
+def _upgrade_reach_and_range(ability: dict, read) -> None:
+    """Give an ability dict's attack effects that state no reach or range
+    the ones its text does (upgrade_ability_keys)."""
+    keys = ("reach_ft", "range_ft", "long_range_ft")
+    stated = None
+    for effect in ability.get("combat_effects") or []:
+        if effect.get("roll") != "attack" or any(effect.get(k) for k in keys):
+            continue
+        if stated is None:
+            stated = dict(zip(keys, read(ability.get("description", ""))))
+        effect.update({k: v for k, v in stated.items() if v is not None})
 
 
 def roll_dice(dice: str, critical: bool = False) -> int:

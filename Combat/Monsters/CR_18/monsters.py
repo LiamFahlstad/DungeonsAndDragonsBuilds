@@ -112,6 +112,8 @@ class Demilich(ExtendedCombatantData):
                             roll=EffectRoll.ATTACK,
                             attack_bonus=11,
                             damage=(CombatDamage("7d6", DamageType.NECROTIC),),
+                            reach_ft=5,
+                            range_ft=120,
                         ),
                     ),
                 ),

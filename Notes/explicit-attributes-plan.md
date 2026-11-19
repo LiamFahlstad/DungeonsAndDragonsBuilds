@@ -55,7 +55,7 @@ About 160 `re.` calls in `Combat/`. Sorted by what they read:
 | 1 | Read the fields that already exist (group A) | **Done** (2026-11-19): 1.2 with Phase 3 (R3), 1.1 and 1.3 (R10) |
 | 2 | Our own `when` strings become fields (group B) | **Done** (2026-11-19, R11) |
 | 3 | `CombatArea` for spells and features (group C) | **Done** (2026-11-19, R1-R8). 3.5 done for described spells; Sharpshooter and Spell Sniper not (R6) |
-| 4 | Monster stat-block fields at generation time (group D) | **4.1-4.4 done** (2026-11-19: R13, R14, R15, Decisions 3 and 4). Left: 4.5, a freeform ability's reach and range and an attack's melee/ranged kind (R15) |
+| 4 | Monster stat-block fields at generation time (group D) | **Done** (2026-11-19: R13, R14, R15, R16, Decisions 3 and 4) |
 | 5 | Retire `EffectText` (group E) | Not started; waits on the content rollout |
 | G | A guard test that lists every remaining text regex | **Done** (2026-11-19, R12) |
 
@@ -172,7 +172,8 @@ writes fields. Homebrew files get the same fields by hand, or through the
   "Melee" or "Ranged". *Suggestion:* `reach_ft`, `range_ft`,
   `long_range_ft` and `attack_kind` on `CombatEffect`, which a spell's
   attack could use too (the "later" `ranges._RANGED_SPELL` /
-  `_MELEE_SPELL`), written the same way as 4.3's effects.
+  `_MELEE_SPELL`), written the same way as 4.3's effects. *Done* (R16;
+  `attack_kind` is a property, not a field).
 
 *Verify:* regenerate, then `tests/test_picker_rows.py` must not change for
 any homebrew monster or catalog row. Also run `monster_score.py` over a CR
@@ -554,6 +555,68 @@ group D (Phase 4, including `_monster_area` and `ranges.py`'s
     missed (`test_fireball` and `test_guiding_bolt` failed on HEAD since R13).
   - *Left:* 4.5 (a freeform ability's reach and range, an attack's kind).
 
+- **R16. Phase 4.5 (2026-11-19).**
+  - *Model:* `CombatEffect.reach_ft`, `range_ft`, `long_range_ft`, for an
+    `attack` only (positive feet; `long_range_ft` with a shorter
+    `range_ft`). `attack_kind` is a property, not the suggested field: only
+    a reach is MELEE, only a range RANGED, both (or neither) None
+    (`attack_kind_of`). A field would repeat what the two already say, and
+    could disagree with them. A melee spell attack's reach measured from
+    something other than its caster (Spiritual Weapon) is still a "later"
+    question, not a question of kind.
+  - *Readers:* `monster_effect_text.read_reach_and_range` holds the regexes
+    that were in `arena.py` (`_REACH`) and `ranges.py` (`_REACH`, `_RANGE`).
+    It reads only the part before "Hit:" (the old ones searched the whole
+    text, though no stat block had a reach or range after its "Hit:") and
+    takes "feet" as well as "ft." (the Eagle's and Giant Rat's "reach 5
+    feet", which the old ones missed). `read_effects` writes the fields on an
+    attack's own effect, so `generate_monsters.py` emits them. A one-off
+    scratch script inserted them into the files (Decision 3: 650 effects,
+    781 lines in 27 `monsters.py` and 8 `monsters_homebrew.py`; only the
+    keyword lines, nothing else). In homebrew it skipped structured attacks,
+    whose own `reach_ft` / `range_ft` already say it. Seven summons got them
+    by hand. `upgrade_ability_keys` reads an old log's attack effect once
+    when it states neither (a log from after 4.3) and its ability is not a
+    structured attack.
+  - *Runtime:* `MonsterAbilities.stated_reach_and_range` gives the first
+    attack effect's fields, else a structured attack's own
+    (`own_reach_and_range`). `MonsterAction.attack_kind` comes from them,
+    not from how the description starts. `ranges.action_range` is
+    deleted: `monster_action_range` reads only `stated_range`;
+    `arena.reach_ft` reads only fields; `EffectOption.reach_and_range`
+    (from a described row's effect) is what `pick_attack_range` takes for
+    a row before its monster action. Its last line, `action_range` on the
+    tooltip, is gone too: no party feature's row got a range from it.
+  - *Parity:* every stat block's (561, each also round-tripped through a
+    log) and both parties' reach, opportunity-attack row, actions' kind and
+    range, and picker rows' attack range, before and after: 107
+    differences, the same for each stat block and its logged copy, of
+    three kinds. (1) Gains: 77 rows made from another ability's attack
+    (Multiattack, Pounce, Tail Swipe, Rampage, Riposte, Arcane Prowl, ...)
+    now carry that attack's reach. Before, they had no `monster_action` and
+    their tooltip didn't say it, so the map never checked their reach. The
+    Eagle's and Giant Rat's "5 feet" are read (their action and row). The
+    Mouth That Walks' Chain-Wracked Lash, whose text starts with flavour,
+    is now a melee attack. (2) The Dancing Item (College of Creation's
+    summon) had no effects: its 2014-style "Melee Weapon Attack" was missed
+    in 4.3, so it never rolled. It has them now (its action, row and
+    opportunity-attack row). (3) Losses: 21 abilities with no attack effect
+    lost a range nothing used (it only feeds attacks). One of them matters:
+    the catalog's 2024 spell summons, whose "Bonus equals your spell
+    attack modifier" attacks have no effects, so Giant Insect's reach is
+    5 ft., not 10 (DI-108). Picker goldens unchanged (they don't record
+    ranges).
+  - *Tests:* `tests/test_arena_ranges.py` (the reader, the fields, a
+    freeform attack's effect, a log dict, the text alone giving nothing),
+    `tests/test_monster_effect_text.py` (an old log's attack is upgraded
+    once; `test_every_attack_says_how_far_it_goes` holds every catalog,
+    homebrew and summon attack's reach and range to its text). Tests that
+    gave a monster its reach in text only now give the effect's field.
+    Guard test G lost its three "phase 4" entries.
+
+Remaining text regexes under `Combat/` after Phase 4: group E (`EffectText`,
+Phase 5), the five "later" ones (R12), and group F.
+
 ## Discovered issues
 
 - DI-103: `test_the_target_label_says_when_a_target_is_obscured` fails on
@@ -563,3 +626,5 @@ group D (Phase 4, including `_monster_area` and `ranges.py`'s
 - DI-107: abilities that recharge after a rest aren't spent (R14).
 - DI-105: what `CombatArea` can't say yet, found writing R9's areas. Its
   plan: [combat-area-gaps-plan.md](combat-area-gaps-plan.md).
+- DI-108: the catalog's 2024 spell-summon stat blocks have no combat
+  effects, so their attacks don't roll and their reach isn't known (R16).

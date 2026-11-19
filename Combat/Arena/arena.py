@@ -36,7 +36,6 @@ Swim Speed.
 from __future__ import annotations
 
 import heapq
-import re
 from dataclasses import dataclass, field
 from itertools import count
 from typing import Iterable
@@ -676,29 +675,20 @@ def remaining_ft(char: dict) -> int:
     return max((movement_ft(char) or 0) - int(char.get(MOVED_KEY, 0)), 0)
 
 
-_REACH = re.compile(r"\breach (\d+) ft\.", re.IGNORECASE)
 _STAT_BLOCK_SECTIONS = ("actions", "bonus_actions", "reactions", "legendary_actions")
 
 
 def reach_ft(char: dict) -> int:
     """How far char's melee attacks reach (Rules Glossary, Reach: 5 feet,
     10 with a Reach weapon): a monster's longest reach in its stat block
-    (a MeleeAttack's `reach_ft`, or a freeform ability's "reach 10 ft."), a
+    (its attack effect's or a MeleeAttack's `reach_ft`), a
     player's 10 feet with a Reach weapon; else 5 feet."""
     reaches = [5]
     for key in _STAT_BLOCK_SECTIONS:
         for ability in char.get(key) or ():
             stated = stated_reach_and_range(ability)
-            if stated is not None:
-                if stated[0] is not None:
-                    reaches.append(int(stated[0]))
-                continue
-            text = (
-                ability.get("description", "")
-                if isinstance(ability, dict)
-                else getattr(ability, "description", "")
-            )
-            reaches += [int(feet) for feet in _REACH.findall(str(text))]
+            if stated is not None and stated[0] is not None:
+                reaches.append(int(stated[0]))
     for weapon in char.get("_weapons_objects") or ():
         if WeaponProperty.REACH in (getattr(weapon, "properties", None) or ()):
             reaches.append(10)

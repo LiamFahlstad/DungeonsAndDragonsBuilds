@@ -101,6 +101,7 @@ class AncientBlueDragon(ExtendedCombatantData):
                                 CombatDamage("2d8 + 9", DamageType.SLASHING),
                                 CombatDamage("2d10", DamageType.LIGHTNING),
                             ),
+                            reach_ft=15,
                         ),
                     ),
                 ),
@@ -217,6 +218,7 @@ class AncientSilverDragon(ExtendedCombatantData):
                                 CombatDamage("2d8 + 10", DamageType.SLASHING),
                                 CombatDamage("2d8", DamageType.COLD),
                             ),
+                            reach_ft=15,
                         ),
                     ),
                 ),
@@ -445,6 +447,7 @@ class Empyrean(ExtendedCombatantData):
                             notes=(
                                 "Also: The target can choose not to be Stunned, in which case it takes an extra 21 Force damage that bypasses Resistance or Immunity",
                             ),
+                            reach_ft=10,
                         ),
                         CombatEffect(
                             name="Sacred Weapon: Stunned",
@@ -476,6 +479,7 @@ class Empyrean(ExtendedCombatantData):
                                 ),
                             ),
                             notes=("Also: (empyrean's choice)",),
+                            range_ft=600,
                         ),
                     ),
                 ),
@@ -601,6 +605,7 @@ class Kraken(ExtendedCombatantData):
                             roll=EffectRoll.ATTACK,
                             attack_bonus=17,
                             damage=(CombatDamage("4d6 + 10", DamageType.BLUDGEONING),),
+                            reach_ft=30,
                         ),
                         CombatEffect(
                             name="Tentacle: Grappled + Restrained",

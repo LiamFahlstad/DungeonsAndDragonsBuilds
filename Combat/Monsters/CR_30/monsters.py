@@ -120,6 +120,7 @@ class Tarrasque(ExtendedCombatantData):
                             notes=(
                                 "Also: Until the grapple ends, the target has the Restrained condition and can't teleport",
                             ),
+                            reach_ft=15,
                         ),
                         CombatEffect(
                             name="Bite: Grappled",
@@ -140,6 +141,7 @@ class Tarrasque(ExtendedCombatantData):
                             roll=EffectRoll.ATTACK,
                             attack_bonus=19,
                             damage=(CombatDamage("4d8 + 10", DamageType.SLASHING),),
+                            reach_ft=15,
                         ),
                     ),
                 ),
@@ -151,6 +153,7 @@ class Tarrasque(ExtendedCombatantData):
                             roll=EffectRoll.ATTACK,
                             attack_bonus=19,
                             damage=(CombatDamage("3d8 + 10", DamageType.BLUDGEONING),),
+                            reach_ft=30,
                         ),
                         CombatEffect(
                             name="Tail: Prone",

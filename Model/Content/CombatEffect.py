@@ -78,6 +78,17 @@ _UPCAST_DICE_OR_NUMBER = re.compile(r"\d+d\d+|\d+")
 CANTRIP_LEVELS = (5, 11, 17)
 
 
+def attack_kind_of(reach_ft: int | None, range_ft: int | None) -> AttackKind | None:
+    """An attack's kind from how far it goes: MELEE with only a reach,
+    RANGED with only a range; None with both (it can be either: "Melee or
+    Ranged Attack Roll") or neither."""
+    if reach_ft is not None and range_ft is None:
+        return AttackKind.MELEE
+    if range_ft is not None and reach_ft is None:
+        return AttackKind.RANGED
+    return None
+
+
 class EffectRoll(StrEnum):
     """What one use rolls. A StrEnum, so it's its text ("save") in JSON, in
     logs and wherever it's compared with text."""
@@ -441,6 +452,21 @@ class CombatEffect:
     # What it rolls takes no benefit from Half Cover or Three-Quarters
     # Cover (Sacred Flame); Total Cover still counts.
     ignores_cover: bool = False
+    # How far its attack goes, for an 'attack' only: a melee attack's reach
+    # ("reach 10 ft."), a ranged one's normal and long range ("range
+    # 80/320 ft."; long_range_ft None: nothing past normal), or both for one
+    # that can be either ("Melee or Ranged Attack Roll"). Which it is comes
+    # from them (attack_kind). None for all: a structured MonsterAbility's
+    # own reach_ft and range_ft, or not known. (Notes/explicit-attributes-plan.md,
+    # Phase 4.5.)
+    reach_ft: int | None = None
+    range_ft: int | None = None
+    long_range_ft: int | None = None
+
+    @property
+    def attack_kind(self) -> AttackKind | None:
+        """Whether its attack is melee or ranged (attack_kind_of)."""
+        return attack_kind_of(self.reach_ft, self.range_ft)
 
     def __post_init__(self):
         if self.area is not None and not isinstance(self.area, CombatArea):
@@ -555,6 +581,21 @@ class CombatEffect:
             raise ValueError("A dc is for a 'save' only")
         if self.roll is not EffectRoll.ATTACK and self.attack_bonus is not None:
             raise ValueError("An attack_bonus is for an 'attack' only")
+        for name in ("reach_ft", "range_ft", "long_range_ft"):
+            feet = getattr(self, name)
+            if feet is None:
+                continue
+            if isinstance(feet, bool) or not isinstance(feet, int) or feet <= 0:
+                raise ValueError(f"{name} is a number of feet, not {feet!r}")
+            if self.roll is not EffectRoll.ATTACK:
+                raise ValueError(f"{name} is for an 'attack' only")
+        if self.long_range_ft is not None and (
+            self.range_ft is None or self.long_range_ft <= self.range_ft
+        ):
+            raise ValueError(
+                "long_range_ft comes with a shorter range_ft: range 80/320 ft. is"
+                " range_ft=80, long_range_ft=320"
+            )
         if any(not note.strip() for note in self.notes):
             raise ValueError("A note can't be empty")
         names = [condition.name for condition in self.conditions]
@@ -988,6 +1029,9 @@ class _Reader:
             ignores_cover=self.kind(
                 data.get("ignores_cover"), "ignores_cover", (bool,), False
             ),
+            reach_ft=self.kind(data.get("reach_ft"), "reach_ft", (int,)),
+            range_ft=self.kind(data.get("range_ft"), "range_ft", (int,)),
+            long_range_ft=self.kind(data.get("long_range_ft"), "long_range_ft", (int,)),
         )
 
     def area(self, value: Any) -> CombatArea | None:

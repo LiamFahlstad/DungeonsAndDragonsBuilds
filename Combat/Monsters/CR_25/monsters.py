@@ -113,6 +113,7 @@ class Colossus(ExtendedCombatantData):
                             notes=(
                                 "Also: and the colossus pushes the target up to 20 feet straight away from itself",
                             ),
+                            reach_ft=20,
                         ),
                     ),
                 ),
@@ -124,6 +125,7 @@ class Colossus(ExtendedCombatantData):
                             roll=EffectRoll.ATTACK,
                             attack_bonus=18,
                             damage=(CombatDamage("4d10", DamageType.RADIANT),),
+                            range_ft=300,
                         ),
                         CombatEffect(
                             name="Radiant Ray: Prone",
