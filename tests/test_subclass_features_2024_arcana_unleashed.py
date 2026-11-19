@@ -746,7 +746,8 @@ def test_ranges_and_durations_match_the_text(make_character):
     # conjurer.txt Distant Transposition: "increases to 60 feet"
     assert WizardConjurerFeatures.DistantTransposition().activation.range == "60 Feet"
     hypnotic = WizardEnchanterFeatures.HypnoticPresence().activation
-    assert (hypnotic.range, hypnotic.duration) == ("10 Feet", "1 Minute")
+    assert (hypnotic.range, hypnotic.duration_text) == ("10 Feet", "1 Minute")
+    assert hypnotic.duration_to_seconds() == 60
     assert WizardEnchanterFeatures.InstinctiveCharm().activation.range == "30 Feet"
     assert ArcherF.CurvingShot().activation.action_type == ActionType.BONUS_ACTION
     assert ArcherF.CurvingShot().activation.range == "60 Feet"

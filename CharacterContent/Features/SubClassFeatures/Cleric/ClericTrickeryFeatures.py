@@ -1,4 +1,11 @@
-from Model.Content.Feature import Feature, FeatureActivation, ActionType, FeatureTarget
+from Model.Content.Feature import (
+    Feature,
+    FeatureActivation,
+    ActionType,
+    FeatureTarget,
+    FeatureDuration,
+    TimeUnit,
+)
 from Model.View import CharacterView
 from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table
 
@@ -76,7 +83,7 @@ class InvokeDuplicity(Feature):
             origin="Trickery Domain Cleric Level 3",
             activation=FeatureActivation(
                 action_type=ActionType.BONUS_ACTION,
-                duration="1 Minute",
+                duration=FeatureDuration(1, TimeUnit.MINUTE),
                 range="30 Feet",
             ),
             usage_tags=["buff"],

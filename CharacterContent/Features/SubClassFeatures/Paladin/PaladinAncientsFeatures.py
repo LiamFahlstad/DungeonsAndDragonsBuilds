@@ -5,6 +5,8 @@ from Model.Content.Feature import (
     FeatureTarget,
     FeatureUses,
     RegainedOn,
+    FeatureDuration,
+    TimeUnit,
 )
 from Model.View import CharacterView
 from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table, dc_formula
@@ -17,7 +19,9 @@ class NaturesWrath(Feature):
             name="Nature's Wrath",
             origin="Oath of the Ancients Paladin Level 3",
             activation=FeatureActivation(
-                action_type=ActionType.ACTION, duration="1 Minute", range="15 Feet"
+                action_type=ActionType.ACTION,
+                duration=FeatureDuration(1, TimeUnit.MINUTE),
+                range="15 Feet",
             ),
             usage_tags=["control"],
         )
@@ -186,7 +190,8 @@ class ElderChampion(Feature):
             name="Elder Champion",
             origin="Oath of the Ancients Paladin Level 20",
             activation=FeatureActivation(
-                action_type=ActionType.BONUS_ACTION, duration="1 Minute or Until Ended"
+                action_type=ActionType.BONUS_ACTION,
+                duration=FeatureDuration(1, TimeUnit.MINUTE, or_until="Until Ended"),
             ),
             usage_tags=["heal", "control"],
             uses=FeatureUses(max_uses=1, regain_all_on="long rest"),

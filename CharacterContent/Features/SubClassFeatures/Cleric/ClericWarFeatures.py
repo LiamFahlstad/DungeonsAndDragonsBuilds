@@ -6,6 +6,8 @@ from Model.Content.Feature import (
     ActionType,
     FeatureTarget,
     RegainedOn,
+    FeatureDuration,
+    TimeUnit,
 )
 from Model.Content.Improvements import DamageResistance
 from Model.Ledger.LedgerWriter import LedgerWriter
@@ -123,7 +125,7 @@ class WarGodsBlessing(Feature):
         super().__init__(
             name="War God's Blessing",
             origin="War Domain Cleric Level 6",
-            activation=FeatureActivation(duration="1 Minute"),
+            activation=FeatureActivation(duration=FeatureDuration(1, TimeUnit.MINUTE)),
             usage_tags=["buff", "damage"],
         )
 

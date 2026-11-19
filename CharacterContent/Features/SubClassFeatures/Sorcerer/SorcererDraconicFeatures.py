@@ -7,6 +7,8 @@ from Model.Content.Feature import (
     FeatureTarget,
     FeatureUses,
     RegainedOn,
+    FeatureDuration,
+    TimeUnit,
 )
 from Model.Content.Improvements import (
     DamageResistance,
@@ -152,7 +154,8 @@ class DragonWings(Feature):
             name="Dragon Wings",
             origin="Draconic Sorcerer Level 14",
             activation=FeatureActivation(
-                action_type=ActionType.BONUS_ACTION, duration="1 Hour"
+                action_type=ActionType.BONUS_ACTION,
+                duration=FeatureDuration(1, TimeUnit.HOUR),
             ),
             usage_tags=["buff", "utility"],
             uses=FeatureUses(max_uses=1, regain_all_on="long rest"),

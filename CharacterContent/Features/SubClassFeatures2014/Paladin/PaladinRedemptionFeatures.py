@@ -1,5 +1,12 @@
 from Core.Definitions import CharacterClass
-from Model.Content.Feature import Feature, FeatureActivation, ActionType, FeatureTarget
+from Model.Content.Feature import (
+    Feature,
+    FeatureActivation,
+    ActionType,
+    FeatureTarget,
+    FeatureDuration,
+    TimeUnit,
+)
 from Model.View import CharacterView
 from Model.Content.FeatureText import Block, Facts, Paragraph, Table
 
@@ -48,7 +55,8 @@ class EmissaryOfPeace(Feature):
             name="Channel Divinity: Emissary of Peace",
             origin="Oath of Redemption Paladin Level 3",
             activation=FeatureActivation(
-                action_type=ActionType.BONUS_ACTION, duration="10 Minutes"
+                action_type=ActionType.BONUS_ACTION,
+                duration=FeatureDuration(10, TimeUnit.MINUTE),
             ),
             usage_tags=["buff"],
         )

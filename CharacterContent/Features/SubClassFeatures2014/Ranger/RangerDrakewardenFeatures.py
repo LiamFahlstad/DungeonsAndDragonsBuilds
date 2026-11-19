@@ -379,7 +379,7 @@ class DrakesBreath(Feature):
             name="Drake's Breath",
             origin="Drakewarden Ranger Level 11",
             activation=FeatureActivation(
-                action_type=ActionType.ACTION, range="30-Foot Cone"
+                action_type=ActionType.ACTION, range="30 Feet", range_shape="Cone"
             ),
             usage_tags=["damage"],
             uses=FeatureUses(max_uses=1, regain_all_on="long rest"),

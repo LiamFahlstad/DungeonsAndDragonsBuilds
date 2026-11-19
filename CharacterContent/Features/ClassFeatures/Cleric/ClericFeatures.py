@@ -6,6 +6,8 @@ from Model.Content.Feature import (
     FeatureUses,
     RegainedOn,
     FeatureDice,
+    FeatureDuration,
+    TimeUnit,
 )
 from Model.Content.Improvements import (
     SkillBonus,
@@ -189,7 +191,9 @@ class ChannelDivinity(Feature):
             name="Channel Divinity",
             origin="Cleric Level 2",
             activation=FeatureActivation(
-                action_type=ActionType.ACTION, duration="1 Minute", range="30 Feet"
+                action_type=ActionType.ACTION,
+                duration=FeatureDuration(1, TimeUnit.MINUTE),
+                range="30 Feet",
             ),
             usage_tags=["heal", "damage", "control"],
             uses=FeatureUses(

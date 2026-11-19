@@ -10,6 +10,8 @@ from Model.Content.Feature import (
     RegainedOn,
     FeatureTarget,
     FeatureDice,
+    FeatureDuration,
+    TimeUnit,
 )
 from Core.Rules import MAX_ABILITY_MODIFIER
 from Model.View import CharacterView
@@ -85,8 +87,11 @@ class StarryForm(Feature):
             origin="Circle of the Stars Druid Level 3",
             activation=FeatureActivation(
                 action_type=ActionType.BONUS_ACTION,
-                duration="10 Minutes or Until Dismissed/Incapacitated",
-                range="10-Foot Radius",
+                duration=FeatureDuration(
+                    10, TimeUnit.MINUTE, or_until="Until Dismissed/Incapacitated"
+                ),
+                range="10 Feet",
+                range_shape="Radius",
             ),
             usage_tags=["damage", "heal", "buff"],
             dice=STARRY_FORM_DICE,

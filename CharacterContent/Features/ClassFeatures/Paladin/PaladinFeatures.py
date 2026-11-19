@@ -6,6 +6,8 @@ from Model.Content.Feature import (
     FeatureTarget,
     FeatureUses,
     RegainedOn,
+    FeatureDuration,
+    TimeUnit,
 )
 from Model.Content.Improvements import SavingThrowBonus
 from Model.Content.CombatEffect import CombatEffect, CombatHitPoints
@@ -489,7 +491,7 @@ class AuraOfProtection(Feature):
         super().__init__(
             name="Aura of Protection",
             origin="Paladin Level 6",
-            activation=FeatureActivation(range="10-Foot Emanation"),
+            activation=FeatureActivation(range="10 Feet", range_shape="Emanation"),
             usage_tags=["buff"],
         )
 
@@ -540,7 +542,9 @@ class AbjureFoes(Feature):
             origin="Paladin Level 9",
             activation=FeatureActivation(
                 action_type=ActionType.ACTION,
-                duration="1 Minute or Until Takes Damage",
+                duration=FeatureDuration(
+                    1, TimeUnit.MINUTE, or_until="Until Takes Damage"
+                ),
                 range="60 Feet",
             ),
             usage_tags=["control"],

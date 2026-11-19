@@ -95,7 +95,7 @@ class ReanimatorSkillSet(Feature):
         super().__init__(
             name="Reanimator's Skill Set",
             origin="Reanimator Artificer Level 3",
-            activation=FeatureActivation(range="10-Foot Emanation"),
+            activation=FeatureActivation(range="10 Feet", range_shape="Emanation"),
             usage_tags=["heal", "damage", "utility"],
             uses=FeatureUses(
                 max_uses=MAX_ABILITY_MODIFIER,

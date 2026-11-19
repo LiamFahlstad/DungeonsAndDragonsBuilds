@@ -5,6 +5,8 @@ from Model.Content.Feature import (
     ActionType,
     RegainedOn,
     FeatureTarget,
+    FeatureDuration,
+    TimeUnit,
 )
 from Core.Rules import MAX_ABILITY_MODIFIER
 from Model.View import CharacterView
@@ -103,7 +105,7 @@ class StrikeFear(Feature):
         super().__init__(
             name="Strike Fear",
             origin="Scion of the Three Rogue Level 9",
-            activation=FeatureActivation(duration="1 Minute"),
+            activation=FeatureActivation(duration=FeatureDuration(1, TimeUnit.MINUTE)),
             usage_tags=["buff", "control"],
         )
 

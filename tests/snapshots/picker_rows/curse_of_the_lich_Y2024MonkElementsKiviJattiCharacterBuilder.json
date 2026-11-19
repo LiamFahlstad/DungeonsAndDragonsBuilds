@@ -250,7 +250,7 @@
    "counts_uses": false,
    "damage": "",
    "dc": 13,
-   "duration_seconds": null,
+   "duration_seconds": 600,
    "feature_name": "Monk's Focus",
    "half_on_save": false,
    "is_described": true,

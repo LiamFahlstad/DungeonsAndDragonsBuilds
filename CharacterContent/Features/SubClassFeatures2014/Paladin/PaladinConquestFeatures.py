@@ -6,6 +6,8 @@ from Model.Content.Feature import (
     RegainedOn,
     FeatureUses,
     FeatureTarget,
+    FeatureDuration,
+    TimeUnit,
 )
 from Model.View import CharacterView
 from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table
@@ -54,7 +56,9 @@ class ConqueringPresence(Feature):
             name="Channel Divinity: Conquering Presence",
             origin="Oath of Conquest Paladin Level 3",
             activation=FeatureActivation(
-                action_type=ActionType.ACTION, duration="1 Minute", range="30 Feet"
+                action_type=ActionType.ACTION,
+                duration=FeatureDuration(1, TimeUnit.MINUTE),
+                range="30 Feet",
             ),
             usage_tags=["control"],
         )
@@ -225,7 +229,8 @@ class InvincibleConqueror(Feature):
             name="Invincible Conqueror",
             origin="Oath of Conquest Paladin Level 20",
             activation=FeatureActivation(
-                action_type=ActionType.ACTION, duration="1 Minute"
+                action_type=ActionType.ACTION,
+                duration=FeatureDuration(1, TimeUnit.MINUTE),
             ),
             usage_tags=["buff"],
             uses=FeatureUses(max_uses=1, regain_all_on="long rest"),

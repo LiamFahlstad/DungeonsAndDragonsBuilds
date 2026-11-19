@@ -11,6 +11,8 @@ from Model.Content.Feature import (
     RegainedOn,
     FeatureTarget,
     FeatureDice,
+    FeatureDuration,
+    TimeUnit,
 )
 from Model.Content.Improvements import GrantLanguage
 from Model.Ledger.LedgerWriter import LedgerWriter
@@ -186,7 +188,8 @@ class GiantsMight(Feature):
             name="Giant's Might",
             origin="Rune Knight Fighter Level 3",
             activation=FeatureActivation(
-                action_type=ActionType.BONUS_ACTION, duration="1 Minute"
+                action_type=ActionType.BONUS_ACTION,
+                duration=FeatureDuration(1, TimeUnit.MINUTE),
             ),
             usage_tags=["buff", "damage"],
             uses=FeatureUses(

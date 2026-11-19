@@ -1,10 +1,9 @@
-import re
 from dataclasses import dataclass
 from enum import Enum
 from typing import Callable, Literal, Sequence
 
 from Core.Definitions import CharacterClass
-from Core.Rules import MAX_LEVEL, MIN_LEVEL
+from Core.Rules import MAX_LEVEL, MIN_LEVEL, SECONDS_PER_ROUND
 from Model.Content.ActionType import ActionType
 from Model.Content.CombatEffect import CombatEffect
 from Model.Content.CombatModifiers import Movement
@@ -205,27 +204,58 @@ class FeatureTarget(str, Enum):
     AREA = "area"
 
 
-_RANGE_SHAPE_RE = re.compile(
-    r"(\d+)-Foot[- ](Cone|Cube|Sphere|Line|Emanation|Cylinder|Radius(?: Sphere)?)",
-    re.IGNORECASE,
-)
+class TimeUnit(Enum):
+    """The unit of a FeatureDuration, as its card names it."""
 
-_DURATION_RE = re.compile(r"(?:up to\s+)?(\d+)\s+(\w+)", re.IGNORECASE)
+    ROUND = "Round"
+    MINUTE = "Minute"
+    HOUR = "Hour"
+    DAY = "Day"
 
-_DURATION_UNIT_SECONDS = {
-    "second": 1,
-    "seconds": 1,
-    "round": 6,
-    "rounds": 6,
-    "turn": 6,
-    "turns": 6,
-    "minute": 60,
-    "minutes": 60,
-    "hour": 3600,
-    "hours": 3600,
-    "day": 86400,
-    "days": 86400,
+
+_SECONDS_PER_UNIT = {
+    TimeUnit.ROUND: SECONDS_PER_ROUND,
+    TimeUnit.MINUTE: 60,
+    TimeUnit.HOUR: 3600,
+    TimeUnit.DAY: 86400,
 }
+
+
+@dataclass(frozen=True)
+class FeatureDuration:
+    """How long a feature's effect lasts, when that's a length of time:
+    "1 Minute", "Up to 10 Minutes", "1 Minute or Until Incapacitated".
+    `text` is its card's Duration tag and `seconds` its badge's timer in the
+    combat UI, which runs the whole length (what `or_until` says can end it
+    sooner is the GM's to see). A duration that isn't a length of time
+    ("Until Start of Next Turn", "Proficiency Bonus Hours") stays a plain
+    string, with no timer (Notes/explicit-attributes-plan.md, 6.2)."""
+
+    amount: int
+    unit: TimeUnit
+    up_to: bool = False
+    or_until: str = ""
+
+    def __post_init__(self):
+        if self.amount < 1:
+            raise ValueError(f"A FeatureDuration lasts at least 1 {self.unit.value}")
+
+    @property
+    def seconds(self) -> int:
+        return self.amount * _SECONDS_PER_UNIT[self.unit]
+
+    @property
+    def text(self) -> str:
+        unit = self.unit.value if self.amount == 1 else f"{self.unit.value}s"
+        text = f"{self.amount} {unit}"
+        if self.up_to:
+            text = f"Up to {text}"
+        if self.or_until:
+            text = f"{text} or {self.or_until}"
+        return text
+
+    def __str__(self) -> str:
+        return self.text
 
 
 @dataclass
@@ -233,16 +263,16 @@ class FeatureActivation:
     """Action economy, duration, and range/shape for how a feature is activated,
     rendered as tag chips on its card (mirrors FeatureUses' role for limited-use tracking).
 
-    range_shape captures an area-of-effect shape (e.g. "Cone", "Sphere", "Radius")
-    when the range text states one - split out automatically from a combined
-    range string like "30-Foot Cone" unless range_shape is passed explicitly.
-    Left None when no shape is stated (e.g. "30 Feet", "Self", "Touch").
+    `duration` is a FeatureDuration when it's a length of time (its badge
+    gets a timer), else plain card text. `range_shape` is an area-of-effect
+    shape (e.g. "Cone", "Emanation", "Radius") shown with the range ("30
+    Feet"); None when no shape is stated (e.g. "30 Feet", "Self", "Touch").
     """
 
     action_type: "ActionType | Literal['action', 'bonus_action', 'reaction'] | None" = (
         None
     )
-    duration: str | None = None
+    duration: "FeatureDuration | str | None" = None
     range: str | None = None
     range_shape: str | None = None
 
@@ -251,25 +281,18 @@ class FeatureActivation:
             self.action_type, ActionType
         ):
             self.action_type = ActionType(self.action_type)
-        if self.range is not None and self.range_shape is None:
-            match = _RANGE_SHAPE_RE.fullmatch(self.range.strip())
-            if match:
-                self.range = f"{match.group(1)} Feet"
-                self.range_shape = match.group(2).title()
 
-    def duration_to_seconds(self) -> int | str | None:
-        """Convert duration to a whole number of seconds (a turn/round is 6 seconds).
-        Returns the original duration string unchanged when it isn't a plain
-        "<number> <unit>" time span (e.g. "Until Incapacitated", "1d6 Long Rests")."""
-        if self.duration is None:
-            return None
-        match = _DURATION_RE.fullmatch(self.duration.strip())
-        if match:
-            count, unit = match.groups()
-            seconds_per_unit = _DURATION_UNIT_SECONDS.get(unit.lower())
-            if seconds_per_unit is not None:
-                return int(count) * seconds_per_unit
-        return self.duration
+    @property
+    def duration_text(self) -> str | None:
+        """The card's Duration tag."""
+        return None if self.duration is None else str(self.duration)
+
+    def duration_to_seconds(self) -> int | None:
+        """How long its effect lasts in seconds, for its badge's timer: a
+        FeatureDuration's; None for a plain-text duration or none."""
+        if isinstance(self.duration, FeatureDuration):
+            return self.duration.seconds
+        return None
 
 
 class Feature(Effect):

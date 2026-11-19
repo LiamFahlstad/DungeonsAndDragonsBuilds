@@ -5,6 +5,8 @@ from Model.Content.Feature import (
     ActionType,
     RegainedOn,
     FeatureTarget,
+    FeatureDuration,
+    TimeUnit,
 )
 from Model.Content.Improvements import (
     DamageResistance,
@@ -95,7 +97,7 @@ class Stonecunning(Feature):
             origin="Dwarf Trait",
             activation=FeatureActivation(
                 action_type=ActionType.BONUS_ACTION,
-                duration="10 Minutes",
+                duration=FeatureDuration(10, TimeUnit.MINUTE),
                 range="60 Feet",
             ),
             uses=FeatureUses(

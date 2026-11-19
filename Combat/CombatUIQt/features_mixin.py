@@ -67,7 +67,7 @@ class FeaturesMixin(CombatWindowState):
             else "None"
         )
         duration_text = (
-            feature.activation.duration
+            feature.activation.duration_text
             if feature.activation and feature.activation.duration
             else "None"
         )
@@ -132,8 +132,8 @@ class FeaturesMixin(CombatWindowState):
         feature.target() decides who is affected (SELF/None always means the source
         itself; any other target type requires a target to be selected first),
         feature.activation.action_type logs the action-economy cost on the source,
-        and feature.activation.duration_to_seconds() (if positive) adds a ticking
-        duration bar on every recipient. Every application also adds a condition
+        and feature.activation.duration_to_seconds() (a FeatureDuration's, if
+        positive) adds a ticking duration bar on every recipient. Every application also adds a condition
         badge (with the description as a hover tooltip) on its recipient(s) and
         increments the source's features_enabled stat."""
         source = self.selected_character

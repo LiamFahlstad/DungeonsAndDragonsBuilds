@@ -5,6 +5,8 @@ from Model.Content.Feature import (
     ActionType,
     RegainedOn,
     FeatureTarget,
+    FeatureDuration,
+    TimeUnit,
 )
 from Model.Content.Improvements import SpeedBonus
 from Model.Ledger.LedgerWriter import LedgerWriter
@@ -91,7 +93,8 @@ class PeerlessAthlete(Feature):
             name="Peerless Athlete",
             origin="Oath of Glory Paladin Level 3",
             activation=FeatureActivation(
-                action_type=ActionType.BONUS_ACTION, duration="1 Hour"
+                action_type=ActionType.BONUS_ACTION,
+                duration=FeatureDuration(1, TimeUnit.HOUR),
             ),
             usage_tags=["buff"],
         )
@@ -221,7 +224,8 @@ class LivingLegend(Feature):
             name="Living Legend",
             origin="Oath of Glory Paladin Level 20",
             activation=FeatureActivation(
-                action_type=ActionType.BONUS_ACTION, duration="10 Minutes"
+                action_type=ActionType.BONUS_ACTION,
+                duration=FeatureDuration(10, TimeUnit.MINUTE),
             ),
             usage_tags=["buff"],
             uses=FeatureUses(max_uses=1, regain_all_on="long rest"),

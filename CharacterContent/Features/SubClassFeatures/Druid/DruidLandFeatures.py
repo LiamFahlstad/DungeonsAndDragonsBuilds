@@ -11,6 +11,8 @@ from Model.Content.Feature import (
     FeatureActivation,
     FeatureDice,
     FeatureTarget,
+    FeatureDuration,
+    TimeUnit,
 )
 from Model.Content.Improvements import ConditionImmunity, DamageResistance
 from Model.Ledger.LedgerWriter import LedgerWriter
@@ -239,7 +241,9 @@ class NaturesSanctuary(Feature):
             origin="Circle of the Land Druid Level 14",
             activation=FeatureActivation(
                 action_type=ActionType.ACTION,
-                duration="1 Minute or Until Incapacitated",
+                duration=FeatureDuration(
+                    1, TimeUnit.MINUTE, or_until="Until Incapacitated"
+                ),
                 range="120 Feet (15-Foot Cube)",
             ),
             usage_tags=["buff"],

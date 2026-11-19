@@ -4,6 +4,8 @@ from Model.Content.Feature import (
     ActionType,
     FeatureTarget,
     FeatureDice,
+    FeatureDuration,
+    TimeUnit,
 )
 from Core.Definitions import Ability, CharacterClass
 from Model.View import CharacterView
@@ -104,7 +106,9 @@ class EldritchCannon(Feature):
             name="Eldritch Cannon",
             origin="Artillerist Artificer Level 3",
             activation=FeatureActivation(
-                action_type=ActionType.ACTION, duration="1 Hour", range="5 Feet"
+                action_type=ActionType.ACTION,
+                duration=FeatureDuration(1, TimeUnit.HOUR),
+                range="5 Feet",
             ),
             usage_tags=["damage", "buff"],
             dice=[CANNON_DAMAGE_DICE, CANNON_PROTECTOR_DICE],

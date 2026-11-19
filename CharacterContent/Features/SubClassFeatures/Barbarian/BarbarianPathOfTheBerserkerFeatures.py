@@ -7,6 +7,8 @@ from Model.Content.Feature import (
     FeatureActivation,
     FeatureTarget,
     FeatureUses,
+    FeatureDuration,
+    TimeUnit,
 )
 from Model.View import CharacterView
 from Model.Content.FeatureText import Block, Facts, Paragraph, dc_formula
@@ -114,8 +116,9 @@ class IntimidatingPresence(Feature):
             origin="Path Of The Berserker Barbarian Level 14",
             activation=FeatureActivation(
                 action_type=ActionType.BONUS_ACTION,
-                duration="1 Minute",
-                range="30-Foot Emanation",
+                duration=FeatureDuration(1, TimeUnit.MINUTE),
+                range="30 Feet",
+                range_shape="Emanation",
             ),
             usage_tags=["control"],
             uses=FeatureUses(max_uses=1, regain_all_on="long rest"),

@@ -20,6 +20,8 @@ from Model.Content.Feature import (
     FeatureUses,
     RegainedOn,
     regained_on_from_uses,
+    FeatureDuration,
+    TimeUnit,
 )
 from Model.Content.CombatEffect import CombatEffect
 from Model.Content.StandardActions import DISENGAGE, take_actions
@@ -870,7 +872,9 @@ class BoonOfFluidForms(_AbilityScoreEpicBoon):
             ability,
             usage_tags=["buff", "heal"],
             activation=FeatureActivation(
-                action_type=ActionType.ACTION, duration="1 Hour", range="Self"
+                action_type=ActionType.ACTION,
+                duration=FeatureDuration(1, TimeUnit.HOUR),
+                range="Self",
             ),
         )
 
@@ -1120,7 +1124,8 @@ class BoonOfTheBrightSun(_AbilityScoreEpicBoon):
             activation=FeatureActivation(
                 action_type=ActionType.BONUS_ACTION,
                 duration="Until Dismissed",
-                range="30-Foot Emanation",
+                range="30 Feet",
+                range_shape="Emanation",
             ),
         )
 

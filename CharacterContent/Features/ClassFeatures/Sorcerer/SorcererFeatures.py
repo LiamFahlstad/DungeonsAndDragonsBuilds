@@ -6,6 +6,8 @@ from Model.Content.Feature import (
     FeatureTarget,
     FeatureUses,
     RegainedOn,
+    FeatureDuration,
+    TimeUnit,
 )
 from Utils import StringUtils
 from Core.Rules import levels_gained
@@ -86,7 +88,8 @@ class InnateSorcery(Feature):
             name="Innate Sorcery",
             origin="Sorcerer Level 1",
             activation=FeatureActivation(
-                action_type=ActionType.BONUS_ACTION, duration="1 Minute"
+                action_type=ActionType.BONUS_ACTION,
+                duration=FeatureDuration(1, TimeUnit.MINUTE),
             ),
             usage_tags=["buff"],
             uses=FeatureUses(max_uses=2, regain_all_on="long rest"),

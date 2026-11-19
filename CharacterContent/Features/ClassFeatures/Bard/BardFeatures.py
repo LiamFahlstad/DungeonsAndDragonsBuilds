@@ -6,6 +6,8 @@ from Model.Content.Feature import (
     FeatureUses,
     RegainedOn,
     FeatureDice,
+    FeatureDuration,
+    TimeUnit,
 )
 from Model.Content.CombatEffect import CombatCondition, CombatEffect, CombatRegain
 from Model.Content.CombatTriggers import CombatTrigger, TriggerEvent
@@ -110,7 +112,9 @@ class BardicInspiration(Feature):
             name="Bardic Inspiration",
             origin="Bard Level 1",
             activation=FeatureActivation(
-                action_type=ActionType.BONUS_ACTION, duration="1 Hour", range="60 Feet"
+                action_type=ActionType.BONUS_ACTION,
+                duration=FeatureDuration(1, TimeUnit.HOUR),
+                range="60 Feet",
             ),
             usage_tags=["buff"],
             uses=FeatureUses(

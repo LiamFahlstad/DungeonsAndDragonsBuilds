@@ -1,4 +1,11 @@
-from Model.Content.Feature import Feature, FeatureActivation, FeatureUses, RegainedOn
+from Model.Content.Feature import (
+    Feature,
+    FeatureActivation,
+    FeatureUses,
+    RegainedOn,
+    FeatureDuration,
+    TimeUnit,
+)
 from Utils import StringUtils
 from Model.View import CharacterView
 from Model.Content.FeatureText import Block, Facts, Paragraph
@@ -125,7 +132,7 @@ class MagicalCunning(Feature):
         super().__init__(
             name="Magical Cunning",
             origin="Warlock Level 2",
-            activation=FeatureActivation(duration="1 Minute"),
+            activation=FeatureActivation(duration=FeatureDuration(1, TimeUnit.MINUTE)),
             uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
 

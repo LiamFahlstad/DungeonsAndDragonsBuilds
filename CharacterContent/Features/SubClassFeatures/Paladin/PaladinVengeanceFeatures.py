@@ -4,6 +4,8 @@ from Model.Content.Feature import (
     FeatureActivation,
     FeatureTarget,
     FeatureUses,
+    FeatureDuration,
+    TimeUnit,
 )
 from Model.View import CharacterView
 from Model.Content.FeatureText import Block, Facts, Paragraph, Table
@@ -52,7 +54,10 @@ class VowOfEnmity(Feature):
             name="Vow of Enmity",
             origin="Oath of Vengeance Paladin Level 3",
             activation=FeatureActivation(
-                duration="1 Minute or Until Used Again", range="30 Feet"
+                duration=FeatureDuration(
+                    1, TimeUnit.MINUTE, or_until="Until Used Again"
+                ),
+                range="30 Feet",
             ),
             usage_tags=["buff"],
         )
@@ -157,7 +162,7 @@ class AvengingAngel(Feature):
             origin="Oath of Vengeance Paladin Level 20",
             activation=FeatureActivation(
                 action_type=ActionType.BONUS_ACTION,
-                duration="10 Minutes or Until Ended",
+                duration=FeatureDuration(10, TimeUnit.MINUTE, or_until="Until Ended"),
             ),
             usage_tags=["buff", "control", "utility"],
             uses=FeatureUses(max_uses=1, regain_all_on="long rest"),

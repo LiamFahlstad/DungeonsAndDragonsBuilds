@@ -6,6 +6,8 @@ from Model.Content.Feature import (
     ActionType,
     RegainedOn,
     FeatureTarget,
+    FeatureDuration,
+    TimeUnit,
 )
 from Model.Content.Improvements import SkillBonus, SkillProficiencyChoice
 from Model.View import CharacterView
@@ -171,7 +173,9 @@ class BeguilingTwist(Feature):
             name="Beguiling Twist",
             origin="Fey Wanderer Ranger Level 7",
             activation=FeatureActivation(
-                action_type=ActionType.REACTION, duration="1 Minute", range="120 Feet"
+                action_type=ActionType.REACTION,
+                duration=FeatureDuration(1, TimeUnit.MINUTE),
+                range="120 Feet",
             ),
             usage_tags=["buff", "control"],
         )

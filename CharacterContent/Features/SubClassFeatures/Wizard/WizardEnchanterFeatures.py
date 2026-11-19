@@ -7,6 +7,8 @@ from Model.Content.Feature import (
     FeatureTarget,
     FeatureUses,
     RegainedOn,
+    FeatureDuration,
+    TimeUnit,
 )
 from Model.Content.Improvements import SkillBonus, SkillProficiencyChoice
 from Model.Ledger.LedgerWriter import LedgerWriter
@@ -98,7 +100,9 @@ class HypnoticPresence(Feature):
             name="Hypnotic Presence",
             origin="Enchanter Wizard Level 3",
             activation=FeatureActivation(
-                action_type=ActionType.ACTION, duration="1 Minute", range="10 Feet"
+                action_type=ActionType.ACTION,
+                duration=FeatureDuration(1, TimeUnit.MINUTE),
+                range="10 Feet",
             ),
             usage_tags=["control"],
             uses=FeatureUses(

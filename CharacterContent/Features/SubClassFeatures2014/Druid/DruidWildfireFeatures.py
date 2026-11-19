@@ -17,6 +17,8 @@ from Model.Content.Feature import (
     ActionType,
     RegainedOn,
     FeatureTarget,
+    FeatureDuration,
+    TimeUnit,
 )
 from Presentation.CreatureStatBlocks import format_creature_stat_block
 from Core.Rules import (
@@ -221,7 +223,9 @@ class SummonWildfireSpirit(Feature):
             name="Summon Wildfire Spirit",
             origin="Circle of Wildfire Druid Level 3",
             activation=FeatureActivation(
-                action_type=ActionType.ACTION, duration="1 Hour", range="30 Feet"
+                action_type=ActionType.ACTION,
+                duration=FeatureDuration(1, TimeUnit.HOUR),
+                range="30 Feet",
             ),
             usage_tags=["damage", "utility", "summon"],
             uses=FeatureUses(max_uses=1, regain_all_on="Wild Shape use"),
@@ -346,7 +350,9 @@ class CauterizingFlames(Feature):
             origin="Circle of Wildfire Druid Level 10",
             usage_tags=["heal", "damage"],
             activation=FeatureActivation(
-                action_type="reaction", duration="1 Minute", range="30 Feet"
+                action_type="reaction",
+                duration=FeatureDuration(1, TimeUnit.MINUTE),
+                range="30 Feet",
             ),
             uses=FeatureUses(
                 max_uses=MAX_PROFICIENCY_BONUS,

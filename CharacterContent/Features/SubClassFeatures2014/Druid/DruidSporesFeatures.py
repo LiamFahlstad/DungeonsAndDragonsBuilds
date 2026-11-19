@@ -7,6 +7,8 @@ from Model.Content.Feature import (
     RegainedOn,
     FeatureTarget,
     FeatureDice,
+    FeatureDuration,
+    TimeUnit,
 )
 from Model.Content.Improvements import ConditionImmunity
 from Model.Ledger.LedgerWriter import LedgerWriter
@@ -139,7 +141,8 @@ class SymbioticEntity(Feature):
             name="Symbiotic Entity",
             origin="Circle of Spores Druid Level 3",
             activation=FeatureActivation(
-                action_type=ActionType.ACTION, duration="10 Minutes"
+                action_type=ActionType.ACTION,
+                duration=FeatureDuration(10, TimeUnit.MINUTE),
             ),
             usage_tags=["buff"],
         )
@@ -185,7 +188,9 @@ class FungalInfestation(Feature):
             name="Fungal Infestation",
             origin="Circle of Spores Druid Level 6",
             activation=FeatureActivation(
-                action_type=ActionType.REACTION, duration="1 Hour", range="10 Feet"
+                action_type=ActionType.REACTION,
+                duration=FeatureDuration(1, TimeUnit.HOUR),
+                range="10 Feet",
             ),
             usage_tags=["utility", "summon"],
             uses=FeatureUses(
@@ -244,7 +249,7 @@ class SpreadingSpores(Feature):
             usage_tags=["damage"],
             activation=FeatureActivation(
                 action_type="bonus_action",
-                duration="1 Minute",
+                duration=FeatureDuration(1, TimeUnit.MINUTE),
                 range="30 Feet (10-Foot Cube)",
             ),
         )

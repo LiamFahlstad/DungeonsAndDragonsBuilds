@@ -1,7 +1,14 @@
 from Core.Definitions import (
     Ability,
 )
-from Model.Content.Feature import Feature, FeatureActivation, ActionType, FeatureTarget
+from Model.Content.Feature import (
+    Feature,
+    FeatureActivation,
+    ActionType,
+    FeatureTarget,
+    FeatureDuration,
+    TimeUnit,
+)
 from Model.View import CharacterView
 from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table, dc_formula
 
@@ -43,8 +50,11 @@ class WrathOfTheSea(Feature):
             origin="Circle of the Sea Druid Level 3",
             activation=FeatureActivation(
                 action_type=ActionType.BONUS_ACTION,
-                duration="10 Minutes or Until Dismissed/Incapacitated",
-                range="5-Foot Emanation",
+                duration=FeatureDuration(
+                    10, TimeUnit.MINUTE, or_until="Until Dismissed/Incapacitated"
+                ),
+                range="5 Feet",
+                range_shape="Emanation",
             ),
             usage_tags=["damage", "control"],
         )

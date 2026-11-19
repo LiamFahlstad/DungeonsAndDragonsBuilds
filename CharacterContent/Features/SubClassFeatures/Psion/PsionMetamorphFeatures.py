@@ -1,4 +1,11 @@
-from Model.Content.Feature import Feature, FeatureActivation, ActionType, FeatureTarget
+from Model.Content.Feature import (
+    Feature,
+    FeatureActivation,
+    ActionType,
+    FeatureTarget,
+    FeatureDuration,
+    TimeUnit,
+)
 from Model.View import CharacterView
 from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table
 
@@ -34,7 +41,8 @@ class MutableForm(Feature):
             name="Mutable Form",
             origin="Metamorph Psion Level 3",
             activation=FeatureActivation(
-                action_type=ActionType.BONUS_ACTION, duration="1 Minute"
+                action_type=ActionType.BONUS_ACTION,
+                duration=FeatureDuration(1, TimeUnit.MINUTE),
             ),
             usage_tags=["buff"],
         )
@@ -326,7 +334,7 @@ class LifeBendingWeapons(Feature):
         super().__init__(
             name="Life-bending Weapons",
             origin="Metamorph Psion Level 14",
-            activation=FeatureActivation(range="30-Foot Emanation"),
+            activation=FeatureActivation(range="30 Feet", range_shape="Emanation"),
             usage_tags=["damage", "heal"],
         )
 

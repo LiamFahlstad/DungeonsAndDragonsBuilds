@@ -5,6 +5,8 @@ from Model.Content.Feature import (
     ActionType,
     RegainedOn,
     FeatureTarget,
+    FeatureDuration,
+    TimeUnit,
 )
 from Core.Rules import MAX_PROFICIENCY_BONUS, levels_gained, proficiency_bonus
 from Model.View import CharacterView
@@ -78,7 +80,9 @@ class EmboldeningBond(Feature):
             origin="Peace Domain Cleric Level 3",
             activation=FeatureActivation(
                 action_type=ActionType.ACTION,
-                duration="10 Minutes or Until You Use This Feature Again",
+                duration=FeatureDuration(
+                    10, TimeUnit.MINUTE, or_until="Until You Use This Feature Again"
+                ),
                 range="30 Feet",
             ),
             usage_tags=["buff"],

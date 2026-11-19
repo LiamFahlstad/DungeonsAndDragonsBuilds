@@ -5,6 +5,8 @@ from Model.Content.Feature import (
     FeatureTarget,
     FeatureUses,
     RegainedOn,
+    FeatureDuration,
+    TimeUnit,
 )
 from Core.Rules import MAX_PROFICIENCY_BONUS, levels_gained, proficiency_bonus
 from Model.View import CharacterView
@@ -125,7 +127,9 @@ class WrithingTide(Feature):
             origin="Swarmkeeper Ranger Level 7",
             activation=FeatureActivation(
                 action_type=ActionType.BONUS_ACTION,
-                duration="1 Minute or Until Incapacitated",
+                duration=FeatureDuration(
+                    1, TimeUnit.MINUTE, or_until="Until Incapacitated"
+                ),
             ),
             usage_tags=["utility"],
             uses=FeatureUses(

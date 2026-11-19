@@ -1,5 +1,11 @@
 from Core.Definitions import Ability
-from Model.Content.Feature import Feature, FeatureActivation, FeatureTarget
+from Model.Content.Feature import (
+    Feature,
+    FeatureActivation,
+    FeatureTarget,
+    FeatureDuration,
+    TimeUnit,
+)
 from Model.View import CharacterView
 from Model.Content.FeatureText import Block, Facts, Option, Paragraph, dc_formula
 
@@ -91,7 +97,7 @@ class DestructiveTrance(Feature):
         super().__init__(
             name="Destructive Trance",
             origin="Psykinetic Psion Level 6",
-            activation=FeatureActivation(duration="10 Minutes"),
+            activation=FeatureActivation(duration=FeatureDuration(10, TimeUnit.MINUTE)),
             usage_tags=["buff", "damage", "utility"],
         )
 

@@ -6,6 +6,8 @@ from Model.Content.Feature import (
     ActionType,
     RegainedOn,
     FeatureTarget,
+    FeatureDuration,
+    TimeUnit,
 )
 from Model.Content.Improvements import DamageResistance
 from Model.Ledger.LedgerWriter import LedgerWriter
@@ -20,7 +22,8 @@ class FormOfDread(Feature):
             name="Form of Dread",
             origin="Undead Patron Warlock Level 3",
             activation=FeatureActivation(
-                action_type=ActionType.BONUS_ACTION, duration="1 Minute"
+                action_type=ActionType.BONUS_ACTION,
+                duration=FeatureDuration(1, TimeUnit.MINUTE),
             ),
             usage_tags=["heal", "buff", "control"],
             uses=FeatureUses(
@@ -167,7 +170,7 @@ class NecroticHusk(Feature):
         super().__init__(
             name="Necrotic Husk",
             origin="Undead Patron Warlock Level 10",
-            activation=FeatureActivation(range="30-Foot Emanation"),
+            activation=FeatureActivation(range="30 Feet", range_shape="Emanation"),
             usage_tags=["buff", "damage"],
             uses=FeatureUses(
                 max_uses=1,

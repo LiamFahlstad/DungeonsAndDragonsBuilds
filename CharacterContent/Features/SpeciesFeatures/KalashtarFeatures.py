@@ -1,5 +1,12 @@
 from Core.Definitions import Ability, DamageType
-from Model.Content.Feature import Feature, FeatureActivation, ActionType, FeatureTarget
+from Model.Content.Feature import (
+    Feature,
+    FeatureActivation,
+    ActionType,
+    FeatureTarget,
+    FeatureDuration,
+    TimeUnit,
+)
 from Model.Content.Improvements import DamageResistance, SavingThrowAdvantage
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.View import CharacterView
@@ -55,7 +62,7 @@ class MindLink(Feature):
             origin="Kalashtar Trait",
             activation=FeatureActivation(
                 action_type=ActionType.ACTION,
-                duration="1 Hour",
+                duration=FeatureDuration(1, TimeUnit.HOUR),
                 range="10 Feet Per Character Level",
             ),
             usage_tags=["buff", "utility"],

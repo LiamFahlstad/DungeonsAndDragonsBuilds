@@ -5,6 +5,8 @@ from Model.Content.Feature import (
     ActionType,
     RegainedOn,
     FeatureTarget,
+    FeatureDuration,
+    TimeUnit,
 )
 from Model.View import CharacterView
 from Model.Content.FeatureText import Block, Facts, Option, Paragraph
@@ -16,7 +18,9 @@ class BeaconOfLight(Feature):
             name="Beacon of Light",
             origin="Oath of the Holy Paladin Level 3",
             activation=FeatureActivation(
-                action_type=ActionType.ACTION, duration="1 Minute", range="60 Feet"
+                action_type=ActionType.ACTION,
+                duration=FeatureDuration(1, TimeUnit.MINUTE),
+                range="60 Feet",
             ),
             usage_tags=["heal"],
         )
@@ -110,7 +114,8 @@ class HolyDeliverance(Feature):
             name="Holy Deliverance",
             origin="Oath of the Holy Paladin Level 20",
             activation=FeatureActivation(
-                action_type=ActionType.BONUS_ACTION, duration="10 Minutes"
+                action_type=ActionType.BONUS_ACTION,
+                duration=FeatureDuration(10, TimeUnit.MINUTE),
             ),
             usage_tags=["heal", "utility"],
             uses=FeatureUses(max_uses=1, regain_all_on="long rest"),

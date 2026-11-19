@@ -6,6 +6,8 @@ from Model.Content.Feature import (
     ActionType,
     RegainedOn,
     FeatureTarget,
+    FeatureDuration,
+    TimeUnit,
 )
 from Model.Content.Improvements import SkillProficiencyChoice, GrantWeaponProficiency
 from CharacterContent.Items.Weapons import WeaponProficiency
@@ -21,7 +23,8 @@ class Bladesong(Feature):
             name="Bladesong",
             origin="Bladesinger Wizard Level 3",
             activation=FeatureActivation(
-                action_type=ActionType.BONUS_ACTION, duration="1 Minute"
+                action_type=ActionType.BONUS_ACTION,
+                duration=FeatureDuration(1, TimeUnit.MINUTE),
             ),
             usage_tags=["buff"],
             uses=FeatureUses(

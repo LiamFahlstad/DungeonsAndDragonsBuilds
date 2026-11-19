@@ -4673,7 +4673,8 @@ class InfernalDragoon(_GreaterPlanarPact):
             activation=FeatureActivation(
                 action_type=ActionType.ACTION,
                 duration="Until the end of its next turn",
-                range="30-Foot Emanation",
+                range="30 Feet",
+                range_shape="Emanation",
             ),
         )
 

@@ -3,6 +3,8 @@ from Model.Content.Feature import (
     FeatureActivation,
     ActionType,
     FeatureTarget,
+    FeatureDuration,
+    TimeUnit,
 )
 from Model.Content.Improvements import InitiativeBonus
 from Model.Ledger.LedgerWriter import LedgerWriter
@@ -96,7 +98,8 @@ class Panache(Feature):
             name="Panache",
             origin="Swashbuckler Rogue Level 9",
             activation=FeatureActivation(
-                action_type=ActionType.ACTION, duration="1 Minute"
+                action_type=ActionType.ACTION,
+                duration=FeatureDuration(1, TimeUnit.MINUTE),
             ),
             usage_tags=["control"],
         )

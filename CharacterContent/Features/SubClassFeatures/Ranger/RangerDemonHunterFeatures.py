@@ -183,7 +183,7 @@ class SoulFragments(Feature):
         super().__init__(
             name="Soul Fragments",
             origin="Demon Hunter Ranger Level 3",
-            activation=FeatureActivation(range="10-Foot Emanation"),
+            activation=FeatureActivation(range="10 Feet", range_shape="Emanation"),
             usage_tags=["damage", "heal", "utility"],
             uses=FeatureUses(
                 max_uses=MAX_ABILITY_MODIFIER + 2,

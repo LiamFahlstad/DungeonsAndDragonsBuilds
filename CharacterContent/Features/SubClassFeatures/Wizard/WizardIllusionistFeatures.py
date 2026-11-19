@@ -4,6 +4,8 @@ from Model.Content.Feature import (
     FeatureActivation,
     FeatureTarget,
     FeatureUses,
+    FeatureDuration,
+    TimeUnit,
 )
 from Model.View import CharacterView
 from Model.Content.FeatureText import Block, Facts, Paragraph
@@ -142,7 +144,8 @@ class IllusoryReality(Feature):
             name="Illusory Reality",
             origin="Illusionist Wizard Level 14",
             activation=FeatureActivation(
-                action_type=ActionType.BONUS_ACTION, duration="1 Minute"
+                action_type=ActionType.BONUS_ACTION,
+                duration=FeatureDuration(1, TimeUnit.MINUTE),
             ),
             usage_tags=["buff"],
         )

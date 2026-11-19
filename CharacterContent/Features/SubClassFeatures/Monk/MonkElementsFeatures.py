@@ -2,7 +2,14 @@ from Core.Definitions import (
     Ability,
     DamageType,
 )
-from Model.Content.Feature import Feature, FeatureActivation, ActionType, FeatureTarget
+from Model.Content.Feature import (
+    Feature,
+    FeatureActivation,
+    ActionType,
+    FeatureTarget,
+    FeatureDuration,
+    TimeUnit,
+)
 from CharacterContent.Items.Weapons import WeaponDamageRolls
 from CharacterContent.Features.ClassFeatures.Monk.MonkFeatures import MARTIAL_ARTS_DIE
 from CharacterContent.Spells.SpellLists import DruidLevel0Spells
@@ -69,7 +76,11 @@ class ElementalAttunement(Feature):
         super().__init__(
             name="Elemental Attunement",
             origin="Warrior of the Elements Monk Level 3",
-            activation=FeatureActivation(duration="10 Minutes or Until Incapacitated"),
+            activation=FeatureActivation(
+                duration=FeatureDuration(
+                    10, TimeUnit.MINUTE, or_until="Until Incapacitated"
+                )
+            ),
             usage_tags=["damage", "control"],
         )
 

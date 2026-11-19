@@ -12,6 +12,8 @@ from Model.Content.Feature import (
     FeatureTarget,
     FeatureUses,
     RegainedOn,
+    FeatureDuration,
+    TimeUnit,
 )
 from Model.Content.Improvements import DamageResistance
 from Model.Ledger.LedgerWriter import LedgerWriter
@@ -276,7 +278,9 @@ class BulwarkOfForce(Feature):
             origin="Psi Warrior Fighter Level 15",
             activation=FeatureActivation(
                 action_type=ActionType.BONUS_ACTION,
-                duration="1 Minute or Until Incapacitated",
+                duration=FeatureDuration(
+                    1, TimeUnit.MINUTE, or_until="Until Incapacitated"
+                ),
                 range="30 Feet",
             ),
             usage_tags=["buff"],

@@ -5,6 +5,8 @@ from Model.Content.Feature import (
     ActionType,
     RegainedOn,
     FeatureTarget,
+    FeatureDuration,
+    TimeUnit,
 )
 from Core.Rules import MAX_ABILITY_MODIFIER
 from Model.View import CharacterView
@@ -178,7 +180,8 @@ class TranceOfOrder(Feature):
             name="Trance of Order",
             origin="Clockwork Sorcerer Level 14",
             activation=FeatureActivation(
-                action_type=ActionType.BONUS_ACTION, duration="1 Minute"
+                action_type=ActionType.BONUS_ACTION,
+                duration=FeatureDuration(1, TimeUnit.MINUTE),
             ),
             usage_tags=["buff"],
             uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
@@ -224,7 +227,7 @@ class ClockworkCavalcade(Feature):
             name="Clockwork Cavalcade",
             origin="Clockwork Sorcerer Level 18",
             activation=FeatureActivation(
-                action_type=ActionType.ACTION, range="30-Foot Cube"
+                action_type=ActionType.ACTION, range="30 Feet", range_shape="Cube"
             ),
             usage_tags=["heal", "control", "utility"],
         )

@@ -76,7 +76,8 @@ class Howl(Feature):
             activation=FeatureActivation(
                 action_type=ActionType.BONUS_ACTION,
                 duration="Until Start of Next Turn",
-                range="15-Foot Radius",
+                range="15 Feet",
+                range_shape="Radius",
             ),
             usage_tags=["control"],
             uses=FeatureUses(

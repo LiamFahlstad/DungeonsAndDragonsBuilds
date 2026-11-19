@@ -6,6 +6,8 @@ from Model.Content.Feature import (
     ActionType,
     RegainedOn,
     FeatureTarget,
+    FeatureDuration,
+    TimeUnit,
 )
 from Model.Content.Improvements import GrantLanguage
 from Model.Ledger.LedgerWriter import LedgerWriter
@@ -63,7 +65,7 @@ class SpiritTotem(Feature):
             origin="Circle of the Shepherd Druid Level 3",
             activation=FeatureActivation(
                 action_type=ActionType.BONUS_ACTION,
-                duration="1 Minute",
+                duration=FeatureDuration(1, TimeUnit.MINUTE),
                 range="60 Feet",
             ),
             usage_tags=["buff", "summon"],
@@ -234,7 +236,9 @@ class FaithfulSummons(Feature):
             name="Faithful Summons",
             origin="Circle of the Shepherd Druid Level 14",
             usage_tags=["buff", "summon"],
-            activation=FeatureActivation(duration="1 Hour", range="20 Feet"),
+            activation=FeatureActivation(
+                duration=FeatureDuration(1, TimeUnit.HOUR), range="20 Feet"
+            ),
             uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
 

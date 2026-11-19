@@ -936,7 +936,7 @@ def _header_tags_html(
     tags = [
         passive_tag,
         _action_tag_html(activation.action_type),
-        _duration_tag_html(activation.duration),
+        _duration_tag_html(activation.duration_text),
         _range_tag_html(activation.range, activation.range_shape),
         _dc_tag_html(feature.calculate_dc(character)),
         _usage_tags_html(feature.usage_tags),

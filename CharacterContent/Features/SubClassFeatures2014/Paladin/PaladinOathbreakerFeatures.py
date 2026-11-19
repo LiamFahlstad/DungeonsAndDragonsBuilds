@@ -6,6 +6,8 @@ from Model.Content.Feature import (
     RegainedOn,
     FeatureUses,
     FeatureTarget,
+    FeatureDuration,
+    TimeUnit,
 )
 from Model.View import CharacterView
 from Model.Content.FeatureText import Block, Facts, Paragraph, Table
@@ -54,7 +56,9 @@ class ControlUndead(Feature):
             name="Control Undead",
             origin="Oathbreaker Paladin Level 3",
             activation=FeatureActivation(
-                action_type=ActionType.ACTION, duration="24 Hours", range="30 Feet"
+                action_type=ActionType.ACTION,
+                duration=FeatureDuration(24, TimeUnit.HOUR),
+                range="30 Feet",
             ),
             usage_tags=["control"],
         )
@@ -95,7 +99,9 @@ class DreadfulAspect(Feature):
             name="Dreadful Aspect",
             origin="Oathbreaker Paladin Level 3",
             activation=FeatureActivation(
-                action_type=ActionType.ACTION, duration="1 Minute", range="30 Feet"
+                action_type=ActionType.ACTION,
+                duration=FeatureDuration(1, TimeUnit.MINUTE),
+                range="30 Feet",
             ),
             usage_tags=["control"],
         )
@@ -219,8 +225,9 @@ class DreadLord(Feature):
             origin="Oathbreaker Paladin Level 20",
             activation=FeatureActivation(
                 action_type=ActionType.ACTION,
-                duration="1 Minute",
-                range="30-Foot Radius",
+                duration=FeatureDuration(1, TimeUnit.MINUTE),
+                range="30 Feet",
+                range_shape="Radius",
             ),
             usage_tags=["damage", "control"],
             uses=FeatureUses(max_uses=1, regain_all_on="long rest"),

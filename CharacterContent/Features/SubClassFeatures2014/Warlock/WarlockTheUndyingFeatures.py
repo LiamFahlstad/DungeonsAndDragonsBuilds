@@ -8,6 +8,8 @@ from Model.Content.Feature import (
     FeatureActivation,
     ActionType,
     FeatureTarget,
+    FeatureDuration,
+    TimeUnit,
 )
 from Model.View import CharacterView
 from Model.Content.FeatureText import Block, Facts, Paragraph, Table, dc_formula
@@ -55,7 +57,7 @@ class AmongTheDead(Feature):
         super().__init__(
             name="Among the Dead",
             origin="The Undying Patron Warlock Level 3",
-            activation=FeatureActivation(duration="24 Hours"),
+            activation=FeatureActivation(duration=FeatureDuration(24, TimeUnit.HOUR)),
             usage_tags=["buff"],
         )
 

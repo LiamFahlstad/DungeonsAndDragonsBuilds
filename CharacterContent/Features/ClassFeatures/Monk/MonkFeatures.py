@@ -7,6 +7,8 @@ from Model.Content.Feature import (
     ActionType,
     RegainedOn,
     FeatureDice,
+    FeatureDuration,
+    TimeUnit,
 )
 from Model.Content.Improvements import (
     AbilityScoreBonus,
@@ -1017,7 +1019,11 @@ class SuperiorDefense(Feature):
         super().__init__(
             name="Superior Defense",
             origin="Monk Level 18",
-            activation=FeatureActivation(duration="1 Minute or Until Incapacitated"),
+            activation=FeatureActivation(
+                duration=FeatureDuration(
+                    1, TimeUnit.MINUTE, or_until="Until Incapacitated"
+                )
+            ),
             usage_tags=["buff"],
         )
 

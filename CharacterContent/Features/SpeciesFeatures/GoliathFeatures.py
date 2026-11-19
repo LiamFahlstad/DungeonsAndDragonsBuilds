@@ -8,6 +8,8 @@ from Model.Content.Feature import (
     ActionType,
     RegainedOn,
     FeatureTarget,
+    FeatureDuration,
+    TimeUnit,
 )
 from Core.Rules import PROFICIENCY_BONUS_GAINED_AT, MAX_PROFICIENCY_BONUS
 from Model.View import CharacterView
@@ -43,7 +45,8 @@ class LargeForm(Feature):
             name="Large Form",
             origin="Goliath Trait",
             activation=FeatureActivation(
-                action_type=ActionType.BONUS_ACTION, duration="10 Minutes"
+                action_type=ActionType.BONUS_ACTION,
+                duration=FeatureDuration(10, TimeUnit.MINUTE),
             ),
             usage_tags=["buff"],
             uses=FeatureUses(max_uses=1, regain_all_on="long rest"),

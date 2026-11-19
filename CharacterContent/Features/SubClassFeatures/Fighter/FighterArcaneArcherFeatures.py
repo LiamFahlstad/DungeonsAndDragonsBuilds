@@ -12,6 +12,8 @@ from Model.Content.Feature import (
     FeatureTarget,
     FeatureUses,
     RegainedOn,
+    FeatureDuration,
+    TimeUnit,
 )
 from Model.Content.CombatEffect import CombatEffect, CombatRegain
 from Model.Content.CombatTriggers import CombatTrigger, TriggerEvent
@@ -255,7 +257,7 @@ class BurstingShot(ArcaneShotOption):
     def __init__(self):
         super().__init__(
             name="Bursting Shot",
-            activation=FeatureActivation(range="10-Foot Emanation"),
+            activation=FeatureActivation(range="10 Feet", range_shape="Emanation"),
             usage_tags=["damage"],
         )
 
@@ -310,7 +312,7 @@ class GraspingShot(ArcaneShotOption):
     def __init__(self):
         super().__init__(
             name="Grasping Shot",
-            activation=FeatureActivation(duration="1 Minute"),
+            activation=FeatureActivation(duration=FeatureDuration(1, TimeUnit.MINUTE)),
             usage_tags=["damage", "control"],
         )
 
@@ -340,7 +342,7 @@ class PiercingShot(ArcaneShotOption):
     def __init__(self):
         super().__init__(
             name="Piercing Shot",
-            activation=FeatureActivation(range="30-Foot Line"),
+            activation=FeatureActivation(range="30 Feet", range_shape="Line"),
             usage_tags=["damage"],
         )
 

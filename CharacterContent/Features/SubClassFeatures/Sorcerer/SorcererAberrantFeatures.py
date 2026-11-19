@@ -5,6 +5,8 @@ from Model.Content.Feature import (
     FeatureActivation,
     FeatureTarget,
     FeatureUses,
+    FeatureDuration,
+    TimeUnit,
 )
 from Model.Content.Improvements import DamageResistance
 from Model.Ledger.LedgerWriter import LedgerWriter
@@ -165,7 +167,8 @@ class RevelationInFlesh(Feature):
             name="Revelation in Flesh",
             origin="Aberrant Sorcerer Level 14",
             activation=FeatureActivation(
-                action_type=ActionType.BONUS_ACTION, duration="10 Minutes"
+                action_type=ActionType.BONUS_ACTION,
+                duration=FeatureDuration(10, TimeUnit.MINUTE),
             ),
             usage_tags=["buff", "utility"],
         )

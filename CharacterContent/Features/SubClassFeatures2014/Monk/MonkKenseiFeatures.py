@@ -3,6 +3,8 @@ from Model.Content.Feature import (
     FeatureActivation,
     ActionType,
     FeatureTarget,
+    FeatureDuration,
+    TimeUnit,
 )
 from CharacterContent.Items.Weapons import WeaponDamageRolls
 from Model.View import CharacterView
@@ -230,7 +232,9 @@ class SharpenTheBlade(Feature):
             origin="Way of the Kensei Monk Level 11",
             activation=FeatureActivation(
                 action_type=ActionType.BONUS_ACTION,
-                duration="1 Minute or Until Feature Used Again",
+                duration=FeatureDuration(
+                    1, TimeUnit.MINUTE, or_until="Until Feature Used Again"
+                ),
                 range="Touch",
             ),
             usage_tags=["buff"],

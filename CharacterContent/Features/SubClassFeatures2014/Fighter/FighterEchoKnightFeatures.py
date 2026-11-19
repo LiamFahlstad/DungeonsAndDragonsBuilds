@@ -5,6 +5,8 @@ from Model.Content.Feature import (
     ActionType,
     RegainedOn,
     FeatureTarget,
+    FeatureDuration,
+    TimeUnit,
 )
 from Core.Definitions import Ability, Condition
 from Core.Rules import MAX_ABILITY_MODIFIER
@@ -217,7 +219,7 @@ class EchoAvatar(Feature):
             origin="Echo Knight Fighter Level 7",
             activation=FeatureActivation(
                 action_type=ActionType.ACTION,
-                duration="Up to 10 Minutes",
+                duration=FeatureDuration(10, TimeUnit.MINUTE, up_to=True),
                 range="1,000 Feet",
             ),
             usage_tags=["utility"],

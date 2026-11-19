@@ -1,5 +1,12 @@
 from Core.Definitions import Ability
-from Model.Content.Feature import Feature, FeatureActivation, ActionType, FeatureTarget
+from Model.Content.Feature import (
+    Feature,
+    FeatureActivation,
+    ActionType,
+    FeatureTarget,
+    FeatureDuration,
+    TimeUnit,
+)
 from Model.View import CharacterView
 from Model.Content.FeatureText import Block, Facts, Option, Paragraph, dc_formula
 
@@ -11,7 +18,7 @@ class ArmsOfTheAstralSelf(Feature):
             origin="Way of the Astral Self Monk Level 3",
             activation=FeatureActivation(
                 action_type=ActionType.BONUS_ACTION,
-                duration="10 Minutes",
+                duration=FeatureDuration(10, TimeUnit.MINUTE),
                 range="10 Feet",
             ),
             usage_tags=["damage", "buff"],
@@ -77,7 +84,8 @@ class VisageOfTheAstralSelf(Feature):
             name="Visage of the Astral Self",
             origin="Way of the Astral Self Monk Level 6",
             activation=FeatureActivation(
-                action_type=ActionType.BONUS_ACTION, duration="10 Minutes"
+                action_type=ActionType.BONUS_ACTION,
+                duration=FeatureDuration(10, TimeUnit.MINUTE),
             ),
             usage_tags=["buff", "utility"],
         )
@@ -181,7 +189,8 @@ class AwakenedAstralSelf(Feature):
             name="Awakened Astral Self",
             origin="Way of the Astral Self Monk Level 17",
             activation=FeatureActivation(
-                action_type=ActionType.BONUS_ACTION, duration="10 Minutes"
+                action_type=ActionType.BONUS_ACTION,
+                duration=FeatureDuration(10, TimeUnit.MINUTE),
             ),
             usage_tags=["buff"],
         )

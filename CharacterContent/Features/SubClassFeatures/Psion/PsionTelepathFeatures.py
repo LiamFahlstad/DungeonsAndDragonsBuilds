@@ -1,4 +1,11 @@
-from Model.Content.Feature import Feature, FeatureActivation, ActionType, FeatureTarget
+from Model.Content.Feature import (
+    Feature,
+    FeatureActivation,
+    ActionType,
+    FeatureTarget,
+    FeatureDuration,
+    TimeUnit,
+)
 from Model.View import CharacterView
 from Model.Content.FeatureText import Block, Facts
 
@@ -85,7 +92,7 @@ class BulwarkMind(Feature):
         super().__init__(
             name="Bulwark Mind",
             origin="Telepath Psion Level 6",
-            activation=FeatureActivation(duration="10 Minutes"),
+            activation=FeatureActivation(duration=FeatureDuration(10, TimeUnit.MINUTE)),
             usage_tags=["buff"],
         )
 
@@ -203,7 +210,7 @@ class ScrambleMinds(Feature):
         super().__init__(
             name="Scramble Minds",
             origin="Telepath Psion Level 14",
-            activation=FeatureActivation(range="30-Foot Radius"),
+            activation=FeatureActivation(range="30 Feet", range_shape="Radius"),
             usage_tags=["control"],
         )
 

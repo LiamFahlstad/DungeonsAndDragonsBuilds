@@ -8,6 +8,8 @@ from Model.Content.Feature import (
     FeatureActivation,
     ActionType,
     RegainedOn,
+    FeatureDuration,
+    TimeUnit,
 )
 from Model.Content.Improvements import InitiativeProficiency
 from Model.Ledger.LedgerWriter import LedgerWriter
@@ -59,7 +61,9 @@ class WatchersWill(Feature):
             name="Channel Divinity: Watcher's Will",
             origin="Oath of the Watchers Paladin Level 3",
             activation=FeatureActivation(
-                action_type=ActionType.ACTION, duration="1 Minute", range="30 Feet"
+                action_type=ActionType.ACTION,
+                duration=FeatureDuration(1, TimeUnit.MINUTE),
+                range="30 Feet",
             ),
             usage_tags=["buff"],
         )
@@ -100,7 +104,9 @@ class AbjureTheExtraplanar(Feature):
             origin="Oath of the Watchers Paladin Level 3",
             activation=FeatureActivation(
                 action_type=ActionType.ACTION,
-                duration="1 Minute or Until Takes Damage",
+                duration=FeatureDuration(
+                    1, TimeUnit.MINUTE, or_until="Until Takes Damage"
+                ),
                 range="30 Feet",
             ),
             usage_tags=["control"],
@@ -235,7 +241,7 @@ class MortalBulwark(Feature):
             origin="Oath of the Watchers Paladin Level 20",
             activation=FeatureActivation(
                 action_type=ActionType.BONUS_ACTION,
-                duration="1 Minute",
+                duration=FeatureDuration(1, TimeUnit.MINUTE),
                 range="120 Feet (Truesight)",
             ),
             usage_tags=["buff", "control"],

@@ -8,6 +8,8 @@ from Model.Content.Feature import (
     FeatureTarget,
     FeatureUses,
     RegainedOn,
+    FeatureDuration,
+    TimeUnit,
 )
 from Model.Content.FeatureText import (
     Block,
@@ -252,7 +254,7 @@ class DreadedAppearance(Feature):
         super().__init__(
             name="Dreaded Appearance",
             origin="Sorrow Knight Fighter Level 7",
-            activation=FeatureActivation(range="10-Foot Emanation"),
+            activation=FeatureActivation(range="10 Feet", range_shape="Emanation"),
             usage_tags=["damage", "control"],
             uses=FeatureUses(max_uses=1, regain_all_on="short or long rest"),
         )
@@ -453,7 +455,9 @@ class GrievingMantle(Feature):
             name="Grieving Mantle",
             origin="Sorrow Knight Fighter Level 18",
             activation=FeatureActivation(
-                duration="1 Minute or Until Incapacitated",
+                duration=FeatureDuration(
+                    1, TimeUnit.MINUTE, or_until="Until Incapacitated"
+                ),
             ),
             usage_tags=["buff"],
         )

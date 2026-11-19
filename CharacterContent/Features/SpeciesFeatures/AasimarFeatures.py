@@ -11,6 +11,8 @@ from Model.Content.Feature import (
     FeatureTarget,
     FeatureUses,
     RegainedOn,
+    FeatureDuration,
+    TimeUnit,
 )
 from Model.Content.Improvements import DamageResistance, GrantSense
 from Model.Ledger.LedgerWriter import LedgerWriter
@@ -122,7 +124,8 @@ class CelestialRevelation(Feature):
             name="Celestial Revelation",
             origin="Aasimar Trait",
             activation=FeatureActivation(
-                action_type=ActionType.BONUS_ACTION, duration="1 Minute"
+                action_type=ActionType.BONUS_ACTION,
+                duration=FeatureDuration(1, TimeUnit.MINUTE),
             ),
             usage_tags=["damage", "buff", "control", "utility"],
             uses=FeatureUses(max_uses=1, regain_all_on="long rest"),

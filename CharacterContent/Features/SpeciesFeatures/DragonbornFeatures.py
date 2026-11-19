@@ -9,6 +9,8 @@ from Model.Content.Feature import (
     RegainedOn,
     FeatureTarget,
     FeatureDice,
+    FeatureDuration,
+    TimeUnit,
 )
 from Model.Content.Improvements import DamageResistance as DamageResistanceImprovement
 from Core.Definitions import (
@@ -149,7 +151,8 @@ class DraconicFlight(Feature):
             name="Draconic Flight",
             origin="Dragonborn Trait",
             activation=FeatureActivation(
-                action_type=ActionType.BONUS_ACTION, duration="10 Minutes"
+                action_type=ActionType.BONUS_ACTION,
+                duration=FeatureDuration(10, TimeUnit.MINUTE),
             ),
             usage_tags=["buff", "utility"],
             uses=FeatureUses(max_uses=1, regain_all_on="long rest"),

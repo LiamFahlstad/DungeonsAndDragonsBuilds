@@ -1,5 +1,12 @@
 from Core.Definitions import Sense
-from Model.Content.Feature import Feature, FeatureActivation, ActionType, FeatureTarget
+from Model.Content.Feature import (
+    Feature,
+    FeatureActivation,
+    ActionType,
+    FeatureTarget,
+    FeatureDuration,
+    TimeUnit,
+)
 from Model.Content.Improvements import GrantOrExtendSense
 from CharacterContent.Items.Weapons import WeaponDamageRolls
 from Model.Ledger.LedgerWriter import LedgerWriter
@@ -182,7 +189,9 @@ class CloakOfShadows(Feature):
             origin="Warrior of Shadow Monk Level 17",
             activation=FeatureActivation(
                 action_type=ActionType.ACTION,
-                duration="1 Minute or Until Incapacitated or Bright Light",
+                duration=FeatureDuration(
+                    1, TimeUnit.MINUTE, or_until="Until Incapacitated or Bright Light"
+                ),
             ),
             usage_tags=["buff"],
         )

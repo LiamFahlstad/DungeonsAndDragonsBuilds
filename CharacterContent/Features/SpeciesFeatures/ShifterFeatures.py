@@ -9,6 +9,8 @@ from Model.Content.Feature import (
     ActionType,
     RegainedOn,
     FeatureTarget,
+    FeatureDuration,
+    TimeUnit,
 )
 from Model.Content.Improvements import SkillProficiencyChoice, GrantSense
 from Model.Ledger.LedgerWriter import LedgerWriter
@@ -48,7 +50,8 @@ class Shifting(Feature):
             name="Shifting",
             origin="Shifter Trait",
             activation=FeatureActivation(
-                action_type=ActionType.BONUS_ACTION, duration="1 Minute"
+                action_type=ActionType.BONUS_ACTION,
+                duration=FeatureDuration(1, TimeUnit.MINUTE),
             ),
             usage_tags=["heal", "buff", "damage"],
             uses=FeatureUses(

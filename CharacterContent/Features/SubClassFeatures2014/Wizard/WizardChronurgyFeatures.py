@@ -5,6 +5,8 @@ from Model.Content.Feature import (
     FeatureActivation,
     ActionType,
     FeatureTarget,
+    FeatureDuration,
+    TimeUnit,
 )
 from Core.Rules import MAX_ABILITY_MODIFIER
 from Model.View import CharacterView
@@ -124,7 +126,7 @@ class ArcaneAbeyance(Feature):
         super().__init__(
             name="Arcane Abeyance",
             origin="Chronurgy Wizard Level 10",
-            activation=FeatureActivation(duration="1 Hour"),
+            activation=FeatureActivation(duration=FeatureDuration(1, TimeUnit.HOUR)),
             uses=FeatureUses(max_uses=1, regain_all_on="short or long rest"),
         )
 

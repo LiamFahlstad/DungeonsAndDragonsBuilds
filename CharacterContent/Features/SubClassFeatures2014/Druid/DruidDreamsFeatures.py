@@ -82,7 +82,7 @@ class HearthOfMoonlightAndShadow(Feature):
             origin="Circle of Dreams Druid Level 6",
             usage_tags=["buff"],
             activation=FeatureActivation(
-                duration="Until End of Rest", range="30-Foot Radius"
+                duration="Until End of Rest", range="30 Feet", range_shape="Radius"
             ),
         )
 

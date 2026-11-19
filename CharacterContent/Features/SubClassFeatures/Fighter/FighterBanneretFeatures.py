@@ -61,7 +61,7 @@ class GroupRecovery(Feature):
         super().__init__(
             name="Group Recovery",
             origin="Banneret Fighter Level 3",
-            activation=FeatureActivation(range="30-Foot Emanation"),
+            activation=FeatureActivation(range="30 Feet", range_shape="Emanation"),
             usage_tags=["heal"],
         )
 
@@ -120,7 +120,7 @@ class RallyingSurge(Feature):
         super().__init__(
             name="Rallying Surge",
             origin="Banneret Fighter Level 10",
-            activation=FeatureActivation(range="30-Foot Emanation"),
+            activation=FeatureActivation(range="30 Feet", range_shape="Emanation"),
         )
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":

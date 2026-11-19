@@ -9,6 +9,8 @@ from Model.Content.Feature import (
     ActionType,
     RegainedOn,
     FeatureTarget,
+    FeatureDuration,
+    TimeUnit,
 )
 from Model.Content.Improvements import DamageResistance
 from Model.Ledger.LedgerWriter import LedgerWriter
@@ -129,7 +131,8 @@ class FortifyingSoul(Feature):
             name="Fortifying Soul",
             origin="Winter Walker Ranger Level 7",
             activation=FeatureActivation(
-                action_type=ActionType.ACTION, duration="1 Hour"
+                action_type=ActionType.ACTION,
+                duration=FeatureDuration(1, TimeUnit.HOUR),
             ),
             usage_tags=["heal", "buff"],
             uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
@@ -228,7 +231,7 @@ class FrozenHaunt(Feature):
         super().__init__(
             name="Frozen Haunt",
             origin="Winter Walker Ranger Level 15",
-            activation=FeatureActivation(range="15-Foot Emanation"),
+            activation=FeatureActivation(range="15 Feet", range_shape="Emanation"),
             usage_tags=["damage", "buff"],
             uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )

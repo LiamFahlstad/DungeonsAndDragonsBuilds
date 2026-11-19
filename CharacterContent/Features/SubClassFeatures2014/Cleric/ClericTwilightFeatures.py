@@ -6,6 +6,8 @@ from Model.Content.Feature import (
     ActionType,
     RegainedOn,
     FeatureTarget,
+    FeatureDuration,
+    TimeUnit,
 )
 from Model.Content.Improvements import (
     GrantSense,
@@ -89,7 +91,9 @@ class EyesOfNight(Feature):
             name="Eyes of Night",
             origin="Twilight Domain Cleric Level 3",
             activation=FeatureActivation(
-                action_type=ActionType.ACTION, duration="1 Hour", range="10 Feet"
+                action_type=ActionType.ACTION,
+                duration=FeatureDuration(1, TimeUnit.HOUR),
+                range="10 Feet",
             ),
             usage_tags=["utility"],
         )
@@ -172,7 +176,9 @@ class TwilightSanctuaryChannelDivinity(Feature):
             origin="Twilight Domain Cleric Level 3",
             activation=FeatureActivation(
                 action_type=ActionType.ACTION,
-                duration="1 Minute or Until You Are Incapacitated or Die",
+                duration=FeatureDuration(
+                    1, TimeUnit.MINUTE, or_until="Until You Are Incapacitated or Die"
+                ),
                 range="Self (30-Foot-Radius Sphere)",
             ),
             usage_tags=["heal", "buff"],
@@ -235,7 +241,8 @@ class StepsOfNight(Feature):
             name="Steps of Night",
             origin="Twilight Domain Cleric Level 6",
             activation=FeatureActivation(
-                action_type=ActionType.BONUS_ACTION, duration="1 Minute"
+                action_type=ActionType.BONUS_ACTION,
+                duration=FeatureDuration(1, TimeUnit.MINUTE),
             ),
             usage_tags=["utility"],
             uses=FeatureUses(

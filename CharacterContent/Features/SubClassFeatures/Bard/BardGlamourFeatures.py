@@ -7,6 +7,8 @@ from Model.Content.Feature import (
     FeatureActivation,
     FeatureTarget,
     FeatureUses,
+    FeatureDuration,
+    TimeUnit,
 )
 from Model.View import CharacterView
 from Model.Content.FeatureText import Block, Facts, Paragraph, dc_formula
@@ -17,7 +19,9 @@ class BeguilingMagic(Feature):
         super().__init__(
             name="Beguiling Magic",
             origin="College of Glamour Bard Level 3",
-            activation=FeatureActivation(duration="1 Minute", range="60 Feet"),
+            activation=FeatureActivation(
+                duration=FeatureDuration(1, TimeUnit.MINUTE), range="60 Feet"
+            ),
             usage_tags=["control"],
             uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )
@@ -107,7 +111,9 @@ class MantleOfMajesty(Feature):
             origin="College of Glamour Bard Level 6",
             activation=FeatureActivation(
                 action_type=ActionType.BONUS_ACTION,
-                duration="1 Minute or Until Concentration Ends",
+                duration=FeatureDuration(
+                    1, TimeUnit.MINUTE, or_until="Until Concentration Ends"
+                ),
             ),
             usage_tags=["control"],
             uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
@@ -156,7 +162,9 @@ class UnbreakableMajesty(Feature):
             origin="College of Glamour Bard Level 14",
             activation=FeatureActivation(
                 action_type=ActionType.BONUS_ACTION,
-                duration="1 Minute or Until Incapacitated",
+                duration=FeatureDuration(
+                    1, TimeUnit.MINUTE, or_until="Until Incapacitated"
+                ),
             ),
             usage_tags=["buff"],
         )

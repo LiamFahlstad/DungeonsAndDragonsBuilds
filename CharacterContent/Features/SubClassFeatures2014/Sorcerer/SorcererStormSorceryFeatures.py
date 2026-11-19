@@ -3,6 +3,8 @@ from Model.Content.Feature import (
     FeatureActivation,
     ActionType,
     FeatureTarget,
+    FeatureDuration,
+    TimeUnit,
 )
 from Model.Content.Improvements import DamageImmunity, DamageResistance, GrantLanguage
 from Core.Definitions import Ability, CharacterClass, DamageType, Language
@@ -132,7 +134,7 @@ class StormGuide(Feature):
             name="Storm Guide",
             origin="Storm Sorcery Sorcerer Level 6",
             activation=FeatureActivation(
-                action_type=ActionType.ACTION, range="100-Foot Radius"
+                action_type=ActionType.ACTION, range="100 Feet", range_shape="Radius"
             ),
             usage_tags=["utility"],
         )
@@ -211,7 +213,9 @@ class WindSoul(Feature):
             name="Wind Soul",
             origin="Storm Sorcery Sorcerer Level 18",
             activation=FeatureActivation(
-                action_type=ActionType.ACTION, duration="1 Hour", range="30 Feet"
+                action_type=ActionType.ACTION,
+                duration=FeatureDuration(1, TimeUnit.HOUR),
+                range="30 Feet",
             ),
             usage_tags=["utility", "buff"],
         )

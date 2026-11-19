@@ -4,6 +4,8 @@ from Model.Content.Feature import (
     FeatureActivation,
     ActionType,
     FeatureTarget,
+    FeatureDuration,
+    TimeUnit,
 )
 from Model.Content.Improvements import GrantArmorTraining, GrantWeaponProficiency
 from CharacterContent.Items.Weapons import WeaponProficiency
@@ -57,7 +59,7 @@ class HexbladesCurse(Feature):
             origin="Hexblade Patron Warlock Level 3",
             activation=FeatureActivation(
                 action_type=ActionType.BONUS_ACTION,
-                duration="1 Minute",
+                duration=FeatureDuration(1, TimeUnit.MINUTE),
                 range="30 Feet",
             ),
             usage_tags=["buff", "damage"],

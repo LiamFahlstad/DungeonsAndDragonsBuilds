@@ -17,6 +17,8 @@ from Model.Content.Feature import (
     ActionType,
     FeatureTarget,
     RegainedOn,
+    FeatureDuration,
+    TimeUnit,
 )
 from Core.Rules import MAX_ABILITY_MODIFIER
 from Model.View import CharacterView
@@ -60,7 +62,7 @@ class RadianceOfTheDawn(Feature):
             name="Radiance of the Dawn",
             origin="Light Domain Cleric Level 3",
             activation=FeatureActivation(
-                action_type=ActionType.ACTION, range="30-Foot Emanation"
+                action_type=ActionType.ACTION, range="30 Feet", range_shape="Emanation"
             ),
             usage_tags=["damage"],
         )
@@ -246,8 +248,9 @@ class CoronaOfLight(Feature):
             origin="Light Domain Cleric Level 17",
             activation=FeatureActivation(
                 action_type=ActionType.ACTION,
-                duration="1 Minute",
-                range="60-Foot Radius",
+                duration=FeatureDuration(1, TimeUnit.MINUTE),
+                range="60 Feet",
+                range_shape="Radius",
             ),
             usage_tags=["control"],
             uses=FeatureUses(

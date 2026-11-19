@@ -1,4 +1,11 @@
-from Model.Content.Feature import Feature, FeatureActivation, ActionType, FeatureTarget
+from Model.Content.Feature import (
+    Feature,
+    FeatureActivation,
+    ActionType,
+    FeatureTarget,
+    FeatureDuration,
+    TimeUnit,
+)
 from Model.Content.Improvements import GrantArmorTraining
 from Core.Definitions import ArmorType
 from Model.Ledger.LedgerWriter import LedgerWriter
@@ -95,7 +102,9 @@ class CharmAnimalsAndPlantsChannelDivinity(Feature):
             origin="Nature Domain Cleric Level 3",
             activation=FeatureActivation(
                 action_type=ActionType.ACTION,
-                duration="1 Minute or Until Takes Damage",
+                duration=FeatureDuration(
+                    1, TimeUnit.MINUTE, or_until="Until Takes Damage"
+                ),
                 range="30 Feet",
             ),
             usage_tags=["control"],

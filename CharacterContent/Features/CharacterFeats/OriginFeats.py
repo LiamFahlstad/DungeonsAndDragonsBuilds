@@ -6,6 +6,8 @@ from Model.Content.Feature import (
     FeatureUses,
     RegainedOn,
     regained_on_from_uses,
+    FeatureDuration,
+    TimeUnit,
 )
 from Model.Content.CombatEffect import CombatEffect
 from Model.Content.StandardActions import DASH, DISENGAGE, DODGE, take_actions
@@ -2516,8 +2518,9 @@ class ShadowPact(OriginFeat):
             uses=FeatureUses(max_uses=1, regain_all_on="short or long rest"),
             activation=FeatureActivation(
                 action_type=ActionType.BONUS_ACTION,
-                duration="1 Minute",
-                range="5-Foot Emanation",
+                duration=FeatureDuration(1, TimeUnit.MINUTE),
+                range="5 Feet",
+                range_shape="Emanation",
             ),
         )
 

@@ -4,6 +4,8 @@ from Model.Content.Feature import (
     FeatureActivation,
     ActionType,
     FeatureTarget,
+    FeatureDuration,
+    TimeUnit,
 )
 from Model.View import CharacterView
 from Model.Content.FeatureText import Block, Facts, Paragraph
@@ -125,7 +127,9 @@ class UniversalSpeech(Feature):
             name="Universal Speech",
             origin="College of Eloquence Bard Level 6",
             activation=FeatureActivation(
-                action_type=ActionType.ACTION, duration="1 Hour", range="60 Feet"
+                action_type=ActionType.ACTION,
+                duration=FeatureDuration(1, TimeUnit.HOUR),
+                range="60 Feet",
             ),
             usage_tags=["utility"],
             uses=FeatureUses(max_uses=1, regain_all_on="long rest"),

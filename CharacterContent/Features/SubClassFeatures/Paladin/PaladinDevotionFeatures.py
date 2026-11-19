@@ -4,6 +4,8 @@ from Model.Content.Feature import (
     FeatureActivation,
     FeatureTarget,
     FeatureUses,
+    FeatureDuration,
+    TimeUnit,
 )
 from Model.View import CharacterView
 from Model.Content.FeatureText import Block, Facts, Paragraph, Table
@@ -56,7 +58,11 @@ class SacredWeapon(Feature):
             name="Sacred Weapon",
             origin="Oath of Devotion Paladin Level 3",
             activation=FeatureActivation(
-                duration="10 Minutes or Until Used Again", range="20-Foot Radius"
+                duration=FeatureDuration(
+                    10, TimeUnit.MINUTE, or_until="Until Used Again"
+                ),
+                range="20 Feet",
+                range_shape="Radius",
             ),
             usage_tags=["buff"],
         )
@@ -200,7 +206,7 @@ class HolyNimbus(Feature):
             origin="Oath of Devotion Paladin Level 20",
             activation=FeatureActivation(
                 action_type=ActionType.BONUS_ACTION,
-                duration="10 Minutes or Until Ended",
+                duration=FeatureDuration(10, TimeUnit.MINUTE, or_until="Until Ended"),
             ),
             usage_tags=["buff", "damage"],
             uses=FeatureUses(max_uses=1, regain_all_on="long rest"),

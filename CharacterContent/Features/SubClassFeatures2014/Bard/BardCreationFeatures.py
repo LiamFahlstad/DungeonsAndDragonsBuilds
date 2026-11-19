@@ -6,6 +6,8 @@ from Model.Content.Feature import (
     ActionType,
     RegainedOn,
     FeatureTarget,
+    FeatureDuration,
+    TimeUnit,
 )
 from Model.Creatures.Combatants import (
     DamageTypeEntry,
@@ -252,7 +254,9 @@ class AnimatingPerformance(Feature):
             origin="College of Creation Bard Level 6",
             activation=FeatureActivation(
                 action_type=ActionType.ACTION,
-                duration="1 Hour or Until Reduced to 0 HP or Death",
+                duration=FeatureDuration(
+                    1, TimeUnit.HOUR, or_until="Until Reduced to 0 HP or Death"
+                ),
                 range="30 Feet",
             ),
             usage_tags=["utility", "summon"],

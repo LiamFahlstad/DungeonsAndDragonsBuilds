@@ -40,6 +40,8 @@ from Model.Content.Feature import (
     FeatureTarget,
     FeatureUses,
     RegainedOn,
+    FeatureDuration,
+    TimeUnit,
 )
 from Model.Creatures.Combatants import (
     Alignment,
@@ -475,7 +477,9 @@ class SemblanceOfLife(Feature):
             name="Semblance of Life",
             origin="Vestige Patron Warlock Level 14",
             activation=FeatureActivation(
-                action_type=ActionType.ACTION, duration="1 Hour", range="90 Feet"
+                action_type=ActionType.ACTION,
+                duration=FeatureDuration(1, TimeUnit.HOUR),
+                range="90 Feet",
             ),
             usage_tags=["buff", "summon"],
             uses=FeatureUses(max_uses=1, regain_all_on="long rest"),

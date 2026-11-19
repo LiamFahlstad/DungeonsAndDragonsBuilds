@@ -9,6 +9,8 @@ from Model.Content.Feature import (
     ActionType,
     FeatureTarget,
     FeatureDice,
+    FeatureDuration,
+    TimeUnit,
 )
 from Model.View import CharacterView
 from Model.Content.FeatureText import Block, Facts, Option, Paragraph, dc_formula
@@ -72,7 +74,9 @@ class WordsOfTerror(Feature):
             name="Words of Terror",
             origin="College of Whispers Bard Level 3",
             activation=FeatureActivation(
-                duration="1 Hour or Until Attacked or Damaged"
+                duration=FeatureDuration(
+                    1, TimeUnit.HOUR, or_until="Until Attacked or Damaged"
+                )
             ),
             usage_tags=["control"],
             uses=FeatureUses(max_uses=1, regain_all_on="short or long rest"),
@@ -121,7 +125,7 @@ class MantleOfWhispers(Feature):
             origin="College of Whispers Bard Level 6",
             activation=FeatureActivation(
                 action_type=ActionType.ACTION,
-                duration="1 Hour or Until Ended",
+                duration=FeatureDuration(1, TimeUnit.HOUR, or_until="Until Ended"),
                 range="30 Feet",
             ),
             usage_tags=["utility"],
@@ -192,7 +196,9 @@ class ShadowLore(Feature):
             origin="College of Whispers Bard Level 14",
             activation=FeatureActivation(
                 action_type=ActionType.ACTION,
-                duration="8 Hours or Until Attacked or Damaged",
+                duration=FeatureDuration(
+                    8, TimeUnit.HOUR, or_until="Until Attacked or Damaged"
+                ),
                 range="30 Feet",
             ),
             usage_tags=["control"],

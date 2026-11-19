@@ -5,6 +5,8 @@ from Model.Content.Feature import (
     ActionType,
     RegainedOn,
     FeatureTarget,
+    FeatureDuration,
+    TimeUnit,
 )
 from Model.Content.Improvements import MultiAbilityArmorClass, SkillProficiencyChoice
 from Core.Definitions import Ability, Skill
@@ -261,7 +263,7 @@ class NobleScion(Feature):
             origin="Oath of the Noble Genies Paladin Level 20",
             activation=FeatureActivation(
                 action_type=ActionType.BONUS_ACTION,
-                duration="10 Minutes or Until Ended",
+                duration=FeatureDuration(10, TimeUnit.MINUTE, or_until="Until Ended"),
             ),
             usage_tags=["buff", "utility"],
             uses=FeatureUses(max_uses=1, regain_all_on="long rest"),

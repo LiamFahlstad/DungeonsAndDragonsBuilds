@@ -6,6 +6,8 @@ from Model.Content.Feature import (
     FeatureUses,
     FeatureTarget,
     FeatureDice,
+    FeatureDuration,
+    TimeUnit,
 )
 from Model.Content.Improvements import DamageResistance
 from Model.Ledger.LedgerWriter import LedgerWriter
@@ -71,7 +73,9 @@ class TentacleOfTheDeep(Feature):
             origin="The Fathomless Patron Warlock Level 3",
             activation=FeatureActivation(
                 action_type=ActionType.BONUS_ACTION,
-                duration="1 Minute or Until Another Tentacle Created",
+                duration=FeatureDuration(
+                    1, TimeUnit.MINUTE, or_until="Until Another Tentacle Created"
+                ),
                 range="60 Feet",
             ),
             usage_tags=["damage", "control", "summon"],

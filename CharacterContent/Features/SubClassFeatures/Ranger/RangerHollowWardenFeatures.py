@@ -5,6 +5,8 @@ from Model.Content.Feature import (
     FeatureActivation,
     FeatureTarget,
     FeatureUses,
+    FeatureDuration,
+    TimeUnit,
 )
 from Model.Content.Improvements import ConditionImmunity, SavingThrowBonus
 from Model.View import CharacterView
@@ -56,8 +58,11 @@ class WrathOfTheWild(Feature):
             origin="Hollow Warden Ranger Level 3",
             activation=FeatureActivation(
                 action_type=ActionType.BONUS_ACTION,
-                duration="1 Minute or Until Incapacitated",
-                range="10-Foot Emanation",
+                duration=FeatureDuration(
+                    1, TimeUnit.MINUTE, or_until="Until Incapacitated"
+                ),
+                range="10 Feet",
+                range_shape="Emanation",
             ),
             usage_tags=["buff", "control"],
         )

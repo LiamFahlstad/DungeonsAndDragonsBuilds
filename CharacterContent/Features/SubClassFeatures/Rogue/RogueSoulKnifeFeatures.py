@@ -11,6 +11,8 @@ from Model.Content.Feature import (
     RegainedOn,
     FeatureTarget,
     FeatureDice,
+    FeatureDuration,
+    TimeUnit,
 )
 from Model.View import CharacterView
 from Model.Content.FeatureText import (
@@ -245,7 +247,8 @@ class PsychicVeil(Feature):
             name="Psychic Veil",
             origin="Soulknife Rogue Level 13",
             activation=FeatureActivation(
-                action_type=ActionType.ACTION, duration="1 Hour or Until Dismissed"
+                action_type=ActionType.ACTION,
+                duration=FeatureDuration(1, TimeUnit.HOUR, or_until="Until Dismissed"),
             ),
             usage_tags=["buff"],
             uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
@@ -291,7 +294,7 @@ class RendMind(Feature):
         super().__init__(
             name="Rend Mind",
             origin="Soulknife Rogue Level 17",
-            activation=FeatureActivation(duration="1 Minute"),
+            activation=FeatureActivation(duration=FeatureDuration(1, TimeUnit.MINUTE)),
             usage_tags=["control"],
             uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
         )

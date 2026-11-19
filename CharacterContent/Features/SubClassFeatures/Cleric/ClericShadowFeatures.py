@@ -5,6 +5,8 @@ from Model.Content.Feature import (
     ActionType,
     FeatureTarget,
     RegainedOn,
+    FeatureDuration,
+    TimeUnit,
 )
 from Core.Rules import MAX_ABILITY_MODIFIER
 from Model.View import CharacterView
@@ -55,7 +57,9 @@ class Shadowform(Feature):
             name="Shadowform",
             origin="Shadow Domain Cleric Level 3",
             activation=FeatureActivation(
-                action_type=ActionType.BONUS_ACTION, duration="1 Minute", range="Self"
+                action_type=ActionType.BONUS_ACTION,
+                duration=FeatureDuration(1, TimeUnit.MINUTE),
+                range="Self",
             ),
             usage_tags=["buff", "damage"],
         )

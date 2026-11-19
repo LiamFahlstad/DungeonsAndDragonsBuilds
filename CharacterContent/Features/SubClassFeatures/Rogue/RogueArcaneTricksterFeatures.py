@@ -4,6 +4,8 @@ from Model.Content.Feature import (
     ActionType,
     RegainedOn,
     FeatureTarget,
+    FeatureDuration,
+    TimeUnit,
 )
 from Model.View import CharacterView
 from Model.Content.FeatureText import (
@@ -183,7 +185,8 @@ class SpellThief(Feature):
             name="Spell Thief",
             origin="Arcane Trickster Rogue Level 17",
             activation=FeatureActivation(
-                action_type=ActionType.REACTION, duration="8 Hours"
+                action_type=ActionType.REACTION,
+                duration=FeatureDuration(8, TimeUnit.HOUR),
             ),
             usage_tags=["buff", "control"],
         )

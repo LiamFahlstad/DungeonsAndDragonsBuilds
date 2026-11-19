@@ -5,6 +5,8 @@ from Model.Content.Feature import (
     RegainedOn,
     FeatureUses,
     FeatureTarget,
+    FeatureDuration,
+    TimeUnit,
 )
 from Model.View import CharacterView
 from Model.Content.FeatureText import Block, Facts, Paragraph, Table
@@ -193,7 +195,9 @@ class ExaltedChampion(Feature):
             name="Exalted Champion",
             origin="Oath of the Crown Paladin Level 20",
             activation=FeatureActivation(
-                action_type=ActionType.ACTION, duration="1 Hour", range="30 Feet"
+                action_type=ActionType.ACTION,
+                duration=FeatureDuration(1, TimeUnit.HOUR),
+                range="30 Feet",
             ),
             usage_tags=["buff"],
             uses=FeatureUses(max_uses=1, regain_all_on="long rest"),

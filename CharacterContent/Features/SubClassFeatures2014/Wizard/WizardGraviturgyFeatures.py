@@ -5,6 +5,8 @@ from Model.Content.Feature import (
     ActionType,
     RegainedOn,
     FeatureTarget,
+    FeatureDuration,
+    TimeUnit,
 )
 from Core.Rules import MAX_ABILITY_MODIFIER
 from Model.View import CharacterView
@@ -18,7 +20,9 @@ class AdjustDensity(Feature):
             origin="Graviturgy Wizard Level 3",
             activation=FeatureActivation(
                 action_type=ActionType.ACTION,
-                duration="Up To 1 Minute Or Until Concentration Ends",
+                duration=FeatureDuration(
+                    1, TimeUnit.MINUTE, up_to=True, or_until="Until Concentration Ends"
+                ),
                 range="30 Feet",
             ),
             usage_tags=["buff", "control"],
@@ -185,7 +189,9 @@ class EventHorizon(Feature):
             origin="Graviturgy Wizard Level 14",
             activation=FeatureActivation(
                 action_type=ActionType.ACTION,
-                duration="1 Minute Or Until Concentration Ends",
+                duration=FeatureDuration(
+                    1, TimeUnit.MINUTE, or_until="Until Concentration Ends"
+                ),
                 range="30 Feet",
             ),
             usage_tags=["damage", "control"],

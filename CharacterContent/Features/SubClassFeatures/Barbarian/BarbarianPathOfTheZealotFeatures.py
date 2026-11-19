@@ -6,6 +6,8 @@ from Model.Content.Feature import (
     ActionType,
     FeatureTarget,
     RegainedOn,
+    FeatureDuration,
+    TimeUnit,
 )
 from Model.View import CharacterView
 from Model.Content.FeatureText import Block, Facts, Paragraph
@@ -177,7 +179,10 @@ class RageOfTheGods(Feature):
             name="Rage of the Gods",
             origin="Path Of The Zealot Barbarian Level 14",
             activation=FeatureActivation(
-                duration="1 Minute or Until You Drop to 0 Hit Points", range="30 Feet"
+                duration=FeatureDuration(
+                    1, TimeUnit.MINUTE, or_until="Until You Drop to 0 Hit Points"
+                ),
+                range="30 Feet",
             ),
             usage_tags=["buff", "heal", "utility"],
             uses=FeatureUses(max_uses=1, regain_all_on="long rest"),

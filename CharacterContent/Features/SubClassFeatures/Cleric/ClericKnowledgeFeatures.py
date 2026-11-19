@@ -4,6 +4,8 @@ from Model.Content.Feature import (
     FeatureActivation,
     FeatureTarget,
     FeatureUses,
+    FeatureDuration,
+    TimeUnit,
 )
 from Model.Content.Improvements import (
     SavingThrowProficiencyOrAlternative,
@@ -199,7 +201,8 @@ class DivineForeknowledge(Feature):
             name="Divine Foreknowledge",
             origin="Knowledge Domain Cleric Level 17",
             activation=FeatureActivation(
-                action_type=ActionType.BONUS_ACTION, duration="1 Hour"
+                action_type=ActionType.BONUS_ACTION,
+                duration=FeatureDuration(1, TimeUnit.HOUR),
             ),
             usage_tags=["buff"],
             uses=FeatureUses(max_uses=1, regain_all_on="long rest"),
