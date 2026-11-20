@@ -2093,7 +2093,6 @@ class LightningLure(ClassSpell):
         ),
         usage_tags=("damage", "utility"),
         target=FeatureTarget.ENEMY,
-        area=CombatArea(CombatAreaShape.SPHERE, 15, from_source=True),
     )
     converted_from = RecordStamp("spells_dnd5e.json", "3faa8aad4f28f3e1")
 

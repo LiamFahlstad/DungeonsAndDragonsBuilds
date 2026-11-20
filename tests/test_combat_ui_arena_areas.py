@@ -293,8 +293,11 @@ def test_a_spells_area_and_range_are_its_classs():
         AreaOfEffect(AreaShape.CONE, 15),
         None,
     )
-    lure = area_reading(_spell_pick("Lightning Lure"))[0]
-    assert lure == AreaOfEffect(AreaShape.SPHERE, 15, 5, True)
+    stone = area_reading(_spell_pick("Investiture of Stone"))[0]
+    assert stone == AreaOfEffect(AreaShape.SPHERE, 15, 5, True)
+    # Lightning Lure's "Self (15-foot radius)" is how far it reaches one
+    # creature, not an area.
+    assert area_reading(_spell_pick("Lightning Lure"))[0] is None
     assert area_reading(_spell_pick("Investiture of Wind")) == (
         AreaOfEffect(AreaShape.CUBE, 15),
         60,

@@ -68,16 +68,6 @@ The engine has no way to express a resistance or immunity that holds only under 
 **History**
 - 2026-10-28 main-session: found
 
-### DI-014 · tag_report.py misses usage_tags set as a class attribute
-- **Status:** open
-- **Area:** main-session
-- **Where:** `.claude/skills/usage-tags/tag_report.py:36`
-
-tag_report.py finds tags only as a literal usage_tags=[...] keyword in a call inside the class. A class that sets _USAGE_TAGS = [...] and passes it via a base class's __init__ shows as untagged, although the card renders the tags. Found while adding the Faerun Epic Boons (the agent worked around it by passing the literal in each subclass's super().__init__). Fix: also read a class-level _USAGE_TAGS list, or fall back to instantiating the feature and reading .usage_tags.
-
-**History**
-- 2026-10-28 main-session: found
-
 ### DI-016 · No way to add spells to a class's spell list, so Dragonmark 'Spells of the Mark' and Potent Dragonmark's extra slot are text only
 - **Status:** open
 - **Area:** character-engine-dev
@@ -120,16 +110,6 @@ Fey Sentinel ('When you reach character level 5, you also always have the Plant 
 - 2026-10-28 character-engine-dev: found
 - 2026-10-28 main-session: code-reviewer: wider than Fey Sentinel/Tormentor. _DragonmarkFeat.free_cast_spells (OriginFeats.py:1734) gates the level-3 Spells of the Mark spell the same way (Detection, Finding, Healing, Hospitality, Scribing, Storm, Warding); passing a higher character_level stamps the grant at that level's page instead. Fix in Model/Grants.py (level-aware grant), then drop character_level from these feats.
 - 2026-10-28 main-session: Feats now declare spells via granted_spells() (FeatureSpell). A level-aware grant could be a FeatureSpell field (e.g. from_character_level) resolved in Character._feature_spell_grants, once the character level at read time is available there.
-
-### DI-021 · Character Creator offers private _Base feat classes (e.g. _DragonmarkFeat, _GreaterPlanarPact) as pickable feats
-- **Status:** open
-- **Area:** character-creator-gui
-- **Where:** `Builds/CharacterCreator/Registry.py:425`
-
-concrete_subclasses doesn't skip names starting with '_', so _DragonmarkFeat, _GreaterDragonmarkFeat, _GreaterPlanarPact (and older _SchoolAdept, _AbilityScoreFeat, _SpellcastingOriginFeat) appear in feat pickers; constructing them raises AttributeError (_NAME/_ABILITIES). Fix: filter cls.__name__.startswith('_') in Registry.
-
-**History**
-- 2026-10-28 code-reviewer: found
 
 ### DI-022 · Dragonmark/Planar Pact feats: Shadow Weaver use box, duplicated base-class init, no tests
 - **Status:** open
@@ -514,26 +494,6 @@ prepared_log marks only the campaign's party allies (PartyAllies.mark); an encou
 **History**
 - 2026-11-12 main-session: found
 
-### DI-086 · new-content-check marks Demon Hunter (Ranger) as implemented via RangerHunter.py
-- **Status:** open
-- **Area:** new-content-check
-- **Where:** `.claude/skills/new-content-check/check_new_content.py:303`
-
-subclass_code() matches when the file's significant words are a substring of the subclass name: 'hunter' (RangerHunter.py) is in 'demonhunter', so ranger:demon-hunter gets status have with code RangerHunter.py. Substring matching should compare whole words (or require equality after filler removal) so a shorter subclass name can't claim a longer one.
-
-**History**
-- 2026-11-14 main-session: found
-
-### DI-087 · Assassin 2024 re-grants base Cunning Strike at Rogue subclass levels 13 and 17
-- **Status:** open
-- **Area:** subclass-implementer
-- **Where:** `CharacterContent/Classes/SubClasses2024/RogueAssassin.py:44`, `CharacterContent/Classes/SubClasses2024/RogueAssassin.py:59`
-
-RogueAssassinLevel13 and RogueAssassinLevel17 each add RogueFeatures.CunningStrike() (extends SneakAttack) again, although the 2024 Assassin grants only Envenom Weapons (13) and Death Strike (17). The base class already grants Cunning Strike at Rogue 5, so a level-17 Assassin likely shows three Cunning Strike cards. Probably drop those two add_feature calls (check the Assassin snapshot diff), unless the duplicate is intentional.
-
-**History**
-- 2026-11-14 subclass-implementer: found
-
 ### DI-089 · A subclass can't replace a base-class feature or the level-2 Fighting Style choice (Demon Hunter: Improved Spectral Sight vs Feral Senses, Void Warrior)
 - **Status:** open
 - **Area:** character-engine-dev
@@ -634,16 +594,6 @@ On HEAD (dbf889cd) the target label reads 'Target: Pirate (30 ft., Heavily Obscu
 
 **History**
 - 2026-11-19 main-session: found
-
-### DI-104 · test_a_spells_area_and_range_are_its_classs uses Lightning Lure's false area as its from-source Sphere
-- **Status:** open
-- **Area:** test-bughunter
-- **Where:** `tests/test_combat_ui_arena_areas.py:296`, `CharacterContent/Spells/SpellClasses/Cantrips.py`
-
-Lightning Lure (2014) targets one creature within 15 feet; its 'Self (15-foot radius)' is a range, and the one-off text reading made it CombatArea(SPHERE, 15, from_source=True). Booming Blade and Green-Flame Blade lost the same false 5-foot area (explicit-attributes-plan R9), but Lightning Lure's stays because this test asserts it. Fix: assert Investiture of Stone instead (SPHERE 15, from_source=True, the same AreaOfEffect), then remove Lightning Lure's area=.
-
-**History**
-- 2026-11-19 main session (Claude Opus 5.5): found
 
 ### DI-105 · CombatArea can't say several things spells' areas do
 - **Status:** open
@@ -815,6 +765,18 @@ Every class base adds the level-19 boon with data.add_feature(self.epic_boon) (A
 - 2026-10-28 main-session: marked fixed; Feature.granted_spells() (Model/Spells.py FeatureSpell) is now the one way a feature grants spells; Character.spell_grants grants them with the feature, stamped like it. Boon of Revelry, Siberys and Magic School Mastery declare their spells (listed as '<boon> (<class> Level 19)'); feats, class and subclass features moved off their own grant paths. Tests in tests/test_spell_grants.py.
 - 2026-10-28 main-session: Committed in 5b7d6912
 
+### DI-014 · tag_report.py misses usage_tags set as a class attribute
+- **Status:** fixed · 2026-11-19 · uncommitted
+- **Area:** main-session
+- **Where:** `.claude/skills/usage-tags/tag_report.py:36`
+
+tag_report.py finds tags only as a literal usage_tags=[...] keyword in a call inside the class. A class that sets _USAGE_TAGS = [...] and passes it via a base class's __init__ shows as untagged, although the card renders the tags. Found while adding the Faerun Epic Boons (the agent worked around it by passing the literal in each subclass's super().__init__). Fix: also read a class-level _USAGE_TAGS list, or fall back to instantiating the feature and reading .usage_tags.
+
+**History**
+- 2026-10-28 main-session: found
+- 2026-11-19 main session (Claude Opus 5.5): marked in-progress
+- 2026-11-19 main session (Claude Opus 5.5): marked fixed; tag_report.py also reads a class-body _USAGE_TAGS / USAGE_TAGS list or tuple literal; keyword matching stays list-only (spell classes pass tuples to SpellRules). Counts unchanged: 771 features, 662 spells, check OK
+
 ### DI-020 · tests/test_format_changed.py fails where format_changed.sh is checked out with CRLF (core.autocrlf=true)
 - **Status:** fixed · 2026-11-10 · uncommitted
 - **Area:** character-engine-dev
@@ -828,6 +790,18 @@ In worktree agent-af14d0d23a4dd92e0 (core.autocrlf=true) format_changed.sh is LF
 - 2026-11-09 main-session: 2026-11-09: reproduces per checkout, not per branch. In .claude/worktrees/agent-a4cd6d9a2cf96ff85 git ls-files --eol showed format_changed.sh as i/lf w/crlf (autocrlf checkout) and the 3 tests failed; the main checkout has w/lf and they pass. Git Bash grep/od hide the CRs, so check with git ls-files --eol or Python read_bytes. rm + git -c core.autocrlf=false checkout -- format_changed.sh fixes a checkout without a content change.
 - 2026-11-09 main-session: marked in-progress; Adding .gitattributes '*.sh text eol=lf' in the main checkout.
 - 2026-11-10 main-session: marked fixed; .gitattributes '*.sh text eol=lf' committed with the combat effects 3.3 merge; git ls-files --eol shows attr/text eol=lf on all four .sh files
+
+### DI-021 · Character Creator offers private _Base feat classes (e.g. _DragonmarkFeat, _GreaterPlanarPact) as pickable feats
+- **Status:** fixed · 2026-11-19 · uncommitted
+- **Area:** character-creator-gui
+- **Where:** `Builds/CharacterCreator/Registry.py:425`
+
+concrete_subclasses doesn't skip names starting with '_', so _DragonmarkFeat, _GreaterDragonmarkFeat, _GreaterPlanarPact (and older _SchoolAdept, _AbilityScoreFeat, _SpellcastingOriginFeat) appear in feat pickers; constructing them raises AttributeError (_NAME/_ABILITIES). Fix: filter cls.__name__.startswith('_') in Registry.
+
+**History**
+- 2026-10-28 code-reviewer: found
+- 2026-11-19 main session (Claude Opus 5.5): marked in-progress
+- 2026-11-19 main session (Claude Opus 5.5): marked fixed; Registry.concrete_subclasses skips names starting with '_'; OriginFeat and _AbilityScoreFeat pickers now list no private bases
 
 ### DI-025 · Warlock pact magic slots aren't tracked in the combat UI
 - **Status:** fixed · 2026-11-03 · cbf7e0ae
@@ -1139,6 +1113,30 @@ With no positions, every modifier with a distance in its 'when' is only a note f
 - 2026-11-16 combat-simulator: Arena step 16 (2026-11-16): Prone's Advantage/Disadvantage and Paralyzed's and Unconscious's Critical Hits now count from the map's distance when both creatures are on it (modifiers.settled_by_distance); other distance rules (Fire Shield, Dark One's Blessing, spell range, auras) are still notes, so it stays open.
 - 2026-11-18 main session (arena step 27): marked fixed; Step 27 counts the triggers' distances from the map once it's in use: a when ending in 'within N feet' (Fire Shield, Hellish Rebuke, Warding Flare, Storm's Thunder) is settled by Combat/Effects/triggers.py's settle_when in every firing path, and Dark One's Blessing answers another creature's knockout within 10 feet (CombatTrigger.others_within_ft). With steps 16 (conditions), 20 (reach and range), 23 (Opportunity Attacks) and 24 (Spirit Guardians' area), every distance rule in content is counted; only a distance to something that isn't a creature (a homebrew manifestation) stays a question.
 
+### DI-086 · new-content-check marks Demon Hunter (Ranger) as implemented via RangerHunter.py
+- **Status:** fixed · 2026-11-19 · uncommitted
+- **Area:** new-content-check
+- **Where:** `.claude/skills/new-content-check/check_new_content.py:303`
+
+subclass_code() matches when the file's significant words are a substring of the subclass name: 'hunter' (RangerHunter.py) is in 'demonhunter', so ranger:demon-hunter gets status have with code RangerHunter.py. Substring matching should compare whole words (or require equality after filler removal) so a shorter subclass name can't claim a longer one.
+
+**History**
+- 2026-11-14 main-session: found
+- 2026-11-19 main session (Claude Opus 5.5): marked in-progress
+- 2026-11-19 main session (Claude Opus 5.5): marked fixed; subclass_code prefers an exact name match and won't loosely match a file that is exactly another wiki subclass (LocalIndex.know_subclasses). Demon Hunter already had RangerDemonHunter.py; the same bug had mapped Hunter to RangerDemonHunter.py, corrected in baseline_2024.json
+
+### DI-087 · Assassin 2024 re-grants base Cunning Strike at Rogue subclass levels 13 and 17
+- **Status:** fixed · 2026-11-19 · uncommitted
+- **Area:** subclass-implementer
+- **Where:** `CharacterContent/Classes/SubClasses2024/RogueAssassin.py:44`, `CharacterContent/Classes/SubClasses2024/RogueAssassin.py:59`
+
+RogueAssassinLevel13 and RogueAssassinLevel17 each add RogueFeatures.CunningStrike() (extends SneakAttack) again, although the 2024 Assassin grants only Envenom Weapons (13) and Death Strike (17). The base class already grants Cunning Strike at Rogue 5, so a level-17 Assassin likely shows three Cunning Strike cards. Probably drop those two add_feature calls (check the Assassin snapshot diff), unless the duplicate is intentional.
+
+**History**
+- 2026-11-14 subclass-implementer: found
+- 2026-11-19 main session (Claude Opus 5.5): marked in-progress
+- 2026-11-19 main session (Claude Opus 5.5): marked fixed; Dropped the CunningStrike re-grants from RogueAssassinLevel13/17; they now add only Envenom Weapons and Death Strike. No snapshot covers a level 13+ Assassin
+
 ### DI-088 · World of Warcraft spells (Prayer of Mending, Shadow Word: Pain, Psychic Horror, Void Eruption, ...) aren't in the spell data, so domain spell grants omit them
 - **Status:** fixed · 2026-11-14 · uncommitted
 - **Area:** spell-scraper
@@ -1211,6 +1209,18 @@ parse_area(Flaming Sphere's text) gives AreaOfEffect(SPHERE, 20): the first area
 **History**
 - 2026-11-18 main session (arena step 24): found
 - 2026-11-18 main session (arena step 25): marked fixed; parse_area skips a radius after 'Light in a'/'Light for' and reads 'within N feet of the sphere' as an N-foot Sphere: Flaming Sphere is a 5-foot Sphere (its cell and the four beside it). Light, Continual Flame and other light-only spells now read no area; Holy Weapon, Combustion and Investiture of Flame read the area their text states after the light.
+
+### DI-104 · test_a_spells_area_and_range_are_its_classs uses Lightning Lure's false area as its from-source Sphere
+- **Status:** fixed · 2026-11-19 · uncommitted
+- **Area:** test-bughunter
+- **Where:** `tests/test_combat_ui_arena_areas.py:296`, `CharacterContent/Spells/SpellClasses/Cantrips.py`
+
+Lightning Lure (2014) targets one creature within 15 feet; its 'Self (15-foot radius)' is a range, and the one-off text reading made it CombatArea(SPHERE, 15, from_source=True). Booming Blade and Green-Flame Blade lost the same false 5-foot area (explicit-attributes-plan R9), but Lightning Lure's stays because this test asserts it. Fix: assert Investiture of Stone instead (SPHERE 15, from_source=True, the same AreaOfEffect), then remove Lightning Lure's area=.
+
+**History**
+- 2026-11-19 main session (Claude Opus 5.5): found
+- 2026-11-19 main session (Claude Opus 5.5): marked in-progress
+- 2026-11-19 main session (Claude Opus 5.5): marked fixed; Test asserts Investiture of Stone's SPHERE 15 from-source area and that Lightning Lure has none; removed Lightning Lure's area=. explicit-attributes-plan updated
 
 ### DI-111 · test_imports_point_down and test_with_the_setting_off_a_recharge_is_a_reminder failed on HEAD since Phase 4.2 (R14)
 - **Status:** fixed

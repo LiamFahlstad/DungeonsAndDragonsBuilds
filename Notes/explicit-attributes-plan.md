@@ -378,8 +378,9 @@ entries.
   (40,000 square feet of any shape), Find Traps and Hindsight (what's in
   range or sight), Shadow of Moil (dims light a step), Guardian of Nature
   (Difficult Terrain only), Bones of the Earth (2½-foot pillars), Detect
-  Thoughts (its 30 feet is where it targets). Lightning Lure keeps its false
-  area until its test moves (DI-104); what the model can't say is DI-105.
+  Thoughts (its 30 feet is where it targets). Lightning Lure's false area went
+  once its test moved to Investiture of Stone (DI-104, fixed 2026-11-19); what
+  the model can't say is DI-105.
 
 Remaining text regexes under `Combat/` after Phase 3: group B (Phase 2),
 group D (Phase 4, including `_monster_area` and `ranges.py`'s
@@ -744,7 +745,7 @@ Remaining text reads at runtime after Phase 6: group E (`EffectText`, Phase
 
 - DI-103: `test_the_target_label_says_when_a_target_is_obscured` fails on
   HEAD (dbf889cd), before this plan's changes.
-- DI-104: a test asserts Lightning Lure's false area (R9).
+- DI-104: a test asserts Lightning Lure's false area (R9). Fixed 2026-11-19.
 - DI-106: a summoned spirit's form-only speeds (R13).
 - DI-107: abilities that recharge after a rest aren't spent (R14).
 - DI-105: what `CombatArea` can't say yet, found writing R9's areas. Its
