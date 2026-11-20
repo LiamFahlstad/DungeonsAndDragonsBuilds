@@ -42,9 +42,6 @@ class RogueAssassinLevel13(ClassBuilder.SubclassLevel13):
         data: Grants,
     ) -> None:
         data.add_feature(
-            RogueFeatures.CunningStrike(), extends=RogueFeatures.SneakAttack
-        )
-        data.add_feature(
             RogueAssassinFeatures.EnvenomWeapons(), extends=RogueFeatures.SneakAttack
         )
 
@@ -56,9 +53,6 @@ class RogueAssassinLevel17(ClassBuilder.SubclassLevel17):
         self,
         data: Grants,
     ) -> None:
-        data.add_feature(
-            RogueFeatures.CunningStrike(), extends=RogueFeatures.SneakAttack
-        )
         data.add_feature(RogueAssassinFeatures.DeathStrike())
 
 
