@@ -368,7 +368,13 @@ def test_the_target_label_says_when_a_target_is_obscured(tmp_path):
     ui._select_character(tiger)
     ui._select_target_character(pirate)
     feet = distance_ft(tiger, pirate, ui.arena_settings)
-    assert ui.target_label.text() == f"Target: Pirate ({feet} ft., Heavily Obscured)"
+    # The Pirate's cell is Heavily Obscured, and the Tiger's Darkvision 60 ft.
+    # sees into that Darkness within range (as Dim Light), which the label
+    # adds since the battle map counts senses (step 28).
+    assert ui.target_label.text() == (
+        f"Target: Pirate ({feet} ft., Heavily Obscured,"
+        " Tiger sees it by Darkvision 60 ft.)"
+    )
 
 
 def test_a_hazard_is_a_reminder_on_entering_and_at_a_turn_start(tmp_path):
