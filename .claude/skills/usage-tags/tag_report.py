@@ -34,9 +34,38 @@ def rel(path: Path) -> str:
     return path.relative_to(ROOT).as_posix()
 
 
+# Class-body attributes a base class's __init__ may pass on as usage_tags=self._USAGE_TAGS.
+# (Not plain `usage_tags`: that's an attrs field such as SpellRules', and spell classes pass
+# tuples to SpellRules, which is why the keyword below counts only list literals.)
+TAG_ATTRIBUTES = ("_USAGE_TAGS", "USAGE_TAGS")
+
+
+def _literal_tags(node: ast.expr, kinds=(ast.List,)) -> list | None:
+    if not isinstance(node, kinds):
+        return None
+    return [e.value if isinstance(e, ast.Constant) else ast.unparse(e) for e in node.elts]
+
+
+def _class_attribute_tags(cls: ast.ClassDef) -> tuple[list, int] | None:
+    """A literal `_USAGE_TAGS = [...]` (or annotated) set directly in the class body."""
+    for stmt in cls.body:
+        if isinstance(stmt, ast.Assign):
+            names = [t.id for t in stmt.targets if isinstance(t, ast.Name)]
+        elif isinstance(stmt, ast.AnnAssign) and isinstance(stmt.target, ast.Name):
+            names = [stmt.target.id]
+        else:
+            continue
+        if stmt.value is not None and any(n in TAG_ATTRIBUTES for n in names):
+            tags = _literal_tags(stmt.value, (ast.List, ast.Tuple))
+            if tags is not None:
+                return tags, stmt.value.lineno
+    return None
+
+
 def feature_tags(paths=None) -> list[dict]:
-    """Every class whose own __init__ call passes a literal usage_tags list, plus untagged
-    classes in explicitly requested files (so `file` can show what's missing)."""
+    """Every class whose own __init__ call passes a literal usage_tags list (or whose body sets
+    a literal _USAGE_TAGS for a base class to pass on), plus untagged classes in explicitly
+    requested files (so `file` can show what's missing)."""
     files = paths or sorted(FEATURE_DIR.rglob("*.py"))
     found = []
     for path in files:
@@ -47,10 +76,12 @@ def feature_tags(paths=None) -> list[dict]:
                 if not isinstance(call, ast.Call):
                     continue
                 kw = next((k for k in call.keywords if k.arg == "usage_tags"), None)
-                if kw is not None and isinstance(kw.value, ast.List):
-                    tags = [e.value if isinstance(e, ast.Constant) else ast.unparse(e) for e in kw.value.elts]
+                if kw is not None and _literal_tags(kw.value) is not None:
+                    tags = _literal_tags(kw.value)
                     line = kw.value.lineno
                     break
+            if tags is None and (attribute := _class_attribute_tags(cls)) is not None:
+                tags, line = attribute
             if tags is not None or paths:
                 found.append({"name": cls.name, "where": f"{rel(path)}:{line}", "tags": tags})
     return found

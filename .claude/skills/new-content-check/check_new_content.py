@@ -219,6 +219,10 @@ def significant(words: list[str]) -> str:
     return "".join(w.lower() for w in words if w.lower() not in SUBCLASS_FILLER)
 
 
+def subclass_key(entry: dict) -> str:
+    return significant(entry["name"].replace("-", " ").split())
+
+
 def plain(name: str) -> str:
     """Spell and tool names compared loosely: case ("Commune With Nature"), curly
     apostrophes, and the legacy "Power Word: Stun" colon."""
@@ -236,6 +240,8 @@ class LocalIndex:
         self.subclass_files = sorted(
             (REPO_ROOT / "CharacterContent/Classes/SubClasses2024").glob("*.py")
         )
+        # (class, significant name) of every subclass on the wiki; see know_subclasses.
+        self.subclass_keys: set[tuple[str, str]] = set()
         feature_dir = REPO_ROOT / "CharacterContent/Features"
         self.feat_classes: dict[str, str] = {}
         for py in sorted(feature_dir.rglob("*.py")):
@@ -292,14 +298,25 @@ class LocalIndex:
             return (TOOL_FILE if plain(name) in self.tools else None), None
         raise ValueError(category)
 
+    def know_subclasses(self, entries) -> None:
+        """Remember every wiki subclass, so a file named exactly after one (RangerHunter.py,
+        Hunter) isn't also claimed by a longer name that contains it (Demon Hunter)."""
+        self.subclass_keys = {
+            (e["class"], subclass_key(e)) for e in entries if e.get("class")
+        }
+
     def subclass_code(self, entry: dict) -> str | None:
         cls = entry.get("class")
         if not cls:
             return None
-        key = significant(entry["name"].replace("-", " ").split())
+        key = subclass_key(entry)
         for py in self.subclass_files:
             if py.stem.startswith(cls):
                 rest = significant(re.findall(r"[A-Z][a-z]*", py.stem[len(cls) :]))
+                if rest == key:
+                    return rel(py)
+                if rest and (cls, rest) in self.subclass_keys:
+                    continue  # that file is another subclass's exact match
                 if rest and (rest in key or key in rest):
                     return rel(py)
         return None
@@ -404,6 +421,7 @@ def main():
         "spells": scrape_spells(old["spells"]),
         "tools": scrape_tools(),
     }
+    local.know_subclasses(scraped["subclasses"].values())
     fresh = {
         c: {p: classify(config, local, c, e) for p, e in scraped[c].items()}
         for c in CATEGORIES
