@@ -471,13 +471,18 @@ class Registry:
         )
 
     def concrete_subclasses(self, base) -> list:
-        """Non-abstract subclasses of `base` defined in base's module."""
+        """Non-abstract, public subclasses of `base` defined in base's module.
+
+        Private helpers (a name starting with "_", e.g. _DragonmarkFeat) are
+        shared bases, not choices, and can't be constructed on their own.
+        """
         module = importlib.import_module(base.__module__)
         result = []
         for cls in _classes_defined_in(module):
             if (
                 issubclass(cls, base)
                 and cls is not base
+                and not cls.__name__.startswith("_")
                 and not inspect.isabstract(cls)
             ):
                 result.append(cls)
