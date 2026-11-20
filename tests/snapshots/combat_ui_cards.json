@@ -1519,7 +1519,7 @@
    ]
   ]
  },
- "modifier_scores": {
+ "low_scores": {
   "card": {
    "cursor": "PointingHandCursor",
    "fixed_width": 220,
@@ -1609,14 +1609,14 @@
       "cursor": "PointingHandCursor",
       "mouse_transparent": true,
       "style": "font-family: monospace; font-size: 10px; color: #a0a0b0;",
-      "text": "STR +2  DEX -1  CON +0",
+      "text": "STR +0  DEX -1  CON +0",
       "type": "QLabel"
      },
      {
       "cursor": "PointingHandCursor",
       "mouse_transparent": true,
       "style": "font-family: monospace; font-size: 10px; color: #a0a0b0;",
-      "text": "INT +1  WIS +3",
+      "text": "INT -4  WIS -1",
       "type": "QLabel"
      }
     ],

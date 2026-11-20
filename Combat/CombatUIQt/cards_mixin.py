@@ -824,11 +824,11 @@ def _add_ability_rows(layout: QVBoxLayout, char: dict):
         return
     layout.addWidget(_separator())
 
-    # Raw scores or already modifiers? Any value over 10 means raw scores.
-    is_raw = any(v > 10 for v in ability_scores.values())
+    # Always scores: no stat block or campaign log holds modifiers here, and a
+    # Commoner's 10s are scores (+0), not +10 modifiers.
     entries = []
     for name, val in ability_scores.items():
-        mod = ability_modifier(val) if is_raw else val
+        mod = ability_modifier(val)
         # Saving throws are already modifiers — do not convert
         save = saving_throws.get(name, mod) if saving_throws else mod
         entries.append((name[:3].upper(), mod, save))

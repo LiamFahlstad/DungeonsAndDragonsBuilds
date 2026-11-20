@@ -108,9 +108,10 @@ def _timed(ui, chars):
     return char
 
 
-def _modifier_scores(ui, chars):
+def _low_scores(ui, chars):
+    """Scores of 10 or less are still scores (a Commoner's 10s are +0)."""
     char = chars["Draconic Spirit"]
-    char["Ability Scores"] = {"STR": 2, "DEX": -1, "CON": 0, "INT": 1, "WIS": 3}
+    char["Ability Scores"] = {"STR": 10, "DEX": 8, "CON": 10, "INT": 3, "WIS": 9}
     char["Saving Throws"] = {}
     return char
 
@@ -150,7 +151,7 @@ CASES = {
     "conditions": _conditions,
     "visibility": _visibility,
     "timed_and_action_uses": _timed,
-    "modifier_scores": _modifier_scores,
+    "low_scores": _low_scores,
     **{
         f"selection_{'s' * s}{'a' * a}{'t' * t}": _selection(s, a, t)
         for s, a, t in (
