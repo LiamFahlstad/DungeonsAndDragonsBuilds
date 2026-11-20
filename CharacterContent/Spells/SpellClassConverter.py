@@ -109,7 +109,42 @@ _IMPORTS = {
     "EffectRoll": "Model.Content.CombatEffect",
     "TurnEdge": "Model.Content.CombatEffect",
     "TurnOf": "Model.Content.CombatEffect",
+    # A badge's modifiers (CombatCondition.modifiers).
+    **{
+        name: "Model.Content.CombatModifiers"
+        for name in (
+            "ArmorClass",
+            "ArmorClassBase",
+            "ArmorClassMinimum",
+            "AtTurnEnd",
+            "AtTurnStart",
+            "AttackKind",
+            "AttacksAgainst",
+            "AutoFail",
+            "ConditionImmunity",
+            "CriticalHitsAgainst",
+            "D20Bonus",
+            "D20Mode",
+            "D20Test",
+            "DamageImmunity",
+            "ExtraDamageFrom",
+            "ExtraDamageOnHit",
+            "HasConditions",
+            "HitPointMaximum",
+            "Movement",
+            "Note",
+            "Resistance",  # also the Resistance cantrip's class; see module_with
+            "RollMode",
+            "Size",
+            "Speed",
+            "Vision",
+            "Vulnerability",
+            "WhenHit",
+            "WhoseTurn",
+        )
+    },
     "CombatTrigger": "Model.Content.CombatTriggers",
+    "TriggerAim": "Model.Content.CombatTriggers",
     "TriggerEvent": "Model.Content.CombatTriggers",
     "FeatureTarget": "Model.Content.Feature",
     "Block": "Model.Content.FeatureText",
@@ -529,7 +564,9 @@ def module_with(text: str, classes: dict[str, str]) -> str:
     new_code = "\n\n\n".join(source.rstrip("\n") for source in classes.values())
     if new_code:
         rest = f"{rest}\n\n\n{new_code}" if rest else new_code
-    for name in _names_used(rest):
+    # Not a name the module defines itself: the Resistance cantrip's class
+    # isn't the Resistance modifier.
+    for name in _names_used(rest) - existing - set(classes):
         kept_imports.setdefault(_IMPORTS[name], set()).add(name)
     import_lines = other_imports + [
         f"from {module} import {', '.join(sorted(names))}"
