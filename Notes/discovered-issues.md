@@ -45,19 +45,6 @@ should_be_bloodied = hp > 0 and hp <= max_hp / 2. Bloodied.md: 'A creature is Bl
 **History**
 - 2026-10-28 rules-checker: found
 
-### DI-010 · UPDATE_SNAPSHOTS with -n auto can lose golden updates
-- **Status:** open
-- **Area:** test-bughunter
-- **Where:** `tests/_snapshot_helpers.py`, `pytest.ini:7`
-
-On 2026-10-28, 'UPDATE_SNAPSHOTS=1 ./run_tests.sh -q -k "<5 builds>"' rewrote only 4 of the 5 builds' sheet_hashes.json entries; rerunning for the missing build alone fixed it. Likely several xdist workers read-modify-write the same golden file at once. Fix: lock the golden file during updates, or have the update path run with -p no:xdist / -n 0.
-
-**History**
-- 2026-10-28 main-session: found
-- 2026-10-28 claude-main: Also seen in tests/snapshots/combat_ui_cards.json (via tests/_combat_ui.py check_golden): the races left truncated, invalid JSON, not just lost entries
-- 2026-11-03 main-session: Hit again 2026-11-03: UPDATE_SNAPSHOTS=1 pytest on test_combat_ui_cards/more_info/combatant_snapshots lost writes (combatants.json got 31 of 166 lines). -n 0 works. conftest's xdist_group only takes effect with --dist loadgroup, which pytest.ini doesn't pass.
-- 2026-11-09 main-session: Hit again 2026-11-09 (S.4): an update over every build left JSONDecodeErrors and 27 builds unwritten. Cause confirmed: pytest.ini's addopts has -n auto but no --dist loadgroup, so conftest's xdist_group does nothing. Workaround: UPDATE_SNAPSHOTS=1 ./run_tests.sh -q -n 0 ... Fix: add --dist loadgroup to addopts.
-
 ### DI-013 · Boon effects that apply only while Bloodied are text only
 - **Status:** open
 - **Area:** character-engine-dev
@@ -151,16 +138,6 @@ Suggested fix (character-engine-dev): have MartialArts.apply() register a Weapon
 
 **History**
 - 2026-10-28 rules-checker: found
-
-### DI-027 · Cards read ability scores of 10 or less as modifiers
-- **Status:** open
-- **Area:** combat-simulator
-- **Where:** `Combat/CombatUIQt/cards_mixin.py:_add_ability_rows`
-
-_add_ability_rows treats scores as modifiers unless one is over 10, so a Commoner shows +10 on every ability on its card. No stat block or campaign log holds modifiers. Saves in saves.py no longer do this. The cards golden has a modifier_scores case that pins the old reading.
-
-**History**
-- 2026-10-31 main-session: found
 
 ### DI-035 · Monster Spellcasting entries have lost their spell lists: the text stops at the colon
 - **Status:** open
@@ -374,16 +351,6 @@ Unconscious.md: 'When this condition ends, you remain Prone.' Unconscious now gi
 **History**
 - 2026-11-09 rules-checker: found
 
-### DI-070 · SpellClassConverter's _IMPORTS has no modifier names (D20Bonus, D20Test, ArmorClass, ...), so spell_mechanics.py add can't write a badge with modifiers into a module that doesn't import them yet
-- **Status:** open
-- **Area:** spell-mechanics
-- **Where:** `CharacterContent/Spells/SpellClassConverter.py:80 _IMPORTS`
-
-Plan step 3.3: CombatCondition.modifiers holds Model.Content.CombatModifiers types. source_of() writes them (CombatCondition('Bless', modifiers=(D20Bonus(...),))), but module_with() only adds imports for names in _IMPORTS, so a module without 'from Model.Content.CombatModifiers import ...' gets no import and add's fresh-import check fails. Level1.py has the import by hand (Bless, Shield of Faith). Fix: add the CombatModifiers names (ArmorClass, AttacksAgainst, AutoFail, D20Bonus, D20Mode, D20Test, Resistance, RollMode, ...) to _IMPORTS, and a rubric line for modifiers in the spell-mechanics skill.
-
-**History**
-- 2026-11-09 combat-simulator: found
-
 ### DI-072 · Model/Content/CombatEffect.py's _is_rules_condition duplicates Combat/Effects/modifiers.py's rules_condition (a rules condition's name, or one under a longer name)
 - **Status:** open
 - **Area:** combat-simulator
@@ -585,16 +552,6 @@ Since step 28 the Invisible visibility state is the Invisible condition (DI-068)
 **History**
 - 2026-11-18 claude-opus-5-5: found
 
-### DI-103 · test_the_target_label_says_when_a_target_is_obscured fails on HEAD: the label now adds the viewer's Darkvision
-- **Status:** open
-- **Area:** combat-simulator
-- **Where:** `tests/test_combat_ui_map_painter.py:371`
-
-On HEAD (dbf889cd) the target label reads 'Target: Pirate (30 ft., Heavily Obscured, Tiger sees it by Darkvision 60 ft.)' but the test expects 'Target: Pirate (30 ft., Heavily Obscured)'. The Tiger's Darkvision sees into the painted Darkness, so either the label is right and the test is stale, or the Darkness cell should be out of the Tiger's Darkvision. Found while running the suite for explicit-attributes Phase 3; not caused by it (fails on a clean export of HEAD).
-
-**History**
-- 2026-11-19 main-session: found
-
 ### DI-105 · CombatArea can't say several things spells' areas do
 - **Status:** open
 - **Area:** combat-simulator
@@ -740,6 +697,20 @@ Spell-summoned creatures (e.g. Draconic Spirit) have hp=0 in their generated sta
 - 2026-10-28 claude-main: marked fixed; Initiative screen now asks for HP for any combatant with max HP 0 (Start Combat stays disabled until it's a positive number) and _char_death_state treats max HP 0 as 'HP not set', not dead. Uncommitted in the working tree.
 - 2026-10-28 claude-main: Committed in f6dbd2d2
 
+### DI-010 · UPDATE_SNAPSHOTS with -n auto can lose golden updates
+- **Status:** fixed · 2026-11-20 · uncommitted
+- **Area:** test-bughunter
+- **Where:** `tests/_snapshot_helpers.py`, `pytest.ini:7`
+
+On 2026-10-28, 'UPDATE_SNAPSHOTS=1 ./run_tests.sh -q -k "<5 builds>"' rewrote only 4 of the 5 builds' sheet_hashes.json entries; rerunning for the missing build alone fixed it. Likely several xdist workers read-modify-write the same golden file at once. Fix: lock the golden file during updates, or have the update path run with -p no:xdist / -n 0.
+
+**History**
+- 2026-10-28 main-session: found
+- 2026-10-28 claude-main: Also seen in tests/snapshots/combat_ui_cards.json (via tests/_combat_ui.py check_golden): the races left truncated, invalid JSON, not just lost entries
+- 2026-11-03 main-session: Hit again 2026-11-03: UPDATE_SNAPSHOTS=1 pytest on test_combat_ui_cards/more_info/combatant_snapshots lost writes (combatants.json got 31 of 166 lines). -n 0 works. conftest's xdist_group only takes effect with --dist loadgroup, which pytest.ini doesn't pass.
+- 2026-11-09 main-session: Hit again 2026-11-09 (S.4): an update over every build left JSONDecodeErrors and 27 builds unwritten. Cause confirmed: pytest.ini's addopts has -n auto but no --dist loadgroup, so conftest's xdist_group does nothing. Workaround: UPDATE_SNAPSHOTS=1 ./run_tests.sh -q -n 0 ... Fix: add --dist loadgroup to addopts.
+- 2026-11-20 main session (Claude Opus 5.5): marked fixed; tests/conftest.py pytest_cmdline_main (tryfirst) turns -n off when UPDATE_SNAPSHOTS=1, so every golden update runs in one process. The old xdist_group marker did nothing without --dist loadgroup and missed goldens without 'snapshot' in the node id. Checked: an update run starts no workers; a normal run still starts 6
+
 ### DI-011 · Spell improved descriptions orphaned by the 2024 spell additions
 - **Status:** fixed · 2026-10-28 · ea8a58f5
 - **Area:** spell-improved-descriptions
@@ -827,6 +798,18 @@ The 'ends (concentration broken by casting X)' log line carries action=CAST_SPEL
 - 2026-10-31 main-session: found
 - 2026-10-31 main-session: marked fixed; New casts no longer tag the ended spell as a cast, and replay skips the valueless entries in older logs.
 - 2026-10-31 main-session: marked fixed in 97b31819
+
+### DI-027 · Cards read ability scores of 10 or less as modifiers
+- **Status:** fixed · 2026-11-20 · uncommitted
+- **Area:** combat-simulator
+- **Where:** `Combat/CombatUIQt/cards_mixin.py:_add_ability_rows`
+
+_add_ability_rows treats scores as modifiers unless one is over 10, so a Commoner shows +10 on every ability on its card. No stat block or campaign log holds modifiers. Saves in saves.py no longer do this. The cards golden has a modifier_scores case that pins the old reading.
+
+**History**
+- 2026-10-31 main-session: found
+- 2026-11-20 main session (Claude Opus 5.5): marked in-progress
+- 2026-11-20 main session (Claude Opus 5.5): marked fixed; _add_ability_rows always reads scores (ability_modifier). Golden case modifier_scores replaced by low_scores (10/8/10/3/9 -> +0/-1/+0/-4/-1)
 
 ### DI-028 · Player timers and condition notes do not survive replaying the player log
 - **Status:** fixed · 2026-10-31 · 5247bcd7
@@ -1067,6 +1050,18 @@ Plan step 3.3 gave CombatCondition a modifiers tuple (Model/Content/CombatModifi
 - 2026-11-09 combat-simulator: found
 - 2026-11-11 claude-opus-5-5: marked fixed; LogJSONEncoder writes a MonsterAbility's combat_effects with CombatEffect.to_dict at any depth (Combat/EncounterLogs.py _encode); test_a_badge_with_modifiers_comes_back_from_the_log
 
+### DI-070 · SpellClassConverter's _IMPORTS has no modifier names (D20Bonus, D20Test, ArmorClass, ...), so spell_mechanics.py add can't write a badge with modifiers into a module that doesn't import them yet
+- **Status:** fixed · 2026-11-20 · uncommitted
+- **Area:** spell-mechanics
+- **Where:** `CharacterContent/Spells/SpellClassConverter.py:80 _IMPORTS`
+
+Plan step 3.3: CombatCondition.modifiers holds Model.Content.CombatModifiers types. source_of() writes them (CombatCondition('Bless', modifiers=(D20Bonus(...),))), but module_with() only adds imports for names in _IMPORTS, so a module without 'from Model.Content.CombatModifiers import ...' gets no import and add's fresh-import check fails. Level1.py has the import by hand (Bless, Shield of Faith). Fix: add the CombatModifiers names (ArmorClass, AttacksAgainst, AutoFail, D20Bonus, D20Mode, D20Test, Resistance, RollMode, ...) to _IMPORTS, and a rubric line for modifiers in the spell-mechanics skill.
+
+**History**
+- 2026-11-09 combat-simulator: found
+- 2026-11-20 main session (Claude Opus 5.5): marked in-progress
+- 2026-11-20 main session (Claude Opus 5.5): marked fixed; _IMPORTS now has every public CombatModifiers name and TriggerAim; module_with never imports a name the module defines itself (the Resistance cantrip vs the Resistance modifier). Output for every existing SpellClasses module is identical to before. There is no spell-mechanics skill any more, so no rubric line was added
+
 ### DI-071 · A monster's Concentration save rolled by the simulator ignores its modifiers (Bless's 1d4, Exhaustion's note)
 - **Status:** fixed · 2026-11-10 · uncommitted
 - **Area:** combat-simulator
@@ -1209,6 +1204,17 @@ parse_area(Flaming Sphere's text) gives AreaOfEffect(SPHERE, 20): the first area
 **History**
 - 2026-11-18 main session (arena step 24): found
 - 2026-11-18 main session (arena step 25): marked fixed; parse_area skips a radius after 'Light in a'/'Light for' and reads 'within N feet of the sphere' as an N-foot Sphere: Flaming Sphere is a 5-foot Sphere (its cell and the four beside it). Light, Continual Flame and other light-only spells now read no area; Holy Weapon, Combustion and Investiture of Flame read the area their text states after the light.
+
+### DI-103 · test_the_target_label_says_when_a_target_is_obscured fails on HEAD: the label now adds the viewer's Darkvision
+- **Status:** fixed · 2026-11-20 · uncommitted
+- **Area:** combat-simulator
+- **Where:** `tests/test_combat_ui_map_painter.py:371`
+
+On HEAD (dbf889cd) the target label reads 'Target: Pirate (30 ft., Heavily Obscured, Tiger sees it by Darkvision 60 ft.)' but the test expects 'Target: Pirate (30 ft., Heavily Obscured)'. The Tiger's Darkvision sees into the painted Darkness, so either the label is right and the test is stale, or the Darkness cell should be out of the Tiger's Darkvision. Found while running the suite for explicit-attributes Phase 3; not caused by it (fails on a clean export of HEAD).
+
+**History**
+- 2026-11-19 main-session: found
+- 2026-11-20 main session (Claude Opus 5.5): marked fixed; The label is right: Darkvision 60 ft. sees the painted Darkness 30 ft. away as Dim Light, and step 28 deliberately added 'X sees it by ...'. The test now expects that note.
 
 ### DI-104 · test_a_spells_area_and_range_are_its_classs uses Lightning Lure's false area as its from-source Sphere
 - **Status:** fixed · 2026-11-19 · uncommitted

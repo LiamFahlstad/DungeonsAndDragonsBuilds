@@ -7,16 +7,21 @@ import os
 import pytest
 
 
-def pytest_collection_modifyitems(items):
-    """When UPDATE_SNAPSHOTS=1, force all snapshot-update tests onto a single
-    xdist worker so their concurrent read-modify-write on the golden JSON files
-    doesn't corrupt them."""
+@pytest.hookimpl(tryfirst=True)
+def pytest_cmdline_main(config):
+    """When UPDATE_SNAPSHOTS=1, run in one process (pytest.ini's -n auto off).
+
+    Every golden update is a read-modify-write of a shared JSON file
+    (tests/snapshots/*.json); xdist workers doing that at once lost entries
+    and left truncated JSON (DI-010). Grouping them with xdist_group needs
+    --dist loadgroup and a marker on every golden test, including ones
+    without "snapshot" in their name (the combat UI goldens), so this
+    serializes the whole run instead. Runs before xdist reads -n."""
     if os.environ.get("UPDATE_SNAPSHOTS") != "1":
         return
-    marker = pytest.mark.xdist_group("snapshot_update")
-    for item in items:
-        if "snapshot" in item.nodeid:
-            item.add_marker(marker)
+    if getattr(config.option, "numprocesses", None):
+        config.option.numprocesses = 0
+        config.option.dist = "no"
 
 
 from Model.AbilityScores import StandardArrayAbilityScores
