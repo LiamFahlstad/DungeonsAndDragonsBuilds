@@ -5,7 +5,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import TextIO
 
 import requests
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, Tag
 from tqdm import tqdm
 
 BASE_URL = "https://dnd2024.wikidot.com/"
@@ -14,6 +14,22 @@ BASE_URL = "https://dnd2024.wikidot.com/"
 # (e.g. "Cloud Of Daggers" instead of "Cloud of Daggers"). Lowercase them
 # whenever they're not the first word, to match standard spell-name casing.
 _LOWERCASE_MIDWORDS = {"of", "and", "with", "without"}
+
+
+def line_after(label: Tag) -> str:
+    """The text after a bold stat label up to the end of its line (the next
+    <br> or label), links included: Shield's casting time runs on past "...or
+    targeted by the" into its <a>Magic Missile</a> link and " spell" (DI-064),
+    which the text node right after the label alone stops short of."""
+    parts = []
+    for node in label.next_siblings:
+        if isinstance(node, Tag):
+            if node.name in ("br", "strong"):
+                break
+            parts.append(node.get_text())
+        else:
+            parts.append(str(node))
+    return "".join(parts).strip()
 
 
 def normalize_spell_name(name: str) -> str:
@@ -206,23 +222,23 @@ class DnD2024SpellParser:
         if not label:
             return None
 
-        return label.next_sibling.strip()
+        return line_after(label)
 
     def get_range(self):
         label = self.col1.find("strong", string="Range:")
         if not label:
             return None
 
-        return label.next_sibling.strip()
+        return line_after(label)
 
     def get_components(self):
         label = self.col1.find("strong", string="Components:")
         if label:
-            return label.next_sibling.strip()
+            return line_after(label)
 
         label = self.col1.find("strong", string="Component:")
         if label:
-            return label.next_sibling.strip()
+            return line_after(label)
 
         return None
 
@@ -231,7 +247,7 @@ class DnD2024SpellParser:
         if not label:
             return None
 
-        return label.next_sibling.strip()
+        return line_after(label)
 
     def get_description(self):
         # Skip anything inside a table: stat blocks (e.g. Battle Familiar's)

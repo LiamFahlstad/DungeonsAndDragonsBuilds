@@ -290,16 +290,6 @@ tests/test_layering.py lets content import only core/helpers/records/model/conte
 **History**
 - 2026-11-05 main-session: found
 
-### DI-058 · Pyright: 18 errors in tests/test_combat_ui_summons.py around lines 830-864
-- **Status:** open
-- **Area:** combat-simulator
-- **Where:** `tests/test_combat_ui_summons.py:830`
-
-./typecheck.sh tests/test_combat_ui_summons.py reports 18 errors, all in older code at lines ~805-870 (not in the S2.10-S2.12 hunks). Found by combat-simulator and code-reviewer on 2026-11-05; not looked into.
-
-**History**
-- 2026-11-05 main-session: found
-
 ### DI-059 · Tests: intermittent UnicodeDecodeError ('charmap' codec, byte 0x8d) in a background thread
 - **Status:** open
 - **Area:** test-bughunter
@@ -309,37 +299,6 @@ One full ./run_tests.sh -q run on 2026-11-05 ended '9303 passed ... 1 warning' w
 
 **History**
 - 2026-11-05 main-session: found
-
-### DI-060 · pyright errors in two combat-effects test files (test doubles not typed as CharacterView / Combatant)
-- **Status:** open
-- **Area:** test-bughunter
-- **Where:** `tests/test_feature_combat_effects.py:204`, `tests/test_monster_combat_effects.py:349`
-
-./typecheck.sh on these files reports: _ArtificerAt passed where Feature.combat_effects expects a CharacterView (a duck-typed stub), and a Combatant constructed without combatant_type/hp/ac/temp_hp/conditions. Both predate the combat-effects refactor (2026-11-08) and the tests pass. Fix: give the stubs the type the call expects (a Protocol, or cast in the test), or build a real object.
-
-**History**
-- 2026-11-08 main-session: found
-- 2026-11-08 main-session: Also about 30 errors of the same kind (Optional Qt accessors, QTest.keyClick overloads) in tests/test_combat_ui_custom_effect.py and tests/test_combat_ui_player_server.py, outside the lines changed on 2026-11-09.
-
-### DI-061 · Homebrew Mira, Princess of the Loop has 6 MonsterAbility entries; the house rule is at most 4
-- **Status:** open
-- **Area:** monster-balancer
-- **Where:** `Combat/Monsters/CR_5/monsters_homebrew.py:MiraPrincessOfTheLoop`
-
-check_monster.py 'Mira, Princess of the Loop': score 0.55 OK, implied CR 5.15 OK, but 'abilities 6/4 FAIL house rule is at most 4 (1 trait)'. Present since the monster was added (c1a7b8aa); not caused by the combat-effects refactor (2026-11-08), which only changed Rewind's temp_hp to CombatHitPoints('10'). Fix: merge or drop abilities to 4 and rebalance to 0.4-0.6, or record an explicit exception if the campaign needs all six.
-
-**History**
-- 2026-11-08 main-session: found
-
-### DI-064 · Shield's casting time is cut off in the scraped spell JSON ('...or targeted by the')
-- **Status:** open
-- **Area:** content-scraper
-- **Where:** `CharacterContent/Spells/spells_dnd2024.json`, `CharacterContent/Spells/spells_dnd5e.json`
-
-Both dnd2024 and dnd5e records for Shield end their casting_time at 'targeted by the'; spells_aidedd.json has the full text '...targeted by the Magic Missile spell'. The wikidot scraper likely stops at a link inside the trigger. Fix in the scraper (not by hand-editing the scraped JSON), then re-scrape.
-
-**History**
-- 2026-11-08 main-session: found
 
 ### DI-073 · Combat UI: a non-concentration spell cast with Cast Spell keeps its badge after its duration runs out (Divine Favor, Mage Armor)
 - **Status:** open
@@ -380,16 +339,6 @@ A target with a Bless badge typed by hand (Custom Condition) that is then Blesse
 
 **History**
 - 2026-11-10 claude (combat effects 3.6): found
-
-### DI-082 · Turn-panel button of a monster action with combat_effects drops the effect's condition and notes
-- **Status:** open
-- **Area:** combat-simulator
-- **Where:** `Combat/CombatUIQt/monster_actions.py:290`
-
-parse_action's combat_effects path builds the MonsterAction from effects[0] (to_hit, damage) but sets no rider/riders, so the button's hit neither applies nor mentions the effect's conditions or notes. Manifestation of Durmor's Molten Strike button rolls the Slam numbers, but a hit gives no Prone and no 'Also:' reminder (Prone / lava), while the picker's 'Molten Strike: Slam' row applies Prone. GMs using the button lose the rider silently.
-
-**History**
-- 2026-11-12 main-session: found
 
 ### DI-089 · A subclass can't replace a base-class feature or the level-2 Fighting Style choice (Demon Hunter: Improved Spectral Sight vs Feral Senses, Void Warrior)
 - **Status:** open
@@ -910,6 +859,32 @@ damage_mixin only notes what players learn from an attack roll (known AC etc.) w
 - 2026-11-05 combat-simulator: marked in-progress
 - 2026-11-05 combat-simulator: marked fixed; _resolve_attack_roll uses player_view._seen(source, _player_names(...)); test test_an_invisible_players_summons_attack_roll_shows_the_targets_ac; uncommitted
 
+### DI-058 · Pyright: 18 errors in tests/test_combat_ui_summons.py around lines 830-864
+- **Status:** fixed · 2026-11-21 · uncommitted
+- **Area:** combat-simulator
+- **Where:** `tests/test_combat_ui_summons.py:830`
+
+./typecheck.sh tests/test_combat_ui_summons.py reports 18 errors, all in older code at lines ~805-870 (not in the S2.10-S2.12 hunks). Found by combat-simulator and code-reviewer on 2026-11-05; not looked into.
+
+**History**
+- 2026-11-05 main-session: found
+- 2026-11-21 main session (Claude Opus 5.5): marked in-progress
+- 2026-11-21 main session (Claude Opus 5.5): marked fixed; All 18 came from _drake_owner's tuple[dict, object, object, object]; it, _sheet and _spec_of now return Character / Feature / SummonSpec. 0 errors
+
+### DI-060 · pyright errors in two combat-effects test files (test doubles not typed as CharacterView / Combatant)
+- **Status:** fixed · 2026-11-21 · uncommitted
+- **Area:** test-bughunter
+- **Where:** `tests/test_feature_combat_effects.py:204`, `tests/test_monster_combat_effects.py:349`
+
+./typecheck.sh on these files reports: _ArtificerAt passed where Feature.combat_effects expects a CharacterView (a duck-typed stub), and a Combatant constructed without combatant_type/hp/ac/temp_hp/conditions. Both predate the combat-effects refactor (2026-11-08) and the tests pass. Fix: give the stubs the type the call expects (a Protocol, or cast in the test), or build a real object.
+
+**History**
+- 2026-11-08 main-session: found
+- 2026-11-08 main-session: Also about 30 errors of the same kind (Optional Qt accessors, QTest.keyClick overloads) in tests/test_combat_ui_custom_effect.py and tests/test_combat_ui_player_server.py, outside the lines changed on 2026-11-09.
+- 2026-11-21 main session (Claude Opus 5.5): marked in-progress
+- 2026-11-21 main session (Claude Opus 5.5): marked fixed; 0 errors in all four files: cast the _ArtificerAt stub to CharacterView; narrowed Optionals (until, Bless's effects, Qt layout/items/badges/clipboard, the handler timeout); typed helpers _height, _repeat_save, _categories. QTest.keyClick/keyClicks go through _key: PyQt6's stub declares them without @staticmethod, so that is the one pyright ignore (plus the reflective cls() in the all-monsters sweep)
+- 2026-11-21 main session (Claude Opus 5.5): Correction: the _ArtificerAt stub gets a pyright ignore, not typing.cast, which tests/test_layering.py's test_no_cast forbids
+
 ### DI-062 · Five spell records have malformed components text, so SpellClassConverter leaves them as JSON
 - **Status:** fixed · 2026-11-09 · cfc58eaa
 - **Area:** content-scraper
@@ -934,6 +909,18 @@ SpellRules stores components as Component flags plus a material (Notes/combat-ef
 **History**
 - 2026-11-08 main-session: found
 - 2026-11-09 main-session: marked fixed; SpellRules.school_note (Q15): the converter reads the note off the school, and 'Wizard (Dunamancy)' as Wizard with that note (the school's when it has none: Sapping Sting). The card shows the school as before. All 15 are classes now.
+
+### DI-064 · Shield's casting time is cut off in the scraped spell JSON ('...or targeted by the')
+- **Status:** fixed · 2026-11-21 · uncommitted
+- **Area:** content-scraper
+- **Where:** `CharacterContent/Spells/spells_dnd2024.json`, `CharacterContent/Spells/spells_dnd5e.json`
+
+Both dnd2024 and dnd5e records for Shield end their casting_time at 'targeted by the'; spells_aidedd.json has the full text '...targeted by the Magic Missile spell'. The wikidot scraper likely stops at a link inside the trigger. Fix in the scraper (not by hand-editing the scraped JSON), then re-scrape.
+
+**History**
+- 2026-11-08 main-session: found
+- 2026-11-21 main session (Claude Opus 5.5): marked in-progress
+- 2026-11-21 main session (Claude Opus 5.5): marked fixed; Both wikidot spell scrapers read a stat line through line_after (every sibling up to the next <br> or label, links included), not just the text node before the first link. Re-fetching Shield plus 46 sample spells (every reaction spell among them) changed only Shield. Its casting_time in spells_dnd2024.json and spells_dnd5e.json is the scraper's new output; Level1.Shield's trigger merged and --accept'ed (no drift). Sheets: only the Shield line changed (58 pages)
 
 ### DI-065 · 2014 spell records' "ritual": true is ignored, so 2014-only ritual spells don't show as rituals
 - **Status:** fixed · 2026-11-09 · uncommitted
@@ -1082,6 +1069,18 @@ effect_options builds by_name keyed by the name with '(Costs N Actions)' strippe
 **History**
 - 2026-11-12 main-session: found
 - 2026-11-21 main session (Claude Opus 5.5): marked fixed; Three causes: NamedAttackAction never set uses_ability (now defaults to attack_name); MonsterAbilityText.read_uses treated 'Chain Lash (Costs 1 Action)' as itself (a legendary cost now makes it another ability; '(Recharge 6)' still is itself); effect_options' by_name let the legendary entry overwrite the attack (first of a name now wins). Bell Saint's Chain Lash and Durmor's Molten Strike legendary rows now roll their attack (Molten Strike with its Prone)
+
+### DI-082 · Turn-panel button of a monster action with combat_effects drops the effect's condition and notes
+- **Status:** fixed · 2026-11-21 · uncommitted
+- **Area:** combat-simulator
+- **Where:** `Combat/CombatUIQt/monster_actions.py:290`
+
+parse_action's combat_effects path builds the MonsterAction from effects[0] (to_hit, damage) but sets no rider/riders, so the button's hit neither applies nor mentions the effect's conditions or notes. Manifestation of Durmor's Molten Strike button rolls the Slam numbers, but a hit gives no Prone and no 'Also:' reminder (Prone / lava), while the picker's 'Molten Strike: Slam' row applies Prone. GMs using the button lose the rider silently.
+
+**History**
+- 2026-11-12 main-session: found
+- 2026-11-21 main session (Claude Opus 5.5): marked in-progress
+- 2026-11-21 main session (Claude Opus 5.5): marked fixed; The notes half was already shown. Now MonsterAction.conditions holds its attack's conditions, the button's hit line says 'On a hit: Prone', and its PendingAttack carries a dice-free rider CustomEffect (conditions_mixin.hit_rider from its picker row) that _do_apply_damage gives each target hit through the picker's own _give_effect_conditions. Test: test_an_action_buttons_hit_gives_what_its_row_does
 
 ### DI-083 · An encounter's own allies (EncounterSpec.allies) count as enemies for enemy_only triggers
 - **Status:** fixed · 2026-11-21 · 697f9832
@@ -1269,3 +1268,14 @@ A malicious website opened by someone on the same Wi-Fi could rebind its domain 
 
 **History**
 - 2026-11-01 main-session: found
+
+### DI-061 · Homebrew Mira, Princess of the Loop has 6 MonsterAbility entries; the house rule is at most 4
+- **Status:** wontfix
+- **Area:** monster-balancer
+- **Where:** `Combat/Monsters/CR_5/monsters_homebrew.py:MiraPrincessOfTheLoop`
+
+check_monster.py 'Mira, Princess of the Loop': score 0.55 OK, implied CR 5.15 OK, but 'abilities 6/4 FAIL house rule is at most 4 (1 trait)'. Present since the monster was added (c1a7b8aa); not caused by the combat-effects refactor (2026-11-08), which only changed Rewind's temp_hp to CombatHitPoints('10'). Fix: merge or drop abilities to 4 and rebalance to 0.4-0.6, or record an explicit exception if the campaign needs all six.
+
+**History**
+- 2026-11-08 main-session: found
+- 2026-11-21 main session (Claude Opus 5.5): marked wontfix; The user, 2026-11-21: Mira keeps her 6 abilities; this one should not be fixed

@@ -1793,7 +1793,7 @@ class Shield(ClassSpell):
         classes=(CharacterClass.SORCERER, CharacterClass.WIZARD),
         casting_time=CastingTime(
             CastingTimeType.REACTION,
-            trigger="which you take when you are hit by an attack roll or targeted by the",
+            trigger="which you take when you are hit by an attack roll or targeted by the Magic Missile spell",
         ),
         range=Range(RangeType.SELF),
         components=Components(verbal=True, somatic=True),
@@ -1803,7 +1803,7 @@ class Shield(ClassSpell):
         usage_tags=("buff", "control"),
         target=FeatureTarget.SELF,
     )
-    converted_from = RecordStamp("spells_dnd2024.json", "7f57072fb9646fc0")
+    converted_from = RecordStamp("spells_dnd2024.json", "404d24a64f239264")
 
     @property
     def improved_description(self) -> list[Block]:

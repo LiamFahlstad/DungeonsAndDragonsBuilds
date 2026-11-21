@@ -6287,7 +6287,7 @@
             "Sorcerer",
             "Wizard"
         ],
-        "casting_time": "Reaction, which you take when you are hit by an attack roll or targeted by the",
+        "casting_time": "Reaction, which you take when you are hit by an attack roll or targeted by the Magic Missile spell",
         "range": "Self",
         "components": "V, S",
         "duration": "1 round",
