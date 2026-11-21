@@ -192,6 +192,30 @@ _ATTACK_KINDS: dict[bool | None, AttackKind | None] = {
 }
 
 
+def _option_duration(option: EffectOption) -> dict | None:
+    """How long what a picked row gives lasts, as a CustomEffect says it."""
+    if option.until is not None:
+        return {"until": option.until[0], "of": option.until[1]}
+    if option.duration_seconds:
+        return {"seconds": option.duration_seconds}
+    return None
+
+
+def hit_rider(option: EffectOption) -> CustomEffect | None:
+    """What a hit with `option` gives the target beside its damage (Molten
+    Strike's Prone), as the Custom Effect dialog would, with no damage of its
+    own: for a monster's action button, whose damage goes through the Damage
+    field (DI-082). None when the row gives nothing."""
+    if not option.condition:
+        return None
+    return CustomEffect(
+        name=option.name,
+        condition=option.condition,
+        duration=_option_duration(option),
+        pick=option,
+    )
+
+
 def _picked_effect(option: EffectOption, last_save: dict) -> CustomEffect | None:
     """What the Custom Effect dialog applies for `option` picked and nothing
     edited: its roll, damage rolled now (twice over for a Critical Hit),
@@ -211,11 +235,7 @@ def _picked_effect(option: EffectOption, last_save: dict) -> CustomEffect | None
         hit_points, problem = read_hit_points(text, option.amount_kind)
     if problem:
         return None
-    duration: dict | None = None
-    if option.until is not None:
-        duration = {"until": option.until[0], "of": option.until[1]}
-    elif option.duration_seconds:
-        duration = {"seconds": option.duration_seconds}
+    duration = _option_duration(option)
     dc = option.dc if option.dc is not None else last_save.get("dc")
     bonus = option.bonus if option.bonus is not None else last_save.get("bonus")
     return CustomEffect(
@@ -1154,20 +1174,7 @@ class ConditionsMixin(CombatWindowState):
             for condition in effect.pick.ends_conditions if effect.pick else ():
                 if condition in target["conditions"]:
                     self._remove_condition_from(target, condition, source=source)
-            linked = []
-            for condition in effect.conditions:
-                row = {"target": target["name"], "condition": condition}
-                already_had = condition in target["conditions"]
-                held_by_a_spell = self._held_by_effect(row)
-                held_by_a_badge = is_linked(target, condition)
-                if self._give_effect_condition(target, effect, condition):
-                    if held_by_a_spell or not already_had:
-                        applied.append(row)
-                    if held_by_a_badge or not already_had:
-                        linked.append(condition)
-            self._give_pick_badge(target, effect, linked)
-            if effect.repeat_save and effect.ability is not None:
-                self._track_repeat_save(target, effect)
+            applied += self._give_effect_conditions(target, effect)
 
         pick = effect.pick
         if pick is not None and pick.is_described and source is not None:
@@ -1478,6 +1485,28 @@ class ConditionsMixin(CombatWindowState):
             target = self._find_character_by_name(row["target"])
             if target is not None:
                 link_concentration(target, row["condition"], caster["name"])
+
+    def _give_effect_conditions(self, target: dict, effect: CustomEffect) -> list[dict]:
+        """Give target every condition of effect that lands (one it's immune
+        to doesn't), its pick's badge and its repeat save: what the Custom
+        Effect dialog does to a target it hit or that failed its save, and a
+        monster's action button to the target its hit lands on. Returns the
+        ({"target", "condition"}) rows a running effect now holds."""
+        applied, linked = [], []
+        for condition in effect.conditions:
+            row = {"target": target["name"], "condition": condition}
+            already_had = condition in target["conditions"]
+            held_by_a_spell = self._held_by_effect(row)
+            held_by_a_badge = is_linked(target, condition)
+            if self._give_effect_condition(target, effect, condition):
+                if held_by_a_spell or not already_had:
+                    applied.append(row)
+                if held_by_a_badge or not already_had:
+                    linked.append(condition)
+        self._give_pick_badge(target, effect, linked)
+        if effect.repeat_save and effect.ability is not None:
+            self._track_repeat_save(target, effect)
+        return applied
 
     def _give_effect_condition(
         self, target: dict, effect: CustomEffect, condition: str

@@ -437,6 +437,38 @@ def _dice(monkeypatch, *rolls: int):
     monkeypatch.setattr(random, "randint", lambda low, high: next(results))
 
 
+def test_an_action_buttons_hit_gives_what_its_row_does(tmp_path, monkeypatch):
+    """Durmor's Molten Strike button: its hit says and, once its damage is
+    applied, gives the Prone its picker row gives (DI-082); a miss gives
+    nothing."""
+    from Combat.Monsters.CR_6.monsters_homebrew import ManifestationOfDurmor
+
+    ui = make_ui(tmp_path, [ManifestationOfDurmor(), Tiger()])
+    _start(ui, 15, 10)
+    durmor, tiger = ui.characters
+    ui._select_character(durmor)
+    ui._select_target_character(tiger)
+    tiger["ac"] = 12
+    button = next(
+        b
+        for b in ui._actions_box.findChildren(QPushButton)
+        if b.isVisibleTo(ui._actions_box) and b.text().split("\n")[0] == "Molten Strike"
+    )
+    monkeypatch.setattr(random, "randint", lambda low, high: min(high, 10))
+    button.click()
+    assert "On a hit: Prone" in ui._action_result_label.text()
+    ui.damage_input.returnPressed.emit()
+    assert tiger["hp"] < tiger["max_hp"]
+    assert "Prone" in tiger["conditions"]
+    ui._undo_last()
+    assert "Prone" not in tiger["conditions"]
+
+    monkeypatch.setattr(random, "randint", lambda low, high: 1)  # misses
+    button.click()
+    assert "On a hit" not in ui._action_result_label.text()
+    assert "Prone" not in tiger["conditions"]
+
+
 def test_actions_show_for_the_source_with_their_numbers(dragon):
     ui, *_ = dragon
     assert _action(ui, "Bite").text() == "Bite\n+5  1d8 + 3 Piercing"

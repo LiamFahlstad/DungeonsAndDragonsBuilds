@@ -576,6 +576,11 @@ class DamageMixin(CombatWindowState):
                             damage_dealt=damage,
                         )
                     )
+                    if attack.rider is not None:
+                        # A monster's action button: what its hit gives
+                        # (Molten Strike's Prone), as its picker row does.
+                        self._give_effect_conditions(target, attack.rider)
+                        self._rebuild_card(target)
 
     def _after_misses(self, attack: PendingAttack | None, misses: list[dict]):
         """What the misses of an attack typed in trigger."""

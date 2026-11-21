@@ -66,6 +66,9 @@ class MonsterAction:
     # What its first effect says for the GM (its rider, a save its hit
     # forces), shown as it hits.
     notes: tuple[str, ...] = ()
+    # The conditions its attack's hit gives (its first effect's: Molten
+    # Strike's Prone), which its button's hit gives too (DI-082).
+    conditions: tuple[str, ...] = ()
     # What its stat block says using it does (MonsterAbility.combat_effects),
     # one per way to use it, each a picker row; () for one that has nothing
     # to apply (Multiattack).
@@ -188,6 +191,11 @@ def parse_action(ability, legendary: bool = False) -> MonsterAction:
             for d in (first.damage if first is not None else ())
         ),
         notes=first.notes if first is not None else (),
+        conditions=(
+            tuple(str(c.name) for c in first.conditions)
+            if first is not None and first.roll == EffectRoll.ATTACK
+            else ()
+        ),
         effects=effects,
         recharge_on=ability_field(ability, "recharge"),
         per_day=ability_field(ability, "per_day"),

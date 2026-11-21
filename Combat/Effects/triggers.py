@@ -292,6 +292,9 @@ class PendingAttack:
     targets: tuple[dict, ...] | None = None
     step: object = field(default=None, compare=False)
     total: int | None = None  # the roll's total, for a target's Shield
+    # What its hit gives each target it lands on (a monster action button's
+    # Prone): the Custom Effect dialog's CustomEffect for its row, no damage.
+    rider: object = field(default=None, compare=False)
 
 
 @dataclass(frozen=True)

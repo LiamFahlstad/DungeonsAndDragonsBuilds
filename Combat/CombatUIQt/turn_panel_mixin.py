@@ -66,7 +66,13 @@ from .monster_actions import (
 )
 from .player_server import PLAYER_PORT
 from .resources import legendary_resistance_lack, monster_action_lack
-from .effect_options import badge_trigger_row, trigger_option, triggered_rows
+from .conditions_mixin import hit_rider
+from .effect_options import (
+    badge_trigger_row,
+    monster_action_options,
+    trigger_option,
+    triggered_rows,
+)
 from .saves import (
     ATTACK_ROLL,
     HEALING,
@@ -457,6 +463,8 @@ class TurnPanelMixin(CombatWindowState):
         if hit is not False and action.notes:
             said = shorten(" ".join(action.notes), _RIDER_LENGTH, placeholder="...")
             text = f"{text}\n{said}" if text else f"{action.name}: {said}"
+        if hit is not False and action.conditions:
+            text = f"{text}\nOn a hit: {', '.join(action.conditions)}"
         self._action_result_label.setText(text)
         self._action_result_label.setToolTip(action.description)
 
@@ -485,6 +493,7 @@ class TurnPanelMixin(CombatWindowState):
                 row=action.name,
                 kind=action.attack_kind,
                 total=None if critical else total,
+                rider=self._button_hit_rider(char, action),
             )
         rolled = " + ".join(
             f"{roll_dice(roll.dice, critical)} {roll.damage_type or _CHOOSE_A_TYPE}"
@@ -509,6 +518,21 @@ class TurnPanelMixin(CombatWindowState):
         word = rolled.find(_CHOOSE_A_TYPE)
         if word >= 0:
             self.damage_input.setSelection(word, len(_CHOOSE_A_TYPE))
+
+    def _button_hit_rider(self, char: dict, action: MonsterAction):
+        """What the button's hit gives beside its damage, as the action's
+        picker row does (Molten Strike's Prone): None when it gives nothing."""
+        if not action.conditions:
+            return None
+        row = next(
+            (
+                o
+                for o in monster_action_options(char, action, {})
+                if o.roll == ATTACK_ROLL
+            ),
+            None,
+        )
+        return hit_rider(row) if row is not None else None
 
     def _roll_d20_for_attack(self, mode: str) -> int:
         """A d20 with Advantage or Disadvantage, or neither ("Neutral")."""
