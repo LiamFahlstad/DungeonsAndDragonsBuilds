@@ -140,7 +140,13 @@ def read_uses(name: str, description: str, names: Collection[str]) -> dict:
         if match is None:
             continue
         other = match["name"]
-        if other.lower() in names and other.lower() != name_alone(name).lower():
+        # Not itself ("Rend (Recharge 6)" making one Rend attack is the
+        # Rend), but a legendary action named after the attack it makes
+        # ("Chain Lash (Costs 1 Action)") is another ability that uses it.
+        is_itself = other.lower() == name_alone(name).lower()
+        if is_itself and _LEGENDARY_COST.search(name):
+            is_itself = False
+        if other.lower() in names and not is_itself:
             found: dict = {"uses_ability": other}
             if _MOVES.search(description):
                 found["moves_first"] = True

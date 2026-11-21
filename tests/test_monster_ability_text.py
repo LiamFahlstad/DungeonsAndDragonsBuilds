@@ -93,6 +93,10 @@ def test_the_ability_it_uses():
     }
     assert read_uses("Tail", "It makes one Tail attack.", names) == {}
     assert read_uses("Rend (Recharge 6)", "It makes one Rend attack.", names) == {}
+    # A legendary action named after the attack it makes is another ability.
+    assert read_uses("Rend (Costs 2 Actions)", "It makes one Rend attack.", names) == {
+        "uses_ability": "Rend"
+    }
 
 
 def test_keyword_source():

@@ -54,6 +54,7 @@ from Combat.Effects.active_effects import (
     describe,
     drop_repeat_save,
     duration_entry,
+    find_effect,
     give_modifiers,
     is_linked,
     link_badge,
@@ -74,6 +75,7 @@ from Combat.Effects.modifiers import (
     bonus_reminder,
     cover,
     extra_text,
+    has_condition,
     hit_extras,
     hit_plan,
     hit_point_maximum,
@@ -797,6 +799,16 @@ class ConditionsMixin(CombatWindowState):
             )
             if cond == Condition.PRONE.value:
                 self._stand_up(char)
+            if (
+                cond == Condition.UNCONSCIOUS.value
+                and not has_condition(char, Condition.PRONE)
+                and not is_immune_to(char, Condition.PRONE.value)
+                and self._char_death_state(char) != "dead"
+            ):
+                # Unconscious: "When this condition ends, you remain Prone."
+                # Its own Prone went with it (held_conditions), so the
+                # creature is given one, logged, which standing up ends.
+                self._add_condition_to(char, Condition.PRONE.value, counted=False)
             self._forget_effect_on(char, cond)
             # A spell's badge and the conditions it stands for go together
             # (Friends and Charmed): those no other badge stands for, and a
@@ -871,7 +883,12 @@ class ConditionsMixin(CombatWindowState):
                 cond,
                 duration_entry(duration, source_name, target["name"], turn),
             )
-            note_origin(target, cond, caster=source_name)
+            # Its caster, unless it has one: re-adding Hanna's Hunter's Mark
+            # by hand with the Pirate selected mustn't give the Pirate its
+            # extra damage (DI-074).
+            record = find_effect(target, cond)
+            if record is None or not record.get("caster"):
+                note_origin(target, cond, caster=source_name)
             self._rebuild_card(target)
         self._save_fight_state()
 
@@ -1166,7 +1183,7 @@ class ConditionsMixin(CombatWindowState):
         elif effect.from_area:
             self._hold_with_area(effect.from_area, applied)
         if effect.damage and source is not None:
-            source["_last_damage_type"] = effect.damage[-1][1]
+            source["_last_damage_type"] = effect.damage[0][1]  # not an extra's
         pushed = []
         if effect.push is not None and source is not None and to_push:
             pushed = self._push_targets(source, effect.push, to_push, label)

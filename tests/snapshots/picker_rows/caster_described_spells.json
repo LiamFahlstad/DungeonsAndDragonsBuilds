@@ -831,7 +831,7 @@
    "half_on_save": false,
    "is_described": true,
    "is_unavailable": false,
-   "note": "The caster's attacks with weapons deal an extra 1d4 Radiant damage on a hit: the badge goes on the caster.",
+   "note": "It goes on its user, whoever is targeted. The caster's attacks with weapons deal an extra 1d4 Radiant damage on a hit.",
    "repeat_save": false,
    "roll": "Saving throw",
    "row_name": "",
@@ -839,6 +839,7 @@
    "spell_level": 1,
    "spell_name": "Divine Favor",
    "summary": "",
+   "targets_self": true,
    "until": null,
    "upcast": []
   },

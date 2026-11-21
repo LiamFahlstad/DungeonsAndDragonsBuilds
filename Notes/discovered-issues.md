@@ -341,26 +341,6 @@ Both dnd2024 and dnd5e records for Shield end their casting_time at 'targeted by
 **History**
 - 2026-11-08 main-session: found
 
-### DI-067 · Combat UI: a creature whose Unconscious ends isn't left Prone
-- **Status:** open
-- **Area:** combat-simulator
-- **Where:** `Combat/CombatUIQt/damage_mixin.py:535, Combat/CombatUIQt/damage_mixin.py:567, Combat/CombatUIQt/rest.py:204`
-
-Unconscious.md: 'When this condition ends, you remain Prone.' Unconscious now gives Prone through HasConditions (Combat/Effects/modifiers.py held_conditions), so removing Unconscious (healing from 0 HP, Revive, Short Rest healing) also removes the Prone it gave, and nothing adds a Prone of its own. The healed creature's attack rolls then lose Prone's Disadvantage, and attacks against it lose the Prone notes, until the GM adds Prone by hand. Fix: when Unconscious is removed, add Prone unless the creature already holds it (and it isn't immune), logged like any other condition.
-
-**History**
-- 2026-11-09 rules-checker: found
-
-### DI-072 · Model/Content/CombatEffect.py's _is_rules_condition duplicates Combat/Effects/modifiers.py's rules_condition (a rules condition's name, or one under a longer name)
-- **Status:** open
-- **Area:** combat-simulator
-- **Where:** `Model/Content/CombatEffect.py:93 _is_rules_condition`, `Combat/Effects/modifiers.py:62 rules_condition`
-
-Found in review of plan step 3.3. CombatCondition refuses modifiers on a rules condition and needs the same name rule the simulator uses, but Model can't import Combat, so the rule is written twice. If one changes (e.g. how a longer name is matched), the two disagree. Fix: move rules_condition into Model/Content/RulesConditions.py (beside CONDITION_RULES) and have both import it; that touches RulesConditions.py, which was off-limits for 3.3.
-
-**History**
-- 2026-11-10 combat-simulator: found
-
 ### DI-073 · Combat UI: a non-concentration spell cast with Cast Spell keeps its badge after its duration runs out (Divine Favor, Mage Armor)
 - **Status:** open
 - **Area:** combat-simulator
@@ -370,36 +350,6 @@ Cast Spell starts a timer on the caster's active_spells for any spell with a dur
 
 **History**
 - 2026-11-10 combat-simulator: found
-
-### DI-074 · Re-adding a badge by hand overwrites its record's caster, so Hunter's Mark's extra damage follows whoever re-adds it
-- **Status:** open
-- **Area:** combat-simulator
-- **Where:** `Combat/CombatUIQt/conditions_mixin.py:495`
-
-_add_custom_condition calls note_origin(target, cond, caster=source_name), overwriting caster on an existing record; give_modifiers keeps the modifiers. Hanna marks the Tiger, then with the Pirate selected 'Hunter's Mark' is re-added from the combo: caster='Pirate', and the Pirate's hits get the 1d6. Same when a second caster marks the same target (one record per badge name). Fix: only set caster when the record has none.
-
-**History**
-- 2026-11-10 code-reviewer: found
-
-### DI-075 · Monster action button's extra damage makes the extra's type the monster's remembered damage type
-- **Status:** open
-- **Area:** combat-simulator
-- **Where:** `Combat/CombatUIQt/turn_panel_mixin.py:369`, `Combat/CombatUIQt/damage_mixin.py:244`
-
-The button appends the extra last ('3 Piercing + 4 Force'); _do_apply_damage stores parts[-1][1] as source['_last_damage_type'], so the monster's next hit defaults to Force in both damage-type dropdowns. Only when the monster is itself the caster of an extra. Fix: remember parts[0][1], or have the button store the weapon's own type.
-
-**History**
-- 2026-11-10 code-reviewer: found
-
-### DI-076 · A Divine Favor (Self) pick in the Custom Effect dialog puts its badge on the selected target, not the caster
-- **Status:** open
-- **Area:** combat-simulator
-- **Where:** `Combat/CombatUIQt/conditions_mixin.py:839`
-
-The dialog never redirects a Self spell's badge to the caster (R47 documents it). If the enemy is still selected, the enemy gets ExtraDamageOnHit. Fix: send a pick whose spell target is Self to the source, as Cast Spell does.
-
-**History**
-- 2026-11-10 code-reviewer: found
 
 ### DI-077 · Extra-damage test gaps: monster button on a Critical Hit; a weapon pick's damage edited to other dice
 - **Status:** open
@@ -431,32 +381,12 @@ A target with a Bless badge typed by hand (Custom Condition) that is then Blesse
 **History**
 - 2026-11-10 claude (combat effects 3.6): found
 
-### DI-081 · Legendary action named after the attack it makes has nothing to roll in the Custom Effect picker
-- **Status:** open
-- **Area:** combat-simulator
-- **Where:** `Combat/CombatUIQt/effect_options.py:1718`
-
-effect_options builds by_name keyed by the name with '(Costs N Actions)' stripped, so a legendary NamedAttackAction like 'Molten Strike (Costs 3 Actions)' (Manifestation of Durmor) or 'Chain Lash (Costs 1 Action)' (The Bell Saint) overwrites the action it makes in by_name. _action_it_uses then finds itself (other.name == action.name) and returns None, so the picker row is a plain 'Saving throw' row with no attack or damage: Apply only spends the legendary actions. Fix: build by_name from non-legendary sections first, or skip keys already present. Workaround at the table: spend with the turn-panel legendary button, then pick the attack's own row.
-
-**History**
-- 2026-11-12 main-session: found
-
 ### DI-082 · Turn-panel button of a monster action with combat_effects drops the effect's condition and notes
 - **Status:** open
 - **Area:** combat-simulator
 - **Where:** `Combat/CombatUIQt/monster_actions.py:290`
 
 parse_action's combat_effects path builds the MonsterAction from effects[0] (to_hit, damage) but sets no rider/riders, so the button's hit neither applies nor mentions the effect's conditions or notes. Manifestation of Durmor's Molten Strike button rolls the Slam numbers, but a hit gives no Prone and no 'Also:' reminder (Prone / lava), while the picker's 'Molten Strike: Slam' row applies Prone. GMs using the button lose the rider silently.
-
-**History**
-- 2026-11-12 main-session: found
-
-### DI-083 · An encounter's own allies (EncounterSpec.allies) count as enemies for enemy_only triggers
-- **Status:** open
-- **Area:** combat-simulator
-- **Where:** `Combat/EncounterLogs.py:145`
-
-prepared_log marks only the campaign's party allies (PartyAllies.mark); an encounter's allies= (Greypaw and Harat in Wrath of Durmor and Goblin Scouting Party) are logged exactly like its monsters, so Combat/Effects/triggers.py on_party_side() is False for them. enemy_only triggers then treat them as enemies: Gabriel's Warding Flare is offered every time Greypaw or Harat makes an attack roll against the Goblin King or Durmor (seen in a headless run of wrath_of_durmor). Fix: mark encounter allies too (a key on_party_side reads), or have on_party_side read it.
 
 **History**
 - 2026-11-12 main-session: found
@@ -1028,6 +958,18 @@ Cover.md: Half Cover gives +2 to AC and Dexterity saving throws, Three-Quarters 
 - 2026-11-09 combat-simulator: marked in-progress; Plan step 3.3: cover as a source of modifiers (ArmorClass and a D20Bonus on Dexterity saves)
 - 2026-11-09 combat-simulator: marked fixed; Plan step 3.3 (R38), uncommitted in worktree agent-a30cb9221e9d3c056: COVER_RULES in Combat/Effects/modifiers.py gives each cover an ArmorClass and a D20Bonus on Dexterity saves (most protective only); roll_save adds it ('Half Cover: +2'), the dialog's row reads 'DEX +5 (cover)'.
 
+### DI-067 · Combat UI: a creature whose Unconscious ends isn't left Prone
+- **Status:** fixed · 2026-11-21 · uncommitted
+- **Area:** combat-simulator
+- **Where:** `Combat/CombatUIQt/damage_mixin.py:535, Combat/CombatUIQt/damage_mixin.py:567, Combat/CombatUIQt/rest.py:204`
+
+Unconscious.md: 'When this condition ends, you remain Prone.' Unconscious now gives Prone through HasConditions (Combat/Effects/modifiers.py held_conditions), so removing Unconscious (healing from 0 HP, Revive, Short Rest healing) also removes the Prone it gave, and nothing adds a Prone of its own. The healed creature's attack rolls then lose Prone's Disadvantage, and attacks against it lose the Prone notes, until the GM adds Prone by hand. Fix: when Unconscious is removed, add Prone unless the creature already holds it (and it isn't immune), logged like any other condition.
+
+**History**
+- 2026-11-09 rules-checker: found
+- 2026-11-21 main session (Claude Opus 5.5): marked in-progress
+- 2026-11-21 main session (Claude Opus 5.5): marked fixed; _remove_condition_from gives a logged Prone (not counted in stats) when Unconscious ends, unless the creature already has Prone, is immune or is dead, so healing, Revive and Short Rest all leave it Prone. Undo takes it back off. Full suite passed with this change
+
 ### DI-068 · Combat UI: Invisible is a visibility state, so the Invisible condition's rules never reach the attack notes
 - **Status:** fixed · 2026-11-18 · uncommitted
 - **Area:** combat-simulator
@@ -1074,6 +1016,51 @@ _roll_concentration (monsters_roll_concentration on) rolls random.randint(1, 20)
 - 2026-11-10 combat-simulator: marked in-progress; Concentration roll through roll_save
 - 2026-11-10 combat-simulator: marked fixed; Plan step 3.3, R40 (uncommitted, worktree agent-a30cb9221e9d3c056): _roll_concentration calls roll_save(char, 'CON', dc, 'Neutral', one_die_if_straight=True), so its modifiers count (Bless's 1d4 rolled after the d20, a mode, notes) and _settle_concentration adds the note to the keeps/loses line; a straight roll still throws one d20, so fights without bonuses roll the same dice.
 
+### DI-072 · Model/Content/CombatEffect.py's _is_rules_condition duplicates Combat/Effects/modifiers.py's rules_condition (a rules condition's name, or one under a longer name)
+- **Status:** fixed · 2026-11-21 · uncommitted
+- **Area:** combat-simulator
+- **Where:** `Model/Content/CombatEffect.py:93 _is_rules_condition`, `Combat/Effects/modifiers.py:62 rules_condition`
+
+Found in review of plan step 3.3. CombatCondition refuses modifiers on a rules condition and needs the same name rule the simulator uses, but Model can't import Combat, so the rule is written twice. If one changes (e.g. how a longer name is matched), the two disagree. Fix: move rules_condition into Model/Content/RulesConditions.py (beside CONDITION_RULES) and have both import it; that touches RulesConditions.py, which was off-limits for 3.3.
+
+**History**
+- 2026-11-10 combat-simulator: found
+- 2026-11-21 main session (Claude Opus 5.5): marked fixed; rules_condition moved to Model/Content/RulesConditions.py; CombatCondition uses it and Combat/Effects/modifiers.py re-exports it, so existing imports still work
+
+### DI-074 · Re-adding a badge by hand overwrites its record's caster, so Hunter's Mark's extra damage follows whoever re-adds it
+- **Status:** fixed · 2026-11-21 · uncommitted
+- **Area:** combat-simulator
+- **Where:** `Combat/CombatUIQt/conditions_mixin.py:495`
+
+_add_custom_condition calls note_origin(target, cond, caster=source_name), overwriting caster on an existing record; give_modifiers keeps the modifiers. Hanna marks the Tiger, then with the Pirate selected 'Hunter's Mark' is re-added from the combo: caster='Pirate', and the Pirate's hits get the 1d6. Same when a second caster marks the same target (one record per badge name). Fix: only set caster when the record has none.
+
+**History**
+- 2026-11-10 code-reviewer: found
+- 2026-11-21 main session (Claude Opus 5.5): marked in-progress
+- 2026-11-21 main session (Claude Opus 5.5): marked fixed; _add_custom_condition sets the record's caster only when it has none; a fresh cast (spells_mixin, features_mixin) still sets it. Test: test_re_adding_a_badge_by_hand_keeps_its_caster (fails on the old code)
+
+### DI-075 · Monster action button's extra damage makes the extra's type the monster's remembered damage type
+- **Status:** fixed · 2026-11-21 · uncommitted
+- **Area:** combat-simulator
+- **Where:** `Combat/CombatUIQt/turn_panel_mixin.py:369`, `Combat/CombatUIQt/damage_mixin.py:244`
+
+The button appends the extra last ('3 Piercing + 4 Force'); _do_apply_damage stores parts[-1][1] as source['_last_damage_type'], so the monster's next hit defaults to Force in both damage-type dropdowns. Only when the monster is itself the caster of an extra. Fix: remember parts[0][1], or have the button store the weapon's own type.
+
+**History**
+- 2026-11-10 code-reviewer: found
+- 2026-11-21 main session (Claude Opus 5.5): marked fixed; damage_mixin and conditions_mixin remember the first damage part's type, not the last (an extra's). Test: test_the_type_remembered_is_the_first_not_an_extras (fails on the old code)
+
+### DI-076 · A Divine Favor (Self) pick in the Custom Effect dialog puts its badge on the selected target, not the caster
+- **Status:** fixed · 2026-11-21 · uncommitted
+- **Area:** combat-simulator
+- **Where:** `Combat/CombatUIQt/conditions_mixin.py:839`
+
+The dialog never redirects a Self spell's badge to the caster (R47 documents it). If the enemy is still selected, the enemy gets ExtraDamageOnHit. Fix: send a pick whose spell target is Self to the source, as Cast Spell does.
+
+**History**
+- 2026-11-10 code-reviewer: found
+- 2026-11-21 main session (Claude Opus 5.5): marked fixed; The picker already sends a targets_self effect to its user; Divine Favor was the only one of the 85 SELF-target spells whose badge effect lacked targets_self=True. Added it. Test: test_divine_favor_picked_with_an_enemy_targeted_goes_on_its_caster (fails on the old code)
+
 ### DI-080 · A magic weapon didn't count its kind's Weapon Mastery
 - **Status:** fixed · 2026-11-12 · uncommitted
 - **Area:** character-engine
@@ -1084,6 +1071,28 @@ has_mastery compared exact types (type(self) is type(mastery)), so a magic weapo
 **History**
 - 2026-11-12 main-session: found
 - 2026-11-12 main-session: marked fixed; isinstance(self, type(mastery)): a weapon of the mastered kind, magic or not, is mastered; Thum's sheet snapshot updated (Halfling's Trick: Vex checked)
+
+### DI-081 · Legendary action named after the attack it makes has nothing to roll in the Custom Effect picker
+- **Status:** fixed · 2026-11-21 · uncommitted
+- **Area:** combat-simulator
+- **Where:** `Combat/CombatUIQt/effect_options.py:1718`
+
+effect_options builds by_name keyed by the name with '(Costs N Actions)' stripped, so a legendary NamedAttackAction like 'Molten Strike (Costs 3 Actions)' (Manifestation of Durmor) or 'Chain Lash (Costs 1 Action)' (The Bell Saint) overwrites the action it makes in by_name. _action_it_uses then finds itself (other.name == action.name) and returns None, so the picker row is a plain 'Saving throw' row with no attack or damage: Apply only spends the legendary actions. Fix: build by_name from non-legendary sections first, or skip keys already present. Workaround at the table: spend with the turn-panel legendary button, then pick the attack's own row.
+
+**History**
+- 2026-11-12 main-session: found
+- 2026-11-21 main session (Claude Opus 5.5): marked fixed; Three causes: NamedAttackAction never set uses_ability (now defaults to attack_name); MonsterAbilityText.read_uses treated 'Chain Lash (Costs 1 Action)' as itself (a legendary cost now makes it another ability; '(Recharge 6)' still is itself); effect_options' by_name let the legendary entry overwrite the attack (first of a name now wins). Bell Saint's Chain Lash and Durmor's Molten Strike legendary rows now roll their attack (Molten Strike with its Prone)
+
+### DI-083 · An encounter's own allies (EncounterSpec.allies) count as enemies for enemy_only triggers
+- **Status:** fixed · 2026-11-21 · 697f9832
+- **Area:** combat-simulator
+- **Where:** `Combat/EncounterLogs.py:145`
+
+prepared_log marks only the campaign's party allies (PartyAllies.mark); an encounter's allies= (Greypaw and Harat in Wrath of Durmor and Goblin Scouting Party) are logged exactly like its monsters, so Combat/Effects/triggers.py on_party_side() is False for them. enemy_only triggers then treat them as enemies: Gabriel's Warding Flare is offered every time Greypaw or Harat makes an attack roll against the Goblin King or Durmor (seen in a headless run of wrath_of_durmor). Fix: mark encounter allies too (a key on_party_side reads), or have on_party_side read it.
+
+**History**
+- 2026-11-12 main-session: found
+- 2026-11-21 main session (Claude Opus 5.5): marked fixed in 697f9832; Already fixed by 697f9832 (logged as DI-092): on_party_side reads is_encounter_ally, and the enemy_only check goes through on_party_side
 
 ### DI-084 · speed_in_use ignores the conditions' Speed 0 (Grappled, Restrained, Paralyzed, Petrified, Unconscious)
 - **Status:** fixed · 2026-11-13 · uncommitted

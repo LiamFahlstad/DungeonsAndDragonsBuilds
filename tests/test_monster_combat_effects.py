@@ -32,7 +32,9 @@ from Combat.Monsters.CR_23.monsters import AncientBlueDragon
 from Combat.Monsters.CR_24.monsters import AncientGoldDragon, AncientRedDragon
 from Combat.Monsters.CR_3.monsters_homebrew import MirelleTheGildedKnight
 from Combat.Monsters.CR_5.monsters_homebrew import MiraPrincessOfTheLoop
+from Combat.Monsters.CR_6.monsters_homebrew import ManifestationOfDurmor
 from Combat.Monsters.CR_8.monsters import FrostGiant
+from Combat.Monsters.CR_9.monsters_homebrew import TheBellSaint
 from Combat.PlayerCombatant import combatant_from_stat_block
 from Core.Definitions import Ability, DamageType
 from Core.Rules import SPELL_SAVE_DC_BASE
@@ -270,6 +272,34 @@ def test_a_legendary_action_that_makes_another_attack():
     assert swipe.monster_action.name == "Tail Swipe"
     assert swipe.monster_action.legendary_cost == 1
     assert "makes one Rend attack" in swipe.note
+
+
+@pytest.mark.parametrize(
+    "monster, legendary, attack",
+    [
+        (TheBellSaint, "Chain Lash (Costs 1 Action)", "Chain Lash"),
+        (ManifestationOfDurmor, "Molten Strike (Costs 3 Actions)", "Molten Strike"),
+    ],
+)
+def test_a_legendary_action_named_after_its_attack_rolls_it(monster, legendary, attack):
+    """A NamedAttackAction named after the attack it makes: its row is that
+    attack (DI-081), not a row with nothing to roll. Its name alone matches
+    the attack's, which must still be the attack it finds, not itself."""
+    rows = _rows(monster())
+    # The attack's first row (Molten Strike has one per effect: its Slam).
+    made = next(
+        o
+        for (title, _), o in rows.items()
+        if title == "Actions" and o.monster_action.name == attack
+    )
+    row = rows[("Legendary Actions", legendary)]
+    assert row.roll == ATTACK_ROLL
+    assert (row.bonus, row.damage, row.condition) == (
+        made.bonus,
+        made.damage,
+        made.condition,
+    )
+    assert row.monster_action.name == legendary
 
 
 def test_pounce_says_to_move_first():

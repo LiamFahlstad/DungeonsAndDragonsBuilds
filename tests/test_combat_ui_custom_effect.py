@@ -786,6 +786,22 @@ def test_the_type_used_is_remembered(fight):
     assert pirate["_last_damage_type"] == FIRE
 
 
+def test_the_type_remembered_is_the_first_not_an_extras(fight):
+    """'3 Piercing + 4 Force': the next hit defaults to Piercing, not the
+    extra's Force (DI-075), from the Damage field and from an effect."""
+    ui, pirate, tiger, *_ = fight
+    ui._select_character(pirate)
+    ui._select_target_character(tiger)
+    ui.damage_input.setText("3 piercing + 4 force")
+    ui._do_apply_damage(False)
+    assert tiger["hp"] == tiger["max_hp"] - 7
+    assert pirate["_last_damage_type"] == DamageType.PIERCING.value
+    ui._apply_custom_effect(
+        CustomEffect(damage=[(5, FIRE), (2, DamageType.COLD.value)])
+    )
+    assert pirate["_last_damage_type"] == FIRE
+
+
 def test_the_name_goes_in_the_log_and_the_summary(fight, monkeypatch):
     ui, *_ = fight
     _d20s(monkeypatch, 1, 1)

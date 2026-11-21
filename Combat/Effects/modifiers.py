@@ -60,7 +60,11 @@ from Model.Content.CombatModifiers import (
     attacker_distance_text,
     modifier_from_dict,
 )
-from Model.Content.RulesConditions import CONDITION_RULES, conditions_given_by
+from Model.Content.RulesConditions import (  # rules_condition: re-exported
+    CONDITION_RULES,
+    conditions_given_by,
+    rules_condition,
+)
 from Model.Content.StandardActions import DODGE
 from Model.Creatures.Combatants import Visibility
 
@@ -86,15 +90,6 @@ COVER_RULES: dict[str, tuple[Modifier, ...]] = {
         D20Bonus((D20Test.SAVING_THROW,), "5", (Ability.DEXTERITY,)),
     ),
 }
-
-
-def rules_condition(name: str) -> Condition | None:
-    """The rules condition a condition's name is: its own name, or one that
-    starts with it and a space ("Restrained by vines"). None for a badge."""
-    for condition in Condition:
-        if name == condition.value or name.startswith(f"{condition.value} "):
-            return condition
-    return None
 
 
 def held_conditions(char: dict) -> list[Condition]:

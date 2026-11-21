@@ -3346,8 +3346,9 @@ class DivineFavor(ClassSpell):
                     ),
                 ),
                 notes=(
-                    "The caster's attacks with weapons deal an extra 1d4 Radiant damage on a hit: the badge goes on the caster.",
+                    "The caster's attacks with weapons deal an extra 1d4 Radiant damage on a hit.",
                 ),
+                targets_self=True,
             )
         ]
 

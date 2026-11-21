@@ -1681,11 +1681,13 @@ def effect_options(
     ]
     if described_traits:
         sections.append((TRAITS, described_traits))
-    by_name = {
-        _NAME_ALONE.sub("", action.name).lower(): action
-        for _, actions in sections
-        for action in actions
-    }
+    # The first of a name wins: a legendary action named after the attack it
+    # makes ("Molten Strike (Costs 3 Actions)") mustn't stand in for that
+    # attack, or it finds itself and has nothing to roll (DI-081).
+    by_name: dict[str, MonsterAction] = {}
+    for _, actions in sections:
+        for action in actions:
+            by_name.setdefault(_NAME_ALONE.sub("", action.name).lower(), action)
     categories = [
         (
             title,

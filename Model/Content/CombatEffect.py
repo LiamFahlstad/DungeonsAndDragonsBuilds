@@ -67,6 +67,7 @@ from Model.Content.CombatTriggers import (
     TriggerAim,
     TriggerEvent,
 )
+from Model.Content.RulesConditions import rules_condition
 
 # "2d4", "1d8 + 3", or a flat "5".
 DICE = re.compile(r"\d+d\d+(?: [+-] \d+)?|\d+")
@@ -114,15 +115,6 @@ class TurnOf(StrEnum):
     SOURCE = "source"
     TARGET = "target"
     CURRENT = "current"
-
-
-def _is_rules_condition(name: str) -> bool:
-    """Whether `name` is a rules condition, or one under a longer name
-    ("Restrained by vines"), as the combat simulator reads it."""
-    return any(
-        name == condition.value or name.startswith(f"{condition.value} ")
-        for condition in Condition
-    )
 
 
 def with_bonus(dice: str, bonus: int) -> str:
@@ -222,7 +214,7 @@ class CombatCondition:
                 f"modifiers is a tuple of modifiers, like (ArmorClass(2),),"
                 f" not {self.modifiers!r}"
             )
-        if self.modifiers and _is_rules_condition(self.name):
+        if self.modifiers and rules_condition(self.name) is not None:
             raise ValueError(
                 f"{self.name} is a rules condition: its modifiers are the rules'"
             )

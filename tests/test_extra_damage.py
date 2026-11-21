@@ -330,6 +330,17 @@ def test_hunters_mark_adds_1d6_force_to_its_casters_hit(fight, monkeypatch):
     ]
 
 
+def test_re_adding_a_badge_by_hand_keeps_its_caster(fight):
+    """The Pirate marks the Tiger; the Bugbear, selected, re-adds Hunter's
+    Mark by hand: the mark stays the Pirate's, so the Bugbear's hits get no
+    1d6 (DI-074)."""
+    ui, pirate, tiger, bugbear = fight
+    _mark(ui, pirate, tiger)
+    ui._select_character(bugbear)
+    ui._add_custom_condition("Hunter's Mark", targets=[tiger])
+    assert find_effect(tiger, "Hunter's Mark")["caster"] == "Pirate"
+
+
 def test_the_extra_damage_line_is_for_the_gm(fight, monkeypatch):
     """The player link joins a hit's damage to its line: the extra's own
     line stays off it, so nothing comes between them."""
@@ -455,6 +466,19 @@ def test_divine_favor_adds_1d4_radiant_to_its_casters_weapon_hit(fight, monkeypa
     lines = _new_events(ui, before)
     assert "Pirate's Divine Favor: +3 Radiant (1d4)" in lines
     assert "Tiger takes 3 Radiant damage from Pirate" in lines
+
+
+def test_divine_favor_picked_with_an_enemy_targeted_goes_on_its_caster(fight):
+    """Divine Favor is a Self spell: picked in the Custom Effect dialog while
+    the Tiger is still targeted, its badge (and its extra damage) goes on the
+    Pirate, as Cast Spell does (DI-076)."""
+    from Combat.CombatUIQt.effect_options import spell_option
+
+    ui, pirate, tiger, _ = fight
+    option = spell_option(SpellFactory.create("Divine Favor"), pirate)
+    assert ui._apply_row(pirate, tiger, option)
+    assert find_effect(tiger, "Divine Favor") is None
+    assert find_effect(pirate, "Divine Favor") is not None
 
 
 def test_divine_favor_adds_nothing_to_another_attack(fight, monkeypatch):

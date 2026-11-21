@@ -397,6 +397,28 @@ def test_healing_ends_unconscious_and_resets_death_saves(dying_tiger):
     assert (tiger["death_saves_fail"], tiger["death_saves_success"]) == (0, 0)
 
 
+def test_a_creature_whose_unconscious_ends_is_left_prone(dying_tiger):
+    """Unconscious: "When this condition ends, you remain Prone" (DI-067).
+    Once, logged; undoing the heal takes the Prone back off."""
+    ui, _, tiger = dying_tiger
+    _damage(ui, 40)
+    assert "Prone" not in tiger["conditions"], "Unconscious gives Prone itself"
+    _heal(ui, 3)
+    assert tiger["conditions"].count("Prone") == 1
+    assert "Tiger gains Prone" in str(ui._read_log())
+    ui._undo_last()
+    assert "Prone" not in tiger["conditions"]
+    assert "Unconscious" in tiger["conditions"]
+
+
+def test_a_creature_already_prone_isnt_given_a_second(dying_tiger):
+    ui, _, tiger = dying_tiger
+    _damage(ui, 40)
+    tiger["conditions"].append("Prone")
+    _heal(ui, 3)
+    assert tiger["conditions"].count("Prone") == 1
+
+
 # ---------------------------------------------------------------------------
 # 7. Healing doesn't raise the dead; Revive does
 

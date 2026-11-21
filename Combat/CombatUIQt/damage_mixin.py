@@ -549,7 +549,9 @@ class DamageMixin(CombatWindowState):
             hits.append((target, dealt, critical))
 
         if source is not None:
-            source["_last_damage_type"] = parts[-1][1]
+            # The first part: the hit's own type, not an extra added after
+            # it ("3 Piercing + 4 Force" from Hunter's Mark-like riders).
+            source["_last_damage_type"] = parts[0][1]
         if self.settings.reset_damage_type_after_hit:
             self._show_source_damage_type(source)
         self.damage_input.clear()

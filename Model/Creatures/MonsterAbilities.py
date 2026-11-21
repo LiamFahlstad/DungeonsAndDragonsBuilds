@@ -749,3 +749,7 @@ class NamedAttackAction(MonsterAbility):
         article = "The " if self.use_article else ""
         ruling = f" {self.extra_ruling}" if self.extra_ruling else ""
         self.description = f"{article}{self.creature_name} makes one {self.attack_name} attack.{ruling}"
+        # The attack it makes is the ability it uses: the picker fills its
+        # row from that attack (DI-081).
+        if not self.uses_ability:
+            self.uses_ability = self.attack_name

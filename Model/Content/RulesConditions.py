@@ -151,6 +151,17 @@ CONDITION_RULES: dict[Condition, tuple[Modifier, ...]] = {
 }
 
 
+def rules_condition(name: str) -> Condition | None:
+    """The rules condition a condition's name is: its own name, or one that
+    starts with it and a space ("Restrained by vines"). None for a badge.
+    The one reading of a name for both the model (CombatCondition) and the
+    combat simulator (Combat/Effects/modifiers.py)."""
+    for condition in Condition:
+        if name == condition.value or name.startswith(f"{condition.value} "):
+            return condition
+    return None
+
+
 def conditions_with(condition: Condition) -> frozenset[Condition]:
     """The conditions that are `condition` or give it, however indirectly:
     for Incapacitated, also Paralyzed, Petrified, Stunned and Unconscious."""
