@@ -1992,14 +1992,15 @@ def test_a_dropped_phone_is_quiet_but_a_bug_is_not(fight, capsys, error, printed
     http_server = ui._player_server._http
     try:
         raise error
-    except type(error):
+    except Exception:  # handle_error reads the exception being handled
         http_server.handle_error(None, ("127.0.0.1", 1))
     assert bool(capsys.readouterr().err) == printed
 
 
 def test_a_client_that_goes_quiet_doesnt_keep_its_thread(fight, monkeypatch):
     ui, *_ = fight
-    assert 0 < player_server._Handler.timeout <= 10
+    timeout = player_server._Handler.timeout
+    assert timeout is not None and 0 < timeout <= 10
     monkeypatch.setattr(player_server._Handler, "timeout", 0.2)
     address = ("127.0.0.1", _port(ui._player_server))
     with socket.create_connection(address, timeout=5) as quiet:
@@ -2115,7 +2116,7 @@ def test_the_etag_hashes_the_content():
 
 def test_the_feed_keeps_finished_bytes_not_the_rows_it_was_given():
     feed = PlayerFeed()
-    rows = [{"name": "Tiger"}]
+    rows: list[dict] = [{"name": "Tiger"}]
     feed.publish("Round 1", rows)
     before = feed.latest()
     rows[0]["hp"] = 30
@@ -2271,7 +2272,8 @@ def test_copy_puts_the_link_on_the_clipboard(tmp_path, monkeypatch):
     ui = make_ui(tmp_path, [Pirate()])
     dlg = open_dialog(monkeypatch, ui._show_player_link_dialog)
     _button(dlg, "Copy").click()
-    assert QApplication.clipboard().text() == ui._player_server.url
+    clipboard = QApplication.clipboard()
+    assert clipboard is not None and clipboard.text() == ui._player_server.url
     assert _message(dlg) == "Link copied."
 
 

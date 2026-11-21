@@ -56,6 +56,8 @@ from Combat.Summons import (
     upgrade_keys,
 )
 from Core.Definitions import DamageType
+from Model.Character import Character
+from Model.Content.Feature import Feature
 from Model.Content.Summons import (
     OnZeroHp,
     SummonContext,
@@ -94,7 +96,7 @@ def no_modal_dialogs(monkeypatch):
 
 
 @cache
-def _sheet(build_name: str):
+def _sheet(build_name: str) -> Character:
     return build(build_name)
 
 
@@ -102,7 +104,7 @@ def _party() -> list:
     return [_sheet(DESSIE_BUILD), _sheet(HANNA_BUILD)]
 
 
-def _spec_of(sheet, feature_name: str):
+def _spec_of(sheet: Character, feature_name: str) -> tuple[Feature, SummonSpec]:
     """(feature, spec) of sheet's summon feature called feature_name."""
     return next((f, s) for f, s in feature_summons(sheet) if f.name == feature_name)
 
@@ -817,7 +819,7 @@ def test_an_old_logs_hidden_companions_load_and_arent_out(tmp_path):
 # Paying for a summon (SummonSpec.costs)
 
 
-def _drake_owner(**state) -> tuple[dict, object, object, object]:
+def _drake_owner(**state) -> tuple[dict, Character, Feature, SummonSpec]:
     """(an owner dict for Hanna with `state`, her sheet, the Drake Companion
     feature, its spec)."""
     hanna = _sheet(HANNA_BUILD)

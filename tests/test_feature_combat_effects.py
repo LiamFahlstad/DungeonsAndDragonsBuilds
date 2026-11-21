@@ -116,8 +116,9 @@ def test_a_roll_and_a_turn_given_as_text_are_kept_as_enums():
         }
     )
     assert effect.roll is EffectRoll.SAVE
-    assert effect.conditions[0].until == (TurnEdge.START, TurnOf.SOURCE)
-    assert type(effect.conditions[0].until[0]) is TurnEdge
+    until = effect.conditions[0].until
+    assert until == (TurnEdge.START, TurnOf.SOURCE)
+    assert until is not None and type(until[0]) is TurnEdge
     assert effect == CombatEffect.from_dict(effect.to_dict())
     assert effect.to_dict()["roll"] == "save"
     assert effect.to_dict()["conditions"][0]["until"] == ["start", "source"]
@@ -237,7 +238,12 @@ class _ArtificerAt:
     "level, dice", [(3, "2d4"), (10, "2d4"), (11, "3d4"), (16, "3d4"), (17, "4d4")]
 )
 def test_jolt_to_life_grows_at_artificer_levels_11_and_17(level, dice):
-    (jolt,) = ReanimatorSkillSet().combat_effects(_ArtificerAt(level))
+    # Only get_class_level is read: the stub stands in for a CharacterView
+    # (and the house rule is no typing.cast, tests/test_layering.py).
+    stub = _ArtificerAt(level)
+    (jolt,) = ReanimatorSkillSet().combat_effects(
+        stub  # pyright: ignore[reportArgumentType]
+    )
     assert jolt.damage[0].dice == dice
 
 

@@ -108,6 +108,25 @@ def _log(ui) -> str:
     return str(ui._read_log())
 
 
+def _height(dlg) -> int:
+    """The height the dialog's layout needs at its width."""
+    layout = dlg.layout()
+    assert layout is not None
+    return layout.totalHeightForWidth(dlg.width())
+
+
+def _repeat_save(char: dict) -> dict:
+    """char's first repeat save, as its effect records it."""
+    save = repeat_saves(char)[0]["repeat_save"]
+    assert save is not None
+    return save
+
+
+def _key(widget: QWidget, key: Qt.Key) -> None:
+    """QTest.keyClick, which PyQt6's stub declares without @staticmethod."""
+    QTest.keyClick(widget, key)  # pyright: ignore[reportCallIssue]
+
+
 def _custom_notes(char: dict) -> dict[str, str | None]:
     """The notes typed for char's badges, by badge."""
     return {
@@ -539,7 +558,7 @@ def test_the_dialog_remembers_the_last_save(fight, monkeypatch):
 def test_the_dialog_fits_the_smallest_window(fight, monkeypatch):
     ui, *_ = fight
     dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
-    assert dlg.layout().totalHeightForWidth(dlg.width()) <= 600
+    assert _height(dlg) <= 600
 
 
 def test_legendary_resistance_shows_only_when_a_target_has_any(fight, monkeypatch):
@@ -1033,7 +1052,7 @@ def test_the_dialog_applies_the_new_options(fight, monkeypatch):
     _d20s(monkeypatch, 1, 1)
     _apply(dlg)
     assert "Paralyzed" in tiger["conditions"]
-    assert repeat_saves(tiger)[0]["repeat_save"]["dc"] == 15
+    assert _repeat_save(tiger)["dc"] == 15
     assert pirate["spell_slots"] == {2: 0}
     assert pirate["action_uses"] == {"Action": 1}
     assert pirate["active_spells"][0]["name"] == "Hold Person"
@@ -1256,7 +1275,7 @@ def test_a_repeat_keeps_the_rolls_mode(fight, monkeypatch):
     tiger["Saving Throws"] = {"WIS": 0}
     _d20s(monkeypatch, 1, 1)
     ui._apply_custom_effect(_hold(mode="Advantage"))
-    assert repeat_saves(tiger)[0]["repeat_save"]["mode"] == "Advantage"
+    assert _repeat_save(tiger)["mode"] == "Advantage"
     ui._advance_turn()
     rolls = iter([3, 16])
     monkeypatch.setattr(random, "randint", lambda low, high: next(rolls))
@@ -1270,7 +1289,7 @@ def test_a_repeat_can_spend_legendary_resistance(fight, monkeypatch):
     _d20s(monkeypatch, 1, 1)
     effect = _hold()
     ui._apply_custom_effect(effect)
-    repeat_saves(tiger)[0]["repeat_save"]["use_legendary_resistance"] = True
+    _repeat_save(tiger)["use_legendary_resistance"] = True
     ui._advance_turn()
     _d20s(monkeypatch, 1)
     ui._advance_turn()
@@ -1800,7 +1819,7 @@ def test_the_dialog_remembers_the_attack(armored, monkeypatch):
 def test_the_dialog_fits_the_smallest_window_for_an_attack(fight, monkeypatch):
     ui, *_ = fight
     dlg = _attack_dialog(ui, monkeypatch)
-    assert dlg.layout().totalHeightForWidth(dlg.width()) <= 600
+    assert _height(dlg) <= 600
 
 
 def test_the_bonus_starts_at_a_monsters_attack(fight, monkeypatch):
@@ -2020,13 +2039,15 @@ def _tree(dlg) -> QTreeWidget:
     return dlg.findChild(QTreeWidget, "effectOptions")
 
 
-def _rows(dlg) -> list[QTreeWidgetItem]:
+def _categories(dlg) -> list[QTreeWidgetItem]:
     tree = _tree(dlg)
-    return [
-        tree.topLevelItem(i).child(j)
-        for i in range(tree.topLevelItemCount())
-        for j in range(tree.topLevelItem(i).childCount())
-    ]
+    items = [tree.topLevelItem(i) for i in range(tree.topLevelItemCount())]
+    return [item for item in items if item is not None]
+
+
+def _rows(dlg) -> list[QTreeWidgetItem]:
+    rows = [c.child(j) for c in _categories(dlg) for j in range(c.childCount())]
+    return [row for row in rows if row is not None]
 
 
 def _row(dlg, name: str) -> QTreeWidgetItem:
@@ -2093,8 +2114,7 @@ def test_the_dialog_opens_on_the_search_box(paladin, monkeypatch):
 def test_the_categories(paladin, monkeypatch):
     ui, *_ = paladin
     dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
-    tree = _tree(dlg)
-    categories = [tree.topLevelItem(i) for i in range(tree.topLevelItemCount())]
+    categories = _categories(dlg)
     assert [c.text(0) for c in categories] == [
         "Attacks",
         "Edmund's Spells",
@@ -2111,7 +2131,10 @@ def _browsable(dlg) -> list[QTreeWidgetItem]:
     return [
         row
         for row in _rows(dlg)
-        if row.parent().isExpanded() and not row.isHidden() and not row.isDisabled()
+        if (parent := row.parent()) is not None
+        and parent.isExpanded()
+        and not row.isHidden()
+        and not row.isDisabled()
     ]
 
 
@@ -2119,13 +2142,13 @@ def test_down_and_up_from_the_search_box_pick_as_they_go(paladin, monkeypatch):
     ui, *_ = paladin
     dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
     first, second = _browsable(dlg)[:2]
-    QTest.keyClick(_search(dlg), Qt.Key.Key_Down)
+    _key(_search(dlg), Qt.Key.Key_Down)
     assert _tree(dlg).currentItem() is first
     assert _form(dlg)["name"] == first.data(0, Qt.ItemDataRole.UserRole).name
-    QTest.keyClick(_search(dlg), Qt.Key.Key_Down)
+    _key(_search(dlg), Qt.Key.Key_Down)
     assert _tree(dlg).currentItem() is second
     assert _form(dlg)["name"] == second.data(0, Qt.ItemDataRole.UserRole).name
-    QTest.keyClick(_search(dlg), Qt.Key.Key_Up)
+    _key(_search(dlg), Qt.Key.Key_Up)
     assert _tree(dlg).currentItem() is first
     assert dlg.focusWidget() is _search(dlg)  # still typing
 
@@ -2135,18 +2158,19 @@ def test_down_stops_at_the_last_row_it_can_show(paladin, monkeypatch):
     dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
     rows = _browsable(dlg)
     for _ in range(len(rows) + 3):
-        QTest.keyClick(_search(dlg), Qt.Key.Key_Down)
+        _key(_search(dlg), Qt.Key.Key_Down)
     # The last of the Standard Actions: All spells is folded.
     assert _tree(dlg).currentItem() is rows[-1]
-    assert rows[-1].parent().text(0) == "Standard Actions"
+    category = rows[-1].parent()
+    assert category is not None and category.text(0) == "Standard Actions"
 
 
 def test_down_goes_through_the_search_results(paladin, monkeypatch):
     ui, *_ = paladin
     dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
     _search(dlg).setText("fireball")
-    QTest.keyClick(_search(dlg), Qt.Key.Key_Down)
-    QTest.keyClick(_search(dlg), Qt.Key.Key_Down)
+    _key(_search(dlg), Qt.Key.Key_Down)
+    _key(_search(dlg), Qt.Key.Key_Down)
     assert _form(dlg)["name"] == "Delayed Blast Fireball"
 
 
@@ -2155,7 +2179,7 @@ def test_enter_applies_the_row_reached_with_the_arrows(paladin, monkeypatch):
     ui, edmund, tiger = paladin
     dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
     _search(dlg).setText("hold person")
-    QTest.keyClick(_search(dlg), Qt.Key.Key_Down)
+    _key(_search(dlg), Qt.Key.Key_Down)
     assert _form(dlg)["name"] == "Hold Person"
     _search(dlg).returnPressed.emit()
     assert dlg.result() == QDialog.DialogCode.Accepted
@@ -2168,17 +2192,17 @@ def test_escape_empties_the_search_before_it_closes(paladin, monkeypatch):
     rejected = []
     dlg.rejected.connect(lambda: rejected.append(True))
     _search(dlg).setText("fire")
-    QTest.keyClick(_search(dlg), Qt.Key.Key_Escape)
+    _key(_search(dlg), Qt.Key.Key_Escape)
     assert _search(dlg).text() == ""
     assert not rejected
-    assert not _tree(dlg).topLevelItem(2).isHidden()  # the filter is gone
+    assert not _categories(dlg)[2].isHidden()  # the filter is gone
 
 
 def test_typing_in_the_list_types_in_the_search_box(paladin, monkeypatch):
     ui, *_ = paladin
     dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
     _tree(dlg).setFocus()
-    QTest.keyClicks(_tree(dlg), "bles")
+    QTest.keyClicks(_tree(dlg), "bles")  # pyright: ignore[reportCallIssue]  (see _key)
     assert _search(dlg).text() == "bles"
 
 
@@ -2257,7 +2281,8 @@ def test_a_picked_spells_badge_shows_the_spell(paladin, monkeypatch):
     guidance = SpellFactory.create("Guidance")
     assert guidance.description.split("\n")[0] in body
     assert "<b>Duration:</b>" in body  # the spell's card, as Cast Spell's
-    assert _badge(ui, tiger, "Guidance").toolTip() == body
+    badge = _badge(ui, tiger, "Guidance")
+    assert badge is not None and badge.toolTip() == body
 
 
 def test_a_picked_spells_badge_has_the_schools_color(paladin, monkeypatch):
@@ -2334,7 +2359,9 @@ def test_a_rules_conditions_badge_still_shows_its_rule(fight, monkeypatch):
     monkeypatch.setattr(ui, "_show_condition_info", shown.append)
     tiger["conditions"].append("Prone")
     ui._rebuild_card(tiger)
-    _badge(ui, tiger, "Prone").click()
+    prone = _badge(ui, tiger, "Prone")
+    assert prone is not None
+    prone.click()
     assert shown == ["Prone"]
 
 
@@ -2365,7 +2392,7 @@ def test_a_monsters_rider_is_in_the_note(monster, monkeypatch):
     dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
     _pick(dlg, REND["name"])
     assert "Also: " in _form(dlg)["note"]
-    assert dlg.layout().totalHeightForWidth(dlg.width()) <= 600
+    assert _height(dlg) <= 600
 
 
 def test_picking_a_spell(paladin, monkeypatch):
@@ -2993,9 +3020,9 @@ def test_the_dialog_fits_with_eight_targets(tmp_path, monkeypatch):
     assert len(ui.target_characters) == 8
     dlg = _save_dialog(ui, monkeypatch)
     assert len(dlg.findChildren(QLineEdit, "typedTotal")) == 8
-    assert dlg.layout().totalHeightForWidth(dlg.width()) <= 600
+    assert _height(dlg) <= 600
     _combo(dlg, "rollKind").setCurrentText(ATTACK_ROLL)
-    assert dlg.layout().totalHeightForWidth(dlg.width()) <= 600
+    assert _height(dlg) <= 600
 
 
 # ---------------------------------------------------------------------------

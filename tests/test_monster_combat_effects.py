@@ -112,7 +112,9 @@ def test_a_badge_with_modifiers_comes_back_from_the_log():
     """DI-069: asdict dropped each modifier's type, so from_dict refused it.
     Bless's badge carries D20Bonus 1d4; the log must keep it readable, also
     when the ability sits inside another dataclass."""
-    bless = SpellFactory.create("Bless").combat_effects()[0]
+    effects = SpellFactory.create("Bless").combat_effects()
+    assert effects
+    bless = effects[0]
     assert bless.conditions[0].modifiers, "Bless's badge has its 1d4"
     ability = MonsterAbility("Bless", "x", combat_effects=(bless,))
     logged = json.loads(json.dumps(ability, cls=LogJSONEncoder))
@@ -401,7 +403,10 @@ def test_every_monster_still_reads():
                 continue
             if not issubclass(cls, ExtendedCombatantData):
                 continue
-            effect_options(_as_logged(cls()), all_spells=[])
+            # A stat block's fields are its class's defaults, which the
+            # base class's signature can't say.
+            monster = cls()  # pyright: ignore[reportCallIssue]
+            effect_options(_as_logged(monster), all_spells=[])
             count += 1
     assert count > 500
     assert SpellFactory.create("Fear") is not None
