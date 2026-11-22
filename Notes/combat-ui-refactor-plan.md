@@ -58,7 +58,7 @@ and the few others a step touches, not the character-sheet tests. Steps 3,
 | 0 | Safety net: a structure test that ratchets the numbers below down, fix the one pyright error | S | **Done** 2026-11-22 (R1, R2): `tests/test_combat_ui_structure.py`; pyright clean on `Combat/`; the UI tests take about 77 s (1,498 tests, xdist) |
 | 1 | Hygiene: enums for phase and action types, styles into QSS, dead code out | S-M | **Done** 2026-11-22: 1.1, 1.2, 1.6 (R3, R5); 1.3 (R6, R7): inline styles 98 → 23; 1.4 moved to 5.4, 1.5 dropped (R4) |
 | 2 | A typed combatant (`Combatant` TypedDict) | M | **Done** 2026-11-22, revised (R8): the schema and a key test; annotating signatures moved to step 5 |
-| 3 | The Use / Cast dialog as a class, its form-to-effects logic Qt-free | L | 3a **done** 2026-11-22 (R9): `use_cast/form.py`, dialog 1,580 → 1,440 lines; 3b **done** 2026-11-22 (R10): `_UseCastDialog`, `run()` 616 lines + 44 methods; 3c's move **done** (R11): `use_cast/dialog.py`, `conditions_mixin.py` 3,500 → 1,674 lines; 3c's split **done**, revised (R12): `run()` is 14 lines calling 10 builder methods, the longest 126; **3d next**, then the step's review |
+| 3 | The Use / Cast dialog as a class, its form-to-effects logic Qt-free | L | 3a **done** 2026-11-22 (R9): `use_cast/form.py`, dialog 1,580 → 1,440 lines; 3b **done** 2026-11-22 (R10): `_UseCastDialog`, `run()` 616 lines + 44 methods; 3c's move **done** (R11): `use_cast/dialog.py`, `conditions_mixin.py` 3,500 → 1,674 lines; 3c's split **done**, revised (R12): `run()` is 14 lines calling 10 builder methods, the longest 126; 3d **done** (R13): `do_apply` 146 → 50 lines over Qt-free `read_amount`, `check_applicable` and `build_effect`; reviewed (R14): no behaviour change; **step 3 done** |
 | 4 | The window built from panels, shortcuts as a table | M | Not started |
 | 5 | The Qt-free fight core (`Combat/Fight/`), one mixin at a time | XL | Not started |
 | 6 | One refresh path after every GM operation | M | Not started |
@@ -652,6 +652,41 @@ combat plans' file references. Then record the final numbers in Findings.
   - **Checks:** 1,851 tests pass. The sweep over every campaign reports 0
     problems. `run()` is off the long-function list.
 
+- **R13 (step 3d, 2026-11-22).** Apply is now three Qt-free steps in
+  `use_cast/form.py`, over a `FormValues` record of plain values that
+  `UseCastDialog._read_form()` (48 lines) reads from the boxes:
+  1. `read_amount` reads the Damage box.
+  2. `check_applicable` checks there's a target and something to do.
+  3. `build_effect` builds the `CustomEffect`.
+
+  `do_apply` (146 → 50 lines) runs them, the typed-roll readers between
+  steps 2 and 3, and then applies the effect. Errors are shown through
+  `read_or_say`, as in 3a.
+  - **Dice are rolled once, in the same order.** Reading the Damage box
+    rolls its dice, so `read_amount` runs once and its `Amount` is passed
+    on, never read again. `build_effect` rolls a hit's critical damage
+    after it, as `do_apply` did.
+  - **`check_applicable` returns True** rather than None. `read_or_say`
+    returns None for an error, so a check that returned nothing couldn't
+    be told apart from one that failed.
+  - **Tests:** `tests/test_use_cast_form.py` has 8 new tests that build
+    effects without Qt: targets, something to do, a spell pick, condition
+    names, a typed total, an attack's critical damage and Shield boxes,
+    and Temporary Hit Points. The dialog's 1,860 UI tests pass unchanged
+    and the sweep is clean.
+
+- **R14 (step 3's review, 2026-11-22).** The `code-reviewer` checked steps
+  3a to 3d against 08c8fbaa and found **no behaviour change**.
+  - **How it checked:** it compared ASTs after undoing the renames, and
+    used symtable to look for renames that went wrong or were missed.
+  - **One stale test:** 3a moved the dialog's regexes, but
+    `tests/test_text_readers.py` still listed them under
+    `conditions_mixin.py`, and it had failed since 2ab7c0c2 because the
+    per-step test lists didn't include it. Fixed with the 3d commit: the
+    entries point at `use_cast/form.py`. The full suite passes (12,060).
+  - **Verification** now ends each step with a full-suite run.
+  - **Step 3 is done.**
+
 ## Discovered issues
 
 - DI-112: pyright error in `tests/test_roll_sites.py:135`, which was
@@ -663,6 +698,10 @@ combat plans' file references. Then record the final numbers in Findings.
   tests/test_layering.py tests/test_combat_ui_structure.py` plus the core
   tests of the area the step moved (`test_active_effects.py`,
   `test_arena_*`, `test_*_triggers.py`, ...).
+- At the end of each step (not each commit), the full suite runs once:
+  `./run_tests.sh -q`. The list above missed `tests/test_text_readers.py`,
+  which tracks every regex by file. Moving a `re.compile` constant breaks
+  it, and it was broken from 3a until step 3's review (R14).
 - `./typecheck.sh Combat` is clean.
 - Widget dumps (`tests/snapshots/combat_ui_*.json`) unchanged. If one
   changes, read the diff and say why before regenerating.

@@ -5,7 +5,6 @@ typed in, with its roll, damage or healing, condition and duration.
 Moved here from conditions_mixin.py with the helpers only it uses
 (Notes/combat-ui-refactor-plan.md, step 3c)."""
 
-import re
 from html import escape
 
 from PyQt6.QtCore import Qt
@@ -82,7 +81,6 @@ from ..saves import (
     ABILITIES,
     AMOUNT_KINDS,
     ATTACK_ROLL,
-    CONDITION_JOINER,
     DAMAGE_AMOUNT,
     FEATURE,
     HEALING,
@@ -91,13 +89,9 @@ from ..saves import (
     SAVING_THROW,
     SPELL,
     TEMP_HP,
-    CustomEffect,
     EffectOption,
-    condition_names,
     known_attack_bonus,
     known_save_dc,
-    read_damage,
-    read_hit_points,
     rolled_damage,
     save_modifier,
     save_reminder,
@@ -105,7 +99,7 @@ from ..saves import (
 from ..state import CombatWindowState
 from ..tree_filter import first_visible_item
 from . import form as use_cast_form
-from .form import read_or_say
+from .form import DICELESS, read_or_say
 
 # The durations the Custom Condition dialog offers, as (label, duration). A
 # duration is None (until removed), {"seconds": n} (counted down a round at a
@@ -206,10 +200,6 @@ MAX_ATTACK_BONUS = 30
 # The most times one Apply repeats an effect (Scorching Ray at a level 9
 # slot has 10 rays).
 MAX_EFFECT_TIMES = 20
-
-
-# Dice, stood in for by a number when only the type in the text matters.
-_DICELESS = re.compile(r"\d+d\d+")
 
 
 # The units a custom duration can be typed in, as seconds per unit.
@@ -421,7 +411,7 @@ def _damage_preview(text: str, chosen_type: str | None) -> str:
     if not text:
         return ""
     try:
-        parts = rolled_damage(_DICELESS.sub("1", text))
+        parts = rolled_damage(DICELESS.sub("1", text))
     except AmountError:
         return f"{text} (can't be read)"
     if chosen_type is None or all(damage_type for _, damage_type in parts):
@@ -1444,7 +1434,7 @@ class UseCastDialog:
         if self.amount_kind() != DAMAGE_AMOUNT:
             return  # healing has no type
         try:
-            parts = rolled_damage(_DICELESS.sub("1", text))
+            parts = rolled_damage(DICELESS.sub("1", text))
         except AmountError:
             return
         if parts[0][1] is not None:
@@ -1595,135 +1585,88 @@ class UseCastDialog:
         keys = [id(t) for t in self.targets]
         return read_or_say(lambda: use_cast_form.typed_maximum(text, keys), self.say)
 
-    def do_apply(self):
-        if self.applied:
-            return
-        is_attack = self.roll_combo.currentText() == ATTACK_ROLL
-        ability = None if is_attack else self.ability_combo.currentData()
-        # "stunned" is Stunned, so the rules see it as they should; and
-        # "Frightened + Incapacitated" is both.
-        condition = CONDITION_JOINER.join(
-            next((s for s in self.suggestions if s.lower() == typed.lower()), typed)
-            for typed in condition_names(self.name_combo.currentText())
-        )
-        kind = self.amount_kind()
-        damage: list[tuple[int, str]] = []
-        hit_points = 0
-        if kind == DAMAGE_AMOUNT:
-            damage, problem = read_damage(
-                self.damage_input.text(), self.type_combo.currentData()
-            )
-        else:
-            hit_points, problem = read_hit_points(self.damage_input.text(), kind)
-        if problem:
-            self.problem_lbl.setText(problem)
-            return
+    def _read_form(self) -> use_cast_form.FormValues:
+        """What the boxes hold, as plain values."""
         pick: EffectOption | None = self.picked["option"]
-        # A pick the source spends (a feature with no numbers) is enough.
-        spends = pick is not None and pick.is_tracked and self.caster is not None
-        ends = pick is not None and bool(pick.ends_conditions)
-        # The Push mastery's row only moves its target.
-        ends = ends or (pick is not None and pick.push is not None)
         keeps_area = self.aimed is not None and self.keep_area_box.isChecked()
-        if not self.targets and not keeps_area and not self.on_itself(pick):
-            self.problem_lbl.setText(
-                "Target missing: pick one at the top, or keep the area on" " the map."
-            )
-            return
-        if (
-            not keeps_area
-            and not is_attack
-            and ability is None
-            and not damage
-            and not hit_points
-            and not condition
-            and not spends
-            and not ends
-        ):
-            self.problem_lbl.setText(
-                "Add a saving throw, damage, healing or a condition."
-            )
-            return
-        totals = self.typed_totals() if ability is not None else {}
-        attacks = self.typed_attacks() if is_attack else {}
-        extras = self.typed_extras() if is_attack and kind == DAMAGE_AMOUNT else {}
-        maximum = self.typed_maximum()
-        if totals is None or attacks is None or extras is None or maximum is None:
-            return
-        self.typed_rolls.update(totals=totals, attacks=attacks, extras=extras)
-        self.applied.append(True)
         duration = self.duration_combo.currentData()
         if duration == "custom":
             unit = CUSTOM_DURATION_UNITS[self.unit_combo.currentText()]
             duration = {"seconds": self.amount_input.value() * unit}
-        self.app._custom_save = {
-            "roll": self.roll_combo.currentText(),
-            "ability": self.ability_combo.currentData(),
-            "dc": self.dc_input.value(),
-            "half": self.half_box.isChecked(),
-            "bonus": self.bonus_input.value(),
-            "source": self.source,
-        }
-        critical_damage = []
-        if is_attack and kind == DAMAGE_AMOUNT:
-            critical_damage, _ = read_damage(
-                self.damage_input.text(), self.type_combo.currentData(), critical=True
-            )
-        effect = CustomEffect(
-            name=self.name_input.text().strip(),
-            condition=condition,
-            duration=duration,
+        acting_again = self.again is not None
+        return use_cast_form.FormValues(
+            roll=self.roll_combo.currentText(),
+            ability=self.ability_combo.currentData(),
+            condition_text=self.name_combo.currentText(),
+            suggestions=list(self.suggestions),
+            amount_kind=self.amount_kind(),
+            amount_text=self.damage_input.text(),
+            damage_type=self.type_combo.currentData(),
+            pick=pick,
+            pick_damage=self.picked["damage"],
+            has_caster=self.caster is not None,
+            has_targets=bool(self.targets),
+            on_itself=self.on_itself(pick),
+            keeps_area=keeps_area,
+            name=self.name_input.text(),
             notes=self.notes_input.text(),
-            damage=damage,
-            critical_damage=critical_damage,
+            duration=duration,
             count_resistances=self.resistances_box.isChecked(),
-            healing=hit_points if kind == HEALING else 0,
-            temp_hp=hit_points if kind == TEMP_HP else 0,
             slot_level=(
-                self.again_level
-                if self.again is not None
-                else self.slot_combo.currentData()
+                self.again_level if acting_again else self.slot_combo.currentData()
             ),
             action_cost=self.action_combo.currentData(),
             concentration=self.concentrate_box.isChecked(),
-            from_area=self.kept_area if self.again is not None else "",
-            attack_bonus=self.bonus_input.value() if is_attack else None,
-            typed_attacks=use_cast_form.nth(attacks, 0),
-            typed_extras=use_cast_form.nth(extras, 0),
-            ability=ability,
-            dc=self.dc_input.value(),
-            mode=self.mode_combo.currentText(),
-            half_on_save=self.half_box.isChecked(),
-            use_legendary_resistance=self.resist_box.isChecked(),
-            repeat_save=self.repeat_box.isChecked(),
-            typed_totals=use_cast_form.nth(totals, 0),
-            typed_hit_point_maximum=maximum,
-            shields=(
-                {key: box.isChecked() for key, box in self.shield_boxes.items()}
-                if is_attack
-                else {}
-            ),
-            pick=pick,
-            weapon_attack=pick.weapon_attack if pick is not None else None,
-            # A total with no dice, not the pick's own damage, was rolled
-            # at the table: a hit's extra damage isn't added to it.
-            typed_damage=bool(damage)
-            and not _DICELESS.search(self.damage_input.text())
-            and self.damage_input.text() != self.picked["damage"],
+            from_area=self.kept_area if acting_again else "",
             area=(
                 _with_slot(self.aimed["record"], self.slot_combo.currentData())
                 if self.aimed is not None and keeps_area
                 else None
             ),
             cover_origin=self.cover_origin,
-            push=(
-                pick.push
-                if pick is not None
-                and not self.push_box.isHidden()
-                and self.push_box.isChecked()
-                else None
-            ),
+            attack_bonus=self.bonus_input.value(),
+            dc=self.dc_input.value(),
+            mode=self.mode_combo.currentText(),
+            half_on_save=self.half_box.isChecked(),
+            use_legendary_resistance=self.resist_box.isChecked(),
+            repeat_save=self.repeat_box.isChecked(),
+            shields={key: box.isChecked() for key, box in self.shield_boxes.items()},
+            pushes=not self.push_box.isHidden() and self.push_box.isChecked(),
         )
+
+    def do_apply(self):
+        """Apply: check the form, read the rolls typed in, build the effect
+        (use_cast/form.py) and use it on the targets, Times over."""
+        if self.applied:
+            return
+        values = self._read_form()
+        amount = read_or_say(lambda: use_cast_form.read_amount(values), self.say)
+        if amount is None:
+            return
+        checked = read_or_say(
+            lambda: use_cast_form.check_applicable(values, amount), self.say
+        )
+        if not checked:
+            return
+        is_damage = values.amount_kind == DAMAGE_AMOUNT
+        totals = self.typed_totals() if values.save_ability is not None else {}
+        attacks = self.typed_attacks() if values.is_attack else {}
+        extras = self.typed_extras() if values.is_attack and is_damage else {}
+        maximum = self.typed_maximum()
+        if totals is None or attacks is None or extras is None or maximum is None:
+            return
+        self.typed_rolls.update(totals=totals, attacks=attacks, extras=extras)
+        self.applied.append(True)
+        self.app._custom_save = {
+            "roll": values.roll,
+            "ability": values.ability,
+            "dc": values.dc,
+            "half": values.half_on_save,
+            "bonus": values.attack_bonus,
+            "source": self.source,
+        }
+        rolls = use_cast_form.TypedRolls(totals, attacks, extras, maximum)
+        effect = use_cast_form.build_effect(values, amount, rolls)
         # The boxes' picks become the targets, as if clicked on the cards.
         if [id(t) for t in self.targets] != [id(t) for t in self.app.target_characters]:
             self.app._set_targets(list(self.targets))
@@ -1734,9 +1677,9 @@ class UseCastDialog:
             copies = use_cast_form.repeated(
                 effect,
                 times,
-                amount_text=self.damage_input.text(),
-                damage_type=self.type_combo.currentData(),
-                kind=self.amount_kind(),
+                amount_text=values.amount_text,
+                damage_type=values.damage_type,
+                kind=values.amount_kind,
                 typed_rolls=self.typed_rolls,
             )
             self.app._apply_custom_effects(copies)

@@ -72,9 +72,9 @@ TEXT_READERS: dict[tuple[str, str], str] = {
     ("Combat/CombatUIQt/amounts.py", "_TERM"): "input",
     ("Combat/CombatUIQt/amounts.py", "_parse_terms"): "input",
     ("Combat/CombatUIQt/attack_rolls.py", "_NATURAL"): "input",
-    ("Combat/CombatUIQt/conditions_mixin.py", "_NATURAL_ROLL"): "input",
-    ("Combat/CombatUIQt/conditions_mixin.py", "_WHOLE_NUMBER"): "input",
-    ("Combat/CombatUIQt/conditions_mixin.py", "_DICELESS"): "input",
+    ("Combat/CombatUIQt/use_cast/form.py", "_NATURAL_ROLL"): "input",
+    ("Combat/CombatUIQt/use_cast/form.py", "_WHOLE_NUMBER"): "input",
+    ("Combat/CombatUIQt/use_cast/form.py", "DICELESS"): "input",
     ("Combat/CombatUIQt/saves.py", "_DICE"): "input",
     # The dice of a roll, typed or an effect's ("2d6 + 3"), rolled
     ("Combat/CombatUIQt/monster_actions.py", "DIE"): "input",
