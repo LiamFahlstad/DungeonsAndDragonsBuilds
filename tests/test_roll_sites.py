@@ -52,11 +52,7 @@ ROLL_SITES: dict[tuple[str, str, str], str] = {
     ("turn_panel_mixin.py", "_recharge_roll", "randint"): "helper",
     # The Custom Effect dialog
     ("conditions_mixin.py", "_damage_preview", "rolled_damage"): "a preview only",
-    (
-        "conditions_mixin.py",
-        "_show_custom_condition_dialog.show_typed_type",
-        "rolled_damage",
-    ): "a preview only",
+    ("conditions_mixin.py", "show_typed_type", "rolled_damage"): "a preview only",
     (
         "conditions_mixin.py",
         "_apply_effect_to_targets",

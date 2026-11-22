@@ -58,7 +58,7 @@ and the few others a step touches, not the character-sheet tests. Steps 3,
 | 0 | Safety net: a structure test that ratchets the numbers below down, fix the one pyright error | S | **Done** 2026-11-22 (R1, R2): `tests/test_combat_ui_structure.py`; pyright clean on `Combat/`; the UI tests take about 77 s (1,498 tests, xdist) |
 | 1 | Hygiene: enums for phase and action types, styles into QSS, dead code out | S-M | **Done** 2026-11-22: 1.1, 1.2, 1.6 (R3, R5); 1.3 (R6, R7): inline styles 98 → 23; 1.4 moved to 5.4, 1.5 dropped (R4) |
 | 2 | A typed combatant (`Combatant` TypedDict) | M | **Done** 2026-11-22, revised (R8): the schema and a key test; annotating signatures moved to step 5 |
-| 3 | The Use / Cast dialog as a class, its form-to-effects logic Qt-free | L | 3a **done** 2026-11-22 (R9): `use_cast/form.py`, dialog 1,580 → 1,440 lines; **3b next** |
+| 3 | The Use / Cast dialog as a class, its form-to-effects logic Qt-free | L | 3a **done** 2026-11-22 (R9): `use_cast/form.py`, dialog 1,580 → 1,440 lines; 3b **done** 2026-11-22 (R10): `_UseCastDialog`, `run()` 616 lines + 44 methods; **3c next** |
 | 4 | The window built from panels, shortcuts as a table | M | Not started |
 | 5 | The Qt-free fight core (`Combat/Fight/`), one mixin at a time | XL | Not started |
 | 6 | One refresh path after every GM operation | M | Not started |
@@ -584,6 +584,30 @@ combat plans' file references. Then record the final numbers in Findings.
     `symtable` lists each nested scope's free variables exactly, so the
     rename can be a scripted codemod. A text replace would also hit inner
     parameters that shadow outer names.
+
+- **R10 (step 3b, 2026-11-22).** The closure is now the class
+  `_UseCastDialog`, still in `conditions_mixin.py`. Moving it to
+  `use_cast/dialog.py` with its imports is 3c's first commit, so that
+  commit is a pure move.
+  - **Done by a codemod** (a symtable-driven rename, as R9 planned). Of the
+    function's 190 locals, 121 became attributes: each one a nested
+    function or lambda reads, plus the 45 nested functions themselves,
+    which became methods. The other 69 (widgets only the dialog's setup
+    uses) stay locals of `run()`. 802 references were renamed, and the
+    app's `self` became `self.app`.
+  - **`_show_custom_condition_dialog`** keeps its signature and docstring
+    and runs `_UseCastDialog(self).run(pick, cost, kept_area)`. Its 165
+    test uses work unchanged.
+  - **Comprehensions stay as they are:** a name read only by a
+    comprehension in the dialog's setup stays a local, because a
+    comprehension runs at once and a closure doesn't. The one `:=` (in a
+    generator expression) relies on that.
+  - **Result:** pyright clean with no hand fixes. 1,829 combat UI tests
+    pass. The `combat-ui-explore` sweep over every campaign reports 0
+    problems.
+  - **Two test lists followed the new names:** `test_roll_sites`
+    (`show_typed_type` is a method now) and the structure test (`run()`
+    616 lines, `do_apply` 146).
 
 ## Discovered issues
 
