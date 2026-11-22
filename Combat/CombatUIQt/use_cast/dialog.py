@@ -472,8 +472,23 @@ class UseCastDialog:
         self.app = app
 
     def run(self, pick: str, cost: str | None, kept_area: str):
+        self.pick = pick
         self.cost = cost
         self.kept_area = kept_area
+        self._prepare()
+        self._build_targets()
+        self._build_picker()
+        self._build_roll_section()
+        self._build_amount_section()
+        self._build_condition_section()
+        self._build_cost_section()
+        self._build_footer()
+        self._connect()
+        self._start()
+
+    def _prepare(self):
+        """What the opening works on: the source, an area aimed or acting
+        again, the targets."""
         self.source = self.app.selected_character or self.app._current_turn_character()
         self.aimed, self.app._aimed_area = self.app._aimed_area, None
         if self.aimed is not None and (
@@ -511,14 +526,16 @@ class UseCastDialog:
         self.dlg.setWindowTitle("Use / Cast")
         self.dlg.setMinimumWidth(_CUSTOM_DIALOG_WIDTH)
         self.dlg.resize(_effect_dialog_width(self.app._window), 0)
-        outer = QVBoxLayout(self.dlg)
-        outer.setContentsMargins(14, 12, 14, 12)
-        outer.setSpacing(10)
+        self.outer = QVBoxLayout(self.dlg)
+        self.outer.setContentsMargins(14, 12, 14, 12)
+        self.outer.setSpacing(10)
 
+    def _build_targets(self):
+        """The source, and a box per target at the top."""
         # Who uses it on whom: the source, then a box per target.
         who_row = QHBoxLayout()
         who_row.setSpacing(8)
-        outer.addLayout(who_row)
+        self.outer.addLayout(who_row)
         who_lbl = QLabel(_source_text(self.source))
         who_lbl.setObjectName("effectWho")
         who_lbl.setTextFormat(Qt.TextFormat.RichText)
@@ -553,10 +570,12 @@ class UseCastDialog:
         for target in self.targets or [None]:
             self.add_target_slot(target)
 
-        body = QHBoxLayout()
-        body.setSpacing(14)
-        outer.addLayout(body, stretch=1)
+        self.body = QHBoxLayout()
+        self.body.setSpacing(14)
+        self.outer.addLayout(self.body, stretch=1)
 
+    def _build_picker(self):
+        """What the source can use, on the left, and the form's columns."""
         # What the source can use, on the left: a pick fills in the form, and
         # its rules text shows under the list.
         self.search_box, self.tree, self.category_items = self.app._effect_picker(
@@ -574,11 +593,11 @@ class UseCastDialog:
         picker.addWidget(self.search_box)
         picker.addWidget(self.tree, stretch=3)
         picker.addWidget(self.details, stretch=2)
-        body.addWidget(picker_box)
+        self.body.addWidget(picker_box)
 
         form = QVBoxLayout()
         form.setSpacing(8)
-        body.addLayout(form, stretch=1)
+        self.body.addLayout(form, stretch=1)
 
         self.name_input = QLineEdit()
         self.name_input.setObjectName("effectName")
@@ -607,12 +626,15 @@ class UseCastDialog:
             column_layout.setSpacing(8)
             columns.addWidget(column, stretch=stretch)
             column_widgets.append(column_layout)
-        roll_col, effect_col = column_widgets
+        self.roll_col, self.effect_col = column_widgets
         form.addLayout(columns, stretch=1)
 
+    def _build_roll_section(self):
+        """The Roll section: none, a saving throw or an attack roll, and the
+        rows per target."""
         # ── Roll: none, a saving throw or an attack roll, and what it decides
         roll_frame, roll_box, _ = section("Roll")
-        roll_col.addWidget(roll_frame)
+        self.roll_col.addWidget(roll_frame)
         # The roll's value is two combo boxes, hidden behind the chips: an
         # attack, or a saving throw with an ability, or None for no roll.
         self.roll_combo = QComboBox()
@@ -733,11 +755,13 @@ class UseCastDialog:
         self.shield_boxes: dict[int, QCheckBox] = {}
 
         self.build_roll_rows()
-        roll_col.addStretch()
+        self.roll_col.addStretch()
 
+    def _build_amount_section(self):
+        """The Damage section: damage, Hit Points regained or Temporary Hit Points."""
         # ── Damage, or Hit Points regained, or Temporary Hit Points
         damage_frame, damage_box, self.amount_header = section("Damage")
-        effect_col.addWidget(damage_frame)
+        self.effect_col.addWidget(damage_frame)
         self.amount_combo = QComboBox()
         self.amount_combo.setObjectName("amountKind")
         self.amount_combo.addItems(AMOUNT_KINDS)
@@ -788,9 +812,11 @@ class UseCastDialog:
         times_layout.addStretch()
         damage_box.addWidget(times_line)
 
+    def _build_condition_section(self):
+        """The Condition section: what it gives, for how long, and a note."""
         # ── Condition
         condition_frame, condition_box, self.condition_header = section("Condition")
-        effect_col.addWidget(condition_frame)
+        self.effect_col.addWidget(condition_frame)
         self.name_combo = QComboBox()
         self.name_combo.setObjectName("conditionName")
         self.name_combo.setEditable(True)
@@ -800,7 +826,8 @@ class UseCastDialog:
         self.name_combo.setCurrentText("")
         name_edit = self.name_combo.lineEdit()
         assert name_edit is not None  # an editable combo box has one
-        name_edit.setPlaceholderText("e.g. Hexed, Restrained by vines, -2 AC...")
+        self.name_edit = name_edit
+        self.name_edit.setPlaceholderText("e.g. Hexed, Restrained by vines, -2 AC...")
         condition_box.addWidget(self.name_combo)
 
         self.notes_input = QLineEdit()
@@ -844,12 +871,15 @@ class UseCastDialog:
         self.custom_widgets = (self.amount_input, self.unit_combo)
         condition_box.addLayout(custom_row)
 
+    def _build_cost_section(self):
+        """What it costs the source, how many it may target, an area to keep
+        and a push."""
         # ── What it costs the source
         cost_title = (
             f"Cost to {self.caster['name']}" if self.caster is not None else "Cost"
         )
         cost_frame, cost_box, _ = section(cost_title)
-        effect_col.addWidget(cost_frame)
+        self.effect_col.addWidget(cost_frame)
         self.slot_combo = QComboBox()
         self.slot_combo.setObjectName("spellSlot")
         self.slot_combo.addItem("No spell slot", None)
@@ -938,13 +968,15 @@ class UseCastDialog:
             no_cost.setObjectName("secondary")
             no_cost.setWordWrap(True)
             cost_box.addWidget(no_cost)
-        effect_col.addStretch()
+        self.effect_col.addStretch()
 
+    def _build_footer(self):
+        """What Apply will do, what's wrong, and the buttons."""
         # ── What Apply will do, what's wrong, and the buttons
         self.preview_lbl = QLabel("")
         self.preview_lbl.setObjectName("effectPreview")
         self.preview_lbl.setWordWrap(True)
-        outer.addWidget(self.preview_lbl)
+        self.outer.addWidget(self.preview_lbl)
 
         btn_row = QHBoxLayout()
         footer = QVBoxLayout()
@@ -981,17 +1013,19 @@ class UseCastDialog:
 
         area_btn.clicked.connect(self.select_in_area)
         btn_row.addWidget(area_btn)
-        cancel_btn = QPushButton("Cancel")
-        cancel_btn.setAutoDefault(False)
-        cancel_btn.setMinimumWidth(_BUTTON_WIDTH)
+        self.cancel_btn = QPushButton("Cancel")
+        self.cancel_btn.setAutoDefault(False)
+        self.cancel_btn.setMinimumWidth(_BUTTON_WIDTH)
         self.apply_btn = QPushButton("Apply")
         self.apply_btn.setObjectName("primaryBtn")
         self.apply_btn.setAutoDefault(False)
         self.apply_btn.setMinimumWidth(_BUTTON_WIDTH)
-        btn_row.addWidget(cancel_btn)
+        btn_row.addWidget(self.cancel_btn)
         btn_row.addWidget(self.apply_btn)
-        outer.addLayout(btn_row)
+        self.outer.addLayout(btn_row)
 
+    def _connect(self):
+        """Wire the form: what each box and button changes, then show it all once."""
         # The ability a saving throw goes back to after "No roll".
         self.last_ability = {"value": self.ability_combo.currentData() or "DEX"}
 
@@ -1035,6 +1069,8 @@ class UseCastDialog:
         # The rolls typed for each of the Times, as do_apply read them.
         self.typed_rolls: dict[str, dict] = {"totals": {}, "attacks": {}, "extras": {}}
 
+    def _start(self):
+        """Keys, the first pick, and opening the dialog."""
         # Up and Down from the search box pick as they go (fill_from), so
         # Enter applies the row they reached.
         SearchKeys(self.search_box, self.tree)
@@ -1046,14 +1082,14 @@ class UseCastDialog:
         self.name_input.textEdited.connect(self.drop_pick)
 
         self.apply_btn.clicked.connect(self.do_apply)
-        name_edit.returnPressed.connect(self.do_apply)
+        self.name_edit.returnPressed.connect(self.do_apply)
         self.notes_input.returnPressed.connect(self.do_apply)
         self.damage_input.returnPressed.connect(self.do_apply)
         self.name_input.returnPressed.connect(self.do_apply)
         self.keep_area_box.toggled.connect(
             lambda _=False: self.show_target_slots(self.picked["option"])
         )
-        cancel_btn.clicked.connect(self.dlg.reject)
+        self.cancel_btn.clicked.connect(self.dlg.reject)
         for keys, action in (
             ("Ctrl+Return", self.do_apply),
             ("Ctrl+Enter", self.do_apply),
@@ -1070,11 +1106,11 @@ class UseCastDialog:
                 for category in self.category_items.values()
                 for i in range(category.childCount())
                 if (option := self.option_of(category.child(i))) is not None
-                and option.name == pick
+                and option.name == self.pick
             ),
             None,
         )
-        if pick and start is not None:
+        if self.pick and start is not None:
             self.tree.setCurrentItem(start)
             self.tree.scrollToItem(start)
         if self.cost:

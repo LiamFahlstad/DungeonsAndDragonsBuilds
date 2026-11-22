@@ -35,7 +35,6 @@ MAX_FUNCTION_LINES = 150
 # "path::Qualified.name" -> the most lines it may have.
 LONG_FUNCTIONS = {
     "Combat/CombatUIQt/conditions_mixin.py::ConditionsMixin._apply_effect_to_targets": 236,
-    "Combat/CombatUIQt/use_cast/dialog.py::UseCastDialog.run": 616,
     "Combat/CombatUIQt/dialogs_mixin.py::DialogsMixin._show_statistics": 177,
     "Combat/CombatUIQt/effect_options.py::_described_option": 161,
     "Combat/CombatUIQt/window_mixin.py::WindowMixin._build_window": 680,

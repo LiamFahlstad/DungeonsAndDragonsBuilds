@@ -58,7 +58,7 @@ and the few others a step touches, not the character-sheet tests. Steps 3,
 | 0 | Safety net: a structure test that ratchets the numbers below down, fix the one pyright error | S | **Done** 2026-11-22 (R1, R2): `tests/test_combat_ui_structure.py`; pyright clean on `Combat/`; the UI tests take about 77 s (1,498 tests, xdist) |
 | 1 | Hygiene: enums for phase and action types, styles into QSS, dead code out | S-M | **Done** 2026-11-22: 1.1, 1.2, 1.6 (R3, R5); 1.3 (R6, R7): inline styles 98 → 23; 1.4 moved to 5.4, 1.5 dropped (R4) |
 | 2 | A typed combatant (`Combatant` TypedDict) | M | **Done** 2026-11-22, revised (R8): the schema and a key test; annotating signatures moved to step 5 |
-| 3 | The Use / Cast dialog as a class, its form-to-effects logic Qt-free | L | 3a **done** 2026-11-22 (R9): `use_cast/form.py`, dialog 1,580 → 1,440 lines; 3b **done** 2026-11-22 (R10): `_UseCastDialog`, `run()` 616 lines + 44 methods; 3c's move **done** (R11): `use_cast/dialog.py`, `conditions_mixin.py` 3,500 → 1,674 lines; **3c's split of `run()` next** |
+| 3 | The Use / Cast dialog as a class, its form-to-effects logic Qt-free | L | 3a **done** 2026-11-22 (R9): `use_cast/form.py`, dialog 1,580 → 1,440 lines; 3b **done** 2026-11-22 (R10): `_UseCastDialog`, `run()` 616 lines + 44 methods; 3c's move **done** (R11): `use_cast/dialog.py`, `conditions_mixin.py` 3,500 → 1,674 lines; 3c's split **done**, revised (R12): `run()` is 14 lines calling 10 builder methods, the longest 126; **3d next**, then the step's review |
 | 4 | The window built from panels, shortcuts as a table | M | Not started |
 | 5 | The Qt-free fight core (`Combat/Fight/`), one mixin at a time | XL | Not started |
 | 6 | One refresh path after every GM operation | M | Not started |
@@ -630,6 +630,27 @@ combat plans' file references. Then record the final numbers in Findings.
   - **Checks:** 2,009 tests pass and the sweep reports 0 problems.
   - **Logged, not fixed:** typing the touched test files showed a pyright
     error in `test_roll_sites.py` that was already there (DI-112).
+
+- **R12 (step 3c's split, 2026-11-22).** `run()` (616 lines) is now 14
+  lines that set the three parameters and call one builder per section:
+  `_prepare`, `_build_targets`, `_build_picker`, `_build_roll_section`
+  (126 lines), `_build_amount_section`, `_build_condition_section`,
+  `_build_cost_section` (97), `_build_footer`, `_connect` and `_start`.
+  - **Methods, not a class per section.** The plan said a class per
+    section. But the form's readers cut across every section (`do_apply`
+    reads all of them, and `show_preview` most), so section classes would
+    have been held together by cross-references. Builder methods on the
+    one dialog give the same readable shape without that.
+  - **Same codemod approach** (symtable). A local of `run()` became an
+    attribute only if a section reads it before assigning it, meaning it
+    needs another section's value. That was 6 widgets (`outer`, `body`,
+    `roll_col`, `effect_col`, `name_edit`, `cancel_btn`), plus the three
+    parameters. The other 61 stay local to their section.
+  - **One hand fix:** `name_edit`'s not-None assert now narrows a local
+    before the attribute is set. An assert in one method doesn't narrow
+    the attribute in another.
+  - **Checks:** 1,851 tests pass. The sweep over every campaign reports 0
+    problems. `run()` is off the long-function list.
 
 ## Discovered issues
 
