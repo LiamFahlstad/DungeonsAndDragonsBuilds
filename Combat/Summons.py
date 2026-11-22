@@ -308,12 +308,6 @@ def source_for(sheet: Character, summon: dict) -> tuple[Feature, SummonSpec] | N
     )
 
 
-def spec_for(sheet: Character, summon: dict) -> SummonSpec | None:
-    """The SummonSpec `summon` (of `sheet`'s character) was made from."""
-    found = source_for(sheet, summon)
-    return None if found is None else found[1]
-
-
 def summon_name(owner: str, spec: SummonSpec) -> str:
     """What a summon of `owner`'s is called (before numbering)."""
     return f"{owner}'s {spec.name}"
