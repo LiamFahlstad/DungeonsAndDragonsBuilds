@@ -51,8 +51,8 @@ ROLL_SITES: dict[tuple[str, str, str], str] = {
     ("turn_panel_mixin.py", "_roll_d20_for_attack", "randint"): "helper",
     ("turn_panel_mixin.py", "_recharge_roll", "randint"): "helper",
     # The Custom Effect dialog
-    ("conditions_mixin.py", "_damage_preview", "rolled_damage"): "a preview only",
-    ("conditions_mixin.py", "show_typed_type", "rolled_damage"): "a preview only",
+    ("use_cast/dialog.py", "_damage_preview", "rolled_damage"): "a preview only",
+    ("use_cast/dialog.py", "show_typed_type", "rolled_damage"): "a preview only",
     (
         "conditions_mixin.py",
         "_apply_effect_to_targets",
@@ -115,9 +115,10 @@ ROLL_SITES: dict[tuple[str, str, str], str] = {
 def _roll_calls() -> set[tuple[str, str, str]]:
     found = set()
     for folder in FOLDERS:
-        for path in sorted((ROOT / folder).glob("*.py")):
+        # Subfolders too (use_cast/), keyed by their path in the folder.
+        for path in sorted((ROOT / folder).rglob("*.py")):
             tree = ast.parse(path.read_text(encoding="utf-8"))
-            found |= _calls_in(tree, path.name)
+            found |= _calls_in(tree, path.relative_to(ROOT / folder).as_posix())
     return found
 
 

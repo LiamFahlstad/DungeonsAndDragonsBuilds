@@ -500,6 +500,16 @@ Fix (needs a decision: should a trait like Death Burst be a picker row?): give r
 **History**
 - 2026-11-19 main session (explicit-attributes Phase 6): found
 
+### DI-112 · pyright error in test_roll_sites: visit_AsyncFunctionDef = visit_FunctionDef
+- **Status:** open
+- **Area:** test-bughunter
+- **Where:** `tests/test_roll_sites.py:135`
+
+pyright (standard) rejects assigning Visitor.visit_FunctionDef (node: FunctionDef) to visit_AsyncFunctionDef (node: AsyncFunctionDef). Pre-existing; seen when the file was type-checked during step 3c. Fix: define visit_AsyncFunctionDef(self, node: ast.AsyncFunctionDef) that does the same push/visit/pop (or type node as FunctionDef | AsyncFunctionDef in a shared helper).
+
+**History**
+- 2026-11-22 main session (combat-ui-refactor-plan step 3c): found
+
 ## Fixed
 
 ### DI-001 · Temporary Hit Points stack instead of keeping one amount

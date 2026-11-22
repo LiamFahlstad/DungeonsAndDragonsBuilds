@@ -58,7 +58,7 @@ and the few others a step touches, not the character-sheet tests. Steps 3,
 | 0 | Safety net: a structure test that ratchets the numbers below down, fix the one pyright error | S | **Done** 2026-11-22 (R1, R2): `tests/test_combat_ui_structure.py`; pyright clean on `Combat/`; the UI tests take about 77 s (1,498 tests, xdist) |
 | 1 | Hygiene: enums for phase and action types, styles into QSS, dead code out | S-M | **Done** 2026-11-22: 1.1, 1.2, 1.6 (R3, R5); 1.3 (R6, R7): inline styles 98 → 23; 1.4 moved to 5.4, 1.5 dropped (R4) |
 | 2 | A typed combatant (`Combatant` TypedDict) | M | **Done** 2026-11-22, revised (R8): the schema and a key test; annotating signatures moved to step 5 |
-| 3 | The Use / Cast dialog as a class, its form-to-effects logic Qt-free | L | 3a **done** 2026-11-22 (R9): `use_cast/form.py`, dialog 1,580 → 1,440 lines; 3b **done** 2026-11-22 (R10): `_UseCastDialog`, `run()` 616 lines + 44 methods; **3c next** |
+| 3 | The Use / Cast dialog as a class, its form-to-effects logic Qt-free | L | 3a **done** 2026-11-22 (R9): `use_cast/form.py`, dialog 1,580 → 1,440 lines; 3b **done** 2026-11-22 (R10): `_UseCastDialog`, `run()` 616 lines + 44 methods; 3c's move **done** (R11): `use_cast/dialog.py`, `conditions_mixin.py` 3,500 → 1,674 lines; **3c's split of `run()` next** |
 | 4 | The window built from panels, shortcuts as a table | M | Not started |
 | 5 | The Qt-free fight core (`Combat/Fight/`), one mixin at a time | XL | Not started |
 | 6 | One refresh path after every GM operation | M | Not started |
@@ -609,9 +609,32 @@ combat plans' file references. Then record the final numbers in Findings.
     (`show_typed_type` is a method now) and the structure test (`run()`
     616 lines, `do_apply` 146).
 
+- **R11 (step 3c's move, 2026-11-22).** The class is now `UseCastDialog`
+  in `Combat/CombatUIQt/use_cast/dialog.py`. 41 module-level helpers and
+  constants moved with it: everything it uses, found by following each
+  helper's own uses. `conditions_mixin.py` imports back the three it
+  still needs (`_SUMMARY_COLOR`, `_ignores_cover`, `_where_from`). It never
+  imports the other way, so there is no cycle.
+  - **App type and stubs:** the class types its app as `CombatWindowState`,
+    not `ConditionsMixin`, which keeps the module free of the mixin. So the
+    4 `ConditionsMixin` methods it calls got stubs (`_apply_custom_effect`,
+    `_apply_custom_effects`, `_custom_condition_suggestions`,
+    `_effect_picker`), and the stub budget went 207 → 211. Step 7 deletes
+    the stubs with the class.
+  - **Scans that missed subfolders:** `test_roll_sites` and the
+    structure test's inline-style count only scanned the top of
+    `CombatUIQt/`, so they would have missed `use_cast/`. Both now scan
+    subfolders, and a file there is keyed by its path (`use_cast/dialog.py`).
+  - **One test moved its import:** `test_combat_ui_arena_ranges` imports
+    `_attack_text` from the dialog module now.
+  - **Checks:** 2,009 tests pass and the sweep reports 0 problems.
+  - **Logged, not fixed:** typing the touched test files showed a pyright
+    error in `test_roll_sites.py` that was already there (DI-112).
+
 ## Discovered issues
 
-None yet.
+- DI-112: pyright error in `tests/test_roll_sites.py:135`, which was
+  already there (found in step 3c).
 
 ## Verification (every step)
 

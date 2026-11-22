@@ -29,6 +29,8 @@ from PyQt6.QtWidgets import (
     QScrollArea,
     QSplitter,
     QStackedWidget,
+    QTreeWidget,
+    QTreeWidgetItem,
     QWidget,
 )
 
@@ -440,6 +442,20 @@ class CombatWindowState:
         source: dict | None = None,
     ):
         raise NotImplementedError("ConditionsMixin._give_badge_modifiers")
+
+    def _custom_condition_suggestions(self) -> list[str]:
+        raise NotImplementedError("ConditionsMixin._custom_condition_suggestions")
+
+    def _apply_custom_effect(self, effect: CustomEffect):
+        raise NotImplementedError("ConditionsMixin._apply_custom_effect")
+
+    def _apply_custom_effects(self, effects: list[CustomEffect]):
+        raise NotImplementedError("ConditionsMixin._apply_custom_effects")
+
+    def _effect_picker(
+        self, source: dict | None
+    ) -> tuple[QLineEdit, QTreeWidget, dict[str, QTreeWidgetItem]]:
+        raise NotImplementedError("ConditionsMixin._effect_picker")
 
     def _give_effect_conditions(self, target: dict, effect: CustomEffect) -> list[dict]:
         raise NotImplementedError("ConditionsMixin._give_effect_conditions")

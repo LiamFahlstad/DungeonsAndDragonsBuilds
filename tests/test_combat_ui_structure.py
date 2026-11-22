@@ -35,13 +35,15 @@ MAX_FUNCTION_LINES = 150
 # "path::Qualified.name" -> the most lines it may have.
 LONG_FUNCTIONS = {
     "Combat/CombatUIQt/conditions_mixin.py::ConditionsMixin._apply_effect_to_targets": 236,
-    "Combat/CombatUIQt/conditions_mixin.py::_UseCastDialog.run": 616,
+    "Combat/CombatUIQt/use_cast/dialog.py::UseCastDialog.run": 616,
     "Combat/CombatUIQt/dialogs_mixin.py::DialogsMixin._show_statistics": 177,
     "Combat/CombatUIQt/effect_options.py::_described_option": 161,
     "Combat/CombatUIQt/window_mixin.py::WindowMixin._build_window": 680,
 }
 
-MAX_WINDOW_STATE_STUBS = 207
+# 207 at step 0; +4 at step 3c, so the Use / Cast dialog (use_cast/dialog.py)
+# can type its app as CombatWindowState instead of importing ConditionsMixin.
+MAX_WINDOW_STATE_STUBS = 211
 MAX_INLINE_STYLES = 23
 
 
@@ -130,7 +132,7 @@ def test_window_state_stubs_do_not_grow():
 
 def _inline_styles() -> int:
     count = 0
-    for path in sorted(UI.glob("*.py")):
+    for path in sorted(UI.rglob("*.py")):
         if path.name == "styles.py":
             continue
         tree = ast.parse(path.read_text(encoding="utf-8"))

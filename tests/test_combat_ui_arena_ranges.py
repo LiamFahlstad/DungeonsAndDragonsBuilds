@@ -13,7 +13,7 @@ from Combat.Arena.arena import POSITION_KEY
 from Combat.Arena.ranges import AttackRange, check_attack_range
 from Combat.Combatants import Pirate, Tiger
 from Combat.PartyAllies import ENCOUNTER_ALLY_KEY
-from Combat.CombatUIQt.conditions_mixin import _attack_text
+from Combat.CombatUIQt.use_cast.dialog import _attack_text
 from Combat.CombatUIQt.effect_options import MONSTER_ACTION, pick_attack_range
 from Combat.CombatUIQt.monster_actions import DamageRoll, MonsterAction
 from Combat.CombatUIQt.saves import ATTACK_ROLL, CustomEffect, EffectOption
