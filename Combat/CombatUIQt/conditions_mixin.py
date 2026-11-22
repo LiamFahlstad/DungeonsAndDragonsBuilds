@@ -176,6 +176,8 @@ from .stats import _default_stats, increment_named_stat
 from .state import CombatWindowState
 from .tree_filter import filter_category_tree, first_visible_item
 from .undo import undoable
+from .use_cast import form as use_cast_form
+from .use_cast.form import read_or_say
 
 # The conditions that give Incapacitated, which breaks Concentration (and
 # ends a Wild Shape form): Paralyzed, Petrified, Stunned, Unconscious too.
@@ -324,8 +326,6 @@ _DETAILS_HINT = (
     "<p style='color:#a0a0b0'><b>↑/↓</b> browse · <b>Enter</b> picks the top"
     " match, <b>Enter</b> again applies · <b>Esc</b> empties the search</p>"
 )
-_NATURAL_ROLL = re.compile(r"nat(?:ural)?\s*\d+", re.IGNORECASE)
-_WHOLE_NUMBER = re.compile(r"-?\d+")
 MAX_SAVE_DC = 40
 MIN_ATTACK_BONUS = -10
 MAX_ATTACK_BONUS = 30
@@ -2871,134 +2871,31 @@ class ConditionsMixin(CombatWindowState):
         # Enter in a text box and the Apply button can both fire; apply once.
         applied: list[bool] = []
 
-        # A box takes a roll for each of the Times ("17, 9, nat 20"), in
-        # order; a short list rolls the rest (plan step 8.5).
-        def rolls_in(text: str) -> list[str] | None:
-            """The rolls typed in a box, one per time, or None having said
-            there are more than the Times."""
-            parts = [part.strip() for part in text.split(",")]
-            if len(parts) > times_input.value():
-                problem_lbl.setText(
-                    f"'{text}': {len(parts)} rolls for Times" f" {times_input.value()}."
-                )
-                return None
-            return parts
+        # Each reads what's typed for every target, or says what's wrong
+        # under the form and gives None (use_cast/form.py).
+        def say(problem: str):
+            problem_lbl.setText(problem)
 
         def typed_totals() -> dict[int, list[int | None]] | None:
-            """The totals typed, a list for each target, or None having said
-            what's wrong with one: a total ("14") or a sum ("9+5"), as an
-            attack's. A total can be negative: a low roll with a negative
-            save. A natural 20 or 1 is nothing special on a save, so it's the
-            total that's wanted."""
-            totals: dict[int, list[int | None]] = {}
-            for key, total_input in typed_inputs.items():
-                text = total_input.text().strip()
-                if not text:
-                    continue
-                parts = rolls_in(text)
-                if parts is None:
-                    return None
-                for part in parts:
-                    total = None
-                    if not part:
-                        totals.setdefault(key, []).append(None)
-                        continue
-                    if _NATURAL_ROLL.fullmatch(part):
-                        problem_lbl.setText(
-                            f"'{part}': a natural roll is nothing special on a"
-                            " save. Type the total instead."
-                        )
-                        return None
-                    if _WHOLE_NUMBER.fullmatch(part):
-                        total = int(part)
-                    if total is None:
-                        total = parse_amount(part)
-                    if total is None:
-                        problem_lbl.setText(f"'{part}' isn't a saving throw total.")
-                        return None
-                    totals.setdefault(key, []).append(total)
-            return totals
+            texts = {key: box.text() for key, box in typed_inputs.items()}
+            times = times_input.value()
+            return read_or_say(lambda: use_cast_form.typed_totals(texts, times), say)
 
         def typed_attacks() -> dict[int, list[AttackRoll | None]] | None:
-            """The attack rolls typed, a list for each target, or None having
-            said what's wrong with one."""
-            rolls: dict[int, list[AttackRoll | None]] = {}
-            for key, roll_input in attack_inputs.items():
-                text = roll_input.text().strip()
-                if not text:
-                    continue
-                parts = rolls_in(text)
-                if parts is None:
-                    return None
-                for part in parts:
-                    roll = parse_attack_roll(part) if part else None
-                    if part and roll is None:
-                        problem_lbl.setText(
-                            f"'{part}' isn't an attack roll. Try 17, 12+5 or" " nat 20."
-                        )
-                        return None
-                    rolls.setdefault(key, []).append(roll)
-            return rolls
+            texts = {key: box.text() for key, box in attack_inputs.items()}
+            times = times_input.value()
+            return read_or_say(lambda: use_cast_form.typed_attacks(texts, times), say)
 
         def typed_extras() -> dict[int, dict[str, list[int | None]]] | None:
-            """The extra damage rolled at the table, by target and what gives
-            it, a list for each, or None having said what's wrong with one."""
-            extras: dict[int, dict[str, list[int | None]]] = {}
-            for (key, label), (_, extra_input) in extra_rows.items():
-                text = extra_input.text().strip()
-                if not text:
-                    continue
-                parts = rolls_in(text)
-                if parts is None:
-                    return None
-                for part in parts:
-                    total = None
-                    if part and _WHOLE_NUMBER.fullmatch(part):
-                        total = int(part)
-                    elif part:
-                        total = parse_amount(part)
-                    if part and (total is None or total < 0):
-                        problem_lbl.setText(
-                            f"'{part}' isn't an amount of damage for {label}."
-                        )
-                        return None
-                    extras.setdefault(key, {}).setdefault(label, []).append(total)
-            return extras
+            texts = {key: box.text() for key, (_, box) in extra_rows.items()}
+            times = times_input.value()
+            return read_or_say(lambda: use_cast_form.typed_extras(texts, times), say)
 
         def typed_maximum() -> dict[int, int] | None:
-            """The Hit Point maximum typed, by target, or None having said
-            what's wrong with it: one total for all, or one per target."""
-            text = maximum_input.text().strip()
-            if not maximum_input.isVisibleTo(dlg) or not text:
-                return {}
-            parts = [part.strip() for part in text.split(",")]
-            if len(parts) not in (1, len(targets)):
-                problem_lbl.setText(
-                    f"'{text}': one Hit Point maximum for all, or one for each"
-                    f" of the {len(targets)} targets."
-                )
-                return None
-            if not all(_WHOLE_NUMBER.fullmatch(part) for part in parts):
-                problem_lbl.setText(f"'{text}' isn't a Hit Point maximum.")
-                return None
-            values = [int(part) for part in parts] * (
-                len(targets) if len(parts) == 1 else 1
-            )
-            return {id(t): value for t, value in zip(targets, values)}
-
-        def nth(lists: dict, index: int) -> dict:
-            """What was typed for time `index` (from 0), by key; a nested
-            dict (the extras) by its keys too. A blank or missing one is left
-            out, so it's rolled."""
-            picked = {}
-            for key, value in lists.items():
-                if isinstance(value, dict):
-                    inner = nth(value, index)
-                    if inner:
-                        picked[key] = inner
-                elif index < len(value) and value[index] is not None:
-                    picked[key] = value[index]
-            return picked
+            shown = maximum_input.isVisibleTo(dlg)
+            text = maximum_input.text() if shown else ""
+            keys = [id(t) for t in targets]
+            return read_or_say(lambda: use_cast_form.typed_maximum(text, keys), say)
 
         # The rolls typed for each of the Times, as do_apply read them.
         typed_rolls: dict[str, dict] = {"totals": {}, "attacks": {}, "extras": {}}
@@ -3095,15 +2992,15 @@ class ConditionsMixin(CombatWindowState):
                 concentration=concentrate_box.isChecked(),
                 from_area=kept_area if again is not None else "",
                 attack_bonus=bonus_input.value() if is_attack else None,
-                typed_attacks=nth(attacks, 0),
-                typed_extras=nth(extras, 0),
+                typed_attacks=use_cast_form.nth(attacks, 0),
+                typed_extras=use_cast_form.nth(extras, 0),
                 ability=ability,
                 dc=dc_input.value(),
                 mode=mode_combo.currentText(),
                 half_on_save=half_box.isChecked(),
                 use_legendary_resistance=resist_box.isChecked(),
                 repeat_save=repeat_box.isChecked(),
-                typed_totals=nth(totals, 0),
+                typed_totals=use_cast_form.nth(totals, 0),
                 typed_hit_point_maximum=maximum,
                 shields=(
                     {key: box.isChecked() for key, box in shield_boxes.items()}
@@ -3138,52 +3035,16 @@ class ConditionsMixin(CombatWindowState):
             if times == 1:
                 self._apply_custom_effect(effect)
             else:
-                self._apply_custom_effects(repeated(effect, times))
+                copies = use_cast_form.repeated(
+                    effect,
+                    times,
+                    amount_text=damage_input.text(),
+                    damage_type=type_combo.currentData(),
+                    kind=amount_kind(),
+                    typed_rolls=typed_rolls,
+                )
+                self._apply_custom_effects(copies)
             dlg.accept()
-
-        def repeated(effect: CustomEffect, times: int) -> list[CustomEffect]:
-            """`effect` `times` over: each with its own damage roll, named
-            "Scorching Ray (2 of 3)" in the log, only the first costing the
-            source anything, and each with its own of the rolls typed in
-            ("17, 9": the first time's 17, the second's 9; plan step 8.5)."""
-            kind = amount_kind()
-            effects = []
-            for index in range(times):
-                each = replace(effect, name=f"{effect.name} ({index + 1} of {times})")
-                if index:
-                    damage: list[tuple[int, str]] = []
-                    critical: list[tuple[int, str]] = []
-                    hit_points = 0
-                    if kind == DAMAGE_AMOUNT:
-                        damage, _ = read_damage(
-                            damage_input.text(), type_combo.currentData()
-                        )
-                        if effect.attack_bonus is not None:
-                            critical, _ = read_damage(
-                                damage_input.text(),
-                                type_combo.currentData(),
-                                critical=True,
-                            )
-                    else:
-                        hit_points, _ = read_hit_points(damage_input.text(), kind)
-                    each = replace(
-                        each,
-                        damage=damage,
-                        critical_damage=critical,
-                        healing=hit_points if kind == HEALING else 0,
-                        temp_hp=hit_points if kind == TEMP_HP else 0,
-                        slot_level=None,
-                        action_cost=None,
-                        concentration=False,
-                        area=None,
-                        typed_attacks=nth(typed_rolls["attacks"], index),
-                        typed_totals=nth(typed_rolls["totals"], index),
-                        typed_extras=nth(typed_rolls["extras"], index),
-                        pick=None,
-                        row=effect.pick.name if effect.pick is not None else "",
-                    )
-                effects.append(each)
-            return effects
 
         def show_details(option: EffectOption | None):
             details.setHtml(

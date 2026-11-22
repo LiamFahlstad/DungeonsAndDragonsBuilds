@@ -58,7 +58,7 @@ and the few others a step touches, not the character-sheet tests. Steps 3,
 | 0 | Safety net: a structure test that ratchets the numbers below down, fix the one pyright error | S | **Done** 2026-11-22 (R1, R2): `tests/test_combat_ui_structure.py`; pyright clean on `Combat/`; the UI tests take about 77 s (1,498 tests, xdist) |
 | 1 | Hygiene: enums for phase and action types, styles into QSS, dead code out | S-M | **Done** 2026-11-22: 1.1, 1.2, 1.6 (R3, R5); 1.3 (R6, R7): inline styles 98 → 23; 1.4 moved to 5.4, 1.5 dropped (R4) |
 | 2 | A typed combatant (`Combatant` TypedDict) | M | **Done** 2026-11-22, revised (R8): the schema and a key test; annotating signatures moved to step 5 |
-| 3 | The Use / Cast dialog as a class, its form-to-effects logic Qt-free | L | Not started |
+| 3 | The Use / Cast dialog as a class, its form-to-effects logic Qt-free | L | 3a **done** 2026-11-22 (R9): `use_cast/form.py`, dialog 1,580 → 1,440 lines; **3b next** |
 | 4 | The window built from panels, shortcuts as a table | M | Not started |
 | 5 | The Qt-free fight core (`Combat/Fight/`), one mixin at a time | XL | Not started |
 | 6 | One refresh path after every GM operation | M | Not started |
@@ -561,6 +561,29 @@ combat plans' file references. Then record the final numbers in Findings.
   - **The runtime probe found three keys the static scan missed**
     (`known_resistances`, `known_immunities`, `shield_off`), so a schema
     should come from both.
+
+- **R9 (step 3a, 2026-11-22).** The readers of rolls typed at the table
+  (`typed_totals`, `typed_attacks`, `typed_extras`, `typed_maximum`,
+  `rolls_in`), `nth` and the Times copies (`repeated`) are now
+  `Combat/CombatUIQt/use_cast/form.py`, Qt-free and unit tested
+  (`tests/test_use_cast_form.py`).
+  - **Errors as exceptions:** in the dialog, each reader wrote its problem
+    into the error label and returned None. Now it raises `FormError`
+    with the same text, and the dialog's one-line wrappers show it
+    through `read_or_say(read, say)`. Same text, same None.
+  - **Plain arguments:** the readers take the boxes' text, not the boxes,
+    and `repeated` takes the Damage text, type and amount kind it used to
+    read from the widgets.
+  - **What's left for 3b:** `do_apply` still builds the effect in the
+    closure. Its reading moves out in 3d, once 3b has made the closure a
+    class.
+  - **How to do 3b safely:** the closure has no `nonlocal` (its shared
+    state is dicts and lists), so turning it into a class is a rename.
+    Every name a nested function reads from the outer function becomes
+    `self.<name>`, and the app's `self` becomes `self.app`. Python's
+    `symtable` lists each nested scope's free variables exactly, so the
+    rename can be a scripted codemod. A text replace would also hit inner
+    parameters that shadow outer names.
 
 ## Discovered issues
 
