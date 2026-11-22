@@ -14,6 +14,10 @@ Combat state (current HP, conditions, spent slots) lives in the dict, never
 on the Character, which doesn't change. Replacing the dicts with a
 combat-side object that holds a Character is a follow-up
 (Notes/engine-simplification-plan.md, section 7).
+
+Every key the dicts may hold is declared, typed and explained in
+Combat/Fight/combatant.py (Combatant); a new key is declared there first
+(tests/test_combatant_keys.py checks).
 """
 
 import Core.Definitions as Definitions

@@ -18,7 +18,7 @@ what a fight does:
 4. **One way to do each thing:** one way to refresh the views after an
    operation, ask the GM a question, style a widget and build a button.
 
-Written 2026-11-21. Steps 0 and 1 built 2026-11-22.
+Written 2026-11-21. Steps 0 to 2 built 2026-11-22.
 
 **What never changes during this plan:** the behaviour, the widget
 `objectName`s (the tests, the golden widget dumps and the `combat-ui-explore`
@@ -57,7 +57,7 @@ and the few others a step touches, not the character-sheet tests. Steps 3,
 |---|---|---|---|
 | 0 | Safety net: a structure test that ratchets the numbers below down, fix the one pyright error | S | **Done** 2026-11-22 (R1, R2): `tests/test_combat_ui_structure.py`; pyright clean on `Combat/`; the UI tests take about 77 s (1,498 tests, xdist) |
 | 1 | Hygiene: enums for phase and action types, styles into QSS, dead code out | S-M | **Done** 2026-11-22: 1.1, 1.2, 1.6 (R3, R5); 1.3 (R6, R7): inline styles 98 → 23; 1.4 moved to 5.4, 1.5 dropped (R4) |
-| 2 | A typed combatant (`Combatant` TypedDict) | M | Not started |
+| 2 | A typed combatant (`Combatant` TypedDict) | M | **Done** 2026-11-22, revised (R8): the schema and a key test; annotating signatures moved to step 5 |
 | 3 | The Use / Cast dialog as a class, its form-to-effects logic Qt-free | L | Not started |
 | 4 | The window built from panels, shortcuts as a table | M | Not started |
 | 5 | The Qt-free fight core (`Combat/Fight/`), one mixin at a time | XL | Not started |
@@ -250,20 +250,23 @@ function grows.
 **Done when:** the UI tests and widget dumps pass, and the Step 0 counters
 are lower.
 
-### Step 2: a typed combatant *(types only, no runtime change)*
+### Step 2: a typed combatant *(types only, no runtime change)* — done, revised (R8)
 
-- `Combat/Fight/combatant.py`: `class Combatant(TypedDict, total=False)`
-  with every key and a one-line comment on each, including the `"_"` keys
-  and what the prefix means for undo and saving. `PLAYER_FIGHT_KEYS`
-  (`Combat/EncounterLogs.py`) is checked against it by a test.
-- Replace `dict` with `Combatant` in signatures across `Combat/CombatUIQt`,
-  `Combat/Effects`, `Combat/Arena` and the `Combat/*.py` modules, one
-  folder per commit, keeping pyright clean.
-- `combatant_from_character` and `combatant_from_stat_block` return
-  `Combatant`.
+- **Built:** `Combat/Fight/combatant.py`. `Combatant` is a TypedDict with
+  all 110 keys, each typed and commented, including the `"_"` keys and
+  what the prefix means for undo and saving. The 13 keys both builders
+  always set are `Required`. The 110 are the union of a static scan and a
+  runtime probe of every combatant the 1,589 UI tests build.
+- **Built:** `tests/test_combatant_keys.py` checks four things against it:
+  both builders' output (all 154 builds and all 513 catalog monsters, with
+  the required keys present), `PLAYER_FIGHT_KEYS`, the key constants, and
+  every literal key the combat code uses on a combatant (852 sites, found
+  by the names it's given). A mistyped key (`char["hp_max"]`) fails the
+  test (checked by planting one).
+- **Moved to step 5:** replacing `dict` with `Combatant` in signatures.
+  Each module switches as it moves into `Combat/Fight/`.
 
-**Done when:** pyright is clean and a mistyped key (`char["hp_max"]`) is a
-pyright error. Whether it becomes an attrs class later is Q2.
+Whether it becomes an attrs class later is Q2.
 
 ### Step 3: the Use / Cast dialog *(the biggest single win)*
 
@@ -340,6 +343,16 @@ Strangler-style, one area per commit, the tests green after each:
    from rules code.
 5. **Layering test** (section 2) added as soon as `Combat/Fight/` exists,
    with no allowlist.
+6. **`Combatant` in signatures** (from step 2, R8). As a module moves into
+   `Combat/Fight/`, its combatant parameters, returns and attributes say
+   `Combatant` instead of `dict`, and so do the callers it touches. A
+   TypedDict isn't assignable to or from a plain `dict`, so the change
+   has to follow the call chain. That's why it rides along with the move,
+   where every call site is touched anyway.
+   - **Optional keys:** read `char["x"]` on an optional key only where the
+     key is sure to be there (`"x" in char`, or the code that set it),
+     else use `char.get("x")`.
+   - **Key constants:** `Final`, so pyright reads them as their literal key.
 
 New rules tests are written against `Combat/Fight/` without a
 `QApplication`. Old tests move only when they're touched anyway (Q4).
@@ -522,6 +535,32 @@ combat plans' file references. Then record the final numbers in Findings.
     Encounter Log, Map Painter, Short Rest, the tie-break, the party view)
     were screenshotted before and after and diffed pixel by pixel. The
     only difference was a log timestamp in Load Encounter.
+
+- **R8 (step 2, 2026-11-22).** Annotating every signature with `Combatant`
+  at once was tried and measured, then reverted. A sweep switched 703
+  annotations (combatant-like parameters, `list[dict]`s, the window's
+  attributes), and pyright then reported 922 errors:
+  - **443** were reads of optional keys (`char["x"]`). Nearly all were
+    keys both builders always set, now `Required`.
+  - **About 400** were plain `dict` values flowing in from places the
+    sweep couldn't see: dataclass fields like `PendingAttack.attacker`,
+    helpers with parameters named `a`/`b`, and locals inferred from
+    untyped sources. Each needs its source found by hand, over several
+    rounds.
+  - **Only 3** were undefined keys, and all three were the sweep's own
+    false positives (dicts that aren't combatants).
+
+  So the full switch would have been a diff of a thousand-plus lines that
+  found no bug, while step 5 touches each of those signatures anyway. Step
+  2 became the schema plus a test that does the type checker's key check
+  (any literal key used on a combatant must be declared). The switch to
+  `Combatant` in signatures is step 5's item 6. Two smaller lessons:
+  - **Partial adoption doesn't work:** a TypedDict isn't assignable to or
+    from `dict`, so returning `Combatant` from the builders alone breaks
+    every caller.
+  - **The runtime probe found three keys the static scan missed**
+    (`known_resistances`, `known_immunities`, `shield_off`), so a schema
+    should come from both.
 
 ## Discovered issues
 
