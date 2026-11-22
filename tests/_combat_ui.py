@@ -28,6 +28,7 @@ from PyQt6.QtWidgets import (  # noqa: E402
 import pytest  # noqa: E402
 
 from Combat.CombatUIQt import CombatAppQt  # noqa: E402
+from Combat.CombatUIQt.styles import QSS  # noqa: E402
 from tests._snapshot_helpers import UPDATE_SNAPSHOTS, load, save  # noqa: E402
 
 _app: QApplication | None = None
@@ -41,6 +42,9 @@ def qapp() -> QApplication:
         existing = QApplication.instance()
         assert existing is None or isinstance(existing, QApplication)
         _app = existing or QApplication([])
+        # Styled as CombatAppQt.run() styles it: the windows and dialogs
+        # take their theme from the app, not each from a sheet of its own.
+        _app.setStyleSheet(QSS)
     return _app
 
 

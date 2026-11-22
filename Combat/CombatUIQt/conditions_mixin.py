@@ -174,7 +174,6 @@ from .saves import (
 from .spells_mixin import spell_badge_color, spell_badge_description
 from .stats import _default_stats, increment_named_stat
 from .state import CombatWindowState
-from .styles import QSS
 from .tree_filter import filter_category_tree, first_visible_item
 from .undo import undoable
 
@@ -1923,7 +1922,6 @@ class ConditionsMixin(CombatWindowState):
         dlg = QDialog(self._window)
         dlg.setObjectName("customEffectDialog")
         dlg.setWindowTitle("Use / Cast")
-        dlg.setStyleSheet(QSS)
         dlg.setMinimumWidth(_CUSTOM_DIALOG_WIDTH)
         dlg.resize(_effect_dialog_width(self._window), 0)
         outer = QVBoxLayout(dlg)

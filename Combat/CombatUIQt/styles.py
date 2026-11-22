@@ -433,4 +433,105 @@ QScrollBar::handle:vertical {
 }
 QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical { height: 0; }
 QScrollBar:horizontal { height: 0; }
+
+/* ---- Styles that were set inline (combat-ui-refactor-plan step 1.3) ----
+   Last in the sheet on purpose: a rule here that ties another on
+   specificity (QPushButton#x vs QPushButton#x:hover) wins by coming later.
+   #secondary (above) is the grey 11px hint text. */
+
+/* Text */
+QLabel#muted { color: #a0a0b0; }
+QLabel#caption { color: #a0a0b0; font-size: 10px; }
+QLabel#goldHeading { color: #c9a84c; font-weight: bold; }
+QLabel#panelTitle { color: #c9a84c; font-size: 16px; font-weight: bold; }
+QLabel#timerLabel { color: #c9a84c; font-weight: bold; font-size: 12px; }
+QLabel#turnCounter { color: #c9a84c; font-weight: bold; font-size: 11px; }
+QLabel#rollResult { font-size: 16px; font-weight: bold; }
+QLabel#partyLine, QLabel#partyAllyLine { font-size: 13px; }
+QLabel#painterStatus { color: #c9a84c; }
+
+/* Combatant cards */
+QFrame#cardSeparator { color: #0f3460; }
+QLabel#cardSectionHeader { color: #c9a84c; font-size: 10px; font-weight: bold; }
+QLabel#cardResource { color: #a0c4ff; font-size: 11px; }
+QLabel#cardTempHp { color: #5bc8f5; font-size: 10px; }
+QLabel#cardCondImmune { color: #4a9fc4; font-size: 10px; }
+QLabel#cardCounters { color: #c9a84c; font-size: 11px; }
+QLabel#cardSpent { color: #e67e22; font-size: 10px; }
+QLabel#cardSummonName { color: #a0c4ff; font-size: 10px; }
+QLabel#cardAbilities { font-family: monospace; font-size: 10px; color: #a0a0b0; }
+QLabel#deathSavePips { font-size: 11px; letter-spacing: 2px; }
+QPushButton#cardSummonDismiss {
+    background-color: #5c1a1a;
+    color: #ffffff;
+    border: none;
+    border-radius: 3px;
+    font-size: 10px;
+    padding: 0px;
+}
+QPushButton#cardSummonDismiss:hover { background-color: #7a2a2a; }
+QProgressBar#cardTimeBar::chunk { background-color: #5ac8f5; border-radius: 3px; }
+
+/* Control panel */
+QLineEdit#healInput, QLineEdit#tempHpInput {
+    background-color: #0f3460;
+    border-radius: 3px;
+    color: #eaeaea;
+    padding: 3px 5px;
+}
+QLineEdit#healInput { border: 1px solid #4caf82; }
+QLineEdit#healInput:focus { border: 1px solid #5cdf92; }
+QLineEdit#tempHpInput { border: 1px solid #4a9fc4; }
+QLineEdit#tempHpInput:focus { border: 1px solid #5ac8f5; }
+QPushButton#nextTurnBtn {
+    background-color: #3a2e00;
+    border: 1px solid #c9a84c;
+    color: #c9a84c;
+    font-weight: bold;
+    min-height: 28px;
+}
+QPushButton#compactBtn { padding: 2px 6px; min-height: 18px; font-size: 10px; }
+
+/* Initiative */
+QPushButton#rollInitiativeBtn {
+    background-color: #1a2a3a;
+    border: 1px solid #5bc8f5;
+    color: #5bc8f5;
+    font-weight: bold;
+    min-height: 26px;
+}
+QPushButton#startCombatBtn {
+    background-color: #1a3a1a;
+    border: 1px solid #2ecc71;
+    color: #2ecc71;
+    font-weight: bold;
+    min-height: 30px;
+}
+QListWidget#tieList, QListWidget#encounterList {
+    background: #16213e;
+    border: 1px solid #0f3460;
+}
+QListWidget#tieList::item { padding: 5px 10px; }
+QListWidget#encounterList::item { padding: 6px 10px; }
+QListWidget#tieList::item:selected, QListWidget#encounterList::item:selected {
+    background: #1e2d5a;
+    color: #eaeaea;
+}
+
+/* Dialogs */
+QLabel#playerLink { color: #c9a84c; font-size: 18px; font-weight: bold; }
+QLabel#descriptionText { color: #c0c0c0; font-size: 11px; }
+QLabel#monsterDescription { font-style: italic; color: #c0c0c0; }
+QLabel#statsName { color: #eaeaea; font-weight: bold; }
+QLabel#ruleTitle { font-weight: bold; color: #c9a84c; font-size: 13px; }
+QLabel#ruleBody { color: #c0c0c0; font-size: 12px; }
+QPushButton#expandToggle {
+    text-align: left;
+    padding: 2px 4px;
+    background: transparent;
+    border: none;
+    color: #eaeaea;
+    font-size: 12px;
+}
+QPushButton#expandToggle:hover, QPushButton#expandToggle:checked { color: #c9a84c; }
 """

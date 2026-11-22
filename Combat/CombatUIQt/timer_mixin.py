@@ -14,8 +14,6 @@ from .state import CombatWindowState
 class TimerMixin(CombatWindowState):
     """Mixin for session and player timer widgets."""
 
-    _COMPACT_BTN_STYLE = "padding: 2px 6px; min-height: 18px; font-size: 10px;"
-
     def _build_timer_section(self) -> QWidget:
         """Build and return a compact widget with the round/session status
         row and the player timer row (label + inline controls)."""
@@ -27,13 +25,11 @@ class TimerMixin(CombatWindowState):
         # Row 1: Round indicator + session clock, sharing one line.
         status_row = QHBoxLayout()
         self.round_label = QLabel(f"Round {self.round_number}")
-        self.round_label.setStyleSheet(
-            "color: #c9a84c; font-weight: bold; font-size: 12px;"
-        )
+        self.round_label.setObjectName("timerLabel")
         status_row.addWidget(self.round_label)
         status_row.addStretch()
         self._session_timer_label = QLabel("Session 00:00:00")
-        self._session_timer_label.setStyleSheet("color: #a0a0b0; font-size: 11px;")
+        self._session_timer_label.setObjectName("secondary")
         status_row.addWidget(self._session_timer_label)
         layout.addLayout(status_row)
 
@@ -42,24 +38,22 @@ class TimerMixin(CombatWindowState):
         player_row.setSpacing(4)
 
         self._player_timer_label = QLabel("00:00")
-        self._player_timer_label.setStyleSheet(
-            "color: #c9a84c; font-weight: bold; font-size: 12px;"
-        )
+        self._player_timer_label.setObjectName("timerLabel")
         player_row.addWidget(self._player_timer_label)
         player_row.addStretch()
 
         self._player_timer_start_btn = QPushButton("Start")
-        self._player_timer_start_btn.setStyleSheet(self._COMPACT_BTN_STYLE)
+        self._player_timer_start_btn.setObjectName("compactBtn")
         self._player_timer_start_btn.clicked.connect(self._start_player_timer)
         player_row.addWidget(self._player_timer_start_btn)
 
         self._player_timer_pause_btn = QPushButton("Pause")
-        self._player_timer_pause_btn.setStyleSheet(self._COMPACT_BTN_STYLE)
+        self._player_timer_pause_btn.setObjectName("compactBtn")
         self._player_timer_pause_btn.clicked.connect(self._pause_player_timer)
         player_row.addWidget(self._player_timer_pause_btn)
 
         self._player_timer_reset_btn = QPushButton("Reset")
-        self._player_timer_reset_btn.setStyleSheet(self._COMPACT_BTN_STYLE)
+        self._player_timer_reset_btn.setObjectName("compactBtn")
         self._player_timer_reset_btn.clicked.connect(self._reset_player_timer)
         player_row.addWidget(self._player_timer_reset_btn)
 

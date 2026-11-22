@@ -19,6 +19,7 @@
           "word_wrap": true
          },
          {
+          "fixed_height": 3,
           "frame_shape": "HLine",
           "object_name": "divider",
           "size_policy": [
@@ -43,6 +44,7 @@
           "type": "QLabel"
          },
          {
+          "fixed_height": 3,
           "frame_shape": "HLine",
           "object_name": "divider",
           "size_policy": [
@@ -107,6 +109,7 @@
           "word_wrap": true
          },
          {
+          "fixed_height": 3,
           "frame_shape": "HLine",
           "object_name": "divider",
           "size_policy": [
@@ -154,6 +157,7 @@
           "word_wrap": true
          },
          {
+          "fixed_height": 3,
           "frame_shape": "HLine",
           "object_name": "divider",
           "size_policy": [
@@ -185,7 +189,7 @@
              "checkable": true,
              "checked": false,
              "flat": true,
-             "style": "QPushButton { text-align: left; padding: 2px 4px; background: transparent; border: none; color: #eaeaea; font-size: 12px; }QPushButton:hover { color: #c9a84c; }QPushButton:checked { color: #c9a84c; }",
+             "object_name": "expandToggle",
              "text": "\u25b6  Fiendish Burst  (+9 to hit)",
              "type": "QPushButton"
             },
@@ -199,7 +203,7 @@
                 "word_wrap": true
                },
                {
-                "style": "color: #a0a0b0; font-size: 10px;",
+                "object_name": "caption",
                 "text": "Chance to hit, by target AC",
                 "type": "QLabel"
                },
@@ -239,7 +243,7 @@
              "checkable": true,
              "checked": false,
              "flat": true,
-             "style": "QPushButton { text-align: left; padding: 2px 4px; background: transparent; border: none; color: #eaeaea; font-size: 12px; }QPushButton:hover { color: #c9a84c; }QPushButton:checked { color: #c9a84c; }",
+             "object_name": "expandToggle",
              "text": "\u25b6  Banishing Claw (Requires Soul Tome)  (+9 to hit)",
              "type": "QPushButton"
             },
@@ -253,7 +257,7 @@
                 "word_wrap": true
                },
                {
-                "style": "color: #a0a0b0; font-size: 10px;",
+                "object_name": "caption",
                 "text": "Chance to hit, by target AC",
                 "type": "QLabel"
                },
@@ -298,6 +302,7 @@
           "word_wrap": true
          },
          {
+          "fixed_height": 3,
           "frame_shape": "HLine",
           "object_name": "divider",
           "size_policy": [
@@ -323,6 +328,7 @@
           "word_wrap": true
          },
          {
+          "fixed_height": 3,
           "frame_shape": "HLine",
           "object_name": "divider",
           "size_policy": [
@@ -343,7 +349,7 @@
              "checkable": true,
              "checked": false,
              "flat": true,
-             "style": "QPushButton { text-align: left; padding: 2px 4px; background: transparent; border: none; color: #eaeaea; font-size: 12px; }QPushButton:hover { color: #c9a84c; }QPushButton:checked { color: #c9a84c; }",
+             "object_name": "expandToggle",
              "text": "\u25b6  Counterspell  (DC 17)",
              "type": "QPushButton"
             },
@@ -357,7 +363,7 @@
                 "word_wrap": true
                },
                {
-                "style": "color: #a0a0b0; font-size: 10px;",
+                "object_name": "caption",
                 "text": "Target's chance to fail the save, by save modifier",
                 "type": "QLabel"
                },
@@ -486,6 +492,7 @@
           "word_wrap": true
          },
          {
+          "fixed_height": 3,
           "frame_shape": "HLine",
           "object_name": "divider",
           "size_policy": [
@@ -510,6 +517,7 @@
           "type": "QLabel"
          },
          {
+          "fixed_height": 3,
           "frame_shape": "HLine",
           "object_name": "divider",
           "size_policy": [
@@ -574,6 +582,7 @@
           "word_wrap": true
          },
          {
+          "fixed_height": 3,
           "frame_shape": "HLine",
           "object_name": "divider",
           "size_policy": [
@@ -621,6 +630,7 @@
           "word_wrap": true
          },
          {
+          "fixed_height": 3,
           "frame_shape": "HLine",
           "object_name": "divider",
           "size_policy": [
@@ -652,7 +662,7 @@
              "checkable": true,
              "checked": false,
              "flat": true,
-             "style": "QPushButton { text-align: left; padding: 2px 4px; background: transparent; border: none; color: #eaeaea; font-size: 12px; }QPushButton:hover { color: #c9a84c; }QPushButton:checked { color: #c9a84c; }",
+             "object_name": "expandToggle",
              "text": "\u25b6  Fiendish Burst  (+9 to hit)",
              "type": "QPushButton"
             },
@@ -666,7 +676,7 @@
                 "word_wrap": true
                },
                {
-                "style": "color: #a0a0b0; font-size: 10px;",
+                "object_name": "caption",
                 "text": "Chance to hit, by target AC",
                 "type": "QLabel"
                },
@@ -706,7 +716,7 @@
              "checkable": true,
              "checked": false,
              "flat": true,
-             "style": "QPushButton { text-align: left; padding: 2px 4px; background: transparent; border: none; color: #eaeaea; font-size: 12px; }QPushButton:hover { color: #c9a84c; }QPushButton:checked { color: #c9a84c; }",
+             "object_name": "expandToggle",
              "text": "\u25b6  Banishing Claw (Requires Soul Tome)  (+9 to hit)",
              "type": "QPushButton"
             },
@@ -720,7 +730,7 @@
                 "word_wrap": true
                },
                {
-                "style": "color: #a0a0b0; font-size: 10px;",
+                "object_name": "caption",
                 "text": "Chance to hit, by target AC",
                 "type": "QLabel"
                },
@@ -765,6 +775,7 @@
           "word_wrap": true
          },
          {
+          "fixed_height": 3,
           "frame_shape": "HLine",
           "object_name": "divider",
           "size_policy": [
@@ -790,6 +801,7 @@
           "word_wrap": true
          },
          {
+          "fixed_height": 3,
           "frame_shape": "HLine",
           "object_name": "divider",
           "size_policy": [
@@ -810,7 +822,7 @@
              "checkable": true,
              "checked": false,
              "flat": true,
-             "style": "QPushButton { text-align: left; padding: 2px 4px; background: transparent; border: none; color: #eaeaea; font-size: 12px; }QPushButton:hover { color: #c9a84c; }QPushButton:checked { color: #c9a84c; }",
+             "object_name": "expandToggle",
              "text": "\u25b6  Counterspell  (DC 17)",
              "type": "QPushButton"
             },
@@ -824,7 +836,7 @@
                 "word_wrap": true
                },
                {
-                "style": "color: #a0a0b0; font-size: 10px;",
+                "object_name": "caption",
                 "text": "Target's chance to fail the save, by save modifier",
                 "type": "QLabel"
                },
@@ -953,6 +965,7 @@
           "word_wrap": true
          },
          {
+          "fixed_height": 3,
           "frame_shape": "HLine",
           "object_name": "divider",
           "size_policy": [
@@ -972,6 +985,7 @@
           "type": "QLabel"
          },
          {
+          "fixed_height": 3,
           "frame_shape": "HLine",
           "object_name": "divider",
           "size_policy": [
@@ -1016,6 +1030,7 @@
           "word_wrap": true
          },
          {
+          "fixed_height": 3,
           "frame_shape": "HLine",
           "object_name": "divider",
           "size_policy": [
@@ -1041,6 +1056,7 @@
           "word_wrap": true
          },
          {
+          "fixed_height": 3,
           "frame_shape": "HLine",
           "object_name": "divider",
           "size_policy": [
@@ -1152,6 +1168,7 @@
           "word_wrap": true
          },
          {
+          "fixed_height": 3,
           "frame_shape": "HLine",
           "object_name": "divider",
           "size_policy": [
@@ -1240,6 +1257,7 @@
           "word_wrap": true
          },
          {
+          "fixed_height": 3,
           "frame_shape": "HLine",
           "object_name": "divider",
           "size_policy": [
@@ -1264,6 +1282,7 @@
           "type": "QLabel"
          },
          {
+          "fixed_height": 3,
           "frame_shape": "HLine",
           "object_name": "divider",
           "size_policy": [
@@ -1298,6 +1317,7 @@
           "word_wrap": true
          },
          {
+          "fixed_height": 3,
           "frame_shape": "HLine",
           "object_name": "divider",
           "size_policy": [
@@ -1317,6 +1337,7 @@
           "type": "QLabel"
          },
          {
+          "fixed_height": 3,
           "frame_shape": "HLine",
           "object_name": "divider",
           "size_policy": [
@@ -1336,6 +1357,7 @@
           "word_wrap": true
          },
          {
+          "fixed_height": 3,
           "frame_shape": "HLine",
           "object_name": "divider",
           "size_policy": [
@@ -1361,7 +1383,7 @@
              "checkable": true,
              "checked": false,
              "flat": true,
-             "style": "QPushButton { text-align: left; padding: 2px 4px; background: transparent; border: none; color: #eaeaea; font-size: 12px; }QPushButton:hover { color: #c9a84c; }QPushButton:checked { color: #c9a84c; }",
+             "object_name": "expandToggle",
              "text": "\u25b6  Chill Touch",
              "type": "QPushButton"
             },
@@ -1376,7 +1398,7 @@
                 "word_wrap": true
                },
                {
-                "style": "color: #c0c0c0; font-size: 11px;",
+                "object_name": "descriptionText",
                 "text": "Channeling the chill of the grave, make a melee spell attack... [308 chars, sha1 97fa8b534465]",
                 "type": "QLabel",
                 "word_wrap": true
@@ -1412,7 +1434,7 @@
              "checkable": true,
              "checked": false,
              "flat": true,
-             "style": "QPushButton { text-align: left; padding: 2px 4px; background: transparent; border: none; color: #eaeaea; font-size: 12px; }QPushButton:hover { color: #c9a84c; }QPushButton:checked { color: #c9a84c; }",
+             "object_name": "expandToggle",
              "text": "\u25b6  Eldritch Blast",
              "type": "QPushButton"
             },
@@ -1427,7 +1449,7 @@
                 "word_wrap": true
                },
                {
-                "style": "color: #c0c0c0; font-size: 11px;",
+                "object_name": "descriptionText",
                 "text": "You hurl a beam of crackling energy. Make a ranged spell att... [369 chars, sha1 1ae2ab751906]",
                 "type": "QLabel",
                 "word_wrap": true
@@ -1463,7 +1485,7 @@
              "checkable": true,
              "checked": false,
              "flat": true,
-             "style": "QPushButton { text-align: left; padding: 2px 4px; background: transparent; border: none; color: #eaeaea; font-size: 12px; }QPushButton:hover { color: #c9a84c; }QPushButton:checked { color: #c9a84c; }",
+             "object_name": "expandToggle",
              "text": "\u25b6  Minor Illusion",
              "type": "QPushButton"
             },
@@ -1478,7 +1500,7 @@
                 "word_wrap": true
                },
                {
-                "style": "color: #c0c0c0; font-size: 11px;",
+                "object_name": "descriptionText",
                 "text": "You create a sound or an image of an object within range tha... [1104 chars, sha1 604583cdebfc]",
                 "type": "QLabel",
                 "word_wrap": true
@@ -1514,7 +1536,7 @@
              "checkable": true,
              "checked": false,
              "flat": true,
-             "style": "QPushButton { text-align: left; padding: 2px 4px; background: transparent; border: none; color: #eaeaea; font-size: 12px; }QPushButton:hover { color: #c9a84c; }QPushButton:checked { color: #c9a84c; }",
+             "object_name": "expandToggle",
              "text": "\u25b6  True Strike",
              "type": "QPushButton"
             },
@@ -1529,7 +1551,7 @@
                 "word_wrap": true
                },
                {
-                "style": "color: #c0c0c0; font-size: 11px;",
+                "object_name": "descriptionText",
                 "text": "Guided by a flash of magical insight, you make one attack wi... [497 chars, sha1 04fb1457dc09]",
                 "type": "QLabel",
                 "word_wrap": true
@@ -1570,7 +1592,7 @@
              "checkable": true,
              "checked": false,
              "flat": true,
-             "style": "QPushButton { text-align: left; padding: 2px 4px; background: transparent; border: none; color: #eaeaea; font-size: 12px; }QPushButton:hover { color: #c9a84c; }QPushButton:checked { color: #c9a84c; }",
+             "object_name": "expandToggle",
              "text": "\u25b6  Armor of Agathys",
              "type": "QPushButton"
             },
@@ -1585,7 +1607,7 @@
                 "word_wrap": true
                },
                {
-                "style": "color: #c0c0c0; font-size: 11px;",
+                "object_name": "descriptionText",
                 "text": "Protective magical frost surrounds you. You gain 5 Temporary... [367 chars, sha1 4cfd0163b175]",
                 "type": "QLabel",
                 "word_wrap": true
@@ -1621,7 +1643,7 @@
              "checkable": true,
              "checked": false,
              "flat": true,
-             "style": "QPushButton { text-align: left; padding: 2px 4px; background: transparent; border: none; color: #eaeaea; font-size: 12px; }QPushButton:hover { color: #c9a84c; }QPushButton:checked { color: #c9a84c; }",
+             "object_name": "expandToggle",
              "text": "\u25b6  Hellish Rebuke",
              "type": "QPushButton"
             },
@@ -1636,7 +1658,7 @@
                 "word_wrap": true
                },
                {
-                "style": "color: #c0c0c0; font-size: 11px;",
+                "object_name": "descriptionText",
                 "text": "The creature that damaged you is momentarily surrounded by g... [289 chars, sha1 309190f03f56]",
                 "type": "QLabel",
                 "word_wrap": true
@@ -1672,7 +1694,7 @@
              "checkable": true,
              "checked": false,
              "flat": true,
-             "style": "QPushButton { text-align: left; padding: 2px 4px; background: transparent; border: none; color: #eaeaea; font-size: 12px; }QPushButton:hover { color: #c9a84c; }QPushButton:checked { color: #c9a84c; }",
+             "object_name": "expandToggle",
              "text": "\u25b6  Hex",
              "type": "QPushButton"
             },
@@ -1687,7 +1709,7 @@
                 "word_wrap": true
                },
                {
-                "style": "color: #c0c0c0; font-size: 11px;",
+                "object_name": "descriptionText",
                 "text": "You place a curse on a creature that you can see within rang... [585 chars, sha1 96db2b01e95e]",
                 "type": "QLabel",
                 "word_wrap": true
@@ -1728,7 +1750,7 @@
              "checkable": true,
              "checked": false,
              "flat": true,
-             "style": "QPushButton { text-align: left; padding: 2px 4px; background: transparent; border: none; color: #eaeaea; font-size: 12px; }QPushButton:hover { color: #c9a84c; }QPushButton:checked { color: #c9a84c; }",
+             "object_name": "expandToggle",
              "text": "\u25b6  Invisibility",
              "type": "QPushButton"
             },
@@ -1743,7 +1765,7 @@
                 "word_wrap": true
                },
                {
-                "style": "color: #c0c0c0; font-size: 11px;",
+                "object_name": "descriptionText",
                 "text": "A creature you touch has the Invisible condition until the s... [281 chars, sha1 2892d469d103]",
                 "type": "QLabel",
                 "word_wrap": true
@@ -1779,7 +1801,7 @@
              "checkable": true,
              "checked": false,
              "flat": true,
-             "style": "QPushButton { text-align: left; padding: 2px 4px; background: transparent; border: none; color: #eaeaea; font-size: 12px; }QPushButton:hover { color: #c9a84c; }QPushButton:checked { color: #c9a84c; }",
+             "object_name": "expandToggle",
              "text": "\u25b6  Misty Step",
              "type": "QPushButton"
             },
@@ -1794,7 +1816,7 @@
                 "word_wrap": true
                },
                {
-                "style": "color: #c0c0c0; font-size: 11px;",
+                "object_name": "descriptionText",
                 "text": "Briefly surrounded by silvery mist, you teleport up to 30 feet to an unoccupied space you can see.",
                 "type": "QLabel",
                 "word_wrap": true
@@ -1835,7 +1857,7 @@
              "checkable": true,
              "checked": false,
              "flat": true,
-             "style": "QPushButton { text-align: left; padding: 2px 4px; background: transparent; border: none; color: #eaeaea; font-size: 12px; }QPushButton:hover { color: #c9a84c; }QPushButton:checked { color: #c9a84c; }",
+             "object_name": "expandToggle",
              "text": "\u25b6  Counterspell",
              "type": "QPushButton"
             },
@@ -1850,7 +1872,7 @@
                 "word_wrap": true
                },
                {
-                "style": "color: #c0c0c0; font-size: 11px;",
+                "object_name": "descriptionText",
                 "text": "You attempt to interrupt a creature in the process of castin... [309 chars, sha1 92c9b7e151c8]",
                 "type": "QLabel",
                 "word_wrap": true
@@ -1886,7 +1908,7 @@
              "checkable": true,
              "checked": false,
              "flat": true,
-             "style": "QPushButton { text-align: left; padding: 2px 4px; background: transparent; border: none; color: #eaeaea; font-size: 12px; }QPushButton:hover { color: #c9a84c; }QPushButton:checked { color: #c9a84c; }",
+             "object_name": "expandToggle",
              "text": "\u25b6  Fear",
              "type": "QPushButton"
             },
@@ -1901,7 +1923,7 @@
                 "word_wrap": true
                },
                {
-                "style": "color: #c0c0c0; font-size: 11px;",
+                "object_name": "descriptionText",
                 "text": "Each creature in a 30-foot Cone must succeed on a Wisdom sav... [476 chars, sha1 118f7b54dee9]",
                 "type": "QLabel",
                 "word_wrap": true
@@ -1942,7 +1964,7 @@
              "checkable": true,
              "checked": false,
              "flat": true,
-             "style": "QPushButton { text-align: left; padding: 2px 4px; background: transparent; border: none; color: #eaeaea; font-size: 12px; }QPushButton:hover { color: #c9a84c; }QPushButton:checked { color: #c9a84c; }",
+             "object_name": "expandToggle",
              "text": "\u25b6  Banishment",
              "type": "QPushButton"
             },
@@ -1957,7 +1979,7 @@
                 "word_wrap": true
                },
                {
-                "style": "color: #c0c0c0; font-size: 11px;",
+                "object_name": "descriptionText",
                 "text": "One creature that you can see within range must succeed on a... [683 chars, sha1 52f0be32e8b1]",
                 "type": "QLabel",
                 "word_wrap": true
@@ -1993,7 +2015,7 @@
              "checkable": true,
              "checked": false,
              "flat": true,
-             "style": "QPushButton { text-align: left; padding: 2px 4px; background: transparent; border: none; color: #eaeaea; font-size: 12px; }QPushButton:hover { color: #c9a84c; }QPushButton:checked { color: #c9a84c; }",
+             "object_name": "expandToggle",
              "text": "\u25b6  Dimension Door",
              "type": "QPushButton"
             },
@@ -2008,7 +2030,7 @@
                 "word_wrap": true
                },
                {
-                "style": "color: #c0c0c0; font-size: 11px;",
+                "object_name": "descriptionText",
                 "text": "You teleport to a location within range. You arrive at exact... [689 chars, sha1 3242e4df118d]",
                 "type": "QLabel",
                 "word_wrap": true
@@ -2049,7 +2071,7 @@
              "checkable": true,
              "checked": false,
              "flat": true,
-             "style": "QPushButton { text-align: left; padding: 2px 4px; background: transparent; border: none; color: #eaeaea; font-size: 12px; }QPushButton:hover { color: #c9a84c; }QPushButton:checked { color: #c9a84c; }",
+             "object_name": "expandToggle",
              "text": "\u25b6  Contact Other Plane",
              "type": "QPushButton"
             },
@@ -2064,7 +2086,7 @@
                 "word_wrap": true
                },
                {
-                "style": "color: #c0c0c0; font-size: 11px;",
+                "object_name": "descriptionText",
                 "text": "You mentally contact a demigod, the spirit of a long-dead sa... [801 chars, sha1 d8bcddb23a4b]",
                 "type": "QLabel",
                 "word_wrap": true
@@ -2100,7 +2122,7 @@
              "checkable": true,
              "checked": false,
              "flat": true,
-             "style": "QPushButton { text-align: left; padding: 2px 4px; background: transparent; border: none; color: #eaeaea; font-size: 12px; }QPushButton:hover { color: #c9a84c; }QPushButton:checked { color: #c9a84c; }",
+             "object_name": "expandToggle",
              "text": "\u25b6  Hold Monster",
              "type": "QPushButton"
             },
@@ -2115,7 +2137,7 @@
                 "word_wrap": true
                },
                {
-                "style": "color: #c0c0c0; font-size: 11px;",
+                "object_name": "descriptionText",
                 "text": "Choose a creature that you can see within range. The target ... [357 chars, sha1 511b7390debf]",
                 "type": "QLabel",
                 "word_wrap": true
@@ -2156,7 +2178,7 @@
              "checkable": true,
              "checked": false,
              "flat": true,
-             "style": "QPushButton { text-align: left; padding: 2px 4px; background: transparent; border: none; color: #eaeaea; font-size: 12px; }QPushButton:hover { color: #c9a84c; }QPushButton:checked { color: #c9a84c; }",
+             "object_name": "expandToggle",
              "text": "\u25b6  Eyebite",
              "type": "QPushButton"
             },
@@ -2171,7 +2193,7 @@
                 "word_wrap": true
                },
                {
-                "style": "color: #c0c0c0; font-size: 11px;",
+                "object_name": "descriptionText",
                 "text": "For the duration, your eyes become an inky void. One creatur... [915 chars, sha1 5ce67df4d13b]",
                 "type": "QLabel",
                 "word_wrap": true
@@ -2212,7 +2234,7 @@
              "checkable": true,
              "checked": false,
              "flat": true,
-             "style": "QPushButton { text-align: left; padding: 2px 4px; background: transparent; border: none; color: #eaeaea; font-size: 12px; }QPushButton:hover { color: #c9a84c; }QPushButton:checked { color: #c9a84c; }",
+             "object_name": "expandToggle",
              "text": "\u25b6  Finger of Death",
              "type": "QPushButton"
             },
@@ -2227,7 +2249,7 @@
                 "word_wrap": true
                },
                {
-                "style": "color: #c0c0c0; font-size: 11px;",
+                "object_name": "descriptionText",
                 "text": "You unleash negative energy toward a creature you can see wi... [341 chars, sha1 a5e2b111c586]",
                 "type": "QLabel",
                 "word_wrap": true
@@ -2257,6 +2279,7 @@
           "type": "QWidget"
          },
          {
+          "fixed_height": 3,
           "frame_shape": "HLine",
           "object_name": "divider",
           "size_policy": [
@@ -2277,7 +2300,7 @@
              "checkable": true,
              "checked": false,
              "flat": true,
-             "style": "QPushButton { text-align: left; padding: 2px 4px; background: transparent; border: none; color: #eaeaea; font-size: 12px; }QPushButton:hover { color: #c9a84c; }QPushButton:checked { color: #c9a84c; }",
+             "object_name": "expandToggle",
              "text": "\u25b6  Unarmed Strike  1d20+5  dmg 1d1 +0",
              "type": "QPushButton"
             },
@@ -2292,7 +2315,7 @@
                 "word_wrap": true
                },
                {
-                "style": "color: #c0c0c0; font-size: 11px;",
+                "object_name": "descriptionText",
                 "text": "Choose Damage, Grapple or Shove. Grapple and Shove: target w... [569 chars, sha1 76b68bcf556c]",
                 "type": "QLabel",
                 "word_wrap": true
@@ -2328,7 +2351,7 @@
              "checkable": true,
              "checked": false,
              "flat": true,
-             "style": "QPushButton { text-align: left; padding: 2px 4px; background: transparent; border: none; color: #eaeaea; font-size: 12px; }QPushButton:hover { color: #c9a84c; }QPushButton:checked { color: #c9a84c; }",
+             "object_name": "expandToggle",
              "text": "\u25b6  Sickle  1d20+5  dmg 1d4 +0",
              "type": "QPushButton"
             },
@@ -2350,7 +2373,7 @@
                 "word_wrap": true
                },
                {
-                "style": "color: #a0a0b0; font-size: 11px;",
+                "object_name": "secondary",
                 "text": "Properties:",
                 "type": "QLabel"
                },
@@ -2398,7 +2421,7 @@
              "checkable": true,
              "checked": false,
              "flat": true,
-             "style": "QPushButton { text-align: left; padding: 2px 4px; background: transparent; border: none; color: #eaeaea; font-size: 12px; }QPushButton:hover { color: #c9a84c; }QPushButton:checked { color: #c9a84c; }",
+             "object_name": "expandToggle",
              "text": "\u25b6  Dagger  1d20+6  dmg 1d4 +1",
              "type": "QPushButton"
             },
@@ -2420,7 +2443,7 @@
                 "word_wrap": true
                },
                {
-                "style": "color: #a0a0b0; font-size: 11px;",
+                "object_name": "secondary",
                 "text": "Properties:",
                 "type": "QLabel"
                },
@@ -2488,6 +2511,7 @@
           "type": "QWidget"
          },
          {
+          "fixed_height": 3,
           "frame_shape": "HLine",
           "object_name": "divider",
           "size_policy": [
@@ -2508,7 +2532,7 @@
              "checkable": true,
              "checked": false,
              "flat": true,
-             "style": "QPushButton { text-align: left; padding: 2px 4px; background: transparent; border: none; color: #eaeaea; font-size: 12px; }QPushButton:hover { color: #c9a84c; }QPushButton:checked { color: #c9a84c; }",
+             "object_name": "expandToggle",
              "text": "\u25b6  Free Background Ability Bonus",
              "type": "QPushButton"
             },
@@ -2522,7 +2546,7 @@
                 "type": "QLabel"
                },
                {
-                "style": "color: #c0c0c0; font-size: 11px;",
+                "object_name": "descriptionText",
                 "text": "Your background grants an Ability Score bonus: either +1 to ... [176 chars, sha1 98827c9c792c]",
                 "type": "QLabel",
                 "word_wrap": true
@@ -2558,7 +2582,7 @@
              "checkable": true,
              "checked": false,
              "flat": true,
-             "style": "QPushButton { text-align: left; padding: 2px 4px; background: transparent; border: none; color: #eaeaea; font-size: 12px; }QPushButton:hover { color: #c9a84c; }QPushButton:checked { color: #c9a84c; }",
+             "object_name": "expandToggle",
              "text": "\u25b6  Free Background Skill Proficiency",
              "type": "QPushButton"
             },
@@ -2572,7 +2596,7 @@
                 "type": "QLabel"
                },
                {
-                "style": "color: #c0c0c0; font-size: 11px;",
+                "object_name": "descriptionText",
                 "text": "Your background grants proficiency in two skills of your choice.\nChoices: Athletics, Persuasion",
                 "type": "QLabel",
                 "word_wrap": true
@@ -2608,7 +2632,7 @@
              "checkable": true,
              "checked": false,
              "flat": true,
-             "style": "QPushButton { text-align: left; padding: 2px 4px; background: transparent; border: none; color: #eaeaea; font-size: 12px; }QPushButton:hover { color: #c9a84c; }QPushButton:checked { color: #c9a84c; }",
+             "object_name": "expandToggle",
              "text": "\u25b6  Tough",
              "type": "QPushButton"
             },
@@ -2622,7 +2646,7 @@
                 "type": "QLabel"
                },
                {
-                "style": "color: #c0c0c0; font-size: 11px;",
+                "object_name": "descriptionText",
                 "text": "Resilience. You gain 2 additional Hit Points for each level you have. Whenever you gain a new level, you gain 2 additional Hit Points.",
                 "type": "QLabel",
                 "word_wrap": true
@@ -2658,7 +2682,7 @@
              "checkable": true,
              "checked": false,
              "flat": true,
-             "style": "QPushButton { text-align: left; padding: 2px 4px; background: transparent; border: none; color: #eaeaea; font-size: 12px; }QPushButton:hover { color: #c9a84c; }QPushButton:checked { color: #c9a84c; }",
+             "object_name": "expandToggle",
              "text": "\u25b6  Spell Slots",
              "type": "QPushButton"
             },
@@ -2672,7 +2696,7 @@
                 "type": "QLabel"
                },
                {
-                "style": "color: #c0c0c0; font-size: 11px;",
+                "object_name": "descriptionText",
                 "text": "Warlock Spellcasting.\nYou are a warlock and gain pact magic slots that refresh on short or long rests.",
                 "type": "QLabel",
                 "word_wrap": true
@@ -2716,7 +2740,7 @@
              "checkable": true,
              "checked": false,
              "flat": true,
-             "style": "QPushButton { text-align: left; padding: 2px 4px; background: transparent; border: none; color: #eaeaea; font-size: 12px; }QPushButton:hover { color: #c9a84c; }QPushButton:checked { color: #c9a84c; }",
+             "object_name": "expandToggle",
              "text": "\u25b6  Replacing Eldritch Invocations",
              "type": "QPushButton"
             },
@@ -2730,7 +2754,7 @@
                 "type": "QLabel"
                },
                {
-                "style": "color: #c0c0c0; font-size: 11px;",
+                "object_name": "descriptionText",
                 "text": "Replacing and Gaining Invocations. Whenever you gain a Warlo... [477 chars, sha1 83211b874e5f]",
                 "type": "QLabel",
                 "word_wrap": true
@@ -2766,7 +2790,7 @@
              "checkable": true,
              "checked": false,
              "flat": true,
-             "style": "QPushButton { text-align: left; padding: 2px 4px; background: transparent; border: none; color: #eaeaea; font-size: 12px; }QPushButton:hover { color: #c9a84c; }QPushButton:checked { color: #c9a84c; }",
+             "object_name": "expandToggle",
              "text": "\u25b6  Replacing Cantrips and Spells",
              "type": "QPushButton"
             },
@@ -2780,7 +2804,7 @@
                 "type": "QLabel"
                },
                {
-                "style": "color: #c0c0c0; font-size: 11px;",
+                "object_name": "descriptionText",
                 "text": "Whenever you gain a Warlock level, you can replace one of yo... [257 chars, sha1 9565566d4699]",
                 "type": "QLabel",
                 "word_wrap": true
@@ -2816,7 +2840,7 @@
              "checkable": true,
              "checked": false,
              "flat": true,
-             "style": "QPushButton { text-align: left; padding: 2px 4px; background: transparent; border: none; color: #eaeaea; font-size: 12px; }QPushButton:hover { color: #c9a84c; }QPushButton:checked { color: #c9a84c; }",
+             "object_name": "expandToggle",
              "text": "\u25b6  Regaining Spell Slots",
              "type": "QPushButton"
             },
@@ -2830,7 +2854,7 @@
                 "type": "QLabel"
                },
                {
-                "style": "color: #c0c0c0; font-size: 11px;",
+                "object_name": "descriptionText",
                 "text": "You regain all expended Pact Magic spell slots when you finish a Short or Long Rest.",
                 "type": "QLabel",
                 "word_wrap": true
@@ -2866,7 +2890,7 @@
              "checkable": true,
              "checked": false,
              "flat": true,
-             "style": "QPushButton { text-align: left; padding: 2px 4px; background: transparent; border: none; color: #eaeaea; font-size: 12px; }QPushButton:hover { color: #c9a84c; }QPushButton:checked { color: #c9a84c; }",
+             "object_name": "expandToggle",
              "text": "\u25b6  Magical Cunning",
              "type": "QPushButton"
             },
@@ -2880,7 +2904,7 @@
                 "type": "QLabel"
                },
                {
-                "style": "color: #c0c0c0; font-size: 11px;",
+                "object_name": "descriptionText",
                 "text": "You can perform an esoteric rite for 1 minute. At the end of... [251 chars, sha1 81050de6446c]",
                 "type": "QLabel",
                 "word_wrap": true
@@ -2916,7 +2940,7 @@
              "checkable": true,
              "checked": false,
              "flat": true,
-             "style": "QPushButton { text-align: left; padding: 2px 4px; background: transparent; border: none; color: #eaeaea; font-size: 12px; }QPushButton:hover { color: #c9a84c; }QPushButton:checked { color: #c9a84c; }",
+             "object_name": "expandToggle",
              "text": "\u25b6  Ability Score Improvement",
              "type": "QPushButton"
             },
@@ -2930,7 +2954,7 @@
                 "type": "QLabel"
                },
                {
-                "style": "color: #c0c0c0; font-size: 11px;",
+                "object_name": "descriptionText",
                 "text": "You can increase one ability score of your choice by 2, or y... [223 chars, sha1 5f5efbd549c6]",
                 "type": "QLabel",
                 "word_wrap": true
@@ -2966,7 +2990,7 @@
              "checkable": true,
              "checked": false,
              "flat": true,
-             "style": "QPushButton { text-align: left; padding: 2px 4px; background: transparent; border: none; color: #eaeaea; font-size: 12px; }QPushButton:hover { color: #c9a84c; }QPushButton:checked { color: #c9a84c; }",
+             "object_name": "expandToggle",
              "text": "\u25b6  Ability Score Improvement",
              "type": "QPushButton"
             },
@@ -2980,7 +3004,7 @@
                 "type": "QLabel"
                },
                {
-                "style": "color: #c0c0c0; font-size: 11px;",
+                "object_name": "descriptionText",
                 "text": "You can increase one ability score of your choice by 2, or y... [219 chars, sha1 1bbd2e7e1a3e]",
                 "type": "QLabel",
                 "word_wrap": true
@@ -3016,7 +3040,7 @@
              "checkable": true,
              "checked": false,
              "flat": true,
-             "style": "QPushButton { text-align: left; padding: 2px 4px; background: transparent; border: none; color: #eaeaea; font-size: 12px; }QPushButton:hover { color: #c9a84c; }QPushButton:checked { color: #c9a84c; }",
+             "object_name": "expandToggle",
              "text": "\u25b6  Contact Patron",
              "type": "QPushButton"
             },
@@ -3030,7 +3054,7 @@
                 "type": "QLabel"
                },
                {
-                "style": "color: #c0c0c0; font-size: 11px;",
+                "object_name": "descriptionText",
                 "text": "In the past, you usually contacted your patron through inter... [423 chars, sha1 104105492c47]",
                 "type": "QLabel",
                 "word_wrap": true
@@ -3066,7 +3090,7 @@
              "checkable": true,
              "checked": false,
              "flat": true,
-             "style": "QPushButton { text-align: left; padding: 2px 4px; background: transparent; border: none; color: #eaeaea; font-size: 12px; }QPushButton:hover { color: #c9a84c; }QPushButton:checked { color: #c9a84c; }",
+             "object_name": "expandToggle",
              "text": "\u25b6  Mystic Arcanum",
              "type": "QPushButton"
             },
@@ -3080,7 +3104,7 @@
                 "type": "QLabel"
                },
                {
-                "style": "color: #c0c0c0; font-size: 11px;",
+                "object_name": "descriptionText",
                 "text": "Your patron grants you a magical secret called an arcanum. C... [656 chars, sha1 3012669e2baf]",
                 "type": "QLabel",
                 "word_wrap": true
@@ -3116,7 +3140,7 @@
              "checkable": true,
              "checked": false,
              "flat": true,
-             "style": "QPushButton { text-align: left; padding: 2px 4px; background: transparent; border: none; color: #eaeaea; font-size: 12px; }QPushButton:hover { color: #c9a84c; }QPushButton:checked { color: #c9a84c; }",
+             "object_name": "expandToggle",
              "text": "\u25b6  Ability Score Improvement",
              "type": "QPushButton"
             },
@@ -3130,7 +3154,7 @@
                 "type": "QLabel"
                },
                {
-                "style": "color: #c0c0c0; font-size: 11px;",
+                "object_name": "descriptionText",
                 "text": "You can increase one ability score of your choice by 2, or y... [223 chars, sha1 5f5efbd549c6]",
                 "type": "QLabel",
                 "word_wrap": true
@@ -3166,7 +3190,7 @@
              "checkable": true,
              "checked": false,
              "flat": true,
-             "style": "QPushButton { text-align: left; padding: 2px 4px; background: transparent; border: none; color: #eaeaea; font-size: 12px; }QPushButton:hover { color: #c9a84c; }QPushButton:checked { color: #c9a84c; }",
+             "object_name": "expandToggle",
              "text": "\u25b6  Expanded Spell List",
              "type": "QPushButton"
             },
@@ -3180,7 +3204,7 @@
                 "type": "QLabel"
                },
                {
-                "style": "color: #c0c0c0; font-size: 11px;",
+                "object_name": "descriptionText",
                 "text": "The Hexblade lets you choose from an expanded list of spells... [356 chars, sha1 930ffd1271fb]",
                 "type": "QLabel",
                 "word_wrap": true
@@ -3216,7 +3240,7 @@
              "checkable": true,
              "checked": false,
              "flat": true,
-             "style": "QPushButton { text-align: left; padding: 2px 4px; background: transparent; border: none; color: #eaeaea; font-size: 12px; }QPushButton:hover { color: #c9a84c; }QPushButton:checked { color: #c9a84c; }",
+             "object_name": "expandToggle",
              "text": "\u25b6  Hexblade's Curse",
              "type": "QPushButton"
             },
@@ -3230,7 +3254,7 @@
                 "type": "QLabel"
                },
                {
-                "style": "color: #c0c0c0; font-size: 11px;",
+                "object_name": "descriptionText",
                 "text": "As a Bonus Action, choose one creature you can see within 30... [749 chars, sha1 5e3b65ea7a85]",
                 "type": "QLabel",
                 "word_wrap": true
@@ -3266,7 +3290,7 @@
              "checkable": true,
              "checked": false,
              "flat": true,
-             "style": "QPushButton { text-align: left; padding: 2px 4px; background: transparent; border: none; color: #eaeaea; font-size: 12px; }QPushButton:hover { color: #c9a84c; }QPushButton:checked { color: #c9a84c; }",
+             "object_name": "expandToggle",
              "text": "\u25b6  Hex Warrior",
              "type": "QPushButton"
             },
@@ -3280,7 +3304,7 @@
                 "type": "QLabel"
                },
                {
-                "style": "color: #c0c0c0; font-size: 11px;",
+                "object_name": "descriptionText",
                 "text": "You acquire the training necessary to effectively arm yourse... [714 chars, sha1 0e2e7050b5d5]",
                 "type": "QLabel",
                 "word_wrap": true
@@ -3316,7 +3340,7 @@
              "checkable": true,
              "checked": false,
              "flat": true,
-             "style": "QPushButton { text-align: left; padding: 2px 4px; background: transparent; border: none; color: #eaeaea; font-size: 12px; }QPushButton:hover { color: #c9a84c; }QPushButton:checked { color: #c9a84c; }",
+             "object_name": "expandToggle",
              "text": "\u25b6  Accursed Specter",
              "type": "QPushButton"
             },
@@ -3330,7 +3354,7 @@
                 "type": "QLabel"
                },
                {
-                "style": "color: #c0c0c0; font-size: 11px;",
+                "object_name": "descriptionText",
                 "text": "You can curse the soul of a person you slay, temporarily bin... [733 chars, sha1 8be010a2f0b2]",
                 "type": "QLabel",
                 "word_wrap": true
@@ -3366,7 +3390,7 @@
              "checkable": true,
              "checked": false,
              "flat": true,
-             "style": "QPushButton { text-align: left; padding: 2px 4px; background: transparent; border: none; color: #eaeaea; font-size: 12px; }QPushButton:hover { color: #c9a84c; }QPushButton:checked { color: #c9a84c; }",
+             "object_name": "expandToggle",
              "text": "\u25b6  Resourceful",
              "type": "QPushButton"
             },
@@ -3380,7 +3404,7 @@
                 "type": "QLabel"
                },
                {
-                "style": "color: #c0c0c0; font-size: 11px;",
+                "object_name": "descriptionText",
                 "text": "You gain Heroic Inspiration whenever you finish a Long Rest.\n",
                 "type": "QLabel",
                 "word_wrap": true
@@ -3416,7 +3440,7 @@
              "checkable": true,
              "checked": false,
              "flat": true,
-             "style": "QPushButton { text-align: left; padding: 2px 4px; background: transparent; border: none; color: #eaeaea; font-size: 12px; }QPushButton:hover { color: #c9a84c; }QPushButton:checked { color: #c9a84c; }",
+             "object_name": "expandToggle",
              "text": "\u25b6  Skillful",
              "type": "QPushButton"
             },
@@ -3430,7 +3454,7 @@
                 "type": "QLabel"
                },
                {
-                "style": "color: #c0c0c0; font-size: 11px;",
+                "object_name": "descriptionText",
                 "text": "You gain proficiency in the Deception skill.",
                 "type": "QLabel",
                 "word_wrap": true
@@ -3466,7 +3490,7 @@
              "checkable": true,
              "checked": false,
              "flat": true,
-             "style": "QPushButton { text-align: left; padding: 2px 4px; background: transparent; border: none; color: #eaeaea; font-size: 12px; }QPushButton:hover { color: #c9a84c; }QPushButton:checked { color: #c9a84c; }",
+             "object_name": "expandToggle",
              "text": "\u25b6  Versatile",
              "type": "QPushButton"
             },
@@ -3480,7 +3504,7 @@
                 "type": "QLabel"
                },
                {
-                "style": "color: #c0c0c0; font-size: 11px;",
+                "object_name": "descriptionText",
                 "text": "You gain an Origin feat of your choice (see 'Feats'). Skilled is recommended.\n",
                 "type": "QLabel",
                 "word_wrap": true
@@ -3516,7 +3540,7 @@
              "checkable": true,
              "checked": false,
              "flat": true,
-             "style": "QPushButton { text-align: left; padding: 2px 4px; background: transparent; border: none; color: #eaeaea; font-size: 12px; }QPushButton:hover { color: #c9a84c; }QPushButton:checked { color: #c9a84c; }",
+             "object_name": "expandToggle",
              "text": "\u25b6  Alert",
              "type": "QPushButton"
             },
@@ -3530,7 +3554,7 @@
                 "type": "QLabel"
                },
                {
-                "style": "color: #c0c0c0; font-size: 11px;",
+                "object_name": "descriptionText",
                 "text": "Initiative Proficiency. When you roll Initiative, you can ad... [320 chars, sha1 e40391efd5cc]",
                 "type": "QLabel",
                 "word_wrap": true
@@ -3560,6 +3584,7 @@
           "type": "QWidget"
          },
          {
+          "fixed_height": 3,
           "frame_shape": "HLine",
           "object_name": "divider",
           "size_policy": [
@@ -4086,6 +4111,7 @@
           "word_wrap": true
          },
          {
+          "fixed_height": 3,
           "frame_shape": "HLine",
           "object_name": "divider",
           "size_policy": [
@@ -4110,6 +4136,7 @@
           "type": "QLabel"
          },
          {
+          "fixed_height": 3,
           "frame_shape": "HLine",
           "object_name": "divider",
           "size_policy": [
@@ -4144,6 +4171,7 @@
           "word_wrap": true
          },
          {
+          "fixed_height": 3,
           "frame_shape": "HLine",
           "object_name": "divider",
           "size_policy": [
@@ -4163,6 +4191,7 @@
           "type": "QLabel"
          },
          {
+          "fixed_height": 3,
           "frame_shape": "HLine",
           "object_name": "divider",
           "size_policy": [
@@ -4182,6 +4211,7 @@
           "word_wrap": true
          },
          {
+          "fixed_height": 3,
           "frame_shape": "HLine",
           "object_name": "divider",
           "size_policy": [
@@ -4207,7 +4237,7 @@
              "checkable": true,
              "checked": false,
              "flat": true,
-             "style": "QPushButton { text-align: left; padding: 2px 4px; background: transparent; border: none; color: #eaeaea; font-size: 12px; }QPushButton:hover { color: #c9a84c; }QPushButton:checked { color: #c9a84c; }",
+             "object_name": "expandToggle",
              "text": "\u25b6  Chill Touch",
              "type": "QPushButton"
             },
@@ -4222,7 +4252,7 @@
                 "word_wrap": true
                },
                {
-                "style": "color: #c0c0c0; font-size: 11px;",
+                "object_name": "descriptionText",
                 "text": "Channeling the chill of the grave, make a melee spell attack... [308 chars, sha1 97fa8b534465]",
                 "type": "QLabel",
                 "word_wrap": true
@@ -4258,7 +4288,7 @@
              "checkable": true,
              "checked": false,
              "flat": true,
-             "style": "QPushButton { text-align: left; padding: 2px 4px; background: transparent; border: none; color: #eaeaea; font-size: 12px; }QPushButton:hover { color: #c9a84c; }QPushButton:checked { color: #c9a84c; }",
+             "object_name": "expandToggle",
              "text": "\u25b6  Eldritch Blast",
              "type": "QPushButton"
             },
@@ -4273,7 +4303,7 @@
                 "word_wrap": true
                },
                {
-                "style": "color: #c0c0c0; font-size: 11px;",
+                "object_name": "descriptionText",
                 "text": "You hurl a beam of crackling energy. Make a ranged spell att... [369 chars, sha1 1ae2ab751906]",
                 "type": "QLabel",
                 "word_wrap": true
@@ -4314,7 +4344,7 @@
              "checkable": true,
              "checked": false,
              "flat": true,
-             "style": "QPushButton { text-align: left; padding: 2px 4px; background: transparent; border: none; color: #eaeaea; font-size: 12px; }QPushButton:hover { color: #c9a84c; }QPushButton:checked { color: #c9a84c; }",
+             "object_name": "expandToggle",
              "text": "\u25b6  Armor of Agathys",
              "type": "QPushButton"
             },
@@ -4329,7 +4359,7 @@
                 "word_wrap": true
                },
                {
-                "style": "color: #c0c0c0; font-size: 11px;",
+                "object_name": "descriptionText",
                 "text": "Protective magical frost surrounds you. You gain 5 Temporary... [367 chars, sha1 4cfd0163b175]",
                 "type": "QLabel",
                 "word_wrap": true
@@ -4359,6 +4389,7 @@
           "type": "QWidget"
          },
          {
+          "fixed_height": 3,
           "frame_shape": "HLine",
           "object_name": "divider",
           "size_policy": [
@@ -4379,7 +4410,7 @@
              "checkable": true,
              "checked": false,
              "flat": true,
-             "style": "QPushButton { text-align: left; padding: 2px 4px; background: transparent; border: none; color: #eaeaea; font-size: 12px; }QPushButton:hover { color: #c9a84c; }QPushButton:checked { color: #c9a84c; }",
+             "object_name": "expandToggle",
              "text": "\u25b6  Unarmed Strike  1d20+5  dmg 1d1 +0",
              "type": "QPushButton"
             },
@@ -4394,7 +4425,7 @@
                 "word_wrap": true
                },
                {
-                "style": "color: #c0c0c0; font-size: 11px;",
+                "object_name": "descriptionText",
                 "text": "Choose Damage, Grapple or Shove. Grapple and Shove: target w... [569 chars, sha1 76b68bcf556c]",
                 "type": "QLabel",
                 "word_wrap": true
@@ -4424,6 +4455,7 @@
           "type": "QWidget"
          },
          {
+          "fixed_height": 3,
           "frame_shape": "HLine",
           "object_name": "divider",
           "size_policy": [
@@ -4452,7 +4484,7 @@
              "checkable": true,
              "checked": false,
              "flat": true,
-             "style": "QPushButton { text-align: left; padding: 2px 4px; background: transparent; border: none; color: #eaeaea; font-size: 12px; }QPushButton:hover { color: #c9a84c; }QPushButton:checked { color: #c9a84c; }",
+             "object_name": "expandToggle",
              "text": "\u25b6  Free Background Ability Bonus",
              "type": "QPushButton"
             },
@@ -4466,7 +4498,7 @@
                 "type": "QLabel"
                },
                {
-                "style": "color: #c0c0c0; font-size: 11px;",
+                "object_name": "descriptionText",
                 "text": "Your background grants an Ability Score bonus: either +1 to ... [176 chars, sha1 98827c9c792c]",
                 "type": "QLabel",
                 "word_wrap": true
@@ -4502,7 +4534,7 @@
              "checkable": true,
              "checked": false,
              "flat": true,
-             "style": "QPushButton { text-align: left; padding: 2px 4px; background: transparent; border: none; color: #eaeaea; font-size: 12px; }QPushButton:hover { color: #c9a84c; }QPushButton:checked { color: #c9a84c; }",
+             "object_name": "expandToggle",
              "text": "\u25b6  Free Background Skill Proficiency",
              "type": "QPushButton"
             },
@@ -4516,7 +4548,7 @@
                 "type": "QLabel"
                },
                {
-                "style": "color: #c0c0c0; font-size: 11px;",
+                "object_name": "descriptionText",
                 "text": "Your background grants proficiency in two skills of your choice.\nChoices: Athletics, Persuasion",
                 "type": "QLabel",
                 "word_wrap": true
@@ -4546,6 +4578,7 @@
           "type": "QWidget"
          },
          {
+          "fixed_height": 3,
           "frame_shape": "HLine",
           "object_name": "divider",
           "size_policy": [
@@ -4722,6 +4755,7 @@
           "word_wrap": true
          },
          {
+          "fixed_height": 3,
           "frame_shape": "HLine",
           "object_name": "divider",
           "size_policy": [
@@ -4746,6 +4780,7 @@
           "type": "QLabel"
          },
          {
+          "fixed_height": 3,
           "frame_shape": "HLine",
           "object_name": "divider",
           "size_policy": [
@@ -4780,6 +4815,7 @@
           "word_wrap": true
          },
          {
+          "fixed_height": 3,
           "frame_shape": "HLine",
           "object_name": "divider",
           "size_policy": [
@@ -4799,6 +4835,7 @@
           "type": "QLabel"
          },
          {
+          "fixed_height": 3,
           "frame_shape": "HLine",
           "object_name": "divider",
           "size_policy": [
@@ -4818,6 +4855,7 @@
           "word_wrap": true
          },
          {
+          "fixed_height": 3,
           "frame_shape": "HLine",
           "object_name": "divider",
           "size_policy": [
@@ -4843,7 +4881,7 @@
              "checkable": true,
              "checked": false,
              "flat": true,
-             "style": "QPushButton { text-align: left; padding: 2px 4px; background: transparent; border: none; color: #eaeaea; font-size: 12px; }QPushButton:hover { color: #c9a84c; }QPushButton:checked { color: #c9a84c; }",
+             "object_name": "expandToggle",
              "text": "\u25b6  Chill Touch",
              "type": "QPushButton"
             },
@@ -4858,7 +4896,7 @@
                 "word_wrap": true
                },
                {
-                "style": "color: #c0c0c0; font-size: 11px;",
+                "object_name": "descriptionText",
                 "text": "Channeling the chill of the grave, make a melee spell attack... [308 chars, sha1 97fa8b534465]",
                 "type": "QLabel",
                 "word_wrap": true
@@ -4894,7 +4932,7 @@
              "checkable": true,
              "checked": false,
              "flat": true,
-             "style": "QPushButton { text-align: left; padding: 2px 4px; background: transparent; border: none; color: #eaeaea; font-size: 12px; }QPushButton:hover { color: #c9a84c; }QPushButton:checked { color: #c9a84c; }",
+             "object_name": "expandToggle",
              "text": "\u25b6  Eldritch Blast",
              "type": "QPushButton"
             },
@@ -4909,7 +4947,7 @@
                 "word_wrap": true
                },
                {
-                "style": "color: #c0c0c0; font-size: 11px;",
+                "object_name": "descriptionText",
                 "text": "You hurl a beam of crackling energy. Make a ranged spell att... [369 chars, sha1 1ae2ab751906]",
                 "type": "QLabel",
                 "word_wrap": true
@@ -4950,7 +4988,7 @@
              "checkable": true,
              "checked": false,
              "flat": true,
-             "style": "QPushButton { text-align: left; padding: 2px 4px; background: transparent; border: none; color: #eaeaea; font-size: 12px; }QPushButton:hover { color: #c9a84c; }QPushButton:checked { color: #c9a84c; }",
+             "object_name": "expandToggle",
              "text": "\u25b6  Armor of Agathys",
              "type": "QPushButton"
             },
@@ -4965,7 +5003,7 @@
                 "word_wrap": true
                },
                {
-                "style": "color: #c0c0c0; font-size: 11px;",
+                "object_name": "descriptionText",
                 "text": "Protective magical frost surrounds you. You gain 5 Temporary... [367 chars, sha1 4cfd0163b175]",
                 "type": "QLabel",
                 "word_wrap": true
@@ -4995,6 +5033,7 @@
           "type": "QWidget"
          },
          {
+          "fixed_height": 3,
           "frame_shape": "HLine",
           "object_name": "divider",
           "size_policy": [
@@ -5015,7 +5054,7 @@
              "checkable": true,
              "checked": false,
              "flat": true,
-             "style": "QPushButton { text-align: left; padding: 2px 4px; background: transparent; border: none; color: #eaeaea; font-size: 12px; }QPushButton:hover { color: #c9a84c; }QPushButton:checked { color: #c9a84c; }",
+             "object_name": "expandToggle",
              "text": "\u25b6  Unarmed Strike  1d20+5  dmg 1d1 +0",
              "type": "QPushButton"
             },
@@ -5030,7 +5069,7 @@
                 "word_wrap": true
                },
                {
-                "style": "color: #c0c0c0; font-size: 11px;",
+                "object_name": "descriptionText",
                 "text": "Choose Damage, Grapple or Shove. Grapple and Shove: target w... [569 chars, sha1 76b68bcf556c]",
                 "type": "QLabel",
                 "word_wrap": true
@@ -5060,6 +5099,7 @@
           "type": "QWidget"
          },
          {
+          "fixed_height": 3,
           "frame_shape": "HLine",
           "object_name": "divider",
           "size_policy": [
@@ -5082,6 +5122,7 @@
           "type": "QLabel"
          },
          {
+          "fixed_height": 3,
           "frame_shape": "HLine",
           "object_name": "divider",
           "size_policy": [
@@ -5248,6 +5289,7 @@
           "word_wrap": true
          },
          {
+          "fixed_height": 3,
           "frame_shape": "HLine",
           "object_name": "divider",
           "size_policy": [
@@ -5272,6 +5314,7 @@
           "type": "QLabel"
          },
          {
+          "fixed_height": 3,
           "frame_shape": "HLine",
           "object_name": "divider",
           "size_policy": [
@@ -5306,6 +5349,7 @@
           "word_wrap": true
          },
          {
+          "fixed_height": 3,
           "frame_shape": "HLine",
           "object_name": "divider",
           "size_policy": [
@@ -5325,6 +5369,7 @@
           "type": "QLabel"
          },
          {
+          "fixed_height": 3,
           "frame_shape": "HLine",
           "object_name": "divider",
           "size_policy": [
@@ -5344,6 +5389,7 @@
           "word_wrap": true
          },
          {
+          "fixed_height": 3,
           "frame_shape": "HLine",
           "object_name": "divider",
           "size_policy": [
@@ -5369,7 +5415,7 @@
              "checkable": true,
              "checked": false,
              "flat": true,
-             "style": "QPushButton { text-align: left; padding: 2px 4px; background: transparent; border: none; color: #eaeaea; font-size: 12px; }QPushButton:hover { color: #c9a84c; }QPushButton:checked { color: #c9a84c; }",
+             "object_name": "expandToggle",
              "text": "\u25b6  Chill Touch",
              "type": "QPushButton"
             },
@@ -5384,7 +5430,7 @@
                 "word_wrap": true
                },
                {
-                "style": "color: #c0c0c0; font-size: 11px;",
+                "object_name": "descriptionText",
                 "text": "Channeling the chill of the grave, make a melee spell attack... [308 chars, sha1 97fa8b534465]",
                 "type": "QLabel",
                 "word_wrap": true
@@ -5420,7 +5466,7 @@
              "checkable": true,
              "checked": false,
              "flat": true,
-             "style": "QPushButton { text-align: left; padding: 2px 4px; background: transparent; border: none; color: #eaeaea; font-size: 12px; }QPushButton:hover { color: #c9a84c; }QPushButton:checked { color: #c9a84c; }",
+             "object_name": "expandToggle",
              "text": "\u25b6  Eldritch Blast",
              "type": "QPushButton"
             },
@@ -5435,7 +5481,7 @@
                 "word_wrap": true
                },
                {
-                "style": "color: #c0c0c0; font-size: 11px;",
+                "object_name": "descriptionText",
                 "text": "You hurl a beam of crackling energy. Make a ranged spell att... [369 chars, sha1 1ae2ab751906]",
                 "type": "QLabel",
                 "word_wrap": true
@@ -5476,7 +5522,7 @@
              "checkable": true,
              "checked": false,
              "flat": true,
-             "style": "QPushButton { text-align: left; padding: 2px 4px; background: transparent; border: none; color: #eaeaea; font-size: 12px; }QPushButton:hover { color: #c9a84c; }QPushButton:checked { color: #c9a84c; }",
+             "object_name": "expandToggle",
              "text": "\u25b6  Armor of Agathys",
              "type": "QPushButton"
             },
@@ -5491,7 +5537,7 @@
                 "word_wrap": true
                },
                {
-                "style": "color: #c0c0c0; font-size: 11px;",
+                "object_name": "descriptionText",
                 "text": "Protective magical frost surrounds you. You gain 5 Temporary... [367 chars, sha1 4cfd0163b175]",
                 "type": "QLabel",
                 "word_wrap": true
@@ -5521,6 +5567,7 @@
           "type": "QWidget"
          },
          {
+          "fixed_height": 3,
           "frame_shape": "HLine",
           "object_name": "divider",
           "size_policy": [
@@ -5541,7 +5588,7 @@
              "checkable": true,
              "checked": false,
              "flat": true,
-             "style": "QPushButton { text-align: left; padding: 2px 4px; background: transparent; border: none; color: #eaeaea; font-size: 12px; }QPushButton:hover { color: #c9a84c; }QPushButton:checked { color: #c9a84c; }",
+             "object_name": "expandToggle",
              "text": "\u25b6  Unarmed Strike  1d20+5  dmg 1d1 +0",
              "type": "QPushButton"
             },
@@ -5556,7 +5603,7 @@
                 "word_wrap": true
                },
                {
-                "style": "color: #c0c0c0; font-size: 11px;",
+                "object_name": "descriptionText",
                 "text": "Choose Damage, Grapple or Shove. Grapple and Shove: target w... [569 chars, sha1 76b68bcf556c]",
                 "type": "QLabel",
                 "word_wrap": true
@@ -5586,6 +5633,7 @@
           "type": "QWidget"
          },
          {
+          "fixed_height": 3,
           "frame_shape": "HLine",
           "object_name": "divider",
           "size_policy": [
@@ -5606,7 +5654,7 @@
              "checkable": true,
              "checked": false,
              "flat": true,
-             "style": "QPushButton { text-align: left; padding: 2px 4px; background: transparent; border: none; color: #eaeaea; font-size: 12px; }QPushButton:hover { color: #c9a84c; }QPushButton:checked { color: #c9a84c; }",
+             "object_name": "expandToggle",
              "text": "\u25b6  Free Background Ability Bonus",
              "type": "QPushButton"
             },
@@ -5620,7 +5668,7 @@
                 "type": "QLabel"
                },
                {
-                "style": "color: #c0c0c0; font-size: 11px;",
+                "object_name": "descriptionText",
                 "text": "Your background grants an Ability Score bonus: either +1 to ... [176 chars, sha1 98827c9c792c]",
                 "type": "QLabel",
                 "word_wrap": true
@@ -5656,7 +5704,7 @@
              "checkable": true,
              "checked": false,
              "flat": true,
-             "style": "QPushButton { text-align: left; padding: 2px 4px; background: transparent; border: none; color: #eaeaea; font-size: 12px; }QPushButton:hover { color: #c9a84c; }QPushButton:checked { color: #c9a84c; }",
+             "object_name": "expandToggle",
              "text": "\u25b6  Free Background Skill Proficiency",
              "type": "QPushButton"
             },
@@ -5670,7 +5718,7 @@
                 "type": "QLabel"
                },
                {
-                "style": "color: #c0c0c0; font-size: 11px;",
+                "object_name": "descriptionText",
                 "text": "Your background grants proficiency in two skills of your choice.\nChoices: Athletics, Persuasion",
                 "type": "QLabel",
                 "word_wrap": true
@@ -5700,6 +5748,7 @@
           "type": "QWidget"
          },
          {
+          "fixed_height": 3,
           "frame_shape": "HLine",
           "object_name": "divider",
           "size_policy": [
@@ -5876,6 +5925,7 @@
           "word_wrap": true
          },
          {
+          "fixed_height": 3,
           "frame_shape": "HLine",
           "object_name": "divider",
           "size_policy": [
@@ -5900,6 +5950,7 @@
           "type": "QLabel"
          },
          {
+          "fixed_height": 3,
           "frame_shape": "HLine",
           "object_name": "divider",
           "size_policy": [
@@ -5934,6 +5985,7 @@
           "word_wrap": true
          },
          {
+          "fixed_height": 3,
           "frame_shape": "HLine",
           "object_name": "divider",
           "size_policy": [
@@ -5953,6 +6005,7 @@
           "type": "QLabel"
          },
          {
+          "fixed_height": 3,
           "frame_shape": "HLine",
           "object_name": "divider",
           "size_policy": [
@@ -5972,6 +6025,7 @@
           "word_wrap": true
          },
          {
+          "fixed_height": 3,
           "frame_shape": "HLine",
           "object_name": "divider",
           "size_policy": [
@@ -5997,7 +6051,7 @@
              "checkable": true,
              "checked": false,
              "flat": true,
-             "style": "QPushButton { text-align: left; padding: 2px 4px; background: transparent; border: none; color: #eaeaea; font-size: 12px; }QPushButton:hover { color: #c9a84c; }QPushButton:checked { color: #c9a84c; }",
+             "object_name": "expandToggle",
              "text": "\u25b6  Chill Touch",
              "type": "QPushButton"
             },
@@ -6012,7 +6066,7 @@
                 "word_wrap": true
                },
                {
-                "style": "color: #c0c0c0; font-size: 11px;",
+                "object_name": "descriptionText",
                 "text": "Channeling the chill of the grave, make a melee spell attack... [308 chars, sha1 97fa8b534465]",
                 "type": "QLabel",
                 "word_wrap": true
@@ -6048,7 +6102,7 @@
              "checkable": true,
              "checked": false,
              "flat": true,
-             "style": "QPushButton { text-align: left; padding: 2px 4px; background: transparent; border: none; color: #eaeaea; font-size: 12px; }QPushButton:hover { color: #c9a84c; }QPushButton:checked { color: #c9a84c; }",
+             "object_name": "expandToggle",
              "text": "\u25b6  Eldritch Blast",
              "type": "QPushButton"
             },
@@ -6063,7 +6117,7 @@
                 "word_wrap": true
                },
                {
-                "style": "color: #c0c0c0; font-size: 11px;",
+                "object_name": "descriptionText",
                 "text": "You hurl a beam of crackling energy. Make a ranged spell att... [369 chars, sha1 1ae2ab751906]",
                 "type": "QLabel",
                 "word_wrap": true
@@ -6104,7 +6158,7 @@
              "checkable": true,
              "checked": false,
              "flat": true,
-             "style": "QPushButton { text-align: left; padding: 2px 4px; background: transparent; border: none; color: #eaeaea; font-size: 12px; }QPushButton:hover { color: #c9a84c; }QPushButton:checked { color: #c9a84c; }",
+             "object_name": "expandToggle",
              "text": "\u25b6  Armor of Agathys",
              "type": "QPushButton"
             },
@@ -6119,7 +6173,7 @@
                 "word_wrap": true
                },
                {
-                "style": "color: #c0c0c0; font-size: 11px;",
+                "object_name": "descriptionText",
                 "text": "Protective magical frost surrounds you. You gain 5 Temporary... [367 chars, sha1 4cfd0163b175]",
                 "type": "QLabel",
                 "word_wrap": true
@@ -6153,6 +6207,7 @@
           "type": "QLabel"
          },
          {
+          "fixed_height": 3,
           "frame_shape": "HLine",
           "object_name": "divider",
           "size_policy": [
@@ -6173,7 +6228,7 @@
              "checkable": true,
              "checked": false,
              "flat": true,
-             "style": "QPushButton { text-align: left; padding: 2px 4px; background: transparent; border: none; color: #eaeaea; font-size: 12px; }QPushButton:hover { color: #c9a84c; }QPushButton:checked { color: #c9a84c; }",
+             "object_name": "expandToggle",
              "text": "\u25b6  Unarmed Strike  1d20+5  dmg 1d1 +0",
              "type": "QPushButton"
             },
@@ -6188,7 +6243,7 @@
                 "word_wrap": true
                },
                {
-                "style": "color: #c0c0c0; font-size: 11px;",
+                "object_name": "descriptionText",
                 "text": "Choose Damage, Grapple or Shove. Grapple and Shove: target w... [569 chars, sha1 76b68bcf556c]",
                 "type": "QLabel",
                 "word_wrap": true
@@ -6218,6 +6273,7 @@
           "type": "QWidget"
          },
          {
+          "fixed_height": 3,
           "frame_shape": "HLine",
           "object_name": "divider",
           "size_policy": [
@@ -6238,7 +6294,7 @@
              "checkable": true,
              "checked": false,
              "flat": true,
-             "style": "QPushButton { text-align: left; padding: 2px 4px; background: transparent; border: none; color: #eaeaea; font-size: 12px; }QPushButton:hover { color: #c9a84c; }QPushButton:checked { color: #c9a84c; }",
+             "object_name": "expandToggle",
              "text": "\u25b6  Free Background Ability Bonus",
              "type": "QPushButton"
             },
@@ -6252,7 +6308,7 @@
                 "type": "QLabel"
                },
                {
-                "style": "color: #c0c0c0; font-size: 11px;",
+                "object_name": "descriptionText",
                 "text": "Your background grants an Ability Score bonus: either +1 to ... [176 chars, sha1 98827c9c792c]",
                 "type": "QLabel",
                 "word_wrap": true
@@ -6288,7 +6344,7 @@
              "checkable": true,
              "checked": false,
              "flat": true,
-             "style": "QPushButton { text-align: left; padding: 2px 4px; background: transparent; border: none; color: #eaeaea; font-size: 12px; }QPushButton:hover { color: #c9a84c; }QPushButton:checked { color: #c9a84c; }",
+             "object_name": "expandToggle",
              "text": "\u25b6  Free Background Skill Proficiency",
              "type": "QPushButton"
             },
@@ -6302,7 +6358,7 @@
                 "type": "QLabel"
                },
                {
-                "style": "color: #c0c0c0; font-size: 11px;",
+                "object_name": "descriptionText",
                 "text": "Your background grants proficiency in two skills of your choice.\nChoices: Athletics, Persuasion",
                 "type": "QLabel",
                 "word_wrap": true
@@ -6332,6 +6388,7 @@
           "type": "QWidget"
          },
          {
+          "fixed_height": 3,
           "frame_shape": "HLine",
           "object_name": "divider",
           "size_policy": [
@@ -6508,6 +6565,7 @@
           "word_wrap": true
          },
          {
+          "fixed_height": 3,
           "frame_shape": "HLine",
           "object_name": "divider",
           "size_policy": [
@@ -6532,6 +6590,7 @@
           "type": "QLabel"
          },
          {
+          "fixed_height": 3,
           "frame_shape": "HLine",
           "object_name": "divider",
           "size_policy": [
@@ -6566,6 +6625,7 @@
           "word_wrap": true
          },
          {
+          "fixed_height": 3,
           "frame_shape": "HLine",
           "object_name": "divider",
           "size_policy": [
@@ -6591,7 +6651,7 @@
              "checkable": true,
              "checked": false,
              "flat": true,
-             "style": "QPushButton { text-align: left; padding: 2px 4px; background: transparent; border: none; color: #eaeaea; font-size: 12px; }QPushButton:hover { color: #c9a84c; }QPushButton:checked { color: #c9a84c; }",
+             "object_name": "expandToggle",
              "text": "\u25b6  Chill Touch",
              "type": "QPushButton"
             },
@@ -6606,7 +6666,7 @@
                 "word_wrap": true
                },
                {
-                "style": "color: #c0c0c0; font-size: 11px;",
+                "object_name": "descriptionText",
                 "text": "Channeling the chill of the grave, make a melee spell attack... [308 chars, sha1 97fa8b534465]",
                 "type": "QLabel",
                 "word_wrap": true
@@ -6642,7 +6702,7 @@
              "checkable": true,
              "checked": false,
              "flat": true,
-             "style": "QPushButton { text-align: left; padding: 2px 4px; background: transparent; border: none; color: #eaeaea; font-size: 12px; }QPushButton:hover { color: #c9a84c; }QPushButton:checked { color: #c9a84c; }",
+             "object_name": "expandToggle",
              "text": "\u25b6  Eldritch Blast",
              "type": "QPushButton"
             },
@@ -6657,7 +6717,7 @@
                 "word_wrap": true
                },
                {
-                "style": "color: #c0c0c0; font-size: 11px;",
+                "object_name": "descriptionText",
                 "text": "You hurl a beam of crackling energy. Make a ranged spell att... [369 chars, sha1 1ae2ab751906]",
                 "type": "QLabel",
                 "word_wrap": true
@@ -6698,7 +6758,7 @@
              "checkable": true,
              "checked": false,
              "flat": true,
-             "style": "QPushButton { text-align: left; padding: 2px 4px; background: transparent; border: none; color: #eaeaea; font-size: 12px; }QPushButton:hover { color: #c9a84c; }QPushButton:checked { color: #c9a84c; }",
+             "object_name": "expandToggle",
              "text": "\u25b6  Armor of Agathys",
              "type": "QPushButton"
             },
@@ -6713,7 +6773,7 @@
                 "word_wrap": true
                },
                {
-                "style": "color: #c0c0c0; font-size: 11px;",
+                "object_name": "descriptionText",
                 "text": "Protective magical frost surrounds you. You gain 5 Temporary... [367 chars, sha1 4cfd0163b175]",
                 "type": "QLabel",
                 "word_wrap": true
@@ -6743,6 +6803,7 @@
           "type": "QWidget"
          },
          {
+          "fixed_height": 3,
           "frame_shape": "HLine",
           "object_name": "divider",
           "size_policy": [
@@ -6765,6 +6826,7 @@
           "type": "QLabel"
          },
          {
+          "fixed_height": 3,
           "frame_shape": "HLine",
           "object_name": "divider",
           "size_policy": [
@@ -6906,6 +6968,7 @@
           "word_wrap": true
          },
          {
+          "fixed_height": 3,
           "frame_shape": "HLine",
           "object_name": "divider",
           "size_policy": [
@@ -6930,6 +6993,7 @@
           "type": "QLabel"
          },
          {
+          "fixed_height": 3,
           "frame_shape": "HLine",
           "object_name": "divider",
           "size_policy": [
@@ -6999,6 +7063,7 @@
           "word_wrap": true
          },
          {
+          "fixed_height": 3,
           "frame_shape": "HLine",
           "object_name": "divider",
           "size_policy": [
@@ -7046,6 +7111,7 @@
           "word_wrap": true
          },
          {
+          "fixed_height": 3,
           "frame_shape": "HLine",
           "object_name": "divider",
           "size_policy": [
@@ -7066,7 +7132,7 @@
              "checkable": true,
              "checked": false,
              "flat": true,
-             "style": "QPushButton { text-align: left; padding: 2px 4px; background: transparent; border: none; color: #eaeaea; font-size: 12px; }QPushButton:hover { color: #c9a84c; }QPushButton:checked { color: #c9a84c; }",
+             "object_name": "expandToggle",
              "text": "\u25b6  Umbral Claw  (+5 to hit)",
              "type": "QPushButton"
             },
@@ -7080,7 +7146,7 @@
                 "word_wrap": true
                },
                {
-                "style": "color: #a0a0b0; font-size: 10px;",
+                "object_name": "caption",
                 "text": "Chance to hit, by target AC",
                 "type": "QLabel"
                },
@@ -7114,6 +7180,7 @@
           "type": "QWidget"
          },
          {
+          "fixed_height": 3,
           "frame_shape": "HLine",
           "object_name": "divider",
           "size_policy": [
@@ -7214,6 +7281,7 @@
           "word_wrap": true
          },
          {
+          "fixed_height": 3,
           "frame_shape": "HLine",
           "object_name": "divider",
           "size_policy": [
@@ -7238,6 +7306,7 @@
           "type": "QLabel"
          },
          {
+          "fixed_height": 3,
           "frame_shape": "HLine",
           "object_name": "divider",
           "size_policy": [
@@ -7307,6 +7376,7 @@
           "word_wrap": true
          },
          {
+          "fixed_height": 3,
           "frame_shape": "HLine",
           "object_name": "divider",
           "size_policy": [
@@ -7343,6 +7413,7 @@
           "word_wrap": true
          },
          {
+          "fixed_height": 3,
           "frame_shape": "HLine",
           "object_name": "divider",
           "size_policy": [
@@ -7374,7 +7445,7 @@
              "checkable": true,
              "checked": false,
              "flat": true,
-             "style": "QPushButton { text-align: left; padding: 2px 4px; background: transparent; border: none; color: #eaeaea; font-size: 12px; }QPushButton:hover { color: #c9a84c; }QPushButton:checked { color: #c9a84c; }",
+             "object_name": "expandToggle",
              "text": "\u25b6  Claw  (+12 to hit)",
              "type": "QPushButton"
             },
@@ -7388,7 +7459,7 @@
                 "word_wrap": true
                },
                {
-                "style": "color: #a0a0b0; font-size: 10px;",
+                "object_name": "caption",
                 "text": "Chance to hit, by target AC",
                 "type": "QLabel"
                },
@@ -7439,7 +7510,7 @@
              "checkable": true,
              "checked": false,
              "flat": true,
-             "style": "QPushButton { text-align: left; padding: 2px 4px; background: transparent; border: none; color: #eaeaea; font-size: 12px; }QPushButton:hover { color: #c9a84c; }QPushButton:checked { color: #c9a84c; }",
+             "object_name": "expandToggle",
              "text": "\u25b6  First Roar  (DC 20)",
              "type": "QPushButton"
             },
@@ -7453,7 +7524,7 @@
                 "word_wrap": true
                },
                {
-                "style": "color: #a0a0b0; font-size: 10px;",
+                "object_name": "caption",
                 "text": "Target's chance to fail the save, by save modifier",
                 "type": "QLabel"
                },
@@ -7493,7 +7564,7 @@
              "checkable": true,
              "checked": false,
              "flat": true,
-             "style": "QPushButton { text-align: left; padding: 2px 4px; background: transparent; border: none; color: #eaeaea; font-size: 12px; }QPushButton:hover { color: #c9a84c; }QPushButton:checked { color: #c9a84c; }",
+             "object_name": "expandToggle",
              "text": "\u25b6  Second Roar  (DC 20)",
              "type": "QPushButton"
             },
@@ -7507,7 +7578,7 @@
                 "word_wrap": true
                },
                {
-                "style": "color: #a0a0b0; font-size: 10px;",
+                "object_name": "caption",
                 "text": "Target's chance to fail the save, by save modifier",
                 "type": "QLabel"
                },
@@ -7547,7 +7618,7 @@
              "checkable": true,
              "checked": false,
              "flat": true,
-             "style": "QPushButton { text-align: left; padding: 2px 4px; background: transparent; border: none; color: #eaeaea; font-size: 12px; }QPushButton:hover { color: #c9a84c; }QPushButton:checked { color: #c9a84c; }",
+             "object_name": "expandToggle",
              "text": "\u25b6  Third Roar  (DC 20)",
              "type": "QPushButton"
             },
@@ -7561,7 +7632,7 @@
                 "word_wrap": true
                },
                {
-                "style": "color: #a0a0b0; font-size: 10px;",
+                "object_name": "caption",
                 "text": "Target's chance to fail the save, by save modifier",
                 "type": "QLabel"
                },
@@ -7606,6 +7677,7 @@
           "word_wrap": true
          },
          {
+          "fixed_height": 3,
           "frame_shape": "HLine",
           "object_name": "divider",
           "size_policy": [
@@ -7637,7 +7709,7 @@
              "checkable": true,
              "checked": false,
              "flat": true,
-             "style": "QPushButton { text-align: left; padding: 2px 4px; background: transparent; border: none; color: #eaeaea; font-size: 12px; }QPushButton:hover { color: #c9a84c; }QPushButton:checked { color: #c9a84c; }",
+             "object_name": "expandToggle",
              "text": "\u25b6  Weight of Years  (DC 16)",
              "type": "QPushButton"
             },
@@ -7651,7 +7723,7 @@
                 "word_wrap": true
                },
                {
-                "style": "color: #a0a0b0; font-size: 10px;",
+                "object_name": "caption",
                 "text": "Target's chance to fail the save, by save modifier",
                 "type": "QLabel"
                },
@@ -7800,6 +7872,7 @@
           "word_wrap": true
          },
          {
+          "fixed_height": 3,
           "frame_shape": "HLine",
           "object_name": "divider",
           "size_policy": [
@@ -7819,6 +7892,7 @@
           "type": "QLabel"
          },
          {
+          "fixed_height": 3,
           "frame_shape": "HLine",
           "object_name": "divider",
           "size_policy": [
@@ -7858,7 +7932,7 @@
           "word_wrap": true
          },
          {
-          "style": "font-style: italic; color: #c0c0c0;",
+          "object_name": "monsterDescription",
           "text": "A cloud of shrieking bats.",
           "type": "QLabel",
           "word_wrap": true
@@ -7874,6 +7948,7 @@
           "word_wrap": true
          },
          {
+          "fixed_height": 3,
           "frame_shape": "HLine",
           "object_name": "divider",
           "size_policy": [
@@ -7899,6 +7974,7 @@
           "word_wrap": true
          },
          {
+          "fixed_height": 3,
           "frame_shape": "HLine",
           "object_name": "divider",
           "size_policy": [
@@ -7919,7 +7995,7 @@
              "checkable": true,
              "checked": false,
              "flat": true,
-             "style": "QPushButton { text-align: left; padding: 2px 4px; background: transparent; border: none; color: #eaeaea; font-size: 12px; }QPushButton:hover { color: #c9a84c; }QPushButton:checked { color: #c9a84c; }",
+             "object_name": "expandToggle",
              "text": "\u25b6  Bites  (+4 to hit)",
              "type": "QPushButton"
             },
@@ -7933,7 +8009,7 @@
                 "word_wrap": true
                },
                {
-                "style": "color: #a0a0b0; font-size: 10px;",
+                "object_name": "caption",
                 "text": "Chance to hit, by target AC",
                 "type": "QLabel"
                },

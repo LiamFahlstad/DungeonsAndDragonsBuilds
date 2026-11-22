@@ -359,9 +359,7 @@ class WindowMixin(CombatWindowState):
         tracker_outer.setSpacing(2)
 
         self._turn_counter_label = QLabel("Turn 1 / 1")
-        self._turn_counter_label.setStyleSheet(
-            "color: #c9a84c; font-weight: bold; font-size: 11px;"
-        )
+        self._turn_counter_label.setObjectName("turnCounter")
         tracker_outer.addWidget(self._turn_counter_label)
 
         panel_layout.addWidget(self._init_tracker_container)
@@ -460,11 +458,7 @@ class WindowMixin(CombatWindowState):
         left_col.addWidget(self._section_header("Heal"))
         self.heal_input = _AmountField()
         self.heal_input.setPlaceholderText("Amount...")
-        self.heal_input.setStyleSheet(
-            "QLineEdit { background-color: #0f3460; border: 1px solid #4caf82; "
-            "border-radius: 3px; color: #eaeaea; padding: 3px 5px; }"
-            "QLineEdit:focus { border: 1px solid #5cdf92; }"
-        )
+        self.heal_input.setObjectName("healInput")
         left_col.addWidget(self.heal_input)
         self.heal_input.returnPressed.connect(self._apply_heal)
         heal_btn = QPushButton("Apply Heal")
@@ -478,11 +472,7 @@ class WindowMixin(CombatWindowState):
         left_col.addWidget(self._section_header("Temp HP"))
         self.temp_hp_input = _AmountField()
         self.temp_hp_input.setPlaceholderText("Amount...")
-        self.temp_hp_input.setStyleSheet(
-            "QLineEdit { background-color: #0f3460; border: 1px solid #4a9fc4; "
-            "border-radius: 3px; color: #eaeaea; padding: 3px 5px; }"
-            "QLineEdit:focus { border: 1px solid #5ac8f5; }"
-        )
+        self.temp_hp_input.setObjectName("tempHpInput")
         left_col.addWidget(self.temp_hp_input)
         self.temp_hp_input.returnPressed.connect(self._apply_temp_hp)
         temp_hp_btn = QPushButton("Add Temp HP")
@@ -506,7 +496,7 @@ class WindowMixin(CombatWindowState):
 
         self.roll_result_label = QLabel("")
         self.roll_result_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.roll_result_label.setStyleSheet("font-size: 16px; font-weight: bold;")
+        self.roll_result_label.setObjectName("rollResult")
         left_col.addWidget(self.roll_result_label)
 
         left_col.addStretch()
@@ -672,16 +662,13 @@ class WindowMixin(CombatWindowState):
         self._next_turn_btn = QPushButton("Next Combatant")
         self._next_turn_btn.clicked.connect(self._advance_turn)
         self._next_turn_btn.hide()
-        self._next_turn_btn.setStyleSheet(
-            "background-color: #3a2e00; border: 1px solid #c9a84c;"
-            " color: #c9a84c; font-weight: bold; min-height: 28px;"
-        )
+        self._next_turn_btn.setObjectName("nextTurnBtn")
         turn_row.addWidget(self._next_turn_btn, stretch=2)
         panel_layout.addLayout(turn_row)
 
         self._log_status_label = QLabel(self._log_status_text())
         self._log_status_label.setWordWrap(True)
-        self._log_status_label.setStyleSheet("color: #a0a0b0; font-size: 11px;")
+        self._log_status_label.setObjectName("secondary")
         panel_layout.addWidget(self._log_status_label)
 
         # Logs, Statistics, Rules, the players' views, Settings, two to a row

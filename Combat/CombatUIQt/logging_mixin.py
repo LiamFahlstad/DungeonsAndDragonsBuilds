@@ -697,9 +697,6 @@ class LoggingMixin(CombatWindowState):
         heading = "Between Encounters" if between else "Encounter Log"
         dlg.setWindowTitle(f"{heading} — {self.log_file.name}")
         dlg.setMinimumSize(480, 500)
-        from .styles import QSS
-
-        dlg.setStyleSheet(QSS)
 
         layout = QVBoxLayout(dlg)
         layout.setContentsMargins(14, 14, 14, 14)
@@ -741,9 +738,6 @@ class LoggingMixin(CombatWindowState):
         dlg = QDialog(self._window)
         dlg.setWindowTitle(f"Player Log — {self.player_log_file.name}")
         dlg.setMinimumSize(480, 500)
-        from .styles import QSS
-
-        dlg.setStyleSheet(QSS)
 
         layout = QVBoxLayout(dlg)
         layout.setContentsMargins(14, 14, 14, 14)

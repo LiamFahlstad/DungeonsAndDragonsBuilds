@@ -42,7 +42,7 @@ LONG_FUNCTIONS = {
 }
 
 MAX_WINDOW_STATE_STUBS = 207
-MAX_INLINE_STYLES = 98
+MAX_INLINE_STYLES = 23
 
 
 def _combat_files() -> list[Path]:

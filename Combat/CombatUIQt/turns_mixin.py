@@ -26,7 +26,6 @@ from Combat.Effects.triggers import InitiativeOutcome
 from Combat.Summons import follows_owner, numbered, place_after_owners
 
 from .stats import _default_stats
-from .styles import QSS
 from Core.Rules import ability_modifier
 from .state import CombatWindowState
 from .undo import undoable
@@ -304,7 +303,7 @@ class TurnsMixin(CombatWindowState):
         row_layout.setSpacing(8)
 
         name_lbl = QLabel(unit_label(unit))
-        name_lbl.setStyleSheet("color: #c9a84c; font-weight: bold;")
+        name_lbl.setObjectName("goldHeading")
         name_lbl.setFixedWidth(160)
         row_layout.addWidget(name_lbl)
 
@@ -511,7 +510,7 @@ class TurnsMixin(CombatWindowState):
         outer.setSpacing(8)
 
         header = QLabel("Roll Initiative")
-        header.setStyleSheet("color: #c9a84c; font-size: 16px; font-weight: bold;")
+        header.setObjectName("panelTitle")
         outer.addWidget(header)
 
         outer.addWidget(self._make_divider())
@@ -529,10 +528,7 @@ class TurnsMixin(CombatWindowState):
         outer.addWidget(self._make_divider())
 
         roll_all_btn = QPushButton("Roll for All")
-        roll_all_btn.setStyleSheet(
-            "background-color: #1a2a3a; border: 1px solid #5bc8f5;"
-            " color: #5bc8f5; font-weight: bold; min-height: 26px;"
-        )
+        roll_all_btn.setObjectName("rollInitiativeBtn")
 
         def _roll_all():
             for unit in self._initiative_row_units():
@@ -542,7 +538,7 @@ class TurnsMixin(CombatWindowState):
         roll_all_btn.clicked.connect(_roll_all)
 
         roll_monsters_btn = QPushButton("Roll for Monsters")
-        roll_monsters_btn.setStyleSheet(roll_all_btn.styleSheet())
+        roll_monsters_btn.setObjectName("rollInitiativeBtn")
         roll_monsters_btn.setToolTip(
             "Roll every monster's initiative that isn't filled in, then jump to"
             " the first player's field"
@@ -556,10 +552,7 @@ class TurnsMixin(CombatWindowState):
 
         self._start_combat_btn = QPushButton("Start Combat")
         self._start_combat_btn.setEnabled(False)
-        self._start_combat_btn.setStyleSheet(
-            "background-color: #1a3a1a; border: 1px solid #2ecc71;"
-            " color: #2ecc71; font-weight: bold; min-height: 30px;"
-        )
+        self._start_combat_btn.setObjectName("startCombatBtn")
         self._start_combat_btn.clicked.connect(self._start_combat)
         outer.addWidget(self._start_combat_btn)
 
@@ -720,7 +713,6 @@ class TurnsMixin(CombatWindowState):
         dlg = QDialog(self._window)
         dlg.setWindowTitle("Resolve Initiative Ties")
         dlg.setMinimumWidth(360)
-        dlg.setStyleSheet(QSS)
 
         layout = QVBoxLayout(dlg)
         layout.setContentsMargins(14, 14, 14, 14)
@@ -730,25 +722,21 @@ class TurnsMixin(CombatWindowState):
             "Some combatants tied on initiative.\nDrag rows to set the turn order within each tied group."
         )
         info.setWordWrap(True)
-        info.setStyleSheet("color: #a0a0b0;")
+        info.setObjectName("muted")
         layout.addWidget(info)
 
         list_widgets: list[tuple[int, int, QListWidget]] = []
 
         for init_val, start, end in tied_groups:
             grp_label = QLabel(f"Initiative {init_val}")
-            grp_label.setStyleSheet("font-weight: bold; color: #c9a84c;")
+            grp_label.setObjectName("goldHeading")
             layout.addWidget(grp_label)
 
             lw = QListWidget()
             lw.setDragDropMode(QListWidget.DragDropMode.InternalMove)
             lw.setSelectionMode(QListWidget.SelectionMode.SingleSelection)
             lw.setFixedHeight((end - start) * 32 + 4)
-            lw.setStyleSheet(
-                "QListWidget { background: #16213e; border: 1px solid #0f3460; }"
-                "QListWidget::item { padding: 5px 10px; }"
-                "QListWidget::item:selected { background: #1e2d5a; color: #eaeaea; }"
-            )
+            lw.setObjectName("tieList")
             for _, unit in order_with_initiative[start:end]:
                 item = QListWidgetItem(unit_label(unit))
                 item.setData(Qt.ItemDataRole.UserRole, unit)

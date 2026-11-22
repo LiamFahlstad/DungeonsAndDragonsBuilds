@@ -27,8 +27,6 @@ from PyQt6.QtWidgets import (
 from Combat.Effects.triggers import HitFiring, TriggerChoice
 from Model.Content.CombatTriggers import TriggerAim, TriggerEvent
 
-from .styles import QSS
-
 _WIDTH = 520
 # What a box for a roll made at the table takes: a total, or a sum ("7+8").
 _TOTAL = r"\d+(\s*\+\s*\d+)*"
@@ -42,7 +40,6 @@ class TriggerPrompt(QDialog):
         super().__init__(parent)
         self.setObjectName("triggerPrompt")
         self.setWindowTitle("Use it now?")
-        self.setStyleSheet(QSS)
         self.setMinimumWidth(_WIDTH)
         self._firings = list(firings)
         self._answer = ""

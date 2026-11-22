@@ -51,7 +51,6 @@ from .attack_rolls import armor_text
 from .monster_actions import ability_effects
 from .player_server import PlayerServerError, lan_addresses
 from .settings import SETTING_SECTIONS
-from .styles import QSS
 from Core.Rules import ability_modifier
 from .state import CombatWindowState
 from .tree_filter import filter_category_tree
@@ -313,12 +312,7 @@ class _InfoPanel:
         btn = QPushButton(f"▶  {header_text}")
         btn.setCheckable(True)
         btn.setFlat(True)
-        btn.setStyleSheet(
-            "QPushButton { text-align: left; padding: 2px 4px; background: transparent; "
-            "border: none; color: #eaeaea; font-size: 12px; }"
-            "QPushButton:hover { color: #c9a84c; }"
-            "QPushButton:checked { color: #c9a84c; }"
-        )
+        btn.setObjectName("expandToggle")
         content_widget.setVisible(False)
 
         def toggle(checked: bool):
@@ -353,7 +347,7 @@ def _rich_label(html: str, word_wrap: bool = False, style: str = "") -> QLabel:
 def _description_label(text: str) -> QLabel:
     lbl = QLabel(text)
     lbl.setWordWrap(True)
-    lbl.setStyleSheet("color: #c0c0c0; font-size: 11px;")
+    lbl.setObjectName("descriptionText")
     return lbl
 
 
@@ -597,7 +591,7 @@ def _weapon_details(weapon, char: dict, sb) -> QWidget:
         )
     if weapon.properties:
         prop_header_lbl = QLabel("Properties:")
-        prop_header_lbl.setStyleSheet("color: #a0a0b0; font-size: 11px;")
+        prop_header_lbl.setObjectName("secondary")
         layout.addWidget(prop_header_lbl)
         for prop in weapon.properties:
             prop_lbl = _rich_label(
@@ -690,7 +684,7 @@ def _add_monster_summary(panel: _InfoPanel, char: dict):
     if char.get("description"):
         desc_lbl = QLabel(char["description"])
         desc_lbl.setWordWrap(True)
-        desc_lbl.setStyleSheet("font-style: italic; color: #c0c0c0;")
+        desc_lbl.setObjectName("monsterDescription")
         panel.add(desc_lbl)
 
 
@@ -744,7 +738,7 @@ def _add_monster_ability(panel: _InfoPanel, ab, char: dict | None = None):
     desc_lbl.setWordWrap(True)
     layout.addWidget(desc_lbl)
     caption_lbl = QLabel(caption_text)
-    caption_lbl.setStyleSheet("color: #a0a0b0; font-size: 10px;")
+    caption_lbl.setObjectName("caption")
     layout.addWidget(caption_lbl)
     layout.addWidget(_rich_label(table_html))
     panel.expandable(f"{name}  ({header_suffix})", box)
@@ -765,7 +759,6 @@ class DialogsMixin(CombatWindowState):
             return
         dlg = QDialog(self._window)
         dlg.setWindowTitle("Add Combatant")
-        dlg.setStyleSheet(QSS)
         dlg.setFixedWidth(300)
 
         layout = QVBoxLayout(dlg)
@@ -852,7 +845,6 @@ class DialogsMixin(CombatWindowState):
         (and is saved) the moment it's changed."""
         dlg = QDialog(self._window)
         dlg.setWindowTitle("Settings")
-        dlg.setStyleSheet(QSS)
         dlg.setFixedWidth(_SETTINGS_WIDTH)
 
         layout = QVBoxLayout(dlg)
@@ -882,7 +874,7 @@ class DialogsMixin(CombatWindowState):
                     column.addWidget(box)
                     hint = QLabel(info.hint)
                     hint.setWordWrap(True)
-                    hint.setStyleSheet("color: #a0a0b0; font-size: 11px;")
+                    hint.setObjectName("secondary")
                     column.addWidget(hint)
             column.addStretch()
             columns.addLayout(column, stretch=1)
@@ -905,7 +897,6 @@ class DialogsMixin(CombatWindowState):
 
         dlg = QDialog(self._window)
         dlg.setWindowTitle("Player Link")
-        dlg.setStyleSheet(QSS)
         dlg.setFixedWidth(_PLAYER_LINK_WIDTH)
 
         layout = QVBoxLayout(dlg)
@@ -917,13 +908,12 @@ class DialogsMixin(CombatWindowState):
             "They see what the Player Screen shows, and can't change anything."
         )
         info.setWordWrap(True)
-        info.setStyleSheet("color: #a0a0b0;")
+        info.setObjectName("muted")
         layout.addWidget(info)
 
         link = QLabel()
         link.setObjectName("playerLink")
         link.setTextInteractionFlags(Qt.TextInteractionFlag.TextSelectableByMouse)
-        link.setStyleSheet("color: #c9a84c; font-size: 18px; font-weight: bold;")
         layout.addWidget(link)
 
         message = QLabel()
@@ -941,7 +931,7 @@ class DialogsMixin(CombatWindowState):
 
         hint = QLabel("If a phone can't connect, try another address.")
         hint.setWordWrap(True)
-        hint.setStyleSheet("color: #a0a0b0; font-size: 11px;")
+        hint.setObjectName("secondary")
         layout.addWidget(hint)
 
         view_row = QHBoxLayout()
@@ -961,7 +951,7 @@ class DialogsMixin(CombatWindowState):
             "This changes the Player Screen too."
         )
         view_hint.setWordWrap(True)
-        view_hint.setStyleSheet("color: #a0a0b0; font-size: 11px;")
+        view_hint.setObjectName("secondary")
         layout.addWidget(view_hint)
 
         btn_row = QHBoxLayout()
@@ -1076,7 +1066,6 @@ class DialogsMixin(CombatWindowState):
         dlg = QDialog(self._window)
         dlg.setWindowTitle("Statistics")
         dlg.setMinimumSize(1150, 520)
-        dlg.setStyleSheet(QSS)
 
         outer = QVBoxLayout(dlg)
         outer.setContentsMargins(14, 14, 14, 14)
@@ -1203,7 +1192,7 @@ class DialogsMixin(CombatWindowState):
             headers = ["Name"] + [header for header, _ in columns]
             for col, text in enumerate(headers):
                 lbl = QLabel(text)
-                lbl.setStyleSheet("color: #c9a84c; font-weight: bold;")
+                lbl.setObjectName("goldHeading")
                 grid.addWidget(lbl, 0, col)
 
             for row, char in enumerate(characters, start=1):
@@ -1214,7 +1203,7 @@ class DialogsMixin(CombatWindowState):
                 for col, value in enumerate(values):
                     lbl = QLabel(str(value))
                     if col == 0:
-                        lbl.setStyleSheet("color: #eaeaea; font-weight: bold;")
+                        lbl.setObjectName("statsName")
                     grid.addWidget(lbl, row, col)
 
             grid.setColumnStretch(len(headers), 1)
@@ -1256,7 +1245,6 @@ class DialogsMixin(CombatWindowState):
         dlg = QDialog(self._window)
         dlg.setWindowTitle("Rules")
         dlg.setMinimumSize(760, 560)
-        dlg.setStyleSheet(QSS)
 
         outer = QVBoxLayout(dlg)
         outer.setContentsMargins(14, 14, 14, 14)
@@ -1366,14 +1354,13 @@ class DialogsMixin(CombatWindowState):
         dlg = QDialog(self._window)
         dlg.setWindowTitle(title)
         dlg.setMinimumWidth(380)
-        dlg.setStyleSheet(QSS)
 
         layout = QVBoxLayout(dlg)
         layout.setContentsMargins(14, 14, 14, 14)
         layout.setSpacing(8)
 
         title_lbl = QLabel(heading)
-        title_lbl.setStyleSheet("font-weight: bold; color: #c9a84c; font-size: 13px;")
+        title_lbl.setObjectName("ruleTitle")
         layout.addWidget(title_lbl)
 
         divider = QFrame()
@@ -1382,7 +1369,7 @@ class DialogsMixin(CombatWindowState):
 
         body_lbl = QLabel(body)
         body_lbl.setWordWrap(True)
-        body_lbl.setStyleSheet("color: #c0c0c0; font-size: 12px;")
+        body_lbl.setObjectName("ruleBody")
         layout.addWidget(body_lbl)
 
         close_btn = QPushButton("Close")

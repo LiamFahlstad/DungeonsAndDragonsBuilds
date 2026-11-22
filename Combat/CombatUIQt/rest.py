@@ -135,7 +135,6 @@ def short_rest_dialog(app: CombatAppQt, parent: QWidget | None = None) -> QDialo
     title = app.player_log_file.name if app.player_log_file else "party"
     dlg.setWindowTitle(f"Short Rest — {title}")
     dlg.setMinimumSize(420, 120 + 40 * len(players))
-    dlg.setStyleSheet(QSS)
 
     outer = QVBoxLayout(dlg)
     outer.setContentsMargins(14, 14, 14, 14)

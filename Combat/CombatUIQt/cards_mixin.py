@@ -299,7 +299,7 @@ class CardsMixin(CombatWindowState):
                 f"<span style='color:#40c040'>{'●' * success}{'○' * (3 - success)}</span>"
             )
             pips_lbl.setTextFormat(Qt.TextFormat.RichText)
-            pips_lbl.setStyleSheet("font-size: 11px; letter-spacing: 2px;")
+            pips_lbl.setObjectName("deathSavePips")
             layout.addWidget(pips_lbl)
 
         if death_state == "dying":
@@ -560,7 +560,7 @@ class CardsMixin(CombatWindowState):
         layout.addWidget(_separator())
         layout.addWidget(_section_header("Used:"))
         actions_lbl = QLabel(self._format_action_uses(action_uses))
-        actions_lbl.setStyleSheet("color: #a0c4ff; font-size: 11px;")
+        actions_lbl.setObjectName("cardResource")
         actions_lbl.setWordWrap(True)
         layout.addWidget(actions_lbl)
 
@@ -596,13 +596,13 @@ def _clickable_badge_style(color: str) -> str:
 def _separator() -> QFrame:
     sep = QFrame()
     sep.setFrameShape(QFrame.Shape.HLine)
-    sep.setStyleSheet("color: #0f3460;")
+    sep.setObjectName("cardSeparator")
     return sep
 
 
 def _section_header(text: str) -> QLabel:
     header = QLabel(text)
-    header.setStyleSheet("color: #c9a84c; font-size: 10px; font-weight: bold;")
+    header.setObjectName("cardSectionHeader")
     return header
 
 
@@ -639,8 +639,7 @@ def _hp_row(char: dict) -> QHBoxLayout:
 
     if temp_hp and temp_hp > 0:
         temp_lbl = QLabel(f"(+{temp_hp} temp)")
-        temp_lbl.setObjectName("secondary")
-        temp_lbl.setStyleSheet("color: #5bc8f5; font-size: 10px;")
+        temp_lbl.setObjectName("cardTempHp")
         hp_row.addWidget(temp_lbl)
     return hp_row
 
@@ -651,8 +650,7 @@ def _add_hit_point_maximum(layout: QVBoxLayout, char: dict):
     text = hit_point_maximum_text(char)
     if text:
         lbl = QLabel(f"Max HP {text}")
-        lbl.setObjectName("secondary")
-        lbl.setStyleSheet("font-size: 10px;")
+        lbl.setObjectName("caption")
         lbl.setWordWrap(True)
         layout.addWidget(lbl)
 
@@ -663,8 +661,7 @@ def _add_size(layout: QVBoxLayout, char: dict):
     text = size_text(char)
     if text:
         lbl = QLabel(f"Size {text}")
-        lbl.setObjectName("secondary")
-        lbl.setStyleSheet("font-size: 10px;")
+        lbl.setObjectName("caption")
         lbl.setWordWrap(True)
         layout.addWidget(lbl)
 
@@ -716,7 +713,7 @@ def _add_defenses(layout: QVBoxLayout, char: dict):
     if condition_immunities:
         cond_immune_text = ", ".join(condition_immunities)
         cond_immune_lbl = QLabel(f"Cond. Immune: {cond_immune_text}")
-        cond_immune_lbl.setStyleSheet("color: #4a9fc4; font-size: 10px;")
+        cond_immune_lbl.setObjectName("cardCondImmune")
         cond_immune_lbl.setWordWrap(True)
         layout.addWidget(cond_immune_lbl)
 
@@ -736,11 +733,11 @@ def _add_monster_counters(layout: QVBoxLayout, char: dict):
     layout.addWidget(_separator())
     if parts:
         counters_lbl = QLabel("  ".join(parts))
-        counters_lbl.setStyleSheet("color: #c9a84c; font-size: 11px;")
+        counters_lbl.setObjectName("cardCounters")
         layout.addWidget(counters_lbl)
     if spent:
         spent_lbl = QLabel(f"Spent: {spent}")
-        spent_lbl.setStyleSheet("color: #e67e22; font-size: 10px;")
+        spent_lbl.setObjectName("cardSpent")
         spent_lbl.setWordWrap(True)
         layout.addWidget(spent_lbl)
 
@@ -760,7 +757,7 @@ def _add_spell_slots(layout: QVBoxLayout, char: dict):
             continue
         text = "  ".join(f"LV{lv}({cnt})" for lv, cnt in sorted(left.items()))
         slots_lbl = QLabel(prefix + text)
-        slots_lbl.setStyleSheet("color: #a0c4ff; font-size: 11px;")
+        slots_lbl.setObjectName("cardResource")
         layout.addWidget(slots_lbl)
 
 
@@ -782,23 +779,19 @@ def _add_timed_entries(
         name_row = QHBoxLayout()
         name_row.setSpacing(4)
         name_lbl = QLabel(entry["name"])
-        name_lbl.setStyleSheet("color: #a0c4ff; font-size: 10px;")
+        name_lbl.setObjectName("cardSummonName")
         name_row.addWidget(name_lbl, stretch=1)
         remove_btn = QPushButton("×")
         remove_btn.setFixedSize(16, 16)
         remove_btn.setToolTip(f"Dismiss {entry['name']}")
-        remove_btn.setStyleSheet(
-            "QPushButton { background-color: #5c1a1a; color: #ffffff;"
-            " border: none; border-radius: 3px; font-size: 10px; padding: 0px; }"
-            "QPushButton:hover { background-color: #7a2a2a; }"
-        )
+        remove_btn.setObjectName("cardSummonDismiss")
         remove_btn.setCursor(Qt.CursorShape.PointingHandCursor)
         remove_btn.clicked.connect(lambda _=False, c=char, e=entry: remove(c, e))
         name_row.addWidget(remove_btn)
         layout.addLayout(name_row)
         if "time_left" not in entry:
             until_lbl = QLabel(entry["text"])
-            until_lbl.setStyleSheet("color: #a0a0b0; font-size: 10px;")
+            until_lbl.setObjectName("caption")
             until_lbl.setWordWrap(True)
             layout.addWidget(until_lbl)
             continue
@@ -809,9 +802,7 @@ def _add_timed_entries(
         time_bar.setFormat(f"{entry['time_left']}s")
         time_bar.setTextVisible(True)
         time_bar.setFixedHeight(14)
-        time_bar.setStyleSheet(
-            "QProgressBar::chunk { background-color: #5ac8f5; border-radius: 3px; }"
-        )
+        time_bar.setObjectName("cardTimeBar")
         layout.addWidget(time_bar)
 
 
@@ -842,7 +833,5 @@ def _add_ability_rows(layout: QVBoxLayout, char: dict):
         else:
             row_text = "  ".join(f"{abbr} {m:+d}" for abbr, m, _ in chunk)
         row_lbl = QLabel(row_text)
-        row_lbl.setStyleSheet(
-            "font-family: monospace; font-size: 10px; color: #a0a0b0;"
-        )
+        row_lbl.setObjectName("cardAbilities")
         layout.addWidget(row_lbl)

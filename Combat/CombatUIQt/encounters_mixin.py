@@ -38,7 +38,6 @@ from Combat.Scenario import CombatScenario
 from Combat.Effects.modifiers import hit_point_maximum
 
 from .state import CombatWindowState
-from .styles import QSS
 
 CONTINUE = "continue"
 RESTART = "restart"
@@ -363,35 +362,34 @@ class EncountersMixin(CombatWindowState):
         outer.setSpacing(8)
 
         header = QLabel("Between encounters")
-        header.setStyleSheet("color: #c9a84c; font-size: 16px; font-weight: bold;")
+        header.setObjectName("panelTitle")
         outer.addWidget(header)
         hint = QLabel(
             "Load an encounter (Ctrl+O) to play a fight. Run with --player-log "
             "to track the party, and what they do between encounters."
         )
         hint.setWordWrap(True)
-        hint.setStyleSheet("color: #a0a0b0;")
+        hint.setObjectName("muted")
         outer.addWidget(hint)
         outer.addWidget(self._make_divider())
 
         players = [c for c in self.characters if c.get("_is_player")]
         if not players:
             none = QLabel("No tracked party (run with --player-log to track one).")
-            none.setStyleSheet("color: #a0a0b0;")
+            none.setObjectName("muted")
             outer.addWidget(none)
         for char in players:
             label = QLabel(self._party_line(char))
-            label.setStyleSheet("font-size: 13px;")
+            label.setObjectName("partyLine")
             outer.addWidget(label)
         allies = self._party_allies_now()
         if allies:
             allies_header = QLabel("Allies")
-            allies_header.setStyleSheet("color: #c9a84c; font-weight: bold;")
+            allies_header.setObjectName("goldHeading")
             outer.addWidget(allies_header)
         for char in allies:
             label = QLabel(self._party_line(char))
             label.setObjectName("partyAllyLine")
-            label.setStyleSheet("font-size: 13px;")
             outer.addWidget(label)
         outer.addStretch()
         return container
@@ -412,7 +410,6 @@ class EncountersMixin(CombatWindowState):
         dlg = QDialog(self._window)
         dlg.setWindowTitle("Load Encounter")
         dlg.setMinimumSize(560, 520)
-        dlg.setStyleSheet(QSS)
 
         layout = QVBoxLayout(dlg)
         layout.setContentsMargins(14, 14, 14, 14)
@@ -425,15 +422,11 @@ class EncountersMixin(CombatWindowState):
             "it (the old log is kept as a backup)."
         )
         info.setWordWrap(True)
-        info.setStyleSheet("color: #a0a0b0;")
+        info.setObjectName("muted")
         layout.addWidget(info)
 
         scenario_list = QListWidget()
-        scenario_list.setStyleSheet(
-            "QListWidget { background: #16213e; border: 1px solid #0f3460; }"
-            "QListWidget::item { padding: 6px 10px; }"
-            "QListWidget::item:selected { background: #1e2d5a; color: #eaeaea; }"
-        )
+        scenario_list.setObjectName("encounterList")
         statuses = {}
         # Logs that aren't valid JSON, by encounter: what BrokenLogError says.
         broken: dict[str, str] = {}

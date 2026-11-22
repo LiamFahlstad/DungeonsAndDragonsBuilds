@@ -18,7 +18,7 @@ what a fight does:
 4. **One way to do each thing:** one way to refresh the views after an
    operation, ask the GM a question, style a widget and build a button.
 
-Written 2026-11-21. Step 0 and most of step 1 built 2026-11-22.
+Written 2026-11-21. Steps 0 and 1 built 2026-11-22.
 
 **What never changes during this plan:** the behaviour, the widget
 `objectName`s (the tests, the golden widget dumps and the `combat-ui-explore`
@@ -56,7 +56,7 @@ and the few others a step touches, not the character-sheet tests. Steps 3,
 | Step | What | Size | State |
 |---|---|---|---|
 | 0 | Safety net: a structure test that ratchets the numbers below down, fix the one pyright error | S | **Done** 2026-11-22 (R1, R2): `tests/test_combat_ui_structure.py`; pyright clean on `Combat/`; the UI tests take about 77 s (1,498 tests, xdist) |
-| 1 | Hygiene: enums for phase and action types, styles into QSS, dead code out | S-M | 1.1, 1.2, 1.6 **done** 2026-11-22 (R3, R5); 1.4 moved to 5.4, 1.5 dropped (R4); **1.3 (styles) next** |
+| 1 | Hygiene: enums for phase and action types, styles into QSS, dead code out | S-M | **Done** 2026-11-22: 1.1, 1.2, 1.6 (R3, R5); 1.3 (R6, R7): inline styles 98 → 23; 1.4 moved to 5.4, 1.5 dropped (R4) |
 | 2 | A typed combatant (`Combatant` TypedDict) | M | Not started |
 | 3 | The Use / Cast dialog as a class, its form-to-effects logic Qt-free | L | Not started |
 | 4 | The window built from panels, shortcuts as a table | M | Not started |
@@ -418,7 +418,8 @@ combat plans' file references. Then record the final numbers in Findings.
    Q4 says so. (In the plan, for the user to overrule.)
 3. **`objectName`s are a contract.** The tests, the widget dumps and the
    explore harness find widgets by them, so a refactor never renames one.
-   (In the plan.)
+   (In the plan.) An objectName that nothing finds a widget by, used only
+   as a style class, may change (R7).
 
 ## Open questions
 
@@ -488,6 +489,39 @@ combat plans' file references. Then record the final numbers in Findings.
   regenerate them, read the diff (style text replaced by a property, and
   nothing else), and compare a `run-apps` screenshot of the window from
   before and after.
+- **R7 (step 1.3, done).** What was built, and what it taught:
+  - **ObjectNames as style classes, not a new `role` property.**
+    `styles.py` already styles by objectName (`#secondary`, `#divider`,
+    `#sectionHeader`), so the 75 static inline styles became objectNames
+    (`muted`, `caption`, `goldHeading`, `panelTitle`, `cardResource`, ...)
+    with their rules in one block at the end of the QSS. Being last, they
+    win any specificity tie. The 23 left inline are computed per state (HP
+    bar and badge colours, the damage type's colour, a rolled initiative,
+    the player link button) or are a menu's own QSS, which guards it
+    against a card's inline style cascading into it.
+  - **Decision 3 gets a narrow exception:** three card labels were named
+    `secondary` and overrode most of it inline. They're now `cardTempHp`
+    and `caption`. Nothing looks them up (no test, no explore harness), so
+    an objectName used *only* as a style class may change. One that a test
+    or the harness finds a widget by still may not.
+  - **The 12 dialogs no longer set the whole QSS on themselves.** The app
+    sets it once (`run()`, and `rest.py`'s own entry point). The tests'
+    `QApplication` (`tests/_combat_ui.py`) now sets it too, as `run()`
+    does. Without that, the Settings dialog laid out in Qt's default font
+    and failed `test_the_settings_dialog_fits_the_smallest_window` (620px
+    > 600).
+  - **The golden dumps changed in exactly two ways:** each inline `style`
+    became its `object_name`, and `fixed_height` now appears where the
+    app's QSS gives one (HP bars 16px, dividers). Before, a test window had
+    no stylesheet, and a dialog only got its own copy lazily, after the
+    dump was taken.
+  - **Verified pixel-identical** in the real app's styling. The main
+    window (initiative, a fight with a summon, the party view) and 25
+    dialogs (More Info for all 13 combatants, Add Combatant, Settings,
+    Player Link, Statistics, Rules, a rule popup, Load Encounter,
+    Encounter Log, Map Painter, Short Rest, the tie-break, the party view)
+    were screenshotted before and after and diffed pixel by pixel. The
+    only difference was a log timestamp in Load Encounter.
 
 ## Discovered issues
 

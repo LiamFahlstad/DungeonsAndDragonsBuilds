@@ -78,7 +78,6 @@ from Combat.Summons import owner_name
 
 from .arena_view import CELL_PX, ArenaView, TokenRow, token_label
 from .state import CombatWindowState
-from .styles import QSS
 from .undo import undoable
 
 GROUND_TAB, HEIGHT_TAB, LIGHT_TAB, OBJECT_TAB, START_TAB = range(5)
@@ -225,7 +224,7 @@ class PainterView(ArenaView):
 def _note(text: str) -> QLabel:
     label = QLabel(text)
     label.setWordWrap(True)
-    label.setStyleSheet("color: #a0a0b0; font-size: 11px;")
+    label.setObjectName("secondary")
     return label
 
 
@@ -259,7 +258,6 @@ class MapPainterDialog(QDialog):
     ):
         super().__init__(parent)
         self.setObjectName("mapPainter")
-        self.setStyleSheet(QSS)
         self.resize(1240, 780)
         self._load, self._save = load, save
         self._encounter = current
@@ -295,7 +293,7 @@ class MapPainterDialog(QDialog):
         top.addWidget(QLabel("Height"))
         top.addWidget(self.height_spin)
         self.size_label = QLabel()
-        self.size_label.setStyleSheet("color: #a0a0b0;")
+        self.size_label.setObjectName("muted")
         top.addWidget(self.size_label)
         layout.addLayout(top)
 
@@ -326,7 +324,6 @@ class MapPainterDialog(QDialog):
         bottom = QHBoxLayout()
         self.status = QLabel()
         self.status.setObjectName("painterStatus")
-        self.status.setStyleSheet("color: #c9a84c;")
         bottom.addWidget(self.status, stretch=1)
         undo_btn = QPushButton("Undo (Ctrl+Z)")
         undo_btn.clicked.connect(self.undo)

@@ -24,6 +24,7 @@
          true
         ],
         "cursor": "PointingHandCursor",
+        "fixed_height": 16,
         "mouse_transparent": true,
         "stretch": 1,
         "style": "QProgressBar::chunk { background-color: #2ecc71; border-radius: 3px; }",
@@ -51,11 +52,11 @@
       "cursor": "PointingHandCursor",
       "frame_shape": "HLine",
       "mouse_transparent": true,
+      "object_name": "cardSeparator",
       "size_policy": [
        "Minimum",
        "Fixed"
       ],
-      "style": "color: #0f3460;",
       "type": "QFrame"
      },
      {
@@ -77,7 +78,7 @@
      {
       "cursor": "PointingHandCursor",
       "mouse_transparent": true,
-      "style": "color: #4a9fc4; font-size: 10px;",
+      "object_name": "cardCondImmune",
       "text": "Cond. Immune: Charmed, Poisoned",
       "type": "QLabel",
       "word_wrap": true
@@ -86,24 +87,24 @@
       "cursor": "PointingHandCursor",
       "frame_shape": "HLine",
       "mouse_transparent": true,
+      "object_name": "cardSeparator",
       "size_policy": [
        "Minimum",
        "Fixed"
       ],
-      "style": "color: #0f3460;",
       "type": "QFrame"
      },
      {
       "cursor": "PointingHandCursor",
       "mouse_transparent": true,
-      "style": "font-family: monospace; font-size: 10px; color: #a0a0b0;",
+      "object_name": "cardAbilities",
       "text": "STR +3/+3  DEX +1/+5  CON +2/+6",
       "type": "QLabel"
      },
      {
       "cursor": "PointingHandCursor",
       "mouse_transparent": true,
-      "style": "font-family: monospace; font-size: 10px; color: #a0a0b0;",
+      "object_name": "cardAbilities",
       "text": "INT +5/+9  WIS +3/+7  CHA +3/+3",
       "type": "QLabel"
      }
@@ -201,6 +202,7 @@
          true
         ],
         "cursor": "PointingHandCursor",
+        "fixed_height": 16,
         "mouse_transparent": true,
         "stretch": 1,
         "style": "QProgressBar::chunk { background-color: #2ecc71; border-radius: 3px; }",
@@ -292,11 +294,11 @@
       "cursor": "PointingHandCursor",
       "frame_shape": "HLine",
       "mouse_transparent": true,
+      "object_name": "cardSeparator",
       "size_policy": [
        "Minimum",
        "Fixed"
       ],
-      "style": "color: #0f3460;",
       "type": "QFrame"
      },
      {
@@ -326,7 +328,7 @@
      {
       "cursor": "PointingHandCursor",
       "mouse_transparent": true,
-      "style": "color: #4a9fc4; font-size: 10px;",
+      "object_name": "cardCondImmune",
       "text": "Cond. Immune: Exhaustion, Grappled, Paralyzed, Petrified, Poisoned, Prone, Restrained",
       "type": "QLabel",
       "word_wrap": true
@@ -335,24 +337,24 @@
       "cursor": "PointingHandCursor",
       "frame_shape": "HLine",
       "mouse_transparent": true,
+      "object_name": "cardSeparator",
       "size_policy": [
        "Minimum",
        "Fixed"
       ],
-      "style": "color: #0f3460;",
       "type": "QFrame"
      },
      {
       "cursor": "PointingHandCursor",
       "mouse_transparent": true,
-      "style": "font-family: monospace; font-size: 10px; color: #a0a0b0;",
+      "object_name": "cardAbilities",
       "text": "STR -5/-5  DEX +3/+5  CON +1/+1",
       "type": "QLabel"
      },
      {
       "cursor": "PointingHandCursor",
       "mouse_transparent": true,
-      "style": "font-family: monospace; font-size: 10px; color: #a0a0b0;",
+      "object_name": "cardAbilities",
       "text": "INT +2/+2  WIS +1/+1  CHA +2/+4",
       "type": "QLabel"
      }
@@ -567,6 +569,7 @@
          true
         ],
         "cursor": "PointingHandCursor",
+        "fixed_height": 16,
         "mouse_transparent": true,
         "stretch": 1,
         "style": "QProgressBar::chunk { background-color: #555; border-radius: 3px; }",
@@ -594,24 +597,24 @@
       "cursor": "PointingHandCursor",
       "frame_shape": "HLine",
       "mouse_transparent": true,
+      "object_name": "cardSeparator",
       "size_policy": [
        "Minimum",
        "Fixed"
       ],
-      "style": "color: #0f3460;",
       "type": "QFrame"
      },
      {
       "cursor": "PointingHandCursor",
       "mouse_transparent": true,
-      "style": "color: #c9a84c; font-size: 10px; font-weight: bold;",
+      "object_name": "cardSectionHeader",
       "text": "Slots:",
       "type": "QLabel"
      },
      {
       "cursor": "PointingHandCursor",
       "mouse_transparent": true,
-      "style": "color: #a0c4ff; font-size: 11px;",
+      "object_name": "cardResource",
       "text": "Pact: LV5(3)",
       "type": "QLabel"
      },
@@ -619,24 +622,24 @@
       "cursor": "PointingHandCursor",
       "frame_shape": "HLine",
       "mouse_transparent": true,
+      "object_name": "cardSeparator",
       "size_policy": [
        "Minimum",
        "Fixed"
       ],
-      "style": "color: #0f3460;",
       "type": "QFrame"
      },
      {
       "cursor": "PointingHandCursor",
       "mouse_transparent": true,
-      "style": "font-family: monospace; font-size: 10px; color: #a0a0b0;",
+      "object_name": "cardAbilities",
       "text": "STR +0/+0  DEX +1/+1  CON +3/+3",
       "type": "QLabel"
      },
      {
       "cursor": "PointingHandCursor",
       "mouse_transparent": true,
-      "style": "font-family: monospace; font-size: 10px; color: #a0a0b0;",
+      "object_name": "cardAbilities",
       "text": "INT -1/-1  WIS +1/+6  CHA +5/+10",
       "type": "QLabel"
      }
@@ -745,6 +748,7 @@
          true
         ],
         "cursor": "PointingHandCursor",
+        "fixed_height": 16,
         "mouse_transparent": true,
         "stretch": 1,
         "style": "QProgressBar::chunk { background-color: #555; border-radius: 3px; }",
@@ -772,11 +776,11 @@
       "cursor": "PointingHandCursor",
       "frame_shape": "HLine",
       "mouse_transparent": true,
+      "object_name": "cardSeparator",
       "size_policy": [
        "Minimum",
        "Fixed"
       ],
-      "style": "color: #0f3460;",
       "type": "QFrame"
      },
      {
@@ -790,7 +794,7 @@
      {
       "cursor": "PointingHandCursor",
       "mouse_transparent": true,
-      "style": "color: #4a9fc4; font-size: 10px;",
+      "object_name": "cardCondImmune",
       "text": "Cond. Immune: Charmed, Frightened, Poisoned",
       "type": "QLabel",
       "word_wrap": true
@@ -799,24 +803,24 @@
       "cursor": "PointingHandCursor",
       "frame_shape": "HLine",
       "mouse_transparent": true,
+      "object_name": "cardSeparator",
       "size_policy": [
        "Minimum",
        "Fixed"
       ],
-      "style": "color: #0f3460;",
       "type": "QFrame"
      },
      {
       "cursor": "PointingHandCursor",
       "mouse_transparent": true,
-      "style": "font-family: monospace; font-size: 10px; color: #a0a0b0;",
+      "object_name": "cardAbilities",
       "text": "STR +4  DEX +2  CON +3",
       "type": "QLabel"
      },
      {
       "cursor": "PointingHandCursor",
       "mouse_transparent": true,
-      "style": "font-family: monospace; font-size: 10px; color: #a0a0b0;",
+      "object_name": "cardAbilities",
       "text": "INT +0  WIS +2  CHA +2",
       "type": "QLabel"
      }
@@ -907,7 +911,7 @@
      {
       "cursor": "PointingHandCursor",
       "mouse_transparent": true,
-      "style": "font-size: 11px; letter-spacing: 2px;",
+      "object_name": "deathSavePips",
       "text": "<span style='color:#c04040'>\u25cf\u25cb\u25cb</span>  <span style='color:#40c040'>\u25cf\u25cf\u25cb</span>",
       "text_format": "RichText",
       "type": "QLabel"
@@ -949,6 +953,7 @@
          true
         ],
         "cursor": "PointingHandCursor",
+        "fixed_height": 16,
         "mouse_transparent": true,
         "stretch": 1,
         "style": "QProgressBar::chunk { background-color: #555; border-radius: 3px; }",
@@ -976,24 +981,24 @@
       "cursor": "PointingHandCursor",
       "frame_shape": "HLine",
       "mouse_transparent": true,
+      "object_name": "cardSeparator",
       "size_policy": [
        "Minimum",
        "Fixed"
       ],
-      "style": "color: #0f3460;",
       "type": "QFrame"
      },
      {
       "cursor": "PointingHandCursor",
       "mouse_transparent": true,
-      "style": "color: #c9a84c; font-size: 10px; font-weight: bold;",
+      "object_name": "cardSectionHeader",
       "text": "Slots:",
       "type": "QLabel"
      },
      {
       "cursor": "PointingHandCursor",
       "mouse_transparent": true,
-      "style": "color: #a0c4ff; font-size: 11px;",
+      "object_name": "cardResource",
       "text": "Pact: LV5(3)",
       "type": "QLabel"
      },
@@ -1001,24 +1006,24 @@
       "cursor": "PointingHandCursor",
       "frame_shape": "HLine",
       "mouse_transparent": true,
+      "object_name": "cardSeparator",
       "size_policy": [
        "Minimum",
        "Fixed"
       ],
-      "style": "color: #0f3460;",
       "type": "QFrame"
      },
      {
       "cursor": "PointingHandCursor",
       "mouse_transparent": true,
-      "style": "font-family: monospace; font-size: 10px; color: #a0a0b0;",
+      "object_name": "cardAbilities",
       "text": "STR +0/+0  DEX +1/+1  CON +3/+3",
       "type": "QLabel"
      },
      {
       "cursor": "PointingHandCursor",
       "mouse_transparent": true,
-      "style": "font-family: monospace; font-size: 10px; color: #a0a0b0;",
+      "object_name": "cardAbilities",
       "text": "INT -1/-1  WIS +1/+6  CHA +5/+10",
       "type": "QLabel"
      }
@@ -1138,6 +1143,7 @@
          true
         ],
         "cursor": "PointingHandCursor",
+        "fixed_height": 16,
         "mouse_transparent": true,
         "stretch": 1,
         "style": "QProgressBar::chunk { background-color: #e67e22; border-radius: 3px; }",
@@ -1146,8 +1152,7 @@
        {
         "cursor": "PointingHandCursor",
         "mouse_transparent": true,
-        "object_name": "secondary",
-        "style": "color: #5bc8f5; font-size: 10px;",
+        "object_name": "cardTempHp",
         "text": "(+5 temp)",
         "type": "QLabel"
        }
@@ -1173,11 +1178,11 @@
       "cursor": "PointingHandCursor",
       "frame_shape": "HLine",
       "mouse_transparent": true,
+      "object_name": "cardSeparator",
       "size_policy": [
        "Minimum",
        "Fixed"
       ],
-      "style": "color: #0f3460;",
       "type": "QFrame"
      },
      {
@@ -1199,7 +1204,7 @@
      {
       "cursor": "PointingHandCursor",
       "mouse_transparent": true,
-      "style": "color: #4a9fc4; font-size: 10px;",
+      "object_name": "cardCondImmune",
       "text": "Cond. Immune: Charmed, Frightened",
       "type": "QLabel",
       "word_wrap": true
@@ -1208,17 +1213,17 @@
       "cursor": "PointingHandCursor",
       "frame_shape": "HLine",
       "mouse_transparent": true,
+      "object_name": "cardSeparator",
       "size_policy": [
        "Minimum",
        "Fixed"
       ],
-      "style": "color: #0f3460;",
       "type": "QFrame"
      },
      {
       "cursor": "PointingHandCursor",
       "mouse_transparent": true,
-      "style": "color: #c9a84c; font-size: 11px;",
+      "object_name": "cardCounters",
       "text": "Legendary 3/3  Resist 3/3",
       "type": "QLabel"
      },
@@ -1226,24 +1231,24 @@
       "cursor": "PointingHandCursor",
       "frame_shape": "HLine",
       "mouse_transparent": true,
+      "object_name": "cardSeparator",
       "size_policy": [
        "Minimum",
        "Fixed"
       ],
-      "style": "color: #0f3460;",
       "type": "QFrame"
      },
      {
       "cursor": "PointingHandCursor",
       "mouse_transparent": true,
-      "style": "font-family: monospace; font-size: 10px; color: #a0a0b0;",
+      "object_name": "cardAbilities",
       "text": "STR +6/+6  DEX +0/+6  CON +5/+11",
       "type": "QLabel"
      },
      {
       "cursor": "PointingHandCursor",
       "mouse_transparent": true,
-      "style": "font-family: monospace; font-size: 10px; color: #a0a0b0;",
+      "object_name": "cardAbilities",
       "text": "INT +3/+9  WIS +6/+12  CHA +4/+4",
       "type": "QLabel"
      }
@@ -1341,6 +1346,7 @@
          true
         ],
         "cursor": "PointingHandCursor",
+        "fixed_height": 16,
         "mouse_transparent": true,
         "stretch": 1,
         "style": "QProgressBar::chunk { background-color: #e74c3c; border-radius: 3px; }",
@@ -1349,8 +1355,7 @@
        {
         "cursor": "PointingHandCursor",
         "mouse_transparent": true,
-        "object_name": "secondary",
-        "style": "color: #5bc8f5; font-size: 10px;",
+        "object_name": "cardTempHp",
         "text": "(+5 temp)",
         "type": "QLabel"
        }
@@ -1376,11 +1381,11 @@
       "cursor": "PointingHandCursor",
       "frame_shape": "HLine",
       "mouse_transparent": true,
+      "object_name": "cardSeparator",
       "size_policy": [
        "Minimum",
        "Fixed"
       ],
-      "style": "color: #0f3460;",
       "type": "QFrame"
      },
      {
@@ -1402,7 +1407,7 @@
      {
       "cursor": "PointingHandCursor",
       "mouse_transparent": true,
-      "style": "color: #4a9fc4; font-size: 10px;",
+      "object_name": "cardCondImmune",
       "text": "Cond. Immune: Charmed, Frightened",
       "type": "QLabel",
       "word_wrap": true
@@ -1411,17 +1416,17 @@
       "cursor": "PointingHandCursor",
       "frame_shape": "HLine",
       "mouse_transparent": true,
+      "object_name": "cardSeparator",
       "size_policy": [
        "Minimum",
        "Fixed"
       ],
-      "style": "color: #0f3460;",
       "type": "QFrame"
      },
      {
       "cursor": "PointingHandCursor",
       "mouse_transparent": true,
-      "style": "color: #c9a84c; font-size: 11px;",
+      "object_name": "cardCounters",
       "text": "Legendary 3/3  Resist 3/3",
       "type": "QLabel"
      },
@@ -1429,24 +1434,24 @@
       "cursor": "PointingHandCursor",
       "frame_shape": "HLine",
       "mouse_transparent": true,
+      "object_name": "cardSeparator",
       "size_policy": [
        "Minimum",
        "Fixed"
       ],
-      "style": "color: #0f3460;",
       "type": "QFrame"
      },
      {
       "cursor": "PointingHandCursor",
       "mouse_transparent": true,
-      "style": "font-family: monospace; font-size: 10px; color: #a0a0b0;",
+      "object_name": "cardAbilities",
       "text": "STR +6/+6  DEX +0/+6  CON +5/+11",
       "type": "QLabel"
      },
      {
       "cursor": "PointingHandCursor",
       "mouse_transparent": true,
-      "style": "font-family: monospace; font-size: 10px; color: #a0a0b0;",
+      "object_name": "cardAbilities",
       "text": "INT +3/+9  WIS +6/+12  CHA +4/+4",
       "type": "QLabel"
      }
@@ -1544,6 +1549,7 @@
          true
         ],
         "cursor": "PointingHandCursor",
+        "fixed_height": 16,
         "mouse_transparent": true,
         "stretch": 1,
         "style": "QProgressBar::chunk { background-color: #555; border-radius: 3px; }",
@@ -1571,11 +1577,11 @@
       "cursor": "PointingHandCursor",
       "frame_shape": "HLine",
       "mouse_transparent": true,
+      "object_name": "cardSeparator",
       "size_policy": [
        "Minimum",
        "Fixed"
       ],
-      "style": "color: #0f3460;",
       "type": "QFrame"
      },
      {
@@ -1589,7 +1595,7 @@
      {
       "cursor": "PointingHandCursor",
       "mouse_transparent": true,
-      "style": "color: #4a9fc4; font-size: 10px;",
+      "object_name": "cardCondImmune",
       "text": "Cond. Immune: Charmed, Frightened, Poisoned",
       "type": "QLabel",
       "word_wrap": true
@@ -1598,24 +1604,24 @@
       "cursor": "PointingHandCursor",
       "frame_shape": "HLine",
       "mouse_transparent": true,
+      "object_name": "cardSeparator",
       "size_policy": [
        "Minimum",
        "Fixed"
       ],
-      "style": "color: #0f3460;",
       "type": "QFrame"
      },
      {
       "cursor": "PointingHandCursor",
       "mouse_transparent": true,
-      "style": "font-family: monospace; font-size: 10px; color: #a0a0b0;",
+      "object_name": "cardAbilities",
       "text": "STR +0  DEX -1  CON +0",
       "type": "QLabel"
      },
      {
       "cursor": "PointingHandCursor",
       "mouse_transparent": true,
-      "style": "font-family: monospace; font-size: 10px; color: #a0a0b0;",
+      "object_name": "cardAbilities",
       "text": "INT -4  WIS -1",
       "type": "QLabel"
      }
@@ -1713,6 +1719,7 @@
          true
         ],
         "cursor": "PointingHandCursor",
+        "fixed_height": 16,
         "mouse_transparent": true,
         "stretch": 1,
         "style": "QProgressBar::chunk { background-color: #2ecc71; border-radius: 3px; }",
@@ -1740,24 +1747,24 @@
       "cursor": "PointingHandCursor",
       "frame_shape": "HLine",
       "mouse_transparent": true,
+      "object_name": "cardSeparator",
       "size_policy": [
        "Minimum",
        "Fixed"
       ],
-      "style": "color: #0f3460;",
       "type": "QFrame"
      },
      {
       "cursor": "PointingHandCursor",
       "mouse_transparent": true,
-      "style": "color: #c9a84c; font-size: 10px; font-weight: bold;",
+      "object_name": "cardSectionHeader",
       "text": "Slots:",
       "type": "QLabel"
      },
      {
       "cursor": "PointingHandCursor",
       "mouse_transparent": true,
-      "style": "color: #a0c4ff; font-size: 11px;",
+      "object_name": "cardResource",
       "text": "Pact: LV5(3)",
       "type": "QLabel"
      },
@@ -1765,24 +1772,24 @@
       "cursor": "PointingHandCursor",
       "frame_shape": "HLine",
       "mouse_transparent": true,
+      "object_name": "cardSeparator",
       "size_policy": [
        "Minimum",
        "Fixed"
       ],
-      "style": "color: #0f3460;",
       "type": "QFrame"
      },
      {
       "cursor": "PointingHandCursor",
       "mouse_transparent": true,
-      "style": "font-family: monospace; font-size: 10px; color: #a0a0b0;",
+      "object_name": "cardAbilities",
       "text": "STR +0/+0  DEX +1/+1  CON +3/+3",
       "type": "QLabel"
      },
      {
       "cursor": "PointingHandCursor",
       "mouse_transparent": true,
-      "style": "font-family: monospace; font-size: 10px; color: #a0a0b0;",
+      "object_name": "cardAbilities",
       "text": "INT -1/-1  WIS +1/+6  CHA +5/+10",
       "type": "QLabel"
      }
@@ -1880,6 +1887,7 @@
          true
         ],
         "cursor": "PointingHandCursor",
+        "fixed_height": 16,
         "mouse_transparent": true,
         "stretch": 1,
         "style": "QProgressBar::chunk { background-color: #2ecc71; border-radius: 3px; }",
@@ -1907,11 +1915,11 @@
       "cursor": "PointingHandCursor",
       "frame_shape": "HLine",
       "mouse_transparent": true,
+      "object_name": "cardSeparator",
       "size_policy": [
        "Minimum",
        "Fixed"
       ],
-      "style": "color: #0f3460;",
       "type": "QFrame"
      },
      {
@@ -1933,7 +1941,7 @@
      {
       "cursor": "PointingHandCursor",
       "mouse_transparent": true,
-      "style": "color: #4a9fc4; font-size: 10px;",
+      "object_name": "cardCondImmune",
       "text": "Cond. Immune: Charmed, Poisoned",
       "type": "QLabel",
       "word_wrap": true
@@ -1942,24 +1950,24 @@
       "cursor": "PointingHandCursor",
       "frame_shape": "HLine",
       "mouse_transparent": true,
+      "object_name": "cardSeparator",
       "size_policy": [
        "Minimum",
        "Fixed"
       ],
-      "style": "color: #0f3460;",
       "type": "QFrame"
      },
      {
       "cursor": "PointingHandCursor",
       "mouse_transparent": true,
-      "style": "font-family: monospace; font-size: 10px; color: #a0a0b0;",
+      "object_name": "cardAbilities",
       "text": "STR +3/+3  DEX +1/+5  CON +2/+6",
       "type": "QLabel"
      },
      {
       "cursor": "PointingHandCursor",
       "mouse_transparent": true,
-      "style": "font-family: monospace; font-size: 10px; color: #a0a0b0;",
+      "object_name": "cardAbilities",
       "text": "INT +5/+9  WIS +3/+7  CHA +3/+3",
       "type": "QLabel"
      }
@@ -2057,6 +2065,7 @@
          true
         ],
         "cursor": "PointingHandCursor",
+        "fixed_height": 16,
         "mouse_transparent": true,
         "stretch": 1,
         "style": "QProgressBar::chunk { background-color: #2ecc71; border-radius: 3px; }",
@@ -2084,11 +2093,11 @@
       "cursor": "PointingHandCursor",
       "frame_shape": "HLine",
       "mouse_transparent": true,
+      "object_name": "cardSeparator",
       "size_policy": [
        "Minimum",
        "Fixed"
       ],
-      "style": "color: #0f3460;",
       "type": "QFrame"
      },
      {
@@ -2110,7 +2119,7 @@
      {
       "cursor": "PointingHandCursor",
       "mouse_transparent": true,
-      "style": "color: #4a9fc4; font-size: 10px;",
+      "object_name": "cardCondImmune",
       "text": "Cond. Immune: Charmed, Frightened",
       "type": "QLabel",
       "word_wrap": true
@@ -2119,17 +2128,17 @@
       "cursor": "PointingHandCursor",
       "frame_shape": "HLine",
       "mouse_transparent": true,
+      "object_name": "cardSeparator",
       "size_policy": [
        "Minimum",
        "Fixed"
       ],
-      "style": "color: #0f3460;",
       "type": "QFrame"
      },
      {
       "cursor": "PointingHandCursor",
       "mouse_transparent": true,
-      "style": "color: #c9a84c; font-size: 11px;",
+      "object_name": "cardCounters",
       "text": "Legendary 3/3  Resist 3/3",
       "type": "QLabel"
      },
@@ -2137,24 +2146,24 @@
       "cursor": "PointingHandCursor",
       "frame_shape": "HLine",
       "mouse_transparent": true,
+      "object_name": "cardSeparator",
       "size_policy": [
        "Minimum",
        "Fixed"
       ],
-      "style": "color: #0f3460;",
       "type": "QFrame"
      },
      {
       "cursor": "PointingHandCursor",
       "mouse_transparent": true,
-      "style": "font-family: monospace; font-size: 10px; color: #a0a0b0;",
+      "object_name": "cardAbilities",
       "text": "STR +6/+6  DEX +0/+6  CON +5/+11",
       "type": "QLabel"
      },
      {
       "cursor": "PointingHandCursor",
       "mouse_transparent": true,
-      "style": "font-family: monospace; font-size: 10px; color: #a0a0b0;",
+      "object_name": "cardAbilities",
       "text": "INT +3/+9  WIS +6/+12  CHA +4/+4",
       "type": "QLabel"
      }
@@ -2252,6 +2261,7 @@
          true
         ],
         "cursor": "PointingHandCursor",
+        "fixed_height": 16,
         "mouse_transparent": true,
         "stretch": 1,
         "style": "QProgressBar::chunk { background-color: #2ecc71; border-radius: 3px; }",
@@ -2279,11 +2289,11 @@
       "cursor": "PointingHandCursor",
       "frame_shape": "HLine",
       "mouse_transparent": true,
+      "object_name": "cardSeparator",
       "size_policy": [
        "Minimum",
        "Fixed"
       ],
-      "style": "color: #0f3460;",
       "type": "QFrame"
      },
      {
@@ -2305,7 +2315,7 @@
      {
       "cursor": "PointingHandCursor",
       "mouse_transparent": true,
-      "style": "color: #4a9fc4; font-size: 10px;",
+      "object_name": "cardCondImmune",
       "text": "Cond. Immune: Charmed, Frightened",
       "type": "QLabel",
       "word_wrap": true
@@ -2314,17 +2324,17 @@
       "cursor": "PointingHandCursor",
       "frame_shape": "HLine",
       "mouse_transparent": true,
+      "object_name": "cardSeparator",
       "size_policy": [
        "Minimum",
        "Fixed"
       ],
-      "style": "color: #0f3460;",
       "type": "QFrame"
      },
      {
       "cursor": "PointingHandCursor",
       "mouse_transparent": true,
-      "style": "color: #c9a84c; font-size: 11px;",
+      "object_name": "cardCounters",
       "text": "Legendary 3/3  Resist 3/3",
       "type": "QLabel"
      },
@@ -2332,24 +2342,24 @@
       "cursor": "PointingHandCursor",
       "frame_shape": "HLine",
       "mouse_transparent": true,
+      "object_name": "cardSeparator",
       "size_policy": [
        "Minimum",
        "Fixed"
       ],
-      "style": "color: #0f3460;",
       "type": "QFrame"
      },
      {
       "cursor": "PointingHandCursor",
       "mouse_transparent": true,
-      "style": "font-family: monospace; font-size: 10px; color: #a0a0b0;",
+      "object_name": "cardAbilities",
       "text": "STR +6/+6  DEX +0/+6  CON +5/+11",
       "type": "QLabel"
      },
      {
       "cursor": "PointingHandCursor",
       "mouse_transparent": true,
-      "style": "font-family: monospace; font-size: 10px; color: #a0a0b0;",
+      "object_name": "cardAbilities",
       "text": "INT +3/+9  WIS +6/+12  CHA +4/+4",
       "type": "QLabel"
      }
@@ -2447,6 +2457,7 @@
          true
         ],
         "cursor": "PointingHandCursor",
+        "fixed_height": 16,
         "mouse_transparent": true,
         "stretch": 1,
         "style": "QProgressBar::chunk { background-color: #2ecc71; border-radius: 3px; }",
@@ -2474,11 +2485,11 @@
       "cursor": "PointingHandCursor",
       "frame_shape": "HLine",
       "mouse_transparent": true,
+      "object_name": "cardSeparator",
       "size_policy": [
        "Minimum",
        "Fixed"
       ],
-      "style": "color: #0f3460;",
       "type": "QFrame"
      },
      {
@@ -2500,7 +2511,7 @@
      {
       "cursor": "PointingHandCursor",
       "mouse_transparent": true,
-      "style": "color: #4a9fc4; font-size: 10px;",
+      "object_name": "cardCondImmune",
       "text": "Cond. Immune: Charmed, Frightened",
       "type": "QLabel",
       "word_wrap": true
@@ -2509,17 +2520,17 @@
       "cursor": "PointingHandCursor",
       "frame_shape": "HLine",
       "mouse_transparent": true,
+      "object_name": "cardSeparator",
       "size_policy": [
        "Minimum",
        "Fixed"
       ],
-      "style": "color: #0f3460;",
       "type": "QFrame"
      },
      {
       "cursor": "PointingHandCursor",
       "mouse_transparent": true,
-      "style": "color: #c9a84c; font-size: 11px;",
+      "object_name": "cardCounters",
       "text": "Legendary 3/3  Resist 3/3",
       "type": "QLabel"
      },
@@ -2527,24 +2538,24 @@
       "cursor": "PointingHandCursor",
       "frame_shape": "HLine",
       "mouse_transparent": true,
+      "object_name": "cardSeparator",
       "size_policy": [
        "Minimum",
        "Fixed"
       ],
-      "style": "color: #0f3460;",
       "type": "QFrame"
      },
      {
       "cursor": "PointingHandCursor",
       "mouse_transparent": true,
-      "style": "font-family: monospace; font-size: 10px; color: #a0a0b0;",
+      "object_name": "cardAbilities",
       "text": "STR +6/+6  DEX +0/+6  CON +5/+11",
       "type": "QLabel"
      },
      {
       "cursor": "PointingHandCursor",
       "mouse_transparent": true,
-      "style": "font-family: monospace; font-size: 10px; color: #a0a0b0;",
+      "object_name": "cardAbilities",
       "text": "INT +3/+9  WIS +6/+12  CHA +4/+4",
       "type": "QLabel"
      }
@@ -2642,6 +2653,7 @@
          true
         ],
         "cursor": "PointingHandCursor",
+        "fixed_height": 16,
         "mouse_transparent": true,
         "stretch": 1,
         "style": "QProgressBar::chunk { background-color: #2ecc71; border-radius: 3px; }",
@@ -2669,11 +2681,11 @@
       "cursor": "PointingHandCursor",
       "frame_shape": "HLine",
       "mouse_transparent": true,
+      "object_name": "cardSeparator",
       "size_policy": [
        "Minimum",
        "Fixed"
       ],
-      "style": "color: #0f3460;",
       "type": "QFrame"
      },
      {
@@ -2695,7 +2707,7 @@
      {
       "cursor": "PointingHandCursor",
       "mouse_transparent": true,
-      "style": "color: #4a9fc4; font-size: 10px;",
+      "object_name": "cardCondImmune",
       "text": "Cond. Immune: Charmed, Frightened",
       "type": "QLabel",
       "word_wrap": true
@@ -2704,17 +2716,17 @@
       "cursor": "PointingHandCursor",
       "frame_shape": "HLine",
       "mouse_transparent": true,
+      "object_name": "cardSeparator",
       "size_policy": [
        "Minimum",
        "Fixed"
       ],
-      "style": "color: #0f3460;",
       "type": "QFrame"
      },
      {
       "cursor": "PointingHandCursor",
       "mouse_transparent": true,
-      "style": "color: #c9a84c; font-size: 11px;",
+      "object_name": "cardCounters",
       "text": "Legendary 3/3  Resist 3/3",
       "type": "QLabel"
      },
@@ -2722,24 +2734,24 @@
       "cursor": "PointingHandCursor",
       "frame_shape": "HLine",
       "mouse_transparent": true,
+      "object_name": "cardSeparator",
       "size_policy": [
        "Minimum",
        "Fixed"
       ],
-      "style": "color: #0f3460;",
       "type": "QFrame"
      },
      {
       "cursor": "PointingHandCursor",
       "mouse_transparent": true,
-      "style": "font-family: monospace; font-size: 10px; color: #a0a0b0;",
+      "object_name": "cardAbilities",
       "text": "STR +6/+6  DEX +0/+6  CON +5/+11",
       "type": "QLabel"
      },
      {
       "cursor": "PointingHandCursor",
       "mouse_transparent": true,
-      "style": "font-family: monospace; font-size: 10px; color: #a0a0b0;",
+      "object_name": "cardAbilities",
       "text": "INT +3/+9  WIS +6/+12  CHA +4/+4",
       "type": "QLabel"
      }
@@ -2837,6 +2849,7 @@
          true
         ],
         "cursor": "PointingHandCursor",
+        "fixed_height": 16,
         "mouse_transparent": true,
         "stretch": 1,
         "style": "QProgressBar::chunk { background-color: #2ecc71; border-radius: 3px; }",
@@ -2864,11 +2877,11 @@
       "cursor": "PointingHandCursor",
       "frame_shape": "HLine",
       "mouse_transparent": true,
+      "object_name": "cardSeparator",
       "size_policy": [
        "Minimum",
        "Fixed"
       ],
-      "style": "color: #0f3460;",
       "type": "QFrame"
      },
      {
@@ -2890,7 +2903,7 @@
      {
       "cursor": "PointingHandCursor",
       "mouse_transparent": true,
-      "style": "color: #4a9fc4; font-size: 10px;",
+      "object_name": "cardCondImmune",
       "text": "Cond. Immune: Charmed, Frightened",
       "type": "QLabel",
       "word_wrap": true
@@ -2899,17 +2912,17 @@
       "cursor": "PointingHandCursor",
       "frame_shape": "HLine",
       "mouse_transparent": true,
+      "object_name": "cardSeparator",
       "size_policy": [
        "Minimum",
        "Fixed"
       ],
-      "style": "color: #0f3460;",
       "type": "QFrame"
      },
      {
       "cursor": "PointingHandCursor",
       "mouse_transparent": true,
-      "style": "color: #c9a84c; font-size: 11px;",
+      "object_name": "cardCounters",
       "text": "Legendary 3/3  Resist 3/3",
       "type": "QLabel"
      },
@@ -2917,24 +2930,24 @@
       "cursor": "PointingHandCursor",
       "frame_shape": "HLine",
       "mouse_transparent": true,
+      "object_name": "cardSeparator",
       "size_policy": [
        "Minimum",
        "Fixed"
       ],
-      "style": "color: #0f3460;",
       "type": "QFrame"
      },
      {
       "cursor": "PointingHandCursor",
       "mouse_transparent": true,
-      "style": "font-family: monospace; font-size: 10px; color: #a0a0b0;",
+      "object_name": "cardAbilities",
       "text": "STR +6/+6  DEX +0/+6  CON +5/+11",
       "type": "QLabel"
      },
      {
       "cursor": "PointingHandCursor",
       "mouse_transparent": true,
-      "style": "font-family: monospace; font-size: 10px; color: #a0a0b0;",
+      "object_name": "cardAbilities",
       "text": "INT +3/+9  WIS +6/+12  CHA +4/+4",
       "type": "QLabel"
      }
@@ -3032,6 +3045,7 @@
          true
         ],
         "cursor": "PointingHandCursor",
+        "fixed_height": 16,
         "mouse_transparent": true,
         "stretch": 1,
         "style": "QProgressBar::chunk { background-color: #2ecc71; border-radius: 3px; }",
@@ -3059,11 +3073,11 @@
       "cursor": "PointingHandCursor",
       "frame_shape": "HLine",
       "mouse_transparent": true,
+      "object_name": "cardSeparator",
       "size_policy": [
        "Minimum",
        "Fixed"
       ],
-      "style": "color: #0f3460;",
       "type": "QFrame"
      },
      {
@@ -3085,7 +3099,7 @@
      {
       "cursor": "PointingHandCursor",
       "mouse_transparent": true,
-      "style": "color: #4a9fc4; font-size: 10px;",
+      "object_name": "cardCondImmune",
       "text": "Cond. Immune: Charmed, Frightened",
       "type": "QLabel",
       "word_wrap": true
@@ -3094,17 +3108,17 @@
       "cursor": "PointingHandCursor",
       "frame_shape": "HLine",
       "mouse_transparent": true,
+      "object_name": "cardSeparator",
       "size_policy": [
        "Minimum",
        "Fixed"
       ],
-      "style": "color: #0f3460;",
       "type": "QFrame"
      },
      {
       "cursor": "PointingHandCursor",
       "mouse_transparent": true,
-      "style": "color: #c9a84c; font-size: 11px;",
+      "object_name": "cardCounters",
       "text": "Legendary 3/3  Resist 3/3",
       "type": "QLabel"
      },
@@ -3112,24 +3126,24 @@
       "cursor": "PointingHandCursor",
       "frame_shape": "HLine",
       "mouse_transparent": true,
+      "object_name": "cardSeparator",
       "size_policy": [
        "Minimum",
        "Fixed"
       ],
-      "style": "color: #0f3460;",
       "type": "QFrame"
      },
      {
       "cursor": "PointingHandCursor",
       "mouse_transparent": true,
-      "style": "font-family: monospace; font-size: 10px; color: #a0a0b0;",
+      "object_name": "cardAbilities",
       "text": "STR +6/+6  DEX +0/+6  CON +5/+11",
       "type": "QLabel"
      },
      {
       "cursor": "PointingHandCursor",
       "mouse_transparent": true,
-      "style": "font-family: monospace; font-size: 10px; color: #a0a0b0;",
+      "object_name": "cardAbilities",
       "text": "INT +3/+9  WIS +6/+12  CHA +4/+4",
       "type": "QLabel"
      }
@@ -3227,6 +3241,7 @@
          true
         ],
         "cursor": "PointingHandCursor",
+        "fixed_height": 16,
         "mouse_transparent": true,
         "stretch": 1,
         "style": "QProgressBar::chunk { background-color: #2ecc71; border-radius: 3px; }",
@@ -3254,11 +3269,11 @@
       "cursor": "PointingHandCursor",
       "frame_shape": "HLine",
       "mouse_transparent": true,
+      "object_name": "cardSeparator",
       "size_policy": [
        "Minimum",
        "Fixed"
       ],
-      "style": "color: #0f3460;",
       "type": "QFrame"
      },
      {
@@ -3280,7 +3295,7 @@
      {
       "cursor": "PointingHandCursor",
       "mouse_transparent": true,
-      "style": "color: #4a9fc4; font-size: 10px;",
+      "object_name": "cardCondImmune",
       "text": "Cond. Immune: Charmed, Frightened",
       "type": "QLabel",
       "word_wrap": true
@@ -3289,17 +3304,17 @@
       "cursor": "PointingHandCursor",
       "frame_shape": "HLine",
       "mouse_transparent": true,
+      "object_name": "cardSeparator",
       "size_policy": [
        "Minimum",
        "Fixed"
       ],
-      "style": "color: #0f3460;",
       "type": "QFrame"
      },
      {
       "cursor": "PointingHandCursor",
       "mouse_transparent": true,
-      "style": "color: #c9a84c; font-size: 11px;",
+      "object_name": "cardCounters",
       "text": "Legendary 3/3  Resist 3/3",
       "type": "QLabel"
      },
@@ -3307,24 +3322,24 @@
       "cursor": "PointingHandCursor",
       "frame_shape": "HLine",
       "mouse_transparent": true,
+      "object_name": "cardSeparator",
       "size_policy": [
        "Minimum",
        "Fixed"
       ],
-      "style": "color: #0f3460;",
       "type": "QFrame"
      },
      {
       "cursor": "PointingHandCursor",
       "mouse_transparent": true,
-      "style": "font-family: monospace; font-size: 10px; color: #a0a0b0;",
+      "object_name": "cardAbilities",
       "text": "STR +6/+6  DEX +0/+6  CON +5/+11",
       "type": "QLabel"
      },
      {
       "cursor": "PointingHandCursor",
       "mouse_transparent": true,
-      "style": "font-family: monospace; font-size: 10px; color: #a0a0b0;",
+      "object_name": "cardAbilities",
       "text": "INT +3/+9  WIS +6/+12  CHA +4/+4",
       "type": "QLabel"
      }
@@ -3422,6 +3437,7 @@
          true
         ],
         "cursor": "PointingHandCursor",
+        "fixed_height": 16,
         "mouse_transparent": true,
         "stretch": 1,
         "style": "QProgressBar::chunk { background-color: #2ecc71; border-radius: 3px; }",
@@ -3449,11 +3465,11 @@
       "cursor": "PointingHandCursor",
       "frame_shape": "HLine",
       "mouse_transparent": true,
+      "object_name": "cardSeparator",
       "size_policy": [
        "Minimum",
        "Fixed"
       ],
-      "style": "color: #0f3460;",
       "type": "QFrame"
      },
      {
@@ -3483,7 +3499,7 @@
      {
       "cursor": "PointingHandCursor",
       "mouse_transparent": true,
-      "style": "color: #4a9fc4; font-size: 10px;",
+      "object_name": "cardCondImmune",
       "text": "Cond. Immune: Exhaustion, Grappled, Paralyzed, Petrified, Poisoned, Prone, Restrained",
       "type": "QLabel",
       "word_wrap": true
@@ -3492,24 +3508,24 @@
       "cursor": "PointingHandCursor",
       "frame_shape": "HLine",
       "mouse_transparent": true,
+      "object_name": "cardSeparator",
       "size_policy": [
        "Minimum",
        "Fixed"
       ],
-      "style": "color: #0f3460;",
       "type": "QFrame"
      },
      {
       "cursor": "PointingHandCursor",
       "mouse_transparent": true,
-      "style": "font-family: monospace; font-size: 10px; color: #a0a0b0;",
+      "object_name": "cardAbilities",
       "text": "STR -5/-5  DEX +3/+5  CON +1/+1",
       "type": "QLabel"
      },
      {
       "cursor": "PointingHandCursor",
       "mouse_transparent": true,
-      "style": "font-family: monospace; font-size: 10px; color: #a0a0b0;",
+      "object_name": "cardAbilities",
       "text": "INT +2/+2  WIS +1/+1  CHA +2/+4",
       "type": "QLabel"
      }
@@ -3607,6 +3623,7 @@
          true
         ],
         "cursor": "PointingHandCursor",
+        "fixed_height": 16,
         "mouse_transparent": true,
         "stretch": 1,
         "style": "QProgressBar::chunk { background-color: #2ecc71; border-radius: 3px; }",
@@ -3634,11 +3651,11 @@
       "cursor": "PointingHandCursor",
       "frame_shape": "HLine",
       "mouse_transparent": true,
+      "object_name": "cardSeparator",
       "size_policy": [
        "Minimum",
        "Fixed"
       ],
-      "style": "color: #0f3460;",
       "type": "QFrame"
      },
      {
@@ -3660,7 +3677,7 @@
      {
       "cursor": "PointingHandCursor",
       "mouse_transparent": true,
-      "style": "color: #4a9fc4; font-size: 10px;",
+      "object_name": "cardCondImmune",
       "text": "Cond. Immune: Charmed, Frightened",
       "type": "QLabel",
       "word_wrap": true
@@ -3669,17 +3686,17 @@
       "cursor": "PointingHandCursor",
       "frame_shape": "HLine",
       "mouse_transparent": true,
+      "object_name": "cardSeparator",
       "size_policy": [
        "Minimum",
        "Fixed"
       ],
-      "style": "color: #0f3460;",
       "type": "QFrame"
      },
      {
       "cursor": "PointingHandCursor",
       "mouse_transparent": true,
-      "style": "color: #c9a84c; font-size: 11px;",
+      "object_name": "cardCounters",
       "text": "Legendary 3/3  Resist 3/3",
       "type": "QLabel"
      },
@@ -3687,24 +3704,24 @@
       "cursor": "PointingHandCursor",
       "frame_shape": "HLine",
       "mouse_transparent": true,
+      "object_name": "cardSeparator",
       "size_policy": [
        "Minimum",
        "Fixed"
       ],
-      "style": "color: #0f3460;",
       "type": "QFrame"
      },
      {
       "cursor": "PointingHandCursor",
       "mouse_transparent": true,
-      "style": "font-family: monospace; font-size: 10px; color: #a0a0b0;",
+      "object_name": "cardAbilities",
       "text": "STR +6/+6  DEX +0/+6  CON +5/+11",
       "type": "QLabel"
      },
      {
       "cursor": "PointingHandCursor",
       "mouse_transparent": true,
-      "style": "font-family: monospace; font-size: 10px; color: #a0a0b0;",
+      "object_name": "cardAbilities",
       "text": "INT +3/+9  WIS +6/+12  CHA +4/+4",
       "type": "QLabel"
      }
@@ -3795,7 +3812,7 @@
      {
       "cursor": "PointingHandCursor",
       "mouse_transparent": true,
-      "style": "font-size: 11px; letter-spacing: 2px;",
+      "object_name": "deathSavePips",
       "text": "<span style='color:#c04040'>\u25cb\u25cb\u25cb</span>  <span style='color:#40c040'>\u25cf\u25cf\u25cf</span>",
       "text_format": "RichText",
       "type": "QLabel"
@@ -3811,6 +3828,7 @@
          true
         ],
         "cursor": "PointingHandCursor",
+        "fixed_height": 16,
         "mouse_transparent": true,
         "stretch": 1,
         "style": "QProgressBar::chunk { background-color: #555; border-radius: 3px; }",
@@ -3838,24 +3856,24 @@
       "cursor": "PointingHandCursor",
       "frame_shape": "HLine",
       "mouse_transparent": true,
+      "object_name": "cardSeparator",
       "size_policy": [
        "Minimum",
        "Fixed"
       ],
-      "style": "color: #0f3460;",
       "type": "QFrame"
      },
      {
       "cursor": "PointingHandCursor",
       "mouse_transparent": true,
-      "style": "color: #c9a84c; font-size: 10px; font-weight: bold;",
+      "object_name": "cardSectionHeader",
       "text": "Slots:",
       "type": "QLabel"
      },
      {
       "cursor": "PointingHandCursor",
       "mouse_transparent": true,
-      "style": "color: #a0c4ff; font-size: 11px;",
+      "object_name": "cardResource",
       "text": "Pact: LV5(3)",
       "type": "QLabel"
      },
@@ -3863,24 +3881,24 @@
       "cursor": "PointingHandCursor",
       "frame_shape": "HLine",
       "mouse_transparent": true,
+      "object_name": "cardSeparator",
       "size_policy": [
        "Minimum",
        "Fixed"
       ],
-      "style": "color: #0f3460;",
       "type": "QFrame"
      },
      {
       "cursor": "PointingHandCursor",
       "mouse_transparent": true,
-      "style": "font-family: monospace; font-size: 10px; color: #a0a0b0;",
+      "object_name": "cardAbilities",
       "text": "STR +0/+0  DEX +1/+1  CON +3/+3",
       "type": "QLabel"
      },
      {
       "cursor": "PointingHandCursor",
       "mouse_transparent": true,
-      "style": "font-family: monospace; font-size: 10px; color: #a0a0b0;",
+      "object_name": "cardAbilities",
       "text": "INT -1/-1  WIS +1/+6  CHA +5/+10",
       "type": "QLabel"
      }
@@ -3978,6 +3996,7 @@
          true
         ],
         "cursor": "PointingHandCursor",
+        "fixed_height": 16,
         "mouse_transparent": true,
         "stretch": 1,
         "style": "QProgressBar::chunk { background-color: #2ecc71; border-radius: 3px; }",
@@ -4005,31 +4024,31 @@
       "cursor": "PointingHandCursor",
       "frame_shape": "HLine",
       "mouse_transparent": true,
+      "object_name": "cardSeparator",
       "size_policy": [
        "Minimum",
        "Fixed"
       ],
-      "style": "color: #0f3460;",
       "type": "QFrame"
      },
      {
       "cursor": "PointingHandCursor",
       "mouse_transparent": true,
-      "style": "color: #c9a84c; font-size: 10px; font-weight: bold;",
+      "object_name": "cardSectionHeader",
       "text": "Slots:",
       "type": "QLabel"
      },
      {
       "cursor": "PointingHandCursor",
       "mouse_transparent": true,
-      "style": "color: #a0c4ff; font-size: 11px;",
+      "object_name": "cardResource",
       "text": "LV1(2)  LV3(1)",
       "type": "QLabel"
      },
      {
       "cursor": "PointingHandCursor",
       "mouse_transparent": true,
-      "style": "color: #a0c4ff; font-size: 11px;",
+      "object_name": "cardResource",
       "text": "Pact: LV5(3)",
       "type": "QLabel"
      },
@@ -4037,17 +4056,17 @@
       "cursor": "PointingHandCursor",
       "frame_shape": "HLine",
       "mouse_transparent": true,
+      "object_name": "cardSeparator",
       "size_policy": [
        "Minimum",
        "Fixed"
       ],
-      "style": "color: #0f3460;",
       "type": "QFrame"
      },
      {
       "cursor": "PointingHandCursor",
       "mouse_transparent": true,
-      "style": "color: #c9a84c; font-size: 10px; font-weight: bold;",
+      "object_name": "cardSectionHeader",
       "text": "Active Spells:",
       "type": "QLabel"
      },
@@ -4056,8 +4075,8 @@
        {
         "cursor": "PointingHandCursor",
         "mouse_transparent": true,
+        "object_name": "cardSummonName",
         "stretch": 1,
-        "style": "color: #a0c4ff; font-size: 10px;",
         "text": "Hex",
         "type": "QLabel"
        },
@@ -4065,7 +4084,7 @@
         "cursor": "PointingHandCursor",
         "fixed_height": 16,
         "fixed_width": 16,
-        "style": "QPushButton { background-color: #5c1a1a; color: #ffffff; border: none; border-radius: 3px; font-size: 10px; padding: 0px; }QPushButton:hover { background-color: #7a2a2a; }",
+        "object_name": "cardSummonDismiss",
         "text": "\u00d7",
         "tooltip": "Dismiss Hex",
         "type": "QPushButton"
@@ -4091,7 +4110,7 @@
       "cursor": "PointingHandCursor",
       "fixed_height": 14,
       "mouse_transparent": true,
-      "style": "QProgressBar::chunk { background-color: #5ac8f5; border-radius: 3px; }",
+      "object_name": "cardTimeBar",
       "type": "QProgressBar"
      },
      {
@@ -4099,8 +4118,8 @@
        {
         "cursor": "PointingHandCursor",
         "mouse_transparent": true,
+        "object_name": "cardSummonName",
         "stretch": 1,
-        "style": "color: #a0c4ff; font-size: 10px;",
         "text": "Shield",
         "type": "QLabel"
        },
@@ -4108,7 +4127,7 @@
         "cursor": "PointingHandCursor",
         "fixed_height": 16,
         "fixed_width": 16,
-        "style": "QPushButton { background-color: #5c1a1a; color: #ffffff; border: none; border-radius: 3px; font-size: 10px; padding: 0px; }QPushButton:hover { background-color: #7a2a2a; }",
+        "object_name": "cardSummonDismiss",
         "text": "\u00d7",
         "tooltip": "Dismiss Shield",
         "type": "QPushButton"
@@ -4134,24 +4153,24 @@
       "cursor": "PointingHandCursor",
       "fixed_height": 14,
       "mouse_transparent": true,
-      "style": "QProgressBar::chunk { background-color: #5ac8f5; border-radius: 3px; }",
+      "object_name": "cardTimeBar",
       "type": "QProgressBar"
      },
      {
       "cursor": "PointingHandCursor",
       "frame_shape": "HLine",
       "mouse_transparent": true,
+      "object_name": "cardSeparator",
       "size_policy": [
        "Minimum",
        "Fixed"
       ],
-      "style": "color: #0f3460;",
       "type": "QFrame"
      },
      {
       "cursor": "PointingHandCursor",
       "mouse_transparent": true,
-      "style": "color: #c9a84c; font-size: 10px; font-weight: bold;",
+      "object_name": "cardSectionHeader",
       "text": "Active Features:",
       "type": "QLabel"
      },
@@ -4160,8 +4179,8 @@
        {
         "cursor": "PointingHandCursor",
         "mouse_transparent": true,
+        "object_name": "cardSummonName",
         "stretch": 1,
-        "style": "color: #a0c4ff; font-size: 10px;",
         "text": "Hexblade's Curse",
         "type": "QLabel"
        },
@@ -4169,7 +4188,7 @@
         "cursor": "PointingHandCursor",
         "fixed_height": 16,
         "fixed_width": 16,
-        "style": "QPushButton { background-color: #5c1a1a; color: #ffffff; border: none; border-radius: 3px; font-size: 10px; padding: 0px; }QPushButton:hover { background-color: #7a2a2a; }",
+        "object_name": "cardSummonDismiss",
         "text": "\u00d7",
         "tooltip": "Dismiss Hexblade's Curse",
         "type": "QPushButton"
@@ -4195,31 +4214,31 @@
       "cursor": "PointingHandCursor",
       "fixed_height": 14,
       "mouse_transparent": true,
-      "style": "QProgressBar::chunk { background-color: #5ac8f5; border-radius: 3px; }",
+      "object_name": "cardTimeBar",
       "type": "QProgressBar"
      },
      {
       "cursor": "PointingHandCursor",
       "frame_shape": "HLine",
       "mouse_transparent": true,
+      "object_name": "cardSeparator",
       "size_policy": [
        "Minimum",
        "Fixed"
       ],
-      "style": "color: #0f3460;",
       "type": "QFrame"
      },
      {
       "cursor": "PointingHandCursor",
       "mouse_transparent": true,
-      "style": "color: #c9a84c; font-size: 10px; font-weight: bold;",
+      "object_name": "cardSectionHeader",
       "text": "Used:",
       "type": "QLabel"
      },
      {
       "cursor": "PointingHandCursor",
       "mouse_transparent": true,
-      "style": "color: #a0c4ff; font-size: 11px;",
+      "object_name": "cardResource",
       "text": "2x Action, Reaction",
       "type": "QLabel",
       "word_wrap": true
@@ -4228,24 +4247,24 @@
       "cursor": "PointingHandCursor",
       "frame_shape": "HLine",
       "mouse_transparent": true,
+      "object_name": "cardSeparator",
       "size_policy": [
        "Minimum",
        "Fixed"
       ],
-      "style": "color: #0f3460;",
       "type": "QFrame"
      },
      {
       "cursor": "PointingHandCursor",
       "mouse_transparent": true,
-      "style": "font-family: monospace; font-size: 10px; color: #a0a0b0;",
+      "object_name": "cardAbilities",
       "text": "STR +0/+0  DEX +1/+1  CON +3/+3",
       "type": "QLabel"
      },
      {
       "cursor": "PointingHandCursor",
       "mouse_transparent": true,
-      "style": "font-family: monospace; font-size: 10px; color: #a0a0b0;",
+      "object_name": "cardAbilities",
       "text": "INT -1/-1  WIS +1/+6  CHA +5/+10",
       "type": "QLabel"
      }
@@ -4379,6 +4398,7 @@
          true
         ],
         "cursor": "PointingHandCursor",
+        "fixed_height": 16,
         "mouse_transparent": true,
         "stretch": 1,
         "style": "QProgressBar::chunk { background-color: #2ecc71; border-radius: 3px; }",
@@ -4449,11 +4469,11 @@
       "cursor": "PointingHandCursor",
       "frame_shape": "HLine",
       "mouse_transparent": true,
+      "object_name": "cardSeparator",
       "size_policy": [
        "Minimum",
        "Fixed"
       ],
-      "style": "color: #0f3460;",
       "type": "QFrame"
      },
      {
@@ -4475,7 +4495,7 @@
      {
       "cursor": "PointingHandCursor",
       "mouse_transparent": true,
-      "style": "color: #4a9fc4; font-size: 10px;",
+      "object_name": "cardCondImmune",
       "text": "Cond. Immune: Charmed, Poisoned",
       "type": "QLabel",
       "word_wrap": true
@@ -4484,24 +4504,24 @@
       "cursor": "PointingHandCursor",
       "frame_shape": "HLine",
       "mouse_transparent": true,
+      "object_name": "cardSeparator",
       "size_policy": [
        "Minimum",
        "Fixed"
       ],
-      "style": "color: #0f3460;",
       "type": "QFrame"
      },
      {
       "cursor": "PointingHandCursor",
       "mouse_transparent": true,
-      "style": "font-family: monospace; font-size: 10px; color: #a0a0b0;",
+      "object_name": "cardAbilities",
       "text": "STR +3/+3  DEX +1/+5  CON +2/+6",
       "type": "QLabel"
      },
      {
       "cursor": "PointingHandCursor",
       "mouse_transparent": true,
-      "style": "font-family: monospace; font-size: 10px; color: #a0a0b0;",
+      "object_name": "cardAbilities",
       "text": "INT +5/+9  WIS +3/+7  CHA +3/+3",
       "type": "QLabel"
      }
