@@ -3,9 +3,31 @@ statuses tracked beside the rules conditions, and the rules text of each
 condition. A creature's stat block (BasicCombatantData,
 ExtendedCombatantData, MonsterAbility, ...) lives in Model/Creatures/."""
 
-from enum import Enum
+from enum import Enum, StrEnum
 
 from Core.Definitions import Condition
+
+
+class Phase(StrEnum):
+    """Where the combat window is: the party between encounters, rolling
+    Initiative for a fight, or in the fight's turns. Its values are the
+    strings the window used before it was an enum."""
+
+    PARTY = "PARTY"
+    INITIATIVE = "INITIATIVE"
+    COMBAT = "COMBAT"
+
+
+class ActionCost(StrEnum):
+    """The action economy a fight counts per creature and round, as the
+    combat window names it. Its values are the keys of a combatant's
+    "action_uses" in the logs. Give Qt str(member) as item data: a
+    combo box's findData matches by type, so a member and its string
+    don't find each other."""
+
+    ACTION = "Action"
+    BONUS_ACTION = "Bonus Action"
+    REACTION = "Reaction"
 
 
 class Action(str, Enum):

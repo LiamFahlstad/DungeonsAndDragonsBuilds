@@ -24,6 +24,7 @@ from collections.abc import Callable, Collection, Iterable
 from dataclasses import dataclass, field, replace
 from enum import StrEnum
 
+from Combat.Definitions import ActionCost
 from Combat.PartyAllies import is_encounter_ally, is_party_ally
 from Combat.Summons import owner_name
 from Core.Definitions import Condition
@@ -334,7 +335,7 @@ class TriggerRow:
 
     @property
     def takes_reaction(self) -> bool:
-        return self.trigger.reaction or self.action == REACTION
+        return self.trigger.reaction or self.action == ActionCost.REACTION
 
 
 class TriggerMode(StrEnum):
@@ -578,7 +579,6 @@ def is_down(char: dict) -> bool:
     return True
 
 
-REACTION = "Reaction"
 # The conditions that give Incapacitated: a creature with one takes no
 # Reaction (Paralyzed, Petrified, Stunned, Unconscious too).
 _INCAPACITATING = conditions_with(Condition.INCAPACITATED)
@@ -587,7 +587,7 @@ _INCAPACITATING = conditions_with(Condition.INCAPACITATED)
 def reaction_lack(char: dict) -> str | None:
     """Why char can't take a Reaction now: it's used this round, or char is
     Incapacitated (or worse). None when it can."""
-    if (char.get("action_uses") or {}).get(REACTION, 0) >= 1:
+    if (char.get("action_uses") or {}).get(ActionCost.REACTION, 0) >= 1:
         return "Reaction used"
     if any(rules_condition(c) in _INCAPACITATING for c in char.get("conditions", [])):
         return "Incapacitated"
@@ -606,7 +606,7 @@ class OpportunityAttack:
     attacker: dict
     target: dict
     pick: str = ""
-    action: str = REACTION
+    action: str = ActionCost.REACTION
     name: str = "Opportunity Attack"
 
     @property

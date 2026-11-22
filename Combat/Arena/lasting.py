@@ -71,6 +71,7 @@ from Combat.Arena.areas import (
 )
 from Combat.Arena.geometry import Cell
 from Combat.Arena.terrain import NO_COVER, WALL, MapObject, Terrain
+from Combat.Definitions import ActionCost
 from Model.Content.ActionType import ActionType
 from Model.Content.CombatArea import DEFAULT_TIMING as _DEFAULT_ACTS
 from Model.Content.CombatArea import AreaTiming, CombatArea
@@ -380,9 +381,10 @@ ENDS = AreaTiming.ENDS.value
 # What an area whose rules say none of these does: what the reminders said
 # before step 24, a creature entering it or starting its turn in it.
 DEFAULT_TIMING = frozenset(when.value for when in _DEFAULT_ACTS)
-BONUS_ACTION = "Bonus Action"
-ACTION = "Action"
-_ACTION_NAMES = {ActionType.ACTION: ACTION, ActionType.BONUS_ACTION: BONUS_ACTION}
+_ACTION_NAMES = {
+    ActionType.ACTION: ActionCost.ACTION,
+    ActionType.BONUS_ACTION: ActionCost.BONUS_ACTION,
+}
 
 
 def area_timing(rules: CombatArea | None) -> frozenset[str]:
@@ -400,7 +402,7 @@ def record_timing(record: dict, name: str = "") -> frozenset[str]:
 @dataclass(frozen=True)
 class MoveRule:
     """How a kept area is moved: up to `feet` (None: its rules don't say),
-    costing its caster `action` (ACTION or BONUS_ACTION; None: nothing, or
+    costing its caster `action` (ActionCost.ACTION or ActionCost.BONUS_ACTION; None: nothing, or
     its rules don't say)."""
 
     feet: int | None = None
@@ -413,7 +415,9 @@ class MoveRule:
         if self.feet is not None:
             parts.append(f"up to {self.feet} ft.")
         if self.action is not None:
-            parts.append(f"a{'n' if self.action == ACTION else ''} {self.action}")
+            parts.append(
+                f"a{'n' if self.action == ActionCost.ACTION else ''} {self.action}"
+            )
         return ", ".join(parts)
 
 

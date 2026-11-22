@@ -44,7 +44,13 @@ from Combat.Arena.ranges import (
     spell_range_warning,
 )
 from Combat.Arena.lasting import AREA_KEY, find_area, record_origin
-from Combat.Definitions import Action, CombatStatus, ConditionRule
+from Combat.Definitions import (
+    Action,
+    ActionCost,
+    CombatStatus,
+    ConditionRule,
+    Phase,
+)
 from Combat.Effects.active_effects import (
     CUSTOM,
     FEATURE,
@@ -2491,7 +2497,7 @@ class ConditionsMixin(CombatWindowState):
         action_combo.setObjectName("actionCost")
         action_combo.addItem("No action", None)
         for action_type in self.ACTION_ECONOMY_TYPES:
-            action_combo.addItem(action_type, action_type)
+            action_combo.addItem(action_type, str(action_type))
         cost_box.addWidget(action_combo)
         action_chips = chip_row(
             action_combo,
@@ -2538,7 +2544,7 @@ class ConditionsMixin(CombatWindowState):
         push_box.hide()
         cost_box.addWidget(push_box)
         pushes_on_map = (
-            self.phase == "COMBAT"
+            self.phase == Phase.COMBAT
             and source is not None
             and position(source) is not None
             and self.arena_settings.in_use
@@ -2601,7 +2607,7 @@ class ConditionsMixin(CombatWindowState):
         area_btn.setObjectName("areaTargetsBtn")
         area_btn.setAutoDefault(False)
         on_map = (
-            self.phase == "COMBAT"
+            self.phase == Phase.COMBAT
             and source is not None
             and position(source) is not None
         )
@@ -3253,7 +3259,7 @@ class ConditionsMixin(CombatWindowState):
             spends = cost or option.action_cost
             if again is not None:
                 spends = None  # a kept area acting: its cast was spent
-            action_index = action_combo.findData(spends)
+            action_index = action_combo.findData(str(spends))
             action_combo.setCurrentIndex(max(action_index, 0) if spends else 0)
             concentrate_box.setChecked(option.concentration and again is None)
             # A type left from before would disagree with the pick's damage.
@@ -3442,7 +3448,7 @@ class ConditionsMixin(CombatWindowState):
             tree.setCurrentItem(start)
             tree.scrollToItem(start)
         if cost:
-            action_combo.setCurrentIndex(max(action_combo.findData(cost), 0))
+            action_combo.setCurrentIndex(max(action_combo.findData(str(cost)), 0))
         dlg.resize(dlg.width(), _effect_dialog_height(dlg))
         dlg.exec()
         if area_request:
@@ -3493,7 +3499,7 @@ class ConditionsMixin(CombatWindowState):
         the GM is asked whether to log it anyway, unless the caller asked
         already, along with the rest of what it costs (ask=False).
         """
-        if self.phase == "PARTY":
+        if self.phase == Phase.PARTY:
             return  # between encounters there are no turns to spend them in
         char = char or self.selected_character
         if not char:
@@ -3508,7 +3514,7 @@ class ConditionsMixin(CombatWindowState):
         counts = char.setdefault("action_uses", {})
         counts[action_type] = counts.get(action_type, 0) + 1
         self._log_event(f"{char['name']} uses {action_type}", character=char["name"])
-        if action_type == "Reaction":
+        if action_type == ActionCost.REACTION:
             # Its other Opportunity Attack buttons go: the Reaction is spent
             # (arena step 23).
             left = tuple(

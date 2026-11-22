@@ -37,7 +37,7 @@ from PyQt6.QtWidgets import QMenu
 
 import Combat.PlayerLog as PlayerLog
 from Combat.Arena.arena import place_summons
-from Combat.Definitions import Action, CombatStatus
+from Combat.Definitions import Action, CombatStatus, Phase
 from Combat.Effects.active_effects import held_by_concentration
 from Combat.LogFiles import read_json
 from Combat.Summons import (
@@ -316,7 +316,7 @@ class SummonsMixin(CombatWindowState):
             value=summon_event(new, initiative=rolls),
         )
         self._rebuild_cards()
-        if self.phase == "COMBAT":
+        if self.phase == Phase.COMBAT:
             self._refresh_turn()
         self._refresh_views()
 
@@ -364,7 +364,7 @@ class SummonsMixin(CombatWindowState):
         own = [c for c in new if not follows_owner(c)]
         follow = [c for c in new if follows_owner(c)]
         rolls: dict[str, int] = {}
-        if self.phase == "COMBAT" and self.initiative_order:
+        if self.phase == Phase.COMBAT and self.initiative_order:
             # Whoever's turn it is keeps it.
             current = self.initiative_order[self.current_turn_idx]
             self.initiative_order = place_after_owners(self.initiative_order, follow)
@@ -376,7 +376,7 @@ class SummonsMixin(CombatWindowState):
             self.characters[:] = place_after_owners(self.characters, follow)
             return rolls
         self.characters[:] = place_after_owners(self.characters, new)
-        if self.phase == "INITIATIVE":
+        if self.phase == Phase.INITIATIVE:
             for char in own:
                 self._add_initiative_row([char])
             if own:
@@ -410,7 +410,7 @@ class SummonsMixin(CombatWindowState):
                 char, reason=f"{char['name']} leaves the fight"
             )
         order = self.initiative_order
-        if self.phase == "COMBAT" and any(c is char for c in order):
+        if self.phase == Phase.COMBAT and any(c is char for c in order):
             current = order[self.current_turn_idx]
             at = next(i for i, c in enumerate(order) if c is char)
             self.initiative_order = [c for c in order if c is not char]
@@ -424,7 +424,7 @@ class SummonsMixin(CombatWindowState):
                     i for i, c in enumerate(self.initiative_order) if c is current
                 )
                 self.current_turn_idx = self._turn_span(at)[0]
-        if self.phase == "INITIATIVE":
+        if self.phase == Phase.INITIATIVE:
             self._remove_initiative_row(char)
         self.characters[:] = [c for c in self.characters if c is not char]
         if self.selected_character is char:
@@ -450,7 +450,7 @@ class SummonsMixin(CombatWindowState):
         self._remove_from_fight(summon)
         self._save_fight_state()
         self._rebuild_cards()
-        if self.phase == "COMBAT":
+        if self.phase == Phase.COMBAT:
             self._refresh_turn()
         self._refresh_views()
 
@@ -498,7 +498,7 @@ class SummonsMixin(CombatWindowState):
         self._remove_from_fight(summon)
         self._save_fight_state()
         self._rebuild_cards()
-        if self.phase == "COMBAT":
+        if self.phase == Phase.COMBAT:
             self._refresh_turn()
         self._refresh_views()
         return True
@@ -602,7 +602,7 @@ class SummonsMixin(CombatWindowState):
             value=summon_event(new, before_combat=True, initiative=rolls),
         )
         self._rebuild_cards()
-        if self.phase == "COMBAT":
+        if self.phase == Phase.COMBAT:
             self._refresh_turn()
         self._refresh_views()
 

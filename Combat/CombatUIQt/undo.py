@@ -18,6 +18,7 @@ import functools
 import inspect
 from dataclasses import dataclass, field
 
+from Combat.Definitions import Phase
 from Combat.Arena.arena import ArenaSettings
 
 
@@ -141,8 +142,8 @@ def undoable(method):
             # whatever it's connected to; drop the ones the method doesn't take.
             args = args[: positional - 1]
         if self._open_undo_point is not None or self.phase not in (
-            "COMBAT",
-            "PARTY",
+            Phase.COMBAT,
+            Phase.PARTY,
         ):
             return method(self, *args, **kwargs)
         point = UndoPoint.capture(self)

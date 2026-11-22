@@ -1,0 +1,508 @@
+# Plan: clean up and restructure the combat UI
+
+Goal: the combat UI (`Combat/CombatUIQt/`, about 24,700 lines in 40 files)
+grew one feature at a time, mostly through
+[combat-effects-plan.md](combat-effects-plan.md) and
+[combat-arena-plan.md](combat-arena-plan.md). Nobody has gone back over it
+as a whole yet. This plan does that, without changing what the GM sees or
+what a fight does:
+
+1. **Rules away from widgets.** What a fight *does* (damage, conditions,
+   turns, casting, undo, the log) lives in a Qt-free core that can be tested
+   without a window. The window only shows the fight and turns clicks into
+   calls.
+2. **No function you can't read in one sitting.** The 1,580-line Use / Cast
+   dialog and the 680-line `_build_window` become classes with named parts.
+3. **Types where there are dicts and strings now.** A combatant has a
+   declared shape, the phase is an enum, and pyright catches a mistyped key.
+4. **One way to do each thing:** one way to refresh the views after an
+   operation, ask the GM a question, style a widget and build a button.
+
+Written 2026-11-21. Step 0 and most of step 1 built 2026-11-22.
+
+**What never changes during this plan:** the behaviour, the widget
+`objectName`s (the tests, the golden widget dumps and the `combat-ui-explore`
+harness find widgets by them), the encounter and player log formats (unless
+Q1 says otherwise), and every test passing at the end of each step.
+
+## How to use this document
+
+This is a living plan, like the two combat plans. Whoever works on a step
+updates it **in the same change** as the code:
+
+- **Status**: tick the step, with the date and the Revisions it made.
+- **Revisions**: when the code shows a better way than the plan, do the
+  better thing and write down what changed and why (R1, R2, ...).
+- **Open questions**: Q1, Q2, ..., never reused, each with a *Suggestion*,
+  which is what gets built if nobody says otherwise. Answered ones move to
+  **Decisions** (numbered, never renumbered, each saying who decided and
+  when).
+- **Discovered issues**: bugs found while moving code go into
+  `Notes/discovered-issues.md` through the `discovered-issues` skill's
+  script, and their ids go here. **A refactor step does not fix them**: it
+  moves the bug along unchanged, so a test diff never mixes "moved" with
+  "fixed". Fix them in a step of their own.
+- **The other two plans** describe where code lives ("The dialog
+  (`conditions_mixin.py`)", "How it fits the code that's there"). A step
+  that moves that code updates their file references in the same change.
+
+**Keep the overhead low (the user, 2026-11-10).** Run the combat UI tests
+and the few others a step touches, not the character-sheet tests. Steps 3,
+5 and 7 are large enough to also warrant a `code-reviewer` pass and a
+`combat-ui-explore` sweep before they're called done.
+
+## Status
+
+| Step | What | Size | State |
+|---|---|---|---|
+| 0 | Safety net: a structure test that ratchets the numbers below down, fix the one pyright error | S | **Done** 2026-11-22 (R1, R2): `tests/test_combat_ui_structure.py`; pyright clean on `Combat/`; the UI tests take about 77 s (1,498 tests, xdist) |
+| 1 | Hygiene: enums for phase and action types, styles into QSS, dead code out | S-M | 1.1, 1.2, 1.6 **done** 2026-11-22 (R3, R5); 1.4 moved to 5.4, 1.5 dropped (R4); **1.3 (styles) next** |
+| 2 | A typed combatant (`Combatant` TypedDict) | M | Not started |
+| 3 | The Use / Cast dialog as a class, its form-to-effects logic Qt-free | L | Not started |
+| 4 | The window built from panels, shortcuts as a table | M | Not started |
+| 5 | The Qt-free fight core (`Combat/Fight/`), one mixin at a time | XL | Not started |
+| 6 | One refresh path after every GM operation | M | Not started |
+| 7 | Mixins into composed views and one module per dialog; `CombatWindowState` gone | L | Not started |
+| 8 | Docs, agents and skills point at the new layout | S | Not started |
+
+Steps 0-2 are cheap and safe and make the later ones easier, so do them
+first. Steps 3 and 4 are independent of each other. Step 6 needs step 5's
+results. Step 7 comes last.
+
+## 1. Findings (2026-11-21)
+
+Measured with an AST walk over `Combat/CombatUIQt/`. Step 0 turns these
+numbers into a test.
+
+### 1a. Size
+
+| What | Now |
+|---|---|
+| Lines in `Combat/CombatUIQt/` | 24,740 in 40 files |
+| Largest files | `conditions_mixin.py` 3,585; `arena_mixin.py` 2,114; `effect_options.py` 2,071; `dialogs_mixin.py` 1,393; `turn_panel_mixin.py` 1,190; `damage_mixin.py` 1,185 |
+| Functions over 100 lines | 14 (over 50 lines: 64, of 1,225) |
+| Longest functions | `_show_custom_condition_dialog` **1,580** lines with 53 nested functions; `_build_window` 680; `_apply_effect_to_targets` 236; `_show_statistics` 177; `_described_option` 161; `do_apply` (nested in the dialog) 137; `_show_player_link_dialog` 134; `_apply_replay_action` 133 |
+| Mixins making up `CombatAppQt` | 19 |
+| Method stubs in `state.py` (`CombatWindowState`) | 206 |
+
+### 1b. Design
+
+1. **Rules and widgets are mixed in the same methods.** For example,
+   `DamageMixin._deal_typed_damage` works out criticals, asks `_before_hit`,
+   deals damage and fires `_after_attack` triggers, and in between it
+   clears `self.damage_input`, rebuilds cards and sets the status line.
+   `damage_mixin.py` imports no Qt but is still part of the window. So
+   every rules test needs a full `CombatAppQt` with its window built (61
+   test files call `make_ui`), and a second front end (the player link, the
+   map on the Player Screen, arena Later item 11) can't reuse the rules.
+2. **Rules inside rendering.** `_refresh_views` starts by landing fliers
+   who can't stay aloft (`_land_fallers`), so a view refresh changes the
+   fight. `UndoPoint.restore` writes to `damage_input` and
+   `attack_roll_input`.
+3. **The mixin web.** 19 mixins call each other freely. `state.py` declares
+   206 stubs so pyright can check those calls. That works, but every new
+   method has to be added in two places, and nothing marks which mixin owns
+   which state. The one pyright error right now is a missing stub
+   (`_give_effect_conditions`, `damage_mixin.py:582`, from work in
+   progress).
+4. **Refreshing is manual.** There are 35 `_rebuild_card` calls, 27
+   `_refresh_views` calls and 39 `_refresh_*` / `_update_*` / `_rebuild_*`
+   functions. Every operation has to remember what to redraw, and tests
+   call `_refresh_views` by hand 112 times. `@undoable` already wraps every
+   GM operation (52 of them), which makes it the natural single place to
+   save, redraw and publish afterwards.
+5. **A combatant is an untyped dict**, with about 45 keys read directly
+   (`name` 191 times, `stats` 63, `hp` 43, ...) and 236 `.get("...")`
+   reads. A `"_"` prefix means the key is fixed for the fight and isn't
+   undone. Some registries are keyed by `id(char)`, and many checks rely on
+   identity (`any(t is c for c in ...)`). Undo's in-place refill is what
+   keeps that identity working.
+6. **Stringly-typed state.** `phase` is set to or compared with
+   `"COMBAT"`, `"PARTY"` and `"INITIATIVE"` in 54 places. Action types are string literals
+   next to `ACTION_ECONOMY_TYPES`.
+7. **Styling is spread out.** There are about 100 `setStyleSheet(...)`
+   calls outside `styles.py` (`cards_mixin.py` 25, `dialogs_mixin.py` 22,
+   `turns_mixin.py` 11, ...).
+8. **Old-log compatibility shims** sit in the replay code ("Older logs
+   stored the condition name as a plain string", `upgrade_old_keys`). Each
+   one is small, but they add up and nothing records which log version
+   needs them.
+
+### 1c. What's already good (keep it)
+
+- `Combat/Effects/` and `Combat/Arena/` (6,400 lines) are Qt-free and
+  imported by the UI, never the other way round. They're the model for
+  step 5.
+- 14 UI modules import no Qt at all (`amounts`, `attack_rolls`,
+  `effect_options`, `saves`, `monster_actions`, `stats`, `public_log`,
+  `undo`, `player_server`, ...). Some of them are really core code that
+  sits in the wrong folder.
+- The UI is well tested: about 20,000 lines of `test_combat_ui_*` tests,
+  golden widget dumps (`tests/snapshots/combat_ui_*.json`), the picker-row
+  goldens, and the `combat-ui-explore` harness. That safety net is what
+  makes this plan affordable.
+- Undo as a captured snapshot plus the log lines it wrote is simple and
+  correct. Keep the design and only move it.
+- pyright is clean apart from the one missing stub.
+
+### 1d. The constraint: tests reach into the app
+
+Tests use 215 different private members of the app, 2,833 times in all
+(`_advance_turn` 175, `_show_custom_condition_dialog` 165,
+`_select_character` 161, `_apply_custom_effect` 137, ...), and
+`monkeypatch` 1,129 times. Rewriting those tests is out of scope. The
+plan is built so they keep passing (Decision 2).
+
+## 2. Target design
+
+A sketch: the plan updates itself as the steps teach us.
+
+```
+Combat/
+  Effects/, Arena/            unchanged: Qt-free rules pieces
+  Fight/                      NEW, Qt-free: one fight's state and what the GM can do to it
+    combatant.py              Combatant TypedDict, key docs (step 2)
+    fight.py                  Fight: combatants, initiative order, turn, round,
+                              phase (enum), arena settings, pending prompts
+    undo.py                   UndoPoint / gm_operation (moved from CombatUIQt)
+    log.py                    encounter log write / read / replay (from logging_mixin)
+    damage.py conditions.py turns.py casting.py summons.py
+    wild_shape.py rests.py    the operations (from the *_mixin files)
+    picker/                   effect_options, saves, amounts, attack_rolls,
+                              monster_actions (moved, Qt-free already)
+    asker.py                  the Asker protocol: how the core asks the GM something
+  CombatUIQt/                 Qt only
+    app.py                    CombatAppQt: owns a Fight and the views; GM
+                              operations stay as thin methods (Decision 2)
+    window/                   control_panel.py, turn_column.py, menus.py, shortcuts.py
+    use_cast/                 dialog.py + one widget per section, form.py
+    cards/  turn_panel/  arena/ (arena_view, map_painter)  player/ (view, server, public log)
+    dialogs/                  one module per dialog (statistics, player link, add combatant, rules, ...)
+    styles.py                 all the QSS
+```
+
+**The core's API.** An operation takes the fight and plain arguments, and
+returns what happened:
+
+```python
+@dataclass
+class StepResult:
+    changed: list[Combatant]          # whose cards to redraw
+    status: str = ""                  # the status line
+    prompts: list[Firing | AreaPrompt] = field(default_factory=list)  # turn-column buttons
+```
+
+When the core needs an answer in the middle of an operation (an ASK
+trigger, "out of resources, use it anyway?", a tie-break), it asks through
+an `Asker` it was given. The window implements that with dialogs, and core
+tests use a scripted one instead of monkeypatching `QMessageBox`.
+
+**One seam after every operation.** `@undoable` becomes `@gm_operation`.
+After the outermost operation it records the undo point (as today), saves
+the fight state, redraws whatever the results changed and publishes to the
+Player Screen and player link. Operations stop calling `_rebuild_card` and
+`_refresh_views` themselves.
+
+**Layering.** `tests/test_layering.py` gets a `"Combat.CombatUIQt"` layer
+above `"combat"`. Nothing in `Combat.Fight`, `Combat.Effects` or
+`Combat.Arena` may import PyQt6 or `Combat.CombatUIQt`.
+
+## 3. Steps
+
+Each step is one or more commits, each behaviour-preserving and green. A
+step that moves code moves it unchanged first, in its own commit, and
+improves it in a later commit, so each diff is either a move or an edit,
+never both.
+
+### Step 0: safety net *(tests only)*
+
+- `tests/test_combat_ui_structure.py`, in the same ratchet style as
+  `test_layering.py`: an allowlist of today's functions over 150 lines in
+  `Combat/` with their current length, which may only shrink (a listed
+  function that's already short enough fails too, so the list can't go
+  stale); the number of `CombatWindowState` stubs, which may only fall;
+  `setStyleSheet` calls outside `styles.py`, which may only fall.
+- Fix the missing `_give_effect_conditions` stub once the work in progress
+  in `damage_mixin.py` is committed. It isn't ours to fix while someone
+  else is editing that file.
+- Time the combat UI tests once (`./run_tests.sh -q tests/test_combat_ui_*`)
+  and write the number here, so later steps can tell if they slowed them
+  down.
+
+**Done when:** the structure test passes on HEAD and fails when a long
+function grows.
+
+### Step 1: hygiene *(mechanical, small commits)*
+
+1. `Phase` as a `str` enum (`PARTY`, `INITIATIVE`, `COMBAT`) in
+   `Combat/Definitions.py`. Its values stay the same strings, so the logs
+   don't change.
+2. The action economy types as an enum next to it, used for
+   `ACTION_ECONOMY_TYPES` and the literals.
+3. Inline `setStyleSheet` calls become `objectName`s or dynamic properties
+   styled in `styles.py`. The golden widget dumps must stay byte-identical,
+   apart from the style text they record, if they record it.
+4. *(Moved to step 5.4, R4.)* One helper for the GM's questions.
+5. *(Dropped, R4.)* A button factory.
+6. **Done** (R5). Dead code: stubs in `state.py` that no mixin implements,
+   methods nothing calls.
+
+**Done when:** the UI tests and widget dumps pass, and the Step 0 counters
+are lower.
+
+### Step 2: a typed combatant *(types only, no runtime change)*
+
+- `Combat/Fight/combatant.py`: `class Combatant(TypedDict, total=False)`
+  with every key and a one-line comment on each, including the `"_"` keys
+  and what the prefix means for undo and saving. `PLAYER_FIGHT_KEYS`
+  (`Combat/EncounterLogs.py`) is checked against it by a test.
+- Replace `dict` with `Combatant` in signatures across `Combat/CombatUIQt`,
+  `Combat/Effects`, `Combat/Arena` and the `Combat/*.py` modules, one
+  folder per commit, keeping pyright clean.
+- `combatant_from_character` and `combatant_from_stat_block` return
+  `Combatant`.
+
+**Done when:** pyright is clean and a mistyped key (`char["hp_max"]`) is a
+pyright error. Whether it becomes an attrs class later is Q2.
+
+### Step 3: the Use / Cast dialog *(the biggest single win)*
+
+`_show_custom_condition_dialog` (`conditions_mixin.py:1870`, 1,580 lines,
+53 nested functions sharing state through closures) is where the effects
+plan and the arena plan both keep adding things. In sub-steps:
+
+- **3a. Pull out what's already Qt-free.** `rolls_in`, `typed_totals`,
+  `typed_attacks`, `typed_extras`, `typed_maximum`, `nth`, `repeated` and
+  the module-level helpers (`_picked_effect`, `hit_rider`,
+  `_option_duration`, ...) move into `use_cast/form.py` unchanged, with
+  their inputs as arguments instead of closed-over widgets.
+- **3b. Closure to class.** `UseCastDialog(QDialog)` in `use_cast/dialog.py`:
+  closed-over variables become attributes, nested functions become
+  methods. A mechanical move, with each `nonlocal` and closed-over name
+  checked. `_show_custom_condition_dialog(pick, cost, kept_area)` stays as
+  the entry point and builds and runs it (165 test uses).
+- **3c. A class per section:** the targets row, the pick list and search,
+  the roll section (save / attack), the amount section (damage / healing,
+  Times, typed rolls), push, duration and condition, the preview. Each owns
+  its widgets and tells the dialog when it changed. The dialog holds a
+  `UseCastForm` dataclass (the pick, targets, typed values) that the
+  sections read and write.
+- **3d. Apply as a function.** `do_apply`'s logic becomes
+  `build_effects(form, fight) -> list[CustomEffect]` in `form.py`, tested
+  without Qt. The dialog's Apply only collects the form, calls it and
+  hands the result to `_apply_custom_effects`.
+- Then `_apply_effect_to_targets` (236 lines) is split into its phases
+  (cost, rolls, damage, conditions, triggers, summary).
+
+**Done when:** no function in `use_cast/` is over 80 lines, every
+`objectName` is unchanged, `test_combat_ui_custom_effect.py`,
+`test_combat_ui_effect_steps.py`, `test_picker_rows.py` and the rest of the
+UI tests pass, and a `combat-ui-explore` sweep reports nothing new. Update
+the effects plan's "The dialog" section.
+
+### Step 4: the window from panels
+
+`_build_window` (680 lines) becomes `window/control_panel.py`,
+`window/turn_column.py`, `window/menus.py` and `window/shortcuts.py`, each
+a function or a small `QWidget` subclass that returns its widgets.
+Shortcuts become a table (key, action, when it's active), and a test checks
+the table against `Combat/CombatUIQt/KEYBOARD_SHORTCUTS.md` so the doc
+can't drift.
+`_show_statistics` (177 lines) and `_show_player_link_dialog` (134) get
+the same treatment in step 7.
+
+**Done when:** the widget dumps are byte-identical. Update the arena plan's
+"How it fits the code that's there".
+
+### Step 5: the Qt-free fight core *(the design change)*
+
+Strangler-style, one area per commit, the tests green after each:
+
+1. **Move what's already Qt-free.** `undo.py`, `amounts.py`,
+   `attack_rolls.py`, `effect_options.py`, `saves.py`, `monster_actions.py`,
+   `stats.py` and `public_log.py` go into `Combat/Fight/` (the picker files
+   into `Combat/Fight/picker/`). Leave re-export shims in their old places
+   for one step if that's easier, then delete them.
+2. **`Fight` holds the state** that `CombatAppQt.__init__` holds today
+   (combatants, order, turn, round, phase, arena settings, history,
+   pending prompts). The app keeps properties with the old names that
+   forward to `self.fight`, so tests and mixins keep working.
+3. **The operations, one mixin at a time**, in this order: damage
+   (already Qt-import-free), conditions (`_add_condition_to`,
+   `_remove_condition_from`, badges, durations), turns (`_advance_turn`,
+   `_start_combat`, end-of-turn saves), casting and features
+   (`_apply_cast_spell`, `_apply_feature`, `_apply_effect_to_targets` after
+   step 3), summons, wild shape, rests, and last the log
+   (`_write_log`, `_load_log_from_path`, `_replay_player_log`). Each mixin
+   method becomes `result = damage.deal(self.fight, ...)` plus showing the
+   result. The rules code moves and the widget lines stay behind.
+4. **The Asker** replaces direct `QMessageBox` and trigger pop-up calls
+   from rules code.
+5. **Layering test** (section 2) added as soon as `Combat/Fight/` exists,
+   with no allowlist.
+
+New rules tests are written against `Combat/Fight/` without a
+`QApplication`. Old tests move only when they're touched anyway (Q4).
+
+**Done when:** no PyQt6 import under `Combat/Fight/`, the mixins hold only
+widget code, and all UI tests pass unchanged. This is the step that lets
+arena Later item 11 (the map on the Player Screen and player link) and
+[player-web-view-plan.md](player-web-view-plan.md) read the fight without
+the Qt window.
+
+### Step 6: one refresh path
+
+- `@undoable` becomes `@gm_operation`: after the outermost operation it
+  saves the fight state, redraws the cards in the results' `changed` (or
+  all of them, if that's simpler and fast enough), refreshes the turn
+  column and the arena, and publishes to the player view and server.
+- `_land_fallers` moves out of `_refresh_views` into the operations that
+  can make a flier fall (moving, a condition, a speed change).
+- `UndoPoint.restore` stops writing widgets. The window puts the Damage
+  and Attack roll fields back from the restored state in its own redraw.
+- Remove the manual `_rebuild_card` / `_refresh_views` calls the seam now
+  covers. Tests that call `_refresh_views` by hand still work, since it's
+  still there and is now just redundant.
+
+**Done when:** an operation's code contains no redraw calls, and the
+`_rebuild_card` count is near zero outside the seam.
+
+### Step 7: composed views, one module per dialog
+
+- With the rules gone (step 5), the remaining mixins are view code. Cards,
+  the turn panel, the initiative widget, the arena and the map painter
+  become classes the window owns (`self.cards = CardsView(...)`). Each one
+  reads the `Fight` and calls back into the app's GM operations.
+- `dialogs_mixin.py` (1,393 lines) and `encounters_mixin.py` split into
+  `dialogs/<name>.py`, one per dialog.
+- `CombatWindowState`'s stubs drop to zero and the class is deleted. The
+  app's private method names that tests use stay as one-line delegates
+  (Decision 2), listed in one block in `app.py`.
+
+**Done when:** `state.py` is gone, and `CombatAppQt` is under about 500
+lines, mostly delegates and wiring.
+
+### Step 8: docs, agents and skills
+
+Update `Combat/CHEATSHEET.md`, `HOWTO.md`, the `combat-simulator` and
+`combat-ui-tester` agent prompts, the `combat-ui-explore` and `map-painter`
+skills (their code indexes point at file:line), the agent index, and both
+combat plans' file references. Then record the final numbers in Findings.
+
+## 4. Coordination with the other plans
+
+- **Where they stand.** The effects plan is down to content (Phase 4.3,
+  spells and features: content files, not the UI), Phase 5 (sheet chips:
+  `Presentation/`) and open questions Q63 and Q66. The arena plan's steps
+  1-28 are done, and what's left is Later items 11-14. So feature work
+  has paused at a good moment for this plan.
+- **No two changes to the same file at once.** A refactor step and a
+  feature step never edit the same file in parallel. Before a step starts,
+  say in its Status row which files it moves. Content work (effects plan
+  4.3) can continue throughout, since it doesn't touch `Combat/CombatUIQt/`.
+- **Order against the arena's Later items.** Do items 11 (map on the Player
+  Screen and player link) and 13 (doors, jumps) after step 5, since they
+  read the fight from outside the window. Items 12 (areas count height)
+  and 14 (distance rules) are in `Combat/Arena/` and can go any time.
+- **New dialog features** (anything the effects plan adds to Use / Cast)
+  wait for step 3 to finish, or go in before it starts. Never during it.
+
+## Decisions
+
+1. **Behaviour-preserving only.** No step changes what the GM sees or what
+   a fight does. Bugs found are logged and fixed separately. (In the plan,
+   for the user to overrule.)
+2. **The app's operation methods are the test surface.** The 215 private
+   names tests use stay on `CombatAppQt` (as delegates once their code has
+   moved), so the 2,833 test uses keep working. They're cleaned up only if
+   Q4 says so. (In the plan, for the user to overrule.)
+3. **`objectName`s are a contract.** The tests, the widget dumps and the
+   explore harness find widgets by them, so a refactor never renames one.
+   (In the plan.)
+
+## Open questions
+
+- **Q1. Old logs.** Should every old encounter and player log keep replaying
+  forever, or can a log version and a one-off migration script upgrade
+  existing logs so the compatibility shims can go? Blocks nothing; it
+  decides how much of step 5's log code can be simplified. *Suggestion:* a
+  `"version"` field and `Combat/Tools/migrate_logs.py`, run once over
+  `Combat/PlayerLogs/` and the campaigns' encounter logs, then delete the
+  shims. The player logs are long-lived campaign data, so back them up
+  first.
+- **Q2. TypedDict or a class?** A `Combatant` attrs class would give
+  methods and real attributes, but touches every `char["..."]` in the repo
+  and undo's dict copying. *Suggestion:* TypedDict only (step 2). Revisit
+  after step 5, when most access goes through the core.
+- **Q3. How far to go with mixins?** *Suggestion:* step 7 as written:
+  compose the views, which have clear boundaries. If a leftover mixin is
+  small and only glue, keeping it is fine.
+- **Q4. Moving old tests.** *Suggestion:* don't migrate in bulk. New rules
+  tests go against `Combat/Fight/`, and an old UI test moves only when it's
+  edited for another reason.
+- **Q5. Who does the work?** *Suggestion:* the `combat-simulator` agent
+  (opus) per step, one step at a time (no parallel agents on these files),
+  and a `code-reviewer` pass after steps 3, 5 and 7. Steps 0-2 are small
+  enough to do in the main session.
+
+## Revisions
+
+- **R1 (step 0, 2026-11-22).** The long-function rule skips `Combat/Tools/`
+  (hand-run report scripts, outside this plan) as well as
+  `Combat/Monsters/`. Its budgets are caps, not exact numbers: a function
+  that shrinks doesn't fail the test, so feature work isn't blocked by
+  every line it removes. A function that drops under 150 lines must come
+  off the list. The stub budget is 207, not 206: fixing the pyright error
+  added the missing stub. The test caught its first growth the same day
+  (a two-line comment in the Use / Cast dialog), which moved to a
+  docstring.
+- **R2 (step 0).** The pyright error was more than a missing stub.
+  `PendingAttack.rider` (`Combat/Effects/triggers.py`) is typed `object`
+  because `CustomEffect` lives in the UI's `saves.py`, which
+  `Combat/Effects` may not import. `damage_mixin.py` narrows it with
+  `isinstance` for now. Step 5.1 moves `saves.py` down, and then the field
+  can name its type.
+- **R3 (step 1.2).** The action types were defined in four places (the
+  app's `ACTION_ECONOMY_TYPES`, `effect_options.FEATURE_ACTION_COSTS`,
+  `triggers.REACTION`, `lasting.ACTION` / `BONUS_ACTION`). They're now one
+  `ActionCost` StrEnum in `Combat/Definitions.py`, beside `Phase`. Both
+  enums keep the old strings as values, so logs, `action_uses` keys and
+  tests comparing with `"COMBAT"` are unchanged. **Lesson for later steps:
+  Qt's `findData` matches item data by type**, so an enum member and its
+  string don't find each other. Give Qt `str(member)` as item data (the
+  Use / Cast dialog's `actionCost` box does).
+- **R4 (step 1).** 1.4, one helper for the GM's questions, is folded into
+  step 5.4. There are only four yes/no questions, and step 5's `Asker`
+  replaces them anyway. 1.5, a button factory, is dropped. Of the 88
+  `QPushButton(...)`s, 34 take no setup at all and no sequence repeats
+  more than 12 times, so a factory would be cleverness for nothing.
+- **R5 (step 1.6).** A scan found no dead mixin methods and no stub without
+  an implementation. The only unused UI-side code was `Summons.spec_for`,
+  which `source_for` had replaced, and it's deleted.
+  `Combat/Combatants.py`'s unused `SaberToothedTiger` is encounter
+  content, not UI code, and stays.
+- **R6 (step 1.3, before starting it).** The golden widget dumps record
+  each widget's `styleSheet()` and dynamic properties, so moving inline
+  styles into QSS changes `tests/snapshots/combat_ui_cards.json` and
+  `combat_ui_more_info.json`. 1.3 is therefore a reviewed output change:
+  regenerate them, read the diff (style text replaced by a property, and
+  nothing else), and compare a `run-apps` screenshot of the window from
+  before and after.
+
+## Discovered issues
+
+None yet.
+
+## Verification (every step)
+
+- `./run_tests.sh -q tests/test_combat_ui_* tests/test_picker_rows.py
+  tests/test_layering.py tests/test_combat_ui_structure.py` plus the core
+  tests of the area the step moved (`test_active_effects.py`,
+  `test_arena_*`, `test_*_triggers.py`, ...).
+- `./typecheck.sh Combat` is clean.
+- Widget dumps (`tests/snapshots/combat_ui_*.json`) unchanged. If one
+  changes, read the diff and say why before regenerating.
+- Steps 3, 5 and 7: a `combat-ui-explore` sweep reports nothing new, and the
+  window is opened once with the `run-apps` skill's screenshot.
+- `./format.sh` only on the files the step changed (it reformats the whole
+  repo otherwise).

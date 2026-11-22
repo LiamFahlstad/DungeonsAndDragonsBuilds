@@ -6,7 +6,7 @@ from PyQt6.QtWidgets import QDialog, QMessageBox, QPushButton, QTextEdit, QVBoxL
 
 import Combat.PartyAllies as PartyAllies
 import Combat.PlayerLog as PlayerLog
-from Combat.Definitions import Action
+from Combat.Definitions import Action, Phase
 from Combat.Effects.active_effects import upgrade_old_keys
 from Combat.Arena.arena import ArenaSettings
 from Combat.EncounterLogs import (
@@ -74,7 +74,7 @@ class LoggingMixin(CombatWindowState):
         if self.log_file is None:
             return
         data["round_number"] = self.round_number
-        if self.phase == "COMBAT" and self.initiative_order:
+        if self.phase == Phase.COMBAT and self.initiative_order:
             # By name: players aren't in "combatants", and the dicts are
             # rebuilt when the fight is continued (_load_log_from_path).
             data[ORDER_KEY] = [c["name"] for c in self.initiative_order]
@@ -119,7 +119,7 @@ class LoggingMixin(CombatWindowState):
         if self.log_file is None:
             return {}
         if not self.log_file.exists():
-            if self.phase == "PARTY":
+            if self.phase == Phase.PARTY:
                 return {
                     "type": PlayerLog.BETWEEN_ENCOUNTERS,
                     "title": PlayerLog.BETWEEN_ENCOUNTERS_TITLE,
@@ -131,7 +131,7 @@ class LoggingMixin(CombatWindowState):
         return read_json(self.log_file)
 
     def _current_turn_character(self) -> dict | None:
-        if self.phase != "COMBAT" or not self.initiative_order:
+        if self.phase != Phase.COMBAT or not self.initiative_order:
             return None
         return self.initiative_order[self.current_turn_idx]
 
@@ -186,7 +186,7 @@ class LoggingMixin(CombatWindowState):
         # Before combat, nobody has perceived anyone yet.
         readable = (
             public
-            and self.phase == "COMBAT"
+            and self.phase == Phase.COMBAT
             and may_read_log_line(str(event["text"]), character, value, self.characters)
         )
         if readable:
@@ -205,7 +205,7 @@ class LoggingMixin(CombatWindowState):
 
     def _public_log(self) -> list[dict]:
         """What players may read of this encounter's log (see public_log.py)."""
-        if self.phase != "COMBAT":
+        if self.phase != Phase.COMBAT:
             return []
         return public_log_rounds(self._read_log(), self.characters)
 
@@ -284,13 +284,13 @@ class LoggingMixin(CombatWindowState):
         if not has_round_events(data):
             self._carry_summons_over(Path(path))
             self._carry_party_allies_over(Path(path))
-            self.phase = "INITIATIVE"
+            self.phase = Phase.INITIATIVE
             self.initiative_order = []
             self._switch_to_initiative()
             return
         # Continuing a fight jumps straight into COMBAT, in the turn order it
         # was saved with (_write_log) and on the turn it stopped at.
-        self.phase = "COMBAT"
+        self.phase = Phase.COMBAT
         self.characters[:] = self._saved_initiative_order(data)
         self.initiative_order = list(self.characters)
         turn = data.get(TURN_KEY)
@@ -675,7 +675,7 @@ class LoggingMixin(CombatWindowState):
         """Display the round-by-round event history of the active encounter
         log, or between encounters what has happened since the last
         encounter or rest."""
-        between = self.phase == "PARTY"
+        between = self.phase == Phase.PARTY
         if self.log_file is None or (not between and not self.log_file.exists()):
             QMessageBox.information(
                 self._window,

@@ -44,6 +44,7 @@ from PyQt6.QtWidgets import (
     QWidget,
 )
 
+from Combat.Definitions import Phase
 from Combat import PartyAllies
 from Combat.Arena.arena import (
     POSITION_KEY,
@@ -855,7 +856,7 @@ class MapPainterMixin(CombatWindowState):
         """Who takes part in the encounter, as combatant dicts read only for
         their names, sides and sizes: the window's own for the encounter
         that's open (summons left out), else built from its config."""
-        if encounter_id == self._scenario_name and self.phase != "PARTY":
+        if encounter_id == self._scenario_name and self.phase != Phase.PARTY:
             return [c for c in self.characters if owner_name(c) is None]
         scenario = self._scenario(encounter_id)
         if scenario is None:
@@ -888,8 +889,8 @@ class MapPainterMixin(CombatWindowState):
         write_map(map_path(self._combat_log_dir, encounter_id), design)
         self._show_status(f"Saved the map of {self._scenario_title(encounter_id)}.")
         if encounter_id == self._scenario_name and self.phase in (
-            "INITIATIVE",
-            "COMBAT",
+            Phase.INITIATIVE,
+            Phase.COMBAT,
         ):
             self._use_painted_map(design)
 
@@ -903,7 +904,7 @@ class MapPainterMixin(CombatWindowState):
         # The fight keeps whether it's played on the map (Decision 29).
         settings.in_use = self.arena_settings.in_use
         self.arena_settings = settings
-        if self.phase != "COMBAT":
+        if self.phase != Phase.COMBAT:
             return
         rule = settings.distance_rule
         moved = []

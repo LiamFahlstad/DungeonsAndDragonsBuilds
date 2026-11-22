@@ -25,6 +25,7 @@ from PyQt6.QtWidgets import (
 )
 
 import Combat.PlayerLog as PlayerLog
+from Combat.Definitions import Phase
 from Model.Content.CombatModifiers import WhenHit
 from Model.Content.CombatTriggers import TriggerAim
 from Combat.Arena.lasting import AreaPrompt
@@ -228,9 +229,9 @@ class TurnPanelMixin(CombatWindowState):
         to date. Whoever can't stay aloft falls first (the battle map's
         _land_fallers), so the views show where it landed."""
         self._land_fallers()
-        between = self.phase == "PARTY" and self.log_file is not None
+        between = self.phase == Phase.PARTY and self.log_file is not None
         self._log_box_header.setText("Log" if between else "Encounter Log")
-        if self.phase == "COMBAT" and self.initiative_order:
+        if self.phase == Phase.COMBAT and self.initiative_order:
             self._refresh_turn_labels()
             self._refresh_action_buttons()
             self._refresh_next_button()
@@ -1154,7 +1155,7 @@ class TurnPanelMixin(CombatWindowState):
 
     def _player_view_content(self) -> tuple[str, list[PlayerViewRow]]:
         """The title and rows every player view shows, the screen and the link."""
-        if self.phase != "COMBAT" or not self.initiative_order:
+        if self.phase != Phase.COMBAT or not self.initiative_order:
             return "Waiting for the fight to start", []
         return (
             f"Round {self.round_number}",

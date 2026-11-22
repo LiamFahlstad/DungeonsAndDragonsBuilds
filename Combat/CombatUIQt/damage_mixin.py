@@ -53,7 +53,7 @@ from .attack_rolls import (
 )
 from .monster_actions import first_number
 from .player_view import _player_names, _seen, note_damage_defense, note_health
-from .saves import roll_save, save_modifier
+from .saves import CustomEffect, roll_save, save_modifier
 from .stats import _default_stats, damage_dealt_key, damage_taken_key
 from .state import CombatWindowState
 from .undo import undoable
@@ -576,7 +576,10 @@ class DamageMixin(CombatWindowState):
                             damage_dealt=damage,
                         )
                     )
-                    if attack.rider is not None:
+                    # PendingAttack (Combat/Effects) can't name CustomEffect
+                    # while it lives here in the UI, so its rider is typed
+                    # object (combat-ui-refactor-plan step 5 moves it down).
+                    if isinstance(attack.rider, CustomEffect):
                         # A monster's action button: what its hit gives
                         # (Molten Strike's Prone), as its picker row does.
                         self._give_effect_conditions(target, attack.rider)

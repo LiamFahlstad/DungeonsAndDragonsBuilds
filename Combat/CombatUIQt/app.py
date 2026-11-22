@@ -7,7 +7,7 @@ from PyQt6.QtCore import QSettings
 from PyQt6.QtWidgets import QApplication
 
 from Combat.Arena.arena import ArenaSettings
-from Combat.Definitions import tracked_condition_names
+from Combat.Definitions import ActionCost, Phase, tracked_condition_names
 from Combat.EncounterConfig import CombatantSpec
 from Combat.Arena.lasting import AreaPrompt
 from Combat.Effects.triggers import Firing
@@ -63,11 +63,11 @@ class CombatAppQt(
     RollsMixin,
     WindowMixin,
 ):
-    ACTION_ECONOMY_TYPES: list[str] = ["Action", "Bonus Action", "Reaction"]
+    ACTION_ECONOMY_TYPES: list[str] = list(ActionCost)
     ACTION_ECONOMY_SHORTCUTS: dict[str, str] = {
-        "A": "Action",
-        "B": "Bonus Action",
-        "R": "Reaction",
+        "A": ActionCost.ACTION,
+        "B": ActionCost.BONUS_ACTION,
+        "R": ActionCost.REACTION,
     }
 
     def __init__(
@@ -157,7 +157,7 @@ class CombatAppQt(
         self._open_undo_point = None
 
         # --- Phase / initiative state ---
-        self.phase: str = "INITIATIVE"
+        self.phase: Phase = Phase.INITIATIVE
         self.initiative_order: list[dict] = []
         self.current_turn_idx: int = 0
 
@@ -177,7 +177,7 @@ class CombatAppQt(
         if log_path is not None and scenario_name is None:
             self._use_log_file(Path(log_path))
         elif log_path is None:
-            self.phase = "PARTY"
+            self.phase = Phase.PARTY
         # With a scenario, run() opens `log_path`.
         self._encounter_log_to_open = (
             Path(log_path) if log_path is not None and scenario_name else None

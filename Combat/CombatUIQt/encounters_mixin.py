@@ -22,6 +22,7 @@ from PyQt6.QtWidgets import (
 
 import Combat.PartyAllies as PartyAllies
 import Combat.PlayerLog as PlayerLog
+from Combat.Definitions import Phase
 from Combat.EncounterLogs import (
     ENDED_KEY,
     is_prepared,
@@ -171,7 +172,7 @@ class EncountersMixin(CombatWindowState):
         title = "DnD Combat Engine"
         if self._scenario_name:
             title += f" — {self._scenario_title(self._scenario_name)}"
-        elif self.phase == "PARTY" and self.log_file is not None:
+        elif self.phase == Phase.PARTY and self.log_file is not None:
             title += f" — {PlayerLog.BETWEEN_ENCOUNTERS_TITLE}"
         self._window.setWindowTitle(title)
         self._log_status_label.setText(self._log_status_text())
@@ -250,7 +251,7 @@ class EncountersMixin(CombatWindowState):
         self._clear_encounter_state()
         self._use_log_file(None)
         self._set_party(None)
-        self.phase = "PARTY"
+        self.phase = Phase.PARTY
         self._show_party_view()
         self._refresh_encounter_labels()
         self._refresh_views()
@@ -328,7 +329,7 @@ class EncountersMixin(CombatWindowState):
     def _party_allies_to_rest(self) -> list[dict]:
         """The party's allies a rest now applies to: those in the encounter
         loaded (not started yet), else all of them as they are now."""
-        if self.phase != "PARTY":
+        if self.phase != Phase.PARTY:
             return [c for c in self.characters if PartyAllies.is_party_ally(c)]
         return self._party_allies_now()
 

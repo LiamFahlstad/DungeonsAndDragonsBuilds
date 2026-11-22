@@ -52,6 +52,7 @@ from Combat.Arena.speeds import (  # noqa: F401 (TRAIT_MOVEMENT, movements: here
     speed_of_mode,
 )
 from Combat.Arena.terrain import Terrain
+from Combat.Definitions import ActionCost
 from Combat.Effects.modifiers import (
     has_condition,
     size_in_use,
@@ -715,7 +716,7 @@ def _can_react(mover: dict, other: dict) -> bool:
     began."""
     if other is mover or _is_ally(mover, other) or _out_of_the_fight(other):
         return False
-    return (other.get("action_uses") or {}).get("Reaction", 0) == 0
+    return (other.get("action_uses") or {}).get(ActionCost.REACTION, 0) == 0
 
 
 def opportunity_attackers(

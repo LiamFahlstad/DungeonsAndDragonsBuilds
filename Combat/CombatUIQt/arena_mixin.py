@@ -83,6 +83,7 @@ from PyQt6.QtWidgets import (
     QWidget,
 )
 
+from Combat.Definitions import Phase
 from Combat.Arena.arena import (
     MOVED_KEY,
     POSITION_KEY,
@@ -323,7 +324,7 @@ class ArenaMixin(CombatWindowState):
         aloft = char is not None and altitude_ft(char) > 0
         if (
             char is None
-            or self.phase != "COMBAT"
+            or self.phase != Phase.COMBAT
             or position(char) is None
             or (len(have) < 2 and not aloft)
         ):
@@ -429,7 +430,7 @@ class ArenaMixin(CombatWindowState):
         deals (Rules Glossary, Falling). Run as the views are brought up to
         date, so whatever made it fall (a condition, a spell ending) is in
         the same undo step."""
-        if self.phase != "COMBAT":
+        if self.phase != Phase.COMBAT:
             return
         lines = []
         for char in self.characters:
@@ -639,7 +640,7 @@ class ArenaMixin(CombatWindowState):
         from it (area_reading), or the last area used. `what` names it in
         the bar. False, having said why, when the source isn't on the map."""
         source = self.selected_character or self._current_turn_character()
-        if self.phase != "COMBAT" or source is None or position(source) is None:
+        if self.phase != Phase.COMBAT or source is None or position(source) is None:
             self._show_status("Targets in an area need the source on the map.")
             return False
         area, range_ft = area_reading(option)
@@ -681,7 +682,7 @@ class ArenaMixin(CombatWindowState):
         its time, concentration and colour. The bar says how far it went
         against the "up to" its text gives; Esc or a right click leaves it."""
         found = self._selected_lasting()
-        if found is None or self.phase != "COMBAT":
+        if found is None or self.phase != Phase.COMBAT:
             return
         caster, entry = found
         record = entry[AREA_KEY]
@@ -991,7 +992,7 @@ class ArenaMixin(CombatWindowState):
 
     def _toggle_view(self):
         """Cards <-> Arena, during combat only; the choice is remembered."""
-        if self.phase != "COMBAT":
+        if self.phase != Phase.COMBAT:
             return
         if self._cancel_area_targeting():
             return
@@ -1007,10 +1008,10 @@ class ArenaMixin(CombatWindowState):
         stack = getattr(self, "_view_stack", None)
         if stack is None:
             return
-        arena = self.phase == "COMBAT" and self.arena_view_on
+        arena = self.phase == Phase.COMBAT and self.arena_view_on
         stack.setCurrentIndex(ARENA_PAGE if arena else CARDS_PAGE)
         self._view_toggle_btn.setText("Cards" if arena else "Arena")
-        self._view_toggle_btn.setVisible(self.phase == "COMBAT")
+        self._view_toggle_btn.setVisible(self.phase == Phase.COMBAT)
         if arena:
             self._refresh_arena()
 
@@ -1259,7 +1260,7 @@ class ArenaMixin(CombatWindowState):
         title = f"{caster['name']}'s {entry['name']}"
         if (
             rule.action is not None
-            and self.phase == "COMBAT"
+            and self.phase == Phase.COMBAT
             and not self._go_ahead_anyway(
                 caster, f"Move {title}", [self._action_lack(caster, rule.action)]
             )
@@ -1774,7 +1775,7 @@ class ArenaMixin(CombatWindowState):
         Moonbeam as one ends), its button in the turn column (an
         AreaPrompt, step 24). A hazard is a reminder in the turn column, as
         what starting the turn did."""
-        if self.phase != "COMBAT":
+        if self.phase != Phase.COMBAT:
             return
         settings = self._map_settings()
         areas = lasting_areas(self.characters, settings)
@@ -1851,7 +1852,7 @@ class ArenaMixin(CombatWindowState):
         (a creature makes its save "only once per turn"). `beside`: char
         ended its turn by a wall's damaging side, not in it."""
         found = find_area(self.characters, key)
-        if self.phase != "COMBAT" or found is None:
+        if self.phase != Phase.COMBAT or found is None:
             return
         caster, entry = found
         if self._char_death_state(char) == "dead":

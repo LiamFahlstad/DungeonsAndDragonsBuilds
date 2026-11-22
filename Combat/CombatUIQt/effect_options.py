@@ -23,6 +23,7 @@ from Combat.Arena.ranges import (
     stated_range,
     weapon_range,
 )
+from Combat.Definitions import ActionCost
 from Combat.Effects.triggers import TriggerRow
 from Core.Definitions import Condition
 from Model.Content.CombatArea import CombatArea
@@ -100,12 +101,12 @@ _ABILITY_NAMES = "|".join(_ABILITY_SHORT_NAMES)
 _CONDITION_NAMES = "|".join(condition.value for condition in Condition)
 # The action types a feature's activation names, as the UI calls them.
 FEATURE_ACTION_COSTS = {
-    "action": "Action",
-    "bonus_action": "Bonus Action",
-    "reaction": "Reaction",
+    "action": ActionCost.ACTION,
+    "bonus_action": ActionCost.BONUS_ACTION,
+    "reaction": ActionCost.REACTION,
 }
-# The action economy the UI counts (CombatAppQt.ACTION_ECONOMY_TYPES).
-ACTION_COSTS = tuple(FEATURE_ACTION_COSTS.values())
+# The action economy the UI counts.
+ACTION_COSTS = tuple(ActionCost)
 
 # "Using a Higher-Level Spell Slot." and "Cantrip Upgrade.": not what the spell
 # does at its own level, so they're read for that alone.
@@ -1095,7 +1096,7 @@ def _weapon_option(char: dict, weapon, sheet) -> EffectOption:
     rolls, notes = _weapon_rolls(weapon, sheet)
     if _has_mastery(char, weapon) and mastery_note(weapon):
         notes.append(mastery_note(weapon))
-    acted = char.get("action_uses", {}).get("Action", 0) > 0
+    acted = char.get("action_uses", {}).get(ActionCost.ACTION, 0) > 0
     return EffectOption(
         name=weapon.name,
         kind=WEAPON,
@@ -1105,7 +1106,7 @@ def _weapon_option(char: dict, weapon, sheet) -> EffectOption:
         roll=ATTACK_ROLL,
         bonus=bonus,
         rolls=rolls,
-        action_cost=None if acted else "Action",
+        action_cost=None if acted else ActionCost.ACTION,
         # "A weapon attack is an attack roll made with a weapon" (Rules
         # Glossary); an Unarmed Strike isn't one.
         weapon_attack=not getattr(weapon, "is_unarmed_strike", False),
@@ -1137,7 +1138,7 @@ def _shove_options(char: dict, weapon, sheet) -> list[EffectOption]:
     Attack action's attacks, costing the Action as the weapon's row does."""
     if sheet is None or not getattr(weapon, "is_unarmed_strike", False):
         return []
-    acted = char.get("action_uses", {}).get("Action", 0) > 0
+    acted = char.get("action_uses", {}).get(ActionCost.ACTION, 0) > 0
     return [
         _described_option(
             char,
@@ -1145,7 +1146,7 @@ def _shove_options(char: dict, weapon, sheet) -> list[EffectOption]:
             name=weapon.name,
             kind=WEAPON,
             tooltip=UNARMED_STRIKE_RULES,
-            action_cost=None if acted else "Action",
+            action_cost=None if acted else ActionCost.ACTION,
         )
         for effect in unarmed_strike_effects(weapon, sheet)
     ]

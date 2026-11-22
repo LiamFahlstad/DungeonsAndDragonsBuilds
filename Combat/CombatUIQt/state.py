@@ -32,6 +32,7 @@ from PyQt6.QtWidgets import (
     QWidget,
 )
 
+from Combat.Definitions import Phase
 from Combat.Arena.arena import ArenaSettings
 from Combat.Arena.cover import CoverReading
 from Combat.Arena.geometry import Cell
@@ -57,7 +58,7 @@ from Model.Creatures.Combatants import BasicCombatantData
 from .attack_rolls import AttackRoll
 from .monster_actions import MonsterAction
 from .player_server import PlayerServer
-from .saves import EffectOption
+from .saves import CustomEffect, EffectOption
 from .settings import CombatSettings
 from .undo import UndoPoint
 
@@ -132,7 +133,7 @@ class CombatWindowState:
     # Undo steps, oldest first, and the one being recorded (undo.py).
     history: list[UndoPoint]
     _open_undo_point: UndoPoint | None
-    phase: str
+    phase: Phase
     initiative_order: list[dict]
     current_turn_idx: int
     player_log_file: Path | None
@@ -439,6 +440,9 @@ class CombatWindowState:
         source: dict | None = None,
     ):
         raise NotImplementedError("ConditionsMixin._give_badge_modifiers")
+
+    def _give_effect_conditions(self, target: dict, effect: CustomEffect) -> list[dict]:
+        raise NotImplementedError("ConditionsMixin._give_effect_conditions")
 
     def _summon_owner(self, char: dict) -> dict | None:
         raise NotImplementedError("SummonsMixin._summon_owner")

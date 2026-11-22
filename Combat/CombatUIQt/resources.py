@@ -15,6 +15,7 @@ when there's enough of it.
 
 from PyQt6.QtWidgets import QMessageBox
 
+from Combat.Definitions import ActionCost, Phase
 from Core.Rules import ACTIONS_PER_TURN
 
 from .effect_options import has_slots, row_uses_most, spell_slot_choices
@@ -35,7 +36,7 @@ def action_lack(char: dict, action_type: str | None) -> str | None:
     used = (char.get("action_uses") or {}).get(action_type, 0)
     if used < ACTIONS_PER_TURN:
         return None
-    if action_type == "Reaction":
+    if action_type == ActionCost.REACTION:
         return "Reaction: already used (it comes back at the start of their turn)"
     return f"{action_type}: already used this turn"
 
@@ -110,7 +111,7 @@ class ResourcesMixin(CombatWindowState):
     def _action_lack(self, char: dict, action_type: str | None) -> str | None:
         """action_lack, while the action economy is counted: not between
         encounters, where there are no turns (see _add_action_use)."""
-        if self.phase == "PARTY":
+        if self.phase == Phase.PARTY:
             return None
         return action_lack(char, action_type)
 

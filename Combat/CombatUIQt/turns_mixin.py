@@ -17,6 +17,7 @@ from PyQt6.QtWidgets import (
     QWidget,
 )
 
+from Combat.Definitions import Phase
 from Combat.Arena.arena import DASHES_KEY, MOVED_KEY
 from Combat.PlayerLog import has_round_events
 from Model.Content.CombatModifiers import AtTurnEnd, AtTurnStart
@@ -82,7 +83,7 @@ class TurnsMixin(CombatWindowState):
     def _current_turn_group(self) -> list[dict]:
         """Everyone whose turn it is (the active combatant's initiative group,
         or just them); [] outside combat."""
-        if self.phase != "COMBAT" or not self.initiative_order:
+        if self.phase != Phase.COMBAT or not self.initiative_order:
             return []
         start, end = self._turn_span(self.current_turn_idx)
         return self.initiative_order[start:end]
@@ -201,7 +202,7 @@ class TurnsMixin(CombatWindowState):
         Straight after Next, that press is undone (its round, timer ticks and
         reset action tallies included); after anything else, only whose turn
         it is steps back."""
-        if self.phase != "COMBAT" or self._is_first_turn():
+        if self.phase != Phase.COMBAT or self._is_first_turn():
             return
         if self.history and self.history[-1].operation == "_advance_turn":
             self._undo_last()
@@ -237,7 +238,7 @@ class TurnsMixin(CombatWindowState):
         """Keyboard shortcut 'Enter': Next Combatant / Next Round, only once combat has
         started and no text field is focused (Enter in an input field should only submit
         that field, not also advance the turn)."""
-        if self.phase != "COMBAT":
+        if self.phase != Phase.COMBAT:
             return
         if isinstance(QApplication.focusWidget(), QLineEdit):
             return
@@ -409,7 +410,7 @@ class TurnsMixin(CombatWindowState):
     def _can_set_initiative(self, char: dict) -> bool:
         """Whether char's initiative can be set by itself (Set initiative...):
         in a fight, with a turn of its own, not an initiative group's."""
-        if self.phase != "COMBAT":
+        if self.phase != Phase.COMBAT:
             return False
         at = next((i for i, c in enumerate(self.initiative_order) if c is char), None)
         if at is None:
@@ -492,10 +493,10 @@ class TurnsMixin(CombatWindowState):
         self.characters.append(char)
         # Not public: the GM may be about to hide it. The rows show it if not.
         self._log_event(f"{name} added to the encounter", note_turn=False, public=False)
-        if self.phase == "COMBAT":
+        if self.phase == Phase.COMBAT:
             self.initiative_order.append(char)
             self._rebuild_cards()
-        elif self.phase == "PARTY":
+        elif self.phase == Phase.PARTY:
             self._rebuild_cards()  # between encounters: no turns to take
         else:
             self._add_initiative_row([char])
@@ -699,7 +700,7 @@ class TurnsMixin(CombatWindowState):
         self.characters[:] = sorted_chars
         self.initiative_order = list(sorted_chars)
         self.current_turn_idx = 0
-        self.phase = "COMBAT"
+        self.phase = Phase.COMBAT
         self._log_turn_start()
 
         self._switch_to_combat()

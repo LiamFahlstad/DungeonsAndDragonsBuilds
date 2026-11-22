@@ -19,6 +19,7 @@ from PyQt6.QtWidgets import (
     QWidget,
 )
 
+from Combat.Definitions import Phase
 from Core.Definitions import DamageType
 from Core.Definitions import get_damage_type_color
 from .state import CombatWindowState, saved_label
@@ -110,7 +111,7 @@ class WindowMixin(CombatWindowState):
     def _nothing_logged_here(self) -> bool:
         """Between encounters without a tracked party: there's no log to
         write anything to, so nothing can be picked or done."""
-        return self.phase == "PARTY" and self.log_file is None
+        return self.phase == Phase.PARTY and self.log_file is None
 
     def _update_target_label(self):
         everyone_saved = len(self._saved_targets) == len(self.target_characters)
@@ -226,7 +227,7 @@ class WindowMixin(CombatWindowState):
     def _shortcut_select_active_source(self):
         """Keyboard shortcut 'Space': select whoever's turn it currently is as
         the source, saving a mouse click at the start of every turn."""
-        if self.phase != "COMBAT" or not self.initiative_order:
+        if self.phase != Phase.COMBAT or not self.initiative_order:
             return
         self._select_character(self.initiative_order[self.current_turn_idx])
 
@@ -278,7 +279,7 @@ class WindowMixin(CombatWindowState):
 
         # The initiative screen, or between encounters the party view
         # (shown once the panels it uses are built, at the end).
-        if self.phase == "PARTY":
+        if self.phase == Phase.PARTY:
             self._initiative_widget = None
         else:
             self._initiative_widget = self._build_initiative_widget()
@@ -626,7 +627,7 @@ class WindowMixin(CombatWindowState):
         encounter_row.addWidget(load_encounter_btn)
 
         self._add_combatant_btn = QPushButton("+ Add Combatant")
-        self._add_combatant_btn.setEnabled(self.phase != "PARTY")
+        self._add_combatant_btn.setEnabled(self.phase != Phase.PARTY)
         self._add_combatant_btn.clicked.connect(self._show_add_combatant_dialog)
         encounter_row.addWidget(self._add_combatant_btn)
 
@@ -924,7 +925,7 @@ class WindowMixin(CombatWindowState):
         app.focusChanged.connect(self._update_combo_sensitive_shortcuts)
         self._update_combo_sensitive_shortcuts(None, QApplication.focusWidget())
 
-        if self.phase == "PARTY":
+        if self.phase == Phase.PARTY:
             self._show_party_view()
 
     @staticmethod

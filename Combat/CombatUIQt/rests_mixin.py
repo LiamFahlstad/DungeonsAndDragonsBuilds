@@ -14,6 +14,7 @@ from typing import Callable
 from PyQt6.QtWidgets import QMessageBox
 
 import Combat.PlayerLog as PlayerLog
+from Combat.Definitions import Phase
 from Combat.EncounterLogs import read_log_status
 
 from .state import CombatWindowState
@@ -27,9 +28,9 @@ class RestsMixin(CombatWindowState):
         encounters, or an encounter not started yet."""
         if not self.player_log_file:
             return False
-        if self.phase == "PARTY":
+        if self.phase == Phase.PARTY:
             return True
-        return self.phase != "COMBAT" and read_log_status(self.log_file) is None
+        return self.phase != Phase.COMBAT and read_log_status(self.log_file) is None
 
     def _refresh_rest_buttons(self):
         enabled = self._can_rest()
@@ -47,7 +48,7 @@ class RestsMixin(CombatWindowState):
         """Undo stops at a rest; the window shows the rested party, in a new
         stretch between encounters when the rest was recorded."""
         self.history = []
-        if self.phase == "PARTY":
+        if self.phase == Phase.PARTY:
             self._show_party_view()
         self._log_status_label.setText(self._log_status_text())
 
