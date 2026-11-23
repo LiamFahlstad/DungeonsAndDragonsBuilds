@@ -25,6 +25,7 @@ from Combat.Effects.modifiers import (
     size_text,
 )
 from Combat.Fight.attack_rolls import armor_text
+from Combat.Fight.health import death_state
 from .dialogs_mixin import _damage_entry_text, _speed_text
 from Core.Rules import ability_modifier
 from Combat.Fight.monster_actions import (
@@ -194,15 +195,7 @@ class CardsMixin(CombatWindowState):
         characters, and monsters/NPCs that opt in with `death_saves`, make
         Death Saving Throws; any other combatant at 0 HP is dead. A summon
         whose HP isn't set yet (max HP 0, see TurnsMixin._hp_not_set) isn't."""
-        if char["hp"] > 0 or char.get("max_hp", 1) <= 0:
-            return "alive"
-        if not (char.get("_is_player") or char.get("death_saves", False)):
-            return "dead"
-        if char.get("death_saves_fail", 0) >= 3:
-            return "dead"
-        if char.get("death_saves_success", 0) >= 3:
-            return "stabilized"
-        return "dying"
+        return death_state(char)
 
     def _format_action_uses(self, counts: dict) -> str:
         """Format e.g. {'Action': 2, 'Reaction': 1} as '2x Action, Reaction'."""

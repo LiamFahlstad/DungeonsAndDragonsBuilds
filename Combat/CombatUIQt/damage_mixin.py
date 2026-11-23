@@ -39,6 +39,17 @@ from Combat.Effects.sight import UNKNOWN, Seen
 from Combat.Summons import vanishes_at_zero_hp
 from Core.Definitions import Condition
 from Combat.Fight.amounts import AmountError, parse_amount, parse_damage
+from Combat.Fight.health import (
+    DEAD,
+    DYING,
+    damage_at_zero_hp,
+    death_state,
+    fail_death_save,
+    give_temp_hp,
+    regain_hit_points,
+    revive,
+    succeed_death_save,
+)
 from Combat.Fight.damage import (
     damage_after_defenses,
     damage_type_modifier,
@@ -56,7 +67,6 @@ from Combat.Fight.attack_rolls import (
 from Combat.Fight.monster_actions import first_number
 from .player_view import _player_names, _seen, note_damage_defense, note_health
 from Combat.Fight.saves import CustomEffect, roll_save, save_modifier
-from Combat.Fight.stats import _default_stats
 from .state import CombatWindowState
 from .undo import undoable
 
@@ -868,25 +878,11 @@ class DamageMixin(CombatWindowState):
         False for a dead creature, which can't regain Hit Points until it's
         revived (the card's Revive button). Heal and the Custom Effect dialog
         share it."""
-        death_state = self._char_death_state(char)
-        if death_state == "dead":
+        if death_state(char) == DEAD:
             return False
-        was_downed = death_state != "alive"
         source_name = source["name"] if source is not None else None
-
-        pre_hp = char["hp"]
-        char["hp"] = min(char["hp"] + heal, hit_point_maximum(char))
-        actual_heal = char["hp"] - pre_hp
-
-        char.setdefault("stats", _default_stats())
-        char["stats"]["healing_received"] = (
-            char["stats"].get("healing_received", 0) + actual_heal
-        )
-        if source is not None:
-            source.setdefault("stats", _default_stats())
-            source["stats"]["healing_done"] = (
-                source["stats"].get("healing_done", 0) + actual_heal
-            )
+        regained = regain_hit_points(char, heal, source)
+        actual_heal = regained.amount
 
         heal_value = {
             "heal": actual_heal,
@@ -896,9 +892,7 @@ class DamageMixin(CombatWindowState):
 
         source_suffix = f" from {source_name}" if source_name else ""
 
-        if was_downed and char["hp"] > 0:
-            char["death_saves_fail"] = 0
-            char["death_saves_success"] = 0
+        if regained.came_to:
             self._log_event(
                 f"{char['name']} regains consciousness with {char['hp']} HP{source_suffix}",
                 character=char["name"],
@@ -926,12 +920,10 @@ class DamageMixin(CombatWindowState):
     def _revive(self, char: dict):
         """Bring a dead creature back with 1 HP, as Revivify or Raise Dead
         would; healing alone can't (see _apply_heal)."""
-        if self._char_death_state(char) != "dead":
+        if death_state(char) != DEAD:
             return
         self._select_character(char)
-        char["hp"] = 1
-        char["death_saves_fail"] = 0
-        char["death_saves_success"] = 0
+        revive(char)
         self._log_event(
             f"{char['name']} is revived with 1 HP",
             character=char["name"],
@@ -948,17 +940,9 @@ class DamageMixin(CombatWindowState):
         Critical Hit, and death if it's at least char's Hit Point maximum.
         A Stable creature stops being Stable: its saves start over (they
         were reset as it became Stable) with these failures."""
-        ends_stable = self._char_death_state(char) == "stabilized"
-        if ends_stable:
-            char["death_saves_fail"] = char["death_saves_success"] = 0
-        failures = 2 if critical else 1
-        massive = damage >= hit_point_maximum(char)
-        pre_fail = char.get("death_saves_fail", 0)
-        char["death_saves_fail"] = 3 if massive else min(pre_fail + failures, 3)
-        newly_dead = pre_fail < 3 and char["death_saves_fail"] >= 3
-        if newly_dead:
-            char.setdefault("stats", _default_stats())
-            char["stats"]["deaths"] = char["stats"].get("deaths", 0) + 1
+        hit = damage_at_zero_hp(char, damage, critical)
+        failures, massive = hit.failures, hit.massive
+        ends_stable, newly_dead = hit.ends_stable, hit.newly_dead
         name = char["name"]
         if massive:
             text = (
@@ -996,16 +980,11 @@ class DamageMixin(CombatWindowState):
 
     @undoable
     def _apply_failed_death_save(self, char: dict):
-        if self._char_death_state(char) != "dying":
+        if death_state(char) != DYING:
             return
         self._select_character(char)
-        pre_fail = char.get("death_saves_fail", 0)
-        char["death_saves_fail"] = min(pre_fail + 1, 3)
-        newly_dead = pre_fail < 3 and char["death_saves_fail"] >= 3
+        newly_dead = fail_death_save(char)
         if newly_dead:
-            char.setdefault("stats", _default_stats())
-            char["stats"]["deaths"] = char["stats"].get("deaths", 0) + 1
-        if char["death_saves_fail"] >= 3:
             self._log_event(
                 f"{char['name']} has died (3 failed death saves)",
                 character=char["name"],
@@ -1028,11 +1007,10 @@ class DamageMixin(CombatWindowState):
 
     @undoable
     def _apply_success_death_save(self, char: dict):
-        if self._char_death_state(char) != "dying":
+        if death_state(char) != DYING:
             return
         self._select_character(char)
-        char["death_saves_success"] = min(char.get("death_saves_success", 0) + 1, 3)
-        if char["death_saves_success"] >= 3:
+        if succeed_death_save(char):
             self._log_event(
                 f"{char['name']} stabilizes (3 successful death saves)",
                 character=char["name"],
@@ -1063,19 +1041,8 @@ class DamageMixin(CombatWindowState):
         """Give target `amount` temporary Hit Points from source, counted in
         both their stats and logged. Temp HP and Wild Shape share it."""
         source_name = source["name"] if source is not None else None
-        old = target.get("temp_hp", 0)
-        # Temporary Hit Points don't stack: keep the higher amount.
-        target["temp_hp"] = max(old, amount)
-
-        target.setdefault("stats", _default_stats())
-        target["stats"]["temp_hp_received"] = (
-            target["stats"].get("temp_hp_received", 0) + amount
-        )
-        if source is not None:
-            source.setdefault("stats", _default_stats())
-            source["stats"]["temp_hp_granted"] = (
-                source["stats"].get("temp_hp_granted", 0) + amount
-            )
+        # Temporary Hit Points don't stack: it keeps the higher amount.
+        old = give_temp_hp(target, amount, source)
 
         temp_hp_value = {
             "amount": amount,

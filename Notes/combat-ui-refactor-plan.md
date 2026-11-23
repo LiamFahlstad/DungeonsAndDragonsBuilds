@@ -60,7 +60,7 @@ and the few others a step touches, not the character-sheet tests. Steps 3,
 | 2 | A typed combatant (`Combatant` TypedDict) | M | **Done** 2026-11-22, revised (R8): the schema and a key test; annotating signatures moved to step 5 |
 | 3 | The Use / Cast dialog as a class, its form-to-effects logic Qt-free | L | 3a **done** 2026-11-22 (R9): `use_cast/form.py`, dialog 1,580 → 1,440 lines; 3b **done** 2026-11-22 (R10): `_UseCastDialog`, `run()` 616 lines + 44 methods; 3c's move **done** (R11): `use_cast/dialog.py`, `conditions_mixin.py` 3,500 → 1,674 lines; 3c's split **done**, revised (R12): `run()` is 14 lines calling 10 builder methods, the longest 126; 3d **done** (R13): `do_apply` 146 → 50 lines over Qt-free `read_amount`, `check_applicable` and `build_effect`; reviewed (R14): no behaviour change; **step 3 done** |
 | 4 | The window built from panels, shortcuts as a table | M | **Done** 2026-11-23 (R15, R16): `_build_window` 680 → 13 lines over 12 builders (the longest 111); the shortcuts a table (`shortcuts.py`) checked against KEYBOARD_SHORTCUTS.md |
-| 5 | The Qt-free fight core (`Combat/Fight/`), one mixin at a time | XL | 5.1 **done** 2026-11-23 (R17): seven Qt-free modules moved to `Combat/Fight/`; 5.5's guard test in place; 5.2 **done** (R18): `Fight` holds the fight's state; 5.3 started (R19): damage's defenses and arithmetic in `Combat/Fight/damage.py`; **5.3 continues with the rest of damage** |
+| 5 | The Qt-free fight core (`Combat/Fight/`), one mixin at a time | XL | 5.1 **done** 2026-11-23 (R17): seven Qt-free modules moved to `Combat/Fight/`; 5.5's guard test in place; 5.2 **done** (R18): `Fight` holds the fight's state; 5.3 started (R19, R20): damage's defenses and arithmetic in `Combat/Fight/damage.py`, health (death state, healing, Temporary Hit Points, Death Saving Throws) in `Combat/Fight/health.py`; **5.3 continues: attack rolls, then conditions** |
 | 6 | One refresh path after every GM operation | M | Not started |
 | 7 | Mixins into composed views and one module per dialog; `CombatWindowState` gone | L | Not started |
 | 8 | Docs, agents and skills point at the new layout | S | Not started |
@@ -797,6 +797,25 @@ combat plans' file references. Then record the final numbers in Findings.
     3. Move the logging once the log code itself moves (5.3's last area).
   - **Tests:** `tests/test_fight_damage.py` (8 tests without Qt).
     `damage_mixin.py` is 101 lines shorter. The full suite passes (12,075).
+
+- **R20 (step 5.3, damage's second slice, 2026-11-23).** A combatant's
+  health is now `Combat/Fight/health.py`:
+  - `death_state`, with the `ALIVE` / `DYING` / `STABLE` / `DEAD` it
+    returns (the same strings as before);
+  - `regain_hit_points` (no more than the maximum, and someone at 0 comes
+    to, with their saves reset) and `give_temp_hp` (they don't stack);
+  - `revive`;
+  - `fail_death_save`, `succeed_death_save` and `damage_at_zero_hp` (one
+    failure, two from a Critical Hit, death from damage at least the Hit
+    Point maximum, and Stable ended).
+
+  `DamageMixin`'s `_heal_target`, `_revive`, `_damage_at_zero_hp`, the two
+  death-save buttons and `_give_temp_hp` call them, and keep their log
+  lines, conditions and cards. `CardsMixin._char_death_state` is a
+  one-line wrapper, because tests call it 26 times.
+  - **Tests:** `tests/test_fight_health.py` (8 tests without Qt, expected
+    values from the Rules Glossary). The mixins are 68 lines shorter. The
+    full suite passes (12,083).
 
 ## Discovered issues
 
