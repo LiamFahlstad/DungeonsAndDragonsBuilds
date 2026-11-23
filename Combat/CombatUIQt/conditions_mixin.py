@@ -14,7 +14,6 @@ from PyQt6.QtWidgets import (
 
 from Combat.Arena.arena import (
     DASHES_KEY,
-    GRAPPLER_KEY,
     MOVED_KEY,
     dashes,
     grappled_by,
@@ -47,10 +46,7 @@ from Combat.Effects.active_effects import (
     is_linked,
     link_badge,
     link_concentration,
-    linked_badges_left_without,
-    linked_conditions,
     note_origin,
-    remove_effect,
     repeat_saves,
     set_duration,
     set_repeat_save,
@@ -118,7 +114,7 @@ from Combat.Fight.saves import (
     with_extra_damage,
 )
 from .spells_mixin import spell_badge_color, spell_badge_description
-from Combat.Fight.stats import _default_stats, increment_named_stat
+from Combat.Fight.conditions import gain_condition, lose_condition
 from .state import CombatWindowState
 from .tree_filter import filter_category_tree
 from .undo import undoable
@@ -253,28 +249,10 @@ class ConditionsMixin(CombatWindowState):
             # Each Dash this turn is its Speed again on the map, a second
             # one (Cunning Action's) too, which the badge it has can't say.
             self._take_dash(char)
-        if (
-            cond == Condition.GRAPPLED.value
-            and source is not None
-            and source is not char
-        ):
-            # Who grapples it: the battle map drags it along (arena step 22).
-            char[GRAPPLER_KEY] = source["name"]
-        if cond not in char["conditions"]:
-            char["conditions"].append(cond)
-            char.setdefault("stats", _default_stats())
-            if counted:
-                char["stats"]["conditions_received"] = (
-                    char["stats"].get("conditions_received", 0) + 1
-                )
-                increment_named_stat(char["stats"], "conditions_received_by_name", cond)
+        # Who grapples it, the condition and the statistics:
+        # Combat/Fight/conditions.py's gain_condition.
+        if gain_condition(char, cond, source, counted=counted):
             source_name = source["name"] if source is not None else None
-            if source is not None and counted:
-                source.setdefault("stats", _default_stats())
-                source["stats"]["conditions_given"] = (
-                    source["stats"].get("conditions_given", 0) + 1
-                )
-                increment_named_stat(source["stats"], "conditions_given_by_name", cond)
             cond_value = {
                 "condition": cond,
                 "source_name": source_name,
@@ -431,19 +409,13 @@ class ConditionsMixin(CombatWindowState):
 
     @undoable
     def _remove_condition_from(self, char: dict, cond: str, source: dict | None = None):
-        if cond in char["conditions"]:
+        # Its lasting effect, a Dash's movement and who grappled it go with
+        # it: Combat/Fight/conditions.py's lose_condition.
+        lost = lose_condition(char, cond)
+        if lost is not None:
+            stands_for, emptied = lost.stands_for, lost.emptied
             # What it did to the Hit Point maximum (Aid) goes with it.
-            maximum = hit_point_maximum(char)
-            stands_for = linked_conditions(char, cond)
-            char["conditions"].remove(cond)
-            # Its tooltip, colour, timer and repeat save go with it.
-            remove_effect(char, cond)
-            if cond == DASH:
-                char.pop(DASHES_KEY, None)  # and the Dash's movement
-            if cond == Condition.GRAPPLED.value:
-                char.pop(GRAPPLER_KEY, None)  # and who grappled it
-            emptied = linked_badges_left_without(char, cond)
-            if hit_point_maximum(char) != maximum:
+            if hit_point_maximum(char) != lost.maximum_before:
                 self._keep_hit_points_in_maximum(char, cond)
             source_name = source["name"] if source is not None else None
             cond_value = {

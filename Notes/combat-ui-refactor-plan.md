@@ -60,7 +60,7 @@ and the few others a step touches, not the character-sheet tests. Steps 3,
 | 2 | A typed combatant (`Combatant` TypedDict) | M | **Done** 2026-11-22, revised (R8): the schema and a key test; annotating signatures moved to step 5 |
 | 3 | The Use / Cast dialog as a class, its form-to-effects logic Qt-free | L | 3a **done** 2026-11-22 (R9): `use_cast/form.py`, dialog 1,580 → 1,440 lines; 3b **done** 2026-11-22 (R10): `_UseCastDialog`, `run()` 616 lines + 44 methods; 3c's move **done** (R11): `use_cast/dialog.py`, `conditions_mixin.py` 3,500 → 1,674 lines; 3c's split **done**, revised (R12): `run()` is 14 lines calling 10 builder methods, the longest 126; 3d **done** (R13): `do_apply` 146 → 50 lines over Qt-free `read_amount`, `check_applicable` and `build_effect`; reviewed (R14): no behaviour change; **step 3 done** |
 | 4 | The window built from panels, shortcuts as a table | M | **Done** 2026-11-23 (R15, R16): `_build_window` 680 → 13 lines over 12 builders (the longest 111); the shortcuts a table (`shortcuts.py`) checked against KEYBOARD_SHORTCUTS.md |
-| 5 | The Qt-free fight core (`Combat/Fight/`), one mixin at a time | XL | 5.1 **done** 2026-11-23 (R17): seven Qt-free modules moved to `Combat/Fight/`; 5.5's guard test in place; 5.2 **done** (R18): `Fight` holds the fight's state; 5.3 started (R19, R20): damage's defenses and arithmetic in `Combat/Fight/damage.py`, health (death state, healing, Temporary Hit Points, Death Saving Throws) in `Combat/Fight/health.py`; the map's questions (distance, sight, cover, range, Critical Hits within 5 feet) are `Fight` methods (R21); an attack roll's check is `Combat/Fight/attacks.py` (R22); **5.3 continues with conditions** |
+| 5 | The Qt-free fight core (`Combat/Fight/`), one mixin at a time | XL | 5.1 **done** 2026-11-23 (R17): seven Qt-free modules moved to `Combat/Fight/`; 5.5's guard test in place; 5.2 **done** (R18): `Fight` holds the fight's state; 5.3 started (R19, R20): damage's defenses and arithmetic in `Combat/Fight/damage.py`, health (death state, healing, Temporary Hit Points, Death Saving Throws) in `Combat/Fight/health.py`; the map's questions (distance, sight, cover, range, Critical Hits within 5 feet) are `Fight` methods (R21); an attack roll's check is `Combat/Fight/attacks.py` (R22); gaining and losing a condition is `Combat/Fight/conditions.py` (R23); **5.3 continues with turns** |
 | 6 | One refresh path after every GM operation | M | Not started |
 | 7 | Mixins into composed views and one module per dialog; `CombatWindowState` gone | L | Not started |
 | 8 | Docs, agents and skills point at the new layout | S | Not started |
@@ -853,6 +853,27 @@ combat plans' file references. Then record the final numbers in Findings.
     (`_deal_typed_damage`) and its triggers (`_before_hit`,
     `_after_attack`). They go with the triggers' prompts, which ask the GM
     something and so need step 5.4's `Asker`.
+
+- **R23 (step 5.3, conditions' first slice, 2026-11-23).** What gaining or
+  losing a condition does to the combatant itself is
+  `Combat/Fight/conditions.py`:
+  - `gain_condition`: the grappler named, the condition added once, and
+    both sides' statistics (not for a badge beside its conditions). It
+    returns whether it's new.
+  - `lose_condition`: the condition, its lasting effect, a Dash's movement
+    and the grappler removed. It returns a `LostCondition` with the Hit
+    Point maximum before, and the linked badges to follow up on.
+  - **What stays in the mixin, and why:** the cascades a condition sets
+    off (Concentration broken, a Wild Shape form left, grapples ended,
+    Dodge lost, Prone after Unconscious, linked badges) each log through
+    another mixin. So they stay in `_add_condition_to` and
+    `_remove_condition_from` until the log moves. Those two are 28 lines
+    shorter.
+  - **Tests:** `tests/test_fight_conditions.py` (6 tests without Qt). The
+    full suite passes (12,097).
+  - **Process note:** a commit run started before the previous one had
+    reported found that one's commit unpushed and refused to push. Start
+    the next commit run only after the last one has reported.
 
 ## Discovered issues
 
