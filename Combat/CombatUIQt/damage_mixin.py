@@ -22,11 +22,8 @@ from Combat.Effects.modifiers import (
     hit_extras,
     hit_notes,
     hit_point_maximum,
-    immune_to_damage,
     makes_critical_hit,
-    resists,
     used_up_by_attack,
-    vulnerable_to,
 )
 from Combat.Effects.triggers import (
     AttackOutcome,
@@ -42,6 +39,11 @@ from Combat.Effects.sight import UNKNOWN, Seen
 from Combat.Summons import vanishes_at_zero_hp
 from Core.Definitions import Condition
 from Combat.Fight.amounts import AmountError, parse_amount, parse_damage
+from Combat.Fight.damage import (
+    damage_after_defenses,
+    damage_type_modifier,
+    take_damage,
+)
 from Combat.Fight.attack_rolls import (
     AttackRoll,
     armor_bonus,
@@ -54,7 +56,7 @@ from Combat.Fight.attack_rolls import (
 from Combat.Fight.monster_actions import first_number
 from .player_view import _player_names, _seen, note_damage_defense, note_health
 from Combat.Fight.saves import CustomEffect, roll_save, save_modifier
-from Combat.Fight.stats import _default_stats, damage_dealt_key, damage_taken_key
+from Combat.Fight.stats import _default_stats
 from .state import CombatWindowState
 from .undo import undoable
 
@@ -67,16 +69,6 @@ _VERDICTS: dict[bool | None, str] = {
     False: "misses",
     None: "can't be checked against",
 }
-
-
-def _damage_type_value(t) -> str:
-    return t.value if hasattr(t, "value") else str(t)
-
-
-def _entry_damage_types(entry) -> list:
-    if isinstance(entry, dict):
-        return entry.get("damage_types", [])
-    return getattr(entry, "damage_types", [])
 
 
 class DamageMixin(CombatWindowState):
@@ -95,44 +87,9 @@ class DamageMixin(CombatWindowState):
         return amount
 
     def _damage_type_modifier(self, target: dict, dmg: int, damage_type: str):
-        """Check target's damage immunities/resistances/vulnerabilities against
-        damage_type and return (applied_dmg, outcome), outcome being one of
-        'immune', 'resisted', 'vulnerable', 'resisted and vulnerable', or None.
-        Immunity zeroes the damage; otherwise Resistance halves it (rounded
-        down) and then Vulnerability doubles it, so both can apply."""
-
-        def has_type(entries) -> bool:
-            for entry in entries or []:
-                if any(
-                    _damage_type_value(t) == damage_type
-                    for t in _entry_damage_types(entry)
-                ):
-                    return True
-            return False
-
-        # A condition or a badge can give these too (Petrified's Resistance
-        # to all damage, Stoneskin's, Heroes' Feast's Poison).
-        if has_type(target.get("damage_immunities")) or immune_to_damage(
-            target, damage_type
-        ):
-            return 0, "immune"
-        resisted = has_type(target.get("damage_resistances")) or resists(
-            target, damage_type
-        )
-        vulnerable = has_type(target.get("damage_vulnerabilities")) or vulnerable_to(
-            target, damage_type
-        )
-        if resisted:
-            dmg //= 2
-        if vulnerable:
-            dmg *= 2
-        if resisted and vulnerable:
-            return dmg, "resisted and vulnerable"
-        if resisted:
-            return dmg, "resisted"
-        if vulnerable:
-            return dmg, "vulnerable"
-        return dmg, None
+        """(the damage, its outcome) after target's defenses: see
+        Combat/Fight/damage.py's damage_type_modifier."""
+        return damage_type_modifier(target, dmg, damage_type)
 
     def _apply_bloodied_condition(self, char: dict, source: dict | None = None):
         """Auto-apply/remove Bloodied condition based on HP threshold. Pass
@@ -697,7 +654,7 @@ class DamageMixin(CombatWindowState):
         if target["hp"] <= 0:
             return 0, []
         damage = sum(
-            self._damage_after_defenses(target, amount, kind, check_resistance, saved)
+            damage_after_defenses(target, amount, kind, check_resistance, saved)
             for amount, kind in parts
         )
         past_temp = damage - min(target.get("temp_hp", 0), damage)
@@ -721,21 +678,6 @@ class DamageMixin(CombatWindowState):
                 used += [firing for firing, _ in self._answer_firings(asks, notes)]
             drops_to = max((f.row.drops_to for f in used), default=0)
         return drops_to, notes
-
-    def _damage_after_defenses(
-        self,
-        target: dict,
-        amount: int,
-        damage_type: str,
-        check_resistance: bool,
-        saved: bool,
-    ) -> int:
-        """What one damage type of a hit comes to on target: halved first
-        if it saved, then its Immunity, Resistance and Vulnerability."""
-        dmg = amount // 2 if saved else amount
-        if check_resistance:
-            dmg, _ = self._damage_type_modifier(target, dmg, damage_type)
-        return dmg
 
     def _note_health(self, char: dict):
         """Note what the change of HP that's just over showed the players. The
@@ -762,44 +704,16 @@ class DamageMixin(CombatWindowState):
         dmg = amount // 2 if saved else amount
         outcome = None
         if check_resistance:
-            dmg, outcome = self._damage_type_modifier(target, dmg, damage_type)
+            dmg, outcome = damage_type_modifier(target, dmg, damage_type)
         defense = outcome
         if saved:
             outcome = f"saved, {outcome}" if outcome else "saved"
 
-        pre_hp = target["hp"]
-        pre_temp = target["temp_hp"]
-
-        temp_reduction = min(target["temp_hp"], dmg)
-        target["temp_hp"] -= temp_reduction
-        # Hit Points can't go below 0, nor below what it drops to instead.
-        target["hp"] = max(floor, target["hp"] - (dmg - temp_reduction))
-
-        hp_delta = target["hp"] - pre_hp
-        temp_delta = target["temp_hp"] - pre_temp
-
-        knockout = pre_hp > 0 and target["hp"] <= 0
-
-        target.setdefault("stats", _default_stats())
-        target["stats"]["damage_taken"] = target["stats"].get("damage_taken", 0) + dmg
-        taken_type_key = damage_taken_key(damage_type)
-        target["stats"][taken_type_key] = target["stats"].get(taken_type_key, 0) + dmg
-        if knockout:
-            target["stats"]["times_downed"] = target["stats"].get("times_downed", 0) + 1
-
-        if source is not None:
-            source.setdefault("stats", _default_stats())
-            source["stats"]["damage_dealt"] = (
-                source["stats"].get("damage_dealt", 0) + dmg
-            )
-            type_key = damage_dealt_key(damage_type)
-            source["stats"][type_key] = source["stats"].get(type_key, 0) + dmg
-            if knockout:
-                source["stats"]["knockouts"] = source["stats"].get("knockouts", 0) + 1
-
+        taken = take_damage(target, dmg, damage_type, source, floor)
+        knockout = taken.knockout
         damage_value = {
-            "hp_delta": hp_delta,
-            "temp_delta": temp_delta,
+            "hp_delta": taken.hp_delta,
+            "temp_delta": taken.temp_delta,
             "dmg": dmg,
             "damage_type": damage_type,
             "source_name": source_name,
