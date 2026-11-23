@@ -60,7 +60,7 @@ and the few others a step touches, not the character-sheet tests. Steps 3,
 | 2 | A typed combatant (`Combatant` TypedDict) | M | **Done** 2026-11-22, revised (R8): the schema and a key test; annotating signatures moved to step 5 |
 | 3 | The Use / Cast dialog as a class, its form-to-effects logic Qt-free | L | 3a **done** 2026-11-22 (R9): `use_cast/form.py`, dialog 1,580 → 1,440 lines; 3b **done** 2026-11-22 (R10): `_UseCastDialog`, `run()` 616 lines + 44 methods; 3c's move **done** (R11): `use_cast/dialog.py`, `conditions_mixin.py` 3,500 → 1,674 lines; 3c's split **done**, revised (R12): `run()` is 14 lines calling 10 builder methods, the longest 126; 3d **done** (R13): `do_apply` 146 → 50 lines over Qt-free `read_amount`, `check_applicable` and `build_effect`; reviewed (R14): no behaviour change; **step 3 done** |
 | 4 | The window built from panels, shortcuts as a table | M | **Done** 2026-11-23 (R15, R16): `_build_window` 680 → 13 lines over 12 builders (the longest 111); the shortcuts a table (`shortcuts.py`) checked against KEYBOARD_SHORTCUTS.md |
-| 5 | The Qt-free fight core (`Combat/Fight/`), one mixin at a time | XL | 5.1 **done** 2026-11-23 (R17): seven Qt-free modules moved to `Combat/Fight/`; 5.5's guard test in place; 5.2 **done** (R18): `Fight` holds the fight's state; 5.3 started (R19, R20): damage's defenses and arithmetic in `Combat/Fight/damage.py`, health (death state, healing, Temporary Hit Points, Death Saving Throws) in `Combat/Fight/health.py`; **5.3 continues: attack rolls, then conditions** |
+| 5 | The Qt-free fight core (`Combat/Fight/`), one mixin at a time | XL | 5.1 **done** 2026-11-23 (R17): seven Qt-free modules moved to `Combat/Fight/`; 5.5's guard test in place; 5.2 **done** (R18): `Fight` holds the fight's state; 5.3 started (R19, R20): damage's defenses and arithmetic in `Combat/Fight/damage.py`, health (death state, healing, Temporary Hit Points, Death Saving Throws) in `Combat/Fight/health.py`; the map's questions (distance, sight, cover, range, Critical Hits within 5 feet) are `Fight` methods (R21); **5.3 continues: the attack roll's check, then conditions** |
 | 6 | One refresh path after every GM operation | M | Not started |
 | 7 | Mixins into composed views and one module per dialog; `CombatWindowState` gone | L | Not started |
 | 8 | Docs, agents and skills point at the new layout | S | Not started |
@@ -816,6 +816,22 @@ combat plans' file references. Then record the final numbers in Findings.
   - **Tests:** `tests/test_fight_health.py` (8 tests without Qt, expected
     values from the Rules Glossary). The mixins are 68 lines shorter. The
     full suite passes (12,083).
+
+- **R21 (step 5.3, attack rolls' first slice, 2026-11-23).** The battle
+  map's questions the rules ask are `Fight` methods:
+  - `map_settings` (the painted map with kept walls);
+  - `distance_ft`, `sees`, `map_cover` and `covered`;
+  - `range_check`, `cover_warning` and `critical_against`.
+
+  Each reads only the fight's state, and each answers "not known" before
+  the map is in use (arena plan Decision 29). The window's
+  `_attacker_distance_ft`, `_sees`, `_map_cover`, `_covered`,
+  `_range_check`, `_cover_warning`, `_critical_against` and `_map_settings`
+  are one-line wrappers. They have about 40 callers across the mixins and
+  tests, which switch to `self.fight` as their own code moves.
+  - **Tests:** 3 more in `tests/test_fight.py`: before the map is in use,
+    distances once it is, and Paralyzed's Critical Hit within 5 feet. The
+    full suite passes (12,086).
 
 ## Discovered issues
 

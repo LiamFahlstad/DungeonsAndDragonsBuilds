@@ -148,7 +148,6 @@ from Combat.Arena.lasting import (
     record_timing,
     time_left_text,
     who_is_in,
-    with_kept_walls,
 )
 from Combat.Arena.maps import place_at_starts
 from Combat.Arena.grapples import dragged_to, stretched
@@ -1057,14 +1056,8 @@ class ArenaMixin(CombatWindowState):
             self._arena_view.refresh_area()
 
     def _map_settings(self) -> ArenaSettings:
-        """The map as the rules read it (step 25): the painted terrain, with
-        each kept wall's own laid over it while it lasts (Wall of Force
-        blocks movement and is Total Cover, Blade Barrier is Three-Quarters
-        Cover and Difficult Terrain: lasting.with_kept_walls). A copy for
-        reading, or `arena_settings` itself with no such wall up: what's
-        written (in_use, the painter, the log) goes to `arena_settings`, so
-        the wall is never saved into the painted map."""
-        return with_kept_walls(self.arena_settings, self.characters)
+        """Fight.map_settings (Combat/Fight/fight.py)."""
+        return self.fight.map_settings()
 
     def _lasting_rows(self) -> list[LastingArea]:
         """The kept areas the map draws, the one selected marked; a

@@ -1,20 +1,12 @@
 """Damage/healing mixin for CombatAppQt."""
 
-from Combat.Arena.arena import distance_ft
 from Combat.Arena.cover import (
-    NO_COVER_READING,
     CoverReading,
-    cover_between,
-    cover_from,
-    with_cover,
 )
 from Combat.Arena.geometry import Cell
-from Combat.Arena.senses import sees
 from Combat.Arena.ranges import (
-    NO_RANGE_CHECK,
     AttackRange,
     RangeCheck,
-    check_attack_range,
 )
 from Combat.Definitions import Action
 from Combat.Effects.modifiers import (
@@ -35,7 +27,7 @@ from Combat.Effects.triggers import (
     TriggerMode,
     reduced_damage,
 )
-from Combat.Effects.sight import UNKNOWN, Seen
+from Combat.Effects.sight import Seen
 from Combat.Summons import vanishes_at_zero_hp
 from Core.Definitions import Condition
 from Combat.Fight.amounts import AmountError, parse_amount, parse_damage
@@ -185,25 +177,12 @@ class DamageMixin(CombatWindowState):
     def _attacker_distance_ft(
         self, attacker: dict | None, target: dict | None
     ) -> int | None:
-        """How far attacker is from target on the battle map, for the rules
-        that ask (Prone's and Paralyzed's "within 5 feet"). None without
-        either, with either off the map, or before the map is in use (only
-        place_new's starting edges, Decision 29): then those stay notes."""
-        if attacker is None or target is None or attacker is target:
-            return None
-        if not self.arena_settings.in_use:
-            return None
-        return distance_ft(attacker, target, self.arena_settings)
+        """Fight.distance_ft (Combat/Fight/fight.py)."""
+        return self.fight.distance_ft(attacker, target)
 
     def _sees(self, viewer: dict | None, other: dict | None) -> Seen:
-        """Whether viewer sees other on the battle map, and why
-        (Combat/Arena/senses.py): its Darkness, a kept Fog Cloud, Invisible,
-        Blinded, Darkvision, Blindsight, Truesight. UNKNOWN without either,
-        with either off the map, or before the map is in use (Decision 29):
-        then what asks it stays the GM's."""
-        if viewer is None or other is None or not self.arena_settings.in_use:
-            return UNKNOWN
-        return sees(viewer, other, self.characters, self._map_settings())
+        """Fight.sees (Combat/Fight/fight.py)."""
+        return self.fight.sees(viewer, other)
 
     def _sees_of(self, viewer: dict, other: dict) -> bool | None:
         """_sees's answer alone, for the triggers' "you can see it"."""
@@ -215,21 +194,8 @@ class DamageMixin(CombatWindowState):
         target: dict | None,
         origin: list[Cell] | None = None,
     ) -> CoverReading:
-        """The cover target has on the battle map (Combat/Arena/cover.py)
-        against source, or against an area's point of origin `origin` (a
-        Fireball's cell): what's between them. None of it before the map is
-        in use (Decision 29), as distances count only then, or with either
-        off the map."""
-        if target is None or not self.arena_settings.in_use:
-            return NO_COVER_READING
-        if origin is not None:
-            leave = [source] if source is not None else []
-            return cover_between(
-                origin, target, self.characters, self._map_settings(), leave
-            )
-        if source is None:
-            return NO_COVER_READING
-        return cover_from(source, target, self.characters, self._map_settings())
+        """Fight.map_cover (Combat/Fight/fight.py)."""
+        return self.fight.map_cover(source, target, origin)
 
     def _covered(
         self,
@@ -238,47 +204,22 @@ class DamageMixin(CombatWindowState):
         origin: list[Cell] | None = None,
         ignores_cover: bool = False,
     ) -> dict:
-        """Target as a roll against it from source reads it, the map's cover
-        among its own (with_cover: a copy to read, never to change).
-        `ignores_cover`: what's rolled takes Half and Three-Quarters Cover
-        away (Sacred Flame), so only Total Cover is left of the map's."""
-        reading = self._map_cover(source, target, origin)
-        if ignores_cover and not reading.total:
-            return target
-        return with_cover(target, reading)
+        """Fight.covered (Combat/Fight/fight.py)."""
+        return self.fight.covered(source, target, origin, ignores_cover)
 
     def _range_check(
         self, source: dict | None, target: dict | None, attack: AttackRange | None
     ) -> RangeCheck:
-        """What the battle map says of `attack`'s reach or range from source
-        to target (Combat/Arena/ranges.py): Long range's Disadvantage, an
-        enemy within 5 feet of a ranged attacker, past its reach or range.
-        Nothing before the map is in use (Decision 29)."""
-        if not self.arena_settings.in_use:
-            return NO_RANGE_CHECK
-        return check_attack_range(
-            attack, source, target, self.characters, self._map_settings()
-        )
+        """Fight.range_check (Combat/Fight/fight.py)."""
+        return self.fight.range_check(source, target, attack)
 
     def _cover_warning(self, source: dict | None, target: dict) -> str:
-        """ "Goblin is behind Total Cover (Wall at D5): it can't be targeted
-        directly", for a roll made anyway (warned about, not refused, as a
-        range is: Decision 19); "" otherwise."""
-        reading = self._map_cover(source, target)
-        if not reading.total:
-            return ""
-        return (
-            f"{target['name']} is behind Total Cover ({reading.by}): it can't"
-            " be targeted directly"
-        )
+        """Fight.cover_warning (Combat/Fight/fight.py)."""
+        return self.fight.cover_warning(source, target)
 
     def _critical_against(self, attacker: dict | None, target: dict | None) -> bool:
-        """Whether a hit by attacker on target is a Critical Hit by what
-        target has, whatever the d20 showed: Paralyzed's or Unconscious's,
-        with attacker within 5 feet on the map."""
-        if target is None:
-            return False
-        return makes_critical_hit(target, self._attacker_distance_ft(attacker, target))
+        """Fight.critical_against (Combat/Fight/fight.py)."""
+        return self.fight.critical_against(attacker, target)
 
     def _resolve_attack_roll(
         self,
