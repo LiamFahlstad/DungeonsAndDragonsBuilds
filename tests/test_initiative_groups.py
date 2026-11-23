@@ -6,7 +6,7 @@ import pytest
 from PyQt6.QtWidgets import QDialog, QMessageBox
 
 from Combat.Combatants import Bull, Pirate, Tiger
-from Combat.CombatUIQt.turns_mixin import initiative_units, unit_label
+from Combat.Fight.fight import initiative_units, unit_label
 from Combat.EncounterConfig import (
     CampaignSpec,
     CombatantSpec,

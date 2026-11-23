@@ -55,7 +55,7 @@ from .dialogs_mixin import (
     _speed_text,
 )
 from Combat.Fight.monster_actions import first_number
-from .turns_mixin import initiative_units, unit_label
+from Combat.Fight.fight import initiative_units, unit_label
 
 # A monster with one of these (a condition, a Visibility, or the spell's badge)
 # isn't shown to the players.

@@ -11,7 +11,7 @@ Fight; until then this is the state they share."""
 
 from dataclasses import dataclass, field
 
-from Combat.Arena.arena import ArenaSettings, distance_ft
+from Combat.Arena.arena import DASHES_KEY, MOVED_KEY, ArenaSettings, distance_ft
 from Combat.Arena.cover import (
     NO_COVER_READING,
     CoverReading,
@@ -31,6 +31,42 @@ from Combat.Arena.senses import sees
 from Combat.Definitions import Phase
 from Combat.Effects.modifiers import makes_critical_hit
 from Combat.Effects.sight import UNKNOWN, Seen
+
+from .health import DEAD, death_state
+
+
+def initiative_units(chars: list[dict]) -> list[list[dict]]:
+    """`chars` as the turns they take: each initiative group (the
+    "initiative_group" its members share, at its first member's place) as
+    one, and everyone else on their own."""
+    units: list[list[dict]] = []
+    groups: dict[str, list[dict]] = {}
+    for char in chars:
+        group = char.get("initiative_group")
+        if group is None:
+            units.append([char])
+        elif group in groups:
+            groups[group].append(char)
+        else:
+            groups[group] = [char]
+            units.append(groups[group])
+    return units
+
+
+def unit_label(unit: list[dict]) -> str:
+    """How the initiative screen names a turn: "Goblin Warriors (6)" for a
+    group, the combatant's name otherwise."""
+    group = unit[0].get("initiative_group")
+    return f"{group} ({len(unit)})" if group else unit[0]["name"]
+
+
+def start_turn(char: dict):
+    """char's turn starts: its Action, Bonus Action and Reaction are back,
+    and its movement on the map starts over (feet moved, Dashes taken).
+    Everyone else keeps theirs until their own turn starts."""
+    char["action_uses"] = {}
+    char.pop(MOVED_KEY, None)
+    char.pop(DASHES_KEY, None)
 
 
 @dataclass
@@ -144,3 +180,95 @@ class Fight:
         if target is None:
             return False
         return makes_critical_hit(target, self.distance_ft(attacker, target))
+
+    # ---- The turn order ----
+    # An initiative group (initiative_units) stands together in the order and
+    # takes one turn: current_turn_idx is its first member.
+
+    def turn_span(self, idx: int) -> tuple[int, int]:
+        """The slice [start, end) of initiative_order whose turn idx is in:
+        its initiative group's run, or idx alone."""
+        order = self.initiative_order
+        group = order[idx].get("initiative_group")
+        start, end = idx, idx + 1
+        if group is None:
+            return start, end
+        while start > 0 and order[start - 1].get("initiative_group") == group:
+            start -= 1
+        while end < len(order) and order[end].get("initiative_group") == group:
+            end += 1
+        return start, end
+
+    def current_turn_group(self) -> list[dict]:
+        """Everyone whose turn it is (the active combatant's initiative
+        group, or just them); [] outside combat."""
+        if self.phase != Phase.COMBAT or not self.initiative_order:
+            return []
+        start, end = self.turn_span(self.current_turn_idx)
+        return self.initiative_order[start:end]
+
+    def is_last_turn(self) -> bool:
+        if not self.initiative_order:
+            return True
+        return self.turn_span(self.current_turn_idx)[1] >= len(self.initiative_order)
+
+    def is_first_turn(self) -> bool:
+        """Whether it's round 1's first turn, so there is no turn before it."""
+        return self.round_number <= 1 and (
+            not self.initiative_order or self.turn_span(self.current_turn_idx)[0] == 0
+        )
+
+    def turn_is_dead(self) -> bool:
+        """Whether everyone whose turn it is is dead. Someone dying still has
+        a turn: it's when they make their death save."""
+        return all(death_state(c) == DEAD for c in self.current_turn_group())
+
+    def upcoming_turns(self, skip_dead: bool) -> list[list[dict]]:
+        """The turns after this one, soonest first, once round the order;
+        with `skip_dead`, leaving out the ones Next would pass over."""
+        order = self.initiative_order
+        turns = []
+        start = 0
+        while start < len(order):
+            span_end = self.turn_span(start)[1]
+            turns.append(order[start:span_end])
+            start = span_end
+        now = next(
+            i
+            for i, turn in enumerate(turns)
+            if any(c is order[self.current_turn_idx] for c in turn)
+        )
+        upcoming = turns[now + 1 :] + turns[:now]
+        if not skip_dead:
+            return upcoming
+        return [turn for turn in upcoming if any(death_state(c) != DEAD for c in turn)]
+
+    def pass_turn(self) -> bool:
+        """Make it the next turn's; True when that starts a new round (counted
+        in round_number). What the turn passing ticks is the caller's."""
+        new_round = self.is_last_turn()
+        if not new_round:
+            self.current_turn_idx = self.turn_span(self.current_turn_idx)[1]
+        else:
+            self.round_number += 1
+            self.current_turn_idx = 0
+        return new_round
+
+    def step_back(self, skip_dead: bool) -> bool:
+        """Make it the previous turn's (the last one of the round before,
+        from a round's first turn), changing nothing else; with `skip_dead`,
+        the last turn Next wouldn't have passed over. True when it went back
+        a round."""
+        went_back_a_round = False
+        for _ in initiative_units(self.initiative_order):
+            start = self.turn_span(self.current_turn_idx)[0]
+            if start > 0:
+                self.current_turn_idx = self.turn_span(start - 1)[0]
+            else:
+                self.round_number -= 1
+                last = len(self.initiative_order) - 1
+                self.current_turn_idx = self.turn_span(last)[0]
+                went_back_a_round = True
+            if not (skip_dead and self.turn_is_dead()) or self.is_first_turn():
+                break
+        return went_back_a_round

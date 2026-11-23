@@ -18,7 +18,7 @@ from PyQt6.QtWidgets import (
 )
 
 from Combat.Definitions import Phase
-from Combat.Arena.arena import DASHES_KEY, MOVED_KEY
+from Combat.Fight.fight import initiative_units, start_turn, unit_label
 from Combat.PlayerLog import has_round_events
 from Model.Content.CombatModifiers import AtTurnEnd, AtTurnStart
 
@@ -35,62 +35,22 @@ from .undo import undoable
 INITIATIVE_KEY = "_initiative"
 
 
-def initiative_units(chars: list[dict]) -> list[list[dict]]:
-    """`chars` as the turns they take: each initiative group (the
-    "initiative_group" its members share, at its first member's place) as
-    one, and everyone else on their own."""
-    units: list[list[dict]] = []
-    groups: dict[str, list[dict]] = {}
-    for char in chars:
-        group = char.get("initiative_group")
-        if group is None:
-            units.append([char])
-        elif group in groups:
-            groups[group].append(char)
-        else:
-            groups[group] = [char]
-            units.append(groups[group])
-    return units
-
-
-def unit_label(unit: list[dict]) -> str:
-    """How the initiative screen names a turn: "Goblin Warriors (6)" for a
-    group, the combatant's name otherwise."""
-    group = unit[0].get("initiative_group")
-    return f"{group} ({len(unit)})" if group else unit[0]["name"]
-
-
 class TurnsMixin(CombatWindowState):
     """Mixin for turn and initiative management. An initiative group (see
     initiative_units) rolls once and stands together in initiative_order, so
     its members take one turn: current_turn_idx is its first member."""
 
     def _turn_span(self, idx: int) -> tuple[int, int]:
-        """The slice [start, end) of initiative_order whose turn idx is in:
-        its initiative group's run, or idx alone."""
-        order = self.initiative_order
-        group = order[idx].get("initiative_group")
-        start, end = idx, idx + 1
-        if group is None:
-            return start, end
-        while start > 0 and order[start - 1].get("initiative_group") == group:
-            start -= 1
-        while end < len(order) and order[end].get("initiative_group") == group:
-            end += 1
-        return start, end
+        """Fight.turn_span (Combat/Fight/fight.py)."""
+        return self.fight.turn_span(idx)
 
     def _current_turn_group(self) -> list[dict]:
-        """Everyone whose turn it is (the active combatant's initiative group,
-        or just them); [] outside combat."""
-        if self.phase != Phase.COMBAT or not self.initiative_order:
-            return []
-        start, end = self._turn_span(self.current_turn_idx)
-        return self.initiative_order[start:end]
+        """Fight.current_turn_group (Combat/Fight/fight.py)."""
+        return self.fight.current_turn_group()
 
     def _is_last_turn(self) -> bool:
-        if not self.initiative_order:
-            return True
-        return self._turn_span(self.current_turn_idx)[1] >= len(self.initiative_order)
+        """Fight.is_last_turn (Combat/Fight/fight.py)."""
+        return self.fight.is_last_turn()
 
     @undoable
     def _advance_turn(self):
@@ -130,55 +90,26 @@ class TurnsMixin(CombatWindowState):
             self._log_event(text, public=False)
 
     def _turn_is_dead(self) -> bool:
-        """Whether everyone whose turn it is is dead. Someone dying still has
-        a turn: it's when they make their death save."""
-        return all(
-            self._char_death_state(c) == "dead" for c in self._current_turn_group()
-        )
+        """Fight.turn_is_dead (Combat/Fight/fight.py)."""
+        return self.fight.turn_is_dead()
 
     def _upcoming_turns(self) -> list[list[dict]]:
-        """The turns after this one, soonest first, once round the order,
-        leaving out the ones Next would pass over."""
-        order = self.initiative_order
-        turns = []
-        start = 0
-        while start < len(order):
-            span_end = self._turn_span(start)[1]
-            turns.append(order[start:span_end])
-            start = span_end
-        now = next(
-            i
-            for i, turn in enumerate(turns)
-            if any(c is order[self.current_turn_idx] for c in turn)
-        )
-        upcoming = turns[now + 1 :] + turns[:now]
-        if not self.settings.skip_dead_turns:
-            return upcoming
-        return [
-            turn
-            for turn in upcoming
-            if any(self._char_death_state(c) != "dead" for c in turn)
-        ]
+        """Fight.upcoming_turns (Combat/Fight/fight.py)."""
+        return self.fight.upcoming_turns(self.settings.skip_dead_turns)
 
     def _pass_turn(self):
         """Move on one turn: its round, and what the turn passing ticks. A
         skipped turn passes like any other, so durations stay right."""
         ended = self._current_turn_group()
-        new_round = self._is_last_turn()
-        if not new_round:
-            self.current_turn_idx = self._turn_span(self.current_turn_idx)[1]
-        else:
-            self.round_number += 1
-            self.current_turn_idx = 0
+        new_round = self.fight.pass_turn()
+        if new_round:
             self._log_event(f"--- Round {self.round_number} ---", note_turn=False)
             self.round_label.setText(f"Round {self.round_number}")
             self._tick_active_features()
         # The action economy (Action/Bonus Action/Reaction) resets for whoever's
         # turn is now starting — other combatants keep their tallies until theirs does.
         for new_active in self._current_turn_group():
-            new_active["action_uses"] = {}
-            new_active.pop(MOVED_KEY, None)  # its feet moved on the map
-            new_active.pop(DASHES_KEY, None)  # and the Dashes it took
+            start_turn(new_active)  # its actions back, its movement anew
             if self._char_death_state(new_active) != "dead":
                 self._start_monster_turn(new_active)
             self._rebuild_card(new_active)
@@ -191,10 +122,8 @@ class TurnsMixin(CombatWindowState):
         self._remind_lasting_areas(self._current_turn_group(), ended)
 
     def _is_first_turn(self) -> bool:
-        """Whether it's round 1's first turn, so there is no turn before it."""
-        return self.round_number <= 1 and (
-            not self.initiative_order or self._turn_span(self.current_turn_idx)[0] == 0
-        )
+        """Fight.is_first_turn (Combat/Fight/fight.py)."""
+        return self.fight.is_first_turn()
 
     def _previous_turn(self):
         """Previous button handler: take back a Next press made by mistake.
@@ -213,19 +142,8 @@ class TurnsMixin(CombatWindowState):
         """Make it the previous turn's (the last one of the round before, from
         a round's first turn), changing nothing else. With the "skip dead"
         setting on, that's the last turn Next wouldn't have passed over."""
-        for _ in initiative_units(self.initiative_order):
-            start = self._turn_span(self.current_turn_idx)[0]
-            if start > 0:
-                self.current_turn_idx = self._turn_span(start - 1)[0]
-            else:
-                self.round_number -= 1
-                self.current_turn_idx = self._turn_span(len(self.initiative_order) - 1)[
-                    0
-                ]
-                self.round_label.setText(f"Round {self.round_number}")
-            skip = self.settings.skip_dead_turns and self._turn_is_dead()
-            if not skip or self._is_first_turn():
-                break
+        if self.fight.step_back(self.settings.skip_dead_turns):
+            self.round_label.setText(f"Round {self.round_number}")
         self._log_turn_start(back=True)
         self._refresh_turn()
         self._on_turn_changed()

@@ -84,3 +84,77 @@ def test_a_hit_on_the_paralyzed_from_within_5_feet_is_critical():
     assert fight.critical_against(fighter, near)
     assert not fight.critical_against(fighter, far)
     assert not fight.critical_against(fighter, None)
+
+
+# ---- The turn order (step 5.3) ----
+
+from Combat.Arena.arena import DASHES_KEY, MOVED_KEY  # noqa: E402
+from Combat.Fight.fight import start_turn  # noqa: E402
+
+
+def _in_combat(*chars: dict) -> Fight:
+    return Fight(
+        characters=list(chars), initiative_order=list(chars), phase=Phase.COMBAT
+    )
+
+
+def _c(name: str, hp: int = 10, group: str | None = None) -> dict:
+    char = {"name": name, "hp": hp, "max_hp": 10, "conditions": []}
+    if group:
+        char["initiative_group"] = group
+    return char
+
+
+def test_an_initiative_group_takes_one_turn():
+    a, g1, g2, b = _c("A"), _c("G1", group="G"), _c("G2", group="G"), _c("B")
+    fight = _in_combat(a, g1, g2, b)
+    assert fight.turn_span(2) == (1, 3)
+    assert not fight.pass_turn()
+    assert fight.current_turn_group() == [g1, g2]
+    assert not fight.pass_turn() and fight.current_turn_group() == [b]
+
+
+def test_the_last_turn_passes_into_a_new_round():
+    a, b = _c("A"), _c("B")
+    fight = _in_combat(a, b)
+    fight.current_turn_idx = 1
+    assert fight.is_last_turn() and fight.pass_turn()
+    assert (fight.round_number, fight.current_turn_idx) == (2, 0)
+
+
+def test_no_turn_group_outside_combat():
+    fight = Fight(characters=[_c("A")], initiative_order=[_c("A")])
+    assert fight.current_turn_group() == []
+
+
+def test_stepping_back_from_a_rounds_first_turn_goes_to_the_last_one():
+    a, b, c = _c("A"), _c("B"), _c("C")
+    fight = _in_combat(a, b, c)
+    fight.round_number = 2
+    assert fight.step_back(skip_dead=False)
+    assert (fight.round_number, fight.current_turn_idx) == (1, 2)
+    assert not fight.step_back(skip_dead=False) and fight.current_turn_idx == 1
+
+
+def test_stepping_back_passes_over_dead_turns_when_asked():
+    # A monster at 0 Hit Points without death saves is dead.
+    a, dead, c = _c("A"), _c("Goblin", hp=0), _c("C")
+    fight = _in_combat(a, dead, c)
+    fight.current_turn_idx = 2
+    fight.step_back(skip_dead=True)
+    assert fight.current_turn_idx == 0
+    assert fight.upcoming_turns(skip_dead=True) == [[c]]
+    assert fight.upcoming_turns(skip_dead=False) == [[dead], [c]]
+
+
+def test_round_ones_first_turn_has_none_before_it():
+    fight = _in_combat(_c("A"), _c("B"))
+    assert fight.is_first_turn()
+    fight.round_number = 2
+    assert not fight.is_first_turn()
+
+
+def test_a_turn_starting_gives_back_actions_and_movement():
+    char = {"action_uses": {"Action": 1}, MOVED_KEY: 25, DASHES_KEY: 1}
+    start_turn(char)
+    assert char == {"action_uses": {}}

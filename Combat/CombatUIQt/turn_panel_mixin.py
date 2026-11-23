@@ -91,7 +91,7 @@ from .player_view import (
     player_view_rows,
 )
 from .state import CombatWindowState
-from .turns_mixin import unit_label
+from Combat.Fight.fight import unit_label
 from .undo import undoable
 
 _TURN_PANEL_WIDTH = 330
