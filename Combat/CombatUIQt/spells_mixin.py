@@ -21,7 +21,7 @@ from Combat.Effects.active_effects import (
 from Combat.PlayerCombatant import max_pact_slots
 from Core.Definitions import Condition
 from Combat.Fight.effect_options import PactSlot, casting_time_cost
-from .resources import spell_slot_lack
+from Combat.Fight.resources import spell_slot_lack
 from .state import CombatWindowState
 from .undo import undoable
 

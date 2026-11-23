@@ -11,7 +11,7 @@ from Combat.Effects.active_effects import (
 )
 from Presentation.FeatureCards import feature_label
 from Combat.Fight.effect_options import feature_action_cost
-from .resources import feature_lack
+from Combat.Fight.resources import feature_lack
 from Combat.Fight.stats import _default_stats, increment_named_stat
 from .state import CombatWindowState
 from .undo import undoable

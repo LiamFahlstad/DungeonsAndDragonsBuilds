@@ -90,7 +90,7 @@ from Combat.Fight.effect_options import (
 from .features_mixin import FEATURE_BADGE_COLOR
 from Combat.Fight.monster_actions import legendary_resistances_left, roll_dice
 from .player_view import note_condition_immunity
-from .resources import feature_lack, monster_action_lack, spell_slot_lack
+from Combat.Fight.resources import feature_lack, monster_action_lack, spell_slot_lack
 from Combat.Fight.saves import (
     ABILITIES,
     ATTACK_ROLL,

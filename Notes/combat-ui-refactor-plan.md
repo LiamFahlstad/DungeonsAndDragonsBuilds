@@ -64,7 +64,7 @@ and the few others a step touches, not the character-sheet tests. Steps 3,
 | 2 | A typed combatant (`Combatant` TypedDict) | M | **Done** 2026-11-22, revised (R8): the schema and a key test; annotating signatures moved to step 5 |
 | 3 | The Use / Cast dialog as a class, its form-to-effects logic Qt-free | L | 3a **done** 2026-11-22 (R9): `use_cast/form.py`, dialog 1,580 → 1,440 lines; 3b **done** 2026-11-22 (R10): `_UseCastDialog`, `run()` 616 lines + 44 methods; 3c's move **done** (R11): `use_cast/dialog.py`, `conditions_mixin.py` 3,500 → 1,674 lines; 3c's split **done**, revised (R12): `run()` is 14 lines calling 10 builder methods, the longest 126; 3d **done** (R13): `do_apply` 146 → 50 lines over Qt-free `read_amount`, `check_applicable` and `build_effect`; reviewed (R14): no behaviour change; **step 3 done** |
 | 4 | The window built from panels, shortcuts as a table | M | **Done** 2026-11-23 (R15, R16): `_build_window` 680 → 13 lines over 12 builders (the longest 111); the shortcuts a table (`shortcuts.py`) checked against KEYBOARD_SHORTCUTS.md |
-| 5 | The Qt-free fight core (`Combat/Fight/`), one mixin at a time | XL | 5.1 **done** 2026-11-23 (R17): seven Qt-free modules moved to `Combat/Fight/`; 5.5's guard test in place; 5.2 **done** (R18): `Fight` holds the fight's state; 5.3 started (R19, R20): damage's defenses and arithmetic in `Combat/Fight/damage.py`, health (death state, healing, Temporary Hit Points, Death Saving Throws) in `Combat/Fight/health.py`; the map's questions (distance, sight, cover, range, Critical Hits within 5 feet) are `Fight` methods (R21); an attack roll's check is `Combat/Fight/attacks.py` (R22); gaining and losing a condition is `Combat/Fight/conditions.py` (R23); the turn order is `Fight`'s (R24); casting's slots, recipients and timers are `Combat/Fight/spells.py` (R25); joining and leaving the turn order are `Fight`'s, summons' questions and carry-over `Combat/Fight/summons.py` (R26); Wild Shape's uses and badge `Combat/Fight/wild_shape.py` (R27); a short rest's regains and Hit Dice `Combat/Fight/rests.py` (R28); saving, loading and replaying the fight `Combat/Fight/log.py` (R29); **5.3's areas are each started; what's left of them (features, triggers, the cascades a condition sets off, `_log_event`) waits for 5.4's `Asker` and step 6** |
+| 5 | The Qt-free fight core (`Combat/Fight/`), one mixin at a time | XL | 5.1 **done** 2026-11-23 (R17): seven Qt-free modules moved to `Combat/Fight/`; 5.5's guard test in place; 5.2 **done** (R18): `Fight` holds the fight's state; 5.3 started (R19, R20): damage's defenses and arithmetic in `Combat/Fight/damage.py`, health (death state, healing, Temporary Hit Points, Death Saving Throws) in `Combat/Fight/health.py`; the map's questions (distance, sight, cover, range, Critical Hits within 5 feet) are `Fight` methods (R21); an attack roll's check is `Combat/Fight/attacks.py` (R22); gaining and losing a condition is `Combat/Fight/conditions.py` (R23); the turn order is `Fight`'s (R24); casting's slots, recipients and timers are `Combat/Fight/spells.py` (R25); joining and leaving the turn order are `Fight`'s, summons' questions and carry-over `Combat/Fight/summons.py` (R26); Wild Shape's uses and badge `Combat/Fight/wild_shape.py` (R27); a short rest's regains and Hit Dice `Combat/Fight/rests.py` (R28); saving, loading and replaying the fight `Combat/Fight/log.py` (R29); 5.3's areas are each started; what's left of them (features, triggers, the cascades a condition sets off, `_log_event`) waits for 5.4's `Asker` and step 6; 5.4 started (R30): the `Asker` asks "out of resources, go ahead anyway?", and the checks are `Combat/Fight/resources.py`; **5.4 continues with the trigger pop-up** |
 | 6 | One refresh path after every GM operation | M | Not started |
 | 7 | Mixins into composed views and one module per dialog; `CombatWindowState` gone | L | Not started |
 | 8 | Docs, agents and skills point at the new layout | S | Not started |
@@ -1125,6 +1125,34 @@ whole on purpose, each with its reason, and the full suite passes.
     timer out, and for `undo.py`, which moves after step 6 too (R17).
   - **Tests:** `tests/test_fight_log.py` (9 tests without Qt).
     `logging_mixin.py` 791 → 518 lines. The full suite passes (12,144).
+
+- **R30 (step 5.4, the Asker's first question, 2026-11-23).** The fight
+  asks the GM through an `Asker` (`Combat/Fight/asker.py`), a Protocol with
+  one question so far: `go_ahead_anyway(char, doing, missing)`, "out of
+  resources, go ahead anyway?".
+  - **`Combat/Fight/resources.py`:** the checks moved there unchanged from
+    `Combat/CombatUIQt/resources.py` (`action_lack`, `feature_uses_left`,
+    `feature_lack`, `spell_slot_lack`, `monster_action_lack`,
+    `legendary_resistance_lack`), plus `go_ahead_anyway(asker, char,
+    doing, lacks)`, which asks only when something is missing. Their
+    importers (four mixins, three tests) moved with them.
+  - **The window's Asker** is `Combat/CombatUIQt/asker.py`'s
+    `WindowAsker`, held as `CombatAppQt.asker`. It asks with the same
+    `QMessageBox.question` as before, and a No says why on the status
+    line, so the tests' `answer_out_of_resources` still answers it.
+    `ResourcesMixin` keeps `_action_lack` (no action economy between
+    encounters) and `_go_ahead_anyway`, now a one-line call through the
+    Asker.
+  - **Tests** answer with `ScriptedAsker`, which takes its answers from a
+    list and keeps each question asked. `tests/test_fight_resources.py`
+    has 4 tests without Qt. The full suite passes (12,148).
+  - **Only one question, on purpose.** The trigger pop-up
+    (`_ask_triggers`) and the initiative tie-break join the Protocol when
+    the code that asks them moves into `Combat/Fight/`, so nothing is in
+    it that no Qt-free code calls. The other yes/no questions (End
+    Encounter, Long Rest, the Map Painter's unsaved map) confirm a click
+    on the window rather than ask in the middle of a rule, so they stay
+    dialogs.
 
 ## Discovered issues
 

@@ -17,6 +17,7 @@ from Model.Creatures.Combatants import BasicCombatantData, Visibility
 from Utils.QtMessages import install_qt_message_handler
 
 from .arena_mixin import ArenaMixin
+from .asker import WindowAsker
 from .cards_mixin import CardsMixin
 from .conditions_mixin import ConditionsMixin
 from .damage_mixin import DamageMixin
@@ -101,6 +102,7 @@ class CombatAppQt(
 
         # ---- data ----
         self.fight = Fight()
+        self.asker = WindowAsker(self)
         # The tracked party by character name; who of them is in the window
         # depends on the encounter (_set_party).
         self._party_sheets = {}

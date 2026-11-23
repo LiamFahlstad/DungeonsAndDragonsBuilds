@@ -66,7 +66,7 @@ from Combat.Fight.monster_actions import (
     start_of_turn_traits,
 )
 from .player_server import PLAYER_PORT
-from .resources import legendary_resistance_lack, monster_action_lack
+from Combat.Fight.resources import legendary_resistance_lack, monster_action_lack
 from .conditions_mixin import hit_rider
 from Combat.Fight.effect_options import (
     badge_trigger_row,

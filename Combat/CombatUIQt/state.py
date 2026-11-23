@@ -41,6 +41,7 @@ from Combat.Arena.geometry import Cell
 from Combat.Arena.lasting import AreaPrompt
 from Combat.Arena.ranges import AttackRange, RangeCheck
 from Combat.Effects.sight import Seen
+from Combat.Fight.asker import Asker
 from Combat.Fight.fight import Fight
 from Combat.Effects.triggers import (
     AttackOutcome,
@@ -81,6 +82,9 @@ class CombatWindowState:
     # The fight's state lives in a Fight (Combat/Fight/fight.py); these
     # names read and write it, as they did when they were attributes.
     fight: Fight
+    # How the fight's rules ask the GM something (Combat/Fight/asker.py):
+    # with the window's dialogs (asker.py's WindowAsker).
+    asker: Asker
 
     @property
     def characters(self) -> list[dict]:

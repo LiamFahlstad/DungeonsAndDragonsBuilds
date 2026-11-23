@@ -13,7 +13,7 @@ from Builds.Examples.Y2024_Monk_Elements_KaidaEmberfist import (
     Y2024MonkElementsKaidaEmberfistCharacterBuilder as Kaida,
 )
 from Combat.Fight.effect_options import effect_options
-from Combat.CombatUIQt.resources import feature_lack
+from Combat.Fight.resources import feature_lack
 from Combat.Definitions import Action
 from Combat.Monsters.CR_2.monsters import Ogre
 from Core.Definitions import DamageType

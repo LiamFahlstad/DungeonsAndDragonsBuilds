@@ -1,4 +1,5 @@
-"""Running out in the combat UI (Combat/CombatUIQt/resources.py): using
+"""Running out in the combat UI (Combat/Fight/resources.py, asked through
+the window's Asker, Combat/CombatUIQt/asker.py): using
 something the source has none left of asks the GM first, instead of
 refusing. Yes uses it anyway; No leaves everything as it was, with no undo
 step. The other resources (slots, feature uses, recharges, legendary
@@ -10,7 +11,7 @@ from PyQt6.QtWidgets import QDialog, QMessageBox
 
 from CharacterContent.Spells.SpellFactory import SpellFactory
 from Combat.Combatants import Pirate, Tiger
-from Combat.CombatUIQt.resources import action_lack
+from Combat.Fight.resources import action_lack
 from tests._combat_ui import answer_out_of_resources, make_ui
 
 

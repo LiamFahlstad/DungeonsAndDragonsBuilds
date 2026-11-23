@@ -592,7 +592,7 @@ def test_paladins_smite_counts_its_one_free_casting():
     from CharacterContent.Features.ClassFeatures.Paladin.PaladinFeatures import (
         PaladinsSmite,
     )
-    from Combat.CombatUIQt.resources import feature_lack
+    from Combat.Fight.resources import feature_lack
 
     uses = PaladinsSmite().uses
     assert uses is not None
