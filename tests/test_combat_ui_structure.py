@@ -37,7 +37,6 @@ LONG_FUNCTIONS = {
     "Combat/CombatUIQt/conditions_mixin.py::ConditionsMixin._apply_effect_to_targets": 236,
     "Combat/CombatUIQt/dialogs_mixin.py::DialogsMixin._show_statistics": 177,
     "Combat/CombatUIQt/effect_options.py::_described_option": 161,
-    "Combat/CombatUIQt/window_mixin.py::WindowMixin._build_window": 680,
 }
 
 # 207 at step 0; +4 at step 3c, so the Use / Cast dialog (use_cast/dialog.py)

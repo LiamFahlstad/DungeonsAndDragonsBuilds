@@ -116,7 +116,8 @@ verification passes per step unless asked.
 What the code already gives, found while writing this:
 
 - **The window** ([window_mixin.py](../Combat/CombatUIQt/window_mixin.py),
-  `_build_window`) is a row of three parts: the cards' scroll area
+  `_build_window`, whose `_build_frame` lays it out since the refactor
+  plan's step 4) is a row of three parts: the cards' scroll area
   (`self._scroll_area`), the turn column, and the control panel. Only the
   first part changes between views; the other two stay as they are.
 - **Selection** is the app's, not the cards': a left click calls

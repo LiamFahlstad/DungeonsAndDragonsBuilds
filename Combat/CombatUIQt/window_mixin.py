@@ -1,5 +1,6 @@
 """Window/UI construction mixin for CombatAppQt."""
 
+import functools
 import sys
 
 from PyQt6.QtCore import QEvent, Qt, QTimer
@@ -22,6 +23,7 @@ from PyQt6.QtWidgets import (
 from Combat.Definitions import Phase
 from Core.Definitions import DamageType
 from Core.Definitions import get_damage_type_color
+from .shortcuts import SHORTCUTS
 from .state import CombatWindowState, saved_label
 
 # How long the status line stays up (WindowMixin._show_status).
@@ -248,6 +250,21 @@ class WindowMixin(CombatWindowState):
         self.temp_hp_input.selectAll()
 
     def _build_window(self):
+        root_layout, panel, panel_layout = self._build_frame()
+        self._build_selection_labels(panel_layout)
+        self._build_turn_tracker(panel_layout)
+        columns_layout, left_col = self._build_damage_controls()
+        self._build_healing_controls(left_col)
+        self._build_d20_roll(left_col)
+        self._build_more_controls(panel_layout, columns_layout, left_col)
+        self._build_action_buttons(panel_layout)
+        self._build_turn_buttons(panel_layout)
+        self._build_view_buttons(panel_layout)
+        self._finish_window(root_layout, panel)
+        self._build_shortcuts()
+
+    def _build_frame(self) -> tuple[QHBoxLayout, QFrame, QVBoxLayout]:
+        """The window: the cards (or the battle map) and the turn column, and the control panel's frame."""
         self._window = QMainWindow()
         self._window.setWindowTitle("DnD Combat Engine")
         self._window.setMinimumSize(900, 600)
@@ -302,7 +319,10 @@ class WindowMixin(CombatWindowState):
         panel_layout = QVBoxLayout(panel)
         panel_layout.setContentsMargins(10, 10, 10, 10)
         panel_layout.setSpacing(6)
+        return root_layout, panel, panel_layout
 
+    def _build_selection_labels(self, panel_layout: QVBoxLayout):
+        """Who's the source and who's targeted, the status line and Use / Cast."""
         # Selected indicator (source — left-click)
         self.selected_label = QLabel("Source: None")
         self.selected_label.setObjectName("selectedLabel")
@@ -347,6 +367,8 @@ class WindowMixin(CombatWindowState):
         info_cast_row.addWidget(self._use_cast_btn, stretch=2)
         panel_layout.addLayout(info_cast_row)
 
+    def _build_turn_tracker(self, panel_layout: QVBoxLayout):
+        """The round, the timers and the turn tracker."""
         # Round indicator + session/player timers (compact, combined rows)
         panel_layout.addWidget(self._build_timer_section())
         panel_layout.addWidget(self._make_divider())
@@ -366,6 +388,8 @@ class WindowMixin(CombatWindowState):
 
         panel_layout.addWidget(self._make_divider())
 
+    def _build_damage_controls(self) -> tuple[QHBoxLayout, QVBoxLayout]:
+        """The controls' two columns, and the Damage section in the left one."""
         # Two-column layout for controls
         columns_layout = QHBoxLayout()
         columns_layout.setSpacing(6)
@@ -453,7 +477,10 @@ class WindowMixin(CombatWindowState):
         left_col.addLayout(dmg_btn_row)
 
         left_col.addWidget(self._make_divider())
+        return columns_layout, left_col
 
+    def _build_healing_controls(self, left_col: QVBoxLayout):
+        """The Heal and Temp HP sections."""
         # Heal section
         left_col.addWidget(self._section_header("Heal"))
         self.heal_input = _AmountField()
@@ -482,6 +509,8 @@ class WindowMixin(CombatWindowState):
 
         left_col.addWidget(self._make_divider())
 
+    def _build_d20_roll(self, left_col: QVBoxLayout):
+        """The free d20 roll."""
         # d20 roll section (advantage / neutral / disadvantage)
         left_col.addWidget(self._section_header("d20 Roll"))
         roll_row = QHBoxLayout()
@@ -501,6 +530,13 @@ class WindowMixin(CombatWindowState):
 
         left_col.addStretch()
 
+    def _build_more_controls(
+        self,
+        panel_layout: QVBoxLayout,
+        columns_layout: QHBoxLayout,
+        left_col: QVBoxLayout,
+    ):
+        """The right column, collapsed until asked for: conditions, visibility, spell slots and action economy."""
         # Right column: Conditions, Visibility, Spell Slots, Action Economy.
         # Rarely clicked (Use / Cast, the card menu and the shortcuts do the
         # same): collapsed until asked for.
@@ -606,6 +642,8 @@ class WindowMixin(CombatWindowState):
 
         panel_layout.addWidget(self._make_divider())
 
+    def _build_action_buttons(self, panel_layout: QVBoxLayout):
+        """Load Encounter, Add Combatant, End Encounter and the rests."""
         # Actions section
         panel_layout.addWidget(self._section_header("Actions"))
 
@@ -639,6 +677,8 @@ class WindowMixin(CombatWindowState):
         panel_layout.addLayout(rest_row)
         self._refresh_rest_buttons()
 
+    def _build_turn_buttons(self, panel_layout: QVBoxLayout):
+        """Undo, Previous and Next Combatant."""
         # Next turn button (hidden during initiative phase)
         self._turn_divider = self._make_divider()
         self._turn_divider.hide()
@@ -671,6 +711,8 @@ class WindowMixin(CombatWindowState):
         self._log_status_label.setObjectName("secondary")
         panel_layout.addWidget(self._log_status_label)
 
+    def _build_view_buttons(self, panel_layout: QVBoxLayout):
+        """The logs, Statistics, Rules, the players' views and Settings."""
         # Logs, Statistics, Rules, the players' views, Settings, two to a row
         info_grid = QGridLayout()
         info_grid.setSpacing(6)
@@ -701,6 +743,8 @@ class WindowMixin(CombatWindowState):
 
         panel_layout.addStretch()
 
+    def _finish_window(self, root_layout: QHBoxLayout, panel: QFrame):
+        """The panel scrolls on a short screen; the window shows its first view."""
         # On a short screen the panel scrolls rather than squashing its rows.
         panel_scroll = QScrollArea()
         panel_scroll.setObjectName("controlPanelScroll")
@@ -713,197 +757,27 @@ class WindowMixin(CombatWindowState):
         panel_scroll.setFixedWidth(panel.width() + scroll_bar.sizeHint().width())
         root_layout.addWidget(panel_scroll)
 
-        # Shortcuts that must stand down (fully disabled, not just a no-op
-        # handler) while a combo box has focus — see _update_combo_sensitive_shortcuts.
+    def _build_shortcuts(self):
+        """The keyboard shortcuts."""
+        # Each shortcut in the table, by its name. The combo-sensitive ones
+        # stand down (fully disabled, not just a no-op handler) while a combo
+        # box has focus: see _update_combo_sensitive_shortcuts.
+        made: dict[str, list[QShortcut]] = {}
         self._combo_sensitive_shortcuts: list[QShortcut] = []
-
-        # Keyboard shortcuts: A / B / R log an Action / Bonus Action / Reaction use
-        # for the current source. These naturally yield to any focused text field.
-        self._action_shortcuts = []
-        for key, action_type in self.ACTION_ECONOMY_SHORTCUTS.items():
-            shortcut = QShortcut(QKeySequence(key), self._window)
-            shortcut.activated.connect(lambda a=action_type: self._add_action_use(a))
-            self._action_shortcuts.append(shortcut)
-        self._combo_sensitive_shortcuts += self._action_shortcuts
-
-        # C / Ctrl+C / Ctrl+Shift+C: Concentrating on the source, cleared from the target.
-        self._concentration_shortcut = QShortcut(QKeySequence("C"), self._window)
-        self._concentration_shortcut.activated.connect(self._shortcut_add_concentration)
-        self._remove_concentration_shortcut = QShortcut(
-            QKeySequence("Ctrl+C"), self._window
-        )
-        self._remove_concentration_shortcut.activated.connect(
-            self._shortcut_remove_concentration
-        )
-        self._clear_target_conditions_shortcut = QShortcut(
-            QKeySequence("Ctrl+Shift+C"), self._window
-        )
-        self._clear_target_conditions_shortcut.activated.connect(
-            self._shortcut_clear_target_conditions
-        )
-        # Shift+C: the Custom Condition dialog, for every target.
-        self._custom_condition_shortcut = QShortcut(
-            QKeySequence("Shift+C"), self._window
-        )
-        self._custom_condition_shortcut.activated.connect(
-            self._show_custom_condition_dialog
-        )
-        self._combo_sensitive_shortcuts += [
-            self._concentration_shortcut,
-            self._remove_concentration_shortcut,
-            self._clear_target_conditions_shortcut,
-            self._custom_condition_shortcut,
-        ]
-
-        # Ctrl+Z: Undo Last Action
-        self._undo_shortcut = QShortcut(QKeySequence("Ctrl+Z"), self._window)
-        self._undo_shortcut.activated.connect(self._undo_last)
-
-        # Escape: clear source and target selection
-        self._clear_selection_shortcut = QShortcut(
-            QKeySequence(Qt.Key.Key_Escape), self._window
-        )
-        self._clear_selection_shortcut.activated.connect(self._escape_pressed)
-
-        # Enter / Return: Next Combatant / Next Round
-        self._next_turn_shortcuts = [
-            QShortcut(QKeySequence(Qt.Key.Key_Return), self._window),
-            QShortcut(QKeySequence(Qt.Key.Key_Enter), self._window),
-        ]
-        for shortcut in self._next_turn_shortcuts:
-            shortcut.activated.connect(self._shortcut_next_turn)
-
-        # Shift+Enter / Shift+Return: Previous turn
-        self._previous_turn_shortcuts = [
-            QShortcut(QKeySequence("Shift+Return"), self._window),
-            QShortcut(QKeySequence("Shift+Enter"), self._window),
-        ]
-        for shortcut in self._previous_turn_shortcuts:
-            shortcut.activated.connect(self._shortcut_previous_turn)
-
-        # 1-9: cast a spell slot of that level for the source
-        self._spell_slot_shortcuts = []
-        for level in range(1, 10):
-            shortcut = QShortcut(QKeySequence(str(level)), self._window)
-            shortcut.activated.connect(
-                lambda lvl=level: self._cast_spell_slot_level(lvl)
-            )
-            self._spell_slot_shortcuts.append(shortcut)
-        self._combo_sensitive_shortcuts += self._spell_slot_shortcuts
-
-        # N / P (and Left / Right arrow aliases): select next / previous
-        # combatant as source. Shift+N / Shift+P (and Up / Down arrow
-        # aliases): same, as target. A focused text field keeps its own
-        # cursor-movement arrow keys regardless (see the class docstring above).
-        self._cycle_source_next_shortcut = QShortcut(QKeySequence("N"), self._window)
-        self._cycle_source_next_shortcut.activated.connect(
-            lambda: self._cycle_source(1)
-        )
-        self._cycle_source_prev_shortcut = QShortcut(QKeySequence("P"), self._window)
-        self._cycle_source_prev_shortcut.activated.connect(
-            lambda: self._cycle_source(-1)
-        )
-        self._cycle_target_next_shortcut = QShortcut(
-            QKeySequence("Shift+N"), self._window
-        )
-        self._cycle_target_next_shortcut.activated.connect(
-            lambda: self._cycle_target(1)
-        )
-        self._cycle_target_prev_shortcut = QShortcut(
-            QKeySequence("Shift+P"), self._window
-        )
-        self._cycle_target_prev_shortcut.activated.connect(
-            lambda: self._cycle_target(-1)
-        )
-
-        self._cycle_source_right_shortcut = QShortcut(
-            QKeySequence(Qt.Key.Key_Right), self._window
-        )
-        self._cycle_source_right_shortcut.activated.connect(
-            lambda: self._cycle_source(1)
-        )
-        self._cycle_source_left_shortcut = QShortcut(
-            QKeySequence(Qt.Key.Key_Left), self._window
-        )
-        self._cycle_source_left_shortcut.activated.connect(
-            lambda: self._cycle_source(-1)
-        )
-        self._cycle_target_down_shortcut = QShortcut(
-            QKeySequence(Qt.Key.Key_Down), self._window
-        )
-        self._cycle_target_down_shortcut.activated.connect(
-            lambda: self._cycle_target(1)
-        )
-        self._cycle_target_up_shortcut = QShortcut(
-            QKeySequence(Qt.Key.Key_Up), self._window
-        )
-        self._cycle_target_up_shortcut.activated.connect(lambda: self._cycle_target(-1))
-        self._combo_sensitive_shortcuts += [
-            self._cycle_source_next_shortcut,
-            self._cycle_source_prev_shortcut,
-            self._cycle_target_next_shortcut,
-            self._cycle_target_prev_shortcut,
-            self._cycle_source_right_shortcut,
-            self._cycle_source_left_shortcut,
-            self._cycle_target_down_shortcut,
-            self._cycle_target_up_shortcut,
-        ]
-
-        # Space: select whoever's turn it is as the source
-        self._select_active_shortcut = QShortcut(
-            QKeySequence(Qt.Key.Key_Space), self._window
-        )
-        self._select_active_shortcut.activated.connect(
-            self._shortcut_select_active_source
-        )
-        self._combo_sensitive_shortcuts.append(self._select_active_shortcut)
-
-        # Shift+A / D / H / T: jump straight into the Attack roll field or the
-        # Damage / Heal / Temp HP amount field
-        self._focus_attack_roll_shortcut = QShortcut(
-            QKeySequence("Shift+A"), self._window
-        )
-        self._focus_attack_roll_shortcut.activated.connect(
-            self._focus_attack_roll_input
-        )
-        self._focus_damage_shortcut = QShortcut(QKeySequence("D"), self._window)
-        self._focus_damage_shortcut.activated.connect(self._focus_damage_input)
-        self._focus_heal_shortcut = QShortcut(QKeySequence("H"), self._window)
-        self._focus_heal_shortcut.activated.connect(self._focus_heal_input)
-        self._focus_temp_hp_shortcut = QShortcut(QKeySequence("T"), self._window)
-        self._focus_temp_hp_shortcut.activated.connect(self._focus_temp_hp_input)
-        self._combo_sensitive_shortcuts += [
-            self._focus_attack_roll_shortcut,
-            self._focus_damage_shortcut,
-            self._focus_heal_shortcut,
-            self._focus_temp_hp_shortcut,
-        ]
-
-        # I: the source's More Info
-        self._more_info_shortcut = QShortcut(QKeySequence("I"), self._window)
-        self._more_info_shortcut.activated.connect(self._show_more_info)
-        self._combo_sensitive_shortcuts.append(self._more_info_shortcut)
-
-        # Ctrl+N: open the Add Combatant dialog
-        # G: the Cards / Arena switch, during combat (ArenaMixin._toggle_view).
-        self._toggle_view_shortcut = QShortcut(QKeySequence("G"), self._window)
-        self._toggle_view_shortcut.activated.connect(self._toggle_view)
-        self._combo_sensitive_shortcuts.append(self._toggle_view_shortcut)
-        self._add_combatant_shortcut = QShortcut(QKeySequence("Ctrl+N"), self._window)
-        self._add_combatant_shortcut.activated.connect(self._show_add_combatant_dialog)
-        self._combo_sensitive_shortcuts.append(self._add_combatant_shortcut)
-
-        # Ctrl+M: the Map Painter (map_painter.py)
-        self._map_painter_shortcut = QShortcut(QKeySequence("Ctrl+M"), self._window)
-        self._map_painter_shortcut.activated.connect(self._show_map_painter)
-        self._combo_sensitive_shortcuts.append(self._map_painter_shortcut)
-
-        # Ctrl+O: open the Load Encounter dialog
-        self._load_encounter_shortcut = QShortcut(QKeySequence("Ctrl+O"), self._window)
-        self._load_encounter_shortcut.activated.connect(
-            self._show_load_encounter_dialog
-        )
-        self._combo_sensitive_shortcuts.append(self._load_encounter_shortcut)
+        for spec in SHORTCUTS:
+            handler = functools.partial(getattr(self, spec.action), *spec.args)
+            for key in spec.keys:
+                shortcut = QShortcut(QKeySequence(key), self._window)
+                shortcut.activated.connect(handler)
+                made.setdefault(spec.name, []).append(shortcut)
+                if spec.combo_sensitive:
+                    self._combo_sensitive_shortcuts.append(shortcut)
+        # The ones the window (and tests) reach for by themselves.
+        self._next_turn_shortcuts = made["next_turn"]
+        self._previous_turn_shortcuts = made["previous_turn"]
+        self._spell_slot_shortcuts = made["spell_slot"]
+        (self._more_info_shortcut,) = made["more_info"]
+        (self._map_painter_shortcut,) = made["map_painter"]
 
         # Keep the shortcuts above disabled while focus is on a combo box, and
         # restored the instant it moves elsewhere (see the method docstring).

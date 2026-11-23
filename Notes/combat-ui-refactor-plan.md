@@ -59,7 +59,7 @@ and the few others a step touches, not the character-sheet tests. Steps 3,
 | 1 | Hygiene: enums for phase and action types, styles into QSS, dead code out | S-M | **Done** 2026-11-22: 1.1, 1.2, 1.6 (R3, R5); 1.3 (R6, R7): inline styles 98 → 23; 1.4 moved to 5.4, 1.5 dropped (R4) |
 | 2 | A typed combatant (`Combatant` TypedDict) | M | **Done** 2026-11-22, revised (R8): the schema and a key test; annotating signatures moved to step 5 |
 | 3 | The Use / Cast dialog as a class, its form-to-effects logic Qt-free | L | 3a **done** 2026-11-22 (R9): `use_cast/form.py`, dialog 1,580 → 1,440 lines; 3b **done** 2026-11-22 (R10): `_UseCastDialog`, `run()` 616 lines + 44 methods; 3c's move **done** (R11): `use_cast/dialog.py`, `conditions_mixin.py` 3,500 → 1,674 lines; 3c's split **done**, revised (R12): `run()` is 14 lines calling 10 builder methods, the longest 126; 3d **done** (R13): `do_apply` 146 → 50 lines over Qt-free `read_amount`, `check_applicable` and `build_effect`; reviewed (R14): no behaviour change; **step 3 done** |
-| 4 | The window built from panels, shortcuts as a table | M | Not started |
+| 4 | The window built from panels, shortcuts as a table | M | **Done** 2026-11-23 (R15, R16): `_build_window` 680 → 13 lines over 12 builders (the longest 111); the shortcuts a table (`shortcuts.py`) checked against KEYBOARD_SHORTCUTS.md |
 | 5 | The Qt-free fight core (`Combat/Fight/`), one mixin at a time | XL | Not started |
 | 6 | One refresh path after every GM operation | M | Not started |
 | 7 | Mixins into composed views and one module per dialog; `CombatWindowState` gone | L | Not started |
@@ -686,6 +686,49 @@ combat plans' file references. Then record the final numbers in Findings.
     entries point at `use_cast/form.py`. The full suite passes (12,060).
   - **Verification** now ends each step with a full-suite run.
   - **Step 3 is done.**
+
+- **R15 (step 4's split, 2026-11-23).** `_build_window` (680 lines) is
+  now 13 lines that call 12 builder methods on the window mixin:
+  `_build_frame`, `_build_selection_labels`, `_build_turn_tracker`,
+  `_build_damage_controls`, `_build_healing_controls`, `_build_d20_roll`,
+  `_build_more_controls` (111 lines, the longest), `_build_action_buttons`,
+  `_build_turn_buttons`, `_build_view_buttons`, `_finish_window` and
+  `_build_shortcuts`.
+  - **Arguments, not attributes.** Unlike 3c, the builders here are
+    methods of the app itself, so `self.` attributes would have put
+    temporaries like `left_col` on the app. A section takes what earlier
+    ones made as typed parameters and returns what later ones need. Only 5
+    locals crossed sections (`root_layout`, `panel`, `panel_layout`,
+    `columns_layout`, `left_col`).
+  - **Done by a script with a guard:** it refused to run if a nested
+    function read a local that a later section sets.
+  - **Not new modules yet.** The plan said `window/control_panel.py` and
+    so on. The builders stay on the mixin for now, so the window doesn't
+    have to be passed around. Step 7, which turns the mixins into
+    composed views, is where they move.
+  - **Checks:** the main window's screenshots are pixel-identical, and the
+    full suite passes.
+- **R16 (step 4's shortcuts, 2026-11-23).** The shortcuts are a table,
+  `SHORTCUTS` in `Combat/CombatUIQt/shortcuts.py` (Qt-free): one row per
+  action with its keys, the app method it calls, the method's arguments
+  and whether it's combo-sensitive. `_build_shortcuts` is 31 lines that
+  make them.
+  - **`ACTION_ECONOMY_SHORTCUTS` folded into the table.** It was only
+    used to build the A/B/R shortcuts, so it's gone from `app.py` and
+    `state.py`.
+  - **Attributes:** the 23 one-per-shortcut attributes nothing read are
+    gone. The five that the window or tests read stay as typed attributes
+    (`_next_turn_shortcuts`, `_previous_turn_shortcuts`,
+    `_spell_slot_shortcuts`, `_more_info_shortcut`,
+    `_map_painter_shortcut`), and so does `_combo_sensitive_shortcuts`.
+  - **Same behaviour:** the shortcuts are made in the same order, and
+    each key gives the same key sequence as before (checked: "Esc" ==
+    Key_Escape, and so on). N and the Right arrow, and the like, now share
+    a row, as they share a line in the doc.
+  - **`tests/test_shortcuts_doc.py`** checks the table against
+    KEYBOARD_SHORTCUTS.md both ways. Every action has a documented key,
+    and every documented key exists. It catches either kind of mistake
+    (checked by adding an undocumented shortcut, and by dropping Ctrl+M).
 
 ## Discovered issues
 

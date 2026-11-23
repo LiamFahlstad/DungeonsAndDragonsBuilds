@@ -74,7 +74,6 @@ class CombatWindowState:
     # ── Class constants (CombatAppQt) ──────────────────────────────────────
 
     ACTION_ECONOMY_TYPES: list[str]
-    ACTION_ECONOMY_SHORTCUTS: dict[str, str]
 
     # ── Data (CombatAppQt.__init__) and widgets (WindowMixin, TimerMixin) ─
 

@@ -64,11 +64,6 @@ class CombatAppQt(
     WindowMixin,
 ):
     ACTION_ECONOMY_TYPES: list[str] = list(ActionCost)
-    ACTION_ECONOMY_SHORTCUTS: dict[str, str] = {
-        "A": ActionCost.ACTION,
-        "B": ActionCost.BONUS_ACTION,
-        "R": ActionCost.REACTION,
-    }
 
     def __init__(
         self,
