@@ -14,7 +14,7 @@ from Builds.Characters.Y2024_Paladin_Devotion_Edmund import (
 from Combat.Arena.arena import POSITION_KEY
 from Combat.Arena.geometry import Cell
 from Combat.Monsters.CR_1.monsters import Tiger
-from Combat.CombatUIQt.effect_options import opportunity_attack_row
+from Combat.Fight.effect_options import opportunity_attack_row
 from Combat.Effects.triggers import OpportunityAttack
 from Combat.PlayerCombatant import combatant_from_character
 from Model.Content.StandardActions import DISENGAGE

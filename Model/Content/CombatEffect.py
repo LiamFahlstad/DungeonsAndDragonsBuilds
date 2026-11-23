@@ -8,7 +8,7 @@ model for all three (Notes/combat-effects-plan.md):
 - a monster's ability has it written on it (MonsterAbility.combat_effects).
 
 to_dict() and from_dict() are what a fight's log keeps. The combat UI's Custom Effect picker fills its
-form from these (Combat/CombatUIQt/effect_options.py).
+form from these (Combat/Fight/effect_options.py).
 
 What depends on who uses it is left blank and worked out then: the DC (a
 feature's calculate_dc(), a spell's caster), the attack bonus, the

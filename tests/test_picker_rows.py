@@ -14,7 +14,7 @@ import re
 import pytest
 
 from CharacterContent.Spells.SpellFactory import SpellFactory
-from Combat.CombatUIQt.effect_options import ALL_SPELLS, effect_options
+from Combat.Fight.effect_options import ALL_SPELLS, effect_options
 from Combat.EncounterLogs import _plain
 from Combat.Monsters.CR_0.monsters_homebrew import DwarfLifeCleric
 from Combat.Monsters.CR_1.monsters_homebrew import HumanPaladinOfDevotion

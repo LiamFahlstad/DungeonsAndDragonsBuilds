@@ -34,7 +34,7 @@ from Combat.Effects.modifiers import (
     resists,
     save_plan,
 )
-from Combat.CombatUIQt.saves import (
+from Combat.Fight.saves import (
     ATTACK_ROLL,
     SPELL,
     CustomEffect,
@@ -435,7 +435,7 @@ def test_a_blessed_attackers_roll_adds_1d4_in_the_log(fight, monkeypatch):
 
 
 def test_a_blessed_monsters_action_adds_1d4(fight, monkeypatch):
-    from Combat.CombatUIQt.monster_actions import MonsterAction
+    from Combat.Fight.monster_actions import MonsterAction
 
     ui, pirate, tiger = fight
     _cast_bless(ui, pirate, pirate)

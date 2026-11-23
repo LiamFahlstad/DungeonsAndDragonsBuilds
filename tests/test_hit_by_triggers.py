@@ -45,10 +45,10 @@ from CharacterContent.Features.SpeciesFeatures.GoliathFeatures import (
     GiantAncestryType,
 )
 from CharacterContent.Spells.SpellClasses.Level1 import HellishRebuke, Shield
-from Combat.CombatUIQt.attack_rolls import parse_attack_roll
-from Combat.CombatUIQt.effect_options import effect_options, triggered_rows
-from Combat.CombatUIQt.monster_actions import parse_action
-from Combat.CombatUIQt.saves import CustomEffect
+from Combat.Fight.attack_rolls import parse_attack_roll
+from Combat.Fight.effect_options import effect_options, triggered_rows
+from Combat.Fight.monster_actions import parse_action
+from Combat.Fight.saves import CustomEffect
 from Combat.Effects.triggers import (
     AttackOutcome,
     DamageOutcome,

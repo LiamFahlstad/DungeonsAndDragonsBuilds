@@ -117,7 +117,7 @@ Combatant = TypedDict(
         "_spell_objects": dict,
         "_feature_objects": list,
         # ---- What the fight adds ----
-        # Battle statistics (Combat/CombatUIQt/stats.py).
+        # Battle statistics (Combat/Fight/stats.py).
         "stats": dict,
         # Lasting effects (Combat/Effects/active_effects.py, ActiveEffect).
         "active_effects": list,

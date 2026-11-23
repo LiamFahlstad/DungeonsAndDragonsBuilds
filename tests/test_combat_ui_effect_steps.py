@@ -24,7 +24,7 @@ from Builds.Characters.Y2024_Paladin_Devotion_Edmund import (
     Y2024PaladinDevotionEdmundCharacterBuilder as Edmund,
 )
 from Combat.Combatants import Tiger
-from Combat.CombatUIQt.saves import CustomEffect
+from Combat.Fight.saves import CustomEffect
 from Combat.Effects.active_effects import repeat_saves
 from tests._combat_ui import make_ui, open_dialog
 

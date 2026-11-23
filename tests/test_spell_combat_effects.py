@@ -13,7 +13,7 @@ import re
 import pytest
 
 from CharacterContent.Spells.SpellFactory import DataSpell, SpellFactory
-from Combat.CombatUIQt.effect_options import (
+from Combat.Fight.effect_options import (
     ALL_SPELLS,
     effect_options,
     is_applicable,
@@ -21,7 +21,7 @@ from Combat.CombatUIQt.effect_options import (
     spell_option,
     spell_options,
 )
-from Combat.CombatUIQt.saves import ATTACK_ROLL, HEALING, SAVING_THROW, TEMP_HP
+from Combat.Fight.saves import ATTACK_ROLL, HEALING, SAVING_THROW, TEMP_HP
 from Core.Definitions import Ability, Condition, DamageType
 from Model.Content.CombatEffect import (
     CombatCondition,

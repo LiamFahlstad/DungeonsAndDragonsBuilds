@@ -13,7 +13,7 @@ from PyQt6.QtWidgets import QMenu, QPushButton
 
 from CharacterContent.Spells.SpellFactory import SpellFactory
 from Combat.CombatUIQt import CombatAppQt
-from Combat.CombatUIQt.monster_actions import first_number
+from Combat.Fight.monster_actions import first_number
 from Combat.Definitions import Action
 from Combat.EncounterConfig import resolve_players
 from Combat.EncounterLogs import prepare_log, scenario_log_path

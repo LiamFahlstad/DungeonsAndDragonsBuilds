@@ -36,7 +36,7 @@ from Combat.Arena.terrain import (
     MapObject,
     Spot,
 )
-from Combat.CombatUIQt.effect_options import _spell_named, read_effect_text
+from Combat.Fight.effect_options import _spell_named, read_effect_text
 from Combat.Effects.modifiers import armor_class, save_plan
 
 BARREL = Spot(thing=MapObject("Barrel", blocks=True, cover=HALF))

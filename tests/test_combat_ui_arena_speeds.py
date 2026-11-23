@@ -12,7 +12,7 @@ from Combat.Arena.arena import MOVED_KEY, POSITION_KEY, distance_ft
 from Combat.Arena.geometry import Cell
 from Combat.Arena.speeds import ALTITUDE_KEY, FLY, MODE_KEY, WALK, speeds
 from Combat.CombatUIQt.arena_view import token_rows
-from Combat.CombatUIQt.effect_options import effect_options
+from Combat.Fight.effect_options import effect_options
 from Combat.Combatants import Pirate
 from Combat.EncounterLogs import TURN_PREFIX
 from Combat.Monsters.CR_1.monsters import GiantEagle

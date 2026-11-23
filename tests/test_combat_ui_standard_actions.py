@@ -37,12 +37,12 @@ from Combat.Arena.arena import (
 )
 from Combat.Arena.geometry import Cell
 from Combat.Combatants import Tiger
-from Combat.CombatUIQt.effect_options import (
+from Combat.Fight.effect_options import (
     STANDARD_ACTIONS,
     effect_options,
     feature_options,
 )
-from Combat.CombatUIQt.saves import STANDARD_ACTION
+from Combat.Fight.saves import STANDARD_ACTION
 from Combat.Effects.modifiers import attack_plan, save_plan
 from Combat.PlayerCombatant import combatant_from_character
 from Combat.EncounterLogs import TURN_PREFIX

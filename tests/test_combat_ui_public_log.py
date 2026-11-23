@@ -4,7 +4,7 @@ players may read at all; this covers how what they may read is put."""
 
 import json
 
-from Combat.CombatUIQt.public_log import public_log_rounds
+from Combat.Fight.public_log import public_log_rounds
 from Combat.Definitions import Action
 
 PIRATE = "Pirate"

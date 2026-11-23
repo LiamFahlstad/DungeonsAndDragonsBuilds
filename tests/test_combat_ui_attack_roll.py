@@ -8,8 +8,8 @@ from PyQt6.QtWidgets import QApplication, QDialog, QMessageBox
 
 from Combat.Combatants import Pirate, Tiger
 from Combat.CombatUIQt import CombatAppQt
-from Combat.CombatUIQt.attack_rolls import AttackRoll, parse_attack_roll
-from Combat.CombatUIQt.monster_actions import MonsterAction
+from Combat.Fight.attack_rolls import AttackRoll, parse_attack_roll
+from Combat.Fight.monster_actions import MonsterAction
 from Combat.EncounterLogs import prepare_log, scenario_log_path
 from Combat.PlayerLog import is_round_key
 from Combat.Scenario import CombatScenario

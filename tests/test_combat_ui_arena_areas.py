@@ -23,8 +23,8 @@ from Combat.Arena.areas import AreaOfEffect, AreaShape
 from Combat.Arena.arena import POSITION_KEY
 from Combat.Arena.geometry import Cell
 from Combat.CombatUIQt.arena_mixin import ARENA_PAGE, CARDS_PAGE, area_reading
-from Combat.CombatUIQt.effect_options import _spell_named, spell_option
-from Combat.CombatUIQt.saves import MONSTER_ACTION, SPELL, EffectOption
+from Combat.Fight.effect_options import _spell_named, spell_option
+from Combat.Fight.saves import MONSTER_ACTION, SPELL, EffectOption
 from Combat.Combatants import Pirate
 from Combat.Monsters.CR_0.monsters import IceMephit
 from Combat.Monsters.CR_1.monsters import Tiger

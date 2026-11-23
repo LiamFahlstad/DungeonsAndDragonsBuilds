@@ -33,7 +33,7 @@ from Combat.WildShape import (
 from Model.Character import Character
 
 from .conditions_mixin import incapacitates
-from .effect_options import feature_action_cost
+from Combat.Fight.effect_options import feature_action_cost
 from .state import CombatWindowState
 from .styles import QSS
 from .undo import undoable

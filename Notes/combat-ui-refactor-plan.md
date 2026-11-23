@@ -60,7 +60,7 @@ and the few others a step touches, not the character-sheet tests. Steps 3,
 | 2 | A typed combatant (`Combatant` TypedDict) | M | **Done** 2026-11-22, revised (R8): the schema and a key test; annotating signatures moved to step 5 |
 | 3 | The Use / Cast dialog as a class, its form-to-effects logic Qt-free | L | 3a **done** 2026-11-22 (R9): `use_cast/form.py`, dialog 1,580 → 1,440 lines; 3b **done** 2026-11-22 (R10): `_UseCastDialog`, `run()` 616 lines + 44 methods; 3c's move **done** (R11): `use_cast/dialog.py`, `conditions_mixin.py` 3,500 → 1,674 lines; 3c's split **done**, revised (R12): `run()` is 14 lines calling 10 builder methods, the longest 126; 3d **done** (R13): `do_apply` 146 → 50 lines over Qt-free `read_amount`, `check_applicable` and `build_effect`; reviewed (R14): no behaviour change; **step 3 done** |
 | 4 | The window built from panels, shortcuts as a table | M | **Done** 2026-11-23 (R15, R16): `_build_window` 680 → 13 lines over 12 builders (the longest 111); the shortcuts a table (`shortcuts.py`) checked against KEYBOARD_SHORTCUTS.md |
-| 5 | The Qt-free fight core (`Combat/Fight/`), one mixin at a time | XL | Not started |
+| 5 | The Qt-free fight core (`Combat/Fight/`), one mixin at a time | XL | 5.1 **done** 2026-11-23 (R17): seven Qt-free modules moved to `Combat/Fight/`; 5.5's guard test in place; **5.2 (`Fight` holds the state) next** |
 | 6 | One refresh path after every GM operation | M | Not started |
 | 7 | Mixins into composed views and one module per dialog; `CombatWindowState` gone | L | Not started |
 | 8 | Docs, agents and skills point at the new layout | S | Not started |
@@ -729,6 +729,30 @@ combat plans' file references. Then record the final numbers in Findings.
     KEYBOARD_SHORTCUTS.md both ways. Every action has a documented key,
     and every documented key exists. It catches either kind of mistake
     (checked by adding an undocumented shortcut, and by dropping Ctrl+M).
+
+- **R17 (step 5.1, 2026-11-23).** Seven modules moved from
+  `Combat/CombatUIQt/` to `Combat/Fight/` with `git mv`, unchanged:
+  `amounts`, `attack_rolls`, `monster_actions`, `saves`, `effect_options`,
+  `stats` and `public_log`. None of them imported Qt or anything in the
+  UI, as a dependency walk showed. A script pointed everything at their
+  new place: 88 files, including the UI's relative imports, tests, the
+  two tools, the combat-effects skill's script, the code-lookup agent's
+  prompt and the notes. Then one hand fix: a multi-name import whose other
+  names stay in the UI.
+  - **Not moved:**
+    - `undo.py` still writes the Damage and Attack roll fields as it
+      restores, so it moves after step 6 has taken that out.
+    - `player_server.py`, `styles.py` and `shortcuts.py` are the window's.
+  - **No shims.** Every importer was updated in the same change.
+    `Notes/discovered-issues.md` keeps the old paths in its entries, since
+    only its script edits it.
+  - **Tests that follow file paths:** `test_roll_sites` scans
+    `Combat/Fight/` too (its keys didn't change: they're paths within the
+    scanned folder), and `test_text_readers` follows the new paths.
+  - **5.5's guard is in** (`tests/test_combat_ui_structure.py`): nothing
+    in `Combat/Fight`, `Combat/Effects` or `Combat/Arena` imports PyQt6 or
+    `Combat.CombatUIQt`. There's no allowlist, because nothing breaks it.
+  - **Checks:** the full suite passes (12,064) and pyright is clean.
 
 ## Discovered issues
 

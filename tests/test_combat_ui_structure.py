@@ -36,7 +36,7 @@ MAX_FUNCTION_LINES = 150
 LONG_FUNCTIONS = {
     "Combat/CombatUIQt/conditions_mixin.py::ConditionsMixin._apply_effect_to_targets": 236,
     "Combat/CombatUIQt/dialogs_mixin.py::DialogsMixin._show_statistics": 177,
-    "Combat/CombatUIQt/effect_options.py::_described_option": 161,
+    "Combat/Fight/effect_options.py::_described_option": 161,
 }
 
 # 207 at step 0; +4 at step 3c, so the Use / Cast dialog (use_cast/dialog.py)
@@ -149,3 +149,27 @@ def test_inline_styles_do_not_grow():
         f"{count} setStyleSheet calls outside styles.py, more than "
         f"{MAX_INLINE_STYLES}: style it in styles.py by objectName instead."
     )
+
+
+# The fight's Qt-free core (combat-ui-refactor-plan step 5): its folders
+# never import Qt or the window, so it runs and is tested without a
+# QApplication, and a second front end (the player link) can use it.
+QT_FREE = ("Combat/Fight", "Combat/Effects", "Combat/Arena")
+
+
+def test_the_fight_core_imports_no_qt():
+    offenders = []
+    for folder in QT_FREE:
+        for path in sorted((REPO / folder).rglob("*.py")):
+            tree = ast.parse(path.read_text(encoding="utf-8"))
+            for node in ast.walk(tree):
+                names = []
+                if isinstance(node, ast.Import):
+                    names = [alias.name for alias in node.names]
+                elif isinstance(node, ast.ImportFrom) and node.level == 0:
+                    names = [node.module or ""]
+                for name in names:
+                    if name.startswith(("PyQt6", "Combat.CombatUIQt")):
+                        where = path.relative_to(REPO).as_posix()
+                        offenders.append(f"{where}:{node.lineno} {name}")
+    assert not offenders, offenders

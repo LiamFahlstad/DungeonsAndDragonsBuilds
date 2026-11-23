@@ -9,8 +9,8 @@ from dataclasses import replace
 
 import pytest
 
-from Combat.CombatUIQt.attack_rolls import AttackRoll
-from Combat.CombatUIQt.saves import DAMAGE_AMOUNT, HEALING, CustomEffect
+from Combat.Fight.attack_rolls import AttackRoll
+from Combat.Fight.saves import DAMAGE_AMOUNT, HEALING, CustomEffect
 from Combat.CombatUIQt.use_cast.form import (
     FormError,
     nth,
@@ -145,8 +145,8 @@ def test_healing_copies_heal_and_deal_nothing():
 
 # ---- Apply: the form read, checked and built into an effect (step 3d) ----
 
-from Combat.CombatUIQt.saves import ATTACK_ROLL, SAVING_THROW, TEMP_HP  # noqa: E402
-from Combat.CombatUIQt.saves import EffectOption  # noqa: E402
+from Combat.Fight.saves import ATTACK_ROLL, SAVING_THROW, TEMP_HP  # noqa: E402
+from Combat.Fight.saves import EffectOption  # noqa: E402
 from Combat.CombatUIQt.use_cast.form import (  # noqa: E402
     Amount,
     FormValues,

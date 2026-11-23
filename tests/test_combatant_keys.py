@@ -17,7 +17,8 @@ import pytest
 import Combat.Monsters as Monsters
 from Combat import PartyAllies, Summons, WildShape
 from Combat.Arena import arena, lasting, speeds
-from Combat.CombatUIQt import attack_rolls, player_view, turns_mixin
+from Combat.CombatUIQt import player_view, turns_mixin
+from Combat.Fight import attack_rolls
 from Combat.Effects import active_effects
 from Combat.EncounterLogs import PLAYER_FIGHT_KEYS
 from Combat.Fight.combatant import COMBATANT_KEYS, Combatant

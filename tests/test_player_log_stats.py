@@ -9,7 +9,7 @@ import pytest
 
 import Combat.Scenarios as Scenarios
 from Combat.CombatUIQt.rest import apply_long_rest
-from Combat.CombatUIQt.stats import (
+from Combat.Fight.stats import (
     compute_player_log_stats,
     long_rest_archive_sessions,
     player_log_history,

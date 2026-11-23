@@ -19,12 +19,12 @@ import re
 from dataclasses import dataclass
 from functools import lru_cache
 
-from Combat.CombatUIQt.effect_options import (
+from Combat.Fight.effect_options import (
     _REPEATS_THE_SAVE,
     _inflicted_condition,
     _read_gain,
 )
-from Combat.CombatUIQt.monster_actions import (
+from Combat.Fight.monster_actions import (
     ACTION_SECTIONS,
     DAMAGE,
     DAMAGE_TYPE_NAMES,
@@ -34,7 +34,7 @@ from Combat.CombatUIQt.monster_actions import (
     picker_names,
     tidy_dice,
 )
-from Combat.CombatUIQt.saves import CONDITION_JOINER
+from Combat.Fight.saves import CONDITION_JOINER
 from Core.Definitions import Ability, Condition, CreatureSize, DamageType
 from Model.Content.CombatAreaText import read_combat_area
 from Model.Content.CombatEffect import (

@@ -38,7 +38,7 @@ from Combat.Effects.active_effects import (
     timers,
     upgrade_old_keys,
 )
-from Combat.CombatUIQt.saves import CustomEffect
+from Combat.Fight.saves import CustomEffect
 from Combat.EncounterLogs import PLAYER_FIGHT_STATE_KEY
 from Combat.PlayerLog import is_round_key
 from tests._combat_ui import make_ui

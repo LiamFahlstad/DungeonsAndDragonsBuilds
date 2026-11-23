@@ -24,7 +24,7 @@
 ## Goal
 
 When the GM picks a spell in the combat UI's Custom Effect dialog, the form is
-filled in by `spell_option()` in [effect_options.py](../Combat/CombatUIQt/effect_options.py),
+filled in by `spell_option()` in [effect_options.py](../Combat/Fight/effect_options.py),
 which reads the spell's rules text with regexes (`read_effect_text()`). That
 reading is careful but can't be sure, so the GM still has to check the text and
 read the option's note.
@@ -58,7 +58,7 @@ later without new code.
 | Companion loading | [Factory.py](../CharacterContent/Spells/SpellFactory/Factory.py) `_load_json()` merges `_extended` fields and `_improved` blocks into each source's records | The new file is merged the same way. |
 | Spell object | [DataSpell.py](../CharacterContent/Spells/SpellFactory/DataSpell.py) (`usage_tags`, `target`, `improved_description` validate their data on access) | Gets a `mechanics` property. |
 | Text reading | `read_effect_text()` -> `EffectText` in `effect_options.py` | The fallback. Also a good seed for the new file. |
-| Form values | `EffectOption` in [saves.py](../Combat/CombatUIQt/saves.py) | The target of both paths. Unchanged. |
+| Form values | `EffectOption` in [saves.py](../Combat/Fight/saves.py) | The target of both paths. Unchanged. |
 | Improved descriptions | `spells_dnd2024_improved.json` (390 spells) with facts such as `Save`, `Failed save`, `Attack`, `On a hit`, `Repeat save`, `Damage`, `Healing` | A second, independent signal to check the seed against. |
 | Tests | [test_combat_ui_effect_options.py](../tests/test_combat_ui_effect_options.py) (47 tests, many on real spells such as Fireball, Hold Person, Toll the Dead) | Must keep testing the regex path once those spells get JSON entries (see step 6). |
 

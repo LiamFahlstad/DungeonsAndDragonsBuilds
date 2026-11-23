@@ -1,7 +1,7 @@
 """The actions every creature can take on its turn (Rules Glossary, Combat >
 Actions), in one place: each one's 2024 rules text and what taking it does in
 a fight, as combat effects. The combat picker lists them for every combatant
-("Standard Actions", Combat/CombatUIQt/effect_options.py), and features that
+("Standard Actions", Combat/Fight/effect_options.py), and features that
 let their owner take one of them (Cunning Action's Dash, Patient Defense's
 Dodge, Step of the Wind's Disengage) give the same badges, from here:
 take_actions() is such a feature's row, for a Bonus Action or a Reaction.

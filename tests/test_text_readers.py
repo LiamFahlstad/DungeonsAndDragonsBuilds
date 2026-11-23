@@ -69,24 +69,24 @@ KINDS = ("input", "log", "validation", "phase 5", "later: ")
 # (file, module constant or function): what it reads.
 TEXT_READERS: dict[tuple[str, str], str] = {
     # What the GM types
-    ("Combat/CombatUIQt/amounts.py", "_TERM"): "input",
-    ("Combat/CombatUIQt/amounts.py", "_parse_terms"): "input",
-    ("Combat/CombatUIQt/attack_rolls.py", "_NATURAL"): "input",
+    ("Combat/Fight/amounts.py", "_TERM"): "input",
+    ("Combat/Fight/amounts.py", "_parse_terms"): "input",
+    ("Combat/Fight/attack_rolls.py", "_NATURAL"): "input",
     ("Combat/CombatUIQt/use_cast/form.py", "_NATURAL_ROLL"): "input",
     ("Combat/CombatUIQt/use_cast/form.py", "_WHOLE_NUMBER"): "input",
     ("Combat/CombatUIQt/use_cast/form.py", "DICELESS"): "input",
-    ("Combat/CombatUIQt/saves.py", "_DICE"): "input",
+    ("Combat/Fight/saves.py", "_DICE"): "input",
     # The dice of a roll, typed or an effect's ("2d6 + 3"), rolled
-    ("Combat/CombatUIQt/monster_actions.py", "DIE"): "input",
+    ("Combat/Fight/monster_actions.py", "DIE"): "input",
     ("Combat/CombatUIQt/trigger_prompt.py", "TriggerPrompt.choice"): "input",
     # Our own log and display strings
     ("Combat/CombatUIQt/arena_view.py", "token_label"): "log",
     ("Combat/CombatUIQt/player_view.py", "_scaled_style"): "log",
-    ("Combat/CombatUIQt/public_log.py", "_ATTACK"): "log",
-    ("Combat/CombatUIQt/public_log.py", "_event_lines"): "log",
-    ("Combat/CombatUIQt/effect_options.py", "_without_slot_note"): "log",
+    ("Combat/Fight/public_log.py", "_ATTACK"): "log",
+    ("Combat/Fight/public_log.py", "_event_lines"): "log",
+    ("Combat/Fight/effect_options.py", "_without_slot_note"): "log",
     # An ability's name without its "(Recharge 5-6)", for its row's name.
-    ("Combat/CombatUIQt/effect_options.py", "_NAME_ALONE"): "log",
+    ("Combat/Fight/effect_options.py", "_NAME_ALONE"): "log",
     ("Combat/EncounterLogs.py", "TURN_PREFIX"): "log",
     # A Wild Shape form's shown senses say the Druid's Passive Perception.
     ("Combat/WildShape.py", "_PASSIVE_PERCEPTION"): "log",
@@ -109,42 +109,42 @@ TEXT_READERS: dict[tuple[str, str], str] = {
     # Phase 5: EffectText, an undescribed spell's or feature's text. Frozen.
     # Its damage reading, which a monster's attacks no longer use (Phase
     # 4.3: Combat/Tools/monster_effect_text.py wrote their effects).
-    ("Combat/CombatUIQt/monster_actions.py", "DAMAGE"): "phase 5",
-    ("Combat/CombatUIQt/monster_actions.py", "JOINED"): "phase 5",
-    ("Combat/CombatUIQt/monster_actions.py", "tidy_dice"): "phase 5",
-    ("Combat/CombatUIQt/effect_options.py", "_UPGRADE_PARAGRAPH"): "phase 5",
-    ("Combat/CombatUIQt/effect_options.py", "_SENTENCE_END"): "phase 5",
-    ("Combat/CombatUIQt/effect_options.py", "_SAVE"): "phase 5",
-    ("Combat/CombatUIQt/effect_options.py", "_NOT_THE_TARGETS_SAVE"): "phase 5",
-    ("Combat/CombatUIQt/effect_options.py", "_FOR_CONCENTRATION"): "phase 5",
-    ("Combat/CombatUIQt/effect_options.py", "_SAID_TO_THE_CASTER"): "phase 5",
-    ("Combat/CombatUIQt/effect_options.py", "_ATTACK"): "phase 5",
-    ("Combat/CombatUIQt/effect_options.py", "_HALF"): "phase 5",
-    ("Combat/CombatUIQt/effect_options.py", "_ON_A_FAILED_SAVE"): "phase 5",
-    ("Combat/CombatUIQt/effect_options.py", "_ON_A_HIT"): "phase 5",
-    ("Combat/CombatUIQt/effect_options.py", "_WAITS_ON_SOMETHING"): "phase 5",
-    ("Combat/CombatUIQt/effect_options.py", "_ANOTHER_AMOUNT"): "phase 5",
-    ("Combat/CombatUIQt/effect_options.py", "_DAMAGE_ROLL"): "phase 5",
-    ("Combat/CombatUIQt/effect_options.py", "_ANY_DAMAGE"): "phase 5",
-    ("Combat/CombatUIQt/effect_options.py", "_REPEATS_THE_SAVE"): "phase 5",
-    ("Combat/CombatUIQt/effect_options.py", "_HAS_CONDITION"): "phase 5",
-    ("Combat/CombatUIQt/effect_options.py", "_NOT_INFLICTED"): "phase 5",
-    ("Combat/CombatUIQt/effect_options.py", "_UPCAST"): "phase 5",
-    ("Combat/CombatUIQt/effect_options.py", "_ONE_DAMAGE"): "phase 5",
-    ("Combat/CombatUIQt/effect_options.py", "_ANY_UPCAST"): "phase 5",
-    ("Combat/CombatUIQt/effect_options.py", "_CANTRIP_STEP"): "phase 5",
-    ("Combat/CombatUIQt/effect_options.py", "_OPTION_LINE"): "phase 5",
-    ("Combat/CombatUIQt/effect_options.py", "_UNTIL_A_TURN"): "phase 5",
-    ("Combat/CombatUIQt/effect_options.py", "_THE_TARGETS"): "phase 5",
-    ("Combat/CombatUIQt/effect_options.py", "_HEALS"): "phase 5",
-    ("Combat/CombatUIQt/effect_options.py", "_HEAL_AMOUNT"): "phase 5",
-    ("Combat/CombatUIQt/effect_options.py", "_TEMP_HP_AMOUNT"): "phase 5",
-    ("Combat/CombatUIQt/effect_options.py", "_HEAL_UPCAST"): "phase 5",
-    ("Combat/CombatUIQt/effect_options.py", "_TEMP_HP_UPCAST"): "phase 5",
-    ("Combat/CombatUIQt/effect_options.py", "_JUST_YOU"): "phase 5",
-    ("Combat/CombatUIQt/effect_options.py", "_IGNORES_COVER"): "phase 5",
-    ("Combat/CombatUIQt/effect_options.py", "read_effect_text"): "phase 5",
-    ("Combat/CombatUIQt/effect_options.py", "_upcast_dice"): "phase 5",
+    ("Combat/Fight/monster_actions.py", "DAMAGE"): "phase 5",
+    ("Combat/Fight/monster_actions.py", "JOINED"): "phase 5",
+    ("Combat/Fight/monster_actions.py", "tidy_dice"): "phase 5",
+    ("Combat/Fight/effect_options.py", "_UPGRADE_PARAGRAPH"): "phase 5",
+    ("Combat/Fight/effect_options.py", "_SENTENCE_END"): "phase 5",
+    ("Combat/Fight/effect_options.py", "_SAVE"): "phase 5",
+    ("Combat/Fight/effect_options.py", "_NOT_THE_TARGETS_SAVE"): "phase 5",
+    ("Combat/Fight/effect_options.py", "_FOR_CONCENTRATION"): "phase 5",
+    ("Combat/Fight/effect_options.py", "_SAID_TO_THE_CASTER"): "phase 5",
+    ("Combat/Fight/effect_options.py", "_ATTACK"): "phase 5",
+    ("Combat/Fight/effect_options.py", "_HALF"): "phase 5",
+    ("Combat/Fight/effect_options.py", "_ON_A_FAILED_SAVE"): "phase 5",
+    ("Combat/Fight/effect_options.py", "_ON_A_HIT"): "phase 5",
+    ("Combat/Fight/effect_options.py", "_WAITS_ON_SOMETHING"): "phase 5",
+    ("Combat/Fight/effect_options.py", "_ANOTHER_AMOUNT"): "phase 5",
+    ("Combat/Fight/effect_options.py", "_DAMAGE_ROLL"): "phase 5",
+    ("Combat/Fight/effect_options.py", "_ANY_DAMAGE"): "phase 5",
+    ("Combat/Fight/effect_options.py", "_REPEATS_THE_SAVE"): "phase 5",
+    ("Combat/Fight/effect_options.py", "_HAS_CONDITION"): "phase 5",
+    ("Combat/Fight/effect_options.py", "_NOT_INFLICTED"): "phase 5",
+    ("Combat/Fight/effect_options.py", "_UPCAST"): "phase 5",
+    ("Combat/Fight/effect_options.py", "_ONE_DAMAGE"): "phase 5",
+    ("Combat/Fight/effect_options.py", "_ANY_UPCAST"): "phase 5",
+    ("Combat/Fight/effect_options.py", "_CANTRIP_STEP"): "phase 5",
+    ("Combat/Fight/effect_options.py", "_OPTION_LINE"): "phase 5",
+    ("Combat/Fight/effect_options.py", "_UNTIL_A_TURN"): "phase 5",
+    ("Combat/Fight/effect_options.py", "_THE_TARGETS"): "phase 5",
+    ("Combat/Fight/effect_options.py", "_HEALS"): "phase 5",
+    ("Combat/Fight/effect_options.py", "_HEAL_AMOUNT"): "phase 5",
+    ("Combat/Fight/effect_options.py", "_TEMP_HP_AMOUNT"): "phase 5",
+    ("Combat/Fight/effect_options.py", "_HEAL_UPCAST"): "phase 5",
+    ("Combat/Fight/effect_options.py", "_TEMP_HP_UPCAST"): "phase 5",
+    ("Combat/Fight/effect_options.py", "_JUST_YOU"): "phase 5",
+    ("Combat/Fight/effect_options.py", "_IGNORES_COVER"): "phase 5",
+    ("Combat/Fight/effect_options.py", "read_effect_text"): "phase 5",
+    ("Combat/Fight/effect_options.py", "_upcast_dice"): "phase 5",
     # Rules text no phase covers yet
     ("Combat/Arena/ranges.py", "_RANGED_SPELL"): (
         "later: a spell's attack is ranged (to its range), from its text"
@@ -152,10 +152,10 @@ TEXT_READERS: dict[tuple[str, str], str] = {
     ("Combat/Arena/ranges.py", "_MELEE_SPELL"): (
         "later: a spell's attack is melee (5 feet), from its text"
     ),
-    ("Combat/CombatUIQt/effect_options.py", "_NOT_ALWAYS"): (
+    ("Combat/Fight/effect_options.py", "_NOT_ALWAYS"): (
         "later: a weapon's extra damage that isn't always dealt, from its note"
     ),
-    ("Combat/CombatUIQt/monster_actions.py", "first_number"): (
+    ("Combat/Fight/monster_actions.py", "first_number"): (
         "later: a player's AC as a number, from the sheet's AC sentence"
     ),
     ("Combat/WildShape.py", "_MATERIAL_COST"): (

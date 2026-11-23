@@ -6,7 +6,7 @@ description: Combat effects - what a spell or feature does in a fight (saving th
 # Combat effects (spells and features)
 
 The combat UI's Custom Effect dialog fills its form from a spell
-(`spell_option()` in `Combat/CombatUIQt/effect_options.py`). A spell whose
+(`spell_option()` in `Combat/Fight/effect_options.py`). A spell whose
 `combat_effects()` returns a list is filled from it; any other spell is read
 from its rules text with regexes, which the GM then has to check. Combat
 effects replace that guess with checked data, so every one must be right.

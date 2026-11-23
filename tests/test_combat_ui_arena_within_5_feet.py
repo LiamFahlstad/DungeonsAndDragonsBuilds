@@ -18,8 +18,8 @@ from Combat.Arena.arena import IN_USE_KEY, POSITION_KEY, ArenaSettings, distance
 from Combat.Arena.geometry import Cell
 from Combat.Arena.maps import ARENA_KEY, MapDesign
 from Combat.Combatants import Pirate, Tiger
-from Combat.CombatUIQt.monster_actions import DamageRoll, MonsterAction
-from Combat.CombatUIQt.saves import CustomEffect
+from Combat.Fight.monster_actions import DamageRoll, MonsterAction
+from Combat.Fight.saves import CustomEffect
 from Core.Definitions import DamageType
 from tests._combat_ui import make_ui
 

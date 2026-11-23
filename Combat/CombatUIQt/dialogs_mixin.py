@@ -41,14 +41,14 @@ from Combat.Effects.modifiers import (
 from Core.Definitions import DiceRollCondition, Die
 from Utils.DamageCalculator import probability_of_success
 
-from .stats import (
+from Combat.Fight.stats import (
     SPELL_SLOT_LEVELS,
     damage_dealt_key,
     damage_taken_key,
     spell_slots_used_key,
 )
-from .attack_rolls import armor_text
-from .monster_actions import ability_effects
+from Combat.Fight.attack_rolls import armor_text
+from Combat.Fight.monster_actions import ability_effects
 from .player_server import PlayerServerError, lan_addresses
 from .settings import SETTING_SECTIONS
 from Core.Rules import ability_modifier

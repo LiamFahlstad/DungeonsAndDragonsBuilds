@@ -11,9 +11,9 @@ import json
 import pytest
 
 from CharacterContent.Spells.SpellFactory import SpellFactory
-from Combat.CombatUIQt.effect_options import effect_options
-from Combat.CombatUIQt.monster_actions import ability_effects, parse_action
-from Combat.CombatUIQt.saves import (
+from Combat.Fight.effect_options import effect_options
+from Combat.Fight.monster_actions import ability_effects, parse_action
+from Combat.Fight.saves import (
     ATTACK_ROLL,
     DAMAGE_AMOUNT,
     HEALING,

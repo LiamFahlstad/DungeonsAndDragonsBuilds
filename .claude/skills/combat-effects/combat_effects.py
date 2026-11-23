@@ -48,7 +48,7 @@ sys.path.insert(0, str(ROOT))
 
 from CharacterContent.Spells import SpellClassConverter as converter  # noqa: E402
 from CharacterContent.Spells.SpellFactory import DataSpell, SpellFactory  # noqa: E402
-from Combat.CombatUIQt import effect_options as eo  # noqa: E402
+from Combat.Fight import effect_options as eo  # noqa: E402
 from Core.Definitions import Ability, Condition  # noqa: E402
 from Model.Content.CombatEffect import CombatEffect  # noqa: E402
 from Model.Content.CombatTriggers import trigger_problems  # noqa: E402

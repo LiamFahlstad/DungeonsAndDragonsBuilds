@@ -37,8 +37,8 @@ from CharacterContent.Features.SubClassFeatures.Artificer.ArtificerReanimatorFea
     ReanimatorSkillSet,
 )
 from Combat.Campaigns.TimeLoopPR.Campaign import CAMPAIGN
-from Combat.CombatUIQt.effect_options import effect_options, feature_options
-from Combat.CombatUIQt.saves import ATTACK_ROLL, HEALING, SAVING_THROW, TEMP_HP
+from Combat.Fight.effect_options import effect_options, feature_options
+from Combat.Fight.saves import ATTACK_ROLL, HEALING, SAVING_THROW, TEMP_HP
 from Combat.PlayerCombatant import combatant_from_character
 from Core.Definitions import Ability, CharacterClass, DamageType
 from Model.Content.CombatEffect import (

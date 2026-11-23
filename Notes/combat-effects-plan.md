@@ -764,7 +764,7 @@ with_bonus("1d8", 4) == "1d8 + 4"
 "Alarm": []
 ```
 
-### The picker (`Combat/CombatUIQt/effect_options.py`)
+### The picker (`Combat/Fight/effect_options.py`)
 
 - `spell_options(spell, char)`: `None` → the text reading; `[]` → a row that
   only spends the cast; else one row per effect. Every spell row carries

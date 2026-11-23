@@ -14,13 +14,13 @@ from Builds.Characters.Y2024_Cleric_Light_GabrielGreybeard import (
 )
 from CharacterContent.Spells.SpellFactory import SpellFactory
 from Combat.Combatants import Pirate, Tiger
-from Combat.CombatUIQt.effect_options import (
+from Combat.Fight.effect_options import (
     EffectOption,
     effect_options,
     spell_options,
 )
 from Combat.CombatUIQt.features_mixin import FEATURE_BADGE_COLOR
-from Combat.CombatUIQt.saves import MONSTER_ACTION, WEAPON, CustomEffect
+from Combat.Fight.saves import MONSTER_ACTION, WEAPON, CustomEffect
 from Combat.Effects.active_effects import (
     FEATURE,
     SPELL,

@@ -69,9 +69,9 @@ from Model.Character import Character
 from Model.Content.Feature import Feature
 from Model.Content.Summons import OnZeroHp, SummonContext, SummonLifetime, SummonSpec
 
-from .effect_options import PactSlot, feature_action_cost
+from Combat.Fight.effect_options import PactSlot, feature_action_cost
 from .state import CombatWindowState
-from .stats import _default_stats
+from Combat.Fight.stats import _default_stats
 from .styles import QSS
 from .undo import undoable
 

@@ -13,8 +13,8 @@ from Combat.Arena.arena import POSITION_KEY
 from Combat.Arena.geometry import Cell
 from Combat.Arena.terrain import HALF, TOTAL, WALL, MapObject, Spot
 from Combat.Combatants import Pirate, Tiger
-from Combat.CombatUIQt.monster_actions import DamageRoll, MonsterAction
-from Combat.CombatUIQt.saves import CustomEffect, save_modifier
+from Combat.Fight.monster_actions import DamageRoll, MonsterAction
+from Combat.Fight.saves import CustomEffect, save_modifier
 from Core.Definitions import DamageType
 from tests._combat_ui import make_ui
 

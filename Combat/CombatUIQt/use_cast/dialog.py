@@ -52,8 +52,8 @@ from Core.Definitions import DamageType
 from Core.Rules import SECONDS_PER_ROUND
 from Model.Content.CombatModifiers import HitPointMaximum
 
-from ..amounts import AmountError
-from ..attack_rolls import (
+from Combat.Fight.amounts import AmountError
+from Combat.Fight.attack_rolls import (
     AttackRoll,
     armor_bonus,
     cover_bonus,
@@ -70,14 +70,14 @@ from ..effect_dialog_widgets import (
     section,
     target_roll_rows,
 )
-from ..effect_options import (
+from Combat.Fight.effect_options import (
     amount_text as _amount_text,
     pick_attack_range,
     pick_spell_range_ft,
     spell_slot_choices,
 )
-from ..monster_actions import legendary_resistances_left
-from ..saves import (
+from Combat.Fight.monster_actions import legendary_resistances_left
+from Combat.Fight.saves import (
     ABILITIES,
     AMOUNT_KINDS,
     ATTACK_ROLL,

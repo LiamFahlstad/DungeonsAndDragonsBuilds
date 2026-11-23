@@ -32,8 +32,8 @@ from Builds.Characters.Y2024_Paladin_Devotion_Edmund import (
 from CharacterContent.Spells.SpellFactory import SpellFactory
 from Combat.Combatants import Pirate, Tiger
 from Combat.PartyAllies import mark
-from Combat.CombatUIQt.effect_options import spell_options, trigger_option
-from Combat.CombatUIQt.saves import TEMP_HP
+from Combat.Fight.effect_options import spell_options, trigger_option
+from Combat.Fight.saves import TEMP_HP
 from Combat.Effects.active_effects import find_effect, give_modifiers, note_origin
 from Combat.Effects.modifiers import immune_to_condition
 from Combat.Effects.triggers import firings, on_party_side

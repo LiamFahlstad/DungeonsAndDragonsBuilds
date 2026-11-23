@@ -11,8 +11,8 @@ import Combat.Monsters
 from CharacterContent.Features.SubClassFeatures.Artificer.ArtificerBattleSmithFeatures import (
     SteelDefender,
 )
-from Combat.CombatUIQt.effect_options import effect_options
-from Combat.CombatUIQt.monster_actions import parse_action, upgrade_ability_keys
+from Combat.Fight.effect_options import effect_options
+from Combat.Fight.monster_actions import parse_action, upgrade_ability_keys
 from Combat.EncounterLogs import _plain
 from Combat.Tools.monster_effect_text import (
     EFFECT_SECTIONS,

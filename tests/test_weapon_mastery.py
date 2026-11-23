@@ -58,10 +58,10 @@ from CharacterContent.Items import Weapons
 from CharacterContent.Items.Weapons.Magic import HalflingssTrick
 from CharacterContent.Spells.SpellClasses.Cantrips import ViciousMockery
 from CharacterContent.Spells.SpellClasses.Level1 import GuidingBolt
-from Combat.CombatUIQt.attack_rolls import parse_attack_roll
+from Combat.Fight.attack_rolls import parse_attack_roll
 from Combat.CombatUIQt.conditions_mixin import _picked_effect
-from Combat.CombatUIQt.monster_actions import parse_action
-from Combat.CombatUIQt.effect_options import (
+from Combat.Fight.monster_actions import parse_action
+from Combat.Fight.effect_options import (
     ATTACKS,
     effect_options,
     triggered_rows,

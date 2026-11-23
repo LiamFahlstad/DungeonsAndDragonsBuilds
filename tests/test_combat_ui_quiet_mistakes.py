@@ -7,7 +7,7 @@ from PyQt6.QtWidgets import QDialog, QMessageBox, QPushButton
 
 from CharacterContent.Spells.SpellFactory import SpellFactory
 from Combat.Combatants import Pirate, Tiger
-from Combat.CombatUIQt.effect_options import spell_slot_choices
+from Combat.Fight.effect_options import spell_slot_choices
 from Core.Definitions import DamageType
 from tests._combat_ui import make_ui
 

@@ -21,16 +21,16 @@ from PyQt6.QtWidgets import QDialog, QMessageBox
 from Builds.Characters.Y2024_Monk_Elements_KiviJatti import (
     Y2024MonkElementsKiviJattiCharacterBuilder as Kivi,
 )
-from Combat.CombatUIQt.attack_rolls import parse_attack_roll
-from Combat.CombatUIQt.effect_options import effect_options, triggered_rows
-from Combat.CombatUIQt.monster_actions import parse_action
+from Combat.Fight.attack_rolls import parse_attack_roll
+from Combat.Fight.effect_options import effect_options, triggered_rows
+from Combat.Fight.monster_actions import parse_action
 from Combat.Tools.monster_effect_text import (
     HitRider,
     hit_riders,
     read_effects,
     read_text,
 )
-from Combat.CombatUIQt.saves import CustomEffect
+from Combat.Fight.saves import CustomEffect
 from Combat.CombatUIQt.trigger_prompt import TriggerPrompt
 from Combat.Effects.triggers import (
     AttackOutcome,

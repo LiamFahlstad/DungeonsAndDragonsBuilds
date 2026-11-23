@@ -12,7 +12,7 @@ import ast
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-FOLDERS = ("Combat/CombatUIQt", "Combat/Effects")
+FOLDERS = ("Combat/CombatUIQt", "Combat/Effects", "Combat/Fight")
 
 # The functions that roll dice, or roll them for their caller.
 ROLLERS = {

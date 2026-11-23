@@ -32,12 +32,12 @@ from Builds.Characters.Y2024_Paladin_Devotion_Edmund import (
 )
 from CharacterContent.Spells.SpellFactory import SpellFactory
 from Combat.Combatants import Pirate, Tiger
-from Combat.CombatUIQt.amounts import AmountError
+from Combat.Fight.amounts import AmountError
 from Combat.Definitions import Action
 from Combat.Effects.active_effects import CUSTOM, SPELL, active_effects
 from Combat.Effects.active_effects import repeat_saves, timed_effects, timers
-from Combat.CombatUIQt.attack_rolls import AttackRoll
-from Combat.CombatUIQt.saves import (
+from Combat.Fight.attack_rolls import AttackRoll
+from Combat.Fight.saves import (
     ATTACK_ROLL,
     DAMAGE_AMOUNT,
     FEATURE,

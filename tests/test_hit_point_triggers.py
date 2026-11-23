@@ -50,7 +50,7 @@ from CharacterContent.Features.SubClassFeatures.Warlock.WarlockFiendFeatures imp
 from CharacterContent.Features.SubClassFeatures.Wizard.WizardNecromancerFeatures import (
     HarvestUndead,
 )
-from Combat.CombatUIQt.effect_options import effect_options, triggered_rows
+from Combat.Fight.effect_options import effect_options, triggered_rows
 from Combat.Effects.triggers import (
     BloodiedOutcome,
     DropOutcome,

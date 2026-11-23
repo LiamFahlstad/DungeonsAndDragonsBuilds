@@ -10,7 +10,7 @@ import json
 import pkgutil
 
 import Combat.Monsters
-from Combat.CombatUIQt.monster_actions import (
+from Combat.Fight.monster_actions import (
     ABILITY_SECTIONS,
     parse_action,
     start_of_turn_traits,

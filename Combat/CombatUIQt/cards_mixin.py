@@ -24,10 +24,10 @@ from Combat.Effects.modifiers import (
     hit_point_maximum_text,
     size_text,
 )
-from .attack_rolls import armor_text
+from Combat.Fight.attack_rolls import armor_text
 from .dialogs_mixin import _damage_entry_text, _speed_text
 from Core.Rules import ability_modifier
-from .monster_actions import (
+from Combat.Fight.monster_actions import (
     LEGENDARY_ACTIONS_PER_ROUND,
     legendary_actions_left,
     legendary_resistances_left,

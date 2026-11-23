@@ -13,9 +13,9 @@ from Combat.Arena.arena import POSITION_KEY
 from Combat.Arena.geometry import Cell
 from Combat.Arena.terrain import DARK
 from Combat.Combatants import Pirate, Tiger
-from Combat.CombatUIQt.effect_options import MONSTER_ACTION
-from Combat.CombatUIQt.monster_actions import DamageRoll, MonsterAction
-from Combat.CombatUIQt.saves import ATTACK_ROLL, CustomEffect, EffectOption
+from Combat.Fight.effect_options import MONSTER_ACTION
+from Combat.Fight.monster_actions import DamageRoll, MonsterAction
+from Combat.Fight.saves import ATTACK_ROLL, CustomEffect, EffectOption
 from Core.Definitions import DamageType
 from Model.Creatures.Combatants import Visibility
 from tests._combat_ui import make_ui

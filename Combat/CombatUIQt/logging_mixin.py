@@ -30,11 +30,11 @@ from Combat.WildShape import assume_form, leave_form
 from Combat.Effects.modifiers import hit_point_maximum
 from Model.Creatures.MonsterStatText import upgrade_stat_block_keys
 
-from .effect_options import row_uses_most
-from .monster_actions import upgrade_ability_keys
+from Combat.Fight.effect_options import row_uses_most
+from Combat.Fight.monster_actions import upgrade_ability_keys
 from .player_view import may_read_log_line
-from .public_log import public_log_rounds
-from .stats import (
+from Combat.Fight.public_log import public_log_rounds
+from Combat.Fight.stats import (
     DICT_STAT_KEYS,
     STAT_KEYS,
     _default_stats,

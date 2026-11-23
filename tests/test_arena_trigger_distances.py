@@ -9,7 +9,7 @@ its owner (combat-effects plan Q63). The distance and the sight are fields
 
 import pytest
 
-from Combat.CombatUIQt.effect_options import badge_trigger_row
+from Combat.Fight.effect_options import badge_trigger_row
 from Combat.Effects.active_effects import give_modifiers
 from Combat.Effects.triggers import (
     AttackOutcome,

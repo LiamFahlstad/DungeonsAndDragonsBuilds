@@ -10,7 +10,7 @@ import pytest
 from PyQt6.QtWidgets import QDialog, QLabel, QMessageBox
 
 from Combat.CombatUIQt import CombatAppQt
-from Combat.CombatUIQt.effect_options import PactSlot, spell_slot_choices
+from Combat.Fight.effect_options import PactSlot, spell_slot_choices
 from Combat.Definitions import Action
 from Combat.EncounterConfig import resolve_players
 from Combat.EncounterLogs import prepare_log, scenario_log_path

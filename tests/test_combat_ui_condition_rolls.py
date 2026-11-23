@@ -12,9 +12,9 @@ from PyQt6.QtWidgets import QDialog, QLabel, QMessageBox, QPushButton, QWidget
 
 from Combat.Arena.arena import POSITION_KEY
 from Combat.Combatants import Pirate, Tiger
-from Combat.CombatUIQt.monster_actions import MonsterAction
-from Combat.CombatUIQt.public_log import _ATTACK
-from Combat.CombatUIQt.saves import ATTACK_ROLL, CustomEffect
+from Combat.Fight.monster_actions import MonsterAction
+from Combat.Fight.public_log import _ATTACK
+from Combat.Fight.saves import ATTACK_ROLL, CustomEffect
 from Core.Definitions import Condition, DamageType
 from Model.Content import RulesConditions
 from Model.Content.CombatModifiers import ArmorClass

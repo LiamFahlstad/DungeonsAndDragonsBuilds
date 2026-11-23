@@ -19,7 +19,7 @@ from Combat.Arena.areas import (
 )
 from Combat.Arena.arena import ArenaSettings
 from Combat.Arena.geometry import Cell
-from Combat.CombatUIQt.effect_options import spell_range_ft
+from Combat.Fight.effect_options import spell_range_ft
 from Core.Definitions import CreatureSize
 from Model.Content.CombatAreaText import parse_area as read_area
 from Model.Content.CombatAreaText import point_range_ft

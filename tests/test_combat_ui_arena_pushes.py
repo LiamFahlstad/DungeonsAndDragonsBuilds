@@ -14,7 +14,7 @@ from Builds.Characters.Y2024_Paladin_Devotion_Edmund import (
 from Combat.Arena.arena import MOVED_KEY, POSITION_KEY
 from Combat.Arena.geometry import Cell
 from Combat.Arena.terrain import WALL, Spot
-from Combat.CombatUIQt.effect_options import effect_options
+from Combat.Fight.effect_options import effect_options
 from Combat.Effects.triggers import OpportunityAttack
 from Combat.LogFiles import read_json
 from Combat.Monsters.CR_1.monsters import Tiger

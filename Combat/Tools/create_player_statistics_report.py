@@ -22,7 +22,7 @@ from pathlib import Path
 import Combat.PlayerLog as PlayerLog
 import Combat.Scenarios as Scenarios
 from Combat.Campaign import Campaign
-from Combat.CombatUIQt.stats import (
+from Combat.Fight.stats import (
     SPELL_SLOT_LEVELS,
     compute_player_log_stats,
     damage_dealt_key,

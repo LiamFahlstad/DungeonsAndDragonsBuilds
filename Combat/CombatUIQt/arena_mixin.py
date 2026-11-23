@@ -179,13 +179,13 @@ from Core.Definitions import Condition
 from Core.Rules import SECONDS_PER_ROUND
 
 from .arena_view import ArenaView, MoveKind, token_rows
-from .effect_options import (
+from Combat.Fight.effect_options import (
     _spell_named,
     area_effect_row,
     opportunity_attack_row,
     spell_range_ft,
 )
-from .saves import SPELL, CustomEffect, EffectOption
+from Combat.Fight.saves import SPELL, CustomEffect, EffectOption
 from .settings import ARENA_VIEW_KEY
 from .state import CombatWindowState
 from .undo import undoable

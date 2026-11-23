@@ -41,8 +41,8 @@ from Combat.Effects.triggers import (
 from Combat.Effects.sight import UNKNOWN, Seen
 from Combat.Summons import vanishes_at_zero_hp
 from Core.Definitions import Condition
-from .amounts import AmountError, parse_amount, parse_damage
-from .attack_rolls import (
+from Combat.Fight.amounts import AmountError, parse_amount, parse_damage
+from Combat.Fight.attack_rolls import (
     AttackRoll,
     armor_bonus,
     armor_in_use,
@@ -51,10 +51,10 @@ from .attack_rolls import (
     parse_attack_roll,
     stored_armor,
 )
-from .monster_actions import first_number
+from Combat.Fight.monster_actions import first_number
 from .player_view import _player_names, _seen, note_damage_defense, note_health
-from .saves import CustomEffect, roll_save, save_modifier
-from .stats import _default_stats, damage_dealt_key, damage_taken_key
+from Combat.Fight.saves import CustomEffect, roll_save, save_modifier
+from Combat.Fight.stats import _default_stats, damage_dealt_key, damage_taken_key
 from .state import CombatWindowState
 from .undo import undoable
 

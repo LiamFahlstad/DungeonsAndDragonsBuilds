@@ -39,7 +39,7 @@ from Combat.Arena.lasting import (
     with_kept_walls,
 )
 from Combat.Arena.terrain import HALF, THREE_QUARTERS, TOTAL, WALL, MapObject, Spot
-from Combat.CombatUIQt.effect_options import _spell_named
+from Combat.Fight.effect_options import _spell_named
 from Model.Content.CombatArea import CombatArea
 from Model.Content.CombatAreaText import parse_area as read_area
 

@@ -22,10 +22,10 @@ from Builds.Characters.Y2024_Bard_Valor_Clover import (
 from Builds.Characters.Y2024_Cleric_Light_GabrielGreybeard import (
     Y2024ClericLightGabrielGreybeardCharacterBuilder as Gabriel,
 )
-from Combat.CombatUIQt.attack_rolls import parse_attack_roll
-from Combat.CombatUIQt.effect_options import effect_options, triggered_rows
-from Combat.CombatUIQt.monster_actions import parse_action
-from Combat.CombatUIQt.saves import CustomEffect
+from Combat.Fight.attack_rolls import parse_attack_roll
+from Combat.Fight.effect_options import effect_options, triggered_rows
+from Combat.Fight.monster_actions import parse_action
+from Combat.Fight.saves import CustomEffect
 from Combat.Effects.triggers import TriggerChoice, TriggerMode, attack_roll_firings
 from Combat.Tools.monster_effect_text import read_effects
 from Combat.Monsters.CR_2.monsters import Ogre

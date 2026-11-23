@@ -18,8 +18,8 @@ from PyQt6.QtWidgets import QMessageBox
 from Combat.Definitions import ActionCost, Phase
 from Core.Rules import ACTIONS_PER_TURN
 
-from .effect_options import has_slots, row_uses_most, spell_slot_choices
-from .monster_actions import (
+from Combat.Fight.effect_options import has_slots, row_uses_most, spell_slot_choices
+from Combat.Fight.monster_actions import (
     MonsterAction,
     is_spent,
     legendary_actions_left,

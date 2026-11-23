@@ -26,7 +26,7 @@ You find things in this D&D 5e (2024 rules) repo and say exactly where they are.
 
 ## What to report
 
-- Every answer is a path with a line number (`Combat/CombatUIQt/saves.py:59`) and the matching line quoted. Never give a location you didn't open.
+- Every answer is a path with a line number (`Combat/Fight/saves.py:59`) and the matching line quoted. Never give a location you didn't open.
 - If something isn't found, say so and list the searches you ran. Don't guess a nearby name.
 - Report what the code says, not whether it is right. If something looks wrong, add one line under **Concerns** and leave the judgment to the caller.
 - You have no Bash, so you can't run scripts, tests or git. If the answer needs code to run, say so under **Not done**.

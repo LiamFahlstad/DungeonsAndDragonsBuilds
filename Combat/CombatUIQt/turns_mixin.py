@@ -25,7 +25,7 @@ from Model.Content.CombatModifiers import AtTurnEnd, AtTurnStart
 from Combat.Effects.triggers import InitiativeOutcome
 from Combat.Summons import follows_owner, numbered, place_after_owners
 
-from .stats import _default_stats
+from Combat.Fight.stats import _default_stats
 from Core.Rules import ability_modifier
 from .state import CombatWindowState
 from .undo import undoable

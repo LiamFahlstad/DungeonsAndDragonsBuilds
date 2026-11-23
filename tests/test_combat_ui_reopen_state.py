@@ -9,7 +9,7 @@ import pytest
 from PyQt6.QtWidgets import QDialog, QMessageBox
 
 from Combat.CombatUIQt import CombatAppQt
-from Combat.CombatUIQt.stats import compute_player_log_stats, player_log_history
+from Combat.Fight.stats import compute_player_log_stats, player_log_history
 from Combat.Definitions import Action
 from Combat.EncounterConfig import resolve_players
 from Combat.EncounterLogs import prepare_log, scenario_log_path

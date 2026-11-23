@@ -22,7 +22,7 @@ from Combat.Arena.arena import POSITION_KEY
 from Combat.Arena.geometry import Cell
 from Combat.Arena.lasting import AREA_KEY, AreaPrompt, lasting_areas
 from Combat.CombatUIQt.arena_view import MoveKind
-from Combat.CombatUIQt.effect_options import effect_options
+from Combat.Fight.effect_options import effect_options
 from Combat.Combatants import Pirate
 from Combat.EncounterLogs import TURN_PREFIX
 from Combat.Monsters.CR_1.monsters import Tiger

@@ -10,9 +10,9 @@ from Combat.Effects.active_effects import (
     note_origin,
 )
 from Presentation.FeatureCards import feature_label
-from .effect_options import feature_action_cost
+from Combat.Fight.effect_options import feature_action_cost
 from .resources import feature_lack
-from .stats import _default_stats, increment_named_stat
+from Combat.Fight.stats import _default_stats, increment_named_stat
 from .state import CombatWindowState
 from .undo import undoable
 

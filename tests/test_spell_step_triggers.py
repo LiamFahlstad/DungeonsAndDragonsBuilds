@@ -27,7 +27,7 @@ from Builds.Characters.Y2024_Bard_Valor_Clover import (
 )
 from CharacterContent.Spells.SpellClasses.Cantrips import GreenFlameBlade
 from CharacterContent.Spells.SpellClasses.Level1 import IceKnife
-from Combat.CombatUIQt.effect_options import effect_options, triggered_rows
+from Combat.Fight.effect_options import effect_options, triggered_rows
 from Combat.Effects.triggers import (
     AttackOutcome,
     TriggerChoice,

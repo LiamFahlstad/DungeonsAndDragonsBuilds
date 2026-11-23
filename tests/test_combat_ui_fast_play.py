@@ -27,7 +27,7 @@ from Builds.Characters.Y2024_Artificer_Cartographer_ObmarStalskagg import (
 from Combat.Combatants import Pirate, Tiger
 from Combat.Definitions import Action
 from Combat.CombatUIQt.player_view import player_view_rows
-from Combat.CombatUIQt.monster_actions import parse_action
+from Combat.Fight.monster_actions import parse_action
 from Combat.CombatUIQt.settings import SETTING_SECTIONS
 from Combat.CombatUIQt.styles import QSS
 from Combat.EncounterLogs import PLAYER_FIGHT_STATE_KEY, LogJSONEncoder

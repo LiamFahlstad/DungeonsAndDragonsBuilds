@@ -52,9 +52,9 @@ from Combat.Effects.triggers import (
     still_hits,
 )
 
-from .attack_rolls import armor_bonus, armor_in_use, stored_armor
+from Combat.Fight.attack_rolls import armor_bonus, armor_in_use, stored_armor
 from .log_feed import LogFeed
-from .monster_actions import (
+from Combat.Fight.monster_actions import (
     DIE,
     LEGENDARY_ACTIONS_PER_ROUND,
     MonsterAction,
@@ -68,13 +68,13 @@ from .monster_actions import (
 from .player_server import PLAYER_PORT
 from .resources import legendary_resistance_lack, monster_action_lack
 from .conditions_mixin import hit_rider
-from .effect_options import (
+from Combat.Fight.effect_options import (
     badge_trigger_row,
     monster_action_options,
     trigger_option,
     triggered_rows,
 )
-from .saves import (
+from Combat.Fight.saves import (
     ATTACK_ROLL,
     HEALING,
     TEMP_HP,

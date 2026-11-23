@@ -47,7 +47,7 @@ from CharacterContent.Features.ClassFeatures.Monk.MonkFeatures import (
 from CharacterContent.Features.SubClassFeatures.Fighter.FighterArcaneArcherFeatures import (
     EverReadyShot,
 )
-from Combat.CombatUIQt.effect_options import (
+from Combat.Fight.effect_options import (
     effect_options,
     regained_uses,
     triggered_rows,

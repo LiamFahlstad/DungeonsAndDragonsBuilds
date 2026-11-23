@@ -35,8 +35,8 @@ from Builds.Characters.Y2024_Paladin_Devotion_Edmund import (
 from CharacterContent.Spells.SpellFactory import SpellFactory
 from Combat.Combatants import Pirate, Tiger
 from Combat.CombatUIQt import turn_panel_mixin as turn_panel
-from Combat.CombatUIQt.monster_actions import DamageRoll
-from Combat.CombatUIQt.saves import CustomEffect, roll_extra_damage
+from Combat.Fight.monster_actions import DamageRoll
+from Combat.Fight.saves import CustomEffect, roll_extra_damage
 from Combat.CombatUIQt.trigger_prompt import TriggerPrompt
 from Combat.Effects.active_effects import give_modifiers, note_origin, repeat_saves
 from Combat.Effects.modifiers import hit_plan, hit_point_maximum

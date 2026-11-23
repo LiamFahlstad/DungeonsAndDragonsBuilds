@@ -57,10 +57,10 @@ from Model.Content.CombatEffect import CombatPush
 from Model.Content.Feature import Feature
 from Model.Creatures.Combatants import BasicCombatantData
 
-from .attack_rolls import AttackRoll
-from .monster_actions import MonsterAction
+from Combat.Fight.attack_rolls import AttackRoll
+from Combat.Fight.monster_actions import MonsterAction
 from .player_server import PlayerServer
-from .saves import CustomEffect, EffectOption
+from Combat.Fight.saves import CustomEffect, EffectOption
 from .settings import CombatSettings
 from .undo import UndoPoint
 

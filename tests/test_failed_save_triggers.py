@@ -24,8 +24,8 @@ from Builds.Examples.Y2024_Fighter_ArcaneArcher_SylvaineFarshot import (
 from CharacterContent.Features.ClassFeatures.Fighter.FighterFeatures import (
     Indomitable,
 )
-from Combat.CombatUIQt.effect_options import triggered_rows
-from Combat.CombatUIQt.saves import CustomEffect, save_modifier
+from Combat.Fight.effect_options import triggered_rows
+from Combat.Fight.saves import CustomEffect, save_modifier
 from Combat.Effects.triggers import (
     FailedSaveOutcome,
     TriggerChoice,

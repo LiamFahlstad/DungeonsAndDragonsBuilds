@@ -16,8 +16,8 @@ from Builds.Characters.Y2024_Paladin_Devotion_Edmund import (
 )
 from CharacterContent.Spells.SpellClasses.Level1 import ArmorOfAgathys
 from CharacterContent.Spells.SpellClasses.Level4 import FireShield
-from Combat.CombatUIQt.effect_options import badge_trigger_row, trigger_option
-from Combat.CombatUIQt.monster_actions import parse_action
+from Combat.Fight.effect_options import badge_trigger_row, trigger_option
+from Combat.Fight.monster_actions import parse_action
 from Combat.Tools.monster_effect_text import read_effects
 from Combat.Effects.active_effects import give_modifiers
 from Combat.Effects.modifiers import rolled_modifiers

@@ -31,8 +31,8 @@ from .player_server import PlayerServer
 from .rolls_mixin import RollsMixin
 from .settings import ARENA_VIEW_KEY, CombatSettings, open_settings_store
 from .spells_mixin import SpellsMixin
-from .stats import _default_stats
-from .saves import DEFAULT_ATTACK_BONUS, DEFAULT_SAVE_DC, SAVING_THROW
+from Combat.Fight.stats import _default_stats
+from Combat.Fight.saves import DEFAULT_ATTACK_BONUS, DEFAULT_SAVE_DC, SAVING_THROW
 from .styles import QSS
 from .summons_mixin import SummonsMixin
 from .timer_mixin import TimerMixin

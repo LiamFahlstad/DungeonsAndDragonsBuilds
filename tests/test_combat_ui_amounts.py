@@ -11,13 +11,13 @@ import pkgutil
 import pytest
 
 import Combat.Monsters
-from Combat.CombatUIQt.amounts import (
+from Combat.Fight.amounts import (
     AmountError,
     damage_type_from_text,
     parse_amount,
     parse_damage,
 )
-from Combat.CombatUIQt.monster_actions import (
+from Combat.Fight.monster_actions import (
     DamageRoll,
     first_number,
     monster_actions,

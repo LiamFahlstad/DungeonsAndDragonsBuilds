@@ -32,8 +32,8 @@ from Builds.Characters.Y2024_Paladin_Devotion_Edmund import (
 )
 from CharacterContent.Spells.SpellFactory import SpellFactory
 from Combat.Combatants import BugbearWarrior, Pirate, Tiger
-from Combat.CombatUIQt.monster_actions import DamageRoll, MonsterAction
-from Combat.CombatUIQt.saves import (
+from Combat.Fight.monster_actions import DamageRoll, MonsterAction
+from Combat.Fight.saves import (
     ATTACK_ROLL,
     FEATURE,
     SPELL,
@@ -472,7 +472,7 @@ def test_divine_favor_picked_with_an_enemy_targeted_goes_on_its_caster(fight):
     """Divine Favor is a Self spell: picked in the Custom Effect dialog while
     the Tiger is still targeted, its badge (and its extra damage) goes on the
     Pirate, as Cast Spell does (DI-076)."""
-    from Combat.CombatUIQt.effect_options import spell_option
+    from Combat.Fight.effect_options import spell_option
 
     ui, pirate, tiger, _ = fight
     option = spell_option(SpellFactory.create("Divine Favor"), pirate)

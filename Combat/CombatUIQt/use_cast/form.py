@@ -14,9 +14,9 @@ from collections.abc import Callable
 from dataclasses import dataclass, field, replace
 from typing import TypeVar
 
-from ..amounts import parse_amount
-from ..attack_rolls import AttackRoll, parse_attack_roll
-from ..saves import (
+from Combat.Fight.amounts import parse_amount
+from Combat.Fight.attack_rolls import AttackRoll, parse_attack_roll
+from Combat.Fight.saves import (
     ATTACK_ROLL,
     CONDITION_JOINER,
     DAMAGE_AMOUNT,

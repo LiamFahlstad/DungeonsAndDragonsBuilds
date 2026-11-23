@@ -32,7 +32,7 @@ from Combat.Arena.ranges import (
     weapon_range,
 )
 from Combat.Effects.modifiers import attack_plan
-from Combat.CombatUIQt.monster_actions import parse_action
+from Combat.Fight.monster_actions import parse_action
 from Combat.Effects.sight import NO_SIGHT
 from Combat.EncounterLogs import _plain
 from Combat.Tools.monster_effect_text import read_effects, read_reach_and_range

@@ -45,7 +45,7 @@ from Combat.Effects.modifiers import (
 from Combat.Summons import is_out, owner_name
 from Core.Definitions import Condition
 from Core.Rules import ability_modifier
-from .attack_rolls import armor_in_use, known_ac_text
+from Combat.Fight.attack_rolls import armor_in_use, known_ac_text
 from .cards_mixin import _hp_chunk_color
 from .dialogs_mixin import (
     _MONSTER_ABILITY_SECTIONS,
@@ -54,7 +54,7 @@ from .dialogs_mixin import (
     _display,
     _speed_text,
 )
-from .monster_actions import first_number
+from Combat.Fight.monster_actions import first_number
 from .turns_mixin import initiative_units, unit_label
 
 # A monster with one of these (a condition, a Visibility, or the spell's badge)

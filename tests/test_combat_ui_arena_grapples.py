@@ -12,7 +12,7 @@ from Builds.Characters.Y2024_Paladin_Devotion_Edmund import (
 from Combat.Arena.arena import GRAPPLER_KEY, MOVED_KEY, POSITION_KEY
 from Combat.Arena.geometry import Cell
 from Combat.CombatUIQt.arena_view import MoveKind
-from Combat.CombatUIQt.effect_options import effect_options
+from Combat.Fight.effect_options import effect_options
 from Combat.EncounterLogs import PLAYER_FIGHT_KEYS
 from Combat.Effects.triggers import OpportunityAttack
 from Combat.LogFiles import read_json

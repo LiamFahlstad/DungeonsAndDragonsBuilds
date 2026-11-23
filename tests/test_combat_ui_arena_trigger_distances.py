@@ -12,8 +12,8 @@ from Builds.Characters.Y2024_Paladin_Devotion_Edmund import (
     Y2024PaladinDevotionEdmundCharacterBuilder as Edmund,
 )
 from Combat.Arena.arena import POSITION_KEY
-from Combat.CombatUIQt.effect_options import trigger_option
-from Combat.CombatUIQt.monster_actions import parse_action
+from Combat.Fight.effect_options import trigger_option
+from Combat.Fight.monster_actions import parse_action
 from Combat.Effects.triggers import TriggerChoice
 from Combat.Monsters.CR_2.monsters import Ogre
 from tests._combat_ui import make_ui

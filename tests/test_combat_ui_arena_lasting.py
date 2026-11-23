@@ -25,8 +25,8 @@ from Combat.Arena.arena import POSITION_KEY
 from Combat.Arena.geometry import Cell
 from Combat.Arena.lasting import AREA_KEY, lasting_areas
 from Combat.CombatUIQt.arena_mixin import ARENA_PAGE, area_lasts
-from Combat.CombatUIQt.effect_options import _spell_named
-from Combat.CombatUIQt.saves import MONSTER_ACTION, SPELL, EffectOption
+from Combat.Fight.effect_options import _spell_named
+from Combat.Fight.saves import MONSTER_ACTION, SPELL, EffectOption
 from Combat.Combatants import Pirate
 from Combat.EncounterLogs import TURN_PREFIX
 from Combat.Monsters.CR_0.monsters import IceMephit

@@ -23,9 +23,9 @@ from CharacterContent.Spells.SpellFactory import SpellFactory
 from Combat.Combatants import Pirate, Tiger
 from Combat.CombatUIQt.player_view import note_damage_defense
 from Combat.PlayerLog import is_round_key
-from Combat.CombatUIQt.saves import CustomEffect
+from Combat.Fight.saves import CustomEffect
 from Combat.Effects.active_effects import KEY, give_modifiers, new_effect
-from Combat.CombatUIQt.attack_rolls import armor_text
+from Combat.Fight.attack_rolls import armor_text
 from Combat.Effects.modifiers import (
     armor_class,
     armor_class_bonus,

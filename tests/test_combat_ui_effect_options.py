@@ -1,5 +1,5 @@
 """What the Custom Effect dialog's picker reads out of spells, features,
-weapons and stat-block actions (Combat/CombatUIQt/effect_options.py). The
+weapons and stat-block actions (Combat/Fight/effect_options.py). The
 expected values come from each spell's own text and the rules, read by hand:
 Fireball's "taking 8d6 Fire damage on a failed save or half as much damage on a
 successful one", Web's 2d4 Fire that's for the webs burning, and so on."""
@@ -16,7 +16,7 @@ from Builds.Characters.Y2024_Paladin_Devotion_Edmund import (
     Y2024PaladinDevotionEdmundCharacterBuilder as Edmund,
 )
 from CharacterContent.Spells.SpellFactory import DataSpell, SpellFactory
-from Combat.CombatUIQt.effect_options import (
+from Combat.Fight.effect_options import (
     ALL_SPELLS,
     FEATURES,
     STANDARD_ACTIONS,
@@ -24,7 +24,7 @@ from Combat.CombatUIQt.effect_options import (
     read_effect_text,
     spell_option,
 )
-from Combat.CombatUIQt.saves import (
+from Combat.Fight.saves import (
     EffectOption,
     ATTACK_ROLL,
     DAMAGE_AMOUNT,

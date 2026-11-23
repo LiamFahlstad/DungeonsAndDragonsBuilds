@@ -80,13 +80,13 @@ from Core.Definitions import Condition
 from Model.Content.CombatModifiers import AttackKind, HitPointMaximum
 from Model.Content.RulesConditions import conditions_with
 from Model.Content.StandardActions import DASH, DODGE, HIDDEN
-from .attack_rolls import (
+from Combat.Fight.attack_rolls import (
     armor_in_use,
     has_shield,
     is_shield_off,
     SHIELD_OFF,
 )
-from .effect_options import (
+from Combat.Fight.effect_options import (
     COLLAPSED_CATEGORIES,
     effect_options,
     pick_attack_range,
@@ -94,10 +94,10 @@ from .effect_options import (
     triggered_rows,
 )
 from .features_mixin import FEATURE_BADGE_COLOR
-from .monster_actions import legendary_resistances_left, roll_dice
+from Combat.Fight.monster_actions import legendary_resistances_left, roll_dice
 from .player_view import note_condition_immunity
 from .resources import feature_lack, monster_action_lack, spell_slot_lack
-from .saves import (
+from Combat.Fight.saves import (
     ABILITIES,
     ATTACK_ROLL,
     DAMAGE_AMOUNT,
@@ -118,7 +118,7 @@ from .saves import (
     with_extra_damage,
 )
 from .spells_mixin import spell_badge_color, spell_badge_description
-from .stats import _default_stats, increment_named_stat
+from Combat.Fight.stats import _default_stats, increment_named_stat
 from .state import CombatWindowState
 from .tree_filter import filter_category_tree
 from .undo import undoable
