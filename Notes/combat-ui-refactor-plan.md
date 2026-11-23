@@ -64,7 +64,7 @@ and the few others a step touches, not the character-sheet tests. Steps 3,
 | 2 | A typed combatant (`Combatant` TypedDict) | M | **Done** 2026-11-22, revised (R8): the schema and a key test; annotating signatures moved to step 5 |
 | 3 | The Use / Cast dialog as a class, its form-to-effects logic Qt-free | L | 3a **done** 2026-11-22 (R9): `use_cast/form.py`, dialog 1,580 → 1,440 lines; 3b **done** 2026-11-22 (R10): `_UseCastDialog`, `run()` 616 lines + 44 methods; 3c's move **done** (R11): `use_cast/dialog.py`, `conditions_mixin.py` 3,500 → 1,674 lines; 3c's split **done**, revised (R12): `run()` is 14 lines calling 10 builder methods, the longest 126; 3d **done** (R13): `do_apply` 146 → 50 lines over Qt-free `read_amount`, `check_applicable` and `build_effect`; reviewed (R14): no behaviour change; **step 3 done** |
 | 4 | The window built from panels, shortcuts as a table | M | **Done** 2026-11-23 (R15, R16): `_build_window` 680 → 13 lines over 12 builders (the longest 111); the shortcuts a table (`shortcuts.py`) checked against KEYBOARD_SHORTCUTS.md |
-| 5 | The Qt-free fight core (`Combat/Fight/`), one mixin at a time | XL | 5.1 **done** 2026-11-23 (R17): seven Qt-free modules moved to `Combat/Fight/`; 5.5's guard test in place; 5.2 **done** (R18): `Fight` holds the fight's state; 5.3 started (R19, R20): damage's defenses and arithmetic in `Combat/Fight/damage.py`, health (death state, healing, Temporary Hit Points, Death Saving Throws) in `Combat/Fight/health.py`; the map's questions (distance, sight, cover, range, Critical Hits within 5 feet) are `Fight` methods (R21); an attack roll's check is `Combat/Fight/attacks.py` (R22); gaining and losing a condition is `Combat/Fight/conditions.py` (R23); the turn order is `Fight`'s (R24); casting's slots, recipients and timers are `Combat/Fight/spells.py` (R25); joining and leaving the turn order are `Fight`'s, summons' questions and carry-over `Combat/Fight/summons.py` (R26); **5.3 continues with Wild Shape and rests** |
+| 5 | The Qt-free fight core (`Combat/Fight/`), one mixin at a time | XL | 5.1 **done** 2026-11-23 (R17): seven Qt-free modules moved to `Combat/Fight/`; 5.5's guard test in place; 5.2 **done** (R18): `Fight` holds the fight's state; 5.3 started (R19, R20): damage's defenses and arithmetic in `Combat/Fight/damage.py`, health (death state, healing, Temporary Hit Points, Death Saving Throws) in `Combat/Fight/health.py`; the map's questions (distance, sight, cover, range, Critical Hits within 5 feet) are `Fight` methods (R21); an attack roll's check is `Combat/Fight/attacks.py` (R22); gaining and losing a condition is `Combat/Fight/conditions.py` (R23); the turn order is `Fight`'s (R24); casting's slots, recipients and timers are `Combat/Fight/spells.py` (R25); joining and leaving the turn order are `Fight`'s, summons' questions and carry-over `Combat/Fight/summons.py` (R26); Wild Shape's uses and badge `Combat/Fight/wild_shape.py` (R27); **5.3 continues with rests** |
 | 6 | One refresh path after every GM operation | M | Not started |
 | 7 | Mixins into composed views and one module per dialog; `CombatWindowState` gone | L | Not started |
 | 8 | Docs, agents and skills point at the new layout | S | Not started |
@@ -1056,6 +1056,25 @@ whole on purpose, each with its reason, and the full suite passes.
     Dessie's and Hanna's sheets) and 8 more in `tests/test_fight.py`.
     `summons_mixin.py` 679 → 520 lines, `turns_mixin.py` 770 → 736. The
     full suite passes (12,125).
+
+- **R27 (step 5.3, Wild Shape, 2026-11-23).** Wild Shape's rules were
+  already Qt-free: `Combat/WildShape.py` holds the forms, taking one on,
+  leaving it and what can be cast in it. So this slice is small:
+  - `Combat/Fight/wild_shape.py`: `wild_shape_uses_left`, and
+    `describe_form_badge` (the badge's statistics, in `WILD_SHAPE_COLOR`,
+    which moved with it).
+  - `Combat/Fight/conditions.py`: `incapacitates` (from
+    `conditions_mixin.py`) and `incapacitated_by`, the condition that
+    keeps one from the Bonus Action Wild Shape costs.
+  - **What `WildShapeMixin` keeps:** the menu, and the order of what taking
+    a form on does (a use, the Bonus Action, leaving the old form, the
+    temporary Hit Points, the badge), because each of those logs.
+    `_wild_shape_uses_left` is a one-line wrapper (a test calls it).
+  - **Not merged:** `Combat/Effects/triggers.py` has its own copy of the
+    incapacitating conditions. That file is the effects plan's, so it's
+    left for step 9a's split of `triggers.py`.
+  - **Tests:** `tests/test_fight_wild_shape.py` (4 tests without Qt).
+    `wild_shape_mixin.py` 192 → 178 lines. The full suite passes (12,129).
 
 ## Discovered issues
 

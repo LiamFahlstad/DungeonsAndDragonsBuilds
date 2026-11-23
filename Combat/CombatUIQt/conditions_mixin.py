@@ -60,7 +60,6 @@ from Combat.Effects.modifiers import (
     hit_point_maximum_notes,
     loses_dodge,
     rolled_modifiers,
-    rules_condition,
 )
 from Model.Content.CombatModifiers import Modifier
 from Combat.Effects.triggers import (
@@ -74,7 +73,6 @@ from Combat.Effects.triggers import (
 from Combat.WildShape import current_form, form_badge
 from Core.Definitions import Condition
 from Model.Content.CombatModifiers import AttackKind, HitPointMaximum
-from Model.Content.RulesConditions import conditions_with
 from Model.Content.StandardActions import DASH, DODGE, HIDDEN
 from Combat.Fight.attack_rolls import (
     armor_in_use,
@@ -114,7 +112,7 @@ from Combat.Fight.saves import (
     with_extra_damage,
 )
 from .spells_mixin import spell_badge_color, spell_badge_description
-from Combat.Fight.conditions import gain_condition, lose_condition
+from Combat.Fight.conditions import gain_condition, incapacitates, lose_condition
 from .state import CombatWindowState
 from .tree_filter import filter_category_tree
 from .undo import undoable
@@ -124,17 +122,6 @@ from .use_cast.dialog import (
     _ignores_cover,
     _where_from,
 )
-
-# The conditions that give Incapacitated, which breaks Concentration (and
-# ends a Wild Shape form): Paralyzed, Petrified, Stunned, Unconscious too.
-_INCAPACITATING = conditions_with(Condition.INCAPACITATED)
-
-
-def incapacitates(name: str) -> bool:
-    """Whether a condition named `name` gives Incapacitated, also under a
-    longer custom name ("Stunned by Stunning Strike")."""
-    return rules_condition(name) in _INCAPACITATING
-
 
 # What a hit made with a weapon's row (True) or an Unarmed Strike's (False)
 # is, for its triggers; None: not known.

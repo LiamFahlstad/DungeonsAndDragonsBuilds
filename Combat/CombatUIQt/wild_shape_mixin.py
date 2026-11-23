@@ -2,7 +2,8 @@
 forms and leaving it (the dict side is Combat/WildShape.py).
 
 Wild Shape is used from Enable Feature or from the Druid's card menu, which
-lists their forms. It spends a use and a Bonus Action, gives the form's
+lists their forms. It spends a use and a Bonus Action (the uses left and the form's
+badge are Combat/Fight/wild_shape.py), gives the form's
 temporary Hit Points and a "Wild Shape (<form>)" badge, and from then on the
 card, the turn column's buttons, attacks against them and their saves are
 the form's. They leave it with the card menu or by taking the badge off (a
@@ -16,11 +17,10 @@ from PyQt6.QtGui import QCursor
 from PyQt6.QtWidgets import QMenu
 
 from CharacterContent.Features.ClassFeatures.Druid.WildShapeForms import (
-    format_wild_shape_form,
     wild_shape_temp_hp,
 )
 from Combat.Definitions import Action
-from Combat.Effects.active_effects import FEATURE, describe, note_origin
+from Combat.Effects.active_effects import note_origin
 from Combat.WildShape import (
     assume_form,
     can_cast_in_form,
@@ -32,26 +32,19 @@ from Combat.WildShape import (
 )
 from Model.Character import Character
 
-from .conditions_mixin import incapacitates
+from Combat.Fight.conditions import incapacitated_by
 from Combat.Fight.effect_options import feature_action_cost
+from Combat.Fight.wild_shape import describe_form_badge, wild_shape_uses_left
 from .state import CombatWindowState
 from .styles import QSS
 from .undo import undoable
-
-# A Wild Shape badge's color, apart from other features' blue.
-WILD_SHAPE_COLOR = "#4a8a4c"
 
 
 class WildShapeMixin(CombatWindowState):
     """Mixin for Wild Shape."""
 
     def _wild_shape_uses_left(self, char: dict) -> int:
-        feature = wild_shape_feature(char)
-        sheet = char.get("_stat_block")
-        if feature is None or not isinstance(sheet, Character):
-            return 0
-        used = char.get("feature_uses_used", {}).get(feature.name, 0)
-        return max(feature.number_of_uses(sheet) - used, 0)
+        return wild_shape_uses_left(char)
 
     def _wild_shape_menu(self, char: dict) -> QMenu | None:
         """A menu of char's Wild Shape forms, the one it's in checked, and a
@@ -60,7 +53,7 @@ class WildShapeMixin(CombatWindowState):
         forms = known_forms(sheet) if isinstance(sheet, Character) else {}
         if not forms:
             return None
-        left = self._wild_shape_uses_left(char)
+        left = wild_shape_uses_left(char)
         menu = QMenu(f"Wild Shape ({left} left)", self._window)
         menu.setStyleSheet(QSS)
         form_now = current_form(char)
@@ -97,10 +90,10 @@ class WildShapeMixin(CombatWindowState):
         if feature is None or not isinstance(sheet, Character):
             return
         # Incapacitated: "You can't take any action, Bonus Action, or Reaction."
-        incapacitated = [c for c in char["conditions"] if incapacitates(c)]
-        if incapacitated:
+        incapacitated = incapacitated_by(char)
+        if incapacitated is not None:
             self._show_status(
-                f"No Wild Shape: {char['name']} is {min(incapacitated)}"
+                f"No Wild Shape: {char['name']} is {incapacitated}"
                 " and can't take a Bonus Action."
             )
             return
@@ -108,7 +101,7 @@ class WildShapeMixin(CombatWindowState):
         lacks = [
             (
                 f"{feature.name}: no uses left"
-                if self._wild_shape_uses_left(char) <= 0
+                if wild_shape_uses_left(char) <= 0
                 else None
             ),
             self._action_lack(char, action_cost),
@@ -129,14 +122,7 @@ class WildShapeMixin(CombatWindowState):
             value={"form": form},
         )
         self._give_temp_hp(char, wild_shape_temp_hp(sheet), source=None)
-        badge = form_badge(form)
-        describe(
-            char,
-            badge,
-            format_wild_shape_form(known_forms(sheet)[form], sheet),
-            WILD_SHAPE_COLOR,
-            FEATURE,
-        )
+        badge = describe_form_badge(char, sheet, form)
         self._add_condition_to(char, badge, source=char)
         note_origin(char, badge, source=feature.name, caster=char["name"])
         self._rebuild_card(char)

@@ -14,11 +14,29 @@ from Combat.Effects.active_effects import (
     linked_conditions,
     remove_effect,
 )
-from Combat.Effects.modifiers import hit_point_maximum
+from Combat.Effects.modifiers import hit_point_maximum, rules_condition
 from Core.Definitions import Condition
+from Model.Content.RulesConditions import conditions_with
 from Model.Content.StandardActions import DASH
 
 from .stats import _default_stats, increment_named_stat
+
+# The conditions that give Incapacitated, which breaks Concentration (and
+# ends a Wild Shape form): Paralyzed, Petrified, Stunned, Unconscious too.
+_INCAPACITATING = conditions_with(Condition.INCAPACITATED)
+
+
+def incapacitates(name: str) -> bool:
+    """Whether a condition named `name` gives Incapacitated, also under a
+    longer custom name ("Stunned by Stunning Strike")."""
+    return rules_condition(name) in _INCAPACITATING
+
+
+def incapacitated_by(char: dict) -> str | None:
+    """The first (by name) of char's conditions that gives it Incapacitated
+    ("You can't take any action, Bonus Action, or Reaction"), or None."""
+    incapacitating = [c for c in char["conditions"] if incapacitates(c)]
+    return min(incapacitating) if incapacitating else None
 
 
 def gain_condition(
