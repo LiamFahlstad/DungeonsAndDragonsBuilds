@@ -1,6 +1,13 @@
 """Spells mixin for CombatAppQt."""
 
-from Model.Content.Feature import FeatureTarget
+from Combat.Fight.spells import (
+    active_spell_record,
+    count_spell_cast,
+    spell_recipients,
+    spend_slot,
+    tick,
+    ticks_now,
+)
 from Combat.Definitions import Action, CombatStatus
 from Combat.Effects.active_effects import (
     SPELL,
@@ -15,11 +22,6 @@ from Combat.PlayerCombatant import max_pact_slots
 from Core.Definitions import Condition
 from Combat.Fight.effect_options import PactSlot, casting_time_cost
 from .resources import spell_slot_lack
-from Combat.Fight.stats import (
-    _default_stats,
-    increment_named_stat,
-    spell_slots_used_key,
-)
 from .state import CombatWindowState
 from .undo import undoable
 
@@ -44,21 +46,14 @@ class SpellsMixin(CombatWindowState):
         does; False, saying why, when there's none left."""
         asked_for_pact = isinstance(level, PactSlot)
         level = int(level)
-        level_left = char.get("spell_slots", {}).get(level, 0)
-        pact_left = char.get("pact_slots", {}).get(level, 0)
-        pact = asked_for_pact or (level_left <= 0 and pact_left > 0)
-        if (pact_left if pact else level_left) <= 0:
+        spent = spend_slot(char, level, asked_for_pact)
+        if spent is None:
             kind = "Pact Magic slots" if asked_for_pact else "slots"
             self._show_status(
                 f"Nothing spent: {char['name']} has no level {level} {kind} left."
             )
             return False
-        slots = char["pact_slots" if pact else "spell_slots"]
-        slots[level] -= 1
-        char.setdefault("stats", _default_stats())
-        char["stats"]["spell_slots_used"] = char["stats"].get("spell_slots_used", 0) + 1
-        level_key = spell_slots_used_key(level)
-        char["stats"][level_key] = char["stats"].get(level_key, 0) + 1
+        pact = spent.pact
         kind = "Pact Magic slot" if pact else "spell slot"
         self._log_event(
             f"{char['name']} uses a Level {level} {kind}",
@@ -252,16 +247,11 @@ class SpellsMixin(CombatWindowState):
             remaining = []
             expired_concentration = False
             for entry in active_spells:
-                ticks_on = entry.get("ticks_on")
-                if ticks_on in in_order and ticks_on not in started_names:
-                    remaining.append(entry)
-                    continue
-                if ticks_on not in started_names and not new_round:
+                if not ticks_now(entry, started_names, in_order, new_round):
                     remaining.append(entry)
                     continue
                 ticked = True
-                entry["time_left"] = max(entry["time_left"] - 6, 0)
-                if entry["time_left"] > 0:
+                if not tick(entry):
                     remaining.append(entry)
                 else:
                     self._log_event(
@@ -319,9 +309,7 @@ class SpellsMixin(CombatWindowState):
         """Count a cast of the spell `name` (of `level`, using a slot of
         slot_level, if any) in caster's stats, and log it so the party's
         replay counts it too. Cast Spell and the Custom Effect dialog share it."""
-        stats = caster.setdefault("stats", _default_stats())
-        stats["spells_cast"] = stats.get("spells_cast", 0) + 1
-        increment_named_stat(stats, "spells_cast_by_name", name)
+        count_spell_cast(caster, name)
         upcast = f" at level {slot_level}" if (slot_level or 0) > level else ""
         self._log_event(
             f"{caster['name']} casts {name}{upcast}",
@@ -353,18 +341,14 @@ class SpellsMixin(CombatWindowState):
         if not self._can_cast_or_say(source, spell.name):
             return
 
-        if spell.target is None or spell.target == FeatureTarget.SELF:
-            recipients = [source]
-        elif spell.target == FeatureTarget.AREA:
-            recipients = list(self.target_characters)
-        else:
-            if not self.target_characters:
-                self._show_status(
-                    f"No spell cast: {spell.name} needs a target"
-                    f" ({spell.target.value}). Right-click a card."
-                )
-                return
-            recipients = self.target_characters
+        recipients = spell_recipients(spell, source, self.target_characters)
+        if recipients is None:
+            target = spell.target.value if spell.target is not None else ""
+            self._show_status(
+                f"No spell cast: {spell.name} needs a target"
+                f" ({target}). Right-click a card."
+            )
+            return
 
         # Action economy: the caster spends the action, regardless of who it affects
         action_cost = casting_time_cost(spell)
@@ -423,14 +407,13 @@ class SpellsMixin(CombatWindowState):
         if has_duration:
             turn = self._current_turn_group()
             source.setdefault("active_spells", []).append(
-                {
-                    "name": spell.name,
-                    "time_left": duration,
-                    "duration": duration,
-                    "concentration": spell.is_concentration,
-                    "applied": applied,
-                    "ticks_on": turn[0]["name"] if turn else None,
-                }
+                active_spell_record(
+                    spell.name,
+                    duration,
+                    spell.is_concentration,
+                    applied,
+                    turn[0]["name"] if turn else None,
+                )
             )
 
         self._save_fight_state()
