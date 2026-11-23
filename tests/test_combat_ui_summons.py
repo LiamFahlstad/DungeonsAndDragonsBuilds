@@ -26,7 +26,7 @@ from CharacterContent.Features.SubClassFeatures.Artificer.ArtificerReanimatorFea
     ReanimatedCompanion,
 )
 from Combat.CombatUIQt import CombatAppQt
-from Combat.CombatUIQt.player_view import _can_be_seen
+from Combat.Fight.player_knowledge import _can_be_seen
 from Combat.Definitions import Action
 from Combat.Effects.active_effects import KEY as ACTIVE_EFFECTS
 from Combat.Effects.active_effects import new_effect

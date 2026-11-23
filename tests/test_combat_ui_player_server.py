@@ -47,10 +47,9 @@ from Combat.CombatUIQt.player_view import (
     PlayerViewRow,
     PlayerViewWindow,
     _limited_health,
-    may_read_log_line,
-    note_health,
     player_view_rows,
 )
+from Combat.Fight.player_knowledge import may_read_log_line, note_health
 from Combat.Fight.saves import CustomEffect
 from Combat.EncounterConfig import CombatantSpec
 from Combat.EncounterLogs import prepare_log, scenario_log_path

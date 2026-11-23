@@ -67,7 +67,7 @@ and the few others a step touches, not the character-sheet tests. Steps 3,
 | 2 | A typed combatant (`Combatant` TypedDict) | M | **Done** 2026-11-22, revised (R8): the schema and a key test; annotating signatures moved to step 5 |
 | 3 | The Use / Cast dialog as a class, its form-to-effects logic Qt-free | L | 3a **done** 2026-11-22 (R9): `use_cast/form.py`, dialog 1,580 → 1,440 lines; 3b **done** 2026-11-22 (R10): `_UseCastDialog`, `run()` 616 lines + 44 methods; 3c's move **done** (R11): `use_cast/dialog.py`, `conditions_mixin.py` 3,500 → 1,674 lines; 3c's split **done**, revised (R12): `run()` is 14 lines calling 10 builder methods, the longest 126; 3d **done** (R13): `do_apply` 146 → 50 lines over Qt-free `read_amount`, `check_applicable` and `build_effect`; reviewed (R14): no behaviour change; **step 3 done** |
 | 4 | The window built from panels, shortcuts as a table | M | **Done** 2026-11-23 (R15, R16): `_build_window` 680 → 13 lines over 12 builders (the longest 111); the shortcuts a table (`shortcuts.py`) checked against KEYBOARD_SHORTCUTS.md |
-| 5 | The Qt-free fight core (`Combat/Fight/`), one mixin at a time | XL | 5.1 **done** 2026-11-23 (R17): seven Qt-free modules moved to `Combat/Fight/`; 5.5's guard test in place; 5.2 **done** (R18): `Fight` holds the fight's state; 5.3 started (R19, R20): damage's defenses and arithmetic in `Combat/Fight/damage.py`, health (death state, healing, Temporary Hit Points, Death Saving Throws) in `Combat/Fight/health.py`; the map's questions (distance, sight, cover, range, Critical Hits within 5 feet) are `Fight` methods (R21); an attack roll's check is `Combat/Fight/attacks.py` (R22); gaining and losing a condition is `Combat/Fight/conditions.py` (R23); the turn order is `Fight`'s (R24); casting's slots, recipients and timers are `Combat/Fight/spells.py` (R25); joining and leaving the turn order are `Fight`'s, summons' questions and carry-over `Combat/Fight/summons.py` (R26); Wild Shape's uses and badge `Combat/Fight/wild_shape.py` (R27); a short rest's regains and Hit Dice `Combat/Fight/rests.py` (R28); saving, loading and replaying the fight `Combat/Fight/log.py` (R29); 5.3's areas are each started; what's left of them (features, triggers, the cascades a condition sets off, `_log_event`) waits for 5.4's `Asker` and step 6; 5.4 started (R30): the `Asker` asks "out of resources, go ahead anyway?", and the checks are `Combat/Fight/resources.py`; the core logs through a `Logger` (Decision 4, R32), first spending an Action, a feature use or a slot; **5.4 continues with the Use / Cast apply path, then triggers** |
+| 5 | The Qt-free fight core (`Combat/Fight/`), one mixin at a time | XL | 5.1 **done** 2026-11-23 (R17): seven Qt-free modules moved to `Combat/Fight/`; 5.5's guard test in place; 5.2 **done** (R18): `Fight` holds the fight's state; 5.3 started (R19, R20): damage's defenses and arithmetic in `Combat/Fight/damage.py`, health (death state, healing, Temporary Hit Points, Death Saving Throws) in `Combat/Fight/health.py`; the map's questions (distance, sight, cover, range, Critical Hits within 5 feet) are `Fight` methods (R21); an attack roll's check is `Combat/Fight/attacks.py` (R22); gaining and losing a condition is `Combat/Fight/conditions.py` (R23); the turn order is `Fight`'s (R24); casting's slots, recipients and timers are `Combat/Fight/spells.py` (R25); joining and leaving the turn order are `Fight`'s, summons' questions and carry-over `Combat/Fight/summons.py` (R26); Wild Shape's uses and badge `Combat/Fight/wild_shape.py` (R27); a short rest's regains and Hit Dice `Combat/Fight/rests.py` (R28); saving, loading and replaying the fight `Combat/Fight/log.py` (R29); 5.3's areas are each started; what's left of them (features, triggers, the cascades a condition sets off, `_log_event`) waits for 5.4's `Asker` and step 6; 5.4 started (R30): the `Asker` asks "out of resources, go ahead anyway?", and the checks are `Combat/Fight/resources.py`; the core logs through a `Logger` (Decision 4, R32), first spending an Action, a feature use or a slot; what the players know is `Combat/Fight/player_knowledge.py` (R33); **5.4 continues with conditions and their cascades (R33), then the Use / Cast apply path and triggers** |
 | 6 | One refresh path after every GM operation | M | Not started |
 | 7 | Mixins into composed views and one module per dialog; `CombatWindowState` gone | L | Not started |
 | 8 | Docs, agents and skills point at the new layout | S | Not started |
@@ -1390,6 +1390,34 @@ path, which tests don't cover).
   - **Next:** a hit's triggers. What they apply goes through the Use / Cast
     apply path (`_apply_row`, `_apply_effect_to_targets`), so that path
     moves first, with the Logger and the Asker.
+
+- **R33 (step 5.4, what the players know, 2026-11-23).** The Qt-free half
+  of `Combat/CombatUIQt/player_view.py` is `Combat/Fight/player_knowledge.py`,
+  moved unchanged (each definition's AST matches): who players can perceive
+  (`_can_be_seen`, `_seen`, `HIDDEN_STATES`, ...), `may_read_log_line`, and
+  what the log has shown them of a monster (`note_health`,
+  `note_damage_defense`, `note_condition_immunity`, `known_max_hp_text`,
+  `known_defense_texts`). `player_view.py` keeps the rows and the window;
+  its rows read those through imports (`_seen`, `_HEALTH_WORDS`, ...: the
+  private names keep their `_`, as in step 9). The importers (four mixins,
+  `arena_view.py`, four tests) moved with them.
+  - **Why now:** the rules R22 left in the window note what an attack roll
+    or a change of Hit Points showed the players, and that was Qt-module
+    code. The rows can't follow yet: they use the More Info dialog's stat
+    block helpers (`dialogs_mixin.py`), which step 9b moves.
+  - **What's next, and why it's one slice.** Gaining or losing a condition
+    sets off ending Concentration (`_end_concentration_spells`, with the
+    spells' badges on others), leaving a Wild Shape form, standing up,
+    Bloodied, Hit Points held to a lower maximum and healing, and each of
+    those gains or loses conditions in turn. They call each other, so they
+    move together: `_add_condition_to`, `_remove_condition_from`,
+    `_take_dash`, `_stand_up`, `_keep_hit_points_in_maximum`,
+    `_apply_bloodied_condition`, `_heal_target`, `_leave_wild_shape`,
+    `_end_concentration_spells` and its helpers, `_forget_effect_on`. They
+    also redraw cards and set the status line as they go, so the core
+    reports those in section 2's `StepResult` (who changed, what to say),
+    passed down the cascade and drawn once by the window at the end.
+  - **Tests:** the existing ones. The full suite passes (12,152).
   - **Only one question, on purpose.** The trigger pop-up
     (`_ask_triggers`) and the initiative tie-break join the Protocol when
     the code that asks them moves into `Combat/Fight/`, so nothing is in

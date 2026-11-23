@@ -83,11 +83,10 @@ from Combat.Fight.saves import (
     roll_extra_damage,
 )
 from .trigger_prompt import ask_triggers
+from Combat.Fight.player_knowledge import _player_names, _seen
 from .player_view import (
     PlayerViewRow,
     PlayerViewWindow,
-    _player_names,
-    _seen,
     player_view_rows,
 )
 from .state import CombatWindowState

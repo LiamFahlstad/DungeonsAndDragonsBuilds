@@ -21,7 +21,7 @@ from PyQt6.QtWidgets import QDialog, QMessageBox
 from CharacterContent.Features.ClassFeatures.Barbarian.BarbarianFeatures import Rage
 from CharacterContent.Spells.SpellFactory import SpellFactory
 from Combat.Combatants import Pirate, Tiger
-from Combat.CombatUIQt.player_view import note_damage_defense
+from Combat.Fight.player_knowledge import note_damage_defense
 from Combat.PlayerLog import is_round_key
 from Combat.Fight.saves import CustomEffect
 from Combat.Effects.active_effects import KEY, give_modifiers, new_effect

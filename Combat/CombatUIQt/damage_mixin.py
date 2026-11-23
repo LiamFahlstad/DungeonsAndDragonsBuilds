@@ -55,7 +55,12 @@ from Combat.Fight.attack_rolls import (
     parse_attack_roll,
 )
 from Combat.Fight.monster_actions import first_number
-from .player_view import _player_names, _seen, note_damage_defense, note_health
+from Combat.Fight.player_knowledge import (
+    _player_names,
+    _seen,
+    note_damage_defense,
+    note_health,
+)
 from Combat.Fight.saves import CustomEffect, roll_save, save_modifier
 from .state import CombatWindowState
 from .undo import undoable

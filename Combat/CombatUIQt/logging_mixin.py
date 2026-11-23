@@ -33,7 +33,7 @@ from Combat.Fight.log import (
     slots_by_level,
     take_combatants_from,
 )
-from .player_view import may_read_log_line
+from Combat.Fight.player_knowledge import may_read_log_line
 from Combat.Fight.public_log import public_log_rounds
 from Combat.Fight.stats import (
     _default_stats,

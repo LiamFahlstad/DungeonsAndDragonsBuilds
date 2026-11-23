@@ -81,7 +81,7 @@ PLAYER_FIGHT_KEYS = (
 # The fight's battle map settings (Combat/Arena/arena.py, ArenaSettings).
 ARENA_KEY = "arena"
 HEADER_KEYS = ("encounter", "title", "players")
-# Marks an event players may read (player_view.may_read_log_line).
+# Marks an event players may read (Combat/Fight/player_knowledge.py's may_read_log_line).
 PUBLIC_KEY = "public"
 # The "[Goblin's turn] " an event's line starts with during a turn.
 TURN_PREFIX = re.compile(r"\[(.+?)'s turn\] (.*)", re.DOTALL)

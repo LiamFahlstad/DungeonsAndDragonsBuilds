@@ -64,7 +64,7 @@ from Combat.Arena.lasting import DEFAULT_AREA_COLOR, LastingArea
 from Combat.Arena.terrain import BRIGHT, DARK, DIFFICULT, WALL, WATER
 from Combat.Effects.triggers import on_party_side
 
-from .player_view import _can_be_seen
+from Combat.Fight.player_knowledge import _can_be_seen
 
 CELL_PX = 40.0
 
