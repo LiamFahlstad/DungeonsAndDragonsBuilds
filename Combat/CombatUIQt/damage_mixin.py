@@ -12,9 +12,7 @@ from Combat.Definitions import Action
 from Combat.Effects.modifiers import (
     extra_text,
     hit_extras,
-    hit_notes,
     hit_point_maximum,
-    makes_critical_hit,
     used_up_by_attack,
 )
 from Combat.Effects.triggers import (
@@ -31,6 +29,7 @@ from Combat.Effects.sight import Seen
 from Combat.Summons import vanishes_at_zero_hp
 from Core.Definitions import Condition
 from Combat.Fight.amounts import AmountError, parse_amount, parse_damage
+from Combat.Fight.attacks import check_attack
 from Combat.Fight.health import (
     DEAD,
     DYING,
@@ -49,12 +48,10 @@ from Combat.Fight.damage import (
 )
 from Combat.Fight.attack_rolls import (
     AttackRoll,
-    armor_bonus,
     armor_in_use,
     cover_bonus,
     note_attack_roll,
     parse_attack_roll,
-    stored_armor,
 )
 from Combat.Fight.monster_actions import first_number
 from .player_view import _player_names, _seen, note_damage_defense, note_health
@@ -238,10 +235,8 @@ class DamageMixin(CombatWindowState):
         Cover warned about there, not refused). The log doesn't say the AC, as the Limited view's players read
         it too. They don't learn from a hidden attacker's roll, which they
         never saw."""
-        seen = self._covered(source, target, ignores_cover=ignores_cover)
-        armor = stored_armor(seen)
-        bonus = armor_bonus(seen)
-        hit = roll.hits(None if armor is None else armor + bonus)
+        check = check_attack(self.fight, target, roll, source, notes, ignores_cover)
+        seen, armor, bonus, hit = check.seen, check.armor, check.bonus, check.hit
         # A player's summon is seen as its owner is, even while Invisible.
         if source is None or _seen(source, _player_names(self.characters)):
             # Noted against the stored AC's first number, so a Shield set
@@ -251,11 +246,7 @@ class DamageMixin(CombatWindowState):
                 bonus if armor is None or first is None else armor + bonus - first
             )
             note_attack_roll(target, roll, hit, seen_bonus)
-        is_critical = roll.is_critical
-        if hit is not False:
-            feet = self._attacker_distance_ft(source, target)
-            notes = (*notes, *hit_notes(target, feet))
-            is_critical = is_critical or makes_critical_hit(target, feet)
+        is_critical, notes = check.critical, check.notes
         name = target["name"]
         attacker = f"{source['name']}'s attack roll" if source else "Attack roll"
         critical = " (critical hit)" if is_critical else ""

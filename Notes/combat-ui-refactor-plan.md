@@ -60,7 +60,7 @@ and the few others a step touches, not the character-sheet tests. Steps 3,
 | 2 | A typed combatant (`Combatant` TypedDict) | M | **Done** 2026-11-22, revised (R8): the schema and a key test; annotating signatures moved to step 5 |
 | 3 | The Use / Cast dialog as a class, its form-to-effects logic Qt-free | L | 3a **done** 2026-11-22 (R9): `use_cast/form.py`, dialog 1,580 → 1,440 lines; 3b **done** 2026-11-22 (R10): `_UseCastDialog`, `run()` 616 lines + 44 methods; 3c's move **done** (R11): `use_cast/dialog.py`, `conditions_mixin.py` 3,500 → 1,674 lines; 3c's split **done**, revised (R12): `run()` is 14 lines calling 10 builder methods, the longest 126; 3d **done** (R13): `do_apply` 146 → 50 lines over Qt-free `read_amount`, `check_applicable` and `build_effect`; reviewed (R14): no behaviour change; **step 3 done** |
 | 4 | The window built from panels, shortcuts as a table | M | **Done** 2026-11-23 (R15, R16): `_build_window` 680 → 13 lines over 12 builders (the longest 111); the shortcuts a table (`shortcuts.py`) checked against KEYBOARD_SHORTCUTS.md |
-| 5 | The Qt-free fight core (`Combat/Fight/`), one mixin at a time | XL | 5.1 **done** 2026-11-23 (R17): seven Qt-free modules moved to `Combat/Fight/`; 5.5's guard test in place; 5.2 **done** (R18): `Fight` holds the fight's state; 5.3 started (R19, R20): damage's defenses and arithmetic in `Combat/Fight/damage.py`, health (death state, healing, Temporary Hit Points, Death Saving Throws) in `Combat/Fight/health.py`; the map's questions (distance, sight, cover, range, Critical Hits within 5 feet) are `Fight` methods (R21); **5.3 continues: the attack roll's check, then conditions** |
+| 5 | The Qt-free fight core (`Combat/Fight/`), one mixin at a time | XL | 5.1 **done** 2026-11-23 (R17): seven Qt-free modules moved to `Combat/Fight/`; 5.5's guard test in place; 5.2 **done** (R18): `Fight` holds the fight's state; 5.3 started (R19, R20): damage's defenses and arithmetic in `Combat/Fight/damage.py`, health (death state, healing, Temporary Hit Points, Death Saving Throws) in `Combat/Fight/health.py`; the map's questions (distance, sight, cover, range, Critical Hits within 5 feet) are `Fight` methods (R21); an attack roll's check is `Combat/Fight/attacks.py` (R22); **5.3 continues with conditions** |
 | 6 | One refresh path after every GM operation | M | Not started |
 | 7 | Mixins into composed views and one module per dialog; `CombatWindowState` gone | L | Not started |
 | 8 | Docs, agents and skills point at the new layout | S | Not started |
@@ -832,6 +832,27 @@ combat plans' file references. Then record the final numbers in Findings.
   - **Tests:** 3 more in `tests/test_fight.py`: before the map is in use,
     distances once it is, and Paralyzed's Critical Hit within 5 feet. The
     full suite passes (12,086).
+
+- **R22 (step 5.3, attack rolls' second slice, 2026-11-23).** An attack
+  roll's check is `Combat/Fight/attacks.py`'s `check_attack(fight, target,
+  roll, source, notes, ignores_cover)`. It returns an `AttackCheck`: the
+  hit (None with no AC), the target as the roll read it, its AC and bonus,
+  the Critical Hit, and the notes.
+  - **`_resolve_attack_roll` keeps** noting the roll for the players
+    (`note_attack_roll` needs `player_view`'s sight, and that module is
+    Qt), the log line, using up one-roll badges, and its status text. It's
+    9 lines shorter.
+  - **Order:** the hit's notes and Critical Hit used to be worked out after
+    the noting. They're worked out first now, which gives the same result:
+    they read the target's conditions and distance, never what the noting
+    writes.
+  - **Tests:** `tests/test_fight_attacks.py` (5 tests without Qt:
+    equals-AC hits, naturals, no AC, Paralyzed within 5 feet, a miss's
+    notes). The full suite passes (12,091).
+  - **What's left of the attack path in the window** is how a hit is dealt
+    (`_deal_typed_damage`) and its triggers (`_before_hit`,
+    `_after_attack`). They go with the triggers' prompts, which ask the GM
+    something and so need step 5.4's `Asker`.
 
 ## Discovered issues
 
