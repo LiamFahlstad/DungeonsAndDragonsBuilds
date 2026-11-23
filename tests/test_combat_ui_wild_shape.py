@@ -20,7 +20,8 @@ from Combat.EncounterLogs import prepare_log, scenario_log_path
 from Combat.Monsters.CR_1.monsters import BrownBear, Tiger
 from Combat.PlayerCombatant import combatant_from_character
 from Combat.Scenario import CombatScenario
-from Combat.CombatUIQt.rest import SHORT_REST_CADENCES, _restore_feature_uses
+from Combat.CombatUIQt.rest import _restore_feature_uses
+from Combat.Fight.rests import SHORT_REST_CADENCES
 from Combat.WildShape import (
     _saving_throws,
     assume_form,

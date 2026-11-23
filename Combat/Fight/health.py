@@ -48,18 +48,22 @@ class Regained:
     came_to: bool
 
 
-def regain_hit_points(char: dict, heal: int, source: dict | None) -> Regained:
+def regain_hit_points(
+    char: dict, heal: int, source: dict | None, *, counted: bool = True
+) -> Regained:
     """char regains up to `heal` Hit Points (no more than its maximum),
-    counted in both their statistics. One at 0 Hit Points comes to, and its
-    Death Saving Throws start over. The caller checks char isn't dead: a
+    counted in both their statistics unless not `counted` (Hit Dice spent
+    on a short rest, outside any fight). One at 0 Hit Points comes to, and
+    its Death Saving Throws start over. The caller checks char isn't dead: a
     dead creature regains none until it's revived."""
     was_downed = death_state(char) != ALIVE
     pre_hp = char["hp"]
     char["hp"] = min(char["hp"] + heal, hit_point_maximum(char))
     amount = char["hp"] - pre_hp
-    _count(char, "healing_received", amount)
-    if source is not None:
-        _count(source, "healing_done", amount)
+    if counted:
+        _count(char, "healing_received", amount)
+        if source is not None:
+            _count(source, "healing_done", amount)
     came_to = was_downed and char["hp"] > 0
     if came_to:
         char["death_saves_fail"] = 0

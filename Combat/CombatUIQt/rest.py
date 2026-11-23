@@ -31,17 +31,19 @@ from PyQt6.QtWidgets import (
 
 import Combat.PlayerLog as PlayerLog
 from Combat.Campaign import Campaign
-from Model.Content.Feature import RegainedOn
 from Combat.Definitions import Action
-from Combat.PlayerCombatant import max_pact_slots
 from Combat.Effects.modifiers import hit_point_maximum
+from Combat.Fight.rests import (
+    SHORT_REST_CADENCES,
+    heal_with_hit_dice,
+    regain_feature_uses,
+    regain_pact_slots,
+)
 from Core.Definitions import Condition
 from Utils.QtMessages import install_qt_message_handler
 
 from .app import CombatAppQt
 from .styles import QSS
-
-SHORT_REST_CADENCES = {RegainedOn.SHORT_REST, RegainedOn.SHORT_OR_LONG_REST}
 
 
 def _build_party_state(player_log_path: str, campaign: Campaign) -> CombatAppQt:
@@ -58,29 +60,15 @@ def _build_party_state(player_log_path: str, campaign: Campaign) -> CombatAppQt:
 
 
 def _restore_feature_uses(app: CombatAppQt, char: dict, cadences: set, note: str):
-    stat_block = char.get("_stat_block")
-    if stat_block is None:
-        return
-    used = char.setdefault("feature_uses_used", {})
-    for feature in char.get("_feature_objects", []):
-        if feature.uses is None:
-            continue
-        if feature.regained_on(stat_block) not in cadences:
-            continue
-        regained = used.get(feature.name, 0)
-        # Some regain only a few uses on a Short Rest and the rest on a Long
-        # one (Wild Shape, Channel Divinity: "regain one expended use").
-        partial = feature.uses.regain_x_on
-        if partial is not None and partial[1] == note:
-            regained = min(regained, partial[0])
-        for _ in range(regained):
-            used[feature.name] = max(used.get(feature.name, 0) - 1, 0)
-            app._log_event(
-                f"{char['name']} regains a use of {feature.name} ({note})",
-                character=char["name"],
-                action=Action.REGAIN_FEATURE_CHARGE,
-                value=feature.name,
-            )
+    """char regains its feature uses of a rest of `cadences`
+    (regain_feature_uses), one logged event each."""
+    for name in regain_feature_uses(char, cadences, note):
+        app._log_event(
+            f"{char['name']} regains a use of {name} ({note})",
+            character=char["name"],
+            action=Action.REGAIN_FEATURE_CHARGE,
+            value=name,
+        )
 
 
 def apply_long_rest(player_log_path: str):
@@ -105,16 +93,13 @@ def run_short_rest(player_log_path: str, campaign: Campaign):
 
 def _restore_pact_slots(app: CombatAppQt, char: dict, note: str):
     """Give back every Pact Magic slot char has spent, one logged event each."""
-    pact_slots = char.setdefault("pact_slots", {})
-    for level, most in max_pact_slots(char).items():
-        while pact_slots.get(level, 0) < most:
-            pact_slots[level] = pact_slots.get(level, 0) + 1
-            app._log_event(
-                f"{char['name']} regains a Level {level} Pact Magic slot ({note})",
-                character=char["name"],
-                action=Action.ADD_PACT_SLOT,
-                value=level,
-            )
+    for level in regain_pact_slots(char):
+        app._log_event(
+            f"{char['name']} regains a Level {level} Pact Magic slot ({note})",
+            character=char["name"],
+            action=Action.ADD_PACT_SLOT,
+            value=level,
+        )
 
 
 def short_rest_dialog(app: CombatAppQt, parent: QWidget | None = None) -> QDialog:
@@ -181,14 +166,10 @@ def short_rest_dialog(app: CombatAppQt, parent: QWidget | None = None) -> QDialo
                 continue
             if heal <= 0:
                 continue
-            death_state = app._char_death_state(char)
-            # A dead creature can't regain Hit Points until it is revived.
-            if death_state == "dead":
-                continue
-            was_downed = death_state != "alive"
-            pre_hp = char["hp"]
-            char["hp"] = min(char["hp"] + heal, hit_point_maximum(char))
-            actual_heal = char["hp"] - pre_hp
+            regained = heal_with_hit_dice(char, heal)
+            if regained is None:
+                continue  # dead: no Hit Points until revived
+            actual_heal = regained.amount
             heal_value = {
                 "heal": actual_heal,
                 "source_name": None,
@@ -200,9 +181,7 @@ def short_rest_dialog(app: CombatAppQt, parent: QWidget | None = None) -> QDialo
                 action=Action.HEAL,
                 value=heal_value,
             )
-            if was_downed and char["hp"] > 0:
-                char["death_saves_fail"] = 0
-                char["death_saves_success"] = 0
+            if regained.came_to:
                 app._remove_condition_from(char, Condition.UNCONSCIOUS.value)
             app._apply_bloodied_condition(char)
             hp_labels[char["name"]].setText(
