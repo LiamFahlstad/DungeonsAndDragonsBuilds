@@ -17,8 +17,12 @@ what a fight does:
    declared shape, the phase is an enum, and pyright catches a mistyped key.
 4. **One way to do each thing:** one way to refresh the views after an
    operation, ask the GM a question, style a widget and build a button.
+5. **No file you have to scroll through to find a part of it.** A file over
+   about 1,000 lines that holds several separate jobs is split into one
+   module per job (step 9).
 
-Written 2026-11-21. Steps 0 to 2 built 2026-11-22.
+Written 2026-11-21. Steps 0 to 2 built 2026-11-22. Step 9 (splitting large
+files) added 2026-11-23.
 
 **What never changes during this plan:** the behaviour, the widget
 `objectName`s (the tests, the golden widget dumps and the `combat-ui-explore`
@@ -60,14 +64,17 @@ and the few others a step touches, not the character-sheet tests. Steps 3,
 | 2 | A typed combatant (`Combatant` TypedDict) | M | **Done** 2026-11-22, revised (R8): the schema and a key test; annotating signatures moved to step 5 |
 | 3 | The Use / Cast dialog as a class, its form-to-effects logic Qt-free | L | 3a **done** 2026-11-22 (R9): `use_cast/form.py`, dialog 1,580 → 1,440 lines; 3b **done** 2026-11-22 (R10): `_UseCastDialog`, `run()` 616 lines + 44 methods; 3c's move **done** (R11): `use_cast/dialog.py`, `conditions_mixin.py` 3,500 → 1,674 lines; 3c's split **done**, revised (R12): `run()` is 14 lines calling 10 builder methods, the longest 126; 3d **done** (R13): `do_apply` 146 → 50 lines over Qt-free `read_amount`, `check_applicable` and `build_effect`; reviewed (R14): no behaviour change; **step 3 done** |
 | 4 | The window built from panels, shortcuts as a table | M | **Done** 2026-11-23 (R15, R16): `_build_window` 680 → 13 lines over 12 builders (the longest 111); the shortcuts a table (`shortcuts.py`) checked against KEYBOARD_SHORTCUTS.md |
-| 5 | The Qt-free fight core (`Combat/Fight/`), one mixin at a time | XL | 5.1 **done** 2026-11-23 (R17): seven Qt-free modules moved to `Combat/Fight/`; 5.5's guard test in place; 5.2 **done** (R18): `Fight` holds the fight's state; 5.3 started (R19, R20): damage's defenses and arithmetic in `Combat/Fight/damage.py`, health (death state, healing, Temporary Hit Points, Death Saving Throws) in `Combat/Fight/health.py`; the map's questions (distance, sight, cover, range, Critical Hits within 5 feet) are `Fight` methods (R21); an attack roll's check is `Combat/Fight/attacks.py` (R22); gaining and losing a condition is `Combat/Fight/conditions.py` (R23); the turn order is `Fight`'s (R24); **5.3 continues with casting** |
+| 5 | The Qt-free fight core (`Combat/Fight/`), one mixin at a time | XL | 5.1 **done** 2026-11-23 (R17): seven Qt-free modules moved to `Combat/Fight/`; 5.5's guard test in place; 5.2 **done** (R18): `Fight` holds the fight's state; 5.3 started (R19, R20): damage's defenses and arithmetic in `Combat/Fight/damage.py`, health (death state, healing, Temporary Hit Points, Death Saving Throws) in `Combat/Fight/health.py`; the map's questions (distance, sight, cover, range, Critical Hits within 5 feet) are `Fight` methods (R21); an attack roll's check is `Combat/Fight/attacks.py` (R22); gaining and losing a condition is `Combat/Fight/conditions.py` (R23); the turn order is `Fight`'s (R24); casting's slots, recipients and timers are `Combat/Fight/spells.py` (R25); joining and leaving the turn order are `Fight`'s, summons' questions and carry-over `Combat/Fight/summons.py` (R26); **5.3 continues with Wild Shape and rests** |
 | 6 | One refresh path after every GM operation | M | Not started |
 | 7 | Mixins into composed views and one module per dialog; `CombatWindowState` gone | L | Not started |
 | 8 | Docs, agents and skills point at the new layout | S | Not started |
+| 9 | Large files split into one module per job, with a file-size ratchet | M | Not started. 9.0 (the ratchet) and 9a (Qt-free files) can start now; 9b (UI files) after step 7 |
 
 Steps 0-2 are cheap and safe and make the later ones easier, so do them
 first. Steps 3 and 4 are independent of each other. Step 6 needs step 5's
-results. Step 7 comes last.
+results. Step 7 comes last of the restructuring steps. Step 9's parts fit
+in between (see the step), and step 8 runs after step 9's last part, so the
+docs are updated once.
 
 ## 1. Findings (2026-11-21)
 
@@ -84,6 +91,7 @@ numbers into a test.
 | Longest functions | `_show_custom_condition_dialog` **1,580** lines with 53 nested functions; `_build_window` 680; `_apply_effect_to_targets` 236; `_show_statistics` 177; `_described_option` 161; `do_apply` (nested in the dialog) 137; `_show_player_link_dialog` 134; `_apply_replay_action` 133 |
 | Mixins making up `CombatAppQt` | 19 |
 | Method stubs in `state.py` (`CombatWindowState`) | 206 |
+| Files over 1,000 lines in `Combat/` (2026-11-23, after steps 3 and 5.1) | 10: `arena_mixin.py` 2,108; `Fight/effect_options.py` 2,072; `use_cast/dialog.py` 1,908; `conditions_mixin.py` 1,646; `dialogs_mixin.py` 1,380; `turn_panel_mixin.py` 1,191; `Effects/triggers.py` 1,143; `Effects/modifiers.py` 1,120; `arena_view.py` 1,005; `damage_mixin.py` 1,001. Another 6 are over 800 (`state.py` 967, `map_painter.py` 929, `Arena/arena.py` 833, `cards_mixin.py` 830, `window_mixin.py` 803), and `logging_mixin.py` (791) is just under |
 
 ### 1b. Design
 
@@ -401,6 +409,98 @@ Update `Combat/CHEATSHEET.md`, `HOWTO.md`, the `combat-simulator` and
 `combat-ui-tester` agent prompts, the `combat-ui-explore` and `map-painter`
 skills (their code indexes point at file:line), the agent index, and both
 combat plans' file references. Then record the final numbers in Findings.
+Runs after step 9's last part, so the new module names are final.
+
+### Step 9: one module per job *(moves only)*
+
+Steps 3 to 7 shorten functions and pull rules out of the window, but they
+leave some files long: a mixin with five jobs, or a Qt-free module that
+grew a section per kind of pick. A long file isn't wrong in itself. One
+that mixes jobs is, because finding the part you want means scrolling, and
+two people editing different jobs in it collide. This step splits those
+files along the seams they already have.
+
+**When a file gets split.** It's over the limit (Q6: 1,000 lines) *and*
+it holds more than one job, meaning groups of functions that call each
+other and barely touch the rest. One cohesive class that's long because
+its job is long (`ArenaView`'s drawing, `UseCastDialog`, see R12) stays
+whole and goes on the allowlist with its reason. Splitting a class across
+files would need more mixins, which step 7 is removing.
+
+**How a split is done** (each split is one commit, a pure move):
+
+- **The old module keeps the entry points** most importers use, and
+  imports the pieces from the new modules, so the new modules form a
+  layer under it and there's no import cycle. Importers of a moved name
+  are pointed at its new home in the same commit. No re-export shims (as
+  in R17), since a shim hides which module owns a name.
+- **Names don't change.** A private helper that now crosses a module
+  keeps its `_`. Making it public is a later edit commit, if anyone wants
+  it.
+- **`git mv` the old file to the biggest piece** when the old name stops
+  fitting, so `git log --follow` keeps the history of most of the code.
+- **What follows file paths has to move with the code:**
+  - `monkeypatch.setattr(module, "name", ...)` patches the name where it's
+    *looked up*. A test that patched a helper in the old module and now
+    patches nothing still passes and silently tests less. So grep the
+    tests for every moved name and point each patch at the module that
+    calls it.
+  - `test_roll_sites`, `test_text_readers` (every `re.compile` by file),
+    the structure test's `LONG_FUNCTIONS` (keyed by path), and the
+    `map-painter` and `combat-effects` skills' scripts and indexes.
+  - The other two plans' file references.
+- **Checks:** the moved code is byte-identical apart from imports (compare
+  each moved function's AST with the old one, as R14 did), pyright is
+  clean, and the full suite passes.
+
+**9.0. The ratchet first.** `tests/test_combat_ui_structure.py` gets a
+file-size rule in the same style as the long-function one: no file under
+`Combat/` (skipping `Monsters/` and `Tools/`, as R1 does) over the limit,
+except an allowlist of today's long files with their length as a cap. A
+listed file that drops under the limit must come off the list. Each entry
+says either "split in 9a/9b" or why it stays whole.
+
+**9a. The Qt-free files** (any time, but not while a step 5 slice is
+moving code into or out of the same file; do the slice first, then split
+what's left):
+
+| File | Split into (a sketch; the code's own seams decide) |
+|---|---|
+| `Fight/effect_options.py` 2,072 | The target design's `Fight/picker/` package: `effect_text.py` (reading an effect from its text, upcasting, cantrip levels), `spell_options.py` (slots, casting cost, spell rows), `monster_options.py` (monster actions and spells), `weapon_options.py` (weapons, Shove, Masteries), `feature_options.py` (feature rows and uses), `described.py` (`_described_option` and the effect amounts), `trigger_rows.py` (trigger and badge rows, regained uses). `effect_options.py` keeps `effect_options`, the standard actions, the area and range rows. `amounts`, `attack_rolls`, `saves` and `monster_actions` join the package then, as section 2 sketched |
+| `Effects/modifiers.py` 1,120 | `modifiers.py` keeps held conditions and `modifiers_on`; `roll_plans.py` (save and attack plans, distance and sight), `hits.py` (hit notes, extras and `hit_plan`), `armor_class.py`, `stats_in_use.py` (Hit Point maximum, Speed, size) and `defenses.py` (Resistance, Immunity, Vulnerability) |
+| `Effects/triggers.py` 1,143 | `triggers.py` keeps the firing functions; `outcomes.py` (the nine `*Outcome` records), `trigger_rows.py` (`TriggerRow`, `TriggerMode`, `TriggerChoice`, `Firing`), `hit_firings.py` (`HitFiring`, `PendingAttack`, `still_hits`, `reduced_damage`) |
+| `Arena/arena.py` 833 | Under the limit: leave it |
+
+`Combat/Effects/` belongs to the effects plan as much as this one, so its
+splits wait until no effects-plan step has those files open, and that plan's
+file references are updated in the same commit.
+
+**9b. The UI files** (after step 7). Steps 5 and 7 take most of the
+mixins apart: their rules move to `Combat/Fight/` and their views become
+classes. So don't split a mixin before then, or its code moves twice. What
+can move earlier is the module-level code that sits *beside* a mixin and
+never touches it:
+
+- `dialogs_mixin.py`: the More Info panel's 700 lines of builders
+  (`_InfoPanel`, `_add_*`, the chance tables) become `dialogs/more_info.py`
+  now. They're the first module of step 7's `dialogs/` folder.
+- `arena_mixin.py`: the move and area text helpers at its end (`move_line`,
+  `forced_move_line`, `area_reading`, `hazards_under`, ...) become
+  `arena/texts.py`.
+- `use_cast/dialog.py`: its 240 lines of text and tooltip helpers
+  (`_attack_text`, `_attack_tooltip`, `_save_text`, `_damage_preview`, ...)
+  become `use_cast/texts.py`. The dialog class itself stays whole (R12).
+
+After step 7, measure again and split whatever is still over the limit
+with more than one job. The likely ones, from today's outlines:
+`arena_mixin.py`'s view code (the speed bar, the area bar and targeting,
+the area panel, and moving combatants are four separate jobs),
+`conditions_mixin.py` (applying an effect vs. conditions, badges and
+visibility), and `turn_panel_mixin.py`. `state.py` (967) is deleted by
+step 7 and needs nothing.
+
+**Done when:** the structure test's file allowlist holds only files kept
+whole on purpose, each with its reason, and the full suite passes.
 
 ## 4. Coordination with the other plans
 
@@ -419,6 +519,10 @@ combat plans' file references. Then record the final numbers in Findings.
   and 14 (distance rules) are in `Combat/Arena/` and can go any time.
 - **New dialog features** (anything the effects plan adds to Use / Cast)
   wait for step 3 to finish, or go in before it starts. Never during it.
+- **File splits (step 9) never run beside other work on the same file.**
+  A split touches every importer of the moved names, so it goes in alone,
+  between slices, with nobody else's uncommitted changes in those files
+  (check `git status` first).
 
 ## Decisions
 
@@ -458,6 +562,17 @@ combat plans' file references. Then record the final numbers in Findings.
   (opus) per step, one step at a time (no parallel agents on these files),
   and a `code-reviewer` pass after steps 3, 5 and 7. Steps 0-2 are small
   enough to do in the main session.
+- **Q6. The file-size limit.** What length makes a file a candidate for
+  step 9? *Suggestion:* 1,000 lines, as the ratchet's limit, with the
+  "more than one job" test deciding whether a file over it is split or
+  allowlisted. 800 would also catch `map_painter.py`, `cards_mixin.py`
+  and `window_mixin.py`, which each do one job today.
+- **Q7. Packages or flat siblings?** Should a split file become a package
+  (`Fight/picker/`, `Effects/modifiers/`) or sibling modules beside it
+  (`Effects/armor_class.py`)? *Suggestion:* a package where section 2
+  already sketched one (`Fight/picker/`, `dialogs/`, `arena/`), flat
+  siblings elsewhere. Turning `modifiers.py` into a package would change
+  the import path of every one of its importers for no gain.
 
 ## Revisions
 
@@ -893,6 +1008,54 @@ combat plans' file references. Then record the final numbers in Findings.
   - **Tests:** 7 more in `tests/test_fight.py` (group turns, a new round,
     stepping back over dead turns, upcoming turns, a turn's start). The
     full suite passes (12,104).
+- **R25 (step 5.3, casting's first slice, 2026-11-23).** Casting's rules
+  are `Combat/Fight/spells.py`:
+  - `spend_slot`: a Pact Magic slot when asked for, or when there's no
+    spell slot of that level, plus the statistics. It returns a
+    `SpentSlot`, or None when there's none to spend.
+  - `count_spell_cast`.
+  - `spell_recipients`: SELF lands on the caster, AREA on the targets even
+    if there are none, anything else on the targets, and None when one is
+    needed and none is picked.
+  - `active_spell_record`, the timer kept on the caster.
+  - `ticks_now` and `tick`: a spell counts down on the turn it was cast
+    on, and by `SECONDS_PER_ROUND` rather than a bare 6.
+  - **What `SpellsMixin` keeps:** the log lines, the badge, conditions and
+    Concentration a cast gives, and the expiry loop. That loop ends a
+    spell's effects as it goes, and that can change other combatants, so
+    only the per-entry decisions moved. It's 17 lines shorter.
+  - **Tests:** `tests/test_fight_spells.py` (7 tests without Qt). The full
+    suite passes (12,111).
+
+- **R26 (step 5.3, summons' first slice, 2026-11-23).** Joining and
+  leaving the fight are `Fight` methods, and the questions a fight asks of
+  its summons are `Combat/Fight/summons.py`:
+  - **`Fight`:** `place_in_turn_order` (before the first turn that rolled
+    lower; a roll not known isn't compared), `place_as_in_turn_order`,
+    `follow_owners_in_turn_order`, `move_in_turn_order` (Set
+    initiative...) and `remove`. Each keeps whoever's turn it is.
+    `INITIATIVE_KEY` moved to `fight.py` with them, and its importers with
+    it.
+  - **`summons.py`:** `summon_owner`, `owner_summons`, `summon_source`,
+    `same_summons`, `room_for`, `already_summoned_options`, and
+    `carry_summons_over` (the summons an earlier encounter left out, back
+    as they were). `Combat/Summons.py` stays where it is: it's the summons
+    themselves, and the player log's replay and the tests use it too.
+  - **What stays in the window:** the menus, the log lines, rolling a
+    summon's initiative (a roll site, `test_roll_sites`), the initiative
+    screen's rows, the selection, and ending what a leaving summon
+    concentrates on (it logs). `_summon_owner`, `_owner_summons`,
+    `_summon_source`, `_already_summoned_options` and `_carry_summons_over`
+    are one-line wrappers, because tests and other mixins call them.
+    `_same_summons`, `_room_for`, `_place_as_in_turn_order` and
+    `_place_in_turn_order` are gone, and so is one stub (210).
+  - **Order kept:** `_join_fight` still puts the followers in the turn
+    order, then each summon with its own roll, then the followers among
+    the characters, so the window's order is what it was.
+  - **Tests:** `tests/test_fight_summons.py` (6 tests without Qt, on
+    Dessie's and Hanna's sheets) and 8 more in `tests/test_fight.py`.
+    `summons_mixin.py` 679 → 520 lines, `turns_mixin.py` 770 → 736. The
+    full suite passes (12,125).
 
 ## Discovered issues
 
@@ -916,3 +1079,6 @@ combat plans' file references. Then record the final numbers in Findings.
   window is opened once with the `run-apps` skill's screenshot.
 - `./format.sh` only on the files the step changed (it reformats the whole
   repo otherwise).
+- Step 9's splits: each moved function's AST matches the old one, and no
+  test's `monkeypatch` of a moved name now patches a module that no longer
+  looks it up.

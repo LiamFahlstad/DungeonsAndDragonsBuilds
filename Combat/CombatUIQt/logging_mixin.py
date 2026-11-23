@@ -28,6 +28,7 @@ from Combat.PlayerLog import has_round_events, is_round_key, session_label
 from Combat.Summons import upgrade_keys
 from Combat.WildShape import assume_form, leave_form
 from Combat.Effects.modifiers import hit_point_maximum
+from Combat.Fight.fight import INITIATIVE_KEY
 from Model.Creatures.MonsterStatText import upgrade_stat_block_keys
 
 from Combat.Fight.effect_options import row_uses_most
@@ -48,7 +49,6 @@ from Combat.Fight.stats import (
     spell_slots_used_key,
 )
 from .state import CombatWindowState
-from .turns_mixin import INITIATIVE_KEY
 
 # The combatant key of the slots each slot action changes.
 _SLOT_POOLS = {

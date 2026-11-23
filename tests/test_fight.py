@@ -158,3 +158,93 @@ def test_a_turn_starting_gives_back_actions_and_movement():
     char = {"action_uses": {"Action": 1}, MOVED_KEY: 25, DASHES_KEY: 1}
     start_turn(char)
     assert char == {"action_uses": {}}
+
+
+# ---- Joining and leaving the fight (step 5.3, summons) ----
+
+from Combat.Fight.fight import INITIATIVE_KEY  # noqa: E402
+from Combat.Summons import SUMMON_OF_KEY  # noqa: E402
+
+
+def _rolled(name: str, value: int | None) -> dict:
+    char = _c(name)
+    if value is not None:
+        char[INITIATIVE_KEY] = value
+    return char
+
+
+def test_one_joining_goes_before_the_first_turn_that_rolled_lower():
+    a, b, c = _rolled("A", 18), _rolled("B", 12), _rolled("C", 5)
+    fight = _in_combat(a, b, c)
+    fight.current_turn_idx = 1  # B's turn
+    owl = _c("Owl")
+    fight.place_in_turn_order(owl, 15)
+    assert fight.initiative_order == [a, owl, b, c]
+    assert owl[INITIATIVE_KEY] == 15
+    assert fight.initiative_order[fight.current_turn_idx] is b
+
+
+def test_a_turn_whose_roll_isnt_known_isnt_compared():
+    # A fight continued from its log knows only the turn order.
+    a, b = _rolled("A", None), _rolled("B", None)
+    fight = _in_combat(a, b)
+    owl = _c("Owl")
+    fight.place_in_turn_order(owl, 1)
+    assert fight.initiative_order == [a, b, owl]
+
+
+def test_one_joining_is_put_among_the_others_as_in_the_turn_order():
+    a, b = _c("A"), _c("B")
+    fight = _in_combat(a, b)
+    owl = _c("Owl")
+    fight.initiative_order.insert(1, owl)
+    fight.place_as_in_turn_order(owl)
+    assert fight.characters == [a, owl, b]
+
+
+def test_a_summon_follows_its_owner_and_the_turn_stays():
+    hanna, goblin = _c("Hanna"), _c("Goblin")
+    fight = _in_combat(goblin, hanna)
+    fight.current_turn_idx = 1  # Hanna's turn
+    drake = {**_c("Drake"), SUMMON_OF_KEY: "Hanna"}
+    fight.follow_owners_in_turn_order([drake])
+    assert fight.initiative_order == [goblin, hanna, drake]
+    assert fight.initiative_order[fight.current_turn_idx] is hanna
+    assert drake not in fight.characters  # the caller's
+
+
+def test_leaving_on_its_own_turn_passes_the_turn_to_the_next():
+    a, b, c = _c("A"), _c("B"), _c("C")
+    fight = _in_combat(a, b, c)
+    fight.current_turn_idx = 1
+    fight.remove(b)
+    assert fight.initiative_order == [a, c] and fight.characters == [a, c]
+    assert fight.initiative_order[fight.current_turn_idx] is c
+    fight.remove(c)  # the last turn's: the round's first is next
+    assert fight.current_turn_idx == 0
+
+
+def test_leaving_before_whoevers_turn_it_is_keeps_their_turn():
+    a, b, c = _c("A"), _c("B"), _c("C")
+    fight = _in_combat(a, b, c)
+    fight.current_turn_idx = 2
+    fight.remove(a)
+    assert fight.initiative_order[fight.current_turn_idx] is c
+
+
+def test_leaving_before_the_fight_leaves_only_the_characters():
+    a, b = _c("A"), _c("B")
+    fight = Fight(characters=[a, b], initiative_order=[a, b])
+    fight.remove(a)
+    assert fight.characters == [b] and fight.initiative_order == [a, b]
+
+
+def test_a_new_initiative_moves_a_turn_and_whoevers_turn_it_is_keeps_it():
+    a, b, c = _rolled("A", 18), _rolled("B", 12), _rolled("C", 5)
+    fight = _in_combat(a, b, c)
+    fight.current_turn_idx = 1  # B's turn
+    fight.move_in_turn_order(c, 20)
+    assert fight.initiative_order == [c, a, b] and fight.characters == [c, a, b]
+    assert fight.initiative_order[fight.current_turn_idx] is b
+    fight.move_in_turn_order(b, 1)  # B keeps its turn
+    assert fight.initiative_order[fight.current_turn_idx] is b

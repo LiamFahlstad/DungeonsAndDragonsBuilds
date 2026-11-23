@@ -31,8 +31,13 @@ from Combat.Arena.senses import sees
 from Combat.Definitions import Phase
 from Combat.Effects.modifiers import makes_critical_hit
 from Combat.Effects.sight import UNKNOWN, Seen
+from Combat.Summons import place_after_owners
 
 from .health import DEAD, death_state
+
+# Each combatant's initiative roll this fight, once it's started. Not
+# logged ("_"): a fight continued from its log has only the turn order.
+INITIATIVE_KEY = "_initiative"
 
 
 def initiative_units(chars: list[dict]) -> list[list[dict]]:
@@ -272,3 +277,95 @@ class Fight:
             if not (skip_dead and self.turn_is_dead()) or self.is_first_turn():
                 break
         return went_back_a_round
+
+    # ---- Joining and leaving the fight ----
+    # Whoever's turn it is keeps it as others join or leave the turn order.
+
+    def place_in_turn_order(self, char: dict, value: int):
+        """Give char (not in the turn order) the initiative `value` and put
+        it in the turn order by it: before the first turn that rolled lower,
+        keeping whoever's turn it is. A turn whose roll isn't known (a fight
+        continued from its log) isn't compared; with none known, it goes
+        last."""
+        char[INITIATIVE_KEY] = value
+        order = self.initiative_order
+        current = order[self.current_turn_idx] if order else None
+        at = next(
+            (
+                self.turn_span(i)[0]
+                for i, c in enumerate(order)
+                if c.get(INITIATIVE_KEY) is not None and c[INITIATIVE_KEY] < value
+            ),
+            len(order),
+        )
+        order.insert(at, char)
+        if current is not None:
+            now = next(i for i, c in enumerate(order) if c is current)
+            self.current_turn_idx = self.turn_span(now)[0]
+
+    def place_as_in_turn_order(self, char: dict):
+        """Put char (in the turn order, not yet in characters) in characters
+        where it is in the turn order: before the next one after it there."""
+        order = self.initiative_order
+        at = next(i for i, c in enumerate(order) if c is char)
+        later = next(
+            (
+                i
+                for c in order[at + 1 :]
+                for i, w in enumerate(self.characters)
+                if w is c
+            ),
+            len(self.characters),
+        )
+        self.characters.insert(later, char)
+
+    def move_in_turn_order(self, char: dict, value: int):
+        """char (with a turn of its own in the turn order) has the
+        initiative `value`: it moves in the turn order by it, as
+        place_in_turn_order puts one in, and in characters. Whoever's turn
+        it is keeps it; char keeps its turn if it was its."""
+        order = self.initiative_order
+        current = order[self.current_turn_idx]
+        order.remove(char)
+        if current is not char:
+            # Its index moved if char's turn was before it.
+            at = next(i for i, c in enumerate(order) if c is current)
+            self.current_turn_idx = self.turn_span(at)[0]
+        elif order:
+            self.current_turn_idx = min(self.current_turn_idx, len(order) - 1)
+        self.place_in_turn_order(char, value)
+        if current is char:
+            self.current_turn_idx = next(i for i, c in enumerate(order) if c is char)
+        if any(c is char for c in self.characters):
+            self.characters.remove(char)
+            self.place_as_in_turn_order(char)
+
+    def follow_owners_in_turn_order(self, follow: list[dict]):
+        """Put the summons `follow` in the turn order right after their
+        owners (place_after_owners), keeping whoever's turn it is. Putting
+        them in characters is the caller's."""
+        current = self.initiative_order[self.current_turn_idx]
+        self.initiative_order = place_after_owners(self.initiative_order, follow)
+        at = next(i for i, c in enumerate(self.initiative_order) if c is current)
+        self.current_turn_idx = self.turn_span(at)[0]
+
+    def remove(self, char: dict):
+        """Take char out of characters and, in the turns, out of the turn
+        order, keeping whoever's turn it is (the next one's, when it was
+        char's)."""
+        order = self.initiative_order
+        if self.phase == Phase.COMBAT and any(c is char for c in order):
+            current = order[self.current_turn_idx]
+            at = next(i for i, c in enumerate(order) if c is char)
+            self.initiative_order = [c for c in order if c is not char]
+            if not self.initiative_order:
+                self.current_turn_idx = 0
+            elif current is char:
+                at %= len(self.initiative_order)
+                self.current_turn_idx = self.turn_span(at)[0]
+            else:
+                at = next(
+                    i for i, c in enumerate(self.initiative_order) if c is current
+                )
+                self.current_turn_idx = self.turn_span(at)[0]
+        self.characters[:] = [c for c in self.characters if c is not char]

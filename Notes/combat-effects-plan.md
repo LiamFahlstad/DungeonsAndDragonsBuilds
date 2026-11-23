@@ -2399,7 +2399,9 @@ roll, and stays as it is.
   player's roll instead, or anyone's, which Q58 asked for as well. It
   isn't offered for a member of an initiative group, whose turn is the
   group's: moving one would split it. `_place_in_turn_order(char, value)`
-  is the placing `_roll_into_turn_order` did, shared; the move keeps
+  (now `Fight.place_in_turn_order`, and the move `Fight.move_in_turn_order`:
+  combat-ui-refactor-plan R26) is the placing `_roll_into_turn_order` did,
+  shared; the move keeps
   whoever's turn it is (char too, if it was char's), moves the card in the
   window as a summon's is placed, and is one undo step.
 - **R121. A roll per Times copy, comma separated** (8.5). Each box (attack

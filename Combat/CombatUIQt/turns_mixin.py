@@ -18,7 +18,12 @@ from PyQt6.QtWidgets import (
 )
 
 from Combat.Definitions import Phase
-from Combat.Fight.fight import initiative_units, start_turn, unit_label
+from Combat.Fight.fight import (
+    INITIATIVE_KEY,
+    initiative_units,
+    start_turn,
+    unit_label,
+)
 from Combat.PlayerLog import has_round_events
 from Model.Content.CombatModifiers import AtTurnEnd, AtTurnStart
 
@@ -29,10 +34,6 @@ from Combat.Fight.stats import _default_stats
 from Core.Rules import ability_modifier
 from .state import CombatWindowState
 from .undo import undoable
-
-# Each combatant's initiative roll this fight, once it's started. Not
-# logged ("_"): a fight continued from its log has only the turn order.
-INITIATIVE_KEY = "_initiative"
 
 
 class TurnsMixin(CombatWindowState):
@@ -297,32 +298,11 @@ class TurnsMixin(CombatWindowState):
 
     def _roll_into_turn_order(self, char: dict) -> int:
         """Roll char's initiative (a summon with its own, summoned during the
-        fight) and put it in the turn order by it: before the first turn
-        that rolled lower, keeping whoever's turn it is. A turn whose roll
-        isn't known (a fight continued from its log) isn't compared; with
-        none known, it goes last. Returns the roll."""
+        fight) and put it in the turn order by it (Fight.place_in_turn_order).
+        Returns the roll."""
         value = random.randint(1, 20) + self._dex_mod(char)
-        self._place_in_turn_order(char, value)
+        self.fight.place_in_turn_order(char, value)
         return value
-
-    def _place_in_turn_order(self, char: dict, value: int):
-        """Give char (not in the turn order) the initiative `value` and put
-        it in the turn order by it, as _roll_into_turn_order does."""
-        char[INITIATIVE_KEY] = value
-        order = self.initiative_order
-        current = order[self.current_turn_idx] if order else None
-        at = next(
-            (
-                self._turn_span(i)[0]
-                for i, c in enumerate(order)
-                if c.get(INITIATIVE_KEY) is not None and c[INITIATIVE_KEY] < value
-            ),
-            len(order),
-        )
-        order.insert(at, char)
-        if current is not None:
-            now = next(i for i, c in enumerate(order) if c is current)
-            self.current_turn_idx = self._turn_span(now)[0]
 
     def _can_set_initiative(self, char: dict) -> bool:
         """Whether char's initiative can be set by itself (Set initiative...):
@@ -357,21 +337,7 @@ class TurnsMixin(CombatWindowState):
         turn if it was its."""
         if not self._can_set_initiative(char):
             return
-        order = self.initiative_order
-        current = order[self.current_turn_idx]
-        order.remove(char)
-        if current is not char:
-            # Its index moved if char's turn was before it.
-            at = next(i for i, c in enumerate(order) if c is current)
-            self.current_turn_idx = self._turn_span(at)[0]
-        elif order:
-            self.current_turn_idx = min(self.current_turn_idx, len(order) - 1)
-        self._place_in_turn_order(char, value)
-        if current is char:
-            self.current_turn_idx = next(i for i, c in enumerate(order) if c is char)
-        if any(c is char for c in self.characters):
-            self.characters.remove(char)
-            self._place_as_in_turn_order(char)
+        self.fight.move_in_turn_order(char, value)
         self._log_event(
             f"{char['name']}'s initiative is {value}", character=char["name"]
         )

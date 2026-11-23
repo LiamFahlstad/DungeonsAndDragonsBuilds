@@ -40,8 +40,9 @@ LONG_FUNCTIONS = {
 }
 
 # 207 at step 0; +4 at step 3c, so the Use / Cast dialog (use_cast/dialog.py)
-# can type its app as CombatWindowState instead of importing ConditionsMixin.
-MAX_WINDOW_STATE_STUBS = 211
+# can type its app as CombatWindowState instead of importing ConditionsMixin;
+# -1 at step 5.3's summons slice (_place_as_in_turn_order is Fight's, R26).
+MAX_WINDOW_STATE_STUBS = 210
 MAX_INLINE_STYLES = 23
 
 

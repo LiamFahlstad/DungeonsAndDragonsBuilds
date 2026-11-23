@@ -17,8 +17,8 @@ import pytest
 import Combat.Monsters as Monsters
 from Combat import PartyAllies, Summons, WildShape
 from Combat.Arena import arena, lasting, speeds
-from Combat.CombatUIQt import player_view, turns_mixin
-from Combat.Fight import attack_rolls
+from Combat.CombatUIQt import player_view
+from Combat.Fight import attack_rolls, fight
 from Combat.Effects import active_effects
 from Combat.EncounterLogs import PLAYER_FIGHT_KEYS
 from Combat.Fight.combatant import COMBATANT_KEYS, Combatant
@@ -108,7 +108,7 @@ def test_the_key_constants_are_declared():
         PartyAllies.PARTY_ALLY_KEY,
         PartyAllies.ENCOUNTER_ALLY_KEY,
         attack_rolls.SHIELD_OFF,
-        turns_mixin.INITIATIVE_KEY,
+        fight.INITIATIVE_KEY,
         *(key for key, _ in player_view._KNOWN_DEFENSES),
     ]
     assert not _undeclared(constants)

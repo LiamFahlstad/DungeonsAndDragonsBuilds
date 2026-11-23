@@ -147,7 +147,7 @@ Combatant = TypedDict(
         "shield_off": bool,
         # The damage type it last dealt, for the Damage field's default.
         "_last_damage_type": str,
-        # Its initiative roll (turns_mixin.INITIATIVE_KEY).
+        # Its initiative roll (fight.INITIATIVE_KEY).
         "_initiative": int,
         # ---- The battle map (Combat/Arena/) ----
         "position": list,
