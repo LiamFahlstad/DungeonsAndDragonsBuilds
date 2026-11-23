@@ -6,11 +6,11 @@ from pathlib import Path
 from PyQt6.QtCore import QSettings
 from PyQt6.QtWidgets import QApplication
 
-from Combat.Arena.arena import ArenaSettings
 from Combat.Definitions import ActionCost, Phase, tracked_condition_names
 from Combat.EncounterConfig import CombatantSpec
 from Combat.Arena.lasting import AreaPrompt
 from Combat.Effects.triggers import Firing
+from Combat.Fight.fight import Fight
 from Combat.PlayerCombatant import combatant_from_character, combatant_from_stat_block
 from Combat.Scenario import CombatScenario
 from Model.Creatures.Combatants import BasicCombatantData, Visibility
@@ -100,7 +100,7 @@ class CombatAppQt(
         self.combatants_per_column = combatants_per_column
 
         # ---- data ----
-        self.characters: list[dict] = []
+        self.fight = Fight()
         # The tracked party by character name; who of them is in the window
         # depends on the encounter (_set_party).
         self._party_sheets = {}
@@ -144,17 +144,10 @@ class CombatAppQt(
         # Settings; run() loads the saved ones.
         self.settings = CombatSettings()
         self._settings_store: QSettings | None = None
-        self.round_number = 1
-        self.arena_settings = ArenaSettings()
         self.arena_view_on = False  # run() reads the view last used
         self._map_painter = None
         self.history = []
         self._open_undo_point = None
-
-        # --- Phase / initiative state ---
-        self.phase: Phase = Phase.INITIATIVE
-        self.initiative_order: list[dict] = []
-        self.current_turn_idx: int = 0
 
         # --- Persistent player log: bring the party to their current state ---
         self.player_log_file = Path(player_log_path) if player_log_path else None

@@ -41,6 +41,7 @@ from Combat.Arena.geometry import Cell
 from Combat.Arena.lasting import AreaPrompt
 from Combat.Arena.ranges import AttackRange, RangeCheck
 from Combat.Effects.sight import Seen
+from Combat.Fight.fight import Fight
 from Combat.Effects.triggers import (
     AttackOutcome,
     DropOutcome,
@@ -77,7 +78,58 @@ class CombatWindowState:
 
     # ── Data (CombatAppQt.__init__) and widgets (WindowMixin, TimerMixin) ─
 
-    characters: list[dict]
+    # The fight's state lives in a Fight (Combat/Fight/fight.py); these
+    # names read and write it, as they did when they were attributes.
+    fight: Fight
+
+    @property
+    def characters(self) -> list[dict]:
+        return self.fight.characters
+
+    @characters.setter
+    def characters(self, value: list[dict]):
+        self.fight.characters = value
+
+    @property
+    def initiative_order(self) -> list[dict]:
+        return self.fight.initiative_order
+
+    @initiative_order.setter
+    def initiative_order(self, value: list[dict]):
+        self.fight.initiative_order = value
+
+    @property
+    def current_turn_idx(self) -> int:
+        return self.fight.current_turn_idx
+
+    @current_turn_idx.setter
+    def current_turn_idx(self, value: int):
+        self.fight.current_turn_idx = value
+
+    @property
+    def round_number(self) -> int:
+        return self.fight.round_number
+
+    @round_number.setter
+    def round_number(self, value: int):
+        self.fight.round_number = value
+
+    @property
+    def phase(self) -> Phase:
+        return self.fight.phase
+
+    @phase.setter
+    def phase(self, value: Phase):
+        self.fight.phase = value
+
+    @property
+    def arena_settings(self) -> ArenaSettings:
+        return self.fight.arena_settings
+
+    @arena_settings.setter
+    def arena_settings(self, value: ArenaSettings):
+        self.fight.arena_settings = value
+
     combatants_per_column: int
     conditions: list[str]
     visibility_states: list[str]
@@ -120,9 +172,6 @@ class CombatWindowState:
     # _settings_store; None (tests, scripts) keeps them for this run only.
     settings: CombatSettings
     _settings_store: QSettings | None
-    round_number: int
-    # The fight's battle map (Combat/Arena/), saved in the encounter log.
-    arena_settings: ArenaSettings
     # Whether combat shows the map in place of the cards (ArenaMixin), the
     # view last used.
     arena_view_on: bool
@@ -134,9 +183,6 @@ class CombatWindowState:
     # Undo steps, oldest first, and the one being recorded (undo.py).
     history: list[UndoPoint]
     _open_undo_point: UndoPoint | None
-    phase: Phase
-    initiative_order: list[dict]
-    current_turn_idx: int
     player_log_file: Path | None
     # The log events are written to: the encounter's
     # (LoggingMixin._use_log_file), or between encounters the

@@ -60,7 +60,7 @@ and the few others a step touches, not the character-sheet tests. Steps 3,
 | 2 | A typed combatant (`Combatant` TypedDict) | M | **Done** 2026-11-22, revised (R8): the schema and a key test; annotating signatures moved to step 5 |
 | 3 | The Use / Cast dialog as a class, its form-to-effects logic Qt-free | L | 3a **done** 2026-11-22 (R9): `use_cast/form.py`, dialog 1,580 → 1,440 lines; 3b **done** 2026-11-22 (R10): `_UseCastDialog`, `run()` 616 lines + 44 methods; 3c's move **done** (R11): `use_cast/dialog.py`, `conditions_mixin.py` 3,500 → 1,674 lines; 3c's split **done**, revised (R12): `run()` is 14 lines calling 10 builder methods, the longest 126; 3d **done** (R13): `do_apply` 146 → 50 lines over Qt-free `read_amount`, `check_applicable` and `build_effect`; reviewed (R14): no behaviour change; **step 3 done** |
 | 4 | The window built from panels, shortcuts as a table | M | **Done** 2026-11-23 (R15, R16): `_build_window` 680 → 13 lines over 12 builders (the longest 111); the shortcuts a table (`shortcuts.py`) checked against KEYBOARD_SHORTCUTS.md |
-| 5 | The Qt-free fight core (`Combat/Fight/`), one mixin at a time | XL | 5.1 **done** 2026-11-23 (R17): seven Qt-free modules moved to `Combat/Fight/`; 5.5's guard test in place; **5.2 (`Fight` holds the state) next** |
+| 5 | The Qt-free fight core (`Combat/Fight/`), one mixin at a time | XL | 5.1 **done** 2026-11-23 (R17): seven Qt-free modules moved to `Combat/Fight/`; 5.5's guard test in place; 5.2 **done** (R18): `Fight` holds the fight's state; **5.3 (the operations, damage first) next** |
 | 6 | One refresh path after every GM operation | M | Not started |
 | 7 | Mixins into composed views and one module per dialog; `CombatWindowState` gone | L | Not started |
 | 8 | Docs, agents and skills point at the new layout | S | Not started |
@@ -753,6 +753,25 @@ combat plans' file references. Then record the final numbers in Findings.
     in `Combat/Fight`, `Combat/Effects` or `Combat/Arena` imports PyQt6 or
     `Combat.CombatUIQt`. There's no allowlist, because nothing breaks it.
   - **Checks:** the full suite passes (12,064) and pyright is clean.
+
+- **R18 (step 5.2, 2026-11-23).** `Combat/Fight/fight.py`'s `Fight` (a
+  dataclass) holds `characters`, `initiative_order`, `current_turn_idx`,
+  `round_number`, `phase` and `arena_settings`. The window holds one,
+  `CombatAppQt.fight`.
+  - **Forwarding properties.** `CombatWindowState` turns the six names
+    into properties that read and write the `Fight`, so the mixins, undo,
+    the log code and the tests, about 2,800 references in all, didn't
+    change.
+  - **Not moved yet:**
+    - The undo history, because `UndoPoint` is still in the UI (R17).
+    - The turn column's prompts, which are what the window shows.
+    - The logs, which come with the log code in 5.3's last area.
+  - **The stub budget now counts stubs only** (a lone
+    `raise NotImplementedError`), so the forwarding properties don't
+    count. It stays 211.
+  - **Tests:** `tests/test_fight.py` (new) checks a `Fight` without Qt and
+    that the window's attributes are its. The full suite passes (12,064 +
+    3) and pyright is clean.
 
 ## Discovered issues
 

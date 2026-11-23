@@ -115,7 +115,12 @@ def _window_state_stubs() -> int:
         for node in tree.body
         if isinstance(node, ast.ClassDef) and node.name == "CombatWindowState"
     )
-    return sum(isinstance(node, ast.FunctionDef) for node in state.body)
+    return sum(
+        isinstance(node, ast.FunctionDef)
+        and isinstance(node.body[-1], ast.Raise)
+        and "NotImplementedError" in ast.unparse(node.body[-1])
+        for node in state.body
+    )
 
 
 def test_window_state_stubs_do_not_grow():
@@ -163,13 +168,13 @@ def test_the_fight_core_imports_no_qt():
         for path in sorted((REPO / folder).rglob("*.py")):
             tree = ast.parse(path.read_text(encoding="utf-8"))
             for node in ast.walk(tree):
-                names = []
+                names, line = [], 0
                 if isinstance(node, ast.Import):
-                    names = [alias.name for alias in node.names]
+                    names, line = [alias.name for alias in node.names], node.lineno
                 elif isinstance(node, ast.ImportFrom) and node.level == 0:
-                    names = [node.module or ""]
+                    names, line = [node.module or ""], node.lineno
                 for name in names:
                     if name.startswith(("PyQt6", "Combat.CombatUIQt")):
                         where = path.relative_to(REPO).as_posix()
-                        offenders.append(f"{where}:{node.lineno} {name}")
+                        offenders.append(f"{where}:{line} {name}")
     assert not offenders, offenders
