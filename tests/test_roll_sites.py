@@ -161,5 +161,21 @@ def test_every_listed_roll_still_rolls():
     assert not gone, f"These no longer roll; take them out of ROLL_SITES: {gone}"
 
 
+def test_every_roll_sites_file_is_in_one_folder():
+    # Keys are paths within a scanned folder, so a file that rolls (or is
+    # listed) mustn't share its path with a file in another folder:
+    # Combat/Fight and Combat/CombatUIQt both have a resources.py, and a roll
+    # added to one could pass as the other's listed roll.
+    homes: dict[str, list[str]] = {}
+    for folder in FOLDERS:
+        for path in (ROOT / folder).rglob("*.py"):
+            homes.setdefault(path.relative_to(ROOT / folder).as_posix(), []).append(
+                folder
+            )
+    files = {file for file, _, _ in _roll_calls() | ROLL_SITES.keys()}
+    shared = {file: homes[file] for file in files if len(homes.get(file, [])) > 1}
+    assert not shared, f"Roll sites whose file is in several folders: {shared}"
+
+
 def test_every_entry_says_how():
     assert all(how.strip() for how in ROLL_SITES.values())

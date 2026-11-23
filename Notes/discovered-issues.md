@@ -510,6 +510,16 @@ pyright (standard) rejects assigning Visitor.visit_FunctionDef (node: FunctionDe
 **History**
 - 2026-11-22 main session (combat-ui-refactor-plan step 3c): found
 
+### DI-113 · Combat UI: a Wild Shape badge's source and caster aren't saved until the next logged event
+- **Status:** open
+- **Area:** combat-simulator
+- **Where:** `Combat/CombatUIQt/wild_shape_mixin.py:127`
+
+_assume_wild_shape gives the badge with _add_condition_to (which logs, and so writes the encounter log with the players' fight state) and only then calls note_origin(char, badge, source='Wild Shape', caster=<druid>). Nothing writes the log after that, so a fight reopened right after a Wild Shape (or after the app closes) has the badge's active_effects record with source and caster None. Repro: combat-ui-explore Session('time_loop_pr_square'), start, ui._assume_wild_shape(Maggie, 'Brown Bear'), s.replay_matches() -> combatants.Maggie.active_effects[0].source 'Wild Shape' -> None, .caster 'Maggie' -> None. Same order before the refactor (1e01a850), so not caused by it. Fix: call note_origin before _add_condition_to (as describe() is), or _save_fight_state() after it.
+
+**History**
+- 2026-11-23 main session (combat-ui-explore probe, refactor step 5 review): found
+
 ## Fixed
 
 ### DI-001 · Temporary Hit Points stack instead of keeping one amount

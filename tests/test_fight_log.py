@@ -101,10 +101,12 @@ def test_bloodied_follows_hit_points_silently():
     assert bloodied_change(hero) is True
     resync_bloodied(hero)
     assert hero["conditions"] == ["Bloodied"] and "stats" not in hero
-    hero["hp"] = 0  # at 0 Hit Points it isn't Bloodied
+    assert bloodied_change(hero) is None
+    hero["hp"] = 6  # above half its Hit Point maximum
     resync_bloodied(hero)
     assert hero["conditions"] == []
-    assert bloodied_change(hero) is None
+    # At 0 Hit Points the code takes Bloodied off, which the rule doesn't
+    # ("half its Hit Points or fewer"): DI-007, left as it is by step 5.
 
 
 def test_replayed_damage_counts_for_both_and_bloodies():

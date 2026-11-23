@@ -60,9 +60,13 @@ def test_paralyzed_within_5_feet_is_a_critical_hit():
 
 
 def test_a_miss_adds_no_notes_of_a_hit():
+    # A hit on a Paralyzed creature notes the Critical Hit it may be (with
+    # the map not in use, the distance isn't known); a miss notes nothing.
     fighter = _creature("Fighter")
-    prone = _creature("Ogre", (2, 1), conditions=["Prone"])
-    fight = Fight(characters=[fighter, prone])
+    paralyzed = _creature("Ogre", (2, 1), conditions=["Paralyzed"])
+    fight = Fight(characters=[fighter, paralyzed])
     notes = ("Advantage",)
-    miss = check_attack(fight, prone, AttackRoll(total=3), fighter, notes)
-    assert miss.notes == notes
+    hit = check_attack(fight, paralyzed, AttackRoll(total=18), fighter, notes)
+    assert len(hit.notes) > len(notes)
+    miss = check_attack(fight, paralyzed, AttackRoll(total=3), fighter, notes)
+    assert miss.notes == notes and not miss.critical

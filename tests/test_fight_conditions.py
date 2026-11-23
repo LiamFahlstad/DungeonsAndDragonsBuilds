@@ -6,8 +6,10 @@ condition doesn't get more severe if you have it more than once"), so
 gaining one you have changes nothing; Grappled names its grappler."""
 
 from Combat.Arena.arena import GRAPPLER_KEY
-from Combat.Effects.active_effects import effect_for, find_effect
+from Combat.Effects.active_effects import effect_for, find_effect, give_modifiers
+from Combat.Effects.modifiers import hit_point_maximum
 from Combat.Fight.conditions import gain_condition, lose_condition
+from Model.Content.CombatModifiers import HitPointMaximum
 
 
 def _creature(name: str, *conditions: str) -> dict:
@@ -51,6 +53,10 @@ def test_losing_one_it_doesnt_have_does_nothing():
 
 
 def test_the_hit_point_maximum_before_is_kept_for_the_follow_up():
-    ogre = _creature("Ogre", "Prone")
-    lost = lose_condition(ogre, "Prone")
-    assert lost is not None and lost.maximum_before == 10
+    # Aid raises the Hit Point maximum by 5 while it lasts.
+    ogre = _creature("Ogre", "Aid")
+    give_modifiers(ogre, "Aid", [HitPointMaximum("5")])
+    assert hit_point_maximum(ogre) == 15
+    lost = lose_condition(ogre, "Aid")
+    assert lost is not None and lost.maximum_before == 15
+    assert hit_point_maximum(ogre) == 10

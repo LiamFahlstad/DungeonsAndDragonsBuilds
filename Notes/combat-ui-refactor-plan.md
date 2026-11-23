@@ -1146,6 +1146,29 @@ whole on purpose, each with its reason, and the full suite passes.
   - **Tests** answer with `ScriptedAsker`, which takes its answers from a
     list and keeps each question asked. `tests/test_fight_resources.py`
     has 4 tests without Qt. The full suite passes (12,148).
+
+- **R31 (step 5's review so far, 2026-11-23).** The `code-reviewer` checked
+  R17-R30 (`git diff 1e01a850..36642fce`) and found no behaviour change in
+  the moves. It checked the order arguments of R22, R26 and R28, and that
+  no module under `Combat/Fight`, `Combat/Effects` or `Combat/Arena`
+  imports Qt even indirectly. Its findings were all in tests, and are
+  fixed:
+  - `test_fight_log` asserted that Bloodied ends at 0 Hit Points, which is
+    the open DI-007, not the rule ("half its Hit Points or fewer"). The
+    test no longer asserts it, and says why.
+  - `test_fight_attacks`' "a miss adds no notes of a hit" used a Prone
+    target, which a hit gives no notes either, so it couldn't fail. It
+    uses a Paralyzed one now.
+  - `test_fight_conditions`' "the maximum before" lost Prone, which
+    doesn't change the maximum. It loses an Aid badge (+5) now.
+  - `test_roll_sites` keys files by their path in each scanned folder,
+    and `resources.py` and `asker.py` are in two of them. A new test fails
+    when a file with a roll site shares its path with another folder's.
+
+  Two `combat-ui-explore` sweeps (`ashelm_church`, `time_loop_pr_square`)
+  found nothing. A probe of summons, Set initiative, a drake vanishing,
+  dismissing and Wild Shape, each with Undo and a reopen, found DI-113,
+  which is older than step 5.
   - **Only one question, on purpose.** The trigger pop-up
     (`_ask_triggers`) and the initiative tie-break join the Protocol when
     the code that asks them moves into `Combat/Fight/`, so nothing is in
@@ -1158,6 +1181,11 @@ whole on purpose, each with its reason, and the full suite passes.
 
 - DI-112: pyright error in `tests/test_roll_sites.py:135`, which was
   already there (found in step 3c).
+- DI-113: a Wild Shape badge's source and caster aren't saved until the
+  next logged event, so a fight reopened right after a Wild Shape has
+  them as None. It's older than step 5 (the order of `_assume_wild_shape`
+  is unchanged since 1e01a850). Found by a `combat-ui-explore` probe in
+  step 5's review.
 
 ## Verification (every step)
 
