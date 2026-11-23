@@ -4,9 +4,9 @@ from Combat.Fight.spells import (
     active_spell_record,
     count_spell_cast,
     spell_recipients,
-    spend_slot,
     tick,
     ticks_now,
+    use_slot,
 )
 from Combat.Definitions import Action, CombatStatus
 from Combat.Effects.active_effects import (
@@ -46,21 +46,12 @@ class SpellsMixin(CombatWindowState):
         does; False, saying why, when there's none left."""
         asked_for_pact = isinstance(level, PactSlot)
         level = int(level)
-        spent = spend_slot(char, level, asked_for_pact)
-        if spent is None:
+        if use_slot(self.logger, char, level, asked_for_pact) is None:
             kind = "Pact Magic slots" if asked_for_pact else "slots"
             self._show_status(
                 f"Nothing spent: {char['name']} has no level {level} {kind} left."
             )
             return False
-        pact = spent.pact
-        kind = "Pact Magic slot" if pact else "spell slot"
-        self._log_event(
-            f"{char['name']} uses a Level {level} {kind}",
-            character=char["name"],
-            action=Action.REMOVE_PACT_SLOT if pact else Action.REMOVE_SPELL_SLOT,
-            value=level,
-        )
         return True
 
     @undoable

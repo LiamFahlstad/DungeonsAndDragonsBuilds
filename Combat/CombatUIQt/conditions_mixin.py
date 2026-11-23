@@ -90,7 +90,12 @@ from Combat.Fight.effect_options import (
 from .features_mixin import FEATURE_BADGE_COLOR
 from Combat.Fight.monster_actions import legendary_resistances_left, roll_dice
 from .player_view import note_condition_immunity
-from Combat.Fight.resources import feature_lack, monster_action_lack, spell_slot_lack
+from Combat.Fight.resources import (
+    feature_lack,
+    monster_action_lack,
+    spell_slot_lack,
+    use_action,
+)
 from Combat.Fight.saves import (
     ABILITIES,
     ATTACK_ROLL,
@@ -1553,9 +1558,7 @@ class ConditionsMixin(CombatWindowState):
             [self._action_lack(char, action_type)],
         ):
             return
-        counts = char.setdefault("action_uses", {})
-        counts[action_type] = counts.get(action_type, 0) + 1
-        self._log_event(f"{char['name']} uses {action_type}", character=char["name"])
+        use_action(self.logger, char, action_type)
         if action_type == ActionCost.REACTION:
             # Its other Opportunity Attack buttons go: the Reaction is spent
             # (arena step 23).

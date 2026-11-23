@@ -2,7 +2,6 @@
 
 from CharacterContent.Features.ClassFeatures.Druid.DruidFeatures import WildShape
 from Model.Content.Feature import FeatureTarget
-from Combat.Definitions import Action
 from Combat.Effects.active_effects import (
     FEATURE,
     badge_modifiers,
@@ -11,8 +10,7 @@ from Combat.Effects.active_effects import (
 )
 from Presentation.FeatureCards import feature_label
 from Combat.Fight.effect_options import feature_action_cost
-from Combat.Fight.resources import feature_lack
-from Combat.Fight.stats import _default_stats, increment_named_stat
+from Combat.Fight.resources import count_feature_use, feature_lack
 from .state import CombatWindowState
 from .undo import undoable
 
@@ -107,24 +105,8 @@ class FeaturesMixin(CombatWindowState):
         """Count a use of the feature `name` in source's stats, and `count` of
         its uses if it has any (counts_uses; Elemental Burst spends 2 of Monk's
         Focus), and log it so the party's replay counts it too. Enable Feature
-        and the Custom Effect dialog share it."""
-        stats = source.setdefault("stats", _default_stats())
-        stats["features_enabled"] = stats.get("features_enabled", 0) + 1
-        increment_named_stat(stats, "features_enabled_by_name", name)
-        value: dict = {"feature_name": name}
-        text = f"{source['name']} uses {name}"
-        if count != 1:
-            value["count"] = count
-            text += f" ({count} uses)"
-        self._log_event(
-            text,
-            character=source["name"],
-            action=Action.ENABLE_FEATURE,
-            value=value,
-        )
-        if counts_uses:
-            used = source.setdefault("feature_uses_used", {})
-            used[name] = used.get(name, 0) + count
+        and the Custom Effect dialog share it (Combat/Fight/resources.py)."""
+        count_feature_use(self.logger, source, name, counts_uses, count)
 
     @undoable
     def _apply_feature(self, feature):

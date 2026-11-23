@@ -42,6 +42,7 @@ from Combat.Arena.lasting import AreaPrompt
 from Combat.Arena.ranges import AttackRange, RangeCheck
 from Combat.Effects.sight import Seen
 from Combat.Fight.asker import Asker
+from Combat.Fight.logger import Logger
 from Combat.Fight.fight import Fight
 from Combat.Effects.triggers import (
     AttackOutcome,
@@ -85,6 +86,9 @@ class CombatWindowState:
     # How the fight's rules ask the GM something (Combat/Fight/asker.py):
     # with the window's dialogs (asker.py's WindowAsker).
     asker: Asker
+    # How they log what they did (Combat/Fight/logger.py): through
+    # _log_event (logger.py's WindowLogger).
+    logger: Logger
 
     @property
     def characters(self) -> list[dict]:

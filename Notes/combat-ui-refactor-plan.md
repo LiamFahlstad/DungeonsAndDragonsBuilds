@@ -20,9 +20,12 @@ what a fight does:
 5. **No file you have to scroll through to find a part of it.** A file over
    about 1,000 lines that holds several separate jobs is split into one
    module per job (step 9).
+6. **A folder says what's in it, and a name means one thing.** `Combat/`'s
+   loose modules go into packages named for their job, two modules never
+   share a name, and runtime code leaves `Tools/` (step 10).
 
 Written 2026-11-21. Steps 0 to 2 built 2026-11-22. Step 9 (splitting large
-files) added 2026-11-23.
+files) and step 10 (folders and names) added 2026-11-23.
 
 **What never changes during this plan:** the behaviour, the widget
 `objectName`s (the tests, the golden widget dumps and the `combat-ui-explore`
@@ -64,17 +67,18 @@ and the few others a step touches, not the character-sheet tests. Steps 3,
 | 2 | A typed combatant (`Combatant` TypedDict) | M | **Done** 2026-11-22, revised (R8): the schema and a key test; annotating signatures moved to step 5 |
 | 3 | The Use / Cast dialog as a class, its form-to-effects logic Qt-free | L | 3a **done** 2026-11-22 (R9): `use_cast/form.py`, dialog 1,580 → 1,440 lines; 3b **done** 2026-11-22 (R10): `_UseCastDialog`, `run()` 616 lines + 44 methods; 3c's move **done** (R11): `use_cast/dialog.py`, `conditions_mixin.py` 3,500 → 1,674 lines; 3c's split **done**, revised (R12): `run()` is 14 lines calling 10 builder methods, the longest 126; 3d **done** (R13): `do_apply` 146 → 50 lines over Qt-free `read_amount`, `check_applicable` and `build_effect`; reviewed (R14): no behaviour change; **step 3 done** |
 | 4 | The window built from panels, shortcuts as a table | M | **Done** 2026-11-23 (R15, R16): `_build_window` 680 → 13 lines over 12 builders (the longest 111); the shortcuts a table (`shortcuts.py`) checked against KEYBOARD_SHORTCUTS.md |
-| 5 | The Qt-free fight core (`Combat/Fight/`), one mixin at a time | XL | 5.1 **done** 2026-11-23 (R17): seven Qt-free modules moved to `Combat/Fight/`; 5.5's guard test in place; 5.2 **done** (R18): `Fight` holds the fight's state; 5.3 started (R19, R20): damage's defenses and arithmetic in `Combat/Fight/damage.py`, health (death state, healing, Temporary Hit Points, Death Saving Throws) in `Combat/Fight/health.py`; the map's questions (distance, sight, cover, range, Critical Hits within 5 feet) are `Fight` methods (R21); an attack roll's check is `Combat/Fight/attacks.py` (R22); gaining and losing a condition is `Combat/Fight/conditions.py` (R23); the turn order is `Fight`'s (R24); casting's slots, recipients and timers are `Combat/Fight/spells.py` (R25); joining and leaving the turn order are `Fight`'s, summons' questions and carry-over `Combat/Fight/summons.py` (R26); Wild Shape's uses and badge `Combat/Fight/wild_shape.py` (R27); a short rest's regains and Hit Dice `Combat/Fight/rests.py` (R28); saving, loading and replaying the fight `Combat/Fight/log.py` (R29); 5.3's areas are each started; what's left of them (features, triggers, the cascades a condition sets off, `_log_event`) waits for 5.4's `Asker` and step 6; 5.4 started (R30): the `Asker` asks "out of resources, go ahead anyway?", and the checks are `Combat/Fight/resources.py`; **5.4 continues with the trigger pop-up** |
+| 5 | The Qt-free fight core (`Combat/Fight/`), one mixin at a time | XL | 5.1 **done** 2026-11-23 (R17): seven Qt-free modules moved to `Combat/Fight/`; 5.5's guard test in place; 5.2 **done** (R18): `Fight` holds the fight's state; 5.3 started (R19, R20): damage's defenses and arithmetic in `Combat/Fight/damage.py`, health (death state, healing, Temporary Hit Points, Death Saving Throws) in `Combat/Fight/health.py`; the map's questions (distance, sight, cover, range, Critical Hits within 5 feet) are `Fight` methods (R21); an attack roll's check is `Combat/Fight/attacks.py` (R22); gaining and losing a condition is `Combat/Fight/conditions.py` (R23); the turn order is `Fight`'s (R24); casting's slots, recipients and timers are `Combat/Fight/spells.py` (R25); joining and leaving the turn order are `Fight`'s, summons' questions and carry-over `Combat/Fight/summons.py` (R26); Wild Shape's uses and badge `Combat/Fight/wild_shape.py` (R27); a short rest's regains and Hit Dice `Combat/Fight/rests.py` (R28); saving, loading and replaying the fight `Combat/Fight/log.py` (R29); 5.3's areas are each started; what's left of them (features, triggers, the cascades a condition sets off, `_log_event`) waits for 5.4's `Asker` and step 6; 5.4 started (R30): the `Asker` asks "out of resources, go ahead anyway?", and the checks are `Combat/Fight/resources.py`; the core logs through a `Logger` (Decision 4, R32), first spending an Action, a feature use or a slot; **5.4 continues with the Use / Cast apply path, then triggers** |
 | 6 | One refresh path after every GM operation | M | Not started |
 | 7 | Mixins into composed views and one module per dialog; `CombatWindowState` gone | L | Not started |
 | 8 | Docs, agents and skills point at the new layout | S | Not started |
 | 9 | Large files split into one module per job, with a file-size ratchet | M | Not started. 9.0 (the ratchet) and 9a (Qt-free files) can start now; 9b (UI files) after step 7 |
+| 10 | Folders and names: `Combat/`'s loose modules into packages, clashing names apart, runtime code out of `Tools/`, stray files gone, `CombatUIQt/` in subfolders | M | Not started. 10.0 (the rule), 10a (stray files), 10b (the loose modules) and 10c (clashing names) can start now; 10d (UI subfolders) rides along with steps 7 and 9b |
 
 Steps 0-2 are cheap and safe and make the later ones easier, so do them
 first. Steps 3 and 4 are independent of each other. Step 6 needs step 5's
-results. Step 7 comes last of the restructuring steps. Step 9's parts fit
-in between (see the step), and step 8 runs after step 9's last part, so the
-docs are updated once.
+results. Step 7 comes last of the restructuring steps. Steps 9's and 10's
+parts fit in between (see each step), and step 8 runs after the last part
+of both, so the docs are updated once.
 
 ## 1. Findings (2026-11-21)
 
@@ -167,9 +171,15 @@ A sketch: the plan updates itself as the steps teach us.
 
 ```
 Combat/
+  Definitions.py, CHEATSHEET.md   the only loose files left (step 10)
   Effects/, Arena/            unchanged: Qt-free rules pieces
+  Encounters/                 setting a fight up: campaigns, encounter configs, difficulty (step 10)
+  Logs/                       the encounter and player log files on disk (step 10)
+  Data/                       monsters_raw.json, the Rules dialog's reference (step 10)
+  Campaigns/, Monsters/, Tools/   content, generated stat blocks, hand-run scripts
   Fight/                      NEW, Qt-free: one fight's state and what the GM can do to it
     combatant.py              Combatant TypedDict, key docs (step 2)
+    new_combatant.py          a Combatant from a character or stat block (step 10)
     fight.py                  Fight: combatants, initiative order, turn, round,
                               phase (enum), arena settings, pending prompts
     undo.py                   UndoPoint / gm_operation (moved from CombatUIQt)
@@ -184,10 +194,13 @@ Combat/
                               operations stay as thin methods (Decision 2)
     window/                   control_panel.py, turn_column.py, menus.py, shortcuts.py
     use_cast/                 dialog.py + one widget per section, form.py
-    cards/  turn_panel/  arena/ (arena_view, map_painter)  player/ (view, server, public log)
+    cards/  turn_column/  arena/ (arena_view, map_painter)  player/ (view, server, page)
     dialogs/                  one module per dialog (statistics, player link, add combatant, rules, ...)
+    widgets/                  widgets several dialogs share (tree filter, effect dialog widgets)
     styles.py                 all the QSS
 ```
+
+Step 10 has the file-by-file version of the parts it adds.
 
 **The core's API.** An operation takes the fight and plain arguments, and
 returns what happened:
@@ -409,7 +422,9 @@ Update `Combat/CHEATSHEET.md`, `HOWTO.md`, the `combat-simulator` and
 `combat-ui-tester` agent prompts, the `combat-ui-explore` and `map-painter`
 skills (their code indexes point at file:line), the agent index, and both
 combat plans' file references. Then record the final numbers in Findings.
-Runs after step 9's last part, so the new module names are final.
+Runs after the last parts of steps 9 and 10, so the new module names and
+folders are final. (Code that imports a moved module, a skill's script
+included, is fixed in the move's own commit; step 8 is the prose.)
 
 ### Step 9: one module per job *(moves only)*
 
@@ -502,6 +517,161 @@ step 7 and needs nothing.
 **Done when:** the structure test's file allowlist holds only files kept
 whole on purpose, each with its reason, and the full suite passes.
 
+### Step 10: folders and names *(moves and renames only)*
+
+Step 9 splits files that are too long. This step puts each file where a
+reader would look for it and gives it a name that means one thing. What's
+there today (2026-11-23):
+
+- **15 modules loose in `Combat/`**, beside 7 packages. Apart from
+  `Definitions.py` they do four jobs:
+  - setting up a campaign's encounters: `Campaign.py`, `Scenario.py`,
+    `Scenarios.py`, `EncounterConfig.py`, `EncounterDifficulty.py`,
+    `PartyAllies.py`;
+  - the log files on disk: `EncounterLogs.py`, `PlayerLog.py`, `LogFiles.py`;
+  - making and changing a combatant: `PlayerCombatant.py`, `Summons.py`,
+    `WildShape.py`;
+  - odds and ends: `Rules.py` (the Rules dialog's reference text, with
+    `rules.json`) and `Combatants.py` (ten old hand-made stat blocks: 40
+    test files and two campaigns' encounters use them).
+- **Names that mean two things.**
+  - `Combat/Summons.py` and `Combat/Fight/summons.py`, and
+    `Combat/WildShape.py` and `Combat/Fight/wild_shape.py`, are two modules
+    each on the same subject.
+  - `asker.py` and `resources.py` are in both `Fight/` and `CombatUIQt/`.
+    That clash already broke `test_roll_sites`' keys once (R31).
+  - `Scenario.py` and `Scenarios.py` differ by one letter (the second is
+    the registry of campaigns).
+  - `Combat/Rules.py` sounds like `Core/Rules.py` (the rules constants
+    CLAUDE.md means), and `Combat/Combatants.py` has the name of
+    `Model/Creatures/Combatants.py`.
+  - `CombatUIQt/rest.py` and `CombatUIQt/rests_mixin.py` sit beside
+    `Fight/rests.py`.
+- **Runtime code in `Tools/`.** `Tools/monster_effect_text.py` reads a
+  stat block's text into the CombatEffects the picker offers.
+  `Fight/monster_actions.py` imports it at run time, and so do 8 test
+  files. `Tools/` is for scripts run by hand.
+- **Two cases in one folder.** `Arena/`, `Effects/` and `Fight/` name their
+  modules in snake_case. The top level is PascalCase, and each campaign
+  folder has both (`Campaign.py` and `Players.py` beside `encounters.py`).
+- **Files nothing reads.**
+  - `Combat/PlayerLogs/main_party.json`: one session from 2026-10-22, from
+    before each campaign had its own `PlayerLogs/`. It's tracked only
+    because `.gitignore` covers just the campaigns' folders.
+  - `Combat/rules.txt`: the raw text `rules.json` was written from.
+  - `Combat/FEATURE_GAPS.md`: an audit from 2026-08-22 that nothing links
+    to.
+  - `Tools/migrate_monster_*.py`: three one-time migrations, all run.
+- **`CombatUIQt/` is flat:** 37 files. Section 2 sketched subfolders, and
+  nothing uses them yet (step 4's `shortcuts.py` went in flat).
+
+**The conventions** (Q8):
+
+- Folders are PascalCase, like the rest of the repo. Modules inside a
+  package are snake_case, like `Arena/`, `Effects/` and `Fight/`. A module
+  is renamed for its case only when it moves anyway.
+- No two modules under `Combat/` share a name, ignoring case and `_`
+  (`Summons.py` and `summons.py` clash), apart from `__init__.py` and the
+  files every campaign folder has by design (`campaign.py`,
+  `encounters.py`).
+- `Combat/` itself holds packages, `Definitions.py` (the combat enums: 53
+  importers, the counterpart of `Core/Definitions.py`) and `CHEATSHEET.md`.
+- Nothing outside `Tools/` imports `Combat.Tools`.
+- **Class and function names don't change**, as in step 9 (`CombatScenario`
+  stays `CombatScenario` in `scenario.py`). Only modules and folders do.
+
+**The layout** (a sketch: check each module's importers before moving it):
+
+| Now | Goes to | Why |
+|---|---|---|
+| `Campaign.py`, `Scenario.py`, `Scenarios.py`, `EncounterConfig.py`, `EncounterDifficulty.py`, `PartyAllies.py` | `Combat/Encounters/`: `campaign.py`, `scenario.py`, `campaigns.py` (the registry, was `Scenarios.py`), `config.py`, `difficulty.py`, `party_allies.py` | Setting up what a fight is. `Campaigns/` stays content only: the campaign folders and `ENCOUNTERS.md` |
+| `Combatants.py` | `Combat/Encounters/basic_stat_blocks.py` | Not into `Monsters/`: importing anything there runs its generated `__init__.py`, which loads every monster, and 40 test files import these |
+| `EncounterLogs.py`, `PlayerLog.py`, `LogFiles.py` | `Combat/Logs/`: `encounter_log.py`, `player_log.py`, `files.py` | The log files on disk. `Fight/log.py` (replaying a fight) and `Fight/public_log.py` (what players see) stay with the fight |
+| `PlayerCombatant.py` | `Fight/new_combatant.py` | It makes a `Combatant`, beside `combatant.py`, which declares one |
+| `Summons.py`, `WildShape.py` | merged into `Fight/summons.py` (about 680 lines) and `Fight/wild_shape.py` (about 320) | One module per subject (Q10) |
+| `Rules.py`, `rules.json` | `Combat/Data/rules_reference.py` and `rules_reference.json` | No clash with `Core/Rules.py`; the loader stays next to the one file it reads |
+| `monsters_raw.json` | `Combat/Data/monsters_raw.json` | Data beside data. `scrape_monsters.py` writes it and `generate_monsters.py` reads it |
+| `Tools/monster_effect_text.py` | `Fight/monster_effect_text.py`, and into `Fight/picker/` with `monster_actions.py` when 9a makes that | Runtime code |
+| `PlayerLogs/main_party.json`, `Tools/migrate_monster_*.py` | deleted (Q9 for the migrations) | Nothing reads them; git keeps their history |
+| `rules.txt`, `FEATURE_GAPS.md` | `SourceTexts/` and `Notes/combat-feature-gaps.md` (Q12) | Where the repo keeps source texts and audits |
+| each campaign's `Campaign.py`, `Players.py` | `campaign.py`, `players.py` | One case per folder. `ENCOUNTERS.md`'s "add a campaign" says so |
+| `CombatUIQt/asker.py`, `CombatUIQt/resources.py` | `window_asker.py`, `resources_mixin.py` | Named for what's in them (`WindowAsker`, `ResourcesMixin`), and no clash with `Fight/` |
+| `CombatUIQt/rest.py` | split in step 7: `short_rest_dialog` into `dialogs/short_rest.py`, the command line's `apply_long_rest` and `run_short_rest` into `rest_commands.py` | It's two things today, and neither is `rests_mixin.py` or `Fight/rests.py` |
+
+**The UI's subfolders** (10d). Every file moves once. A mixin doesn't move,
+because step 7 replaces it with a view class, and that class is made in its
+folder. 9b's new modules (`dialogs/more_info.py`, `arena/texts.py`,
+`use_cast/texts.py`) are made in theirs. Files no step touches move by
+themselves, between slices:
+
+| Folder | Now (any time) | When steps 7 and 9b make them |
+|---|---|---|
+| `player/` | `player_view.py`, `player_server.py`, `player_page.html` (move its `!` line in `.gitignore` with it) | |
+| `arena/` | `arena_view.py`, `map_painter.py` | `arena_mixin.py`'s views, `texts.py` |
+| `turn_column/` | `log_feed.py`, `trigger_prompt.py` | the turn panel, turns and timer views |
+| `window/` | `shortcuts.py`, `window_asker.py` | the panels `window_mixin.py` builds |
+| `widgets/` | `tree_filter.py`, `effect_dialog_widgets.py` | |
+| `dialogs/` | | one module per dialog, `short_rest.py` |
+| `cards/` | | the cards view |
+
+Left at the top of `CombatUIQt/`: `app.py`, `styles.py`, `settings.py`,
+`rest_commands.py`, `KEYBOARD_SHORTCUTS.md`, `undo.py` (step 6 decides
+where it goes) and `state.py` (step 7 deletes it). Section 2 called the
+turn column `turn_panel/`; it's `turn_column/` here because that's what
+the GM sees and what the code's docstrings call it.
+
+**How a move is done** (one commit per package or per row, a pure move):
+
+- `git mv`, so `git log --follow` keeps the history. On Windows a rename
+  that only changes case (`Campaign.py` to `campaign.py`) needs two
+  `git mv`s through a temporary name, since the filesystem ignores case.
+- Every importer is pointed at the new path in the same commit. No
+  re-export shims (as in R17 and step 9). The importers are not only
+  `Combat/`: tests, `Run*.py`, the campaigns' `encounters.py` and the
+  skills' scripts (`.claude/skills/*/*.py`) import these modules too.
+- **What follows file paths moves with them**, the same list as step 9:
+  `monkeypatch.setattr(module, ...)` targets (none use a string path
+  today), `test_roll_sites`, `test_text_readers`, the structure test's
+  lists, and `tests/test_layering.py`'s layer map (a new package gets its
+  layer, or inherits `"Combat"`). Also `pyrightconfig.json` and
+  `typecheck.sh` (they name a `Tools/` file), `.gitignore`, and
+  `.claude/settings.json` (its allowed `Combat/Tools/...` commands).
+- The logs on disk don't store module paths (checked 2026-11-23), so old
+  encounter and player logs still open.
+- `Combat/Monsters/` is left alone. Its `__init__.py` and `CR_*/` are
+  generated, and their place is in `generate_monsters.py`, the skills and
+  CLAUDE.md.
+- `Tools/`'s hand-run scripts stay where they are (`monster_score.py`'s
+  path is in CLAUDE.md, four skills, the `monster-balancer` agent and the
+  permissions).
+
+**10.0. The rule first.** `tests/test_combat_ui_structure.py` gets three
+checks, in the same ratchet style as the others: the files loose in
+`Combat/` (an allowlist of today's, which may only shrink); module names
+that clash (an allowlist of today's clashes, which may only shrink); and no
+`Combat.Tools` import outside `Tools/` (an allowlist with
+`monster_effect_text`'s importers).
+
+**The order.**
+
+- **10.0** and **10a** (the deletions and stray files) any time. They're
+  tiny.
+- **10b** (the loose modules, one package per commit) any time, but never
+  during a step 5 slice or a step 9a split that edits the same modules.
+  `Summons.py` and `WildShape.py` go after any slice still moving code out
+  of their mixins.
+- **10c** (the clashing names in `CombatUIQt/` and the campaign folders'
+  case) any time.
+- **10d** (the UI's subfolders): the "now" column any time between slices,
+  the rest as steps 7 and 9b make each module.
+
+**Done when:** `Combat/` holds only packages, `Definitions.py` and
+`CHEATSHEET.md`; the three allowlists of 10.0 are empty; the full suite and
+pyright pass; and `RunCombatSimulator.py` opens an encounter and a player
+log from the command line, `Combat/Tools/prepare_encounters.py` checks a
+campaign and `monster_score.py` scores a monster (they find their files by
+path, which tests don't cover).
+
 ## 4. Coordination with the other plans
 
 - **Where they stand.** The effects plan is down to content (Phase 4.3,
@@ -522,7 +692,8 @@ whole on purpose, each with its reason, and the full suite passes.
 - **File splits (step 9) never run beside other work on the same file.**
   A split touches every importer of the moved names, so it goes in alone,
   between slices, with nobody else's uncommitted changes in those files
-  (check `git status` first).
+  (check `git status` first). The same goes for step 10's moves, which
+  also touch `Combat/Campaigns/` content and the skills' scripts.
 
 ## Decisions
 
@@ -537,6 +708,13 @@ whole on purpose, each with its reason, and the full suite passes.
    explore harness find widgets by them, so a refactor never renames one.
    (In the plan.) An objectName that nothing finds a widget by, used only
    as a style class, may change (R7).
+4. **The core logs through a `Logger`** (the user, 2026-11-23). Like the
+   `Asker`, a Protocol in `Combat/Fight/logger.py` that the rules are given:
+   the window's forwards each line to `_log_event`, and tests keep them in a
+   `RecordingLogger`. Chosen over returning the lines in a result (the
+   `StepResult` of section 2), which would split every operation that logs,
+   asks and logs again around each question, and over doing step 6 first.
+   Line order and Undo stay as they are (R32).
 
 ## Open questions
 
@@ -573,6 +751,26 @@ whole on purpose, each with its reason, and the full suite passes.
   already sketched one (`Fight/picker/`, `dialogs/`, `arena/`), flat
   siblings elsewhere. Turning `modifiers.py` into a package would change
   the import path of every one of its importers for no gain.
+- **Q8. Step 10's conventions and package names.** PascalCase folders,
+  snake_case modules inside them, and the new packages `Encounters/`,
+  `Logs/` and `Data/`? *Suggestion:* yes, as step 10 lists them.
+  `Encounters/` rather than putting the code in `Campaigns/`, so that
+  folder stays content a GM edits.
+- **Q9. The one-time migration scripts** (`Tools/migrate_monster_*.py`,
+  476 lines, all run). *Suggestion:* delete them. git keeps them, and
+  `generate_monsters.py` already writes the format they migrated to.
+- **Q10. Merge or rename?** `Summons.py` into `Fight/summons.py` and
+  `WildShape.py` into `Fight/wild_shape.py`, or keep two modules each with
+  telling names? *Suggestion:* merge, since both results stay under the
+  1,000 lines of Q6. If a merge would make an import cycle, keep two:
+  `Fight/summon_options.py` and `Fight/wild_shape_forms.py`.
+- **Q11. Rename `CombatUIQt/`** to something shorter, such as
+  `Combat/Window/`? *Suggestion:* no. 36 test files, 17 agent and skill
+  files and HOWTO.md name it, and the name is odd but not ambiguous.
+- **Q12. `FEATURE_GAPS.md` and `rules.txt`.** *Suggestion:* move them as
+  step 10's table says, unchanged. Whether `FEATURE_GAPS.md`'s open items
+  go into `Notes/discovered-issues.md` is a separate triage, not part of a
+  move.
 
 ## Revisions
 
@@ -1169,6 +1367,29 @@ whole on purpose, each with its reason, and the full suite passes.
   found nothing. A probe of summons, Set initiative, a drake vanishing,
   dismissing and Wild Shape, each with Undo and a reopen, found DI-113,
   which is older than step 5.
+
+- **R32 (step 5.4, the Logger, 2026-11-23).** The rules left in the mixins
+  (triggers, feature use, a condition's cascades) were each stuck on the
+  same thing: they log as they go, and only the window could. So the core
+  logs through a `Logger` now (Decision 4):
+  - `Combat/Fight/logger.py`: the `Logger` Protocol (`log(text, *,
+    note_turn, character, action, value, public)`, the arguments of
+    `_log_event`) and `RecordingLogger`, which keeps each `LoggedLine`.
+  - **The window's** is `Combat/CombatUIQt/logger.py`'s `WindowLogger`,
+    held as `CombatAppQt.logger`. It calls `_log_event` itself, so each
+    line gets whose turn it is, its Undo step and its public flag as
+    before, in the same order.
+  - **Its first users, spending a resource:** `use_action` and
+    `count_feature_use` (`Combat/Fight/resources.py`) and `use_slot`
+    (`Combat/Fight/spells.py`, `spend_slot` logged). `_add_action_use`
+    keeps the phase check, the question, the Opportunity Attack buttons
+    a spent Reaction takes away and the card; `_count_feature_use` is a
+    one-line call; `_spend_slot` keeps its status line.
+  - **Tests:** `tests/test_fight_spending.py` (3 tests without Qt, one of
+    them replaying the line it logged). The full suite passes (12,152).
+  - **Next:** a hit's triggers. What they apply goes through the Use / Cast
+    apply path (`_apply_row`, `_apply_effect_to_targets`), so that path
+    moves first, with the Logger and the Asker.
   - **Only one question, on purpose.** The trigger pop-up
     (`_ask_triggers`) and the initiative tie-break join the Protocol when
     the code that asks them moves into `Combat/Fight/`, so nothing is in
@@ -1207,3 +1428,6 @@ whole on purpose, each with its reason, and the full suite passes.
 - Step 9's splits: each moved function's AST matches the old one, and no
   test's `monkeypatch` of a moved name now patches a module that no longer
   looks it up.
+- Step 10's moves: the same, plus `git grep` for the old module path finds
+  nothing outside `Notes/` and the prose step 8 updates, and the commands
+  in step 10's "Done when" still run.

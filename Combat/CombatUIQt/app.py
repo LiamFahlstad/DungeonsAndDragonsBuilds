@@ -18,6 +18,7 @@ from Utils.QtMessages import install_qt_message_handler
 
 from .arena_mixin import ArenaMixin
 from .asker import WindowAsker
+from .logger import WindowLogger
 from .cards_mixin import CardsMixin
 from .conditions_mixin import ConditionsMixin
 from .damage_mixin import DamageMixin
@@ -103,6 +104,7 @@ class CombatAppQt(
         # ---- data ----
         self.fight = Fight()
         self.asker = WindowAsker(self)
+        self.logger = WindowLogger(self)
         # The tracked party by character name; who of them is in the window
         # depends on the encounter (_set_party).
         self._party_sheets = {}

@@ -14,10 +14,12 @@ Each check returns what's missing as one line, "<resource>: <why>", or None
 when there's enough of it.
 """
 
-from Combat.Definitions import ActionCost
+from Combat.Definitions import Action, ActionCost
 from Core.Rules import ACTIONS_PER_TURN
 
 from .asker import Asker
+from .logger import Logger
+from .stats import _default_stats, increment_named_stat
 from .effect_options import has_slots, row_uses_most, spell_slot_choices
 from .monster_actions import (
     MonsterAction,
@@ -114,3 +116,40 @@ def go_ahead_anyway(
     if not missing:
         return True
     return asker.go_ahead_anyway(char, doing, missing)
+
+
+# ---- Spending them ----
+
+
+def use_action(logger: Logger, char: dict, action_type: str):
+    """char uses its `action_type` ("Action", "Bonus Action", "Reaction")
+    this round: counted until its next turn starts (fight.start_turn), and
+    logged."""
+    counts = char.setdefault("action_uses", {})
+    counts[action_type] = counts.get(action_type, 0) + 1
+    logger.log(f"{char['name']} uses {action_type}", character=char["name"])
+
+
+def count_feature_use(
+    logger: Logger, source: dict, name: str, counts_uses: bool, count: int = 1
+):
+    """Count a use of the feature `name` in source's stats, and `count` of
+    its uses if it has any (counts_uses; Elemental Burst spends 2 of Monk's
+    Focus), and log it so the party's replay counts it too."""
+    stats = source.setdefault("stats", _default_stats())
+    stats["features_enabled"] = stats.get("features_enabled", 0) + 1
+    increment_named_stat(stats, "features_enabled_by_name", name)
+    value: dict = {"feature_name": name}
+    text = f"{source['name']} uses {name}"
+    if count != 1:
+        value["count"] = count
+        text += f" ({count} uses)"
+    logger.log(
+        text,
+        character=source["name"],
+        action=Action.ENABLE_FEATURE,
+        value=value,
+    )
+    if counts_uses:
+        used = source.setdefault("feature_uses_used", {})
+        used[name] = used.get(name, 0) + count

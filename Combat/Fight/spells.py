@@ -5,9 +5,11 @@ spell's badge and conditions (SpellsMixin)."""
 
 from dataclasses import dataclass
 
+from Combat.Definitions import Action
 from Core.Rules import SECONDS_PER_ROUND
 from Model.Content.Feature import FeatureTarget
 
+from .logger import Logger
 from .stats import _default_stats, increment_named_stat, spell_slots_used_key
 
 
@@ -35,6 +37,23 @@ def spend_slot(
     level_key = spell_slots_used_key(level)
     stats[level_key] = stats.get(level_key, 0) + 1
     return SpentSlot(level, pact)
+
+
+def use_slot(
+    logger: Logger, char: dict, level: int, asked_for_pact: bool = False
+) -> SpentSlot | None:
+    """spend_slot, logged so the party's replay spends it too."""
+    spent = spend_slot(char, level, asked_for_pact)
+    if spent is None:
+        return None
+    kind = "Pact Magic slot" if spent.pact else "spell slot"
+    logger.log(
+        f"{char['name']} uses a Level {level} {kind}",
+        character=char["name"],
+        action=Action.REMOVE_PACT_SLOT if spent.pact else Action.REMOVE_SPELL_SLOT,
+        value=level,
+    )
+    return spent
 
 
 def count_spell_cast(caster: dict, name: str):
