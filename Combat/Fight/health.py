@@ -34,6 +34,31 @@ def death_state(char: dict) -> str:
     return DYING
 
 
+def bloodied_change(char: dict) -> bool | None:
+    """Whether char should gain Bloodied (True: at half its Hit Point
+    maximum or less, above 0) or lose it (False), or neither (None: it has
+    it or not as it should)."""
+    max_hp = hit_point_maximum(char) if "max_hp" in char else 1
+    hp = char.get("hp", 0)
+    is_bloodied = "Bloodied" in char.get("conditions", [])
+    should_be_bloodied = hp > 0 and hp <= max_hp / 2
+    if should_be_bloodied and not is_bloodied:
+        return True
+    if not should_be_bloodied and is_bloodied:
+        return False
+    return None
+
+
+def resync_bloodied(char: dict):
+    """Give char Bloodied, or take it off, as its Hit Points say, silently
+    (nothing logged or counted: a replay, a carried-over ally)."""
+    change = bloodied_change(char)
+    if change is True:
+        char["conditions"].append("Bloodied")
+    elif change is False:
+        char["conditions"].remove("Bloodied")
+
+
 def _count(char: dict, key: str, amount: int):
     char.setdefault("stats", _default_stats())
     char["stats"][key] = char["stats"].get(key, 0) + amount

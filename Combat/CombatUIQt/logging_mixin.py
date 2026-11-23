@@ -1,4 +1,7 @@
-"""Logging mixin for CombatAppQt."""
+"""Logging mixin for CombatAppQt: reading and writing the encounter log and
+the party's player log, appending events, Undo, and the log windows. What a
+log saves of the fight, a log's combatants taken back into it, a continued
+fight's turn order and the party's replay are Combat/Fight/log.py."""
 
 from pathlib import Path
 
@@ -6,16 +9,10 @@ from PyQt6.QtWidgets import QDialog, QMessageBox, QPushButton, QTextEdit, QVBoxL
 
 import Combat.PartyAllies as PartyAllies
 import Combat.PlayerLog as PlayerLog
-from Combat.Definitions import Action, Phase
-from Combat.Effects.active_effects import upgrade_old_keys
+from Combat.Definitions import Phase
 from Combat.Arena.arena import ArenaSettings
 from Combat.EncounterLogs import (
-    ARENA_KEY,
-    ORDER_KEY,
-    PLAYER_FIGHT_KEYS,
-    PLAYER_FIGHT_STATE_KEY,
     PUBLIC_KEY,
-    TURN_KEY,
     LogJSONEncoder,
     encounter_ally_names,
     event_text,
@@ -24,44 +21,26 @@ from Combat.EncounterLogs import (
 )
 from Combat.LogFiles import read_json, write_json
 from Combat.PlayerCombatant import combatant_from_character
-from Combat.PlayerLog import has_round_events, is_round_key, session_label
-from Combat.Summons import upgrade_keys
-from Combat.WildShape import assume_form, leave_form
+from Combat.PlayerLog import has_round_events, session_label
 from Combat.Effects.modifiers import hit_point_maximum
-from Combat.Fight.fight import INITIATIVE_KEY
-from Model.Creatures.MonsterStatText import upgrade_stat_block_keys
 
-from Combat.Fight.effect_options import row_uses_most
-from Combat.Fight.monster_actions import upgrade_ability_keys
+from Combat.Fight.log import (
+    apply_replay_action,
+    continue_fight,
+    record_fight,
+    replay_player_log,
+    saved_map,
+    slots_by_level,
+    take_combatants_from,
+)
 from .player_view import may_read_log_line
 from Combat.Fight.public_log import public_log_rounds
 from Combat.Fight.stats import (
-    DICT_STAT_KEYS,
-    STAT_KEYS,
     _default_stats,
     compute_player_log_stats,
-    credit_source,
-    damage_taken_key,
-    event_source_name,
-    increment_named_stat,
-    is_counted_condition,
     long_rest_archive_sessions,
-    spell_slots_used_key,
 )
 from .state import CombatWindowState
-
-# The combatant key of the slots each slot action changes.
-_SLOT_POOLS = {
-    Action.ADD_SPELL_SLOT: "spell_slots",
-    Action.REMOVE_SPELL_SLOT: "spell_slots",
-    Action.ADD_PACT_SLOT: "pact_slots",
-    Action.REMOVE_PACT_SLOT: "pact_slots",
-}
-
-
-def _slots_by_level(slots: dict | None) -> dict[int, int]:
-    """Spell slots with their levels as numbers, which JSON makes strings."""
-    return {int(level): count for level, count in (slots or {}).items()}
 
 
 class LoggingMixin(CombatWindowState):
@@ -69,31 +48,10 @@ class LoggingMixin(CombatWindowState):
 
     def _write_log(self, data: dict):
         """Save `data` (the encounter log read with _read_log, plus changes)
-        with the combatants, round and, during combat, the turn order and
-        whose turn it is as they are now."""
+        with the fight as it is now (record_fight)."""
         if self.log_file is None:
             return
-        data["round_number"] = self.round_number
-        if self.phase == Phase.COMBAT and self.initiative_order:
-            # By name: players aren't in "combatants", and the dicts are
-            # rebuilt when the fight is continued (_load_log_from_path).
-            data[ORDER_KEY] = [c["name"] for c in self.initiative_order]
-            data[TURN_KEY] = self.initiative_order[self.current_turn_idx]["name"]
-            data[ARENA_KEY] = self.arena_settings.to_dict()
-        data["combatants"] = [
-            {k: v for k, v in c.items() if not k.startswith("_")}
-            for c in self.characters
-            if not c.get("_is_player")
-        ]
-        player_state = {
-            c["name"]: {key: c[key] for key in PLAYER_FIGHT_KEYS if c.get(key)}
-            for c in self.characters
-            if c.get("_is_player")
-        }
-        player_state = {name: keys for name, keys in player_state.items() if keys}
-        data.pop(PLAYER_FIGHT_STATE_KEY, None)
-        if player_state:
-            data[PLAYER_FIGHT_STATE_KEY] = player_state
+        record_fight(self.fight, data)
         write_log(self.log_file, data)
         # The party's journal gets this log's entry once something happens in it.
         session = self._player_log_session
@@ -252,7 +210,7 @@ class LoggingMixin(CombatWindowState):
         already in the window, on the initiative screen for a fight that
         hasn't started, or straight into combat to continue one."""
         data = read_json(path)
-        self._take_combatants_from(data)
+        take_combatants_from(self.fight, data)
         # A log prepared before encounter allies were marked: they're on the
         # party's side all the same (the arena plan's R9).
         scenario = next(
@@ -266,8 +224,9 @@ class LoggingMixin(CombatWindowState):
         # A fight keeps its own map from when it started; one that hasn't
         # started yet plays on the encounter's painted map (map_painter.py),
         # if it has one.
-        if ARENA_KEY in data:
-            self.arena_settings = ArenaSettings.from_dict(data.get(ARENA_KEY))
+        saved = saved_map(data)
+        if saved is not None:
+            self.arena_settings = saved
         else:
             painted = self._encounter_map(data.get("encounter") or self._scenario_name)
             self.arena_settings = (
@@ -289,51 +248,9 @@ class LoggingMixin(CombatWindowState):
             self._switch_to_initiative()
             return
         # Continuing a fight jumps straight into COMBAT, in the turn order it
-        # was saved with (_write_log) and on the turn it stopped at.
-        self.phase = Phase.COMBAT
-        self.characters[:] = self._saved_initiative_order(data)
-        self.initiative_order = list(self.characters)
-        turn = data.get(TURN_KEY)
-        self.current_turn_idx = next(
-            (i for i, c in enumerate(self.initiative_order) if c["name"] == turn), 0
-        )
+        # was saved with and on the turn it stopped at.
+        continue_fight(self.fight, data)
         self._switch_to_combat()
-
-    def _take_combatants_from(self, data: dict):
-        """Put the combatants of the log `data` in the window next to the
-        players already in it, and give the players what the log kept of
-        them (PLAYER_FIGHT_STATE_KEY) in place of any they had."""
-        # Logs only ever hold non-player combatants (see _write_log), so splice
-        # them in alongside the players rather than replacing self.characters.
-        players = [c for c in self.characters if c.get("_is_player")]
-        self.characters = players + data.get("combatants", [])
-        player_state = data.get(PLAYER_FIGHT_STATE_KEY, {})
-        for char in self.characters:
-            # A continued fight knows its order, not the rolls behind it; a
-            # player's roll may be from an earlier fight in this window.
-            char.pop(INITIATIVE_KEY, None)
-            char["spell_slots"] = _slots_by_level(char.get("spell_slots"))
-            if char.get("_is_player"):
-                char["pact_slots"] = _slots_by_level(char.get("pact_slots"))
-                for key in PLAYER_FIGHT_KEYS:
-                    char.pop(key, None)
-                # An older log's timers, notes and repeat saves, as effects.
-                saved = upgrade_old_keys(dict(player_state.get(char["name"], {})))
-                char.update(saved)
-            else:
-                # An older log's companion_of / companion_choice, and its
-                # timers, badge tooltips and repeat saves, and its stat block's
-                # speeds, senses and spellcasting from before they were fields,
-                # and its abilities' costs, casts and combat effects.
-                upgrade_keys(char)
-                upgrade_old_keys(char)
-                upgrade_stat_block_keys(char)
-                upgrade_ability_keys(char)
-            stats = char.setdefault("stats", {})
-            for key in STAT_KEYS:
-                stats.setdefault(key, 0)
-            for key in DICT_STAT_KEYS:
-                stats.setdefault(key, {})
 
     def _carry_party_allies_over(self, log_path: Path):
         """Bring the party's allies in the encounter log at `log_path` (one
@@ -349,16 +266,8 @@ class LoggingMixin(CombatWindowState):
             log_path,
         )
         for char in changed:
-            char["spell_slots"] = _slots_by_level(char.get("spell_slots"))
+            char["spell_slots"] = slots_by_level(char.get("spell_slots"))
             self._apply_bloodied_condition(char)
-
-    def _saved_initiative_order(self, data: dict) -> list[dict]:
-        """self.characters in the turn order the log `data` saved. Anyone it
-        doesn't name (all of them in a log from before the order was saved)
-        goes last, in their current order."""
-        saved = data.get(ORDER_KEY) or []
-        rank = {name: i for i, name in enumerate(saved)}
-        return sorted(self.characters, key=lambda c: rank.get(c["name"], len(saved)))
 
     def _init_player_log(self):
         """Load the party's player log and bring the freshly built players to
@@ -393,7 +302,8 @@ class LoggingMixin(CombatWindowState):
     def _replay_party_history(self):
         assert self.player_log_file is not None
         recent = PlayerLog.since_long_rest(self.player_log_data["sessions"])
-        self._replay_player_log(PlayerLog.with_events(recent, self.player_log_file))
+        sessions = PlayerLog.with_events(recent, self.player_log_file)
+        replay_player_log(self.characters, sessions)
 
     def _use_log_file(self, path: Path | None):
         """Log to the encounter log at `path` from now on (None: nothing is
@@ -457,191 +367,8 @@ class LoggingMixin(CombatWindowState):
                 char.update(fresh)
         self._replay_party_history()
 
-    def _replay_player_log(self, sessions: list[dict]):
-        """Reconstruct current player state from the log history. Older sessions
-        (pre-dating this action-log format) stored a full character snapshot per
-        session instead — apply those as a coarse state overwrite for backward
-        compatibility, then replay any structured actions on top."""
-        players_by_name = {c["name"]: c for c in self.characters if c.get("_is_player")}
-        if not players_by_name:
-            return
-        mutable_keys = (
-            "hp",
-            "temp_hp",
-            "conditions",
-            "visibility_states",
-            "death_saves_fail",
-            "death_saves_success",
-            "stats",
-            "spell_slots",
-        )
-        for session in sessions:
-            for snapshot in session.get("combatants", []):
-                char = players_by_name.get(snapshot.get("name"))
-                if char is None:
-                    continue
-                for key in mutable_keys:
-                    if key in snapshot:
-                        char[key] = snapshot[key]
-                char["spell_slots"] = _slots_by_level(char.get("spell_slots"))
-
-            round_keys = sorted(
-                (
-                    k
-                    for k in session
-                    if k.startswith("round_") and k.split("_", 1)[1].isdigit()
-                ),
-                key=lambda k: int(k.split("_", 1)[1]),
-            )
-            for key in round_keys:
-                for entry in session[key]:
-                    if not isinstance(entry, dict) or "action" not in entry:
-                        continue
-                    action, value = entry["action"], entry["value"]
-                    # What a player earns as its source (the damage they
-                    # dealt), whoever it's on. A monster's own stats come
-                    # back with it from its encounter log's "combatants".
-                    source = players_by_name.get(event_source_name(action, value))
-                    if source is not None:
-                        stats = source.setdefault("stats", _default_stats())
-                        credit_source(stats, action, value)
-                    char = players_by_name.get(entry.get("character"))
-                    if char is not None:
-                        self._apply_replay_action(char, action, value)
-
     def _apply_replay_action(self, char: dict, action: str, value):
-        """Forward-apply one recorded player-log action to the character it's
-        on. What it credits its source with is _replay_player_log's."""
-        if action == Action.DAMAGE:
-            char["hp"] += value["hp_delta"]
-            char["temp_hp"] += value["temp_delta"]
-            char.setdefault("stats", _default_stats())
-            char["stats"]["damage_taken"] = (
-                char["stats"].get("damage_taken", 0) + value["dmg"]
-            )
-            if value.get("damage_type"):
-                taken_type_key = damage_taken_key(value["damage_type"])
-                char["stats"][taken_type_key] = (
-                    char["stats"].get(taken_type_key, 0) + value["dmg"]
-                )
-            if value.get("knockout"):
-                char["stats"]["times_downed"] = char["stats"].get("times_downed", 0) + 1
-            self._apply_bloodied_condition(char)
-        elif action == Action.HEAL:
-            was_downed = self._char_death_state(char) != "alive"
-            char["hp"] += value["heal"]
-            char.setdefault("stats", _default_stats())
-            char["stats"]["healing_received"] = (
-                char["stats"].get("healing_received", 0) + value["heal"]
-            )
-            if was_downed and char["hp"] > 0:
-                char["death_saves_fail"] = 0
-                char["death_saves_success"] = 0
-            self._apply_bloodied_condition(char)
-        elif action == Action.ADD_CONDITION:
-            # Older logs stored the condition name as a plain string.
-            cond = value["condition"] if isinstance(value, dict) else value
-            if cond not in char["conditions"]:
-                char["conditions"].append(cond)
-            char.setdefault("stats", _default_stats())
-            if is_counted_condition(value):
-                char["stats"]["conditions_received"] = (
-                    char["stats"].get("conditions_received", 0) + 1
-                )
-                increment_named_stat(char["stats"], "conditions_received_by_name", cond)
-        elif action == Action.REMOVE_CONDITION:
-            cond = value["condition"] if isinstance(value, dict) else value
-            if cond in char["conditions"]:
-                char["conditions"].remove(cond)
-        elif action in (Action.ADD_SPELL_SLOT, Action.ADD_PACT_SLOT):
-            slots = char.setdefault(_SLOT_POOLS[action], {})
-            slots[value] = slots.get(value, 0) + 1
-        elif action in (Action.REMOVE_SPELL_SLOT, Action.REMOVE_PACT_SLOT):
-            slots = char.setdefault(_SLOT_POOLS[action], {})
-            slots[value] = max(slots.get(value, 0) - 1, 0)
-            char.setdefault("stats", _default_stats())
-            char["stats"]["spell_slots_used"] = (
-                char["stats"].get("spell_slots_used", 0) + 1
-            )
-            level_key = spell_slots_used_key(value)
-            char["stats"][level_key] = char["stats"].get(level_key, 0) + 1
-        elif action == Action.CAST_SPELL:
-            if value is None:
-                return  # older logs marked a spell ended by another cast like this
-            spell_name = value["spell_name"] if isinstance(value, dict) else value
-            char.setdefault("stats", _default_stats())
-            char["stats"]["spells_cast"] = char["stats"].get("spells_cast", 0) + 1
-            increment_named_stat(char["stats"], "spells_cast_by_name", spell_name)
-        elif action == Action.DEATH_SAVE_FAIL:
-            if isinstance(value, dict):
-                # Damage taken at 0 Hit Points (DamageMixin._damage_at_zero_hp).
-                if value.get("ends_stable"):
-                    char["death_saves_fail"] = char["death_saves_success"] = 0
-                fails = char.get("death_saves_fail", 0) + value.get("failures", 1)
-                char["death_saves_fail"] = 3 if value.get("massive") else min(fails, 3)
-            else:
-                char["death_saves_fail"] = min(char.get("death_saves_fail", 0) + 1, 3)
-            if char["death_saves_fail"] >= 3:
-                char.setdefault("stats", _default_stats())
-                char["stats"]["deaths"] = char["stats"].get("deaths", 0) + 1
-        elif action == Action.DEATH_SAVE_SUCCESS:
-            char["death_saves_success"] = min(char.get("death_saves_success", 0) + 1, 3)
-        elif action == Action.ADD_TEMP_HP:
-            if isinstance(value, dict):
-                amount = value["amount"]
-                # Temporary Hit Points don't stack: keep the higher amount.
-                char["temp_hp"] = max(char.get("temp_hp", 0), amount)
-                char.setdefault("stats", _default_stats())
-                char["stats"]["temp_hp_received"] = (
-                    char["stats"].get("temp_hp_received", 0) + amount
-                )
-            else:
-                char["temp_hp"] = max(char.get("temp_hp", 0), value)
-        elif action == Action.LOSE_HIT_POINTS:
-            char["hp"] = max(char["hp"] + value["hp_delta"], 0)
-            self._apply_bloodied_condition(char)
-        elif action == Action.REVIVE:
-            char["hp"] = value["hp"]
-            char["death_saves_fail"] = 0
-            char["death_saves_success"] = 0
-            self._apply_bloodied_condition(char)
-        elif action == Action.ENABLE_FEATURE:
-            feature_name = value["feature_name"] if isinstance(value, dict) else value
-            char.setdefault("stats", _default_stats())
-            char["stats"]["features_enabled"] = (
-                char["stats"].get("features_enabled", 0) + 1
-            )
-            increment_named_stat(
-                char["stats"], "features_enabled_by_name", feature_name
-            )
-            feature = {f.name: f for f in char.get("_feature_objects", [])}.get(
-                feature_name
-            )
-            counted = (
-                feature.uses is not None
-                if feature is not None
-                else row_uses_most(char, feature_name) is not None
-            )
-            if counted:
-                # A use that spends several (Elemental Burst's 2 Focus Points).
-                count = value.get("count", 1) if isinstance(value, dict) else 1
-                used = char.setdefault("feature_uses_used", {})
-                used[feature_name] = used.get(feature_name, 0) + count
-        elif action == Action.REGAIN_FEATURE_CHARGE:
-            used = char.setdefault("feature_uses_used", {})
-            used[value] = max(used.get(value, 0) - 1, 0)
-        elif action == Action.WILD_SHAPE:
-            try:
-                assume_form(char, value["form"])
-            except KeyError:
-                pass  # a form their character sheet no longer has
-        elif action == Action.LEAVE_WILD_SHAPE:
-            leave_form(char)
-        elif action in (Action.SUMMON, Action.DISMISS):
-            # Nothing on the owner: what paid for it is logged on its own,
-            # and the next encounter's carry-over reads which summons are out
-            # (SummonsMixin._carry_summons_over).
-            pass
+        apply_replay_action(char, action, value)
 
     def _compute_player_log_stats(self) -> dict[str, dict]:
         """Aggregate lifetime stats per character name: the sessions archived

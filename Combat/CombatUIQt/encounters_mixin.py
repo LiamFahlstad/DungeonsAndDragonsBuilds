@@ -36,6 +36,7 @@ from Combat.LogFiles import BrokenLogError, read_json
 from Combat.PlayerCombatant import combatant_from_stat_block
 from Combat.Scenario import CombatScenario
 from Combat.Effects.modifiers import hit_point_maximum
+from Combat.Fight.log import take_combatants_from
 
 from .state import CombatWindowState
 
@@ -300,9 +301,9 @@ class EncountersMixin(CombatWindowState):
             # The action economy is a turn's; there are none here.
             char["action_uses"] = {}
         if data is not None:
-            self._take_combatants_from(data)
+            take_combatants_from(self.fight, data)
             return
-        self._take_combatants_from({"combatants": self._party_allies_now()})
+        take_combatants_from(self.fight, {"combatants": self._party_allies_now()})
         self._carry_summons_over(self.log_file)
 
     def _party_allies_now(self) -> list[dict]:

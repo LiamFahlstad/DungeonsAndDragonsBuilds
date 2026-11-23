@@ -42,7 +42,7 @@ class FeaturesMixin(CombatWindowState):
         action/target/duration/recovery/uses, description). Shared by _apply_feature
         (when the badge is first applied) and _make_card's fallback (when a badge's
         tooltip wasn't persisted — e.g. player-log conditions restored via replay,
-        see logging_mixin._apply_replay_action)."""
+        see Combat/Fight/log.py's apply_replay_action)."""
         sb = char.get("_stat_block")
         feature_target = feature.target(sb) if sb is not None else None
         description = None

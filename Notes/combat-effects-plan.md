@@ -1576,7 +1576,8 @@ roll, and stays as it is.
   player's effects as a whole, as it did their timers.
 - **R33. The converter runs where logs are read, not on every access.**
   `upgrade_old_keys` turns the seven old keys (`OLD_KEYS`) into records in
-  `_take_combatants_from` (each combatant, and each player's saved fight
+  `_take_combatants_from` (now `Combat/Fight/log.py`'s
+  `take_combatants_from`: each combatant, and each player's saved fight
   state) and in `ending_conditions` (Summons and PartyAllies read earlier
   logs' combatants directly, on a copy). It reads as leniently as the old
   readers (`test_party_allies` gave entries with only a name). Nothing else
@@ -2096,7 +2097,8 @@ roll, and stays as it is.
 - **R84. The Hit Point maximum is worked out, not written** (7.4). The
   plan said giving Aid "raises `max_hp`". But a player's `max_hp` is
   refilled from the sheet whenever a fight is loaded
-  (`_take_combatants_from`, `_rebuild_players_from_log`) while its
+  (`take_combatants_from` in `Combat/Fight/log.py`,
+  `_rebuild_players_from_log`) while its
   `active_effects` come back from the log, so a raised `max_hp` would be
   lost or, worse, taken off twice. `hit_point_maximum(char)` is the
   stored `max_hp` plus each rolled `HitPointMaximum` on its badges (once

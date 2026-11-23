@@ -12,7 +12,6 @@ from Combat.Definitions import Action
 from Combat.Effects.modifiers import (
     extra_text,
     hit_extras,
-    hit_point_maximum,
     used_up_by_attack,
 )
 from Combat.Effects.triggers import (
@@ -33,11 +32,13 @@ from Combat.Fight.attacks import check_attack
 from Combat.Fight.health import (
     DEAD,
     DYING,
+    bloodied_change,
     damage_at_zero_hp,
     death_state,
     fail_death_save,
     give_temp_hp,
     regain_hit_points,
+    resync_bloodied,
     revive,
     succeed_death_save,
 )
@@ -94,21 +95,14 @@ class DamageMixin(CombatWindowState):
         """Auto-apply/remove Bloodied condition based on HP threshold. Pass
         `source` (the damage dealer/healer) to log the change with a source,
         same as any other condition; omit it for silent resyncs (replay)."""
-        max_hp = hit_point_maximum(char) if "max_hp" in char else 1
-        hp = char.get("hp", 0)
-        is_bloodied = "Bloodied" in char.get("conditions", [])
-        should_be_bloodied = hp > 0 and hp <= max_hp / 2
-
-        if should_be_bloodied and not is_bloodied:
-            if source is not None:
-                self._add_condition_to(char, "Bloodied", source=source)
-            else:
-                char["conditions"].append("Bloodied")
-        elif not should_be_bloodied and is_bloodied:
-            if source is not None:
-                self._remove_condition_from(char, "Bloodied", source=source)
-            else:
-                char["conditions"].remove("Bloodied")
+        if source is None:
+            resync_bloodied(char)
+            return
+        change = bloodied_change(char)
+        if change is True:
+            self._add_condition_to(char, "Bloodied", source=source)
+        elif change is False:
+            self._remove_condition_from(char, "Bloodied", source=source)
 
     def _apply_damage(self):
         """Apply damage as-is, with no resistance/vulnerability/immunity checks."""
@@ -896,7 +890,7 @@ class DamageMixin(CombatWindowState):
             character=name,
             action=Action.DEATH_SAVE_FAIL,
             # A dict, unlike a rolled save's newly_dead, for the replay
-            # (LoggingMixin._apply_replay_action) to do the same.
+            # (Combat/Fight/log.py's apply_replay_action) to do the same.
             value={
                 "newly_dead": newly_dead,
                 "failures": failures,

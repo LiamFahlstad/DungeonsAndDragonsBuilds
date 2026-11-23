@@ -916,9 +916,6 @@ class CombatWindowState:
     def _use_between_encounters_log(self) -> dict | None:
         raise NotImplementedError("LoggingMixin._use_between_encounters_log")
 
-    def _take_combatants_from(self, data: dict):
-        raise NotImplementedError("LoggingMixin._take_combatants_from")
-
     def _nothing_logged_here(self) -> bool:
         raise NotImplementedError("WindowMixin._nothing_logged_here")
 

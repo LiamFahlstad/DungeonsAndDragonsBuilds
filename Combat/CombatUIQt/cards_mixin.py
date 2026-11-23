@@ -481,7 +481,7 @@ class CardsMixin(CombatWindowState):
             return description, color
         # Feature-condition tooltips/colors are transient UI state, not
         # persisted to the player log — after replaying a saved session
-        # (see logging_mixin._apply_replay_action) the condition name is
+        # (see Combat/Fight/log.py's apply_replay_action) the condition name is
         # restored but the dicts above are empty. Reconstruct the tooltip
         # from a matching Feature object so the badge stays clickable/
         # removable exactly as it was before restart. The feature may

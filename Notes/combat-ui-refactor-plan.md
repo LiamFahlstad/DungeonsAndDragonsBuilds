@@ -64,7 +64,7 @@ and the few others a step touches, not the character-sheet tests. Steps 3,
 | 2 | A typed combatant (`Combatant` TypedDict) | M | **Done** 2026-11-22, revised (R8): the schema and a key test; annotating signatures moved to step 5 |
 | 3 | The Use / Cast dialog as a class, its form-to-effects logic Qt-free | L | 3a **done** 2026-11-22 (R9): `use_cast/form.py`, dialog 1,580 → 1,440 lines; 3b **done** 2026-11-22 (R10): `_UseCastDialog`, `run()` 616 lines + 44 methods; 3c's move **done** (R11): `use_cast/dialog.py`, `conditions_mixin.py` 3,500 → 1,674 lines; 3c's split **done**, revised (R12): `run()` is 14 lines calling 10 builder methods, the longest 126; 3d **done** (R13): `do_apply` 146 → 50 lines over Qt-free `read_amount`, `check_applicable` and `build_effect`; reviewed (R14): no behaviour change; **step 3 done** |
 | 4 | The window built from panels, shortcuts as a table | M | **Done** 2026-11-23 (R15, R16): `_build_window` 680 → 13 lines over 12 builders (the longest 111); the shortcuts a table (`shortcuts.py`) checked against KEYBOARD_SHORTCUTS.md |
-| 5 | The Qt-free fight core (`Combat/Fight/`), one mixin at a time | XL | 5.1 **done** 2026-11-23 (R17): seven Qt-free modules moved to `Combat/Fight/`; 5.5's guard test in place; 5.2 **done** (R18): `Fight` holds the fight's state; 5.3 started (R19, R20): damage's defenses and arithmetic in `Combat/Fight/damage.py`, health (death state, healing, Temporary Hit Points, Death Saving Throws) in `Combat/Fight/health.py`; the map's questions (distance, sight, cover, range, Critical Hits within 5 feet) are `Fight` methods (R21); an attack roll's check is `Combat/Fight/attacks.py` (R22); gaining and losing a condition is `Combat/Fight/conditions.py` (R23); the turn order is `Fight`'s (R24); casting's slots, recipients and timers are `Combat/Fight/spells.py` (R25); joining and leaving the turn order are `Fight`'s, summons' questions and carry-over `Combat/Fight/summons.py` (R26); Wild Shape's uses and badge `Combat/Fight/wild_shape.py` (R27); a short rest's regains and Hit Dice `Combat/Fight/rests.py` (R28); **5.3 continues with the log**, then features and triggers once 5.4's `Asker` is in |
+| 5 | The Qt-free fight core (`Combat/Fight/`), one mixin at a time | XL | 5.1 **done** 2026-11-23 (R17): seven Qt-free modules moved to `Combat/Fight/`; 5.5's guard test in place; 5.2 **done** (R18): `Fight` holds the fight's state; 5.3 started (R19, R20): damage's defenses and arithmetic in `Combat/Fight/damage.py`, health (death state, healing, Temporary Hit Points, Death Saving Throws) in `Combat/Fight/health.py`; the map's questions (distance, sight, cover, range, Critical Hits within 5 feet) are `Fight` methods (R21); an attack roll's check is `Combat/Fight/attacks.py` (R22); gaining and losing a condition is `Combat/Fight/conditions.py` (R23); the turn order is `Fight`'s (R24); casting's slots, recipients and timers are `Combat/Fight/spells.py` (R25); joining and leaving the turn order are `Fight`'s, summons' questions and carry-over `Combat/Fight/summons.py` (R26); Wild Shape's uses and badge `Combat/Fight/wild_shape.py` (R27); a short rest's regains and Hit Dice `Combat/Fight/rests.py` (R28); saving, loading and replaying the fight `Combat/Fight/log.py` (R29); **5.3's areas are each started; what's left of them (features, triggers, the cascades a condition sets off, `_log_event`) waits for 5.4's `Asker` and step 6** |
 | 6 | One refresh path after every GM operation | M | Not started |
 | 7 | Mixins into composed views and one module per dialog; `CombatWindowState` gone | L | Not started |
 | 8 | Docs, agents and skills point at the new layout | S | Not started |
@@ -1094,6 +1094,37 @@ whole on purpose, each with its reason, and the full suite passes.
     heal's log line now, not after it. The line doesn't read them.
   - **Tests:** `tests/test_fight_rests.py` (6 tests without Qt). `rest.py`
     221 → 200 lines. The full suite passes (12,135).
+
+- **R29 (step 5.3, the log's first slice, 2026-11-23).** What a log has to
+  do with the fight is `Combat/Fight/log.py`:
+  - `record_fight`: what an encounter log saves of a fight (the round, the
+    turn order by name and whose turn it is, the map, the non-player
+    combatants without their `"_"` keys, the players' fight state).
+  - `take_combatants_from`: a log's combatants beside the players, older
+    logs' keys upgraded, slots by level. `saved_map`,
+    `saved_initiative_order` and `continue_fight` (a saved fight continued
+    on the turn it stopped at). `slots_by_level` and `SLOT_POOLS` moved
+    with them.
+  - `replay_player_log` and `apply_replay_action`: the party's state
+    replayed from the recorded actions. That needed one change: the
+    replay's Bloodied went through `_apply_bloodied_condition` with no
+    source, which never logs. That silent half is now `health.py`'s
+    `resync_bloodied` (with `bloodied_change`), and
+    `_apply_bloodied_condition` calls it when there's no source.
+  - **What `LoggingMixin` keeps:** reading and writing the files, the
+    party's journal entry, `_log_event` (it reads the views' timer, the
+    undo point and the rest being taken), Undo, and the log windows.
+    `_apply_replay_action` is a one-line wrapper (9 test uses).
+    `_take_combatants_from` and its stub are gone (its two callers in
+    `encounters_mixin.py` call the function), and so are
+    `_saved_initiative_order` and `_replay_player_log`. 209 stubs.
+  - **Why `_log_event` stays for now:** an event's line names whose turn
+    it is and whether players may read it, which `Fight` could answer, but
+    it also opens the undo point's list of lines and starts the views'
+    timer. Moving it waits for step 6's refresh path, which takes the
+    timer out, and for `undo.py`, which moves after step 6 too (R17).
+  - **Tests:** `tests/test_fight_log.py` (9 tests without Qt).
+    `logging_mixin.py` 791 → 518 lines. The full suite passes (12,144).
 
 ## Discovered issues
 
