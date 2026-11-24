@@ -206,7 +206,6 @@ LOOSE_IN_COMBAT = {
     "EncounterConfig.py",
     "EncounterDifficulty.py",
     "EncounterLogs.py",
-    "FEATURE_GAPS.md",
     "LogFiles.py",
     "PartyAllies.py",
     "PlayerCombatant.py",
@@ -218,7 +217,6 @@ LOOSE_IN_COMBAT = {
     "WildShape.py",
     "monsters_raw.json",
     "rules.json",
-    "rules.txt",
 }
 
 

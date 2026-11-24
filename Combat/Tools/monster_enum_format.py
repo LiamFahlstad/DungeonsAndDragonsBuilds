@@ -1,8 +1,7 @@
 """Shared source-text formatting helpers for monster stat-block fields.
 
-Used by both `generate_monsters.py` (fresh codegen from monsters_raw.json) and
-`migrate_monster_enums.py` (one-time migration of already-generated files), so
-both paths always emit the identical enum/dataclass-based Python source.
+Used by `generate_monsters.py` (fresh codegen from monsters_raw.json), so it
+emits enum/dataclass-based Python source.
 
 Each `format_*` function takes plain-literal input (str/int/dict/list — the
 shape you'd get from raw scraped JSON or from `ast.literal_eval`-ing existing
