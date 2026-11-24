@@ -2,8 +2,8 @@
 step 5.4). A rule that changes the fight logs what it did through the
 Logger it was given, in the order it happens: the combat window appends
 each line to the encounter log, with whose turn it is, its Undo step and
-whether players may read it (Combat/CombatUIQt/logger.py), and a test keeps
-them in a RecordingLogger.
+whether players may read it (Combat/CombatUIQt/window_logger.py), and a
+test keeps them in a RecordingLogger.
 
 A line that changes someone's state carries `character`, `action` and
 `value`: the party's state is replayed from those on the next run

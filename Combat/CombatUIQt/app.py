@@ -18,7 +18,7 @@ from Utils.QtMessages import install_qt_message_handler
 
 from .arena_mixin import ArenaMixin
 from .window_asker import WindowAsker
-from .logger import WindowLogger
+from .window_logger import WindowLogger
 from .cards_mixin import CardsMixin
 from .conditions_mixin import ConditionsMixin
 from .damage_mixin import DamageMixin

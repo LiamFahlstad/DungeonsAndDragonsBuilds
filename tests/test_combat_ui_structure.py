@@ -241,7 +241,6 @@ REPEATED_BY_DESIGN = {
 # Module names under Combat/ that clash today, ignoring case and "_": the
 # name -> every module that has it.
 NAME_CLASHES: dict[str, set[str]] = {
-    "logger": {"Combat/CombatUIQt/logger.py", "Combat/Fight/logger.py"},
     "summons": {"Combat/Fight/summons.py", "Combat/Summons.py"},
     "wildshape": {"Combat/Fight/wild_shape.py", "Combat/WildShape.py"},
 }

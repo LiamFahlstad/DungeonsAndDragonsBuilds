@@ -87,7 +87,7 @@ class CombatWindowState:
     # with the window's dialogs (window_asker.py's WindowAsker).
     asker: Asker
     # How they log what they did (Combat/Fight/logger.py): through
-    # _log_event (logger.py's WindowLogger).
+    # _log_event (window_logger.py's WindowLogger).
     logger: Logger
 
     @property

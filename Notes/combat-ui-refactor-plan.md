@@ -75,7 +75,7 @@ and the few others a step touches, not the character-sheet tests. Steps 3,
 | 7 | Mixins into composed views and one module per dialog; `CombatWindowState` gone | L | Not started |
 | 8 | Docs, agents and skills point at the new layout | S | Not started |
 | 9 | Large files split into one module per job, with a file-size ratchet | M | Not started. 9.0 (the ratchet) and 9a (Qt-free files) can start now; 9b (UI files) after step 7 |
-| 10 | Folders and names: `Combat/`'s loose modules into packages, clashing names apart, runtime code out of `Tools/`, stray files gone, `CombatUIQt/` in subfolders | M | Started 2026-11-24 (R35): 10.0 **done** (three ratchets in `test_combat_ui_structure.py`); 10a **done** (stray files gone or moved, `monster_effect_text.py` in `Fight/`: loose files in `Combat/` 18 → 16 besides the two kept, `Combat.Tools` runtime importers 9 → 0); 10c's `CombatUIQt/` and campaign-folder renames **done** (name clashes 6 → 3). Left: 10b (the loose modules, which take the `summons` and `wildshape` clashes), 10c's `logger.py` (R35), 10d (UI subfolders, with steps 7 and 9b) |
+| 10 | Folders and names: `Combat/`'s loose modules into packages, clashing names apart, runtime code out of `Tools/`, stray files gone, `CombatUIQt/` in subfolders | M | Started 2026-11-24 (R35): 10.0 **done** (three ratchets in `test_combat_ui_structure.py`); 10a **done** (stray files gone or moved, `monster_effect_text.py` in `Fight/`: loose files in `Combat/` 18 → 16 besides the two kept, `Combat.Tools` runtime importers 9 → 0); 10c **done** (R35, R38: name clashes 6 → 2). Left: 10b (the loose modules, which take the `summons` and `wildshape` clashes), 10d (UI subfolders, with steps 7 and 9b) |
 | 11 | Loose ends: dead code and unused imports, code only tests call, one d20 roller, narrow `except`s, `print` to `logging`, `Tools/`' outputs | S | Not started (added 2026-11-24, R36). 11a-11c and 11e any time; 11d after 10b; 11f after Q15 |
 | 12 | The names left: `Fight/` modules named for one part of what they hold, `Effects/` and the third `Summons`, one name for the Use / Cast dialog, the campaigns' `CombatLogs/`, test names by package, `Tools/` and the scrapers, module headers | M | Not started (added 2026-11-24, R37). After steps 0 to 11 and step 8; 12.0 first; 12b's `Effects/` after Q17, 12c after Q16, 12d after Q18 |
 
@@ -603,7 +603,7 @@ there today (2026-11-23):
 | `rules.txt`, `FEATURE_GAPS.md` | `SourceTexts/` and `Notes/combat-feature-gaps.md` (Q12) | Where the repo keeps source texts and audits |
 | each campaign's `Campaign.py`, `Players.py` | `campaign.py`, `players.py` | One case per folder. `ENCOUNTERS.md`'s "add a campaign" says so |
 | `CombatUIQt/asker.py`, `CombatUIQt/resources.py` | `window_asker.py`, `resources_mixin.py` | Named for what's in them (`WindowAsker`, `ResourcesMixin`), and no clash with `Fight/` |
-| `CombatUIQt/logger.py` | `window_logger.py` (R35) | Named for `WindowLogger`, like `window_asker.py`; no clash with `Fight/logger.py` |
+| `CombatUIQt/logger.py` | `window_logger.py` (R35; done, R38) | Named for `WindowLogger`, like `window_asker.py`; no clash with `Fight/logger.py` |
 | `CombatUIQt/rest.py` | split in step 7: `short_rest_dialog` into `dialogs/short_rest.py`, the command line's `apply_long_rest` and `run_short_rest` into `rest_commands.py` | It's two things today, and neither is `rests_mixin.py` or `Fight/rests.py` |
 
 **The UI's subfolders** (10d). Every file moves once. A mixin doesn't move,
@@ -1900,6 +1900,15 @@ when" commands still run, plus the moved scraper and report script start.
   case (it mirrors `Core/Definitions.py`, 53 importers); and the
   `__init__.py` that `Combat/`, `Tools/` and `Campaigns/` lack, like every
   top-level package in the repo.
+- **R38 (step 10c's last rename, 2026-11-24).** `CombatUIQt/logger.py` is
+  `CombatUIQt/window_logger.py` (`git mv`), named for its `WindowLogger`
+  like `window_asker.py`. Its one importer (`app.py`) and the three
+  comments that named it (`state.py`, `Fight/logger.py`'s docstring,
+  `test_roll_sites`' example of two folders sharing a path, which now
+  cites R31's `resources.py`) moved with it. `"logger"` is off
+  `NAME_CLASHES`, which holds only 10b's `summons` and `wildshape` now
+  (6 → 2). No skill, agent or other plan named the file. The
+  verification list passes (1,536) and `./typecheck.sh Combat` is clean.
 
 ## Discovered issues
 
