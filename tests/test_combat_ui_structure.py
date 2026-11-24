@@ -11,6 +11,11 @@ Each rule starts from today's numbers, as test_layering.py does:
   another, which the plan's steps 5 and 7 remove.
 - At most MAX_INLINE_STYLES setStyleSheet(...) calls outside styles.py:
   styling belongs in its QSS (Step 1).
+- Folders and names (Step 10): no file loose in Combat/ beyond
+  LOOSE_IN_COMBAT, no two modules under Combat/ named alike beyond
+  NAME_CLASHES, and no Combat.Tools import that makes Tools/ runtime code
+  beyond TOOLS_IMPORTERS. Each list may only shrink, and an entry that's
+  clean now must come off it.
 
 A refactor step that lowers a number lowers it here too. Feature work that
 would raise one extracts a helper instead (a long function), or says why in
@@ -180,3 +185,171 @@ def test_the_fight_core_imports_no_qt():
                         where = path.relative_to(REPO).as_posix()
                         offenders.append(f"{where}:{line} {name}")
     assert not offenders, offenders
+
+
+# Folders and names (combat-ui-refactor-plan step 10).
+
+
+def _check_allowlist(found: set, allowlist: set, rule: str, fix: str) -> None:
+    new = sorted(found - allowlist)
+    stale = sorted(allowlist - found)
+    assert not new, f"{rule}: new ones {new}. {fix}"
+    assert not stale, f"{rule}: these are gone now, take them off the list: {stale}"
+
+
+# Combat/ holds packages, these two files, and the files loose in it today,
+# which step 10 moves into packages.
+KEPT_IN_COMBAT = {"CHEATSHEET.md", "Definitions.py"}
+LOOSE_IN_COMBAT = {
+    "Campaign.py",
+    "Combatants.py",
+    "EncounterConfig.py",
+    "EncounterDifficulty.py",
+    "EncounterLogs.py",
+    "FEATURE_GAPS.md",
+    "LogFiles.py",
+    "PartyAllies.py",
+    "PlayerCombatant.py",
+    "PlayerLog.py",
+    "Rules.py",
+    "Scenario.py",
+    "Scenarios.py",
+    "Summons.py",
+    "WildShape.py",
+    "monsters_raw.json",
+    "rules.json",
+    "rules.txt",
+}
+
+
+def test_no_new_files_loose_in_combat():
+    loose = {path.name for path in COMBAT.iterdir() if path.is_file()}
+    _check_allowlist(
+        loose - KEPT_IN_COMBAT,
+        LOOSE_IN_COMBAT,
+        "Files loose in Combat/",
+        "Put them in the package for their job.",
+    )
+
+
+# Files that every folder of a kind has by design, so they share a name:
+# each campaign's (Combat/Campaigns/<Campaign>/) and each generated CR tier's
+# (Combat/Monsters/CR_<x>/). Matched with their case.
+REPEATED_BY_DESIGN = {
+    "Campaigns": {"campaign.py", "encounters.py"},
+    "Monsters": {"monsters.py", "monsters_homebrew.py"},
+}
+
+# Module names under Combat/ that clash today, ignoring case and "_": the
+# name -> every module that has it.
+NAME_CLASHES: dict[str, set[str]] = {
+    "asker": {"Combat/CombatUIQt/asker.py", "Combat/Fight/asker.py"},
+    "campaign": {
+        "Combat/Campaign.py",
+        "Combat/Campaigns/CurseOfTheLich/Campaign.py",
+        "Combat/Campaigns/GrimsCastle/Campaign.py",
+        "Combat/Campaigns/TimeLoopPR/Campaign.py",
+    },
+    "logger": {"Combat/CombatUIQt/logger.py", "Combat/Fight/logger.py"},
+    "resources": {"Combat/CombatUIQt/resources.py", "Combat/Fight/resources.py"},
+    "summons": {"Combat/Fight/summons.py", "Combat/Summons.py"},
+    "wildshape": {"Combat/Fight/wild_shape.py", "Combat/WildShape.py"},
+}
+
+
+def _name_clashes() -> dict[str, set[str]]:
+    homes: dict[str, set[str]] = {}
+    for path in COMBAT.rglob("*.py"):
+        parts = path.relative_to(COMBAT).parts
+        if "__pycache__" in parts or path.name == "__init__.py":
+            continue
+        if len(parts) == 3 and path.name in REPEATED_BY_DESIGN.get(parts[0], ()):
+            continue
+        name = path.stem.lower().replace("_", "")
+        homes.setdefault(name, set()).add(path.relative_to(REPO).as_posix())
+    return {name: paths for name, paths in homes.items() if len(paths) > 1}
+
+
+def test_no_new_name_clashes():
+    clashes = _name_clashes()
+    _check_allowlist(
+        {(name, frozenset(paths)) for name, paths in clashes.items()},
+        {(name, frozenset(paths)) for name, paths in NAME_CLASHES.items()},
+        "Modules under Combat/ with the same name, ignoring case and _",
+        "Name each for what's in it (a clash that changed members is listed"
+        " here too: update its NAME_CLASHES entry).",
+    )
+
+
+# Tools/ holds scripts run by hand, never code the app runs. Only tests and
+# the skills' scripts import Combat.Tools, to test or reuse such a script,
+# and never a Tools module that other code imports too. Today's offenders:
+TOOLS_IMPORTERS: set[str] = {
+    "Combat/Fight/monster_actions.py",
+    "tests/_combat_ui.py",
+    "tests/test_arena_ranges.py",
+    "tests/test_attack_roll_triggers.py",
+    "tests/test_badge_hit_triggers.py",
+    "tests/test_combat_ui_amounts.py",
+    "tests/test_hit_triggers.py",
+    "tests/test_monster_ability_text.py",
+    "tests/test_monster_effect_text.py",
+}
+_NOT_SCANNED = {".claude", ".git", ".venv", "venv", "Output", "SourceTexts"}
+_MAY_USE_TOOLS = ("tests/", ".claude/skills/")
+
+
+def _python_files_outside_tools():
+    """Every project .py file but Combat/Tools/'s, the skills' scripts
+    included (not .claude/worktrees/: other agents' checkouts)."""
+    for top in sorted(REPO.iterdir()):
+        if top.is_dir() and top.name not in _NOT_SCANNED:
+            yield from sorted(top.rglob("*.py"))
+        elif top.suffix == ".py":
+            yield top
+    yield from sorted((REPO / ".claude" / "skills").glob("*/*.py"))
+
+
+def _tools_imports() -> set[tuple[str, str]]:
+    """(file, Combat.Tools module) for each import of Tools/ outside it."""
+    found = set()
+    for path in _python_files_outside_tools():
+        where = path.relative_to(REPO).as_posix()
+        if where.startswith("Combat/Tools/") or "__pycache__" in where:
+            continue
+        tree = ast.parse(path.read_text(encoding="utf-8", errors="ignore"))
+        for node in ast.walk(tree):
+            if isinstance(node, ast.Import):
+                names = [alias.name for alias in node.names]
+            elif isinstance(node, ast.ImportFrom) and node.level == 0:
+                module = node.module or ""
+                if module == "Combat.Tools":
+                    names = [f"{module}.{alias.name}" for alias in node.names]
+                else:
+                    names = [module]
+            else:
+                continue
+            found.update(
+                (where, name)
+                for name in names
+                if name == "Combat.Tools" or name.startswith("Combat.Tools.")
+            )
+    return found
+
+
+def test_tools_is_not_runtime_code():
+    imports = _tools_imports()
+    runtime_modules = {
+        module for where, module in imports if not where.startswith(_MAY_USE_TOOLS)
+    }
+    offenders = {
+        where
+        for where, module in imports
+        if not where.startswith(_MAY_USE_TOOLS) or module in runtime_modules
+    }
+    _check_allowlist(
+        offenders,
+        TOOLS_IMPORTERS,
+        "Combat.Tools imported as runtime code",
+        "Move the module the app runs out of Tools/ (into Fight/, say).",
+    )
