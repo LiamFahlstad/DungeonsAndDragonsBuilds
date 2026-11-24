@@ -240,7 +240,11 @@ class SpellsMixin(CombatWindowState):
         adds a condition badge (with the description as a hover tooltip) on its
         recipient(s) and increments the caster's spells_cast stat. slot_level
         is the spell slot it uses, higher than the spell's level to upcast it;
-        None uses no slot."""
+        None uses no slot.
+
+        No window path calls it (the Use / Cast dialog casts through
+        _apply_effect_to_targets): tests cast a spell through it. Kept until
+        step 5.4's Use / Cast slice (plan R43)."""
         source = self.selected_character
         if source is None:
             self._show_status("No spell cast: left-click a card to pick a source.")

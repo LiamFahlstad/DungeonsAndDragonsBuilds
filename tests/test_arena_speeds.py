@@ -31,7 +31,6 @@ from Combat.Arena.speeds import (
     hovers,
     mode_of,
     speeds,
-    speeds_text,
     stored_speeds,
 )
 from Combat.Arena.terrain import DIFFICULT, WATER, Spot
@@ -90,7 +89,6 @@ def test_hovering_is_read_from_the_stat_block_or_a_movement():
     fly = _creature("Clover", speed=30)
     fly["_feature_objects"] = [_Wings(Movement(fly_ft=60, hovers=True))]
     assert speeds(fly) == {WALK: 30, FLY: 60} and hovers(fly)
-    assert speeds_text(fly) == "Walk 30 ft., Fly 60 ft. (hover)"
 
 
 def test_a_speed_equal_to_its_speed():

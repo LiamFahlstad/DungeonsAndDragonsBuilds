@@ -196,10 +196,3 @@ def falling_dice(feet: int) -> str:
     "20d6"; "" for less than 10 feet."""
     dice = min(MAX_FALLING_DICE, max(0, feet) // FEET_PER_DIE)
     return f"{dice}d6" if dice else ""
-
-
-def speeds_text(char: dict) -> str:
-    """ "Walk 30 ft., Fly 60 ft. (hover)": char's speeds in use, for the bar."""
-    parts = [f"{LABELS[mode]} {feet} ft." for mode, feet in speeds(char).items()]
-    text = ", ".join(parts)
-    return text + (" (hover)" if FLY in speeds(char) and hovers(char) else "")

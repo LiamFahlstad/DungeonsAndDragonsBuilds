@@ -43,9 +43,6 @@ from .undo import undoable
 class WildShapeMixin(CombatWindowState):
     """Mixin for Wild Shape."""
 
-    def _wild_shape_uses_left(self, char: dict) -> int:
-        return wild_shape_uses_left(char)
-
     def _wild_shape_menu(self, char: dict) -> QMenu | None:
         """A menu of char's Wild Shape forms, the one it's in checked, and a
         way out of it. None for a combatant with no forms."""

@@ -16,7 +16,6 @@ from Combat.Effects.modifiers import (
     immune_to_condition,
     makes_critical_hit,
     resists,
-    resists_all_damage,
     rules_condition,
     save_plan,
 )
@@ -292,7 +291,6 @@ def test_exhaustion_is_noted_on_every_d20_test():
 
 def test_petrified_resists_all_damage_and_is_immune_to_poisoned():
     petrified = _with("Petrified")
-    assert resists_all_damage(petrified)
     assert resists(petrified, DamageType.FIRE.value)
     assert immune_to_condition(petrified, "Poisoned")
     assert not immune_to_condition(petrified, "Prone")

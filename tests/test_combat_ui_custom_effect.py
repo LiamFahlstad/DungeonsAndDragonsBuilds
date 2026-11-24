@@ -36,6 +36,7 @@ from Combat.Fight.amounts import AmountError
 from Combat.Definitions import Action
 from Combat.Effects.active_effects import CUSTOM, SPELL, active_effects
 from Combat.Effects.active_effects import repeat_saves, timed_effects, timers
+from Combat.Effects.modifiers import RollPlan
 from Combat.Fight.attack_rolls import AttackRoll
 from Combat.Fight.saves import (
     ATTACK_ROLL,
@@ -51,7 +52,7 @@ from Combat.Fight.saves import (
     known_attack_bonus,
     known_save_dc,
     read_damage,
-    roll_attack,
+    roll_planned_attack,
     roll_save,
     rolled_damage,
     save_modifier,
@@ -1349,14 +1350,14 @@ def armored(fight):
 )
 def test_roll_attack(monkeypatch, d20, roll):
     _d20s(monkeypatch, d20)
-    assert roll_attack(5, "Neutral") == roll
+    assert roll_planned_attack(5, RollPlan("Neutral")) == (roll, ())
 
 
 @pytest.mark.parametrize("mode, total", [("Advantage", 17), ("Disadvantage", 4)])
 def test_an_attacks_advantage(monkeypatch, mode, total):
     rolls = iter([4, 17])
     monkeypatch.setattr(random, "randint", lambda low, high: next(rolls))
-    assert roll_attack(0, mode) == AttackRoll(total=total)
+    assert roll_planned_attack(0, RollPlan(mode)) == (AttackRoll(total=total), ())
 
 
 def test_a_critical_rolls_the_dice_twice_and_adds_modifiers_once(monkeypatch):

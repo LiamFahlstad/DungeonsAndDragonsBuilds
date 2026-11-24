@@ -22,6 +22,7 @@ from Combat.PlayerCombatant import combatant_from_character
 from Combat.Scenario import CombatScenario
 from Combat.CombatUIQt.rest import _restore_feature_uses
 from Combat.Fight.rests import SHORT_REST_CADENCES
+from Combat.Fight.wild_shape import wild_shape_uses_left
 from Combat.WildShape import (
     _saving_throws,
     assume_form,
@@ -276,7 +277,7 @@ def test_no_uses_left_asks_before_wild_shape(fight, monkeypatch):
     ui._assume_wild_shape(char, "Dire Wolf")
     assert current_form(char) == "Dire Wolf"
     assert char["feature_uses_used"]["Wild Shape"] == 3
-    assert ui._wild_shape_uses_left(char) == 0
+    assert wild_shape_uses_left(char) == 0
 
 
 def test_no_uses_left_still_offers_the_forms(fight, monkeypatch):

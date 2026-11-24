@@ -427,11 +427,6 @@ def save_reminder(char: dict, ability: str) -> RollPlan:
     return save_plan(char, ability, "Neutral")
 
 
-def roll_attack(bonus: int, mode: str) -> AttackRoll:
-    """An attack roll for a source that adds `bonus`."""
-    return rolled_attack(_roll_d20(mode), bonus)
-
-
 def roll_planned_attack(
     bonus: int, plan: RollPlan
 ) -> tuple[AttackRoll, tuple[str, ...]]:

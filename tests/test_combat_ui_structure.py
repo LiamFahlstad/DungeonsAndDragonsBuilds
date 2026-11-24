@@ -140,7 +140,7 @@ LONG_FILES = {
     ),
     "Combat/CombatUIQt/turn_panel_mixin.py": (1184, "split in 9b, after step 7"),
     "Combat/Effects/triggers.py": (1143, "split in 9a"),
-    "Combat/Effects/modifiers.py": (1120, "split in 9a"),
+    "Combat/Effects/modifiers.py": (1112, "split in 9a"),
     "Combat/CombatUIQt/arena_view.py": (
         1005,
         "stays whole: one job, drawing the map (ArenaView and the token rows"

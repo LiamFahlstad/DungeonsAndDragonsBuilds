@@ -451,7 +451,7 @@ class ArenaView(QGraphicsView):
 
     @property
     def aiming_area(self) -> bool:
-        """Whether an area is being aimed (start_area)."""
+        """Whether an area is being aimed (start_area; tests)."""
         return self._area is not None
 
     @property

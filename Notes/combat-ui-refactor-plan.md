@@ -76,7 +76,7 @@ and the few others a step touches, not the character-sheet tests. Steps 3,
 | 8 | Docs, agents and skills point at the new layout | S | Not started |
 | 9 | Large files split into one module per job, with a file-size ratchet | M | Started 2026-11-24 (R39): 9.0 **done** (the file-size ratchet: 9 modules over 1,000 lines, 8 to split, `arena_view.py` kept whole). 9a (Qt-free files) can start now; 9b (UI files) after step 7 |
 | 10 | Folders and names: `Combat/`'s loose modules into packages, clashing names apart, runtime code out of `Tools/`, stray files gone, `CombatUIQt/` in subfolders | M | Started 2026-11-24 (R35): 10.0 **done** (three ratchets in `test_combat_ui_structure.py`); 10a **done** (stray files gone or moved, `monster_effect_text.py` in `Fight/`: loose files in `Combat/` 18 → 16 besides the two kept, `Combat.Tools` runtime importers 9 → 0); 10c **done** (R35, R38: name clashes 6 → 2). Left: 10b (the loose modules, which take the `summons` and `wildshape` clashes), 10d (UI subfolders, with steps 7 and 9b) |
-| 11 | Loose ends: dead code and unused imports, code only tests call, one d20 roller, narrow `except`s, `print` to `logging`, `Tools/`' outputs | S | Started 2026-11-24 (R36): 11a **done** (R40: six dead functions and four unused imports gone, with their ratchet); 11c **done** (R41: one d20 roller); 11e **done** (R42: the window's `print`s go through `logging`). 11b any time; 11d after 10b; 11f after Q15 |
+| 11 | Loose ends: dead code and unused imports, code only tests call, one d20 roller, narrow `except`s, `print` to `logging`, `Tools/`' outputs | S | Started 2026-11-24 (R36): 11a **done** (R40: six dead functions and four unused imports gone, with their ratchet); 11c **done** (R41: one d20 roller); 11e **done** (R42: the window's `print`s go through `logging`); 11b **done** (R43: 10 of the 14 kept with a reason, 4 gone). 11d after 10b; 11d after 10b; 11f after Q15 |
 | 12 | The names left: `Fight/` modules named for one part of what they hold, `Effects/` and the third `Summons`, one name for the Use / Cast dialog, the campaigns' `CombatLogs/`, test names by package, `Tools/` and the scrapers, module headers | M | Not started (added 2026-11-24, R37). After steps 0 to 11 and step 8; 12.0 first; 12b's `Effects/` after Q17, 12c after Q16, 12d after Q18 |
 
 Steps 0-2 are cheap and safe and make the later ones easier, so do them
@@ -1991,6 +1991,49 @@ when" commands still run, plus the moved scraper and report script start.
     `__main__` block. The verification list with `test_encounter_loading`
     and `test_log_files` passes (1,585), `./typecheck.sh Combat` is clean,
     and `RunCombatSimulator.py --help` runs.
+- **R43 (step 11b, code only the tests call, 2026-11-24).** All 14 still
+  had no caller outside `tests/` (`git grep -w` over `Combat/`, the
+  launcher and the skills' scripts). Decided:
+  - **Kept, test hooks on a view (9):** `arena_view.py`'s `area_color`,
+    `aiming_area`, `area_shown`, `hover_text`, `reach_shown` and
+    `cell_center`, and `map_painter.py`'s `block_shown`, `set_object` and
+    `pick_choice`. Each reads what the view shows or drives it as a click
+    does. Two docstrings changed: `aiming_area`'s says "tests" now, and
+    `set_object`'s "(tests, and a preset)" lost the preset, since presets
+    fill the tab through `_preset_picked`.
+  - **Gone, their tests on the real path (4):**
+    - `Arena/speeds.py`'s `speeds_text`: the speed bar builds its rows
+      from `speeds` and `hovers` itself, and
+      `test_combat_ui_arena_speeds` reads them from the widget, "(hover)"
+      included. `test_arena_speeds`' line for it went; the line above
+      already asserts `speeds` and `hovers`.
+    - `Effects/modifiers.py`'s `resists_all_damage`: what reads a
+      Petrified creature's Resistance (`player_knowledge.py`'s
+      `note_damage_defense`) asks `resists(char, damage_type)`, which
+      `test_combat_modifiers` asserts on the next line.
+    - `Fight/saves.py`'s `roll_attack`: the Use / Cast dialog rolls with
+      `roll_planned_attack`, which with a bare `RollPlan(mode)` (no
+      bonuses, no notes) gives the same roll. Its two tests in
+      `test_combat_ui_custom_effect` call that now, and `test_roll_sites`
+      lost its `ROLLERS` and `ROLL_SITES` entries. (12a's row for
+      `roll_attack` has nothing to move now.)
+    - `WildShapeMixin._wild_shape_uses_left`: a one-line wrapper of
+      `Fight/wild_shape.py`'s `wild_shape_uses_left`, which the mixin
+      itself calls. `test_combat_ui_wild_shape` calls that.
+  - **Kept for now, with a reason (1):** `SpellsMixin._apply_cast_spell`.
+    The window never calls it (the Use / Cast dialog casts through
+    `_apply_effect_to_targets`), but it is how about 30 tests in 13 files
+    cast a spell to test what it does (Bless's modifiers, Shield of
+    Faith's AC, Concentration, Undo of a cast). Moving them is the bulk
+    test migration Q4 rules out, and step 5.4's next slice rebuilds the
+    Use / Cast apply path anyway. That slice decides it: either the tests
+    cast through the dialog's path, or `_apply_cast_spell` becomes a call
+    into the same core function. Its docstring says so.
+  - `modifiers.py`'s `LONG_FILES` cap is 1,112 (was 1,120). The
+    verification list with `test_roll_sites`, `test_arena_speeds`,
+    `test_combat_modifiers`, `test_fight_wild_shape` and
+    `test_text_readers` passes (1,736), and `./typecheck.sh Combat` is
+    clean.
 
 ## Discovered issues
 

@@ -1074,14 +1074,6 @@ def vulnerable_to(char: dict, damage_type: str) -> bool:
     return _damage_modifier(char, Vulnerability, damage_type)
 
 
-def resists_all_damage(char: dict) -> bool:
-    """Whether char's modifiers give it Resistance to all damage (Petrified):
-    then a resisted hit says nothing about its own defenses."""
-    return any(
-        isinstance(m, Resistance) and not m.damage_types for _, m in modifiers_on(char)
-    )
-
-
 # The card's words for each kind of damage defense, the order it lists them.
 DEFENSE_WORDS: tuple[tuple[type, str], ...] = (
     (Vulnerability, "Vulnerable"),

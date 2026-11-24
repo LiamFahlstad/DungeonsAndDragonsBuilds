@@ -563,7 +563,7 @@ class MapPainterDialog(QDialog):
         self.object_cover.setCurrentIndex(self.object_cover.findData(preset.cover))
 
     def set_object(self, thing: MapObject):
-        """Fill the Objects tab with `thing` (tests, and a preset)."""
+        """Fill the Objects tab with `thing` (tests)."""
         self.preset_combo.setCurrentIndex(self.preset_combo.findText(_CUSTOM))
         self.object_name.setText(thing.name)
         self.object_blocks.setChecked(thing.blocks)
