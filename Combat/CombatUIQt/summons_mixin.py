@@ -17,8 +17,8 @@ replaces the oldest (a drake) or isn't possible (a Reanimated Companion:
 greyed out). The summon's card menu also dismisses it. Its menu entries
 are labelled by its SummonSpec ("Summon Dancing Item"), one for each spec of a
 source that has several. One that vanishes at 0 Hit Points (a drake) leaves
-the fight then (_vanish_at_zero_hp); one that dies (a Reanimated Companion)
-stays, dead.
+the fight then (Combat/Fight/summons.py's vanish_at_zero_hp); one that dies
+(a Reanimated Companion) stays, dead.
 
 The feature's use and the slot are logged with their own actions, so the
 player log's replay spends them for the rest of the day too; the summon
@@ -37,10 +37,8 @@ from PyQt6.QtGui import QCursor
 from PyQt6.QtWidgets import QMenu
 
 from Combat.Arena.arena import place_summons
-from Combat.Definitions import Action, CombatStatus, Phase
-from Combat.Effects.active_effects import held_by_concentration
+from Combat.Definitions import Action, Phase
 from Combat.Summons import (
-    VANISHED_REASON,
     SummonOption,
     SummonPayment,
     choice_of,
@@ -52,7 +50,6 @@ from Combat.Summons import (
     owner_name,
     place_after_owners,
     summon_event,
-    vanishes_at_zero_hp,
 )
 from Model.Character import Character
 from Model.Content.Feature import Feature
@@ -63,12 +60,15 @@ from Combat.Fight.summons import (
     already_summoned_options,
     carry_summons_over,
     owner_summons,
+    remove_from_fight,
     room_for,
     same_summons,
     summon_owner,
     summon_source,
+    summons_die_with,
 )
 from .state import CombatWindowState
+from .steps import run_step
 from Combat.Fight.stats import _default_stats
 from .styles import QSS
 from .undo import undoable
@@ -349,16 +349,13 @@ class SummonsMixin(CombatWindowState):
         return rolls
 
     def _remove_from_fight(self, char: dict):
-        """Take char out of the window and the turn order, keeping whoever's
-        turn it is (the next one's, when it was char's). What it concentrates
-        on ends first: nobody holds it once char is gone."""
-        if CombatStatus.CONCENTRATING.value in char.get("conditions", []) or (
-            held_by_concentration(self.characters, char["name"])
-        ):
-            self._end_concentration_spells(
-                char, reason=f"{char['name']} leaves the fight"
-            )
-        self.fight.remove(char)
+        """Take char out of the fight: Combat/Fight/summons.py's
+        remove_from_fight, then off the window's screens (_forget_removed)."""
+        run_step(self, remove_from_fight, char)
+
+    def _forget_removed(self, char: dict):
+        """char left the fight (remove_from_fight): take it off the
+        initiative screen, the selection and the targets."""
         if self.phase == Phase.INITIATIVE:
             self._remove_initiative_row(char)
         if self.selected_character is char:
@@ -389,53 +386,9 @@ class SummonsMixin(CombatWindowState):
         self._refresh_views()
 
     def _summons_die_with(self, owner: dict):
-        """owner died: each summon of theirs that's out and drops with them
-        drops to 0 Hit Points (a Reanimated Companion's Death Burst goes off;
-        a drake is gone)."""
-        for summon in self._owner_summons(owner):
-            if not is_out(summon):
-                continue
-            found = self._summon_source(summon)
-            if found is not None and not found[3].drops_with_owner:
-                continue
-            summon["hp"] = 0
-            summon["temp_hp"] = 0
-            self._apply_bloodied_condition(summon)
-            traits = summon.get("traits") or []
-            burst = any(_ability_name(t) == "Death Burst" for t in traits)
-            self._log_event(
-                f"{summon['name']} drops to 0 HP: {owner['name']} died"
-                + (" (its Death Burst goes off)" if burst else ""),
-                character=summon["name"],
-            )
-            if not self._vanish_at_zero_hp(summon):
-                self._rebuild_card(summon)
-
-    def _vanish_at_zero_hp(self, summon: dict) -> bool:
-        """summon has just dropped to 0 Hit Points: one that vanishes then
-        (its spec's OnZeroHp, as its dict holds it) leaves the fight, logged
-        as Action.DISMISS on its owner with "reason": "0 hp" (so the next
-        encounter doesn't bring it back from an earlier one). One that dies
-        stays, dead. Returns whether it vanished. Its caller is @undoable."""
-        if summon.get("hp", 0) > 0 or not vanishes_at_zero_hp(summon):
-            return False
-        if not any(c is summon for c in self.characters):
-            return False
-        owner = owner_name(summon)
-        # Logged while it's still there, so players read it if they saw it.
-        self._log_event(
-            f"{summon['name']} drops to 0 HP and vanishes",
-            character=owner or summon["name"],
-            action=Action.DISMISS,
-            value=summon_event([summon], reason=VANISHED_REASON),
-        )
-        self._remove_from_fight(summon)
-        self._save_fight_state()
-        self._rebuild_cards()
-        if self.phase == Phase.COMBAT:
-            self._refresh_turn()
-        self._refresh_views()
-        return True
+        """owner died: their summons that drop with them drop to 0 Hit
+        Points: Combat/Fight/summons.py's summons_die_with."""
+        run_step(self, summons_die_with, owner)
 
     def _carry_summons_over(self, log_path: Path):
         """Start the encounter log at `log_path` (one not started yet) with
@@ -511,10 +464,3 @@ def _unpaid_text(feature: Feature, spec: SummonSpec) -> str:
         else:
             lacks.append(f"no spell slot of level {cost.spell_slot} or higher")
     return " and ".join(lacks) + " left"
-
-
-def _ability_name(ability) -> str | None:
-    """A stat-block ability's name, as a MonsterAbility or as a log stores it."""
-    if isinstance(ability, dict):
-        return ability.get("name")
-    return getattr(ability, "name", None)

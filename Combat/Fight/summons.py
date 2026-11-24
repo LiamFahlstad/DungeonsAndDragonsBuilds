@@ -3,15 +3,20 @@ step 5.3, summons): whose summon a combatant is, which of a player's summons
 a feature made, whether there's room for another, the summons a player could
 have out before the fight, and the ones the last encounter left out that come
 back in this one. The summons themselves (made, numbered, placed after their
-owners, carried over) are Combat/Summons.py; the combat window logs what
-happens to them and builds their menus (SummonsMixin)."""
+owners, carried over) are Combat/Summons.py. A summon leaving the fight,
+vanishing at 0 Hit Points or dropping with its owner is here too, logged
+(R45); the combat window summons and dismisses them and builds their menus
+(SummonsMixin)."""
 
 from pathlib import Path
 
 import Combat.PlayerLog as PlayerLog
+from Combat.Definitions import Action, CombatStatus, Phase
+from Combat.Effects.active_effects import held_by_concentration
 from Combat.LogFiles import read_json
 from Combat.Summons import (
     CHOICE_KEY,
+    VANISHED_REASON,
     SummonOption,
     carried_state,
     create,
@@ -26,14 +31,19 @@ from Combat.Summons import (
     owner_name,
     place_after_owners,
     source_for,
+    summon_event,
     summon_name,
+    vanishes_at_zero_hp,
 )
 from Model.Character import Character
 from Model.Content.Feature import Feature
 from Model.Content.Summons import SummonContext, SummonLifetime, SummonSpec
 
+from .cascade import apply_bloodied, end_concentration_spells
+from .falling import land_fallers
 from .fight import Fight
 from .stats import _default_stats
+from .step import Step
 
 
 def summon_owner(fight: Fight, char: dict) -> dict | None:
@@ -194,3 +204,82 @@ def _earlier_names(
             if name not in names:
                 names.append(name)
     return [(name, (legacy,) if name == base else ()) for name in names]
+
+
+# ---- Leaving the fight ----
+
+
+def remove_from_fight(step: Step, char: dict):
+    """Take char out of the fight and the turn order, keeping whoever's
+    turn it is (the next one's, when it was char's). What it concentrates
+    on ends first: nobody holds it once char is gone. The window takes it
+    off its screens (StepResult.removed)."""
+    if CombatStatus.CONCENTRATING.value in char.get("conditions", []) or (
+        held_by_concentration(step.fight.characters, char["name"])
+    ):
+        end_concentration_spells(step, char, reason=f"{char['name']} leaves the fight")
+    step.fight.remove(char)
+    step.result.removed.append(char)
+
+
+def vanish_at_zero_hp(step: Step, summon: dict) -> bool:
+    """summon has just dropped to 0 Hit Points: one that vanishes then
+    (its spec's OnZeroHp, as its dict holds it) leaves the fight, logged
+    as Action.DISMISS on its owner with "reason": "0 hp" (so the next
+    encounter doesn't bring it back from an earlier one). One that dies
+    stays, dead. Returns whether it vanished."""
+    if summon.get("hp", 0) > 0 or not vanishes_at_zero_hp(summon):
+        return False
+    if not any(c is summon for c in step.fight.characters):
+        return False
+    owner = owner_name(summon)
+    # Logged while it's still there, so players read it if they saw it.
+    step.log(
+        f"{summon['name']} drops to 0 HP and vanishes",
+        character=owner or summon["name"],
+        action=Action.DISMISS,
+        value=summon_event([summon], reason=VANISHED_REASON),
+    )
+    remove_from_fight(step, summon)
+    step.result.save_begun = True
+    step.result.all_cards = True
+    if step.fight.phase == Phase.COMBAT:
+        step.result.turn = True
+    # The window brought its views up to date here, and whoever couldn't
+    # stay aloft fell then (R34's leave_wild_shape does the same).
+    lines = land_fallers(step.fight, step)
+    if lines:
+        step.result.say(" ".join(lines))
+    step.result.views = True
+    return True
+
+
+def summons_die_with(step: Step, owner: dict):
+    """owner died: each summon of theirs that's out and drops with them
+    drops to 0 Hit Points (a Reanimated Companion's Death Burst goes off;
+    a drake is gone)."""
+    for summon in owner_summons(step.fight, owner):
+        if not is_out(summon):
+            continue
+        found = summon_source(step.fight, summon)
+        if found is not None and not found[3].drops_with_owner:
+            continue
+        summon["hp"] = 0
+        summon["temp_hp"] = 0
+        apply_bloodied(step, summon)
+        traits = summon.get("traits") or []
+        burst = any(_ability_name(t) == "Death Burst" for t in traits)
+        step.log(
+            f"{summon['name']} drops to 0 HP: {owner['name']} died"
+            + (" (its Death Burst goes off)" if burst else ""),
+            character=summon["name"],
+        )
+        if not vanish_at_zero_hp(step, summon):
+            step.result.change(summon)
+
+
+def _ability_name(ability) -> str | None:
+    """A stat-block ability's name, as a MonsterAbility or as a log stores it."""
+    if isinstance(ability, dict):
+        return ability.get("name")
+    return getattr(ability, "name", None)

@@ -39,6 +39,13 @@ class StepResult:
     # spent Reaction takes away its Opportunity Attack buttons, and the
     # selected card shows what's left.
     spent: list[tuple[dict, str]] = field(default_factory=list)
+    # Who left the fight (a summon vanishing at 0 Hit Points): the window
+    # takes them off the initiative screen, the selection and the targets.
+    removed: list[dict] = field(default_factory=list)
+    # Whether to rebuild every card (one left the grid) and bring the turn
+    # highlight, tracker and turn buttons up to date.
+    all_cards: bool = False
+    turn: bool = False
 
     def change(self, char: dict):
         """char's card needs redrawing."""

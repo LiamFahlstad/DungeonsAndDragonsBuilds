@@ -70,7 +70,7 @@ and the few others a step touches, not the character-sheet tests. Steps 3,
 | 2 | A typed combatant (`Combatant` TypedDict) | M | **Done** 2026-11-22, revised (R8): the schema and a key test; annotating signatures moved to step 5 |
 | 3 | The Use / Cast dialog as a class, its form-to-effects logic Qt-free | L | 3a **done** 2026-11-22 (R9): `use_cast/form.py`, dialog 1,580 → 1,440 lines; 3b **done** 2026-11-22 (R10): `_UseCastDialog`, `run()` 616 lines + 44 methods; 3c's move **done** (R11): `use_cast/dialog.py`, `conditions_mixin.py` 3,500 → 1,674 lines; 3c's split **done**, revised (R12): `run()` is 14 lines calling 10 builder methods, the longest 126; 3d **done** (R13): `do_apply` 146 → 50 lines over Qt-free `read_amount`, `check_applicable` and `build_effect`; reviewed (R14): no behaviour change; **step 3 done** |
 | 4 | The window built from panels, shortcuts as a table | M | **Done** 2026-11-23 (R15, R16): `_build_window` 680 → 13 lines over 12 builders (the longest 111); the shortcuts a table (`shortcuts.py`) checked against KEYBOARD_SHORTCUTS.md |
-| 5 | The Qt-free fight core (`Combat/Fight/`), one mixin at a time | XL | 5.1 **done** 2026-11-23 (R17): seven Qt-free modules moved to `Combat/Fight/`; 5.5's guard test in place; 5.2 **done** (R18): `Fight` holds the fight's state; 5.3 started (R19, R20): damage's defenses and arithmetic in `Combat/Fight/damage.py`, health (death state, healing, Temporary Hit Points, Death Saving Throws) in `Combat/Fight/health.py`; the map's questions (distance, sight, cover, range, Critical Hits within 5 feet) are `Fight` methods (R21); an attack roll's check is `Combat/Fight/attacks.py` (R22); gaining and losing a condition is `Combat/Fight/conditions.py` (R23); the turn order is `Fight`'s (R24); casting's slots, recipients and timers are `Combat/Fight/spells.py` (R25); joining and leaving the turn order are `Fight`'s, summons' questions and carry-over `Combat/Fight/summons.py` (R26); Wild Shape's uses and badge `Combat/Fight/wild_shape.py` (R27); a short rest's regains and Hit Dice `Combat/Fight/rests.py` (R28); saving, loading and replaying the fight `Combat/Fight/log.py` (R29); 5.3's areas are each started; what's left of them (features, triggers, the cascades a condition sets off, `_log_event`) waits for 5.4's `Asker` and step 6; 5.4 started (R30): the `Asker` asks "out of resources, go ahead anyway?", and the checks are `Combat/Fight/resources.py`; the core logs through a `Logger` (Decision 4, R32), first spending an Action, a feature use or a slot; what the players know is `Combat/Fight/player_knowledge.py` (R33); conditions and their cascades are `Combat/Fight/cascade.py`, run on a `Step` whose `StepResult` the window draws (R34); the Use / Cast apply path's pieces (what an effect gives each target, what holds it, what using the pick spends) are `Combat/Fight/effects_given.py`, `badge_text.py` and additions to `resources.py` (R44); **5.4 continues with temporary Hit Points and damage, then the attack roll's resolution and pushes, then `_apply_effect_to_targets` itself and the triggers (R44's order)** |
+| 5 | The Qt-free fight core (`Combat/Fight/`), one mixin at a time | XL | 5.1 **done** 2026-11-23 (R17): seven Qt-free modules moved to `Combat/Fight/`; 5.5's guard test in place; 5.2 **done** (R18): `Fight` holds the fight's state; 5.3 started (R19, R20): damage's defenses and arithmetic in `Combat/Fight/damage.py`, health (death state, healing, Temporary Hit Points, Death Saving Throws) in `Combat/Fight/health.py`; the map's questions (distance, sight, cover, range, Critical Hits within 5 feet) are `Fight` methods (R21); an attack roll's check is `Combat/Fight/attacks.py` (R22); gaining and losing a condition is `Combat/Fight/conditions.py` (R23); the turn order is `Fight`'s (R24); casting's slots, recipients and timers are `Combat/Fight/spells.py` (R25); joining and leaving the turn order are `Fight`'s, summons' questions and carry-over `Combat/Fight/summons.py` (R26); Wild Shape's uses and badge `Combat/Fight/wild_shape.py` (R27); a short rest's regains and Hit Dice `Combat/Fight/rests.py` (R28); saving, loading and replaying the fight `Combat/Fight/log.py` (R29); 5.3's areas are each started; what's left of them (features, triggers, the cascades a condition sets off, `_log_event`) waits for 5.4's `Asker` and step 6; 5.4 started (R30): the `Asker` asks "out of resources, go ahead anyway?", and the checks are `Combat/Fight/resources.py`; the core logs through a `Logger` (Decision 4, R32), first spending an Action, a feature use or a slot; what the players know is `Combat/Fight/player_knowledge.py` (R33); conditions and their cascades are `Combat/Fight/cascade.py`, run on a `Step` whose `StepResult` the window draws (R34); the Use / Cast apply path's pieces (what an effect gives each target, what holds it, what using the pick spends) are `Combat/Fight/effects_given.py`, `badge_text.py` and additions to `resources.py` (R44); one hit's damage and what it sets off is `Combat/Fight/damage.py`'s `deal_damage`, a summon leaving the fight `summons.py`'s (R45); **5.4 continues with the attack roll's resolution and pushes, then `_apply_effect_to_targets` itself and the triggers (R44's order)** |
 | 6 | One refresh path after every GM operation | M | Not started |
 | 7 | Mixins into composed views and one module per dialog; `CombatWindowState` gone | L | Not started |
 | 8 | Docs, agents and skills point at the new layout | S | Not started |
@@ -2146,6 +2146,88 @@ when" commands still run, plus the moved scraper and report script start.
     resolution and pushes, then `_apply_effect_to_targets` itself. The
     triggers come last: what they apply goes through that function (R32),
     and their pop-up joins the `Asker` with them (R33).
+- **R45 (step 5.4, damage, 2026-11-24).** Damage and the triggers are one
+  cycle: `_deal_damage` fires the hit's triggers, `_drops_to_instead` asks
+  them before any damage is dealt (Relentless Endurance), and a trigger
+  applies its row through the Use / Cast apply path, which deals damage. So
+  the cycle is cut at its two ends, and everything between moves:
+  - **`Combat/Fight/damage.py`:** `deal_damage` (the hit, falling
+    Unconscious, Concentration ending at 0, a summon vanishing),
+    `damage_target` (one damage type, logged, Bloodied) and
+    `take_damage_at_zero_hp` (failed Death Saving Throws, death, and the
+    summons that drop with the dead). It returns a `DamageDealt`: the
+    damage taken, whether a Concentration save is owed, and the outcomes
+    the hit triggers (`DamageOutcome`, `KnockoutOutcome`,
+    `BloodiedOutcome`).
+  - **The window's `_deal_damage`** works out, before calling it, the
+    target's death state and what it drops to instead of 0 (which asks
+    the triggers), and after it, in the old order, draws the result, asks
+    the Concentration save, fires each outcome and adds its notes to the
+    status line. Those were the last things the old method did. The save
+    is asked only without a knockout and a summon vanishes only with one,
+    so the two never both happen. Whether the hit left the target Bloodied
+    (`BloodiedOutcome`) was judged after the save, which, rolled for a
+    monster and lost, can take off a badge's Hit Point maximum and Bloodied
+    with it, so it's `damage.py`'s `bloodied_outcomes`, which the window
+    calls after the save (the review found this; no content reaches it
+    today, as only Aid and Heroes' Feast raise a maximum and neither is
+    Concentration). `_ask_concentration_save` stays the
+    window's, as `test_combat_damage_rules` patches it on the window.
+  - **`Combat/Fight/summons.py`:** `remove_from_fight` (what it
+    concentrated on ends, then it leaves the fight), `vanish_at_zero_hp`
+    and `summons_die_with`, with `_ability_name`. `vanish_at_zero_hp` lands
+    whoever can't stay aloft at the point where the window's
+    `_refresh_views` used to, as R34's `leave_wild_shape` does, so a fall
+    line stays where it was. What the window did to its own screens is
+    `SummonsMixin._forget_removed` (the initiative row, the selection and
+    the targets), which `show_step` runs for each of the `StepResult`'s new
+    `removed`, before its new `all_cards` (`_rebuild_cards`) and `turn`
+    (`_refresh_turn`).
+  - **`effects_given.py`'s `grant_temp_hp`:** `_give_temp_hp`, beside what
+    else an effect gives (`health.py` can't hold it: `fight.py` imports
+    `health.py`, so a `Step` there would be an import cycle).
+  - **The window** keeps `_deal_damage`, `_give_temp_hp`,
+    `_remove_from_fight` and `_summons_die_with` as wrappers.
+    `_damage_target`, `_damage_at_zero_hp` and `_vanish_at_zero_hp` went:
+    only the moved code called them, and no test. `_vanish_at_zero_hp`'s
+    `CombatWindowState` stub went with it, and `_forget_removed` has one,
+    so the count stays 208.
+  - **Order arguments**, as R34's and R44's: the cards, the save and the
+    views are drawn at the end of each wrapper instead of partway. After a
+    summon vanishes, the core reads nothing the window would have changed
+    (the selection, the targets); `_forget_removed` runs before anything
+    after the wrapper does. Between `_note_health`'s old save and the end
+    of `deal_damage`, every change logs a line, which saves.
+  - **Undo:** the probe over 2,190 window tests found only tests calling
+    `_deal_damage` and `_remove_from_fight` directly with no step open,
+    and none of them undoes.
+  - **Checked against the code before it** as in R44: 2,190 window tests on
+    HEAD and on the change, `random` seeded per test, every `_log_event`
+    and `_show_status` recorded: identical in every test. Each moved
+    body's diff with its HEAD version, after the substitutions, is what's
+    listed above and nothing else.
+  - **Tests:** `tests/test_fight_damage_dealt.py`, 6 tests without Qt (a
+    Concentration save owed, a knockout ending Concentration and what it
+    triggers, failed Death Saving Throws at 0 Hit Points and two on a
+    Critical Hit, a drake vanishing, Temporary Hit Points not stacking, a
+    hit leaving the target Bloodied).
+    `combat-ui-explore` sweeps of `ashelm_church` and
+    `time_loop_pr_square` found nothing.
+  - **Review:** the `code-reviewer` found no other behaviour change. It
+    checked each body and the wrappers it bypasses, the order of what's
+    drawn after a vanish (a probe of a selected drake vanishing and of an
+    owner dying with one gave the same selection, targets, cards, status
+    and saved file hash on HEAD and on the change), the saved file, an AST
+    walk of every caller for Undo, and that no `Combat/Fight` module loads
+    Qt. Three docstrings that named the deleted methods
+    (`summons_mixin.py`, `Fight/log.py`, `Fight/stats.py`) are fixed.
+  - **Lines:** `damage_mixin.py` 952 → 786, `summons_mixin.py` 520 → 466;
+    `Fight/damage.py` 127 → 343, `Fight/summons.py` 196 → 285.
+  - **Next:** the attack roll's resolution and what answers it
+    (`_resolve_attack_roll`, `_before_attack_roll`, `_before_hit`, with
+    the trigger pop-up joining the `Asker`), pushes (`_push_targets`,
+    `_relocate`), then `_apply_effect_to_targets` itself, which then lets
+    the triggers' rows apply through the core.
 
 ## Discovered issues
 

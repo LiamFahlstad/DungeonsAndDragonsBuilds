@@ -57,7 +57,7 @@ from .cascade import (
     keep_hit_points_in_maximum,
 )
 from .effect_options import regained_uses
-from .health import death_state
+from .health import death_state, give_temp_hp
 from .monster_actions import roll_dice
 from .player_knowledge import note_condition_immunity
 from .saves import (
@@ -546,3 +546,35 @@ def log_area_kept(step: Step, holder: dict, label: str, record: dict):
         character=holder["name"],
         public=False,
     )
+
+
+def grant_temp_hp(step: Step, target: dict, amount: int, source: dict | None):
+    """Give target `amount` temporary Hit Points from source, counted in
+    both their stats and logged. Temp HP and Wild Shape share it."""
+    source_name = source["name"] if source is not None else None
+    # Temporary Hit Points don't stack: it keeps the higher amount.
+    old = give_temp_hp(target, amount, source)
+
+    temp_hp_value = {
+        "amount": amount,
+        "source_name": source_name,
+        "target_name": target["name"],
+    }
+
+    source_suffix = f" from {source_name}" if source_name else ""
+    if amount > old:
+        text = f"{target['name']} gains {amount} temp HP{source_suffix}"
+        if old:
+            text += f" (replacing {old})"
+    else:
+        text = (
+            f"{target['name']} keeps {old} temp HP instead of "
+            f"{amount}{source_suffix} (they don't stack)"
+        )
+    step.log(
+        text,
+        character=target["name"],
+        action=Action.ADD_TEMP_HP,
+        value=temp_hp_value,
+    )
+    step.result.change(target)

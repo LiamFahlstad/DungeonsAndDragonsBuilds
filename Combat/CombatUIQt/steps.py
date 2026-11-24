@@ -37,8 +37,13 @@ def show_step(app: CombatWindowState, result: StepResult):
     """Redraw the cards of who changed, say the status, take away a spent
     Reaction's Opportunity Attack buttons (arena step 23), save the fight
     state and bring the views up to date, as the operation asked."""
-    for char in result.changed:
-        app._rebuild_card(char)
+    for char in result.removed:
+        app._forget_removed(char)
+    if result.all_cards:
+        app._rebuild_cards()
+    else:
+        for char in result.changed:
+            app._rebuild_card(char)
     for text in result.status:
         app._show_status(text)
     for char, action_type in result.spent:
@@ -58,5 +63,7 @@ def show_step(app: CombatWindowState, result: StepResult):
         app._write_log(app._read_log())
     elif result.save_begun:
         app._save_fight_state()
+    if result.turn:
+        app._refresh_turn()
     if result.views:
         app._refresh_views()

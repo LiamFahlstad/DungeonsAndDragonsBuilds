@@ -16,34 +16,30 @@ from Combat.Effects.modifiers import (
 )
 from Combat.Effects.triggers import (
     AttackOutcome,
-    BloodiedOutcome,
-    DamageOutcome,
     DropOutcome,
-    KnockoutOutcome,
     PendingAttack,
     TriggerMode,
     reduced_damage,
 )
 from Combat.Effects.sight import Seen
-from Combat.Summons import vanishes_at_zero_hp
 from Core.Definitions import Condition
 from Combat.Fight.amounts import AmountError, parse_amount, parse_damage
 from Combat.Fight.attacks import check_attack
 from Combat.Fight.health import (
     DEAD,
     DYING,
-    damage_at_zero_hp,
     death_state,
     fail_death_save,
-    give_temp_hp,
     revive,
     succeed_death_save,
 )
 from Combat.Fight.damage import (
     damage_after_defenses,
+    bloodied_outcomes,
     damage_type_modifier,
-    take_damage,
+    deal_damage,
 )
+from Combat.Fight.effects_given import grant_temp_hp
 from Combat.Fight.attack_rolls import (
     AttackRoll,
     armor_in_use,
@@ -55,12 +51,12 @@ from Combat.Fight.monster_actions import first_number
 from Combat.Fight.player_knowledge import (
     _player_names,
     _seen,
-    note_damage_defense,
 )
 from Combat.Fight.saves import CustomEffect, roll_save, save_modifier
 from Combat.Fight.cascade import apply_bloodied, heal_target, note_health_change
+from Combat.Fight.step import Step
 from .state import CombatWindowState
-from .steps import run_step
+from .steps import run_step, show_step
 from .undo import undoable
 
 # A Concentration save's DC: half the damage taken, between these.
@@ -492,79 +488,41 @@ class DamageMixin(CombatWindowState):
         saved: bool,
         critical: bool = False,
     ) -> int:
-        """One hit on target, of each (amount, damage type) in parts, and what
-        the hit does to it: falling Unconscious, a Concentration save, failed
-        Death Saving Throws if it's at 0 Hit Points already (two if the hit
-        is `critical`, see _damage_at_zero_hp).
+        """One hit on target, of each (amount, damage type) in parts
+        (Combat/Fight/damage.py's deal_damage), then what it leaves the
+        window: the Concentration save asked, what the hit triggers, and
+        what the status line says of what it dropped to instead of 0.
         Returns the damage it took, after Resistance and Immunity. If it
         would drop target to 0 Hit Points, target is asked first about what
         it can drop to instead (_drops_to_instead: Relentless Endurance);
         if it does, the hit leaves it there, and it isn't knocked out."""
-        death_state = self._char_death_state(target)
+        state_before = self._char_death_state(target)
         drops_to, notes = self._drops_to_instead(
             target, parts, source, check_resistance, saved
         )
-        taken = 0
-        knockout = False
-        was_bloodied = "Bloodied" in target.get("conditions", [])
-        for amount, damage_type in parts:
-            dmg, downed = self._damage_target(
-                target,
-                amount,
-                damage_type,
-                source,
-                check_resistance,
-                saved,
-                floor=drops_to,
-            )
-            taken += dmg
-            knockout = knockout or downed
-        if drops_to:
-            points = "Hit Point" if drops_to == 1 else "Hit Points"
-            self._log_event(
-                f"{target['name']} drops to {target['hp']} {points} instead of 0",
-                character=target["name"],
-            )
-        if taken > 0 and death_state in ("dying", "stabilized"):
-            self._damage_at_zero_hp(target, taken, critical)
-        self._note_health(target)
-        # A summon whose spec says so vanishes at 0 HP (a drake), once
-        # what it was concentrating on has ended.
-        vanishes = knockout and vanishes_at_zero_hp(target)
-
-        # A creature that makes Death Saving Throws falls Unconscious at
-        # 0 HP (which also ends its Concentration); any other one dies.
-        if knockout and not vanishes and self._char_death_state(target) != "dead":
-            self._add_condition_to(target, Condition.UNCONSCIOUS.value)
-
-        if "Concentrating" in target.get("conditions", []):
-            if knockout:
-                self._remove_condition_from(target, "Concentrating", source=target)
-            elif taken > 0 and self.settings.ask_concentration_saves:
-                # Only damage taken forces a save (damage soaked by
-                # temporary HP still counts); 0 after immunity doesn't.
-                self._ask_concentration_save(target, taken)
-        if vanishes:
-            self._vanish_at_zero_hp(target)
-        if source is not None and source is not target and taken > 0:
-            # What the one damaged answers it with (Hellish Rebuke), asked
-            # with the rest of the Apply's triggers.
-            self._after_attack(DamageOutcome(source, target, taken))
-        if source is not None and source is not target and knockout:
-            # What the one that did it gets for it (Dark One's Blessing).
-            self._after_attack(KnockoutOutcome(source, target))
-        if (
-            not was_bloodied
-            and target["hp"] > 0
-            and "Bloodied" in target.get("conditions", [])
-        ):
-            # What the one left Bloodied does then (Harvest Undead).
-            self._after_attack(BloodiedOutcome(target, source))
+        step = Step(self.fight, self.logger, self.asker)
+        dealt = deal_damage(
+            step,
+            target,
+            parts,
+            source,
+            check_resistance,
+            saved,
+            critical=critical,
+            state_before=state_before,
+            drops_to=drops_to,
+            ask_concentration=self.settings.ask_concentration_saves,
+        )
+        show_step(self, step.result)
+        if dealt.concentration_save:
+            self._ask_concentration_save(target, dealt.taken)
+        for outcome in (*dealt.outcomes, *bloodied_outcomes(dealt, target, source)):
+            self._after_attack(outcome)
         if notes:
             # After the damage, whose log lines cleared the status line.
             status = self._status_label.text()
             self._show_status("; ".join(part for part in (status, *notes) if part))
-        return taken
+        return dealt.taken
 
     def _drops_to_instead(
         self,
@@ -615,59 +573,6 @@ class DamageMixin(CombatWindowState):
         """Note what the change of HP that's just over showed the players, and
         save the fight state: cascade.py's note_health_change."""
         run_step(self, note_health_change, char)
-
-    def _damage_target(
-        self,
-        target: dict,
-        amount: int,
-        damage_type: str,
-        source: dict | None,
-        check_resistance: bool,
-        saved: bool,
-        floor: int = 0,
-    ) -> tuple[int, bool]:
-        """Deal one damage type to target, halved first if it saved, leaving
-        it no fewer Hit Points than `floor` (what it drops to instead of 0:
-        Relentless Endurance's 1, Relentless Rage's twice the Barbarian's
-        level, even if that's more). Returns (the damage dealt, whether it
-        took target to 0 HP)."""
-        source_name = source["name"] if source is not None else None
-        dmg = amount // 2 if saved else amount
-        outcome = None
-        if check_resistance:
-            dmg, outcome = damage_type_modifier(target, dmg, damage_type)
-        defense = outcome
-        if saved:
-            outcome = f"saved, {outcome}" if outcome else "saved"
-
-        taken = take_damage(target, dmg, damage_type, source, floor)
-        knockout = taken.knockout
-        damage_value = {
-            "hp_delta": taken.hp_delta,
-            "temp_delta": taken.temp_delta,
-            "dmg": dmg,
-            "damage_type": damage_type,
-            "source_name": source_name,
-            "target_name": target["name"],
-            "knockout": knockout,
-            "outcome": outcome,
-        }
-        source_suffix = f" from {source_name}" if source_name else ""
-        outcome_suffix = f" ({outcome})" if outcome else ""
-        readable = self._log_event(
-            f"{target['name']} takes {dmg} {damage_type} damage{source_suffix}{outcome_suffix}",
-            character=target["name"],
-            action=Action.DAMAGE,
-            value=damage_value,
-        )
-        if readable:
-            note_damage_defense(target, damage_type, defense)
-
-        # Auto-apply bloodied condition, attributed to whoever dealt the damage
-        self._apply_bloodied_condition(target, source=source)
-
-        self._rebuild_card(target)
-        return dmg, knockout
 
     def _show_source_damage_type(self, source: dict | None):
         """Show the damage type source last dealt, or a blank one, so a type
@@ -817,50 +722,6 @@ class DamageMixin(CombatWindowState):
         self._apply_bloodied_condition(char)
         self._rebuild_card(char)
 
-    def _damage_at_zero_hp(self, char: dict, damage: int, critical: bool):
-        """Char, dying or Stable at 0 Hit Points, took `damage` (2024 rules,
-        Damage at 0 Hit Points): one failed Death Saving Throw, two from a
-        Critical Hit, and death if it's at least char's Hit Point maximum.
-        A Stable creature stops being Stable: its saves start over (they
-        were reset as it became Stable) with these failures."""
-        hit = damage_at_zero_hp(char, damage, critical)
-        failures, massive = hit.failures, hit.massive
-        ends_stable, newly_dead = hit.ends_stable, hit.newly_dead
-        name = char["name"]
-        if massive:
-            text = (
-                f"{name} dies: {damage} damage at 0 HP is at least their"
-                " Hit Point maximum"
-            )
-        else:
-            saves = "2 death saves" if failures == 2 else "a death save"
-            crit = " (Critical Hit)" if critical else ""
-            stable = ", no longer Stable" if ends_stable else ""
-            text = (
-                f"{name} fails {saves} from damage at 0 HP{crit}{stable}"
-                f" ({char['death_saves_fail']}/3 fails)"
-            )
-            if newly_dead:
-                text += " and dies"
-        self._log_event(
-            text,
-            character=name,
-            action=Action.DEATH_SAVE_FAIL,
-            # A dict, unlike a rolled save's newly_dead, for the replay
-            # (Combat/Fight/log.py's apply_replay_action) to do the same.
-            value={
-                "newly_dead": newly_dead,
-                "failures": failures,
-                "ends_stable": ends_stable,
-                "massive": massive,
-                "target_name": name,
-            },
-        )
-        if newly_dead and "Concentrating" in char.get("conditions", []):
-            self._remove_condition_from(char, "Concentrating", source=char)
-        if newly_dead:
-            self._summons_die_with(char)
-
     @undoable
     def _apply_failed_death_save(self, char: dict):
         if death_state(char) != DYING:
@@ -921,32 +782,6 @@ class DamageMixin(CombatWindowState):
             self._give_temp_hp(target, amount, source)
 
     def _give_temp_hp(self, target: dict, amount: int, source: dict | None):
-        """Give target `amount` temporary Hit Points from source, counted in
-        both their stats and logged. Temp HP and Wild Shape share it."""
-        source_name = source["name"] if source is not None else None
-        # Temporary Hit Points don't stack: it keeps the higher amount.
-        old = give_temp_hp(target, amount, source)
-
-        temp_hp_value = {
-            "amount": amount,
-            "source_name": source_name,
-            "target_name": target["name"],
-        }
-
-        source_suffix = f" from {source_name}" if source_name else ""
-        if amount > old:
-            text = f"{target['name']} gains {amount} temp HP{source_suffix}"
-            if old:
-                text += f" (replacing {old})"
-        else:
-            text = (
-                f"{target['name']} keeps {old} temp HP instead of "
-                f"{amount}{source_suffix} (they don't stack)"
-            )
-        self._log_event(
-            text,
-            character=target["name"],
-            action=Action.ADD_TEMP_HP,
-            value=temp_hp_value,
-        )
-        self._rebuild_card(target)
+        """Give target `amount` temporary Hit Points from source:
+        Combat/Fight/effects_given.py's grant_temp_hp."""
+        run_step(self, grant_temp_hp, target, amount, source)

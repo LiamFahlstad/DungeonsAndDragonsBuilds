@@ -88,7 +88,7 @@ def is_counted_condition(value) -> bool:
 def death_save_fail_kills(value) -> bool:
     """Whether a logged DEATH_SAVE_FAIL is the one the creature dies of: its
     value is that bool, or, for damage taken at 0 Hit Points, a dict with
-    "newly_dead" (DamageMixin._damage_at_zero_hp)."""
+    "newly_dead" (damage.py's take_damage_at_zero_hp)."""
     if isinstance(value, dict):
         return bool(value.get("newly_dead"))
     return bool(value)

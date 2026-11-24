@@ -522,9 +522,6 @@ class CombatWindowState:
     def _summons_die_with(self, owner: dict):
         raise NotImplementedError("SummonsMixin._summons_die_with")
 
-    def _vanish_at_zero_hp(self, summon: dict) -> bool:
-        raise NotImplementedError("SummonsMixin._vanish_at_zero_hp")
-
     def _carry_summons_over(self, log_path: Path):
         raise NotImplementedError("SummonsMixin._carry_summons_over")
 
@@ -542,6 +539,9 @@ class CombatWindowState:
 
     def _remove_initiative_row(self, char: dict):
         raise NotImplementedError("TurnsMixin._remove_initiative_row")
+
+    def _forget_removed(self, char: dict):
+        raise NotImplementedError("SummonsMixin._forget_removed")
 
     def _roll_into_turn_order(self, char: dict) -> int:
         raise NotImplementedError("TurnsMixin._roll_into_turn_order")

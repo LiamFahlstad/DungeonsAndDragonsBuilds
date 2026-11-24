@@ -265,7 +265,7 @@ def apply_replay_action(char: dict, action: str, value):
         increment_named_stat(char["stats"], "spells_cast_by_name", spell_name)
     elif action == Action.DEATH_SAVE_FAIL:
         if isinstance(value, dict):
-            # Damage taken at 0 Hit Points (DamageMixin._damage_at_zero_hp).
+            # Damage taken at 0 Hit Points (damage.py's take_damage_at_zero_hp).
             if value.get("ends_stable"):
                 char["death_saves_fail"] = char["death_saves_success"] = 0
             fails = char.get("death_saves_fail", 0) + value.get("failures", 1)
