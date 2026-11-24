@@ -562,7 +562,7 @@ def main(argv: list[str]) -> int:
 
     if len(argv) != 2:
         print(
-            'usage: python -m Combat.Tools.monster_effect_text "<name>" "<description>"',
+            'usage: python -m Combat.Fight.monster_effect_text "<name>" "<description>"',
             file=sys.stderr,
         )
         return 2
