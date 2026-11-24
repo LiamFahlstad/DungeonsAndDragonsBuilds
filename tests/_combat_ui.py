@@ -91,7 +91,7 @@ def open_dialog(monkeypatch, show) -> QDialog:
 
 def answer_out_of_resources(monkeypatch, yes: bool = True) -> list[str]:
     """Answer the combat UI's "out of resources ... anyway?" question
-    (the window's Asker, Combat/CombatUIQt/asker.py) with Yes or No without blocking on it, and return the
+    (the window's Asker, Combat/CombatUIQt/window_asker.py) with Yes or No without blocking on it, and return the
     text of each one asked, in order."""
     asked: list[str] = []
 

@@ -1,7 +1,7 @@
 """How the fight asks the GM something, Qt-free (Notes/combat-ui-refactor-plan.md,
 step 5.4). When a rule needs an answer in the middle of an operation, it
 asks through the Asker it was given instead of opening a dialog itself: the
-combat window answers with its dialogs (Combat/CombatUIQt/asker.py), and a
+combat window answers with its dialogs (Combat/CombatUIQt/window_asker.py), and a
 test answers with a ScriptedAsker.
 
 So far the Asker asks one question: whether to go ahead with something a

@@ -1,7 +1,7 @@
 """The combat window's side of running out of resources (the checks and the
 question are Combat/Fight/resources.py): the action economy counted only
 during turns, and the question asked through the window's Asker
-(Combat/CombatUIQt/asker.py)."""
+(Combat/CombatUIQt/window_asker.py)."""
 
 from Combat.Fight.resources import counted_action_lack, go_ahead_anyway
 from .state import CombatWindowState

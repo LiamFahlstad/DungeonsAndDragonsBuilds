@@ -17,14 +17,14 @@ from Model.Creatures.Combatants import BasicCombatantData, Visibility
 from Utils.QtMessages import install_qt_message_handler
 
 from .arena_mixin import ArenaMixin
-from .asker import WindowAsker
+from .window_asker import WindowAsker
 from .logger import WindowLogger
 from .cards_mixin import CardsMixin
 from .conditions_mixin import ConditionsMixin
 from .damage_mixin import DamageMixin
 from .dialogs_mixin import DialogsMixin
 from .encounters_mixin import EncountersMixin
-from .resources import ResourcesMixin
+from .resources_mixin import ResourcesMixin
 from .rests_mixin import RestsMixin
 from .features_mixin import FeaturesMixin
 from .logging_mixin import LoggingMixin

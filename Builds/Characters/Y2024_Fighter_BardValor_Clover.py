@@ -6,7 +6,7 @@ grants its full proficiencies (all armor, all weapons, 3 weapon masteries,
 a Fighting Style), unlike multiclassing into Fighter later, which grants
 none of that - so Fighter has to be the starting class for this comparison
 to be meaningful. This is a sandbox for evaluating the trade-off, not a
-character anyone is actually playing - not tracked in Players.py.
+character anyone is actually playing - not tracked in players.py.
 
 Deliberately kept identical to Y2024_Bard_Valor_Clover.py wherever the class
 swap doesn't force a difference: same ability scores/background/species/

@@ -3,15 +3,15 @@
 
 Each campaign lives entirely in Combat/Campaigns/<Campaign>/: its party and
 encounters are in that folder's encounters.py (Combat/Campaigns/ENCOUNTERS.md),
-which its Campaign.py loads. To add a campaign, create its folder and add its
+which its campaign.py loads. To add a campaign, create its folder and add its
 CAMPAIGN to the tuple below."""
 
 from pathlib import Path
 
 from Combat.Campaign import Campaign
-from Combat.Campaigns.CurseOfTheLich.Campaign import CAMPAIGN as CURSE_OF_THE_LICH
-from Combat.Campaigns.GrimsCastle.Campaign import CAMPAIGN as GRIMS_CASTLE
-from Combat.Campaigns.TimeLoopPR.Campaign import CAMPAIGN as TIME_LOOP_PR
+from Combat.Campaigns.CurseOfTheLich.campaign import CAMPAIGN as CURSE_OF_THE_LICH
+from Combat.Campaigns.GrimsCastle.campaign import CAMPAIGN as GRIMS_CASTLE
+from Combat.Campaigns.TimeLoopPR.campaign import CAMPAIGN as TIME_LOOP_PR
 from Combat.Scenario import CombatScenario
 
 CAMPAIGNS: dict[str, Campaign] = {

@@ -36,7 +36,7 @@ from Builds.Characters.Y2024_Ranger_Drakewarden_Hanna import (
 from CharacterContent.Features.SubClassFeatures.Artificer.ArtificerReanimatorFeatures import (
     ReanimatorSkillSet,
 )
-from Combat.Campaigns.TimeLoopPR.Campaign import CAMPAIGN
+from Combat.Campaigns.TimeLoopPR.campaign import CAMPAIGN
 from Combat.Fight.effect_options import effect_options, feature_options
 from Combat.Fight.saves import ATTACK_ROLL, HEALING, SAVING_THROW, TEMP_HP
 from Combat.PlayerCombatant import combatant_from_character

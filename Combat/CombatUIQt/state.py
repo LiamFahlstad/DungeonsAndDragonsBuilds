@@ -84,7 +84,7 @@ class CombatWindowState:
     # names read and write it, as they did when they were attributes.
     fight: Fight
     # How the fight's rules ask the GM something (Combat/Fight/asker.py):
-    # with the window's dialogs (asker.py's WindowAsker).
+    # with the window's dialogs (window_asker.py's WindowAsker).
     asker: Asker
     # How they log what they did (Combat/Fight/logger.py): through
     # _log_event (logger.py's WindowLogger).

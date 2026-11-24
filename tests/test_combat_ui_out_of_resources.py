@@ -1,5 +1,5 @@
 """Running out in the combat UI (Combat/Fight/resources.py, asked through
-the window's Asker, Combat/CombatUIQt/asker.py): using
+the window's Asker, Combat/CombatUIQt/window_asker.py): using
 something the source has none left of asks the GM first, instead of
 refusing. Yes uses it anyway; No leaves everything as it was, with no undo
 step. The other resources (slots, feature uses, recharges, legendary

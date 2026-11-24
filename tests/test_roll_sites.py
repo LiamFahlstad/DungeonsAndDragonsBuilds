@@ -164,7 +164,7 @@ def test_every_listed_roll_still_rolls():
 def test_every_roll_sites_file_is_in_one_folder():
     # Keys are paths within a scanned folder, so a file that rolls (or is
     # listed) mustn't share its path with a file in another folder:
-    # Combat/Fight and Combat/CombatUIQt both have a resources.py, and a roll
+    # Combat/Fight and Combat/CombatUIQt both have a logger.py, and a roll
     # added to one could pass as the other's listed roll.
     homes: dict[str, list[str]] = {}
     for folder in FOLDERS:

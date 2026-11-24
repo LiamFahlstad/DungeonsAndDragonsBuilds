@@ -72,7 +72,7 @@ and the few others a step touches, not the character-sheet tests. Steps 3,
 | 7 | Mixins into composed views and one module per dialog; `CombatWindowState` gone | L | Not started |
 | 8 | Docs, agents and skills point at the new layout | S | Not started |
 | 9 | Large files split into one module per job, with a file-size ratchet | M | Not started. 9.0 (the ratchet) and 9a (Qt-free files) can start now; 9b (UI files) after step 7 |
-| 10 | Folders and names: `Combat/`'s loose modules into packages, clashing names apart, runtime code out of `Tools/`, stray files gone, `CombatUIQt/` in subfolders | M | Not started. 10.0 (the rule), 10a (stray files), 10b (the loose modules) and 10c (clashing names) can start now; 10d (UI subfolders) rides along with steps 7 and 9b |
+| 10 | Folders and names: `Combat/`'s loose modules into packages, clashing names apart, runtime code out of `Tools/`, stray files gone, `CombatUIQt/` in subfolders | M | Started 2026-11-24 (R35): 10.0 **done** (three ratchets in `test_combat_ui_structure.py`); 10a **done** (stray files gone or moved, `monster_effect_text.py` in `Fight/`: loose files in `Combat/` 18 → 16 besides the two kept, `Combat.Tools` runtime importers 9 → 0); 10c's `CombatUIQt/` and campaign-folder renames **done** (name clashes 6 → 3). Left: 10b (the loose modules, which take the `summons` and `wildshape` clashes), 10c's `logger.py` (R35), 10d (UI subfolders, with steps 7 and 9b) |
 
 Steps 0-2 are cheap and safe and make the later ones easier, so do them
 first. Steps 3 and 4 are independent of each other. Step 6 needs step 5's
@@ -596,6 +596,7 @@ there today (2026-11-23):
 | `rules.txt`, `FEATURE_GAPS.md` | `SourceTexts/` and `Notes/combat-feature-gaps.md` (Q12) | Where the repo keeps source texts and audits |
 | each campaign's `Campaign.py`, `Players.py` | `campaign.py`, `players.py` | One case per folder. `ENCOUNTERS.md`'s "add a campaign" says so |
 | `CombatUIQt/asker.py`, `CombatUIQt/resources.py` | `window_asker.py`, `resources_mixin.py` | Named for what's in them (`WindowAsker`, `ResourcesMixin`), and no clash with `Fight/` |
+| `CombatUIQt/logger.py` | `window_logger.py` (R35) | Named for `WindowLogger`, like `window_asker.py`; no clash with `Fight/logger.py` |
 | `CombatUIQt/rest.py` | split in step 7: `short_rest_dialog` into `dialogs/short_rest.py`, the command line's `apply_long_rest` and `run_short_rest` into `rest_commands.py` | It's two things today, and neither is `rests_mixin.py` or `Fight/rests.py` |
 
 **The UI's subfolders** (10d). Every file moves once. A mixin doesn't move,
@@ -755,10 +756,13 @@ path, which tests don't cover).
   snake_case modules inside them, and the new packages `Encounters/`,
   `Logs/` and `Data/`? *Suggestion:* yes, as step 10 lists them.
   `Encounters/` rather than putting the code in `Campaigns/`, so that
-  folder stays content a GM edits.
+  folder stays content a GM edits. *Built (R35), for the parts done so
+  far:* the campaign folders' modules are snake_case, and 10.0's checks
+  follow these conventions. The new packages come with 10b.
 - **Q9. The one-time migration scripts** (`Tools/migrate_monster_*.py`,
   476 lines, all run). *Suggestion:* delete them. git keeps them, and
   `generate_monsters.py` already writes the format they migrated to.
+  *Built (R35):* deleted.
 - **Q10. Merge or rename?** `Summons.py` into `Fight/summons.py` and
   `WildShape.py` into `Fight/wild_shape.py`, or keep two modules each with
   telling names? *Suggestion:* merge, since both results stay under the
@@ -770,7 +774,8 @@ path, which tests don't cover).
 - **Q12. `FEATURE_GAPS.md` and `rules.txt`.** *Suggestion:* move them as
   step 10's table says, unchanged. Whether `FEATURE_GAPS.md`'s open items
   go into `Notes/discovered-issues.md` is a separate triage, not part of a
-  move.
+  move. *Built (R35):* `Notes/combat-feature-gaps.md` and
+  `SourceTexts/RulesDefinitions/rules_definitions.txt`, both unchanged.
 
 ## Revisions
 
@@ -1528,6 +1533,68 @@ path, which tests don't cover).
   - **Next:** the Use / Cast apply path (`_apply_row`,
     `_apply_effect_to_targets`, `_give_badge_modifiers`), then a hit's
     triggers (R32), on the same `Step`.
+- **R35 (step 10: 10.0, 10a and 10c's renames, 2026-11-24).** Built with
+  Q8, Q9 and Q12's suggestions (none answered yet); Q10 and Q11 weren't
+  needed.
+  - **10.0, the rule:** three ratchets in `tests/test_combat_ui_structure.py`,
+    each an allowlist that fails on a new entry and on a listed one that's
+    clean now. *Loose files:* everything directly in `Combat/` besides
+    `KEPT_IN_COMBAT` (`Definitions.py`, `CHEATSHEET.md`, the two the
+    "Done when" keeps, so the allowlist itself can reach empty).
+    *Name clashes:* modules under `Combat/` named alike ignoring case and
+    `_`, besides `__init__.py` and the files every folder of a kind has by
+    design: `campaign.py` and `encounters.py` in a campaign folder, and,
+    not in the plan, `monsters.py` and `monsters_homebrew.py` in a
+    generated `Monsters/CR_*/` (27 and 10 of them). Those are matched with
+    their case, so the campaigns' `Campaign.py` counted as a clash until
+    10c lowercased them. An entry lists the clash's modules, so one that
+    gains or loses a module fails too. *Tools:* the plan's "nothing outside
+    `Tools/` imports `Combat.Tools`" would have listed the tests of
+    hand-run scripts forever (`test_encounter_loading` tests
+    `prepare_encounters`, `test_player_log_stats` the statistics report,
+    and `balance-monster`'s `check_monster.py` reuses `monster_score`). So
+    the rule is that `Tools/` holds no runtime code: only `tests/` and the
+    skills' scripts import `Combat.Tools`, and never a module that other
+    code imports. That listed exactly `monster_effect_text`'s importers.
+    Each check failed on a planted violation (a loose file, a
+    `Fight/definitions.py`, a `Fight/` module importing
+    `prepare_encounters`, which also flagged `test_encounter_loading`).
+  - **10a:** deleted `Combat/PlayerLogs/main_party.json` (nothing reads
+    `Combat/PlayerLogs/`: the code only ever opens a campaign's own) and
+    the three `migrate_monster_*.py` (Q9; `monster_enum_format.py`'s
+    docstring named one). Moved `rules.txt` to
+    `SourceTexts/RulesDefinitions/rules_definitions.txt`: `SourceTexts/`
+    holds only PascalCase folders of snake_case `.txt` files, and
+    `RulesGlossary/` is the `rules-glossary` skill's generated tree.
+    `FEATURE_GAPS.md` is `Notes/combat-feature-gaps.md`, unchanged.
+    `Tools/monster_effect_text.py` is `Fight/monster_effect_text.py`, its
+    importers repointed (`monster_actions.py`, `monster_enum_format.py`,
+    8 test files, path text in `MonsterAbilities.py`). Out of `Tools/`,
+    `test_text_readers` scans it, so it joined that test's `AUTHORING`
+    like `MonsterStatText.py` and `MonsterAbilityText.py`: it reads text
+    where content is written and once as an old log loads, never in a
+    fight.
+  - **10c:** `CombatUIQt/asker.py` → `window_asker.py`,
+    `CombatUIQt/resources.py` → `resources_mixin.py`, each campaign's
+    `Campaign.py` → `campaign.py` and Curse of the Lich's `Players.py` →
+    `players.py` (two `git mv`s each, through a temporary name).
+    `ENCOUNTERS.md` has no "add a campaign" section; its file table's
+    `Campaign.py` row is the one place it named the file.
+  - **Not in the plan:** `CombatUIQt/logger.py` and `Fight/logger.py`
+    clash too (R32 made them after step 10 was written). It's on the
+    allowlist, and the layout table now has a row for it:
+    `window_logger.py`, like `window_asker.py`.
+  - **Counts:** loose files in `Combat/` besides the two kept 18 → 16;
+    name clashes 6 → 3 (`logger`, and `summons` and `wildshape`, which
+    10b's merges take); runtime importers of `Combat.Tools` 9 → 0.
+  - **Left for step 8** (prose): `HOWTO.md` (`Campaign.py` in "add a
+    campaign", the `Combat.Tools.monster_effect_text` and
+    `migrate_monster_*` command rows), `Combat/CHEATSHEET.md`
+    (`Campaign.py` twice), the `combat-simulator` agent
+    (`Campaign.py` twice), `monster-stat-blocks/monster-abilities.md`
+    (`python -m Combat.Tools.monster_effect_text`), and `Notes/`'s
+    `explicit-attributes-plan.md` and `discovered-issues.md` (the old
+    `Tools/monster_effect_text.py` path).
 
 ## Discovered issues
 
