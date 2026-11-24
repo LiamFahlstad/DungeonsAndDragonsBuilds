@@ -79,6 +79,7 @@ from Combat.Fight.saves import (
     HEALING,
     TEMP_HP,
     EffectOption,
+    _roll_d20,
     roll_bonuses,
     roll_extra_damage,
 )
@@ -427,7 +428,7 @@ class TurnPanelMixin(CombatWindowState):
                 extra=reach.modifiers,
                 sight=reach.sight,
             )
-            d20 = self._roll_d20_for_attack(plan.mode)
+            d20 = _roll_d20(plan.mode)
             # What its modifiers add (Bless's 1d4), rolled after the d20.
             added, bonus_notes = roll_bonuses(plan)
             notes = (*plan.notes, *bonus_notes, *reach.notes, *reach.warnings)
@@ -533,13 +534,6 @@ class TurnPanelMixin(CombatWindowState):
             None,
         )
         return hit_rider(row) if row is not None else None
-
-    def _roll_d20_for_attack(self, mode: str) -> int:
-        """A d20 with Advantage or Disadvantage, or neither ("Neutral")."""
-        first, second = random.randint(1, 20), random.randint(1, 20)
-        if mode == "Advantage":
-            return max(first, second)
-        return min(first, second) if mode == "Disadvantage" else first
 
     def _attack_hits(
         self, d20: int, total: int, attacker: dict | None = None

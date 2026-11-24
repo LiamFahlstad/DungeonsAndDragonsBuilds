@@ -21,7 +21,6 @@ ROLLERS = {
     "rolled_damage",
     "roll_bonuses",
     "_roll_d20",
-    "_roll_d20_for_attack",
     "roll_save",
     "roll_attack",
     "roll_planned_attack",
@@ -48,7 +47,6 @@ ROLL_SITES: dict[tuple[str, str, str], str] = {
     ("saves.py", "rolled_damage", "roll_dice"): "helper",
     ("saves.py", "read_damage", "rolled_damage"): "the Damage field: a total",
     ("saves.py", "read_hit_points", "rolled_damage"): "the Damage field: a total",
-    ("turn_panel_mixin.py", "_roll_d20_for_attack", "randint"): "helper",
     ("turn_panel_mixin.py", "_recharge_roll", "randint"): "helper",
     # The Custom Effect dialog
     ("use_cast/dialog.py", "_damage_preview", "rolled_damage"): "a preview only",
@@ -82,7 +80,7 @@ ROLL_SITES: dict[tuple[str, str, str], str] = {
         "monsters_roll_concentration off (the default): on the card"
     ),
     # The main window
-    ("turn_panel_mixin.py", "_roll_action", "_roll_d20_for_attack"): (
+    ("turn_panel_mixin.py", "_roll_action", "_roll_d20"): (
         "the Attack roll field, typed instead of pressing the button"
     ),
     ("turn_panel_mixin.py", "_roll_action", "roll_bonuses"): (

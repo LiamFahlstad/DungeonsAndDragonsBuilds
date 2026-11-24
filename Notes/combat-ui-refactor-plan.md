@@ -76,7 +76,7 @@ and the few others a step touches, not the character-sheet tests. Steps 3,
 | 8 | Docs, agents and skills point at the new layout | S | Not started |
 | 9 | Large files split into one module per job, with a file-size ratchet | M | Started 2026-11-24 (R39): 9.0 **done** (the file-size ratchet: 9 modules over 1,000 lines, 8 to split, `arena_view.py` kept whole). 9a (Qt-free files) can start now; 9b (UI files) after step 7 |
 | 10 | Folders and names: `Combat/`'s loose modules into packages, clashing names apart, runtime code out of `Tools/`, stray files gone, `CombatUIQt/` in subfolders | M | Started 2026-11-24 (R35): 10.0 **done** (three ratchets in `test_combat_ui_structure.py`); 10a **done** (stray files gone or moved, `monster_effect_text.py` in `Fight/`: loose files in `Combat/` 18 → 16 besides the two kept, `Combat.Tools` runtime importers 9 → 0); 10c **done** (R35, R38: name clashes 6 → 2). Left: 10b (the loose modules, which take the `summons` and `wildshape` clashes), 10d (UI subfolders, with steps 7 and 9b) |
-| 11 | Loose ends: dead code and unused imports, code only tests call, one d20 roller, narrow `except`s, `print` to `logging`, `Tools/`' outputs | S | Started 2026-11-24 (R36): 11a **done** (R40: six dead functions and four unused imports gone, with their ratchet). 11b, 11c and 11e any time; 11d after 10b; 11f after Q15 |
+| 11 | Loose ends: dead code and unused imports, code only tests call, one d20 roller, narrow `except`s, `print` to `logging`, `Tools/`' outputs | S | Started 2026-11-24 (R36): 11a **done** (R40: six dead functions and four unused imports gone, with their ratchet); 11c **done** (R41: one d20 roller). 11b and 11e any time; 11d after 10b; 11f after Q15 |
 | 12 | The names left: `Fight/` modules named for one part of what they hold, `Effects/` and the third `Summons`, one name for the Use / Cast dialog, the campaigns' `CombatLogs/`, test names by package, `Tools/` and the scrapers, module headers | M | Not started (added 2026-11-24, R37). After steps 0 to 11 and step 8; 12.0 first; 12b's `Effects/` after Q17, 12c after Q16, 12d after Q18 |
 
 Steps 0-2 are cheap and safe and make the later ones easier, so do them
@@ -1959,6 +1959,20 @@ when" commands still run, plus the moved scraper and report script start.
     (was 1,457).
   - **Tests:** the verification list with the cascade, fight and arena
     tests passes (1,865), and `./typecheck.sh Combat` is clean.
+- **R41 (step 11c, one d20 roller, 2026-11-24).** `TurnPanelMixin._roll_d20_for_attack`
+  is gone, and `_roll_action` (a monster's attack button) calls
+  `Fight/saves.py`'s `_roll_d20`, imported with its `_` as step 9 keeps
+  private names. Checked first: the two bodies are the same statements
+  (two `random.randint(1, 20)`, then max, min or the first by the mode),
+  and every test that fixes the dice patches `random.randint` itself
+  (81 of them), which both read, so no patch now misses. None patched
+  either roller. `test_roll_sites` lost the helper from `ROLLERS` and its
+  own `randint` entry, and `_roll_action`'s entry names `_roll_d20` now.
+  `turn_panel_mixin.py` keeps `import random` for the initiative tie-break.
+  DI-034 (fixed) names the old roller as where its bug was, and stays as
+  written. The verification list with `test_roll_sites` and the attack
+  tests passes (1,557), and `./typecheck.sh Combat` is clean.
+  `turn_panel_mixin.py`'s `LONG_FILES` cap is 1,184 (was 1,190).
 
 ## Discovered issues
 
