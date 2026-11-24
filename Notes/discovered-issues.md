@@ -550,6 +550,16 @@ The script reads Combat/Tools/monster_cr_distributions_template.html (TEMPLATE_H
 **History**
 - 2026-11-24 main session (claude-opus-5-5): found
 
+### DI-117 · commit_plan.py can't record a case-only rename on Windows
+- **Status:** open
+- **Area:** git-commit
+- **Where:** `.claude/skills/commit-plans/commit_plan.py`
+
+On a case-insensitive filesystem, --path Combat/Campaigns/X/Campaign.py resolves to the renamed campaign.py, so the plan says 'no change against HEAD' and the old-case path's deletion can't be recorded. Also, a file that is a staged rename plus a working-tree edit (RM) blocks apply. Seen 2026-11-24 committing combat-ui-refactor-plan step 10c (commit 0d66e265), which was made by hand in a private index instead. Fix: let 'new' take an explicit --delete PATH compared case-sensitively against HEAD's tree (git ls-tree), and take content for an RM path from the working tree.
+
+**History**
+- 2026-11-24 main session (claude-opus-5-5): found
+
 ## Fixed
 
 ### DI-001 · Temporary Hit Points stack instead of keeping one amount
