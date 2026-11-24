@@ -540,6 +540,16 @@ Heal a player at 0 HP to 5 HP (of a larger maximum): the live fight has conditio
 **History**
 - 2026-11-24 main-session: found
 
+### DI-116 · generate_monster_cr_distributions.py needs a template that .gitignore keeps out of git
+- **Status:** open
+- **Area:** combat-simulator
+- **Where:** `Combat/Tools/generate_monster_cr_distributions.py:37`, `.gitignore:210`
+
+The script reads Combat/Tools/monster_cr_distributions_template.html (TEMPLATE_HTML) and fills its placeholder, but .gitignore's '*.html' (line 210) ignores the template, so it exists only on the machine that wrote it: on a fresh clone the script fails with FileNotFoundError. Fix: track the template (a '!' line in .gitignore, as for player_page.html, or rename it to a non-.html extension) and write the generated reports somewhere ignored (combat-ui-refactor-plan Q15). Found while surveying Combat/ for the plan's step 11, 2026-11-24.
+
+**History**
+- 2026-11-24 main session (claude-opus-5-5): found
+
 ## Fixed
 
 ### DI-001 · Temporary Hit Points stack instead of keeping one amount

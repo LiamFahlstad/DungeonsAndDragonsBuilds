@@ -73,6 +73,7 @@ and the few others a step touches, not the character-sheet tests. Steps 3,
 | 8 | Docs, agents and skills point at the new layout | S | Not started |
 | 9 | Large files split into one module per job, with a file-size ratchet | M | Not started. 9.0 (the ratchet) and 9a (Qt-free files) can start now; 9b (UI files) after step 7 |
 | 10 | Folders and names: `Combat/`'s loose modules into packages, clashing names apart, runtime code out of `Tools/`, stray files gone, `CombatUIQt/` in subfolders | M | Started 2026-11-24 (R35): 10.0 **done** (three ratchets in `test_combat_ui_structure.py`); 10a **done** (stray files gone or moved, `monster_effect_text.py` in `Fight/`: loose files in `Combat/` 18 → 16 besides the two kept, `Combat.Tools` runtime importers 9 → 0); 10c's `CombatUIQt/` and campaign-folder renames **done** (name clashes 6 → 3). Left: 10b (the loose modules, which take the `summons` and `wildshape` clashes), 10c's `logger.py` (R35), 10d (UI subfolders, with steps 7 and 9b) |
+| 11 | Loose ends: dead code and unused imports, code only tests call, one d20 roller, narrow `except`s, `print` to `logging`, `Tools/`' outputs | S | Not started (added 2026-11-24, R36). 11a-11c and 11e any time; 11d after 10b; 11f after Q15 |
 
 Steps 0-2 are cheap and safe and make the later ones easier, so do them
 first. Steps 3 and 4 are independent of each other. Step 6 needs step 5's
@@ -673,6 +674,78 @@ log from the command line, `Combat/Tools/prepare_encounters.py` checks a
 campaign and `monster_score.py` scores a monster (they find their files by
 path, which tests don't cover).
 
+### Step 11: loose ends *(small, any time)*
+
+A survey of `Combat/` outside `Monsters/` and `Tools/` (2026-11-24, R36)
+found it in good shape: no TODOs, 9 imports inside functions, 3 broad
+`except`s. What's left is small and doesn't fit steps 1 to 10. Each part is
+a commit of its own and changes no behaviour, apart from 11d (only a bug's)
+and 11f (where reports are written). The numbers are from that day; check
+each before you change it.
+
+- **11a. Dead code.**
+  - Functions nothing calls (a whole-repo name search, Qt and
+    `BaseHTTPRequestHandler` overrides left out):
+    `Campaigns/CurseOfTheLich/players.py`'s `get_players_group`,
+    `ConditionsMixin._take_dash` and `_stand_up`, `SpellsMixin._relink`,
+    and `TurnsMixin._is_last_turn`. R34 kept `_stand_up` and `_relink` as
+    wrappers, and none has a `CombatWindowState` stub left. Delete them.
+    Decision 2 covers names the tests use, and the tests use none of
+    these.
+  - Imports nothing uses (pyflakes, 4 hits): `player_view.py` imports
+    `first_number`; `conditions_mixin.py` imports `FEATURE` and `SPELL` at
+    line 22 and again at line 80; `Arena/arena.py` re-exports
+    `TRAIT_MOVEMENT` under a `noqa`, and nothing imports it from there.
+  - Then a ratchet in the structure test: no unused imports in `Combat/`
+    (an AST check like the others, since pyflakes isn't in
+    `requirements.txt`).
+- **11b. Code only the tests call.** 14 functions in the app have no
+  caller outside `tests/`. Decide each one:
+  - **Test hooks on a view, kept:** `arena_view.py`'s `area_color`,
+    `aiming_area`, `area_shown`, `hover_text`, `reach_shown` and
+    `cell_center`, and `map_painter.py`'s `block_shown`, `set_object` and
+    `pick_choice`. They read what the view shows or drive it the way a
+    click does. Give each a one-line "for tests" docstring if it lacks one.
+  - **Check whether the test should call the real path instead:**
+    `Arena/speeds.py`'s `speeds_text`, `Effects/modifiers.py`'s
+    `resists_all_damage`, `Fight/saves.py`'s `roll_attack`,
+    `SpellsMixin._apply_cast_spell` and `WildShapeMixin._wild_shape_uses_left`.
+    If the app does the same thing another way, the test moves to that way
+    and the function goes. If not, it's a hook and stays.
+- **11c. One d20 roller.** `TurnPanelMixin._roll_d20_for_attack` has the
+  same body as `Fight/saves.py`'s `_roll_d20` (advantage, disadvantage,
+  `randint`). The window calls the Fight one. `test_roll_sites`'
+  `ROLLERS` and `ROLL_SITES` entries for it go too, and no test
+  monkeypatches it today.
+- **11d. Broad `except Exception`s** that turn any bug into a silent
+  default: `dialogs_mixin.py:624` (a feature's description, `pass`),
+  `PlayerCombatant.py:135` (a spell becomes level 0) and `WildShape.py:161`
+  (a spell has no costly component). Each guards "a spell or feature the
+  factory doesn't know". Catch the exception `SpellFactory` and
+  `get_description` raise for that, so other errors show. This is
+  behaviour-preserving for every known spell and feature, which a test of
+  each confirms. Do it after 10b moves the last two.
+- **11e. `print` in the window.** `encounters_mixin.py` (2) and
+  `logging_mixin.py` (2) print to the terminal: a log set up or restarted,
+  an event not logged, an Undo. Send them through
+  `logging.getLogger(__name__)`, with the same text at INFO (DEBUG for
+  "Undid"), so tests and the explore harness can capture them. The
+  `__main__` blocks of `EncounterDifficulty.py` and
+  `monster_effect_text.py` keep their prints.
+- **11f. `Tools/`'s outputs** (Q15). Three scripts write their HTML into
+  `Combat/Tools/` (`monster_cr_compare.html`,
+  `monster_cr_distributions.html`, and `player_statistics_report.html` by
+  default into the campaign's folder), where `.gitignore`'s `*.html`
+  hides them. Two more files there come from scripts that are long gone
+  (`monster_credit_cost_report.html`, `monster_stats_report.html`), and
+  the template `generate_monster_cr_distributions.py` reads is ignored
+  too, so a fresh clone can't run it (DI-116, a fix of its own).
+
+**Done when:** the five dead functions and four unused imports are gone,
+with their ratchet; each of 11b's 14 is kept with a reason or gone; one
+d20 roller; no `except Exception` in `Combat/` outside `Tools/`; no
+`print` outside a `__main__` block or `Tools/`.
+
 ## 4. Coordination with the other plans
 
 - **Where they stand.** The effects plan is down to content (Phase 4.3,
@@ -776,6 +849,27 @@ path, which tests don't cover).
   go into `Notes/discovered-issues.md` is a separate triage, not part of a
   move. *Built (R35):* `Notes/combat-feature-gaps.md` and
   `SourceTexts/RulesDefinitions/rules_definitions.txt`, both unchanged.
+- **Q13. Two copies of the rules.** The Rules dialog reads
+  `Combat/rules.json` (159 entries, written in 2026-07 from what is now
+  `SourceTexts/RulesDefinitions/rules_definitions.txt`). The repo also has
+  the 2024 Rules Glossary (`SourceTexts/RulesGlossary/`, 155 entries) that
+  the `rules-glossary` skill keeps current, and the code and the
+  `rules-checker` agent cite it. Should the dialog read the glossary, so
+  there's one copy? *Suggestion:* yes, as its own change after 10b, since
+  it changes what the GM reads. Then `rules.json`, `rules_definitions.txt`
+  and 10b's `Data/rules_reference.*` row go, and the dialog's loader sits
+  with the glossary's reader. Until then, 10b moves them as its table
+  says.
+- **Q14. A folder for the combat tests?** 108 of `tests/`' 170 files are
+  combat tests, 44 of them `test_combat_ui_*`, all flat. *Suggestion:* no.
+  A flat folder with a prefix is easy to grep and to name in a command,
+  and a move would change every test path in the notes, skills and agent
+  prompts for little gain. Revisit if `tests/` passes about 250 files.
+- **Q15. Where `Tools/`' reports go.** *Suggestion:* `Output/Combat/`,
+  which is already ignored and where the repo's other generated pages go.
+  The template is tracked beside its script (DI-116), and the two stale
+  reports are deleted locally. `player_statistics_report.html` stays in
+  the campaign's folder, where the GM looks for it.
 
 ## Revisions
 
@@ -1595,6 +1689,19 @@ path, which tests don't cover).
     (`python -m Combat.Tools.monster_effect_text`), and `Notes/`'s
     `explicit-attributes-plan.md` and `discovered-issues.md` (the old
     `Tools/monster_effect_text.py` path).
+- **R36 (step 11 added, 2026-11-24).** The user asked for more clean-up
+  after step 10's first run. A survey of `Combat/` outside `Monsters/` and
+  `Tools/` checked the things steps 1 to 10 don't. Its tools were
+  pyflakes, a whole-repo name search for each function's callers, an AST
+  comparison of function bodies, and counts of broad `except`s, imports
+  inside functions, `print`s and TODOs. What it found is step 11 and
+  Q13-Q15. It found one bug outside the plan's scope, DI-116 (a script's
+  template that git ignores). Not taken up: imports inside functions (9,
+  five of them `CharacterContent`'s spell factory or converter, the rest
+  `rest`, `triggers`, `monster_effect_text` and `sys`; not checked one by
+  one, and `test_layering` already rules out hiding a cycle with
+  `TYPE_CHECKING`), TODOs (none), and duplicated code (one pair of 25+
+  node bodies, 11c).
 
 ## Discovered issues
 
@@ -1611,6 +1718,9 @@ path, which tests don't cover).
 - DI-115: a reopened fight gives a creature healed from 0 its conditions
   in another order (Bloodied before Prone). Found by the same probe, older
   than step 5.
+- DI-116: `generate_monster_cr_distributions.py` reads a template that
+  `.gitignore`'s `*.html` keeps out of git, so a fresh clone can't run it.
+  Found by step 11's survey (R36).
 
 ## Verification (every step)
 
