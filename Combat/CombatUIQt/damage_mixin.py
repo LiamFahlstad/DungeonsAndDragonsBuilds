@@ -32,13 +32,10 @@ from Combat.Fight.attacks import check_attack
 from Combat.Fight.health import (
     DEAD,
     DYING,
-    bloodied_change,
     damage_at_zero_hp,
     death_state,
     fail_death_save,
     give_temp_hp,
-    regain_hit_points,
-    resync_bloodied,
     revive,
     succeed_death_save,
 )
@@ -59,10 +56,11 @@ from Combat.Fight.player_knowledge import (
     _player_names,
     _seen,
     note_damage_defense,
-    note_health,
 )
 from Combat.Fight.saves import CustomEffect, roll_save, save_modifier
+from Combat.Fight.cascade import apply_bloodied, heal_target, note_health_change
 from .state import CombatWindowState
+from .steps import run_step
 from .undo import undoable
 
 # A Concentration save's DC: half the damage taken, between these.
@@ -97,17 +95,10 @@ class DamageMixin(CombatWindowState):
         return damage_type_modifier(target, dmg, damage_type)
 
     def _apply_bloodied_condition(self, char: dict, source: dict | None = None):
-        """Auto-apply/remove Bloodied condition based on HP threshold. Pass
-        `source` (the damage dealer/healer) to log the change with a source,
-        same as any other condition; omit it for silent resyncs (replay)."""
-        if source is None:
-            resync_bloodied(char)
-            return
-        change = bloodied_change(char)
-        if change is True:
-            self._add_condition_to(char, "Bloodied", source=source)
-        elif change is False:
-            self._remove_condition_from(char, "Bloodied", source=source)
+        """Bloodied given or taken off by char's Hit Points, logged from
+        `source`, or silently without one (replay): Combat/Fight/cascade.py's
+        apply_bloodied."""
+        run_step(self, apply_bloodied, char, source)
 
     def _apply_damage(self):
         """Apply damage as-is, with no resistance/vulnerability/immunity checks."""
@@ -621,10 +612,9 @@ class DamageMixin(CombatWindowState):
         return drops_to, notes
 
     def _note_health(self, char: dict):
-        """Note what the change of HP that's just over showed the players. The
-        log was written before it was done, and a continued fight needs it."""
-        note_health(char)
-        self._write_log(self._read_log())
+        """Note what the change of HP that's just over showed the players, and
+        save the fight state: cascade.py's note_health_change."""
+        run_step(self, note_health_change, char)
 
     def _damage_target(
         self,
@@ -804,48 +794,10 @@ class DamageMixin(CombatWindowState):
             self.heal_input.clear()
 
     def _heal_target(self, char: dict, heal: int, source: dict | None) -> bool:
-        """char regains `heal` Hit Points from source, up to its maximum,
-        counted in both their stats and logged; one at 0 HP comes to. Returns
-        False for a dead creature, which can't regain Hit Points until it's
-        revived (the card's Revive button). Heal and the Custom Effect dialog
-        share it."""
-        if death_state(char) == DEAD:
-            return False
-        source_name = source["name"] if source is not None else None
-        regained = regain_hit_points(char, heal, source)
-        actual_heal = regained.amount
-
-        heal_value = {
-            "heal": actual_heal,
-            "source_name": source_name,
-            "target_name": char["name"],
-        }
-
-        source_suffix = f" from {source_name}" if source_name else ""
-
-        if regained.came_to:
-            self._log_event(
-                f"{char['name']} regains consciousness with {char['hp']} HP{source_suffix}",
-                character=char["name"],
-                action=Action.HEAL,
-                value=heal_value,
-            )
-            # Regaining any Hit Points ends the Unconscious from 0 HP.
-            self._remove_condition_from(char, Condition.UNCONSCIOUS.value)
-        else:
-            self._log_event(
-                f"{char['name']} heals {actual_heal} HP{source_suffix}",
-                character=char["name"],
-                action=Action.HEAL,
-                value=heal_value,
-            )
-
-        # Auto-apply bloodied condition, attributed to whoever healed
-        self._apply_bloodied_condition(char, source=source)
-        self._note_health(char)
-
-        self._rebuild_card(char)
-        return True
+        """char regains `heal` Hit Points from source, logged; False for a dead
+        creature. Heal and the Custom Effect dialog share it: cascade.py's
+        heal_target."""
+        return run_step(self, heal_target, char, heal, source)
 
     @undoable
     def _revive(self, char: dict):

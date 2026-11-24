@@ -67,7 +67,7 @@ and the few others a step touches, not the character-sheet tests. Steps 3,
 | 2 | A typed combatant (`Combatant` TypedDict) | M | **Done** 2026-11-22, revised (R8): the schema and a key test; annotating signatures moved to step 5 |
 | 3 | The Use / Cast dialog as a class, its form-to-effects logic Qt-free | L | 3a **done** 2026-11-22 (R9): `use_cast/form.py`, dialog 1,580 → 1,440 lines; 3b **done** 2026-11-22 (R10): `_UseCastDialog`, `run()` 616 lines + 44 methods; 3c's move **done** (R11): `use_cast/dialog.py`, `conditions_mixin.py` 3,500 → 1,674 lines; 3c's split **done**, revised (R12): `run()` is 14 lines calling 10 builder methods, the longest 126; 3d **done** (R13): `do_apply` 146 → 50 lines over Qt-free `read_amount`, `check_applicable` and `build_effect`; reviewed (R14): no behaviour change; **step 3 done** |
 | 4 | The window built from panels, shortcuts as a table | M | **Done** 2026-11-23 (R15, R16): `_build_window` 680 → 13 lines over 12 builders (the longest 111); the shortcuts a table (`shortcuts.py`) checked against KEYBOARD_SHORTCUTS.md |
-| 5 | The Qt-free fight core (`Combat/Fight/`), one mixin at a time | XL | 5.1 **done** 2026-11-23 (R17): seven Qt-free modules moved to `Combat/Fight/`; 5.5's guard test in place; 5.2 **done** (R18): `Fight` holds the fight's state; 5.3 started (R19, R20): damage's defenses and arithmetic in `Combat/Fight/damage.py`, health (death state, healing, Temporary Hit Points, Death Saving Throws) in `Combat/Fight/health.py`; the map's questions (distance, sight, cover, range, Critical Hits within 5 feet) are `Fight` methods (R21); an attack roll's check is `Combat/Fight/attacks.py` (R22); gaining and losing a condition is `Combat/Fight/conditions.py` (R23); the turn order is `Fight`'s (R24); casting's slots, recipients and timers are `Combat/Fight/spells.py` (R25); joining and leaving the turn order are `Fight`'s, summons' questions and carry-over `Combat/Fight/summons.py` (R26); Wild Shape's uses and badge `Combat/Fight/wild_shape.py` (R27); a short rest's regains and Hit Dice `Combat/Fight/rests.py` (R28); saving, loading and replaying the fight `Combat/Fight/log.py` (R29); 5.3's areas are each started; what's left of them (features, triggers, the cascades a condition sets off, `_log_event`) waits for 5.4's `Asker` and step 6; 5.4 started (R30): the `Asker` asks "out of resources, go ahead anyway?", and the checks are `Combat/Fight/resources.py`; the core logs through a `Logger` (Decision 4, R32), first spending an Action, a feature use or a slot; what the players know is `Combat/Fight/player_knowledge.py` (R33); **5.4 continues with conditions and their cascades (R33), then the Use / Cast apply path and triggers** |
+| 5 | The Qt-free fight core (`Combat/Fight/`), one mixin at a time | XL | 5.1 **done** 2026-11-23 (R17): seven Qt-free modules moved to `Combat/Fight/`; 5.5's guard test in place; 5.2 **done** (R18): `Fight` holds the fight's state; 5.3 started (R19, R20): damage's defenses and arithmetic in `Combat/Fight/damage.py`, health (death state, healing, Temporary Hit Points, Death Saving Throws) in `Combat/Fight/health.py`; the map's questions (distance, sight, cover, range, Critical Hits within 5 feet) are `Fight` methods (R21); an attack roll's check is `Combat/Fight/attacks.py` (R22); gaining and losing a condition is `Combat/Fight/conditions.py` (R23); the turn order is `Fight`'s (R24); casting's slots, recipients and timers are `Combat/Fight/spells.py` (R25); joining and leaving the turn order are `Fight`'s, summons' questions and carry-over `Combat/Fight/summons.py` (R26); Wild Shape's uses and badge `Combat/Fight/wild_shape.py` (R27); a short rest's regains and Hit Dice `Combat/Fight/rests.py` (R28); saving, loading and replaying the fight `Combat/Fight/log.py` (R29); 5.3's areas are each started; what's left of them (features, triggers, the cascades a condition sets off, `_log_event`) waits for 5.4's `Asker` and step 6; 5.4 started (R30): the `Asker` asks "out of resources, go ahead anyway?", and the checks are `Combat/Fight/resources.py`; the core logs through a `Logger` (Decision 4, R32), first spending an Action, a feature use or a slot; what the players know is `Combat/Fight/player_knowledge.py` (R33); conditions and their cascades are `Combat/Fight/cascade.py`, run on a `Step` whose `StepResult` the window draws (R34); **5.4 continues with the Use / Cast apply path, then triggers** |
 | 6 | One refresh path after every GM operation | M | Not started |
 | 7 | Mixins into composed views and one module per dialog; `CombatWindowState` gone | L | Not started |
 | 8 | Docs, agents and skills point at the new layout | S | Not started |
@@ -1426,6 +1426,109 @@ path, which tests don't cover).
     on the window rather than ask in the middle of a rule, so they stay
     dialogs.
 
+- **R34 (step 5.4, conditions and their cascades, 2026-11-24).** Gaining
+  and losing a condition, and everything it sets off, is
+  `Combat/Fight/cascade.py`. It holds functions of a `Step`, which call each
+  other as the methods did:
+  - `add_condition` / `remove_condition`, `take_dash`, `stand_up` and
+    `keep_hit_points_in_maximum`;
+  - `apply_bloodied`, `heal_target` and `note_health_change`;
+  - `leave_wild_shape` and `spend_action` (the phase check and
+    `use_action`);
+  - `end_concentration_spells`, `end_linked_effects`,
+    `end_spell_effects`, `holder_of`, `relink`, `forget_effect_on` and
+    `clear_concentration_if_unused`.
+
+  The 16 window methods of those names are wrappers with the same
+  signatures, `@undoable` where they were (Decision 2), and so is
+  `_add_action_use`'s spending.
+  - **The StepResult** (`Combat/Fight/step.py`). A `Step` is what an
+    operation is given: the `Fight`, the `Logger`, the `Asker` and the
+    `StepResult` it fills in. The result holds who changed (each once, by
+    identity), the status texts in order, `save` (`_note_health`'s fight
+    state), `views` (`_leave_wild_shape`'s `_refresh_views`) and `spent`
+    (actions spent, for the Opportunity Attack buttons a spent Reaction
+    takes away and the selected card).
+
+    The window's `run_step` (`Combat/CombatUIQt/steps.py`) makes the
+    Step, runs the function and draws the result once at the end. Section
+    2's sketch had `status: str` and `prompts`; the cascade needed a list
+    of statuses, and `save`, `views` and `spent`, and no prompts yet.
+  - **Two things the cascade did partway through that aren't drawing:**
+    - `_log_event` clears the status line. So a line logged through the
+      Step clears the statuses said before it, and the status line ends as
+      it did. Standing up with a Speed of 0 warns, then a later line can
+      clear the warning.
+    - `_leave_wild_shape`'s `_refresh_views` ran `_land_fallers`, which
+      logs a fall. A knocked-out Druid aloft fell between "loses Wild
+      Shape" and the grapple ending. Its rules are now
+      `Combat/Fight/falling.py`'s `land_fallers`, called at that point, so
+      the line stays where it was. `ArenaMixin._land_fallers` calls it too.
+  - **Order arguments.**
+    - Cards are redrawn at the end instead of partway through.
+      `_rebuild_card` writes nothing into any combatant dict: a check
+      around it over 1,762 UI tests compared every combatant before and
+      after 3,739 rebuilds and found no change.
+    - The fight state is saved at the end instead of right after the
+      players' notes. Nothing reads the file in between, and every line
+      logged in between saved the fight as it was then.
+    - `_refresh_views` runs at the end of the wrapper instead of right
+      after leaving the form. What runs after that point in the cascade
+      (grapples ended, Dodge lost) makes nobody a new faller, and the rest
+      of `_refresh_views` only draws. Between encounters it also empties
+      `_hit_prompts`, which nothing in the cascade reads.
+    - Undo: an inner `@undoable` call used to open a step of its own when
+      a non-`@undoable` method ran with none open. Now the core calls the
+      core. No GM operation reaches the cascade that way. A probe over
+      2,074 UI tests found only tests calling `_remove_from_fight`
+      directly, and a static walk of the window's callers found only the
+      silent Bloodied resync (no source), which never had a step.
+  - **Checked against the code before it:** a scratch script drove 15
+    cascades through the window, on both the old code and the new:
+    knock-out with Concentration, Wild Shape, a grapple and a fall;
+    Prone after Unconscious; standing up; healing at 0; taking the form's
+    badge off; leaving with the Bonus Action used; Dash; Aid ending;
+    Concentration ended; a spell that ends with its conditions; Bloodied.
+    It dumped the log events, the status, every combatant's data, the
+    Undo history and the hit prompts after each cascade and after undoing
+    everything. The two dumps are identical.
+  - **Patched methods:** no test patches a moved method. The only patch
+    near the cascade is `_ask_concentration_save`, which damage calls,
+    not the cascade.
+  - **What stays in the window:** drawing what the result says,
+    `_give_badge_modifiers` (it rolls a badge's modifiers, part of the Use
+    / Cast apply path), `_start_concentration`, `_tick_active_spells`,
+    `_remove_active_spell` and `_assume_wild_shape`. Those log too, and
+    move with the apply path and the turns. `_add_action_use` keeps the
+    selection, its question and its own phase check. The phase-aware
+    `_action_lack` is `Combat/Fight/resources.py`'s `counted_action_lack`,
+    shared by `ResourcesMixin` and the cascade.
+  - **Tests:** `tests/test_fight_conditions_cascade.py` (13 tests without
+    Qt, expected values from the Rules Glossary and the Druid's Wild
+    Shape text). Each guarded line was broken once and its test failed
+    (16 breaks). The full suite passes (12,165). `./typecheck.sh Combat`
+    reports 0 errors.
+    - A `combat-ui-explore` probe on `time_loop_pr_square` covered
+      Maggie's Entangle ended by a knock-out, healing her at 0, Wild Shape
+      lost to damage, and Hanna's drake grappling and Stunned, each with
+      `undo_roundtrip` and `replay_matches`. It found DI-113 (known),
+      DI-114 and DI-115, all the same on the code before this slice.
+    - An `ashelm_church` sweep found nothing.
+  - **Lines:** `conditions_mixin.py` 1,636 → 1,457, `damage_mixin.py`
+    1,000 → 952, `spells_mixin.py` 446 → 374, `wild_shape_mixin.py` 178 →
+    149, `arena_mixin.py` 2,108 → 2,086. New: `cascade.py` 498, `step.py`
+    78, `falling.py` 46, `steps.py` 60.
+  - **Review:** the `code-reviewer` found no behaviour change. It checked
+    each body against HEAD, the drawing moved to the end, an AST walk of
+    every window entry point for Undo, the patched methods, and that no
+    module under `Combat/Fight` imports Qt. Its one note: `_take_dash`,
+    `_stand_up`, `_relink` and `_forget_effect_on` have no callers left.
+    They stay as wrappers for now (Decision 2), and a later cleanup can
+    drop them with their stub.
+  - **Next:** the Use / Cast apply path (`_apply_row`,
+    `_apply_effect_to_targets`, `_give_badge_modifiers`), then a hit's
+    triggers (R32), on the same `Step`.
+
 ## Discovered issues
 
 - DI-112: pyright error in `tests/test_roll_sites.py:135`, which was
@@ -1435,6 +1538,12 @@ path, which tests don't cover).
   them as None. It's older than step 5 (the order of `_assume_wild_shape`
   is unchanged since 1e01a850). Found by a `combat-ui-explore` probe in
   step 5's review.
+- DI-114: a grappler that leaves the fight (a summon vanishing at 0 HP)
+  leaves its target Grappled. Found by step 5.4's cascade probe (R34),
+  older than step 5.
+- DI-115: a reopened fight gives a creature healed from 0 its conditions
+  in another order (Bloodied before Prone). Found by the same probe, older
+  than step 5.
 
 ## Verification (every step)
 

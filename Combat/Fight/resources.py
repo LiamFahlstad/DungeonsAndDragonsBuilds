@@ -14,7 +14,7 @@ Each check returns what's missing as one line, "<resource>: <why>", or None
 when there's enough of it.
 """
 
-from Combat.Definitions import Action, ActionCost
+from Combat.Definitions import Action, ActionCost, Phase
 from Core.Rules import ACTIONS_PER_TURN
 
 from .asker import Asker
@@ -40,6 +40,16 @@ def action_lack(char: dict, action_type: str | None) -> str | None:
     if action_type == ActionCost.REACTION:
         return "Reaction: already used (it comes back at the start of their turn)"
     return f"{action_type}: already used this turn"
+
+
+def counted_action_lack(
+    phase: Phase, char: dict, action_type: str | None
+) -> str | None:
+    """action_lack, while the action economy is counted: not between
+    encounters (Phase.PARTY), where there are no turns."""
+    if phase == Phase.PARTY:
+        return None
+    return action_lack(char, action_type)
 
 
 def feature_uses_left(char: dict, name: str) -> int | None:

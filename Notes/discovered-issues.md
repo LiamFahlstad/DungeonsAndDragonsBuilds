@@ -520,6 +520,26 @@ _assume_wild_shape gives the badge with _add_condition_to (which logs, and so wr
 **History**
 - 2026-11-23 main session (combat-ui-explore probe, refactor step 5 review): found
 
+### DI-114 · Combat UI: a grappler that leaves the fight (a summon vanishing at 0 HP, dismissed) leaves its target Grappled
+- **Status:** open
+- **Area:** combat-simulator
+- **Where:** `Combat/CombatUIQt/summons_mixin.py:351`
+
+Rules Glossary, Grappling: the condition ends if the distance between the Grappled target and the grappler exceeds the grapple's range. _remove_from_fight ends what the leaver concentrates on but not its grapples, so a target it held keeps Grappled (and its grappler key) naming a creature no longer in the fight. Repro (time_loop_pr_square): Hanna summons her Drake Companion, the drake grapples Guard Dog 1 (_add_condition_to(dog, 'Grappled', drake)), deal the drake more than its HP: it vanishes, and the dog is still Grappled. Fix: in _remove_from_fight, remove Grappled from grappled_by(char, characters) as Incapacitated does (Combat/Fight/cascade.py add_condition). Older than step 5.4 (same on 6db2ccba).
+
+**History**
+- 2026-11-24 main-session: found
+
+### DI-115 · Combat UI: a reopened fight gives a healed-from-0 creature its conditions in another order (Bloodied before Prone)
+- **Status:** open
+- **Area:** combat-simulator
+- **Where:** `Combat/Fight/log.py`
+
+Heal a player at 0 HP to 5 HP (of a larger maximum): the live fight has conditions ['Prone', 'Bloodied'] (Unconscious ends, Prone stays, then Bloodied), and the reopened fight (explore.py replay_matches) has ['Bloodied', 'Prone']. Cosmetic (card badge order), but replay_matches reports it. Repro: probe on time_loop_pr_square: knock Maggie out with damage, _apply_heal 5, replay_matches. Older than step 5.4 (same on 6db2ccba).
+
+**History**
+- 2026-11-24 main-session: found
+
 ## Fixed
 
 ### DI-001 · Temporary Hit Points stack instead of keeping one amount

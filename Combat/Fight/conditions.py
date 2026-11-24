@@ -2,9 +2,8 @@
 step 5.3, conditions): gaining or losing one, as the combatant and the
 fight's statistics see it. What follows from it (Concentration broken, a
 Wild Shape form left, grapples ended, a linked badge taken off with its
-conditions) and the log line stay the combat window's
-(ConditionsMixin._add_condition_to, _remove_condition_from) until the log
-moves."""
+conditions) and the log line are cascade.py's add_condition and
+remove_condition."""
 
 from dataclasses import dataclass
 

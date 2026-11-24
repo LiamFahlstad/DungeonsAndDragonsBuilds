@@ -12,22 +12,9 @@ from PyQt6.QtWidgets import (
     QTreeWidgetItem,
 )
 
-from Combat.Arena.arena import (
-    DASHES_KEY,
-    MOVED_KEY,
-    dashes,
-    grappled_by,
-    movement_ft,
-    movements,
-    position,
-    remaining_ft,
-    stand_up_ft,
-    walking_speed_ft,
-)
 from Combat.Arena.lasting import AREA_KEY, find_area
 from Combat.Definitions import (
     Action,
-    ActionCost,
     CombatStatus,
     ConditionRule,
     Phase,
@@ -54,26 +41,21 @@ from Combat.Effects.active_effects import (
 )
 from Combat.Effects.modifiers import (
     attack_plan,
-    has_condition,
     hit_plan,
     hit_point_maximum,
     hit_point_maximum_notes,
-    loses_dodge,
     rolled_modifiers,
 )
 from Model.Content.CombatModifiers import Modifier
 from Combat.Effects.triggers import (
     AttackOutcome,
     FailedSaveOutcome,
-    OpportunityAttack,
     UsesOutcome,
     outcome_firings,
     reduced_damage,
 )
-from Combat.WildShape import current_form, form_badge
-from Core.Definitions import Condition
 from Model.Content.CombatModifiers import AttackKind, HitPointMaximum
-from Model.Content.StandardActions import DASH, DODGE, HIDDEN
+from Model.Content.StandardActions import HIDDEN
 from Combat.Fight.attack_rolls import (
     armor_in_use,
     has_shield,
@@ -94,7 +76,6 @@ from Combat.Fight.resources import (
     feature_lack,
     monster_action_lack,
     spell_slot_lack,
-    use_action,
 )
 from Combat.Fight.saves import (
     ABILITIES,
@@ -117,8 +98,16 @@ from Combat.Fight.saves import (
     with_extra_damage,
 )
 from .spells_mixin import spell_badge_color, spell_badge_description
-from Combat.Fight.conditions import gain_condition, incapacitates, lose_condition
+from Combat.Fight.cascade import (
+    add_condition,
+    keep_hit_points_in_maximum,
+    remove_condition,
+    spend_action,
+    stand_up,
+    take_dash,
+)
 from .state import CombatWindowState
+from .steps import run_step
 from .tree_filter import filter_category_tree
 from .undo import undoable
 from .use_cast.dialog import (
@@ -234,105 +223,17 @@ class ConditionsMixin(CombatWindowState):
         *,
         counted: bool = True,
     ):
-        """char gets `cond` from `source`, logged. Not `counted` in the fight's
-        stats: a spell's badge beside the conditions it gave (Friends beside
-        Charmed), which aren't one more condition."""
-        if cond == DASH:
-            # Each Dash this turn is its Speed again on the map, a second
-            # one (Cunning Action's) too, which the badge it has can't say.
-            self._take_dash(char)
-        # Who grapples it, the condition and the statistics:
-        # Combat/Fight/conditions.py's gain_condition.
-        if gain_condition(char, cond, source, counted=counted):
-            source_name = source["name"] if source is not None else None
-            cond_value = {
-                "condition": cond,
-                "source_name": source_name,
-                "target_name": char["name"],
-            }
-            if not counted:
-                # So replaying it doesn't count it either (stats.py's
-                # is_counted_condition).
-                cond_value["counted"] = False
-            source_suffix = (
-                f" from {source_name}"
-                if source_name and source_name != char["name"]
-                else ""
-            )
-            self._log_event(
-                f"{char['name']} gains {cond}{source_suffix}",
-                character=char["name"],
-                action=Action.ADD_CONDITION,
-                value=cond_value,
-            )
-            self._rebuild_card(char)
-            # Break concentration if an incapacitating condition is applied to a concentrating character
-            if (
-                incapacitates(cond)
-                and cond != "Concentrating"
-                and "Concentrating" in char.get("conditions", [])
-            ):
-                self._remove_condition_from(char, "Concentrating", source=char)
-            # So does a Wild Shape form (which a knock-out's Unconscious ends too).
-            if incapacitates(cond) and current_form(char):
-                self._leave_wild_shape(char, reason=cond)
-            # And its grapples (Rules Glossary, Grappling: "The condition also
-            # ends if the grappler has the Incapacitated condition").
-            if incapacitates(cond):
-                for held in grappled_by(char, self.characters):
-                    self._remove_condition_from(
-                        held, Condition.GRAPPLED.value, source=char
-                    )
-            # The Dodge action's benefits are lost to Incapacitated or a
-            # Speed of 0 (Grappled); they don't count from then on anyway.
-            if cond != DODGE and DODGE in char["conditions"] and loses_dodge(char):
-                self._remove_condition_from(char, DODGE)
+        """char gets `cond` from `source`, logged, and what that sets off:
+        Combat/Fight/cascade.py's add_condition."""
+        run_step(self, add_condition, char, cond, source, counted=counted)
 
     def _take_dash(self, char: dict):
-        """char takes the Dash action (or a feature's): as much movement
-        again as its Speed, this turn, a GM-only log line."""
-        char[DASHES_KEY] = dashes(char) + 1
-        movement = movement_ft(char)
-        if movement is not None:
-            self._log_event(
-                f"{char['name']} dashes: {movement} ft. of movement this turn",
-                character=char["name"],
-                public=False,
-            )
+        """char takes the Dash action: cascade.py's take_dash."""
+        run_step(self, take_dash, char)
 
     def _stand_up(self, char: dict):
-        """char rights itself from Prone, as Prone is taken off it on its own
-        turn while it's on the map: that spends its movement (stand_up_ft:
-        half its Speed, 5 ft. with Athlete's Hop Up), counted as moved, a
-        GM-only log line. Prone ending on another's turn (the GM correcting
-        a mistake, a feature standing it up) or off the map spends nothing.
-        A Speed of 0, or too little movement left, is warned about, not
-        refused, as a move past its Speed is."""
-        if position(char) is None or not any(
-            char is c for c in self._current_turn_group()
-        ):
-            return
-        cost = stand_up_ft(char)
-        if cost is None:
-            return
-        name = char["name"]
-        given = [s for s, m in movements(char) if m.stands_up_ft == cost]
-        why = f" ({given[0]})" if given else ""
-        left = remaining_ft(char)
-        char[MOVED_KEY] = int(char.get(MOVED_KEY, 0)) + cost
-        self._log_event(
-            f"{name} stands up{why}: {cost} ft. of movement,"
-            f" {remaining_ft(char)} ft. left this turn",
-            character=name,
-            public=False,
-        )
-        if walking_speed_ft(char) == 0:
-            self._show_status(f"{name} has a Speed of 0 and can't stand up.")
-        elif cost > left:
-            self._show_status(
-                f"{name} stands up with {left} ft. of movement left; it costs"
-                f" {cost} ft."
-            )
+        """char rights itself from Prone: cascade.py's stand_up."""
+        run_step(self, stand_up, char)
 
     def _give_badge_modifiers(
         self,
@@ -380,84 +281,14 @@ class ConditionsMixin(CombatWindowState):
 
     def _keep_hit_points_in_maximum(self, char: dict, reason: str):
         """char has no more Hit Points than its maximum, now that `reason`
-        changed it (Aid ending), logged so the party's history replays it.
-        Bloodied goes by the new maximum."""
-        top = hit_point_maximum(char)
-        if char["hp"] > top:
-            lost = char["hp"] - top
-            char["hp"] = top
-            self._log_event(
-                f"{char['name']} has {top} HP, the most its Hit Point maximum"
-                f" allows without {reason}",
-                character=char["name"],
-                action=Action.LOSE_HIT_POINTS,
-                value={
-                    "hp_delta": -lost,
-                    "reason": reason,
-                    "target_name": char["name"],
-                },
-            )
-        self._apply_bloodied_condition(char, source=char)
+        changed it: cascade.py's keep_hit_points_in_maximum."""
+        run_step(self, keep_hit_points_in_maximum, char, reason)
 
     @undoable
     def _remove_condition_from(self, char: dict, cond: str, source: dict | None = None):
-        # Its lasting effect, a Dash's movement and who grappled it go with
-        # it: Combat/Fight/conditions.py's lose_condition.
-        lost = lose_condition(char, cond)
-        if lost is not None:
-            stands_for, emptied = lost.stands_for, lost.emptied
-            # What it did to the Hit Point maximum (Aid) goes with it.
-            if hit_point_maximum(char) != lost.maximum_before:
-                self._keep_hit_points_in_maximum(char, cond)
-            source_name = source["name"] if source is not None else None
-            cond_value = {
-                "condition": cond,
-                "source_name": source_name,
-                "target_name": char["name"],
-            }
-            source_suffix = (
-                f" from {source_name}"
-                if source_name and source_name != char["name"]
-                else ""
-            )
-            self._log_event(
-                f"{char['name']} loses {cond}{source_suffix}",
-                character=char["name"],
-                action=Action.REMOVE_CONDITION,
-                value=cond_value,
-            )
-            if cond == Condition.PRONE.value:
-                self._stand_up(char)
-            if (
-                cond == Condition.UNCONSCIOUS.value
-                and not has_condition(char, Condition.PRONE)
-                and not is_immune_to(char, Condition.PRONE.value)
-                and self._char_death_state(char) != "dead"
-            ):
-                # Unconscious: "When this condition ends, you remain Prone."
-                # Its own Prone went with it (held_conditions), so the
-                # creature is given one, logged, which standing up ends.
-                self._add_condition_to(char, Condition.PRONE.value, counted=False)
-            self._forget_effect_on(char, cond)
-            # A spell's badge and the conditions it stands for go together
-            # (Friends and Charmed): those no other badge stands for, and a
-            # badge left standing for none. Not Unconscious from 0 HP.
-            for other in [*stands_for, *emptied]:
-                if (
-                    other in char["conditions"]
-                    and not is_linked(char, other)
-                    and (other != Condition.UNCONSCIOUS.value or char["hp"] > 0)
-                ):
-                    self._remove_condition_from(char, other, source=source)
-            if cond == CombatStatus.CONCENTRATING.value:
-                char.pop("concentration_checks", None)
-                self._end_concentration_spells(char)
-            # Taking the Wild Shape badge off is leaving the form early. The
-            # badge is gone already, so the form goes too, without asking.
-            form = current_form(char)
-            if form is not None and cond == form_badge(form):
-                self._leave_wild_shape(char, ask=False)
-            self._rebuild_card(char)
+        """char loses `cond`, logged, and what that sets off:
+        Combat/Fight/cascade.py's remove_condition."""
+        run_step(self, remove_condition, char, cond, source)
 
     @undoable
     def _add_condition(self):
@@ -1558,19 +1389,9 @@ class ConditionsMixin(CombatWindowState):
             [self._action_lack(char, action_type)],
         ):
             return
-        use_action(self.logger, char, action_type)
-        if action_type == ActionCost.REACTION:
-            # Its other Opportunity Attack buttons go: the Reaction is spent
-            # (arena step 23).
-            left = tuple(
-                p
-                for p in self._hit_prompts
-                if not (isinstance(p, OpportunityAttack) and p.attacker is char)
-            )
-            if len(left) != len(self._hit_prompts):
-                self._hit_prompts = left
-                self._refresh_turn_prompts()
-        self._refresh_selected_card()
+        # A spent Reaction's other Opportunity Attack buttons go (arena step
+        # 23), and the selected card shows what's left: steps.py's show_step.
+        run_step(self, spend_action, char, action_type)
 
     @undoable
     def _remove_action_use(self, action_type: str):

@@ -162,8 +162,6 @@ from Combat.Arena.speeds import (
     VERBS,
     WALK,
     altitude_ft,
-    fall_reason,
-    falling_dice,
     hovers,
     mode_of,
     speed_of_mode,
@@ -178,6 +176,7 @@ from Core.Definitions import Condition
 from Core.Rules import SECONDS_PER_ROUND
 
 from .arena_view import ArenaView, MoveKind, token_rows
+from Combat.Fight.falling import land_fallers
 from Combat.Fight.effect_options import (
     _spell_named,
     area_effect_row,
@@ -422,33 +421,12 @@ class ArenaMixin(CombatWindowState):
         self._refresh_views()
 
     def _land_fallers(self):
-        """Whoever is aloft and can't stay so (speeds.fall_reason: Prone,
-        Incapacitated, its Fly Speed 0 or gone, and it can't hover) falls to
-        the ground: its altitude goes and it moves by its Speed, with a
+        """Whoever is aloft and can't stay so falls to the ground, with a
         GM-only line and the status saying how far it fell and what that
-        deals (Rules Glossary, Falling). Run as the views are brought up to
-        date, so whatever made it fall (a condition, a spell ending) is in
-        the same undo step."""
-        if self.phase != Phase.COMBAT:
-            return
-        lines = []
-        for char in self.characters:
-            why = fall_reason(char)
-            if why is None:
-                continue
-            feet = altitude_ft(char)
-            char.pop(ALTITUDE_KEY, None)
-            char.pop(MODE_KEY, None)
-            dice = falling_dice(feet)
-            hurt = (
-                f" {dice} Bludgeoning damage, and it lands Prone unless it takes"
-                " none (Falling)."
-                if dice
-                else " No damage: less than 10 ft. (Falling)."
-            )
-            line = f"{char['name']} falls {feet} ft. ({why}):" + hurt
-            self._log_event(line, character=char["name"], public=False)
-            lines.append(line)
+        deals (Combat/Fight/falling.py's land_fallers). Run as the views are
+        brought up to date, so whatever made it fall (a condition, a spell
+        ending) is in the same undo step."""
+        lines = land_fallers(self.fight, self.logger)
         if lines:
             self._show_status(" ".join(lines))
 

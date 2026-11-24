@@ -8,7 +8,7 @@ temporary Hit Points and a "Wild Shape (<form>)" badge, and from then on the
 card, the turn column's buttons, attacks against them and their saves are
 the form's. They leave it with the card menu or by taking the badge off (a
 Bonus Action), or by gaining an incapacitating condition, which a knock-out's
-Unconscious is (ConditionsMixin). While in a form, they can't cast spells
+Unconscious is (leaving it is Combat/Fight/cascade.py's leave_wild_shape). While in a form, they can't cast spells
 (Combat/WildShape.can_cast_in_form). Each change is logged with an action, so
 the player log's replay keeps a Druid in their form into the next encounter.
 """
@@ -25,9 +25,7 @@ from Combat.WildShape import (
     assume_form,
     can_cast_in_form,
     current_form,
-    form_badge,
     known_forms,
-    leave_form,
     wild_shape_feature,
 )
 from Model.Character import Character
@@ -35,7 +33,9 @@ from Model.Character import Character
 from Combat.Fight.conditions import incapacitated_by
 from Combat.Fight.effect_options import feature_action_cost
 from Combat.Fight.wild_shape import describe_form_badge, wild_shape_uses_left
+from Combat.Fight.cascade import leave_wild_shape
 from .state import CombatWindowState
+from .steps import run_step
 from .styles import QSS
 from .undo import undoable
 
@@ -133,39 +133,10 @@ class WildShapeMixin(CombatWindowState):
         self, char: dict, reason: str | None = None, *, ask: bool = True
     ):
         """char leaves its form: by choice (reason None), a Bonus Action, or
-        because of `reason` ("Unconscious", "Wild Shape again"), no action.
-        With its Bonus Action used already, the GM is asked whether to leave
-        anyway, unless the form's badge is already off (ask=False)."""
-        form_now = current_form(char)
-        if form_now is None:
-            return
-        feature = wild_shape_feature(char)
-        action_cost = feature_action_cost(feature) if feature is not None else None
-        pays = reason is None and action_cost is not None
-        if (
-            pays
-            and ask
-            and not self._go_ahead_anyway(
-                char, f"Leave {form_now} form", [self._action_lack(char, action_cost)]
-            )
-        ):
-            return
-        form = leave_form(char)
-        if form is None:
-            return
-        if pays:
-            assert action_cost is not None  # pays says so
-            self._add_action_use(action_cost, char, ask=False)
-        because = f" ({reason})" if reason else ""
-        self._log_event(
-            f"{char['name']} leaves {form} form{because}",
-            character=char["name"],
-            action=Action.LEAVE_WILD_SHAPE,
-            value={"form": form},
-        )
-        self._remove_condition_from(char, form_badge(form), source=char)
-        self._rebuild_card(char)
-        self._refresh_views()
+        because of `reason`, no action; the GM asked through the Asker when
+        the Bonus Action is used already, unless ask=False:
+        Combat/Fight/cascade.py's leave_wild_shape."""
+        run_step(self, leave_wild_shape, char, reason, ask=ask)
 
     def _can_cast_or_say(self, caster: dict, spell_name: str) -> bool:
         """Whether caster can cast `spell_name`, saying why not if it can't."""
