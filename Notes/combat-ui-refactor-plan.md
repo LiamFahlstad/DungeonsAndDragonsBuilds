@@ -22,10 +22,13 @@ what a fight does:
    module per job (step 9).
 6. **A folder says what's in it, and a name means one thing.** `Combat/`'s
    loose modules go into packages named for their job, two modules never
-   share a name, and runtime code leaves `Tools/` (step 10).
+   share a name, and runtime code leaves `Tools/` (step 10). Once the rest
+   is done, a module's name covers everything in it and one thing has one
+   name everywhere (step 12).
 
 Written 2026-11-21. Steps 0 to 2 built 2026-11-22. Step 9 (splitting large
-files) and step 10 (folders and names) added 2026-11-23.
+files) and step 10 (folders and names) added 2026-11-23. Step 11 (loose
+ends) and step 12 (the names left after everything else) added 2026-11-24.
 
 **What never changes during this plan:** the behaviour, the widget
 `objectName`s (the tests, the golden widget dumps and the `combat-ui-explore`
@@ -74,12 +77,15 @@ and the few others a step touches, not the character-sheet tests. Steps 3,
 | 9 | Large files split into one module per job, with a file-size ratchet | M | Not started. 9.0 (the ratchet) and 9a (Qt-free files) can start now; 9b (UI files) after step 7 |
 | 10 | Folders and names: `Combat/`'s loose modules into packages, clashing names apart, runtime code out of `Tools/`, stray files gone, `CombatUIQt/` in subfolders | M | Started 2026-11-24 (R35): 10.0 **done** (three ratchets in `test_combat_ui_structure.py`); 10a **done** (stray files gone or moved, `monster_effect_text.py` in `Fight/`: loose files in `Combat/` 18 → 16 besides the two kept, `Combat.Tools` runtime importers 9 → 0); 10c's `CombatUIQt/` and campaign-folder renames **done** (name clashes 6 → 3). Left: 10b (the loose modules, which take the `summons` and `wildshape` clashes), 10c's `logger.py` (R35), 10d (UI subfolders, with steps 7 and 9b) |
 | 11 | Loose ends: dead code and unused imports, code only tests call, one d20 roller, narrow `except`s, `print` to `logging`, `Tools/`' outputs | S | Not started (added 2026-11-24, R36). 11a-11c and 11e any time; 11d after 10b; 11f after Q15 |
+| 12 | The names left: `Fight/` modules named for one part of what they hold, `Effects/` and the third `Summons`, one name for the Use / Cast dialog, the campaigns' `CombatLogs/`, test names by package, `Tools/` and the scrapers, module headers | M | Not started (added 2026-11-24, R37). After steps 0 to 11 and step 8; 12.0 first; 12b's `Effects/` after Q17, 12c after Q16, 12d after Q18 |
 
 Steps 0-2 are cheap and safe and make the later ones easier, so do them
 first. Steps 3 and 4 are independent of each other. Step 6 needs step 5's
 results. Step 7 comes last of the restructuring steps. Steps 9's and 10's
 parts fit in between (see each step), and step 8 runs after the last part
-of both, so the docs are updated once.
+of both, so the docs are updated once. Step 12 runs after everything else,
+step 8 included, once the layout is final, so nothing is renamed twice; it
+updates the prose that names what it renames in the same commit.
 
 ## 1. Findings (2026-11-21)
 
@@ -746,6 +752,158 @@ with their ratchet; each of 11b's 14 is kept with a reason or gone; one
 d20 roller; no `except Exception` in `Combat/` outside `Tools/`; no
 `print` outside a `__main__` block or `Tools/`.
 
+### Step 12: the names left *(renames only, after steps 0 to 11)*
+
+Steps 9 and 10 split the long files and move the loose ones. What they
+leave (a survey, 2026-11-24, R37) is names a reader still has to learn the
+hard way: modules named for one part of what they hold, one dialog with
+three names, "log" for four different things, a package whose name means
+something else everywhere outside it, and tests named after modules that
+no longer exist. This step comes last, after step 8, when steps 7, 9 and
+10 have made the layout final, so nothing is renamed twice.
+
+It's renames and moves only, done the way step 10 says ("How a move is
+done": `git mv`, every importer in the same commit, no shims, the
+path-following tests and lists moved along). Two differences:
+
+- Step 8 has run by then, so each commit also updates the prose that names
+  the old name: `Combat/CHEATSHEET.md`, `HOWTO.md`, the agent prompts and
+  skills, and the other two plans.
+- 12c renames a method the tests call and two test files, which Decision 2
+  and step 10's "class and function names don't change" rule out (Q16).
+
+The sizes and counts below are from 2026-11-24, before steps 5 to 11
+finish. Check each row against the code of the day: if a later step
+already fixed a name, drop the row.
+
+**12.0. The rules first**, in `tests/test_combat_ui_structure.py`, as
+ratchets like 10.0's:
+
+- The name-clash check also folds a trailing `s`, so `Fight/step.py` and
+  `CombatUIQt/steps.py` clash, and so would `rest.py` and `rests.py` if
+  step 7 left them. Anything else it finds goes on the allowlist with a
+  row in 12a, or with the reason it's fine.
+- Test names: a `tests/test_*.py` that tests one `Combat/` package starts
+  with that package's prefix (12e). An allowlist of today's exceptions,
+  which may only shrink.
+
+**12a. Modules named for one part of what they hold** (one commit per row):
+
+| Now | Goes to | Why |
+|---|---|---|
+| `Fight/saves.py` (594 lines: saving throws, but also rolling attacks and the d20, `CustomEffect` and `EffectOption`, `damage_text`, the `known_*` numbers, and reading the damage and Hit Points the GM typed) | Split by job, under step 9's rules for a split although it's under the limit: `EffectOption` and `CustomEffect` to `picker/` (as `picker/option.py`), reading typed amounts to `picker/amounts.py`, rolling to `rolls.py`. `saves.py` keeps `SaveResult`, `save_modifier`, `roll_save`, `save_reminder`, `is_immune_to`. The code's seams decide the rest | 36 modules import it, most for something that isn't a save |
+| `Fight/attacks.py` (56) and `Fight/attack_rolls.py` (157) | One `Fight/attacks.py`: a roll checked against its target, the rolls the GM types in, and `roll_attack` from `saves.py` | Three modules answer "does this attack hit?". 9a's sketch put `attack_rolls` in `picker/`, but it's about hitting, not about what the picker offers |
+| `Fight/log.py` | `Fight/replay.py` | It records the fight into its log and rebuilds a fight from one. "Log" also names `Fight/logger.py` (the `Logger` protocol), `Fight/public_log.py` (the log as the players read it) and step 10's `Logs/` (the files on disk) |
+| `Fight/stats.py` | `Fight/battle_statistics.py` | The Statistics dialog's counters. Everywhere else in the repo "stats" means ability scores or a stat block |
+| `Fight/cascade.py` | `Fight/condition_cascades.py` | What gaining or losing a condition sets off. In `Fight/` alone, "cascade" doesn't say of what |
+| `CombatUIQt/steps.py` | `CombatUIQt/window_steps.py` (in `window/` after 10d) | It runs a `Fight/step.py` operation from the window: named like `window_asker.py` and `window_logger.py`, and no clash (12.0) |
+
+**12b. Packages and content modules named for what's in them.**
+
+- `Combat/Effects/` holds the *lasting* effects on a combatant: badges,
+  their modifiers and their triggers (its `__init__.py` says so).
+  Everywhere else "combat effects" means what using a spell or feature
+  does: `Model/Content/CombatEffect.py`, every `combat_effects()` method,
+  the `combat-effects` skill, and the effects plan's own title. Q17:
+  rename it `Combat/LastingEffects/` (85 importing files, one commit), and
+  `Arena/lasting.py` (areas that stay on the map) to
+  `Arena/lasting_areas.py`, so "lasting" always says what lasts. It waits
+  until no effects-plan step has those files open, like 9a's splits.
+- `Model/Content/Summons.py` (`SummonSpec`, what a feature summons) is the
+  third module called Summons, beside the `Combat/Summons.py` that 10b
+  merges and `Fight/summons.py`. `Model/`'s modules are PascalCase and
+  named after their main class (`CombatEffect.py`, `Weapon.py`), so it
+  becomes `Model/Content/SummonSpec.py` (21 importing files). The rest of
+  `Model/Content/` is the character engine's layout and stays (Q19).
+
+**12c. One name for the Use / Cast dialog** (Q16, one commit). The GM sees
+"Use / Cast": the button, the card's menu entry, the window title and
+`KEYBOARD_SHORTCUTS.md` all say so, and its code is in `use_cast/`. But
+the method that opens it is `_show_custom_condition_dialog` (167 uses in
+the tests), 14 docs, skill and agent files call it "the Custom Effect
+dialog", `CustomEffect`'s docstring calls it "the Custom dialog", and its
+tests are `test_combat_ui_custom_conditions.py` and
+`test_combat_ui_custom_effect.py`. Rename the method
+`_show_use_cast_dialog`, the tests `test_combat_ui_use_cast_*.py`, and
+the prose "the Use / Cast dialog", keeping "the picker" for its list of
+rows. `CustomEffect` keeps its name: it is the custom effect the dialog
+applies. The `combat-effects`, `spell-combat-effects` and
+`feature-combat-effects` descriptions are how Claude picks those, so the
+agent index is rebuilt (its hook does that) and checked.
+
+**12d. The campaigns' encounter log folder** (Q18).
+`Campaigns/<C>/CombatLogs/` holds the encounter logs, and everything else
+calls them that: `EncounterLogs.py` (step 10's `Logs/encounter_log.py`),
+the window, `prepare_encounters.py`, and its sibling folder `PlayerLogs/`.
+So `EncounterLogs/`. Unlike every other row here, this moves the GM's play
+data, which git ignores, so the commit's message says which folders to
+move by hand on the one machine that has them (39 files name the folder,
+`.gitignore` among them).
+
+**12e. Test names follow the package they test.** Q14 keeps `tests/`
+flat, and most prefixes already say what's tested: `test_arena_*` (15
+files), `test_fight_*` (13) and `test_combat_ui_*` (44). The rest:
+
+- `Effects/`' tests are `test_active_effects.py`,
+  `test_effect_modifiers.py`, `test_combat_modifiers.py` and the nine
+  `test_*_triggers.py`: `test_effects_*` (or `test_lasting_*` after Q17).
+- `test_summons.py` and `test_wild_shape_forms.py` test what 10b merged
+  into `Fight/summons.py` and `Fight/wild_shape.py`:
+  `test_fight_summon_options.py` and `test_fight_wild_shape_forms.py`.
+- `test_log_files.py`: `test_logs_files.py`; `test_encounter_loading.py`
+  tests `Tools/prepare_encounters.py` and `Encounters/`, so
+  `test_encounters_loading.py`.
+- Kept as they are: tests of content (`test_spell_combat_effects.py`,
+  `test_monster_*`, `test_feature_summons.py`) and the cross-cutting checks
+  (`test_layering.py`, `test_roll_sites.py`, `test_text_readers.py`, the
+  structure test), each on 12.0's allowlist with that reason.
+
+A rename only, never a merge of two files, so `git log --follow` and the
+test counts stay comparable. Notes, skills and agent prompts that name a
+test file by path are updated in the same commit.
+
+**12f. `Tools/` and the scrapers.**
+
+- `Tools/scrape_monsters.py` scrapes aidedd.org like
+  `Scrapers/AideddSpellScraper.py` beside it, and `Scrapers/` holds every
+  other scraper. It becomes `Scrapers/AideddMonsterScraper.py`, named like
+  its neighbours, and still writes `Combat/Data/monsters_raw.json`. The
+  `content-scraper` agent's description adds it.
+- `create_player_statistics_report.py` is the one report script that
+  starts with `create_`; the other two are `generate_*`. It becomes
+  `generate_player_statistics_report.py`.
+- The rest of `Tools/` keeps its paths, for step 10's reasons.
+
+**12g. Module headers that say what's there** (one commit, docstrings
+only). 15 of `CombatUIQt/`'s modules open with "X mixin for CombatAppQt."
+and 19 of `Fight/`'s cite the step that moved them ("(Notes/
+combat-ui-refactor-plan.md, step 5.3, ...)"), which is history git keeps
+once the plan is done. After step 7 and the renames above, each module's
+first line says what it holds, and cites a plan only for a rule that was
+decided there.
+
+**The conventions this step adds** to step 10's:
+
+- A module's name covers everything in it. When a module gains a second
+  job, its name or a split follows, whatever its size.
+- A UI module is named for what the GM sees (`cards/`, `turn_column/`),
+  never for a rule `Fight/` has a module for. 12.0's clash check enforces
+  it.
+- A Qt module that implements a `Fight/` protocol is `window_<name>.py`.
+- One thing has one name in the UI, the code, the tests and the prose:
+  the one the GM sees.
+
+**The order.** 12.0 first. Then 12a, 12f and 12g any time within the step,
+one commit per row. 12b's `SummonSpec.py` any time, its `Effects/` rename
+after Q17 and once the effects plan has nothing open there. 12c after Q16,
+12d after Q18. 12e last, after 12b's rename has fixed the `Effects/`
+prefix.
+
+**Done when:** 12.0's checks pass, their allowlists holding only entries
+kept with a reason; `git grep` for each old name finds nothing outside
+`Notes/`' Revisions; the full suite and pyright pass; and step 10's "Done
+when" commands still run, plus the moved scraper and report script start.
+
 ## 4. Coordination with the other plans
 
 - **Where they stand.** The effects plan is down to content (Phase 4.3,
@@ -870,6 +1028,31 @@ d20 roller; no `except Exception` in `Combat/` outside `Tools/`; no
   The template is tracked beside its script (DI-116), and the two stale
   reports are deleted locally. `player_statistics_report.html` stays in
   the campaign's folder, where the GM looks for it.
+- **Q16. Renaming a name the tests use** (12c). Decision 2 keeps every
+  private name the tests call, and step 10 keeps class and function names.
+  May step 12 rename one whose name says something other than what it
+  does? *Suggestion:* yes, only in step 12 and only for such a name (today
+  just `_show_custom_condition_dialog`), by an exact search and replace
+  over `Combat/`, `tests/` and the prose in one commit. Everything else
+  stays as Decision 2 says.
+- **Q17. Rename `Combat/Effects/`?** It holds the lasting effects on a
+  combatant, while "combat effects" means what a spell or feature does
+  everywhere else. *Suggestion:* `Combat/LastingEffects/`, with
+  `Arena/lasting.py` → `lasting_areas.py`, once the effects plan has no
+  step open in it. It's 85 importing files and that plan's references, but
+  one mechanical commit. The alternative, keeping `Effects/` and saying so
+  in its `__init__.py`, leaves every reader to find out.
+- **Q18. `CombatLogs/` → `EncounterLogs/`?** *Suggestion:* yes, as 12d
+  says, with the GM moving the three campaigns' folders by hand (back them
+  up first). No code that reads the old name, since the logs live on one
+  machine.
+- **Q19. `Model/Content/`'s combat vocabulary.** 11 of its 20 modules are
+  what content uses to describe a fight (`CombatEffect`, `CombatArea`,
+  `CombatModifiers`, `CombatTriggers`, `StandardActions`, `Summons`, ...).
+  A `Model/Content/Combat/` subpackage? *Suggestion:* no. Hundreds of
+  content files import them by their path, the character engine's layout
+  is outside this plan, and their names already say "Combat". Only the
+  clashing `Summons.py` is renamed (12b).
 
 ## Revisions
 
@@ -1702,6 +1885,21 @@ d20 roller; no `except Exception` in `Combat/` outside `Tools/`; no
   one, and `test_layering` already rules out hiding a cycle with
   `TYPE_CHECKING`), TODOs (none), and duplicated code (one pair of 25+
   node bodies, 11c).
+- **R37 (step 12 added, 2026-11-24).** The user asked for still more
+  file, folder and name clean-up, to follow everything else in the plan.
+  A survey of every module's name against its docstring and contents, of
+  names shared across `Combat/`, `Model/` and `tests/` (folding case,
+  `_` and a plural `s`), and of the words the UI, code and prose use for
+  one thing found what step 12 lists, and Q16-Q19. Not taken up:
+  `Arena/arena.py` inside `Arena/` (a package's main class in a module of
+  its name is common and clear); `Effects/sight.py` beside
+  `Arena/senses.py` (the small shared vocabulary `Arena/` and `Effects/`
+  both import; moving it would make the two packages import each other
+  more, not less); `Tools/`' subfolders (nine scripts, and their paths are
+  in CLAUDE.md, the skills and the permissions); `Combat/Definitions.py`'s
+  case (it mirrors `Core/Definitions.py`, 53 importers); and the
+  `__init__.py` that `Combat/`, `Tools/` and `Campaigns/` lack, like every
+  top-level package in the repo.
 
 ## Discovered issues
 
@@ -1745,3 +1943,6 @@ d20 roller; no `except Exception` in `Combat/` outside `Tools/`; no
 - Step 10's moves: the same, plus `git grep` for the old module path finds
   nothing outside `Notes/` and the prose step 8 updates, and the commands
   in step 10's "Done when" still run.
+- Step 12's renames: as step 10's, except that `git grep` for the old name
+  must find nothing outside `Notes/`' Revisions, since step 8's prose pass
+  has already run.
