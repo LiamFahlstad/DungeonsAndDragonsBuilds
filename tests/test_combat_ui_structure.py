@@ -6,6 +6,8 @@ Each rule starts from today's numbers, as test_layering.py does:
 - No function in Combat/ is longer than MAX_FUNCTION_LINES, except the ones
   in LONG_FUNCTIONS, and those may not grow past their listed length. One
   that is short enough now must come off the list, so it can't go stale.
+- No module in Combat/ is longer than MAX_FILE_LINES (Step 9), except the
+  ones in LONG_FILES, capped at their listed length, the same way.
 - CombatWindowState (Combat/CombatUIQt/state.py) has at most
   MAX_WINDOW_STATE_STUBS methods: each is a call from one mixin into
   another, which the plan's steps 5 and 7 remove.
@@ -113,6 +115,78 @@ def test_long_function_list_is_current():
     lengths = _function_lengths()
     stale = [key for key in LONG_FUNCTIONS if lengths.get(key, 0) <= MAX_FUNCTION_LINES]
     assert not stale, f"Gone or short enough now; take them off LONG_FUNCTIONS: {stale}"
+
+
+MAX_FILE_LINES = 1000  # Q6
+
+# Repo-relative path -> the most lines it may have, and what happens to it:
+# split in step 9a or 9b, or why it stays whole.
+LONG_FILES = {
+    "Combat/CombatUIQt/arena_mixin.py": (2086, "split in 9b, after step 7"),
+    "Combat/Fight/effect_options.py": (2072, "split in 9a (Fight/picker/)"),
+    "Combat/CombatUIQt/use_cast/dialog.py": (
+        1908,
+        "9b moves its text helpers to use_cast/texts.py; UseCastDialog"
+        " stays whole (R12)",
+    ),
+    "Combat/CombatUIQt/conditions_mixin.py": (1457, "split in 9b, after step 7"),
+    "Combat/CombatUIQt/dialogs_mixin.py": (
+        1380,
+        "9b moves the More Info panel to dialogs/more_info.py",
+    ),
+    "Combat/CombatUIQt/turn_panel_mixin.py": (1190, "split in 9b, after step 7"),
+    "Combat/Effects/triggers.py": (1143, "split in 9a"),
+    "Combat/Effects/modifiers.py": (1120, "split in 9a"),
+    "Combat/CombatUIQt/arena_view.py": (
+        1005,
+        "stays whole: one job, drawing the map (ArenaView and the token rows"
+        " and terrain it draws)",
+    ),
+}
+
+
+def _file_lengths() -> dict[str, int]:
+    return {
+        path.relative_to(REPO).as_posix(): len(
+            path.read_text(encoding="utf-8").splitlines()
+        )
+        for path in _combat_files()
+    }
+
+
+def test_no_new_long_files():
+    too_long = {
+        key: lines
+        for key, lines in _file_lengths().items()
+        if lines > MAX_FILE_LINES and key not in LONG_FILES
+    }
+    assert not too_long, (
+        f"Modules over {MAX_FILE_LINES} lines; split them by job (plan step 9)"
+        f" or list them in LONG_FILES with the reason they stay whole: {too_long}"
+    )
+
+
+def test_long_files_do_not_grow():
+    lengths = _file_lengths()
+    grown = {
+        key: f"{lengths[key]} > {limit}"
+        for key, (limit, _) in LONG_FILES.items()
+        if key in lengths and lengths[key] > limit
+    }
+    assert not grown, (
+        "These long modules grew; put the new code in a module of its own"
+        f" instead: {grown}"
+    )
+
+
+def test_long_file_list_is_current():
+    lengths = _file_lengths()
+    stale = [key for key in LONG_FILES if lengths.get(key, 0) <= MAX_FILE_LINES]
+    assert not stale, f"Gone or short enough now; take them off LONG_FILES: {stale}"
+
+
+def test_every_long_file_says_why():
+    assert all(why.strip() for _, why in LONG_FILES.values())
 
 
 def _window_state_stubs() -> int:
