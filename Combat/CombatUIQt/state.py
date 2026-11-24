@@ -338,9 +338,6 @@ class CombatWindowState:
     def _report_uncaught_error(self, error_type, error, traceback_):
         raise NotImplementedError("WindowMixin._report_uncaught_error")
 
-    def _forget_effect_on(self, target: dict, condition: str):
-        raise NotImplementedError("SpellsMixin._forget_effect_on")
-
     def _held_by_effect(self, applied: dict, excluding: dict | None = None) -> bool:
         raise NotImplementedError("SpellsMixin._held_by_effect")
 

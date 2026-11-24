@@ -21,8 +21,6 @@ from Combat.Definitions import (
 )
 from Combat.Effects.active_effects import (
     CUSTOM,
-    FEATURE,
-    SPELL,
     ActiveEffect,
     active_effects,
     describe,
@@ -103,8 +101,6 @@ from Combat.Fight.cascade import (
     keep_hit_points_in_maximum,
     remove_condition,
     spend_action,
-    stand_up,
-    take_dash,
 )
 from .state import CombatWindowState
 from .steps import run_step
@@ -226,14 +222,6 @@ class ConditionsMixin(CombatWindowState):
         """char gets `cond` from `source`, logged, and what that sets off:
         Combat/Fight/cascade.py's add_condition."""
         run_step(self, add_condition, char, cond, source, counted=counted)
-
-    def _take_dash(self, char: dict):
-        """char takes the Dash action: cascade.py's take_dash."""
-        run_step(self, take_dash, char)
-
-    def _stand_up(self, char: dict):
-        """char rights itself from Prone: cascade.py's stand_up."""
-        run_step(self, stand_up, char)
 
     def _give_badge_modifiers(
         self,

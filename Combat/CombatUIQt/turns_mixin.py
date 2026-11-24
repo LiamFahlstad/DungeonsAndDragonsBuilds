@@ -49,10 +49,6 @@ class TurnsMixin(CombatWindowState):
         """Fight.current_turn_group (Combat/Fight/fight.py)."""
         return self.fight.current_turn_group()
 
-    def _is_last_turn(self) -> bool:
-        """Fight.is_last_turn (Combat/Fight/fight.py)."""
-        return self.fight.is_last_turn()
-
     @undoable
     def _advance_turn(self):
         """Combined Next Combatant / Next Round button handler. With the "skip

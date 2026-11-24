@@ -8,6 +8,9 @@ Each rule starts from today's numbers, as test_layering.py does:
   that is short enough now must come off the list, so it can't go stale.
 - No module in Combat/ is longer than MAX_FILE_LINES (Step 9), except the
   ones in LONG_FILES, capped at their listed length, the same way.
+- No module in Combat/ imports a name it never uses, or imports one name
+  twice at module level (Step 11a). There are none today, so there is no
+  allowlist.
 - CombatWindowState (Combat/CombatUIQt/state.py) has at most
   MAX_WINDOW_STATE_STUBS methods: each is a call from one mixin into
   another, which the plan's steps 5 and 7 remove.
@@ -49,8 +52,9 @@ LONG_FUNCTIONS = {
 # 207 at step 0; +4 at step 3c, so the Use / Cast dialog (use_cast/dialog.py)
 # can type its app as CombatWindowState instead of importing ConditionsMixin;
 # -1 at step 5.3's summons slice (_place_as_in_turn_order is Fight's, R26),
-# -1 at the log's (_take_combatants_from is Combat/Fight/log.py's, R29).
-MAX_WINDOW_STATE_STUBS = 209
+# -1 at the log's (_take_combatants_from is Combat/Fight/log.py's, R29);
+# -1 at step 11a (_forget_effect_on had no callers, R40).
+MAX_WINDOW_STATE_STUBS = 208
 MAX_INLINE_STYLES = 23
 
 
@@ -129,7 +133,7 @@ LONG_FILES = {
         "9b moves its text helpers to use_cast/texts.py; UseCastDialog"
         " stays whole (R12)",
     ),
-    "Combat/CombatUIQt/conditions_mixin.py": (1457, "split in 9b, after step 7"),
+    "Combat/CombatUIQt/conditions_mixin.py": (1445, "split in 9b, after step 7"),
     "Combat/CombatUIQt/dialogs_mixin.py": (
         1380,
         "9b moves the More Info panel to dialogs/more_info.py",
@@ -187,6 +191,72 @@ def test_long_file_list_is_current():
 
 def test_every_long_file_says_why():
     assert all(why.strip() for _, why in LONG_FILES.values())
+
+
+def _imported_names(node: ast.AST):
+    """(bound name, line) of each import under node; `import a.b` binds a."""
+    for child in ast.walk(node):
+        if isinstance(child, ast.Import):
+            for alias in child.names:
+                yield alias.asname or alias.name.split(".")[0], child.lineno
+        elif isinstance(child, ast.ImportFrom) and child.module != "__future__":
+            for alias in child.names:
+                if alias.name != "*":
+                    yield alias.asname or alias.name, child.lineno
+
+
+def _module_level_imports(tree: ast.Module):
+    """The imports run as the module loads, outside any function or class."""
+    stack: list[ast.AST] = list(tree.body)
+    while stack:
+        node = stack.pop()
+        if isinstance(node, (ast.Import, ast.ImportFrom)):
+            yield node
+        elif not isinstance(
+            node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)
+        ):
+            stack.extend(
+                child
+                for child in ast.iter_child_nodes(node)
+                if isinstance(child, ast.stmt)
+            )
+
+
+def _names_used(tree: ast.Module) -> set[str]:
+    """Every name the module reads, counting the ones in string annotations
+    (and, leniently, in any string that parses as an expression)."""
+    used = set()
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Name):
+            used.add(node.id)
+        elif isinstance(node, ast.Constant) and isinstance(node.value, str):
+            try:
+                inner = ast.parse(node.value, mode="eval")
+            except SyntaxError:
+                continue
+            used |= {name.id for name in ast.walk(inner) if isinstance(name, ast.Name)}
+    return used
+
+
+def test_no_unused_imports():
+    found = []
+    for path in _combat_files():
+        tree = ast.parse(path.read_text(encoding="utf-8"))
+        where = path.relative_to(REPO).as_posix()
+        if path.name != "__init__.py":  # A package's imports are its API.
+            used = _names_used(tree)
+            found += [
+                f"{where}:{line} {name} is never used"
+                for name, line in _imported_names(tree)
+                if name not in used
+            ]
+        first: dict[str, int] = {}
+        for node in sorted(_module_level_imports(tree), key=lambda node: node.lineno):
+            for name, line in _imported_names(node):
+                if name in first:
+                    found.append(f"{where}:{line} {name} again (line {first[name]})")
+                first.setdefault(name, line)
+    assert not found, f"Imports to take out: {found}"
 
 
 def _window_state_stubs() -> int:

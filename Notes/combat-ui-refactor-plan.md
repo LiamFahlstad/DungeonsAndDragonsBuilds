@@ -76,7 +76,7 @@ and the few others a step touches, not the character-sheet tests. Steps 3,
 | 8 | Docs, agents and skills point at the new layout | S | Not started |
 | 9 | Large files split into one module per job, with a file-size ratchet | M | Started 2026-11-24 (R39): 9.0 **done** (the file-size ratchet: 9 modules over 1,000 lines, 8 to split, `arena_view.py` kept whole). 9a (Qt-free files) can start now; 9b (UI files) after step 7 |
 | 10 | Folders and names: `Combat/`'s loose modules into packages, clashing names apart, runtime code out of `Tools/`, stray files gone, `CombatUIQt/` in subfolders | M | Started 2026-11-24 (R35): 10.0 **done** (three ratchets in `test_combat_ui_structure.py`); 10a **done** (stray files gone or moved, `monster_effect_text.py` in `Fight/`: loose files in `Combat/` 18 → 16 besides the two kept, `Combat.Tools` runtime importers 9 → 0); 10c **done** (R35, R38: name clashes 6 → 2). Left: 10b (the loose modules, which take the `summons` and `wildshape` clashes), 10d (UI subfolders, with steps 7 and 9b) |
-| 11 | Loose ends: dead code and unused imports, code only tests call, one d20 roller, narrow `except`s, `print` to `logging`, `Tools/`' outputs | S | Not started (added 2026-11-24, R36). 11a-11c and 11e any time; 11d after 10b; 11f after Q15 |
+| 11 | Loose ends: dead code and unused imports, code only tests call, one d20 roller, narrow `except`s, `print` to `logging`, `Tools/`' outputs | S | Started 2026-11-24 (R36): 11a **done** (R40: six dead functions and four unused imports gone, with their ratchet). 11b, 11c and 11e any time; 11d after 10b; 11f after Q15 |
 | 12 | The names left: `Fight/` modules named for one part of what they hold, `Effects/` and the third `Summons`, one name for the Use / Cast dialog, the campaigns' `CombatLogs/`, test names by package, `Tools/` and the scrapers, module headers | M | Not started (added 2026-11-24, R37). After steps 0 to 11 and step 8; 12.0 first; 12b's `Effects/` after Q17, 12c after Q16, 12d after Q18 |
 
 Steps 0-2 are cheap and safe and make the later ones easier, so do them
@@ -1929,6 +1929,36 @@ when" commands still run, plus the moved scraper and report script start.
     `ArenaView` (685 lines) and the token rows and terrain drawing it
     uses, one job. `state.py` (969, deleted by step 7) and
     `damage_mixin.py` (952) are under the limit.
+- **R40 (step 11a, dead code, 2026-11-24).** Each function's callers were
+  searched again over the whole repo (`git grep -w`, skills and tests
+  included) and each import checked with pyflakes, and the plan's list
+  held. Deleted: `get_players_group` (`RunBuildGroups.py` uses its
+  `_not_obmar` sibling), `ConditionsMixin._take_dash` and `_stand_up`,
+  `SpellsMixin._relink` and `TurnsMixin._is_last_turn` (`Fight`'s
+  `is_last_turn` stays: `pass_turn` uses it). **One more than the plan
+  listed:** `SpellsMixin._forget_effect_on`, which R34's review named with
+  `_take_dash`, `_stand_up` and `_relink`. 11a left it out because it had
+  a `CombatWindowState` stub, but nothing called the stub either, so both
+  went (`MAX_WINDOW_STATE_STUBS` 209 → 208). The `cascade` functions the
+  wrappers called stay: the cascade calls them itself. Their imports in
+  the two mixins went with the wrappers.
+  - **Imports:** `first_number` from `player_view.py`, `TRAIT_MOVEMENT`
+    and its `noqa` from `Arena/arena.py`, and `conditions_mixin.py`'s
+    first `FEATURE` and `SPELL` (from `Effects/active_effects`, line 22).
+    The second pair (from `Fight/saves`) is the binding the module used,
+    since it came later, so nothing that reads them changed.
+  - **The ratchet:** `test_no_unused_imports`, an AST check over
+    `_combat_files()`: an imported name the module never reads (string
+    annotations count, leniently any string that parses), or a name
+    imported twice at module level (imports inside functions, like
+    `monster_effect_text`'s two `import sys`, are each their own scope).
+    `__init__.py`s are skipped, since a package's imports are its API.
+    There's no allowlist: it found exactly pyflakes' four before the
+    deletions and none after, and failed on a planted unused import and
+    a planted repeat. `conditions_mixin.py`'s `LONG_FILES` cap is 1,445
+    (was 1,457).
+  - **Tests:** the verification list with the cascade, fight and arena
+    tests passes (1,865), and `./typecheck.sh Combat` is clean.
 
 ## Discovered issues
 

@@ -41,11 +41,10 @@ from itertools import count
 from typing import Iterable
 
 from Combat.Arena.geometry import DEFAULT_RULE, Cell, DistanceRule, rule_named
-from Combat.Arena.speeds import (  # noqa: F401 (TRAIT_MOVEMENT, movements: here too)
+from Combat.Arena.speeds import (
     BURROW,
     FLY,
     SWIM,
-    TRAIT_MOVEMENT,
     altitude_ft,
     mode_of,
     movements,

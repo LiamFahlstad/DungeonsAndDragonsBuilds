@@ -46,7 +46,6 @@ from .dialogs_mixin import (
     _display,
     _speed_text,
 )
-from Combat.Fight.monster_actions import first_number
 from Combat.Fight.fight import initiative_units, unit_label
 from Combat.Fight.player_knowledge import (
     _HEALTH_WORDS,

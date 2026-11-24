@@ -4,11 +4,6 @@ build the characters themselves (RunBuildGroups.py)."""
 from Combat.Campaigns.CurseOfTheLich.campaign import CAMPAIGN
 
 
-def get_players_group() -> list:
-    """The tracked party's character sheets."""
-    return CAMPAIGN.players()
-
-
 def get_players_group_not_obmar() -> list:
     """The party without Obmar."""
     return [

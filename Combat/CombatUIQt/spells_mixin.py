@@ -24,9 +24,7 @@ from Combat.Fight.cascade import (
     end_concentration_spells,
     end_linked_effects,
     end_spell_effects,
-    forget_effect_on,
     holder_of,
-    relink,
 )
 from .state import CombatWindowState
 from .steps import run_step
@@ -116,16 +114,6 @@ class SpellsMixin(CombatWindowState):
         """The caster and active spell, other than `excluding`, that put this
         condition on this target and still run: cascade.py's holder_of."""
         return holder_of(self.characters, applied, excluding)
-
-    def _relink(self, applied: dict, caster: dict, entry: dict):
-        """The condition in `applied` stays on its target, held by caster's
-        `entry`: cascade.py's relink."""
-        relink(self.characters, applied, caster, entry)
-
-    def _forget_effect_on(self, target: dict, condition: str):
-        """Target has lost condition, so no spell holds it any more:
-        cascade.py's forget_effect_on."""
-        run_step(self, forget_effect_on, target, condition)
 
     def _start_concentration(self, source: dict, name: str):
         """Source starts concentrating on `name`, which ends any concentration
