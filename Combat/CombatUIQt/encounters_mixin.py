@@ -5,6 +5,7 @@ continuing a fight in progress or restarting it; end one; and the party
 between encounters, where what the party does (spells, heals, damage, ...)
 is logged without turns to the between-encounters log (Combat/PlayerLog.py)."""
 
+import logging
 from pathlib import Path
 
 from PyQt6.QtCore import Qt
@@ -39,6 +40,8 @@ from Combat.Effects.modifiers import hit_point_maximum
 from Combat.Fight.log import take_combatants_from
 
 from .state import CombatWindowState
+
+_LOG = logging.getLogger(__name__)
 
 CONTINUE = "continue"
 RESTART = "restart"
@@ -132,7 +135,7 @@ class EncountersMixin(CombatWindowState):
             self._encounter_players(scenario, path),
             sheets=self._party_sheets,
         )
-        print(f"Set up {path} from {scenario.name}'s config")
+        _LOG.info(f"Set up {path} from {scenario.name}'s config")
 
     def _open_encounter_log(self, path: Path, restart: bool):
         """Play the current scenario's prepared log at `path`: continue the
@@ -156,7 +159,9 @@ class EncountersMixin(CombatWindowState):
                 self.player_log_file,
             )
             if backup is not None:
-                print(f"Restarted {path.name}; the old log is backed up to: {backup}")
+                _LOG.info(
+                    f"Restarted {path.name}; the old log is backed up to: {backup}"
+                )
             if len(self.player_log_data["sessions"]) != session_count:
                 self._write_player_log()
                 self._rebuild_players_from_log()

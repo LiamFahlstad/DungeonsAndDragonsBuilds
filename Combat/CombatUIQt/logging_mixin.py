@@ -3,6 +3,7 @@ the party's player log, appending events, Undo, and the log windows. What a
 log saves of the fight, a log's combatants taken back into it, a continued
 fight's turn order and the party's replay are Combat/Fight/log.py."""
 
+import logging
 from pathlib import Path
 
 from PyQt6.QtWidgets import QDialog, QMessageBox, QPushButton, QTextEdit, QVBoxLayout
@@ -41,6 +42,8 @@ from Combat.Fight.stats import (
     long_rest_archive_sessions,
 )
 from .state import CombatWindowState
+
+_LOG = logging.getLogger(__name__)
 
 
 class LoggingMixin(CombatWindowState):
@@ -139,7 +142,7 @@ class LoggingMixin(CombatWindowState):
             return False
         if self.log_file is None:
             # No encounter, and no tracked party to log between encounters.
-            print(f"Not logged (no encounter loaded): {event['text']}")
+            _LOG.info(f"Not logged (no encounter loaded): {event['text']}")
             return False
         # Before combat, nobody has perceived anyone yet.
         readable = (
@@ -197,7 +200,7 @@ class LoggingMixin(CombatWindowState):
 
         self._write_log(data)
         for event in reversed(undone):
-            print(f"Undid: {event}")
+            _LOG.debug(f"Undid: {event}")
         self._rebuild_cards()
         self._refresh_turn()
         self._refresh_turn_prompts()  # the buttons the undone step set off go

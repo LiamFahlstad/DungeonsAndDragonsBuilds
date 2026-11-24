@@ -1,4 +1,5 @@
 import argparse
+import logging
 import sys
 
 import Combat.Scenarios as Scenarios
@@ -7,6 +8,15 @@ from Combat.EncounterLogs import scenario_log_path
 from Combat.LogFiles import BrokenLogError
 
 if __name__ == "__main__":
+    # What the window says in the terminal (a log set up or restarted, a line
+    # not logged, an Undo): its message alone on stdout, at every level.
+    terminal = logging.StreamHandler(sys.stdout)
+    terminal.setFormatter(logging.Formatter("%(message)s"))
+    combat_log = logging.getLogger("Combat")
+    combat_log.addHandler(terminal)
+    combat_log.setLevel(logging.DEBUG)
+    combat_log.propagate = False
+
     parser = argparse.ArgumentParser(description="DnD Combat Engine")
     parser.add_argument(
         "--scenario",
