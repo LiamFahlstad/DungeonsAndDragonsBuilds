@@ -35,7 +35,7 @@ from Combat.Effects.modifiers import attack_plan
 from Combat.Fight.monster_actions import parse_action
 from Combat.Effects.sight import NO_SIGHT
 from Combat.EncounterLogs import _plain
-from Combat.Tools.monster_effect_text import read_effects, read_reach_and_range
+from Combat.Fight.monster_effect_text import read_effects, read_reach_and_range
 from Core.Definitions import Ability
 from Model.Content.CombatEffect import CombatEffect, EffectRoll
 from Model.Content.CombatModifiers import AttackKind

@@ -52,6 +52,10 @@ AUTHORING: dict[str, str] = {
         "an ability's recharge, uses, casts and turn start, for"
         " generate_monsters.py and an old log's ability as it loads (4.2)"
     ),
+    "Combat/Fight/monster_effect_text.py": (
+        "an ability's combat effects, reach and range, for"
+        " generate_monsters.py and an old log's ability as it loads (4.3)"
+    ),
     "CharacterContent/Spells/SpellFactory/SpellFields.py": (
         "a scraped spell record's casting time, range, components and"
         " duration, read when it's converted into a spell class"
@@ -108,7 +112,7 @@ TEXT_READERS: dict[tuple[str, str], str] = {
     ("Model/Content/CombatTriggers.py", "_FIELD_IN_WHEN"): "validation",
     # Phase 5: EffectText, an undescribed spell's or feature's text. Frozen.
     # Its damage reading, which a monster's attacks no longer use (Phase
-    # 4.3: Combat/Tools/monster_effect_text.py wrote their effects).
+    # 4.3: Combat/Fight/monster_effect_text.py wrote their effects).
     ("Combat/Fight/monster_actions.py", "DAMAGE"): "phase 5",
     ("Combat/Fight/monster_actions.py", "JOINED"): "phase 5",
     ("Combat/Fight/monster_actions.py", "tidy_dice"): "phase 5",

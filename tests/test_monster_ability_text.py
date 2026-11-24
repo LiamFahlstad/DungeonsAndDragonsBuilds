@@ -16,7 +16,7 @@ from Combat.Fight.monster_actions import (
     start_of_turn_traits,
     upgrade_ability_keys,
 )
-from Combat.Tools.monster_effect_text import read_ability_fields
+from Combat.Fight.monster_effect_text import read_ability_fields
 from Combat.EncounterLogs import LogJSONEncoder
 from Combat.Tools.monster_enum_format import format_ability_list
 from Model.Creatures.Combatants import ExtendedCombatantData
@@ -30,7 +30,7 @@ from Model.Creatures.MonsterAbilityText import (
     read_turn_start,
     read_uses,
 )
-from Combat.Tools.monster_effect_text import spell_name_in_list
+from Combat.Fight.monster_effect_text import spell_name_in_list
 
 
 def test_costs_from_the_name():

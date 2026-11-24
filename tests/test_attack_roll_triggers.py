@@ -27,7 +27,7 @@ from Combat.Fight.effect_options import effect_options, triggered_rows
 from Combat.Fight.monster_actions import parse_action
 from Combat.Fight.saves import CustomEffect
 from Combat.Effects.triggers import TriggerChoice, TriggerMode, attack_roll_firings
-from Combat.Tools.monster_effect_text import read_effects
+from Combat.Fight.monster_effect_text import read_effects
 from Combat.Monsters.CR_2.monsters import Ogre
 from Model.Content.CombatEffect import CombatEffect
 from Model.Content.CombatModifiers import AttackKind

@@ -4,7 +4,7 @@ and fields written on each (MonsterAbility.combat_effects, recharge, ...), so
 that freeform abilities, structured ones and ones reloaded from a saved fight
 (plain dicts) all work the same. Nothing here reads an ability's text:
 generate_monsters.py writes the effects from it
-(Combat/Tools/monster_effect_text.py, Notes/explicit-attributes-plan.md
+(Combat/Fight/monster_effect_text.py, Notes/explicit-attributes-plan.md
 Phase 4.3), and an older log's are read as it loads (upgrade_ability_keys)."""
 
 import random
@@ -269,7 +269,7 @@ def upgrade_ability_keys(char: dict) -> dict:
     """A monster's combat dict from a log saved before its abilities had
     their fields (recharge, uses, cost, casts, turn start) or combat effects,
     with them read from their text once, in place
-    (Combat/Tools/monster_effect_text.py). A log leaves out the fields at
+    (Combat/Fight/monster_effect_text.py). A log leaves out the fields at
     their defaults and an ability's effects when it has none
     (EncounterLogs._encode), so an ability dict without them is read: for a
     stat block that gives what it had, as its fields and effects say what
@@ -278,7 +278,7 @@ def upgrade_ability_keys(char: dict) -> dict:
     attack effect logged before it had its reach and range (Phase 4.5) gets
     them from the text the same way, unless the ability is a structured
     attack with its own."""
-    from Combat.Tools.monster_effect_text import (
+    from Combat.Fight.monster_effect_text import (
         read_ability_effects,
         read_ability_fields,
         read_reach_and_range,

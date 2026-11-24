@@ -1,6 +1,6 @@
 """What the combat UI's amount fields understand (amounts.py), and what a
 monster's abilities roll on its turn (monster_actions.py): from the combat
-effects written on them, which Combat/Tools/monster_effect_text.py reads from
+effects written on them, which Combat/Fight/monster_effect_text.py reads from
 the stat block's text where stat blocks are written, run over every monster
 in the game so a new wording shows up here."""
 
@@ -27,7 +27,7 @@ from Combat.Fight.monster_actions import (
 )
 from Combat.EncounterLogs import _plain
 from Combat.Monsters.CR_0.monsters import GoblinWarrior, Stirge
-from Combat.Tools.monster_effect_text import read_effects
+from Combat.Fight.monster_effect_text import read_effects
 from Core.Definitions import DamageType
 from Model.Creatures.Combatants import BasicCombatantData
 from Model.Creatures.MonsterAbilities import (

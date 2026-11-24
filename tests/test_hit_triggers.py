@@ -24,7 +24,7 @@ from Builds.Characters.Y2024_Monk_Elements_KiviJatti import (
 from Combat.Fight.attack_rolls import parse_attack_roll
 from Combat.Fight.effect_options import effect_options, triggered_rows
 from Combat.Fight.monster_actions import parse_action
-from Combat.Tools.monster_effect_text import (
+from Combat.Fight.monster_effect_text import (
     HitRider,
     hit_riders,
     read_effects,
@@ -734,7 +734,7 @@ def test_the_popup_gives_the_checked_rows(fight):
 
 # ---------------------------------------------------------------------------
 # Monster riders (6.4): a condition a monster's hit gives, read from its text
-# where stat blocks are written (Combat/Tools/monster_effect_text.py), as an
+# where stat blocks are written (Combat/Fight/monster_effect_text.py), as an
 # effect of its own that comes as the attack hits.
 # The Hill Giant's Tree Club: "Hit: 18 (3d8 + 5) Bludgeoning damage. If the
 # target is a Large or smaller creature, it has the Prone condition." Its

@@ -52,7 +52,7 @@ def described(ability: dict) -> dict:
     """A stat-block ability's dict with the combat effects its text gives,
     as generate_monsters.py writes them: the fight reads those, never the
     text (Notes/explicit-attributes-plan.md, Phase 4.3)."""
-    from Combat.Tools.monster_effect_text import read_effects
+    from Combat.Fight.monster_effect_text import read_effects
 
     effects = read_effects(ability["name"], ability["description"])
     if not effects:

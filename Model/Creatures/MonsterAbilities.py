@@ -26,7 +26,7 @@ class MonsterAbility:
     4.3): empty means nothing to apply (Multiattack). generate_monsters.py
     writes them from the standard stat-block sentences ("Melee Attack Roll:
     +5 ... Hit: 7 (1d8 + 3) Slashing damage";
-    Combat/Tools/monster_effect_text.py). A hand-written stat block or a
+    Combat/Fight/monster_effect_text.py). A hand-written stat block or a
     structured subclass below sets them by hand, also where the text says
     more than the reader would (an old-style "must succeed on a DC 11 Wisdom
     saving throw or ...", healing from a pool, a badge, a condition the text

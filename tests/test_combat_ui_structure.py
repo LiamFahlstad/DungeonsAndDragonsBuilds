@@ -281,18 +281,9 @@ def test_no_new_name_clashes():
 
 # Tools/ holds scripts run by hand, never code the app runs. Only tests and
 # the skills' scripts import Combat.Tools, to test or reuse such a script,
-# and never a Tools module that other code imports too. Today's offenders:
-TOOLS_IMPORTERS: set[str] = {
-    "Combat/Fight/monster_actions.py",
-    "tests/_combat_ui.py",
-    "tests/test_arena_ranges.py",
-    "tests/test_attack_roll_triggers.py",
-    "tests/test_badge_hit_triggers.py",
-    "tests/test_combat_ui_amounts.py",
-    "tests/test_hit_triggers.py",
-    "tests/test_monster_ability_text.py",
-    "tests/test_monster_effect_text.py",
-}
+# and never a Tools module that other code imports too. Today's offenders
+# (none since monster_effect_text.py moved to Fight/):
+TOOLS_IMPORTERS: set[str] = set()
 _NOT_SCANNED = {".claude", ".git", ".venv", "venv", "Output", "SourceTexts"}
 _MAY_USE_TOOLS = ("tests/", ".claude/skills/")
 

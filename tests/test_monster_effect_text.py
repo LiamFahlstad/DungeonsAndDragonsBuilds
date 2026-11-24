@@ -1,6 +1,6 @@
 """A stat-block ability's combat effects: what the combat UI rolls and
 applies for it, and the reader that writes them from its text where stat
-blocks are written (Combat/Tools/monster_effect_text.py,
+blocks are written (Combat/Fight/monster_effect_text.py,
 Notes/explicit-attributes-plan.md Phase 4.3)."""
 
 import importlib
@@ -14,7 +14,7 @@ from CharacterContent.Features.SubClassFeatures.Artificer.ArtificerBattleSmithFe
 from Combat.Fight.effect_options import effect_options
 from Combat.Fight.monster_actions import parse_action, upgrade_ability_keys
 from Combat.EncounterLogs import _plain
-from Combat.Tools.monster_effect_text import (
+from Combat.Fight.monster_effect_text import (
     EFFECT_SECTIONS,
     read_ability_effects,
     read_effects,
