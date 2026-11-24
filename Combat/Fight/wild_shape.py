@@ -9,8 +9,16 @@ from CharacterContent.Features.ClassFeatures.Druid.WildShapeForms import (
     format_wild_shape_form,
 )
 from Combat.Effects.active_effects import FEATURE, describe
-from Combat.WildShape import form_badge, known_forms, wild_shape_feature
+from Combat.WildShape import (
+    can_cast_in_form,
+    current_form,
+    form_badge,
+    known_forms,
+    wild_shape_feature,
+)
 from Model.Character import Character
+
+from .step import Step
 
 # A Wild Shape badge's color, apart from other features' blue.
 WILD_SHAPE_COLOR = "#4a8a4c"
@@ -39,3 +47,14 @@ def describe_form_badge(char: dict, sheet: Character, form: str) -> str:
         FEATURE,
     )
     return badge
+
+
+def can_cast_or_say(step: Step, caster: dict, spell_name: str) -> bool:
+    """Whether caster can cast `spell_name`, saying why not if it can't."""
+    if can_cast_in_form(caster, spell_name):
+        return True
+    step.result.say(
+        f"No spell cast: {caster['name']} can't cast {spell_name}"
+        f" in {current_form(caster)} form."
+    )
+    return False

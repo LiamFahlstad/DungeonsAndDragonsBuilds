@@ -19,7 +19,10 @@ from Core.Rules import ACTIONS_PER_TURN
 
 from .asker import Asker
 from .logger import Logger
+from .saves import FEATURE, SPELL, STANDARD_ACTION, CustomEffect
+from .spells import log_spell_cast
 from .stats import _default_stats, increment_named_stat
+from .step import Step
 from .effect_options import has_slots, row_uses_most, spell_slot_choices
 from .monster_actions import (
     MonsterAction,
@@ -27,6 +30,7 @@ from .monster_actions import (
     legendary_actions_left,
     legendary_resistances_left,
 )
+from .wild_shape import can_cast_or_say
 
 
 def action_lack(char: dict, action_type: str | None) -> str | None:
@@ -163,3 +167,85 @@ def count_feature_use(
     if counts_uses:
         used = source.setdefault("feature_uses_used", {})
         used[name] = used.get(name, 0) + count
+
+
+def effect_lacks(phase: Phase, caster: dict, effect: CustomEffect) -> list[str | None]:
+    """What caster is out of that the effect spends: its pick's slot,
+    uses or recharge, and its action (counted_action_lack)."""
+    lacks = [counted_action_lack(phase, caster, effect.action_cost)]
+    option = effect.pick
+    if option is None:
+        return lacks
+    if option.kind == SPELL and option.counts_uses:
+        lacks.insert(0, spell_slot_lack(caster, option.spell_level, effect.slot_level))
+    elif option.kind == FEATURE and option.counts_uses:
+        lacks.insert(
+            0,
+            feature_lack(caster, option.feature_name or option.name, option.uses_spent),
+        )
+    elif option.monster_action is not None:
+        lacks.insert(0, monster_action_lack(caster, option.monster_action))
+    return lacks
+
+
+def spend_monster_action(
+    step: Step, char: dict, action: MonsterAction, *, ask: bool = True
+) -> bool | None:
+    """Count a use of the action, if it's one that's counted: a recharge or
+    per-day use, or the legendary actions it costs. Shared with the Use /
+    Cast dialog. When it's spent or costs more legendary actions than are
+    left, the GM is asked whether to use it anyway, unless the caller has
+    asked already (ask=False). Returns whether it logged the use, or None
+    if the GM said no."""
+    lack = monster_action_lack(char, action)
+    if ask and not go_ahead_anyway(step.asker, char, f"Use {action.name}", [lack]):
+        return None
+    if action.legendary_cost:
+        left = legendary_actions_left(char)
+        char["legendary_actions_left"] = max(left - action.legendary_cost, 0)
+    if action.is_limited:
+        spent = char.setdefault("spent_abilities", {})
+        spent[action.name] = spent.get(action.name, 0) + 1
+    if not (action.is_limited or action.legendary_cost):
+        return False
+    step.log(f"{char['name']} uses {action.name}", character=char["name"])
+    step.result.change(char)
+    return True
+
+
+def use_pick(step: Step, caster: dict, effect: CustomEffect) -> bool | None:
+    """Count what the dialog's pick was as used by caster, as Cast Spell,
+    Enable Feature and the turn column's buttons do. Returns whether that
+    logged its use, or None, having said why, if it can't be used now."""
+    option = effect.pick
+    assert option is not None  # the caller checks
+    if option.kind == SPELL:
+        if not option.counts_uses:
+            return False  # part of a cast already counted (Ice Knife's burst)
+        spell = option.spell_name or option.name
+        if not can_cast_or_say(step, caster, spell):
+            return None
+        log_spell_cast(step, caster, spell, option.spell_level, effect.slot_level)
+        return True
+    if option.kind == FEATURE:
+        count_feature_use(
+            step,
+            caster,
+            option.feature_name or option.name,
+            option.counts_uses,
+            count=option.uses_spent,
+        )
+        return True
+    if option.monster_action is not None:
+        # The Apply asked already if it's spent (effect_lacks).
+        return spend_monster_action(step, caster, option.monster_action, ask=False)
+    if option.kind == STANDARD_ACTION:
+        # "Clover takes the Help action (Assist an Attack Roll)".
+        action, _, how = option.name.partition(": ")
+        how = f" ({how})" if how else ""
+        step.log(
+            f"{caster['name']} takes the {action} action{how}",
+            character=caster["name"],
+        )
+        return True
+    return False

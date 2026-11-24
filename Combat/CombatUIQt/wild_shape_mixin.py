@@ -23,7 +23,6 @@ from Combat.Definitions import Action
 from Combat.Effects.active_effects import note_origin
 from Combat.WildShape import (
     assume_form,
-    can_cast_in_form,
     current_form,
     known_forms,
     wild_shape_feature,
@@ -32,7 +31,11 @@ from Model.Character import Character
 
 from Combat.Fight.conditions import incapacitated_by
 from Combat.Fight.effect_options import feature_action_cost
-from Combat.Fight.wild_shape import describe_form_badge, wild_shape_uses_left
+from Combat.Fight.wild_shape import (
+    can_cast_or_say,
+    describe_form_badge,
+    wild_shape_uses_left,
+)
 from Combat.Fight.cascade import leave_wild_shape
 from .state import CombatWindowState
 from .steps import run_step
@@ -136,11 +139,6 @@ class WildShapeMixin(CombatWindowState):
         run_step(self, leave_wild_shape, char, reason, ask=ask)
 
     def _can_cast_or_say(self, caster: dict, spell_name: str) -> bool:
-        """Whether caster can cast `spell_name`, saying why not if it can't."""
-        if can_cast_in_form(caster, spell_name):
-            return True
-        self._show_status(
-            f"No spell cast: {caster['name']} can't cast {spell_name}"
-            f" in {current_form(caster)} form."
-        )
-        return False
+        """Whether caster can cast `spell_name`, saying why not:
+        Combat/Fight/wild_shape.py's can_cast_or_say."""
+        return run_step(self, can_cast_or_say, caster, spell_name)

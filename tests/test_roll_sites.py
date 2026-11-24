@@ -54,13 +54,13 @@ ROLL_SITES: dict[tuple[str, str, str], str] = {
         "_apply_effect_to_targets",
         "roll_planned_attack",
     ): "a box per target (typedAttack)",
-    ("conditions_mixin.py", "_with_hit_extras", "roll_extra_damage"): (
+    ("effects_given.py", "with_hit_extras", "roll_extra_damage"): (
         "a box under the target's row (typedExtra, 8.1)"
     ),
     ("conditions_mixin.py", "_roll_effect_save", "roll_save"): (
         "a box per target (typedTotal)"
     ),
-    ("conditions_mixin.py", "_give_badge_modifiers", "rolled_modifiers"): (
+    ("effects_given.py", "give_badge_modifiers", "rolled_modifiers"): (
         "the dialog's Hit Point maximum box (8.6)"
     ),
     # Turns

@@ -33,7 +33,7 @@ from Combat.Fight.monster_actions import (
     legendary_actions_left,
     legendary_resistances_left,
 )
-from .spells_mixin import spell_badge_color, spell_badge_description
+from Combat.Fight.badge_text import spell_badge_color, spell_badge_description
 from .state import CombatWindowState, saved_label
 from .styles import QSS
 

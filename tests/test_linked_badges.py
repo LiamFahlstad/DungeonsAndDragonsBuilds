@@ -19,7 +19,7 @@ from Combat.Fight.effect_options import (
     effect_options,
     spell_options,
 )
-from Combat.CombatUIQt.features_mixin import FEATURE_BADGE_COLOR
+from Combat.Fight.badge_text import FEATURE_BADGE_COLOR
 from Combat.Fight.saves import MONSTER_ACTION, WEAPON, CustomEffect
 from Combat.Effects.active_effects import (
     FEATURE,

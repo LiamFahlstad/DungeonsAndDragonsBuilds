@@ -405,6 +405,28 @@ def end_concentration_spells(
     end_linked_effects(step, char)
 
 
+def start_concentration(step: Step, source: dict, name: str):
+    """Source starts concentrating on `name`, which ends any concentration
+    it had going. Concentration always belongs to the caster, regardless
+    of who the spell targets."""
+    remaining_spells = []
+    for entry in source.get("active_spells") or []:
+        if entry.get("concentration"):
+            step.log(
+                f"{source['name']}'s {entry['name']} ends (concentration broken by casting {name})",
+                character=source["name"],
+                value={"condition": entry["name"]},
+            )
+            end_spell_effects(step, entry)
+        else:
+            remaining_spells.append(entry)
+    source["active_spells"] = remaining_spells
+    end_linked_effects(step, source)
+    # A save still owed was for the spell that just ended.
+    source.pop("concentration_checks", None)
+    add_condition(step, source, CombatStatus.CONCENTRATING.value, source)
+
+
 def end_linked_effects(step: Step, char: dict):
     """char concentrates on nothing now, so every effect whose record
     still says it lasts while char concentrates ends: its badge comes

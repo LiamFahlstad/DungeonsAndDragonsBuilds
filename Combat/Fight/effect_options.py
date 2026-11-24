@@ -1189,7 +1189,7 @@ def _mastery_options(char: dict, weapon, sheet) -> list[EffectOption]:
 
 def feature_uses(char: dict, feature, sheet) -> tuple[int, int] | None:
     """(uses left, uses at most) of a limited feature, counted as
-    FeaturesMixin._feature_uses_text counts them."""
+    badge_text.py's feature_uses_text counts them."""
     if feature.uses is None:
         return None
     most = feature.number_of_uses(sheet) if sheet is not None else feature.uses.max_uses

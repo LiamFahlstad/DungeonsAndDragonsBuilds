@@ -29,6 +29,9 @@ class StepResult:
     # Whether to save the fight state now: something changed after the
     # last line logged saved it (what the players have seen of a creature).
     save: bool = False
+    # Whether to save it only if the fight has begun to be logged
+    # (_save_fight_state): a log that's still as prepared stays so.
+    save_begun: bool = False
     # Whether to bring the turn column, the map and the players' screen up
     # to date (leaving a Wild Shape form changes the turn column's buttons).
     views: bool = False

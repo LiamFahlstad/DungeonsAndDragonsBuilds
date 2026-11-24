@@ -66,7 +66,7 @@ from Combat.Fight.monster_actions import (
     start_of_turn_traits,
 )
 from .player_server import PLAYER_PORT
-from Combat.Fight.resources import legendary_resistance_lack, monster_action_lack
+from Combat.Fight.resources import legendary_resistance_lack, spend_monster_action
 from .conditions_mixin import hit_rider
 from Combat.Fight.effect_options import (
     badge_trigger_row,
@@ -91,6 +91,7 @@ from .player_view import (
     player_view_rows,
 )
 from .state import CombatWindowState
+from .steps import run_step
 from Combat.Fight.fight import unit_label
 from .undo import undoable
 
@@ -372,26 +373,9 @@ class TurnPanelMixin(CombatWindowState):
     def _spend_monster_action(
         self, char: dict, action: MonsterAction, *, ask: bool = True
     ) -> bool | None:
-        """Count a use of the action, if it's one that's counted: a recharge or
-        per-day use, or the legendary actions it costs. Shared with the Custom
-        Effect dialog. When it's spent or costs more legendary actions than are
-        left, the GM is asked whether to use it anyway, unless the caller has
-        asked already (ask=False). Returns whether it logged the use, or None
-        if the GM said no."""
-        lack = monster_action_lack(char, action)
-        if ask and not self._go_ahead_anyway(char, f"Use {action.name}", [lack]):
-            return None
-        if action.legendary_cost:
-            left = legendary_actions_left(char)
-            char["legendary_actions_left"] = max(left - action.legendary_cost, 0)
-        if action.is_limited:
-            spent = char.setdefault("spent_abilities", {})
-            spent[action.name] = spent.get(action.name, 0) + 1
-        if not (action.is_limited or action.legendary_cost):
-            return False
-        self._log_event(f"{char['name']} uses {action.name}", character=char["name"])
-        self._rebuild_card(char)
-        return True
+        """Count a use of the action, asking first if it's spent:
+        Combat/Fight/resources.py's spend_monster_action."""
+        return run_step(self, spend_monster_action, char, action, ask=ask)
 
     def _roll_action(self, action: MonsterAction, char: dict | None = None):
         """Roll char's attack against the target, then its damage into the

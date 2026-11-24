@@ -12,39 +12,18 @@ from PyQt6.QtWidgets import (
     QTreeWidgetItem,
 )
 
-from Combat.Arena.lasting import AREA_KEY, find_area
 from Combat.Definitions import (
-    Action,
     CombatStatus,
-    ConditionRule,
     Phase,
 )
 from Combat.Effects.active_effects import (
-    CUSTOM,
     ActiveEffect,
     active_effects,
-    describe,
     drop_repeat_save,
-    duration_entry,
-    find_effect,
-    give_modifiers,
-    is_linked,
-    link_badge,
-    link_concentration,
-    note_origin,
     repeat_saves,
-    set_duration,
-    set_repeat_save,
     tick,
 )
-from Combat.Effects.modifiers import (
-    attack_plan,
-    hit_plan,
-    hit_point_maximum,
-    hit_point_maximum_notes,
-    rolled_modifiers,
-)
-from Model.Content.CombatModifiers import Modifier
+from Combat.Effects.modifiers import attack_plan
 from Combat.Effects.triggers import (
     AttackOutcome,
     FailedSaveOutcome,
@@ -52,50 +31,42 @@ from Combat.Effects.triggers import (
     outcome_firings,
     reduced_damage,
 )
-from Model.Content.CombatModifiers import AttackKind, HitPointMaximum
-from Model.Content.StandardActions import HIDDEN
-from Combat.Fight.attack_rolls import (
-    armor_in_use,
-    has_shield,
-    is_shield_off,
-    SHIELD_OFF,
-)
+from Model.Content.CombatModifiers import AttackKind
+from Combat.Fight.attack_rolls import armor_in_use
 from Combat.Fight.effect_options import (
     COLLAPSED_CATEGORIES,
     effect_options,
     pick_attack_range,
-    regained_uses,
     triggered_rows,
 )
-from .features_mixin import FEATURE_BADGE_COLOR
-from Combat.Fight.monster_actions import legendary_resistances_left, roll_dice
-from Combat.Fight.player_knowledge import note_condition_immunity
-from Combat.Fight.resources import (
-    feature_lack,
-    monster_action_lack,
-    spell_slot_lack,
+from Combat.Fight.effects_given import (
+    add_custom_condition,
+    give_badge_modifiers,
+    give_effect_condition,
+    give_effect_conditions,
+    hold_concentration,
+    hold_with_area,
+    regain_feature_uses,
+    set_shield,
+    with_hit_extras,
 )
+from Combat.Fight.monster_actions import legendary_resistances_left
+from Combat.Fight.resources import effect_lacks, use_pick
 from Combat.Fight.saves import (
     ABILITIES,
     ATTACK_ROLL,
     DAMAGE_AMOUNT,
     DEFAULT_SAVE_DC,
-    FEATURE,
     HEALING,
     SPELL,
-    STANDARD_ACTION,
     TEMP_HP,
     CustomEffect,
     EffectOption,
-    is_immune_to,
     read_damage,
     read_hit_points,
-    roll_extra_damage,
     roll_planned_attack,
     roll_save,
-    with_extra_damage,
 )
-from .spells_mixin import spell_badge_color, spell_badge_description
 from Combat.Fight.cascade import (
     add_condition,
     keep_hit_points_in_maximum,
@@ -193,9 +164,6 @@ def _picked_effect(option: EffectOption, last_save: dict) -> CustomEffect | None
 _SUMMARY_WIDTH = 150  # a picker row's numbers ("+6  1d8 + 4 Slashing")
 # A row the source is out of (spent, too few legendary actions left).
 _UNAVAILABLE_COLOR = "#6a6a7a"
-# How long a concentration effect runs with no time on it: the longest there is
-# in general use, for the GM to end by hand or by losing concentration.
-LONGEST_CONCENTRATION = 60 * 60
 
 
 def _option_tooltip(option: EffectOption) -> str:
@@ -233,39 +201,18 @@ class ConditionsMixin(CombatWindowState):
         source: dict | None = None,
         rolled_maximum: int | None = None,
     ):
-        """char's badge `name` gives `modifiers` while it's on, their dice
-        rolled now (rolled_modifiers), or a Hit Point maximum's as
-        `rolled_maximum`, rolled at the table (upcast and all; 8.6). One that raises its Hit Point maximum
-        raises its current Hit Points by as much (Aid: "Hit Point maximum and
-        current Hit Points increase by 5"), as Hit Points regained from
-        `source`, so a creature at 0 HP comes to; one that lowers it leaves
-        no more than the new maximum."""
-        before = hit_point_maximum(char)
-        if rolled_maximum is not None:
-            modifiers = [
-                (
-                    HitPointMaximum(str(rolled_maximum))
-                    if isinstance(m, HitPointMaximum) and not m.rolled
-                    else m
-                )
-                for m in modifiers
-            ]
-        kept: tuple[Modifier, ...] = rolled_modifiers(modifiers, levels_up, roll_dice)
-        give_modifiers(char, name, kept)
-        change = hit_point_maximum(char) - before
-        if not change:
-            return
-        notes = ", ".join(hit_point_maximum_notes(char))
-        self._log_event(
-            f"{char['name']}'s Hit Point maximum is {hit_point_maximum(char)}"
-            f" ({char['max_hp']}, {notes})",
-            character=char["name"],
+        """char's badge `name` gives `modifiers` while it's on:
+        Combat/Fight/effects_given.py's give_badge_modifiers."""
+        run_step(
+            self,
+            give_badge_modifiers,
+            char,
+            name,
+            modifiers,
+            levels_up=levels_up,
+            source=source,
+            rolled_maximum=rolled_maximum,
         )
-        if change > 0:
-            # _heal_target sees to Bloodied by the new maximum.
-            self._heal_target(char, change, source)
-        else:
-            self._keep_hit_points_in_maximum(char, name)
 
     def _keep_hit_points_in_maximum(self, char: dict, reason: str):
         """char has no more Hit Points than its maximum, now that `reason`
@@ -311,34 +258,11 @@ class ConditionsMixin(CombatWindowState):
         notes: str = "",
         targets: list[dict] | None = None,
     ):
-        """Give every target (or those of `targets`) `cond`, any text (a rules
-        condition or an effect like "Hexed" or "-2 AC"), attributed to the
-        source, for `duration` (see CUSTOM_CONDITION_DURATIONS) and with
-        `notes` as its tooltip. Giving it again replaces its duration."""
-        cond = cond.strip()
+        """Give every target (or those of `targets`) `cond`, attributed to
+        the source: effects_given.py's add_custom_condition."""
         targets = self.target_characters if targets is None else targets
-        if not cond or not targets:
-            return
         source = self.selected_character or self._current_turn_character()
-        source_name = source["name"] if source is not None else None
-        turn = [c["name"] for c in self._current_turn_group()]
-        for target in list(targets):
-            if notes.strip():
-                describe(target, cond, notes.strip(), None, CUSTOM)
-            self._add_condition_to(target, cond, source=source)
-            set_duration(
-                target,
-                cond,
-                duration_entry(duration, source_name, target["name"], turn),
-            )
-            # Its caster, unless it has one: re-adding Hanna's Hunter's Mark
-            # by hand with the Pirate selected mustn't give the Pirate its
-            # extra damage (DI-074).
-            record = find_effect(target, cond)
-            if record is None or not record.get("caster"):
-                note_origin(target, cond, caster=source_name)
-            self._rebuild_card(target)
-        self._save_fight_state()
+        run_step(self, add_custom_condition, cond, duration, notes, targets, source)
 
     def _tick_effect_durations(
         self, ended: list[dict], started: list[dict], new_round: bool
@@ -643,49 +567,14 @@ class ConditionsMixin(CombatWindowState):
         effect: CustomEffect,
         critical: bool,
     ) -> list[tuple[int, str]]:
-        """A hit's damage with the extra damage that comes with it (Hunter's
-        Mark's on its caster's hits, Divine Favor's on its caster's weapon
-        hits), rolled after the attack's own dice, doubled for a Critical
-        Hit. The log says what each adds, and what wasn't counted. One
-        rolled at the table (its box under Damage) is added as typed, even
-        to a typed damage total; a typed total gets none rolled here, as it
-        was all rolled at the table (Decision 4)."""
-        rolled = effect.typed_extras.get(id(target), {})
-        plan = hit_plan(source, target, effect.weapon_attack, rolled)
-        in_total: list[str] = []
-        if effect.typed_damage:
-            in_total = [
-                f"{label}: not rolled, as the damage total typed has it"
-                for label, _, _ in plan.extras
-                if label not in plan.at_table
-            ]
-            plan = replace(
-                plan,
-                extras=tuple(e for e in plan.extras if e[0] in plan.at_table),
-                notes=(),
-            )
-        extra, lines = roll_extra_damage(plan, critical)
-        for line in (*lines, *plan.notes, *in_total):
-            # After the hit's line, for the GM only: the player link joins a
-            # hit's damage to its line, which a line between would stop.
-            self._log_event(line, character=target["name"], public=False)
-        return with_extra_damage(damage, extra)
+        """A hit's damage with the extra damage that comes with it:
+        effects_given.py's with_hit_extras."""
+        return run_step(self, with_hit_extras, source, target, damage, effect, critical)
 
     def _set_shield(self, char: dict, wielding: bool | None):
-        """Have char wield its Shield or set it down (the attack rows' Shield
-        box), with a log line when that changes it. None, or a char without
-        a Shield, leaves it as it is. It stays so until changed again."""
-        if wielding is None or not has_shield(char):
-            return
-        if wielding != is_shield_off(char):
-            return
-        if wielding:
-            char.pop(SHIELD_OFF, None)
-        else:
-            char[SHIELD_OFF] = True
-        did = "takes up" if wielding else "sets down"
-        self._log_event(f"{char['name']} {did} a Shield", character=char["name"])
-        self._rebuild_card(char)
+        """char wields its Shield or sets it down: effects_given.py's
+        set_shield."""
+        run_step(self, set_shield, char, wielding)
 
     @undoable
     def _apply_custom_effects(self, effects: list[CustomEffect]):
@@ -723,79 +612,19 @@ class ConditionsMixin(CombatWindowState):
         return True
 
     def _regain_feature_uses(self, char: dict, option: EffectOption):
-        """Give char back the expended feature uses option regains
-        (Uncanny Metabolism's Focus Points), a logged line per use, as a rest
-        logs them, so the party's history replays them."""
-        used = char.setdefault("feature_uses_used", {})
-        for regain in option.regains:
-            for _ in range(regained_uses(char, regain)):
-                used[regain.feature] = max(used.get(regain.feature, 0) - 1, 0)
-                self._log_event(
-                    f"{char['name']} regains a use of {regain.feature}"
-                    f" ({option.name})",
-                    character=char["name"],
-                    action=Action.REGAIN_FEATURE_CHARGE,
-                    value=regain.feature,
-                )
-        self._rebuild_card(char)
+        """char regains the uses option gives back: effects_given.py's
+        regain_feature_uses."""
+        run_step(self, regain_feature_uses, char, option)
 
     def _use_pick(self, caster: dict, effect: CustomEffect) -> bool | None:
-        """Count what the dialog's pick was as used by caster, as Cast Spell,
-        Enable Feature and the turn column's buttons do. Returns whether that
-        logged its use, or None, having said why, if it can't be used now."""
-        option = effect.pick
-        assert option is not None  # the caller checks
-        if option.kind == SPELL:
-            if not option.counts_uses:
-                return False  # part of a cast already counted (Ice Knife's burst)
-            spell = option.spell_name or option.name
-            if not self._can_cast_or_say(caster, spell):
-                return None
-            self._count_spell_cast(caster, spell, option.spell_level, effect.slot_level)
-            return True
-        if option.kind == FEATURE:
-            self._count_feature_use(
-                caster,
-                option.feature_name or option.name,
-                option.counts_uses,
-                count=option.uses_spent,
-            )
-            return True
-        if option.monster_action is not None:
-            # _apply_custom_effect asked already if it's spent (_effect_lacks).
-            return self._spend_monster_action(caster, option.monster_action, ask=False)
-        if option.kind == STANDARD_ACTION:
-            # "Clover takes the Help action (Assist an Attack Roll)".
-            action, _, how = option.name.partition(": ")
-            how = f" ({how})" if how else ""
-            self._log_event(
-                f"{caster['name']} takes the {action} action{how}",
-                character=caster["name"],
-            )
-            return True
-        return False
+        """What the dialog's pick was, used by caster: Combat/Fight/
+        resources.py's use_pick."""
+        return run_step(self, use_pick, caster, effect)
 
     def _effect_lacks(self, caster: dict, effect: CustomEffect) -> list[str | None]:
-        """What caster is out of that the effect spends: its pick's slot,
-        uses or recharge, and its action."""
-        lacks = [self._action_lack(caster, effect.action_cost)]
-        option = effect.pick
-        if option is None:
-            return lacks
-        if option.kind == SPELL and option.counts_uses:
-            lacks.insert(
-                0, spell_slot_lack(caster, option.spell_level, effect.slot_level)
-            )
-        elif option.kind == FEATURE and option.counts_uses:
-            lacks.insert(
-                0,
-                feature_lack(
-                    caster, option.feature_name or option.name, option.uses_spent
-                ),
-            )
-        elif option.monster_action is not None:
-            lacks.insert(0, monster_action_lack(caster, option.monster_action))
-        return lacks
+        """What caster is out of that the effect spends: resources.py's
+        effect_lacks."""
+        return effect_lacks(self.phase, caster, effect)
 
     def _effect_picker(
         self, source: dict | None
@@ -860,267 +689,28 @@ class ConditionsMixin(CombatWindowState):
     def _hold_concentration(
         self, caster: dict, label: str, effect: CustomEffect, applied: list[dict]
     ):
-        """Caster's concentration on the effect, tied to what it put on whom,
-        and the area it keeps on the map, if any (arena step 11). If the
-        effect itself just ended that concentration (the caster was among
-        its targets), it's over already."""
-        duration = effect.duration or {}
-        seconds = duration.get("seconds", LONGEST_CONCENTRATION)
-        turn = self._current_turn_group()
-        entry = {
-            "name": label,
-            "time_left": seconds,
-            "duration": seconds,
-            "concentration": True,
-            "applied": applied,
-            "ticks_on": turn[0]["name"] if turn else None,
-            # With a turn for a duration, the conditions are what end first;
-            # not while an area on the map lasts with the concentration.
-            "ends_with_conditions": "until" in duration
-            and bool(applied)
-            and effect.area is None,
-        }
-        if effect.area is not None:
-            entry[AREA_KEY] = effect.area
-        if CombatStatus.CONCENTRATING.value not in caster["conditions"]:
-            self._end_spell_effects(entry)
-            return
-        caster.setdefault("active_spells", []).append(entry)
-        self._link_concentration(caster, applied)
-        if effect.area is not None:
-            self._log_area_kept(caster, label, effect.area)
-        self._rebuild_card(caster)
+        """Caster's concentration on the effect: effects_given.py's
+        hold_concentration."""
+        run_step(self, hold_concentration, caster, label, effect, applied)
 
     def _hold_with_area(self, key: str, applied: list[dict]):
-        """What a kept area gave as it acted again (Web's Restrained), held
-        by the area's active spell when its caster concentrates on it, so
-        it comes off as the concentration ends, as what the cast gave does."""
-        found = find_area(self.characters, key)
-        if found is None or not applied:
-            return
-        caster, entry = found
-        if not entry.get("concentration"):
-            return
-        held = entry.setdefault("applied", [])
-        new = [row for row in applied if row not in held]
-        held.extend(new)
-        self._link_concentration(caster, new)
-
-    def _link_concentration(self, caster: dict, applied: list[dict]):
-        """Record on each effect in `applied` ({"target", "condition"} rows,
-        as an active spell holds them) that caster concentrates on it."""
-        for row in applied:
-            target = self._find_character_by_name(row["target"])
-            if target is not None:
-                link_concentration(target, row["condition"], caster["name"])
+        """What a kept area gave as it acted again, held by its spell:
+        effects_given.py's hold_with_area."""
+        run_step(self, hold_with_area, key, applied)
 
     def _give_effect_conditions(self, target: dict, effect: CustomEffect) -> list[dict]:
-        """Give target every condition of effect that lands (one it's immune
-        to doesn't), its pick's badge and its repeat save: what the Custom
-        Effect dialog does to a target it hit or that failed its save, and a
-        monster's action button to the target its hit lands on. Returns the
-        ({"target", "condition"}) rows a running effect now holds."""
-        applied, linked = [], []
-        for condition in effect.conditions:
-            row = {"target": target["name"], "condition": condition}
-            already_had = condition in target["conditions"]
-            held_by_a_spell = self._held_by_effect(row)
-            held_by_a_badge = is_linked(target, condition)
-            if self._give_effect_condition(target, effect, condition):
-                if held_by_a_spell or not already_had:
-                    applied.append(row)
-                if held_by_a_badge or not already_had:
-                    linked.append(condition)
-        self._give_pick_badge(target, effect, linked)
-        if effect.repeat_save and effect.ability is not None:
-            self._track_repeat_save(target, effect)
-        return applied
+        """Give target what of effect lands: effects_given.py's
+        give_effect_conditions."""
+        source = self.selected_character or self._current_turn_character()
+        return run_step(self, give_effect_conditions, target, effect, source)
 
     def _give_effect_condition(
         self, target: dict, effect: CustomEffect, condition: str
     ) -> bool:
-        """Give target one of the effect's conditions, unless it's died of
-        the effect or is immune. Returns whether it has it from this effect
-        now."""
-        if self._char_death_state(target) == "dead":
-            return False
-        if is_immune_to(target, condition):
-            readable = self._log_event(
-                f"{target['name']} is immune to {condition}",
-                character=target["name"],
-            )
-            if readable:
-                note_condition_immunity(target, condition)
-            return False
-        self._describe_effect_condition(target, effect, condition)
-        duration = effect.duration
-        if effect.pick is not None:
-            duration = effect.pick.duration_for(condition, duration)
-        self._add_custom_condition(condition, duration, effect.notes, [target])
-        note_origin(target, condition, source=effect.name)
-        if effect.pick is not None:
-            # Who gave it, also on a record only its modifiers made: extra
-            # damage from its caster's hits (Hunter's Mark) goes by it.
-            source = self.selected_character or self._current_turn_character()
-            levels_up = max(
-                (effect.slot_level or effect.pick.spell_level)
-                - effect.pick.spell_level,
-                0,
-            )
-            self._give_badge_modifiers(
-                target,
-                condition,
-                effect.pick.modifiers_for(condition),
-                levels_up=levels_up,
-                source=source,
-                rolled_maximum=effect.typed_hit_point_maximum.get(id(target)),
-            )
-            if source is not None:
-                note_origin(
-                    target, condition, source=effect.name, caster=source["name"]
-                )
-        return True
-
-    def _picked_feature(self, owner: dict, option: EffectOption):
-        """owner's feature object for a picked feature row: the row's own
-        feature (Hill's Tumble), else the one whose uses it spends."""
-        features = owner.get("_feature_objects", [])
-        for name in (option.name, option.feature_name):
-            feature = next((f for f in features if f.name == name), None)
-            if feature is not None:
-                return feature
-        return None
-
-    def _give_pick_badge(
-        self, target: dict, effect: CustomEffect, conditions: list[str]
-    ):
-        """Beside the rules conditions a picked spell or feature just gave
-        target (Friends' Charmed, Turn Undead's Frightened), a badge of the
-        spell's or feature's own name with its card, so the card says where
-        they're from. It stands for `conditions`: it comes off with the last
-        of them, and they come off with it (link_badge). None for a pick
-        whose badge is its own name already (Bless), a weapon's or a
-        monster's action (its rider is plain in the log), or conditions that
-        aren't rules conditions (Hexed)."""
-        option = effect.pick
-        if option is None:
-            return
-        rules = [c for c in conditions if ConditionRule.from_name(c) is not None]
-        if not rules:
-            return
-        if HIDDEN in effect.conditions and HIDDEN in target["conditions"]:
-            # The Hide action's (or Cunning Action's): Hidden stands for the
-            # Invisible it came with, so its next attack roll ends both.
-            link_badge(target, HIDDEN, rules)
-            return
+        """Give target one of the effect's conditions: effects_given.py's
+        give_effect_condition."""
         source = self.selected_character or self._current_turn_character()
-        # A spell's badge, for a spell or a feature's use that casts one.
-        badge = option.spell_name or (option.name if option.kind == SPELL else "")
-        if badge:
-            spell = self._spell_named(badge)
-            if spell is not None and badge not in effect.conditions:
-                describe(
-                    target,
-                    badge,
-                    spell_badge_description(spell),
-                    spell_badge_color(spell),
-                    SPELL,
-                )
-        elif option.kind == FEATURE:
-            badge = option.name
-            feature = (
-                self._picked_feature(source, option) if source is not None else None
-            )
-            if (
-                source is not None
-                and feature is not None
-                and badge not in effect.conditions
-            ):
-                describe(
-                    target,
-                    badge,
-                    self._feature_condition_tooltip(source, feature),
-                    FEATURE_BADGE_COLOR,
-                    FEATURE,
-                )
-        if not badge or badge in effect.conditions:
-            return
-        self._add_condition_to(target, badge, source=source, counted=False)
-        link_badge(target, badge, conditions)
-        note_origin(
-            target,
-            badge,
-            source=effect.name or badge,
-            caster=source["name"] if source is not None else None,
-        )
-
-    def _track_repeat_save(self, target: dict, effect: CustomEffect):
-        """The save target repeats at the end of each of its turns, ending
-        every condition the effect gave it: one save for them all (Turn
-        Undead's Frightened and Incapacitated)."""
-        given = [c for c in effect.conditions if c in target["conditions"]]
-        if not given or effect.ability is None:
-            return
-        first, *also = given
-        set_repeat_save(
-            target,
-            first,
-            effect.ability,
-            effect.dc,
-            effect.mode,
-            effect.use_legendary_resistance,
-            also,
-        )
-        note_origin(target, first, source=effect.name)
-
-    def _describe_effect_condition(self, target: dict, effect: CustomEffect, cond: str):
-        """What target's badge for the effect's condition shows when clicked
-        or hovered: the picked spell's card, as Cast Spell's badge has, the
-        picked feature's, or the rules text of the attack or action picked.
-        Notes typed in the dialog come first. Nothing for an effect typed in
-        by hand, whose badge shows its notes, if any."""
-        option = effect.pick
-        if option is None:
-            return
-        notes = escape(effect.notes.strip(), quote=False)
-        notes = f"<i>{notes}</i><br><br>" if notes else ""
-        # A spell's card, for a spell or a feature's use that casts one.
-        spell_name = option.spell_name or (option.name if option.kind == SPELL else "")
-        if spell_name:
-            spell = self._spell_named(spell_name)
-            if spell is not None:
-                describe(
-                    target,
-                    cond,
-                    notes + spell_badge_description(spell),
-                    spell_badge_color(spell),
-                    SPELL,
-                )
-                return
-        owner = self.selected_character or self._current_turn_character()
-        if option.kind == FEATURE and owner is not None:
-            feature = self._picked_feature(owner, option)
-            if feature is not None:
-                describe(
-                    target,
-                    cond,
-                    notes + self._feature_condition_tooltip(owner, feature),
-                    FEATURE_BADGE_COLOR,
-                    FEATURE,
-                )
-                return
-        if option.tooltip:
-            # A weapon's or a monster's action: its name and rules text.
-            name = escape(option.row_name or option.name, quote=False)
-            text = escape(option.tooltip, quote=False).replace("\n", "<br>")
-            describe(
-                target,
-                cond,
-                f"{notes}<b style='color:#c9a84c; font-size:14px;'>{name}</b>"
-                f"<br><br>{text}",
-                None,
-                FEATURE,
-            )
+        return run_step(self, give_effect_condition, target, effect, condition, source)
 
     def _roll_effect_save(
         self, target: dict, effect: CustomEffect, source: dict | None = None

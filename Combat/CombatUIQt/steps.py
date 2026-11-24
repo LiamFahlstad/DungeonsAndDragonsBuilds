@@ -56,5 +56,7 @@ def show_step(app: CombatWindowState, result: StepResult):
         app._refresh_selected_card()
     if result.save:
         app._write_log(app._read_log())
+    elif result.save_begun:
+        app._save_fight_state()
     if result.views:
         app._refresh_views()

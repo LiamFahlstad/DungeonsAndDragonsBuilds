@@ -4,6 +4,7 @@ caster and how that counts down. The combat window logs these and gives the
 spell's badge and conditions (SpellsMixin)."""
 
 from dataclasses import dataclass
+from functools import cache
 
 from Combat.Definitions import Action
 from Core.Rules import SECONDS_PER_ROUND
@@ -61,6 +62,35 @@ def count_spell_cast(caster: dict, name: str):
     stats = caster.setdefault("stats", _default_stats())
     stats["spells_cast"] = stats.get("spells_cast", 0) + 1
     increment_named_stat(stats, "spells_cast_by_name", name)
+
+
+def log_spell_cast(
+    logger: Logger, caster: dict, name: str, level: int, slot_level: int | None
+):
+    """Count a cast of the spell `name` (of `level`, using a slot of
+    slot_level, if any) in caster's stats, and log it so the party's
+    replay counts it too. Cast Spell and the Use / Cast dialog share it."""
+    count_spell_cast(caster, name)
+    upcast = f" at level {slot_level}" if (slot_level or 0) > level else ""
+    logger.log(
+        f"{caster['name']} casts {name}{upcast}",
+        character=caster["name"],
+        action=Action.CAST_SPELL,
+        value={"spell_name": name},
+    )
+
+
+def spell_called(name: str):
+    """The spell called exactly `name` (as a Cast Spell badge is), or None."""
+    return _spells_called().get(name)
+
+
+@cache
+def _spells_called() -> dict:
+    from CharacterContent.Spells.SpellFactory import SpellFactory
+
+    spells = sorted(SpellFactory.all_spells(), key=lambda s: (s.level, s.name))
+    return {spell.name: spell for spell in spells}
 
 
 def spell_recipients(spell, source: dict, targets: list[dict]) -> list[dict] | None:

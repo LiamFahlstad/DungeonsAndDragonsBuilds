@@ -8,96 +8,20 @@ from Combat.Effects.active_effects import (
     describe,
     note_origin,
 )
-from Presentation.FeatureCards import feature_label
+from Combat.Fight.badge_text import FEATURE_BADGE_COLOR, feature_condition_tooltip
 from Combat.Fight.effect_options import feature_action_cost
 from Combat.Fight.resources import count_feature_use, feature_lack
 from .state import CombatWindowState
 from .undo import undoable
 
-# The color of a condition badge a feature puts on a creature.
-FEATURE_BADGE_COLOR = "#4c7ac9"
-
 
 class FeaturesMixin(CombatWindowState):
     """Mixin for feature-related methods."""
 
-    def _feature_uses_text(self, char: dict, feature, sb) -> str:
-        """'<remaining>/<max>' for a limited-use feature, or 'None' for a
-        passive/unlimited one. Remaining is tracked in char['feature_uses_used'],
-        keyed by feature name, and reset by a long/short rest (see Combat/CombatUIQt/rest.py).
-        """
-        if feature.uses is None:
-            return "None"
-        max_uses = (
-            feature.number_of_uses(sb) if sb is not None else feature.uses.max_uses
-        )
-        used = char.get("feature_uses_used", {}).get(feature.name, 0)
-        remaining = max(max_uses - used, 0)
-        return f"{remaining}/{max_uses}"
-
     def _feature_condition_tooltip(self, char: dict, feature) -> str:
-        """Build the HTML tooltip for a feature's condition badge (name, origin,
-        action/target/duration/recovery/uses, description). Shared by _apply_feature
-        (when the badge is first applied) and _make_card's fallback (when a badge's
-        tooltip wasn't persisted — e.g. player-log conditions restored via replay,
-        see Combat/Fight/log.py's apply_replay_action)."""
-        sb = char.get("_stat_block")
-        feature_target = feature.target(sb) if sb is not None else None
-        description = None
-        if sb and hasattr(feature, "get_description"):
-            description = feature.get_description(sb)
-
-        tooltip_html = f"<b style='color:#c9a84c; font-size:14px;'>{feature.name}</b>"
-        origin = feature_label(feature, sb) if sb is not None else feature.origin
-        if origin:
-            tooltip_html += f"<br><span style='color:#a0a0b0;'>{origin}</span>"
-        tooltip_html += "<br><br>"
-
-        regained_on = feature.regained_on(sb) if sb is not None else None
-        action_text = (
-            feature.activation.action_type.value.replace("_", " ").title()
-            if feature.activation and feature.activation.action_type is not None
-            else "None"
-        )
-        target_text = (
-            feature_target.value.replace("_", " ").title()
-            if feature_target is not None
-            else "None"
-        )
-        duration_text = (
-            feature.activation.duration_text
-            if feature.activation and feature.activation.duration
-            else "None"
-        )
-        recovery_text = (
-            regained_on.value.replace("_", " ").title()
-            if regained_on is not None
-            else "None"
-        )
-        uses_text = self._feature_uses_text(char, feature, sb)
-
-        tooltip_html += (
-            f"<span style='color:#7a9fd4;'><b>Action Type:</b> {action_text}</span><br>"
-        )
-        tooltip_html += (
-            f"<span style='color:#7a9fd4;'><b>Target:</b> {target_text}</span><br>"
-        )
-        tooltip_html += (
-            f"<span style='color:#7a9fd4;'><b>Duration:</b> {duration_text}</span><br>"
-        )
-        tooltip_html += (
-            f"<span style='color:#7a9fd4;'><b>Recovery:</b> {recovery_text}</span><br>"
-        )
-        tooltip_html += (
-            f"<span style='color:#7a9fd4;'><b>Uses:</b> {uses_text}</span><br><br>"
-        )
-
-        tooltip_html += (
-            description.replace(chr(10) + chr(10), "<br><br>")
-            if description
-            else "No description available."
-        )
-        return tooltip_html
+        """The HTML tooltip for a feature's condition badge: Combat/Fight/
+        badge_text.py's feature_condition_tooltip."""
+        return feature_condition_tooltip(char, feature)
 
     def _count_feature_use(
         self, source: dict, name: str, counts_uses: bool, count: int = 1

@@ -1,14 +1,16 @@
 """Spells mixin for CombatAppQt."""
 
+from Combat.Fight.badge_text import spell_badge_color, spell_badge_description
 from Combat.Fight.spells import (
     active_spell_record,
-    count_spell_cast,
+    log_spell_cast,
+    spell_called,
     spell_recipients,
     tick,
     ticks_now,
     use_slot,
 )
-from Combat.Definitions import Action, CombatStatus
+from Combat.Definitions import Action
 from Combat.Effects.active_effects import (
     SPELL,
     badge_modifiers,
@@ -25,6 +27,7 @@ from Combat.Fight.cascade import (
     end_linked_effects,
     end_spell_effects,
     holder_of,
+    start_concentration,
 )
 from .state import CombatWindowState
 from .steps import run_step
@@ -116,25 +119,9 @@ class SpellsMixin(CombatWindowState):
         return holder_of(self.characters, applied, excluding)
 
     def _start_concentration(self, source: dict, name: str):
-        """Source starts concentrating on `name`, which ends any concentration
-        it had going. Concentration always belongs to the caster, regardless
-        of who the spell targets."""
-        remaining_spells = []
-        for entry in source.get("active_spells") or []:
-            if entry.get("concentration"):
-                self._log_event(
-                    f"{source['name']}'s {entry['name']} ends (concentration broken by casting {name})",
-                    character=source["name"],
-                    value={"condition": entry["name"]},
-                )
-                self._end_spell_effects(entry)
-            else:
-                remaining_spells.append(entry)
-        source["active_spells"] = remaining_spells
-        self._end_linked_effects(source)
-        # A save still owed was for the spell that just ended.
-        source.pop("concentration_checks", None)
-        self._add_condition_to(source, CombatStatus.CONCENTRATING.value, source=source)
+        """Source starts concentrating on `name`: Combat/Fight/cascade.py's
+        start_concentration."""
+        run_step(self, start_concentration, source, name)
 
     def _tick_active_spells(self, started: list[dict], new_round: bool):
         """Deduct 6 seconds (one round) from the active spell timers due as the
@@ -205,25 +192,15 @@ class SpellsMixin(CombatWindowState):
         return self._spells_cache
 
     def _spell_named(self, name: str):
-        """The spell called `name` (as a Cast Spell badge is), or None."""
-        if not hasattr(self, "_spells_by_name"):
-            self._spells_by_name = {s.name: s for s in self._all_spells()}
-        return self._spells_by_name.get(name)
+        """The spell called `name` (as a Cast Spell badge is), or None:
+        Combat/Fight/spells.py's spell_called."""
+        return spell_called(name)
 
     def _count_spell_cast(
         self, caster: dict, name: str, level: int, slot_level: int | None
     ):
-        """Count a cast of the spell `name` (of `level`, using a slot of
-        slot_level, if any) in caster's stats, and log it so the party's
-        replay counts it too. Cast Spell and the Custom Effect dialog share it."""
-        count_spell_cast(caster, name)
-        upcast = f" at level {slot_level}" if (slot_level or 0) > level else ""
-        self._log_event(
-            f"{caster['name']} casts {name}{upcast}",
-            character=caster["name"],
-            action=Action.CAST_SPELL,
-            value={"spell_name": name},
-        )
+        """Count and log a cast: Combat/Fight/spells.py's log_spell_cast."""
+        log_spell_cast(self.logger, caster, name, level, slot_level)
 
     @undoable
     def _apply_cast_spell(self, spell, slot_level: int | None = None):
@@ -329,38 +306,3 @@ class SpellsMixin(CombatWindowState):
 
         self._save_fight_state()
         self._refresh_selected_card()
-
-
-def spell_badge_description(spell) -> str:
-    """What a condition badge a spell put on a creature shows when clicked or
-    hovered: the spell's card (level, school, casting time, range, target,
-    components, duration) and its rules text, as HTML."""
-    tags = []
-    if spell.is_concentration:
-        tags.append("Concentration")
-    if spell.is_ritual:
-        tags.append("Ritual")
-    tag_text = f" [{', '.join(tags)}]" if tags else ""
-    level = "Cantrips" if spell.level == 0 else f"Level {spell.level}"
-    target_text = (
-        spell.target.value.replace("_", " ").title()
-        if spell.target is not None
-        else "None"
-    )
-    return (
-        f"<b style='color:#c9a84c; font-size:14px;'>{spell.name}</b>{tag_text}"
-        f"<br><span style='color:#a0a0b0;'>{level} · {spell.school}</span>"
-        f"<br><br><b>Casting Time:</b> {spell.casting_time}"
-        f"<br><b>Range:</b> {spell.range}"
-        f"<br><b>Target:</b> {target_text}"
-        f"<br><b>Components:</b> {spell.components}"
-        f"<br><b>Duration:</b> {spell.duration}"
-        f"<br><br>{spell.description.replace(chr(10) + chr(10), '<br><br>')}"
-    )
-
-
-def spell_badge_color(spell) -> str:
-    """A spell's condition badge's color: its school's."""
-    from CharacterContent.Spells.SpellFactory import Spell
-
-    return Spell.get_school_color(spell.school)

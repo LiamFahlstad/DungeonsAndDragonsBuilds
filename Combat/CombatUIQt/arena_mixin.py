@@ -176,6 +176,7 @@ from Core.Definitions import Condition
 from Core.Rules import SECONDS_PER_ROUND
 
 from .arena_view import ArenaView, MoveKind, token_rows
+from Combat.Fight.effects_given import area_where, log_area_kept
 from Combat.Fight.falling import land_fallers
 from Combat.Fight.effect_options import (
     _spell_named,
@@ -186,6 +187,7 @@ from Combat.Fight.effect_options import (
 from Combat.Fight.saves import SPELL, CustomEffect, EffectOption
 from .settings import ARENA_VIEW_KEY
 from .state import CombatWindowState
+from .steps import run_step
 from .undo import undoable
 
 CARDS_PAGE, ARENA_PAGE = 0, 1
@@ -1679,30 +1681,14 @@ class ArenaMixin(CombatWindowState):
         return f"{feet} ft." + (f" · {inside}" if inside else "")
 
     def _area_where(self, record: dict) -> str:
-        """Where a kept area is, for the log: "around its caster", or "at
-        C7" (the cell it was aimed at)."""
-        if record.get("follows"):
-            return "around its caster"
-        aim = record.get("aim")
-        if aim is None:
-            return ""
-        shape = self.arena_settings.distance_rule.shape
-        end = record_end(record)
-        if end is not None:
-            return f"from {shape.cell_name(Cell.of(aim))} to {shape.cell_name(end)}"
-        return f"at {shape.cell_name(Cell.of(aim))}"
+        """Where a kept area is, for the log: Combat/Fight/effects_given.py's
+        area_where."""
+        return run_step(self, area_where, record)
 
     def _log_area_kept(self, holder: dict, label: str, record: dict):
-        """The GM-only log line for an area put on the map: "Clover's
-        Moonbeam stays on the map at C7."."""
-        where = self._area_where(record)
-        self._log_event(
-            f"{holder['name']}'s {label} stays on the map"
-            + (f" {where}" if where else "")
-            + ".",
-            character=holder["name"],
-            public=False,
-        )
+        """The GM-only log line for an area put on the map:
+        effects_given.py's log_area_kept."""
+        run_step(self, log_area_kept, holder, label, record)
 
     def _hold_area(self, holder: dict, label: str, effect: CustomEffect):
         """Keep effect's area on the map with no concentration: an active

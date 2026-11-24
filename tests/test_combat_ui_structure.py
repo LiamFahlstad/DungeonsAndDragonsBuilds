@@ -126,19 +126,19 @@ MAX_FILE_LINES = 1000  # Q6
 # Repo-relative path -> the most lines it may have, and what happens to it:
 # split in step 9a or 9b, or why it stays whole.
 LONG_FILES = {
-    "Combat/CombatUIQt/arena_mixin.py": (2086, "split in 9b, after step 7"),
+    "Combat/CombatUIQt/arena_mixin.py": (2072, "split in 9b, after step 7"),
     "Combat/Fight/effect_options.py": (2072, "split in 9a (Fight/picker/)"),
     "Combat/CombatUIQt/use_cast/dialog.py": (
         1908,
         "9b moves its text helpers to use_cast/texts.py; UseCastDialog"
         " stays whole (R12)",
     ),
-    "Combat/CombatUIQt/conditions_mixin.py": (1445, "split in 9b, after step 7"),
+    "Combat/CombatUIQt/conditions_mixin.py": (1035, "split in 9b, after step 7"),
     "Combat/CombatUIQt/dialogs_mixin.py": (
         1380,
         "9b moves the More Info panel to dialogs/more_info.py",
     ),
-    "Combat/CombatUIQt/turn_panel_mixin.py": (1184, "split in 9b, after step 7"),
+    "Combat/CombatUIQt/turn_panel_mixin.py": (1168, "split in 9b, after step 7"),
     "Combat/Effects/triggers.py": (1143, "split in 9a"),
     "Combat/Effects/modifiers.py": (1112, "split in 9a"),
     "Combat/CombatUIQt/arena_view.py": (

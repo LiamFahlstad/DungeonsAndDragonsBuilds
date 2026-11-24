@@ -70,7 +70,7 @@ and the few others a step touches, not the character-sheet tests. Steps 3,
 | 2 | A typed combatant (`Combatant` TypedDict) | M | **Done** 2026-11-22, revised (R8): the schema and a key test; annotating signatures moved to step 5 |
 | 3 | The Use / Cast dialog as a class, its form-to-effects logic Qt-free | L | 3a **done** 2026-11-22 (R9): `use_cast/form.py`, dialog 1,580 → 1,440 lines; 3b **done** 2026-11-22 (R10): `_UseCastDialog`, `run()` 616 lines + 44 methods; 3c's move **done** (R11): `use_cast/dialog.py`, `conditions_mixin.py` 3,500 → 1,674 lines; 3c's split **done**, revised (R12): `run()` is 14 lines calling 10 builder methods, the longest 126; 3d **done** (R13): `do_apply` 146 → 50 lines over Qt-free `read_amount`, `check_applicable` and `build_effect`; reviewed (R14): no behaviour change; **step 3 done** |
 | 4 | The window built from panels, shortcuts as a table | M | **Done** 2026-11-23 (R15, R16): `_build_window` 680 → 13 lines over 12 builders (the longest 111); the shortcuts a table (`shortcuts.py`) checked against KEYBOARD_SHORTCUTS.md |
-| 5 | The Qt-free fight core (`Combat/Fight/`), one mixin at a time | XL | 5.1 **done** 2026-11-23 (R17): seven Qt-free modules moved to `Combat/Fight/`; 5.5's guard test in place; 5.2 **done** (R18): `Fight` holds the fight's state; 5.3 started (R19, R20): damage's defenses and arithmetic in `Combat/Fight/damage.py`, health (death state, healing, Temporary Hit Points, Death Saving Throws) in `Combat/Fight/health.py`; the map's questions (distance, sight, cover, range, Critical Hits within 5 feet) are `Fight` methods (R21); an attack roll's check is `Combat/Fight/attacks.py` (R22); gaining and losing a condition is `Combat/Fight/conditions.py` (R23); the turn order is `Fight`'s (R24); casting's slots, recipients and timers are `Combat/Fight/spells.py` (R25); joining and leaving the turn order are `Fight`'s, summons' questions and carry-over `Combat/Fight/summons.py` (R26); Wild Shape's uses and badge `Combat/Fight/wild_shape.py` (R27); a short rest's regains and Hit Dice `Combat/Fight/rests.py` (R28); saving, loading and replaying the fight `Combat/Fight/log.py` (R29); 5.3's areas are each started; what's left of them (features, triggers, the cascades a condition sets off, `_log_event`) waits for 5.4's `Asker` and step 6; 5.4 started (R30): the `Asker` asks "out of resources, go ahead anyway?", and the checks are `Combat/Fight/resources.py`; the core logs through a `Logger` (Decision 4, R32), first spending an Action, a feature use or a slot; what the players know is `Combat/Fight/player_knowledge.py` (R33); conditions and their cascades are `Combat/Fight/cascade.py`, run on a `Step` whose `StepResult` the window draws (R34); **5.4 continues with the Use / Cast apply path, then triggers** |
+| 5 | The Qt-free fight core (`Combat/Fight/`), one mixin at a time | XL | 5.1 **done** 2026-11-23 (R17): seven Qt-free modules moved to `Combat/Fight/`; 5.5's guard test in place; 5.2 **done** (R18): `Fight` holds the fight's state; 5.3 started (R19, R20): damage's defenses and arithmetic in `Combat/Fight/damage.py`, health (death state, healing, Temporary Hit Points, Death Saving Throws) in `Combat/Fight/health.py`; the map's questions (distance, sight, cover, range, Critical Hits within 5 feet) are `Fight` methods (R21); an attack roll's check is `Combat/Fight/attacks.py` (R22); gaining and losing a condition is `Combat/Fight/conditions.py` (R23); the turn order is `Fight`'s (R24); casting's slots, recipients and timers are `Combat/Fight/spells.py` (R25); joining and leaving the turn order are `Fight`'s, summons' questions and carry-over `Combat/Fight/summons.py` (R26); Wild Shape's uses and badge `Combat/Fight/wild_shape.py` (R27); a short rest's regains and Hit Dice `Combat/Fight/rests.py` (R28); saving, loading and replaying the fight `Combat/Fight/log.py` (R29); 5.3's areas are each started; what's left of them (features, triggers, the cascades a condition sets off, `_log_event`) waits for 5.4's `Asker` and step 6; 5.4 started (R30): the `Asker` asks "out of resources, go ahead anyway?", and the checks are `Combat/Fight/resources.py`; the core logs through a `Logger` (Decision 4, R32), first spending an Action, a feature use or a slot; what the players know is `Combat/Fight/player_knowledge.py` (R33); conditions and their cascades are `Combat/Fight/cascade.py`, run on a `Step` whose `StepResult` the window draws (R34); the Use / Cast apply path's pieces (what an effect gives each target, what holds it, what using the pick spends) are `Combat/Fight/effects_given.py`, `badge_text.py` and additions to `resources.py` (R44); **5.4 continues with temporary Hit Points and damage, then the attack roll's resolution and pushes, then `_apply_effect_to_targets` itself and the triggers (R44's order)** |
 | 6 | One refresh path after every GM operation | M | Not started |
 | 7 | Mixins into composed views and one module per dialog; `CombatWindowState` gone | L | Not started |
 | 8 | Docs, agents and skills point at the new layout | S | Not started |
@@ -2034,6 +2034,118 @@ when" commands still run, plus the moved scraper and report script start.
     `test_combat_modifiers`, `test_fight_wild_shape` and
     `test_text_readers` passes (1,736), and `./typecheck.sh Combat` is
     clean.
+- **R44 (step 5.4, the Use / Cast apply path's pieces, 2026-11-24).** The
+  apply path (`_apply_row` → `_apply_custom_effect` →
+  `_apply_effect_to_targets`) reaches about 30 window methods, and most of
+  what's still window-side: damage and dropping to 0 (`_deal_damage`,
+  `_damage_at_zero_hp`, a summon vanishing), the attack roll's resolution
+  and what answers it (`_resolve_attack_roll`, `_before_hit` with its
+  trigger pop-up), pushes (`_relocate`, 111 lines), Legendary Resistance
+  and the reroll of a failed save. That's more than one reviewable commit,
+  so this slice moves the pieces that call each other and nothing outside
+  them, as R34 did, and leaves `_apply_effect_to_targets` calling them:
+  - **`Combat/Fight/effects_given.py`** (what an effect gives each target):
+    `add_custom_condition`, `give_effect_conditions`,
+    `give_effect_condition`, `give_pick_badge`, `track_repeat_save`,
+    `describe_effect_condition`, `picked_feature`, `give_badge_modifiers`,
+    `regain_feature_uses`, `set_shield`, `with_hit_extras`,
+    `hold_concentration`, `hold_with_area`, `link_concentration_on`
+    (`_link_concentration`; `active_effects` has a `link_concentration`),
+    `area_where` and `log_area_kept` (from `ArenaMixin`), and
+    `LONGEST_CONCENTRATION`.
+  - **`Combat/Fight/badge_text.py`** (what a badge's card shows):
+    `spell_badge_description` and `spell_badge_color` (from
+    `spells_mixin.py`), `FEATURE_BADGE_COLOR`, `feature_uses_text` and
+    `feature_condition_tooltip` (from `FeaturesMixin`). The importers
+    (`cards_mixin.py`, `spells_mixin.py`, `features_mixin.py`,
+    `test_linked_badges`) moved with them.
+  - **What using the pick spends:** `effect_lacks`, `use_pick` and
+    `spend_monster_action` in `resources.py`; `log_spell_cast` (the cast
+    counted and logged) and `spell_called` in `spells.py`;
+    `can_cast_or_say` in `wild_shape.py`; `start_concentration` in
+    `cascade.py`, beside the concentration it ends.
+  - **The window** keeps a wrapper of the same name for each one something
+    calls (the rest of the window, or a test: Decision 2), 19 in all, with
+    `@undoable` where it was (`_add_custom_condition`). Six that only the
+    moved code called went instead: `_link_concentration`,
+    `_give_pick_badge`, `_track_repeat_save`, `_describe_effect_condition`,
+    `_picked_feature` and `_feature_uses_text`. `source` (the selected
+    card, else whose turn it is) is the wrappers' to work out, since the
+    core doesn't know the selection; every moved method worked it out the
+    same way, and nothing in between changes the selection.
+  - **`StepResult.save_begun`:** `_add_custom_condition` saved through
+    `_save_fight_state`, which writes only once the log has round events,
+    while R34's `save` writes always. So a second flag, and `show_step`
+    calls `_save_fight_state` for it.
+  - **`spell_called`** is `_spell_named`'s exact-name lookup with one
+    module-level cache instead of one per window, as `effect_options`'
+    (case-insensitive) `_spell_named` already has. `SpellFactory` builds
+    fresh spell objects on each call, so windows now share theirs. No
+    test or code changes a spell object, and the one test that patches
+    `SpellFactory` never opens a window. `_spell_named` calls it.
+  - **Order arguments**, as R34's: cards are redrawn, statuses said and
+    the fight state saved at the end of each wrapper call instead of
+    partway through it. A status that a later line logged cleared is
+    dropped (the `Step` clears it, as `_log_event` cleared the status
+    line), and every line logged in between saved the fight as it was
+    then. One difference the probe can't see, as it compares log lines
+    and statuses, not the file: what changed after `_add_custom_condition`'s
+    save with no line logged after it (the effect's origin notes on the
+    record, its repeat save, a badge modifier that leaves the Hit Point
+    maximum alone) reached the file only with the next line logged. Now
+    it's saved at the end of the call. The Use / Cast path saves again at
+    its end anyway, so its file is as before; a monster action button's
+    rider (`DamageMixin._deal_typed_damage`) doesn't, so a fight reopened
+    right after one, before any other line, now has that rider's repeat
+    save and origin, where it didn't. Keeping the old timing would mean
+    snapshotting the fight partway through a Step. Found by the review.
+  - **Undo:** with the core calling the core, `_add_custom_condition` and
+    `_add_condition_to` no longer open a step of their own when one of the
+    moved methods ran with none open. A probe over 2,190 window tests,
+    recording each call of a moved method made in a fight with no step
+    open, found only tests calling `_add_custom_condition` (still
+    `@undoable`), `_give_effect_condition`, `_give_badge_modifiers` and
+    `_start_concentration` directly. None of those tests undoes the call,
+    and no GM operation reaches them that way.
+  - **Checked against the code before it:** the 67 test files that open a
+    window ran on HEAD and on the change with `random` seeded per test, and
+    a pytest plugin recorded every `_log_event` and `_show_status` call:
+    2,190 passed both times, with identical lines and statuses in every
+    test (not even a status that a later line cleared differs). Each moved
+    body was compared with its HEAD version after the substitutions above:
+    what's left is `source` passed in, the core `add_condition` in place of
+    the `_add_condition_to` wrapper, `holder_of` in place of
+    `_held_by_effect`, and the by-name lookup inlined.
+  - **Tests:** `tests/test_fight_effects_given.py`, 7 tests without Qt
+    (Immunity, a condition landing, Aid's +5, Concentration holding what it
+    gave and ending on a new one, a Druid's spells in a Beast form, no
+    action economy between encounters). `test_roll_sites`' two entries
+    follow their functions. The Qt-free `test_fight*` with the structure,
+    layering, roll-site and text-reader tests pass (187), and
+    `./typecheck.sh Combat` is clean. `combat-ui-explore` sweeps of `ashelm_church`
+    and `time_loop_pr_square` (23 Use / Cast applies between them) found
+    nothing.
+  - **Review:** the `code-reviewer` found no other behaviour change. It
+    checked each substitution, that nothing in between changes the
+    selection, an AST walk of every window entry point for Undo (each
+    chain stops at an `@undoable` method), `spell_called` against the old
+    lookup for all 662 spells, the deleted wrappers' callers, and that no
+    `Combat/Fight` module loads Qt. Its other note, a docstring in
+    `effect_options.py` naming `_feature_uses_text`, is fixed.
+  - **Lines:** `conditions_mixin.py` 1,445 → 1,035, `arena_mixin.py`
+    2,086 → 2,072, `turn_panel_mixin.py` 1,184 → 1,168 (their
+    `LONG_FILES` caps follow), `spells_mixin.py` 366 → 308,
+    `features_mixin.py` 224 → 148. New: `effects_given.py` 548,
+    `badge_text.py` 123.
+  - **Not done here, and the order of what's left:** the effects plan's
+    file references name these as `ConditionsMixin` methods, all still
+    true of the wrappers except in its Revisions, which are history; it
+    had uncommitted edits by someone else, so it's untouched. Next:
+    Temporary Hit Points (`_give_temp_hp`, with `health.py`) and damage
+    (`_deal_damage` and what it sets off), then the attack roll's
+    resolution and pushes, then `_apply_effect_to_targets` itself. The
+    triggers come last: what they apply goes through that function (R32),
+    and their pop-up joins the `Asker` with them (R33).
 
 ## Discovered issues
 
