@@ -722,6 +722,26 @@ should be filled in **by one model, through one code path**, so that:
 
 ## The design as built
 
+**Where the code lives now** ([combat-ui-refactor-plan.md](combat-ui-refactor-plan.md),
+2026-11-22 to 24). The fight's rules are leaving `Combat/CombatUIQt/`'s
+mixins for the Qt-free `Combat/Fight/`: the picker (`effect_options.py`),
+damage (`damage.py`), Hit Points and Death Saving Throws (`health.py`),
+attack rolls (`attacks.py`), slots and recipients (`spells.py`), gaining
+and losing a condition (`conditions.py`) and what it sets off: ending
+Concentration, Bloodied, healing, leaving Wild Shape (`cascade.py`, run on
+a `Step`), the turn order (`fight.py`), the log (`log.py`), resources
+(`resources.py`) and what players know (`player_knowledge.py`). The Use /
+Cast dialog is `Combat/CombatUIQt/use_cast/dialog.py`, with its Qt-free
+form reading in `use_cast/form.py`. A window method named in the
+Revisions below (`_add_condition_to`, `_remove_condition_from`,
+`_heal_target`, `_end_concentration_spells`, ...) mostly still exists as a
+wrapper of the same name that calls the core (that plan's Decision 2), so
+a search for the name still finds it. The Use / Cast apply path
+(`_apply_row`, `_apply_effect_to_targets`, `_give_badge_modifiers`) and
+the triggers are what that plan moves next. Until it's done, a step here
+that edits `Combat/CombatUIQt/` or `Combat/Fight/` checks that plan's
+Status first: two changes never edit one file at once.
+
 ### The model (`Model/Content/CombatEffect.py`)
 
 ```python
@@ -783,7 +803,7 @@ with_bonus("1d8", 4) == "1d8 + 4"
   more (1d8 more per slot level above 1). Add it for those targets.").
 - A monster's spells: a row per way to cast each (`_monster_spell_options`).
 
-### The dialog (`Combat/CombatUIQt/conditions_mixin.py`)
+### The dialog (`Combat/CombatUIQt/use_cast/dialog.py`, applied through `conditions_mixin.py`)
 
 - **Condition box:** "Frightened + Incapacitated" gives both; each is matched
   to a rules condition by name. One repeat-save entry per effect holds the
@@ -1810,7 +1830,9 @@ roll, and stays as it is.
   `_end_concentration_spells` and `_start_concentration` end, after the
   active spells' `applied` rows, every record still linked to the caster
   (`held_by_concentration`, `_end_linked_effects`), not Unconscious at 0
-  HP. `applied` stays: it also says which badges a cast put on (so a badge
+  HP. (The ending is now `Combat/Fight/cascade.py`'s
+  `end_concentration_spells` and `end_linked_effects`:
+  combat-ui-refactor-plan R34.) `applied` stays: it also says which badges a cast put on (so a badge
   already there isn't taken off, `_held_by_effect`), and a non-concentration
   effect's `ends_with_conditions` reads it.
 - **R55. A creature leaving the fight ends its concentration first.**
@@ -1825,7 +1847,8 @@ roll, and stays as it is.
   that one dropped the badge rightly stayed (the other's `applied` holds
   it) but the link still named the caster who had stopped.
   `_end_spell_effects` and `_end_linked_effects` now relink such a badge to
-  the holder's caster (`_holder_of`, `_relink`), or unlink it when the
+  the holder's caster (`_holder_of`, `_relink`; now `Combat/Fight/cascade.py`'s
+  `holder_of` and `relink`, combat-ui-refactor-plan R34 and R40), or unlink it when the
   holder needs no Concentration (`unlink_concentration`).
 - **R57. One skill, two agents** (4.1/4.2, 2026-11-10). The skill is
   `combat-effects` (`.claude/skills/combat-effects/`, script
@@ -2115,7 +2138,7 @@ roll, and stays as it is.
   places that give a badge's modifiers (the dialog's pick, Cast Spell,
   Enable Feature) go through one `_give_badge_modifiers`.
 - **R86. The rise in current HP is Hit Points regained** (`_heal_target`
-  from the caster): it's capped by the new maximum, logged and replayed
+  from the caster; now `Combat/Fight/cascade.py`'s `heal_target`): it's capped by the new maximum, logged and replayed
   as a heal, counted in the stats, and brings a dying creature to ("Aid
   ... current Hit Points increase by 5"). A dead one gets nothing, as
   with any healing. A line before it says the new maximum ("Tiger's Hit
@@ -2125,7 +2148,7 @@ roll, and stays as it is.
   (`{"hp_delta": -3, "reason": "Aid"}`), not damage: it isn't damage
   taken (no stats, no Concentration save) but the party's history must
   replay it, as it replays damage and heals. `_remove_condition_from`
-  measures the maximum before the badge goes and, when it changed, caps
+  (now `Combat/Fight/cascade.py`'s `remove_condition`) measures the maximum before the badge goes and, when it changed, caps
   current HP and rechecks Bloodied by the new maximum (17 of 35 is
   Bloodied, 17 of 30 isn't). A GM taking Bloodied off by hand is left
   alone: only a change in the maximum rechecks it. The public log shows
@@ -2428,8 +2451,8 @@ roll, and stays as it is.
   nothing and leaves the turn-column button, whose dialog takes the total.
   No described content has such dice yet; the test gives Heroism 1d4.
 - **R124. The guard test reads the code, not a list of lines** (8.7).
-  `tests/test_roll_sites.py` walks Combat/CombatUIQt/ and Combat/Effects/
-  with `ast`, finds every call of a rolling function (`randint`,
+  `tests/test_roll_sites.py` walks Combat/CombatUIQt/, Combat/Effects/
+  and (since combat-ui-refactor-plan step 5) Combat/Fight/ with `ast`, finds every call of a rolling function (`randint`,
   `roll_dice`, `roll_save`, `roll_extra_damage`, ...) by the function it's
   in, and compares them with `ROLL_SITES`, each with its way to the table
   (or "helper", or "not a rules roll" for the free d20). A new place that
@@ -2444,7 +2467,8 @@ roll, and stays as it is.
   counted in the fight's condition stats (`_add_condition_to(counted=
   False)`), and `link_badge` writes the conditions on its record as
   `linked` (`NotRequired`, so older records and logs read as linking
-  nothing). `_remove_condition_from` does the rest both ways: a badge taken
+  nothing). `_remove_condition_from` (both now in `Combat/Fight/cascade.py`,
+  `add_condition` and `remove_condition`) does the rest both ways: a badge taken
   off takes off what it stood for, unless another badge stands for it too
   (Friends and Charm Person both on a Charmed target) or it's Unconscious
   at 0 HP; a condition taken off is struck from every badge's `linked`
@@ -2479,7 +2503,8 @@ roll, and stays as it is.
   works out whether the whole hit (every damage type, after the save's
   half, Immunity, Resistance and Vulnerability, then Temporary Hit Points)
   would drop its target to 0 (`_drops_to_instead`, with the pure
-  `_damage_after_defenses`), and asks then, in a pop-up of its own as
+  `_damage_after_defenses`, now `Combat/Fight/damage.py`'s
+  `damage_after_defenses`), and asks then, in a pop-up of its own as
   `_before_hit` does; what it applies goes through `_apply_row` (the use is
   spent and logged), inside the hit's undo step. The damage is then dealt
   with a `floor` (`_damage_target(floor=)`): Hit Points don't go below it,

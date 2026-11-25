@@ -49,10 +49,10 @@ from Combat.Effects.triggers import (
     firings,
     hit_by_firings,
     outcome_firings,
-    still_hits,
 )
 
-from Combat.Fight.attack_rolls import armor_bonus, armor_in_use, stored_armor
+from Combat.Fight.attack_rolls import armor_bonus, stored_armor
+from Combat.Fight.attacks import settle_answered_hit
 from .log_feed import LogFeed
 from Combat.Fight.monster_actions import (
     DIE,
@@ -996,29 +996,9 @@ class TurnPanelMixin(CombatWindowState):
             return True, 0
         status = self._status_label.text()
         notes = list(spent)
-        reduction = 0
-        target = outcome.target
-        for firing, at_table in self._answer_firings(found, notes):
-            dice = firing.row.damage_reduction
-            if dice:
-                amount = roll_dice(dice) if at_table is None else at_table
-                how = dice if at_table is None else f"{dice}, rolled at the table"
-                reduction += amount
-                self._log_event(
-                    f"{target['name']}'s {firing.row.name} takes {amount} off"
-                    f" the damage ({how})",
-                    character=target["name"],
-                )
-        hits = still_hits(
-            outcome, armor_in_use(self._covered(outcome.attacker, target))
-        )
-        if not hits:
-            self._log_event(
-                f"{outcome.attacker['name']}'s attack roll now misses"
-                f" {target['name']}",
-                character=target["name"],
-            )
-            notes.append(f"{target['name']}: now a miss")
+        answered = self._answer_firings(found, notes)
+        # What they did: Combat/Fight/attacks.py's settle_answered_hit.
+        hits, reduction = run_step(self, settle_answered_hit, outcome, answered, notes)
         # Logging cleared the hit's own status line; it comes back first.
         self._show_status("; ".join(part for part in (status, *notes) if part))
         return hits, reduction

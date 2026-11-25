@@ -12,7 +12,6 @@ from Combat.Definitions import Action
 from Combat.Effects.modifiers import (
     extra_text,
     hit_extras,
-    used_up_by_attack,
 )
 from Combat.Effects.triggers import (
     AttackOutcome,
@@ -24,7 +23,7 @@ from Combat.Effects.triggers import (
 from Combat.Effects.sight import Seen
 from Core.Definitions import Condition
 from Combat.Fight.amounts import AmountError, parse_amount, parse_damage
-from Combat.Fight.attacks import check_attack
+from Combat.Fight.attacks import resolve_attack_roll, use_up_badges
 from Combat.Fight.health import (
     DEAD,
     DYING,
@@ -43,14 +42,7 @@ from Combat.Fight.effects_given import grant_temp_hp
 from Combat.Fight.attack_rolls import (
     AttackRoll,
     armor_in_use,
-    cover_bonus,
-    note_attack_roll,
     parse_attack_roll,
-)
-from Combat.Fight.monster_actions import first_number
-from Combat.Fight.player_knowledge import (
-    _player_names,
-    _seen,
 )
 from Combat.Fight.saves import CustomEffect, roll_save, save_modifier
 from Combat.Fight.cascade import apply_bloodied, heal_target, note_health_change
@@ -62,12 +54,6 @@ from .undo import undoable
 # A Concentration save's DC: half the damage taken, between these.
 MIN_CONCENTRATION_DC = 10
 MAX_CONCENTRATION_DC = 30
-# How an attack roll went, as the log says it; None is no AC to check against.
-_VERDICTS: dict[bool | None, str] = {
-    True: "hits",
-    False: "misses",
-    None: "can't be checked against",
-}
 
 
 class DamageMixin(CombatWindowState):
@@ -212,60 +198,20 @@ class DamageMixin(CombatWindowState):
         notes: tuple[str, ...] = (),
         ignores_cover: bool = False,
     ) -> tuple[bool | None, str]:
-        """Check `roll` against target's AC, with its cover (its own, and the
-        map's from source: _covered) and modifiers, and log how it went, with
-        `notes` on how it was rolled (attack_plan's) and what the GM should
-        check about a hit. `ignores_cover`: the attack ignores Half and
-        Three-Quarters Cover. Returns whether it hit, None with no AC to
-        check, and how it went against the AC, for the status line (Total
-        Cover warned about there, not refused). The log doesn't say the AC, as the Limited view's players read
-        it too. They don't learn from a hidden attacker's roll, which they
-        never saw."""
-        check = check_attack(self.fight, target, roll, source, notes, ignores_cover)
-        seen, armor, bonus, hit = check.seen, check.armor, check.bonus, check.hit
-        # A player's summon is seen as its owner is, even while Invisible.
-        if source is None or _seen(source, _player_names(self.characters)):
-            # Noted against the stored AC's first number, so a Shield set
-            # down counts as what changed it, like cover.
-            first = first_number(target.get("ac"))
-            seen_bonus = (
-                bonus if armor is None or first is None else armor + bonus - first
-            )
-            note_attack_roll(target, roll, hit, seen_bonus)
-        is_critical, notes = check.critical, check.notes
-        name = target["name"]
-        attacker = f"{source['name']}'s attack roll" if source else "Attack roll"
-        critical = " (critical hit)" if is_critical else ""
-        noted = f", {', '.join(notes)}" if notes else ""
-        self._log_event(
-            f"{attacker} of {roll.text} {_VERDICTS[hit]} {name}{critical}{noted}",
-            character=name,
+        """Check `roll` against target's AC and log how it went:
+        Combat/Fight/attacks.py's resolve_attack_roll."""
+        return run_step(
+            self, resolve_attack_roll, target, roll, source, notes, ignores_cover
         )
-        self._use_up_badges(source, target)
-        warning = self._cover_warning(source, target)
-        if warning:
-            notes = (*notes, warning)
-        why = f" ({'; '.join(notes)})" if notes else ""
-        if armor is None:
-            return hit, f"{name} has no AC to check{why}"
-        cover = " with cover" if cover_bonus(seen) else ""
-        faced = f"AC {armor + bonus}{cover}"
-        word = "hit" if hit else "miss"
-        return hit, f"{name}: {roll.text} vs {faced}, {word}{why}"
 
     def _use_up_badges(self, attacker: dict | None, target: dict | None):
         """End the badges an attack roll by attacker against target has used
-        up (used_up_by_attack: Sap's Disadvantage, Vex's and Guiding Bolt's
-        Advantage, each for one roll), a log line each, in the roll's undo
-        step. Called once the roll is made, in each path that makes one."""
-        for char, name in used_up_by_attack(attacker, target):
-            if name not in char.get("conditions", []):
-                continue
-            self._log_event(
-                f"{char['name']}'s {name} is used up", character=char["name"]
-            )
-            self._remove_condition_from(char, name)
-            self._rebuild_card(char)
+        up: Combat/Fight/attacks.py's use_up_badges, each taken off through
+        the @undoable _remove_condition_from, as before: a monster's action
+        button rolls with no undo step open, and taking one off is a step."""
+        run_step(
+            self, use_up_badges, attacker, target, remove=self._remove_condition_from
+        )
 
     @undoable
     def _apply_attack_roll(self):

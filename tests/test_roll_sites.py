@@ -90,7 +90,7 @@ ROLL_SITES: dict[tuple[str, str, str], str] = {
     ("turn_panel_mixin.py", "_roll_action", "roll_extra_damage"): (
         "the Damage field it fills, changed before Enter"
     ),
-    ("turn_panel_mixin.py", "_before_hit", "roll_dice"): (
+    ("attacks.py", "settle_answered_hit", "roll_dice"): (
         "the trigger pop-up's box (triggerRolled, 8.2)"
     ),
     ("conditions_mixin.py", "_reroll_failed_save", "roll_save"): (

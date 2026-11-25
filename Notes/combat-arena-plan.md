@@ -129,7 +129,9 @@ What the code already gives, found while writing this:
   combatant dict that doesn't start with `_`. A position kept on the
   combatant (`char["position"]`) is undone with everything else, as long as
   moving is an `@undoable` method.
-- **Saving a fight in progress** (`LoggingMixin._write_log`) already keeps
+- **Saving a fight in progress** (`LoggingMixin._write_log`, with what it
+  saves worked out by `Combat/Fight/log.py`'s `record_fight` since the
+  refactor plan's R29) already keeps
   every public key of each monster and ally in `"combatants"`. Players keep
   only `PLAYER_FIGHT_KEYS` ([EncounterLogs.py](../Combat/EncounterLogs.py)),
   so `"position"` is added there.
@@ -143,6 +145,21 @@ What the code already gives, found while writing this:
   (`EncounterSpec.allies`) count since step 9 (DI-092). A walking speed is `speed_ground_ft` on a monster and
   `speed` on a player (as `_speeds_text` in `dialogs_mixin.py` reads them);
   a creature with neither shows no reach.
+- **The fight's rules outside the window**
+  ([combat-ui-refactor-plan.md](combat-ui-refactor-plan.md), step 5,
+  2026-11-23 to 24). The fight's state is a Qt-free `Fight`
+  (`Combat/Fight/fight.py`, `self.fight`; the window's `characters`,
+  `initiative_order`, `arena_settings`, ... forward to it, R18). The map's
+  questions the rules ask are `Fight` methods: `distance_ft`, `sees`,
+  `map_cover`, `covered`, `range_check`, `cover_warning`,
+  `critical_against` and `map_settings` (R21), with the window's
+  `_attacker_distance_ft`, `_sees`, ... kept as one-line wrappers. Who the
+  players can perceive is `Combat/Fight/player_knowledge.py` (R33), a
+  fall `Combat/Fight/falling.py` (R34) and a grappler's name on a
+  Grappled creature `Combat/Fight/conditions.py` (R23). `Combat/Arena/`
+  is unchanged. Until that plan is done, a step here that edits
+  `Combat/CombatUIQt/` or `Combat/Fight/` checks its Status first: two
+  changes never edit one file at once.
 - **The conditions' Speed 0** (DI-084, fixed in step 2): Grappled,
   Restrained, Paralyzed, Petrified and Unconscious give `Speed(set_to=0)`
   beside their note, so `speed_in_use` is 0 and a Grappled goblin reaches
@@ -241,8 +258,10 @@ char["moved_ft"] = 15           # how far it has moved this turn; reset as its t
 Plain lists, not `Cell`, so undo's copy and the log's JSON need nothing new.
 `Cell` is built from it where it's read.
 
-The map settings are the fight's, not a combatant's: they're kept on the app
-(`self.arena_settings`) and in the encounter log's top-level `"arena"` key.
+The map settings are the fight's, not a combatant's: they're kept on the
+`Fight` (`self.fight.arena_settings`, which the app's `self.arena_settings`
+forwards to, combat-ui-refactor-plan R18) and in the encounter log's
+top-level `"arena"` key.
 Changing them isn't an undo step yet (Q6).
 
 **Nothing about the map goes into the player log** (Decision 5). Positions
@@ -598,7 +617,8 @@ are about moving, so the map counts them.
   the ends are known, so running past an enemy isn't caught (the path the
   cheapest-walk search finds may not be the one taken).
 - The window: giving the Dash badge counts a Dash (`_take_dash`, a GM-only
-  line), ending it clears them, and a turn starting clears them too; the
+  line; now `Combat/Fight/cascade.py`'s `take_dash`, its window wrapper
+  gone: combat-ui-refactor-plan R34, R40), ending it clears them, and a turn starting clears them too; the
   move line and the warning count them ("15 of 60 ft. left this turn
   (Dash)"). A walk on the mover's own turn out of an enemy's reach
   reminds of the Opportunity Attack (status and a GM-only line), or says
@@ -894,7 +914,8 @@ target at any time (no action required)."
 
 *Built (R20):* who grapples whom is on the grappled creature,
 `char["grappled_by"] = "Edmund"` (`GRAPPLER_KEY` in arena.py, in
-`PLAYER_FIGHT_KEYS` for a player), set by `_add_condition_to` whenever
+`PLAYER_FIGHT_KEYS` for a player), set by `_add_condition_to` (now
+`Combat/Fight/conditions.py`, combat-ui-refactor-plan R23) whenever
 Grappled is given with a source (a monster's grapple rider, the dialog, the
 new row) and dropped when Grappled comes off. arena.py reads it
 (`grappler_of`, `grappled_by`, `drag_costs_extra`, `drags_at_a_cost`,
@@ -1214,7 +1235,9 @@ first"); an altitude (`_set_altitude`, one undo step) spends its movement
 warned past it). A walk's line has the speed's verb and name ("flies from
 C6 to M6 (50 ft.; 30 of 80 ft. left this turn)", "moved 90 ft., Fly Speed
 80 ft."). The token shows "↑30 ft." over it. `_land_fallers`, run as
-`_refresh_views` starts, lands whoever can't stay aloft: its altitude
+`_refresh_views` starts (its rules `Combat/Fight/falling.py`'s
+`land_fallers` since combat-ui-refactor-plan R34, which leaving a Wild
+Shape form also calls at the point its refresh used to), lands whoever can't stay aloft: its altitude
 gone, back to its Speed, with the status and a GM-only line ("Giant Eagle
 falls 30 ft. (Prone): 3d6 Bludgeoning damage, and it lands Prone unless it
 takes none (Falling)."), so what made it fall and the fall are one undo
@@ -1390,13 +1413,17 @@ distances in triggers, step 27; the tenth, light and senses, step 28.
 11. **The map on the Player Screen and the player link**, from the same
     token rows, hidden monsters left out the way `player_view_rows` leaves
     them out; kept areas on it (hidden with a hidden caster); later a fog
-    of war (the map painter plan's Q1).
+    of war (the map painter plan's Q1). After the combat UI refactor's
+    step 5 (combat-ui-refactor-plan section 4), since it reads the fight
+    from outside the window; who the players can perceive is already
+    `Combat/Fight/player_knowledge.py` (its R33).
 12. **Areas count height** (the map painter plan's Q3): each cell's height
     into an area's reach, as distances already count it (Decision 18).
 13. **Doors and jumps** (the map painter plan's Q6 and Q8): a door opened or
     closed in a fight; a Long or High Jump (Rules Glossary, Jumping) over a
     gap or down a drop instead of climbing; falling damage stays the Custom
-    Effect's.
+    Effect's. Also after the refactor's step 5, for the same reason. Items
+    12 and 14 are `Combat/Arena/`'s alone and can go any time.
 14. **More distance rules**, each a `DistanceRule` and a line in `RULES`:
     Chebyshev and 5-10-5 on squares, Euclidean (rounded to the nearest 5
     ft.), hexagons (a `HexGrid` shape with axial cells and its rule;
@@ -2352,3 +2379,7 @@ Already logged, and touched by this plan:
 - **DI-034** (fixed): attack rolls count conditions, except those that need
   a position (Prone, Paralyzed's and Unconscious's Critical Hits), which
   stay notes. These are DI-085's first candidates.
+- **DI-114** (open, found by combat-ui-refactor-plan R34's cascade probe,
+  older than that plan): a grappler that leaves the fight (a summon
+  vanishing at 0 HP, dismissed) leaves its target Grappled, though step
+  22 ends a grapple with the grappler Incapacitated.

@@ -138,7 +138,7 @@ LONG_FILES = {
         1380,
         "9b moves the More Info panel to dialogs/more_info.py",
     ),
-    "Combat/CombatUIQt/turn_panel_mixin.py": (1168, "split in 9b, after step 7"),
+    "Combat/CombatUIQt/turn_panel_mixin.py": (1148, "split in 9b, after step 7"),
     "Combat/Effects/triggers.py": (1143, "split in 9a"),
     "Combat/Effects/modifiers.py": (1112, "split in 9a"),
     "Combat/CombatUIQt/arena_view.py": (
