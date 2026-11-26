@@ -346,7 +346,8 @@ class CardsMixin(CombatWindowState):
         for dc in char.get("concentration_checks", []):
             # The mode its modifiers give, to roll it so at the table (War
             # Caster's Advantage).
-            mode = save_reminder(char, "CON", KEEPS_CONCENTRATION).mode
+            reading = self.fight.with_auras(char)
+            mode = save_reminder(reading, "CON", KEEPS_CONCENTRATION).mode
             how = "" if mode == "Neutral" else f", {mode}"
             label = QLabel(f"DC {dc} CON ({self._con_save_mod(char):+d}{how})")
             label.setObjectName("statusLabel")

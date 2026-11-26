@@ -37,7 +37,7 @@ from Combat.Effects.sight import NO_SIGHT, Sight
 from Combat.Effects.triggers import on_party_side
 from Core.Definitions import Condition
 from Core.Weapons import WEAPON_RANGES_FT, WeaponProperty
-from Model.Content.CombatModifiers import D20Mode, D20Test, RollMode
+from Model.Content.CombatModifiers import D20Mode, D20Test, Modifier, RollMode
 
 # Rules Glossary, Reach: 5 feet, 10 with a Reach weapon.
 MELEE_REACH_FT = 5
@@ -152,18 +152,22 @@ class RangeCheck:
     (labels, each counted as one: "Long range, 90 ft. away"), what the GM
     should know (`notes`: an enemy close by that doesn't see the attacker)
     and what it can't do (`warnings`: past its reach or range); and whether
-    each of the two sees the other (`sight`, for attack_plan)."""
+    each of the two sees the other (`sight`, for attack_plan). `extra`:
+    what else where creatures stand gives the roll, by label (Pack Tactics'
+    Advantage: Combat/Fight/auras.py)."""
 
     disadvantages: tuple[str, ...] = ()
     notes: tuple[str, ...] = ()
     warnings: tuple[str, ...] = ()
     sight: Sight = NO_SIGHT
+    extra: tuple[tuple[str, Modifier], ...] = ()
 
     @property
-    def modifiers(self) -> list[tuple[str, D20Mode]]:
-        """Its Disadvantages as (label, modifier) for attack_plan."""
+    def modifiers(self) -> list[tuple[str, Modifier]]:
+        """Its Disadvantages as (label, modifier) for attack_plan, then
+        `extra`."""
         mode = D20Mode((D20Test.ATTACK_ROLL,), RollMode.DISADVANTAGE)
-        return [(label, mode) for label in self.disadvantages]
+        return [(label, mode) for label in self.disadvantages] + list(self.extra)
 
 
 NO_RANGE_CHECK = RangeCheck()

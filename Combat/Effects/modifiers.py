@@ -74,6 +74,8 @@ from .always_on import always_on_modifiers
 from .sight import NO_SIGHT, Seen, Sight
 
 NEUTRAL = "Neutral"
+# What auras give a creature, on a copy a roll reads (Combat/Fight/auras.py).
+AURAS_KEY = "_auras"
 
 # What a modifier comes from: a rules condition, or the name of a cover or of
 # a lasting effect's badge ("Half Cover", "Bless").
@@ -193,7 +195,8 @@ def modifiers_on(char: dict) -> list[tuple[Source, Modifier]]:
     where = cover(char)
     if where is not None:
         pairs += [(where, modifier) for modifier in COVER_RULES[where]]
-    return pairs + effect_modifiers(char) + always_on_modifiers(char, held)
+    pairs += effect_modifiers(char) + always_on_modifiers(char, held)
+    return pairs + list(char.get(AURAS_KEY) or ())
 
 
 def _label(source: Source) -> str:

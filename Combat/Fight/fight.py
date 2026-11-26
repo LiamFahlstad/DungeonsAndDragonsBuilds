@@ -9,7 +9,7 @@ code written against those attributes didn't change. The rules move here
 from the window's mixins one area at a time (step 5.3), as functions of a
 Fight; until then this is the state they share."""
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 
 from Combat.Arena.arena import DASHES_KEY, MOVED_KEY, ArenaSettings, distance_ft
 from Combat.Arena.cover import (
@@ -33,6 +33,7 @@ from Combat.Effects.modifiers import makes_critical_hit
 from Combat.Effects.sight import UNKNOWN, Seen
 from Combat.Summons import place_after_owners
 
+from .auras import aura_modifiers, pack_tactics, with_auras
 from .health import DEAD, death_state
 
 # Each combatant's initiative roll this fight, once it's started. Not
@@ -151,8 +152,19 @@ class Fight:
         away (Sacred Flame), so only Total Cover is left of the map's."""
         reading = self.map_cover(source, target, origin)
         if ignores_cover and not reading.total:
-            return target
-        return with_cover(target, reading)
+            return self.with_auras(target)
+        return self.with_auras(with_cover(target, reading))
+
+    def with_auras(self, char: dict) -> dict:
+        """Char as a roll for it reads it, with what its allies' auras give
+        it from where they stand (Combat/Fight/auras.py: Aura of
+        Protection's bonus to saving throws): a copy to read, never to
+        change. Fight.covered gives it too."""
+        found = aura_modifiers(char, self.characters, self._feet)
+        return with_auras(char, found)
+
+    def _feet(self, a: dict, b: dict) -> int | None:
+        return None if a is b else self.distance_ft(a, b)
 
     def range_check(
         self, source: dict | None, target: dict | None, attack: AttackRange | None
@@ -160,11 +172,15 @@ class Fight:
         """What the map says of `attack`'s reach or range from source to
         target (Combat/Arena/ranges.py): Long range's Disadvantage, an enemy
         within 5 feet of a ranged attacker, past its reach or range."""
+        # Pack Tactics' Advantage, from where the attacker's allies stand
+        # (Combat/Fight/auras.py), noted when the map can't say.
+        pack = tuple(pack_tactics(source, target, self.characters, self._feet))
         if not self.arena_settings.in_use:
-            return NO_RANGE_CHECK
-        return check_attack_range(
+            return replace(NO_RANGE_CHECK, extra=pack)
+        check = check_attack_range(
             attack, source, target, self.characters, self.map_settings()
         )
+        return replace(check, extra=check.extra + pack)
 
     def cover_warning(self, source: dict | None, target: dict) -> str:
         """ "Goblin is behind Total Cover (Wall at D5): it can't be targeted

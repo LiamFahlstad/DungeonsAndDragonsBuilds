@@ -721,6 +721,28 @@ Modifier = (
     | AtTurnEnd
     | WhenHit
 )
+
+
+@dataclass(frozen=True)
+class Aura:
+    """An Emanation from its owner that gives its owner's allies within
+    `radius_ft` feet of it `modifiers`, which the combat simulator counts
+    from where each stands on the battle map, and asks about off it
+    (Combat/Fight/auras.py, plan step 9.4): Aura of Protection's bonus to
+    saving throws. `owner_too`: whether its owner gets them from the fight
+    as well; False where its sheet counts them already (Aura of
+    Protection's bonus is in its owner's own saving throw bonuses)."""
+
+    radius_ft: int
+    modifiers: tuple[Modifier, ...]
+    owner_too: bool = True
+
+    def __post_init__(self):
+        _check_feet(self.radius_ft, "An Aura's radius_ft")
+        if not self.modifiers:
+            raise ValueError("An Aura gives at least one modifier")
+
+
 MODIFIER_TYPES: dict[str, type] = {
     cls.__name__: cls
     for cls in (

@@ -6,7 +6,7 @@ from Core.Definitions import CharacterClass
 from Core.Rules import MAX_LEVEL, MIN_LEVEL, SECONDS_PER_ROUND
 from Model.Content.ActionType import ActionType
 from Model.Content.CombatEffect import CombatEffect
-from Model.Content.CombatModifiers import Modifier, Movement
+from Model.Content.CombatModifiers import Aura, Modifier, Movement
 from Model.Content.Effect import Effect
 from Model.Content.FeatureText import Block
 from Model.Creatures.Combatants import ExtendedCombatantData
@@ -466,6 +466,14 @@ class Feature(Effect):
         at (Combat/Fight/attack_action.py, plan step 9.3); the most any of
         the character's features gives counts. Returns None (default) for
         features that don't."""
+        return None
+
+    def aura(self, character: CharacterView) -> Aura | None:
+        """Override when this feature, always on, is an aura around
+        `character` that gives its allies within it modifiers, as their
+        distance from it on the battle map says (Aura of Protection:
+        Model/Content/CombatModifiers.py's Aura; Combat/Fight/auras.py, plan
+        step 9.4). Returns None (default) for features that aren't."""
         return None
 
     def regained_on(self, character: CharacterView) -> "RegainedOn | None":

@@ -20,6 +20,7 @@ from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.Content.FeatureText import Block, Facts, Option, Paragraph, dc_formula
 from Model.Content.CombatEffect import CombatCondition, EffectRoll
 from Core.Definitions import Condition
+from Model.Content.CombatModifiers import Aura, D20Bonus, D20Test
 
 
 class LayOnHands(Feature):
@@ -538,6 +539,19 @@ class AuraOfProtection(Feature):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
+
+    def aura(self, character: CharacterView) -> Aura:
+        # "You and your allies in the aura gain a bonus to saving throws equal
+        # to your Charisma modifier (minimum bonus of +1)", in a 10-foot
+        # Emanation, 30 feet with Aura Expansion (Paladin 18). Its owner's
+        # own bonus is on the sheet (apply), so only its allies get it here.
+        level = character.get_class_level(CharacterClass.PALADIN)
+        bonus = max(1, character.get_charisma_modifier())
+        return Aura(
+            radius_ft=30 if level >= 18 else 10,
+            modifiers=(D20Bonus((D20Test.SAVING_THROW,), str(bonus)),),
+            owner_too=False,
+        )
 
 
 class AbjureFoes(Feature):

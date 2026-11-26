@@ -578,7 +578,7 @@ class DamageMixin(CombatWindowState):
         modifiers count as in any save rolled here (Bless's 1d4, a mode),
         and the log says how."""
         result = roll_save(
-            char,
+            self.fight.with_auras(char),  # Aura of Protection's bonus
             "CON",
             dc,
             "Neutral",

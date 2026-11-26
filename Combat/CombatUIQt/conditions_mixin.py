@@ -768,7 +768,8 @@ class ConditionsMixin(CombatWindowState):
         assert entry is not None  # the caller checks
         rolls = char.setdefault("_repeat_rolls", {})
         turn = (self.round_number, self.current_turn_idx, condition, entry["ability"])
-        result = roll_repeat_save(char, effect, rolls.get(turn))
+        # With what its allies' auras give it (Aura of Protection).
+        result = roll_repeat_save(self.fight.with_auras(char), effect, rolls.get(turn))
         rolls[turn] = result.total
         rolled = "" if result.total is None else f" (rolled {result.total})"
         note = f" ({result.note})" if result.note else ""
