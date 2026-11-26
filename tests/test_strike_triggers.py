@@ -19,6 +19,14 @@ Expected values are the rules text's:
   condition until the start of your next turn. On a successful save, the
   target's Speed is halved until the start of your next turn, and the next
   attack roll made against the target before then has Advantage."
+- Tavern Brawler (Origin feat), Push: "When you hit a creature with an
+  Unarmed Strike as part of the Attack action on your turn, you can deal
+  damage to the target and also push it 5 feet away from you. You can use
+  this benefit only once per turn."
+- Grappler (General feat), Punch and Grab: "When you hit a creature with an
+  Unarmed Strike as part of the Attack action on your turn, you can use both
+  the Damage and the Grapple option. You can use this benefit only once per
+  turn."
 - Rules Glossary, Critical Hit: "roll the attack's damage dice twice".
 """
 
@@ -28,6 +36,9 @@ from typing import cast
 import pytest
 from PyQt6.QtWidgets import QDialog, QMessageBox
 
+from Builds.Characters.Y2024_Monk_Elements_KiviJatti import (
+    Y2024MonkElementsKiviJattiCharacterBuilder as Kivi,
+)
 from Builds.Characters.Y2024_Rogue_ArcaneTrickster_ThumSchtock import (
     Y2024RogueArcaneTricksterThumSchtockCharacterBuilder as Thum,
 )
@@ -35,7 +46,7 @@ from CharacterContent.Features.ClassFeatures.Monk.MonkFeatures import StunningSt
 from CharacterContent.Spells.SpellFactory import SpellFactory
 from Combat.Effects.triggers import TriggerChoice
 from Combat.Fight.attack_rolls import parse_attack_roll
-from Combat.Fight.effect_options import ATTACKS, effect_options
+from Combat.Fight.effect_options import ATTACKS, FEATURES, effect_options
 from Combat.Fight.saves import ATTACK_ROLL, CustomEffect
 from Combat.Monsters.CR_2.monsters import Ogre
 from Core.Definitions import Ability, CharacterClass, Condition, DamageType
@@ -47,6 +58,7 @@ from Model.Content.CombatModifiers import (
     RollMode,
     Speed,
 )
+from Model.Content.CombatEffect import CombatPush
 from Model.Content.CombatTriggers import TriggerEvent
 from Model.View import CharacterView
 from tests._combat_ui import make_ui
@@ -186,3 +198,77 @@ def test_sneak_attack_is_asked_once_a_turn(fight):
     assert [names for names in answers.asked if "Sneak Attack" in names] == [
         ["Sneak Attack"]
     ]
+
+
+# ---------------------------------------------------------------------------
+# Kivi's Unarmed Strike riders: Tavern Brawler's Push, Grappler's Punch and Grab
+
+
+@pytest.fixture
+def kivi_fight(tmp_path, monkeypatch):
+    """Kivi (20) against an Ogre (10), on Kivi's turn, every die a 1."""
+    ui = make_ui(tmp_path, [Ogre()], [Kivi().build()])
+    kivi, ogre = ui.characters
+    for char, value in zip(ui.characters, (20, 10)):
+        ui._initiative_inputs[id(char)].setText(str(value))
+    ui._start_combat()
+    ui._select_character(kivi)
+    answers = Answers()
+    monkeypatch.setattr(ui, "_ask_triggers", answers)
+    monkeypatch.setattr(random, "randint", lambda low, high: 1)
+    return ui, kivi, ogre, answers
+
+
+def _row(char: dict, title: str, name: str):
+    return next(o for o in dict(effect_options(char))[title] if o.name == name)
+
+
+def test_push_and_punch_and_grab_ride_an_unarmed_strike_once_a_turn(kivi_fight):
+    _, kivi, _, _ = kivi_fight
+    push = _row(kivi, FEATURES, "Tavern Brawler: Push")
+    grab = _row(kivi, FEATURES, "Punch and Grab")
+    for row in (push, grab):
+        assert row.trigger is not None
+        assert (row.trigger.event, row.trigger.attacks) == (
+            TriggerEvent.HIT,
+            AttackKind.UNARMED,
+        )
+        assert row.trigger.once_per_turn and row.trigger.optional
+        assert row.action_cost is None and not row.counts_uses
+    assert push.push == CombatPush(5)
+    # Punch and Grab is the Unarmed Strike's own Grapple option.
+    grapple = _row(kivi, ATTACKS, "Unarmed Strike: Grapple")
+    assert (grab.ability, grab.dc, grab.condition) == (
+        grapple.ability,
+        grapple.dc,
+        "Grappled",
+    )
+
+
+def _unarmed_hit(ui, kivi, ogre):
+    row = _row(kivi, ATTACKS, "Unarmed Strike")
+    attack = parse_attack_roll("18")
+    assert attack is not None
+    ui._set_targets([ogre])
+    ui._apply_custom_effect(
+        CustomEffect(
+            name=row.name,
+            damage=[(7, "Bludgeoning")],
+            attack_bonus=row.bonus,
+            typed_attacks={id(ogre): attack},
+            pick=row,
+            weapon_attack=False,
+        )
+    )
+
+
+def test_an_unarmed_hit_grapples_once_a_turn(kivi_fight):
+    """Its d20s all 1s, the Ogre fails the Grapple's save."""
+    ui, kivi, ogre, answers = kivi_fight
+    _unarmed_hit(ui, kivi, ogre)
+    asked = [name for names in answers.asked for name in names]
+    assert {"Tavern Brawler: Push", "Punch and Grab"} <= set(asked)
+    assert "Grappled" in ogre["conditions"]
+    _unarmed_hit(ui, kivi, ogre)
+    again = [name for names in answers.asked[1:] for name in names]
+    assert "Punch and Grab" not in again and "Tavern Brawler: Push" not in again

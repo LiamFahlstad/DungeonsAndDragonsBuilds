@@ -357,9 +357,17 @@ def test_kivis_rows_with_a_trigger():
 
     kivi = combatant_from_character(sheet)
     # Uncanny Metabolism comes with rolling Initiative (6.7) and Deflect
-    # Attacks answers a hit on Kivi (6.5, tests/test_hit_by_triggers.py).
+    # Attacks answers a hit on Kivi (6.5, tests/test_hit_by_triggers.py);
+    # Tavern Brawler's Push and Grappler's Punch and Grab ride his Unarmed
+    # Strikes (9.1, tests/test_strike_triggers.py).
     rows = {r.name: r for r in triggered_rows(kivi)}
-    assert sorted(rows) == ["Deflect Attacks", "Hill's Tumble", "Uncanny Metabolism"]
+    assert sorted(rows) == [
+        "Deflect Attacks",
+        "Hill's Tumble",
+        "Punch and Grab",
+        "Tavern Brawler: Push",
+        "Uncanny Metabolism",
+    ]
     row = rows["Hill's Tumble"]
     assert (row.name, row.trigger, row.conditions, row.uses, row.costs) == (
         "Hill's Tumble",
@@ -414,6 +422,14 @@ def fight(tmp_path, monkeypatch):
         ui._initiative_inputs[id(char)].setText(str(value))
     ui._start_combat()
     ui._select_character(kivi)
+    # Tavern Brawler's Push and Grappler's Punch and Grab ride the same
+    # Unarmed Strike hits (plan step 9.1, tests/test_strike_triggers.py):
+    # left out, so these tests see Hill's Tumble alone.
+    kivi["_feature_objects"] = [
+        f
+        for f in kivi["_feature_objects"]
+        if f.name not in ("Tavern Brawler", "Grappler")
+    ]
     answers = Answers()
     monkeypatch.setattr(ui, "_ask_triggers", answers)
     return ui, kivi, ogre, giant, answers

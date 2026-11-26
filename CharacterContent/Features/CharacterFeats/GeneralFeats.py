@@ -78,6 +78,8 @@ from Model.Content.Improvements import (
     GrantWeaponProficiency,
     GrantLanguage,
 )
+from dataclasses import replace
+
 from Core.Definitions import Ability, DamageType, Language, Sense, Skill
 from CharacterContent.Items.Weapons import WeaponProficiency
 from Model.Ledger.LedgerWriter import LedgerWriter
@@ -103,6 +105,7 @@ from Model.Content.FeatureText import (
 from Model.Content.CombatEffect import CombatCondition, CombatEffect, TurnEdge, TurnOf
 from Model.Content.CombatModifiers import (
     D20Mode,
+    AttackKind,
     D20Test,
     Modifier,
     Movement,
@@ -110,6 +113,7 @@ from Model.Content.CombatModifiers import (
     Speed,
 )
 from Model.Content.CombatTriggers import CombatTrigger, TriggerEvent
+from Model.Content.UnarmedStrikeEffects import GRAPPLE, unarmed_strike_effects
 from Model.Content.StandardActions import DASH, DODGE, HIDE, take_actions
 
 
@@ -676,9 +680,31 @@ class Grappler(_AbilityScoreFeat):
         return FeatureTarget.ENEMY
 
     def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
-        # Riders on its owner's Unarmed Strikes (a weapon row) and its
-        # attack rolls against a creature it grapples.
-        return []
+        # Punch and Grab: "When you hit a creature with an Unarmed Strike as
+        # part of the Attack action on your turn, you can use both the Damage
+        # and the Grapple option. You can use this benefit only once per
+        # turn": the Unarmed Strike's Grapple row, asked as it hits. Its
+        # Advantage against a creature it grapples is plan step 9.2's.
+        strike = next(
+            (
+                weapon
+                for weapon in getattr(character, "weapons", ())
+                if getattr(weapon, "is_unarmed_strike", False)
+            ),
+            None,
+        )
+        if strike is None:
+            return []
+        grapple = next(
+            e for e in unarmed_strike_effects(strike, character) if e.name == GRAPPLE
+        )
+        trigger = CombatTrigger(
+            TriggerEvent.HIT,
+            attacks=AttackKind.UNARMED,
+            once_per_turn=True,
+            when="the Unarmed Strike was part of the Attack action on your turn",
+        )
+        return [replace(grapple, name="Punch and Grab", trigger=trigger)]
 
 
 class GreatWeaponMaster(_AbilityScoreFeat):

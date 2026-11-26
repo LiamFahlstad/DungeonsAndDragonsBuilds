@@ -9,7 +9,9 @@ from Model.Content.Feature import (
     FeatureDuration,
     TimeUnit,
 )
-from Model.Content.CombatEffect import CombatEffect
+from Model.Content.CombatEffect import CombatEffect, CombatPush
+from Model.Content.CombatModifiers import AttackKind
+from Model.Content.CombatTriggers import CombatTrigger, TriggerEvent
 from Model.Content.StandardActions import DASH, DISENGAGE, DODGE, take_actions
 from Model.Content.Improvements import (
     DamageResistance,
@@ -595,9 +597,24 @@ class TavernBrawler(OriginFeat):
         return FeatureTarget.ENEMY
 
     def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
-        # Riders on its owner's Unarmed Strikes (a weapon row): the reroll
-        # and the push are the GM's.
-        return []
+        # Push: "When you hit a creature with an Unarmed Strike as part of the
+        # Attack action on your turn, you can deal damage to the target and
+        # also push it 5 feet away from you. You can use this benefit only
+        # once per turn." Asked as the Unarmed Strike hits. Rerolling a 1 on
+        # its damage is the GM's.
+        return [
+            CombatEffect(
+                name="Tavern Brawler: Push",
+                push=CombatPush(5),
+                spends_use=False,
+                trigger=CombatTrigger(
+                    TriggerEvent.HIT,
+                    attacks=AttackKind.UNARMED,
+                    once_per_turn=True,
+                    when="the Unarmed Strike was part of the Attack action on your turn",
+                ),
+            )
+        ]
 
 
 class Tough(OriginFeat):
