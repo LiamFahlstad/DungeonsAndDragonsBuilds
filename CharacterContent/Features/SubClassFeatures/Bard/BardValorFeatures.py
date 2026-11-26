@@ -120,6 +120,11 @@ class ExtraAttack(Feature):
     def __init__(self):
         super().__init__(name="Extra Attack", origin="College of Valor Bard Level 6")
 
+    def attacks_per_attack_action(self, character: CharacterView) -> int:
+        # "You can attack twice instead of once whenever you take the Attack
+        # action on your turn."
+        return 2
+
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         return [
             Facts(

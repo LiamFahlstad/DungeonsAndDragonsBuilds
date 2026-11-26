@@ -49,6 +49,7 @@ from Model.Content.WeaponMasteryEffects import (
     mastery_note,
 )
 
+from .attack_action import attack_action_cost
 from .monster_actions import (
     DAMAGE,
     DAMAGE_TYPE_NAMES,
@@ -1089,14 +1090,13 @@ def _weapon_rolls(weapon, sheet) -> tuple[tuple[DamageRoll, ...], list[str]]:
 
 
 def _weapon_option(char: dict, weapon, sheet) -> EffectOption:
-    """An attack with the weapon. It costs the Action only if char hasn't used
-    one this turn: Extra Attack makes more attacks with the same Action, and an
-    Opportunity Attack is a Reaction, for the GM to choose."""
+    """An attack with the weapon: the Action and all the Attack action's
+    attacks while char hasn't used its Action this turn, one free one after
+    (attack_action.py: Extra Attack); an Opportunity Attack is the GM's."""
     bonus = weapon.calculate_total_attack_roll_bonus_int(sheet)
     rolls, notes = _weapon_rolls(weapon, sheet)
     if _has_mastery(char, weapon) and mastery_note(weapon):
         notes.append(mastery_note(weapon))
-    acted = char.get("action_uses", {}).get(ActionCost.ACTION, 0) > 0
     return EffectOption(
         name=weapon.name,
         kind=WEAPON,
@@ -1106,7 +1106,7 @@ def _weapon_option(char: dict, weapon, sheet) -> EffectOption:
         roll=ATTACK_ROLL,
         bonus=bonus,
         rolls=rolls,
-        action_cost=None if acted else ActionCost.ACTION,
+        **attack_action_cost(char),
         # "A weapon attack is an attack roll made with a weapon" (Rules
         # Glossary); an Unarmed Strike isn't one.
         weapon_attack=not getattr(weapon, "is_unarmed_strike", False),

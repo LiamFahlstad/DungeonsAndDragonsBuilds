@@ -9,7 +9,15 @@ from Model.Content.Feature import (
 from Core.Definitions import CharacterClass
 from Model.View import CharacterView
 from Model.Content.FeatureText import Block, Facts, Paragraph, Table
-from Model.Content.CombatEffect import CombatEffect, CombatHitPoints, with_bonus
+from Model.Content.CombatEffect import (
+    CombatCondition,
+    CombatEffect,
+    CombatHitPoints,
+    TurnEdge,
+    TurnOf,
+    with_bonus,
+)
+from Model.Content.CombatModifiers import Note
 from Model.Content.CombatTriggers import CombatTrigger, TriggerEvent
 
 
@@ -156,6 +164,26 @@ class ActionSurge(Feature):
             ),
         )
 
+    # "On your turn, you can take one additional action": using it gives back
+    # the turn's Action (Combat/Fight/attack_action.py).
+    gives_actions = ("Action",)
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        return [
+            CombatEffect(
+                targets_self=True,
+                conditions=(
+                    CombatCondition(
+                        "Action Surge",
+                        until=(TurnEdge.END, TurnOf.CURRENT),
+                        modifiers=(
+                            Note("One more action this turn, except the Magic action"),
+                        ),
+                    ),
+                ),
+            )
+        ]
+
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         # Uses and their recharge are in the panel below.
         return [
@@ -213,6 +241,11 @@ class TacticalMind(Feature):
 class ExtraAttack(Feature):
     def __init__(self):
         super().__init__(name="Extra Attack", origin="Fighter Level 5")
+
+    def attacks_per_attack_action(self, character: CharacterView) -> int:
+        # "You can attack twice instead of once whenever you take the Attack
+        # action on your turn."
+        return 2
 
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         return [Facts((("Attack action", "Attack twice instead of once"),))]
@@ -338,6 +371,11 @@ class TwoExtraAttacks(Feature):
     def __init__(self):
         super().__init__(name="Two Extra Attacks", origin="Fighter Level 11")
 
+    def attacks_per_attack_action(self, character: CharacterView) -> int:
+        # "You can attack three times instead of once whenever you take the
+        # Attack action on your turn."
+        return 3
+
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         return [Facts((("Attack action", "Attack three times instead of once"),))]
 
@@ -396,6 +434,11 @@ class EpicBoon(Feature):
 class ThreeExtraAttacks(Feature):
     def __init__(self):
         super().__init__(name="Three Extra Attacks", origin="Fighter Level 20")
+
+    def attacks_per_attack_action(self, character: CharacterView) -> int:
+        # "You can attack four times instead of once whenever you take the
+        # Attack action on your turn."
+        return 4
 
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         return [Facts((("Attack action", "Attack four times instead of once"),))]

@@ -44,6 +44,16 @@ def _trait_names(char: dict) -> list[str]:
     ]
 
 
+def features_of(char: dict) -> list:
+    """Every feature char has, its extensions too (Two Extra Attacks, which
+    extends Extra Attack): from its sheet, else its "_feature_objects"."""
+    sheet = char.get("_stat_block")
+    walk = getattr(sheet, "iter_features_with_extensions", None)
+    if walk is not None:
+        return list(walk())
+    return list(char.get("_feature_objects") or ())
+
+
 def always_on_modifiers(
     char: dict, held: Iterable[Condition]
 ) -> list[tuple[str, Modifier]]:
@@ -53,7 +63,7 @@ def always_on_modifiers(
     sheet = char.get("_stat_block")
     found = [
         (feature.name, modifier)
-        for feature in char.get("_feature_objects") or ()
+        for feature in features_of(char)
         for modifier in getattr(feature, "combat_modifiers", lambda _: ())(sheet)
     ]
     found += [

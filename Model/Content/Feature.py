@@ -315,6 +315,12 @@ class Feature(Effect):
     # (combat_effects.py triggers lists the rest; plan step 6.8).
     untriggered = ""
 
+    # The turn's actions using this feature gives back to its owner, which
+    # the combat simulator then lets it spend again (Action Surge's "one
+    # additional action": ("Action",); Combat/Fight/attack_action.py, plan
+    # step 9.3). Empty for a feature that gives none.
+    gives_actions: tuple[str, ...] = ()
+
     def __init__(
         self,
         name: str | None = None,
@@ -452,6 +458,15 @@ class Feature(Effect):
         gives the modifiers on its badge in combat_effects() instead.
         Returns () (default) for features that change no roll."""
         return ()
+
+    def attacks_per_attack_action(self, character: CharacterView) -> int | None:
+        """Override when this feature changes how many attacks `character`
+        makes when it takes the Attack action (Extra Attack: 2; Two Extra
+        Attacks: 3), which the combat simulator opens a weapon row's Times
+        at (Combat/Fight/attack_action.py, plan step 9.3); the most any of
+        the character's features gives counts. Returns None (default) for
+        features that don't."""
+        return None
 
     def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         """Override to return when this feature's expended resource (uses, hit

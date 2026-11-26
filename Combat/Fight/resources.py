@@ -18,6 +18,7 @@ from Combat.Definitions import Action, ActionCost, Phase
 from Core.Rules import ACTIONS_PER_TURN
 
 from .asker import Asker
+from .attack_action import give_back_actions
 from .logger import Logger
 from .saves import FEATURE, SPELL, STANDARD_ACTION, CustomEffect
 from .spells import log_spell_cast
@@ -228,13 +229,10 @@ def use_pick(step: Step, caster: dict, effect: CustomEffect) -> bool | None:
         log_spell_cast(step, caster, spell, option.spell_level, effect.slot_level)
         return True
     if option.kind == FEATURE:
-        count_feature_use(
-            step,
-            caster,
-            option.feature_name or option.name,
-            option.counts_uses,
-            count=option.uses_spent,
-        )
+        name = option.feature_name or option.name
+        count_feature_use(step, caster, name, option.counts_uses, option.uses_spent)
+        # Action Surge's one more Action this turn (attack_action.py).
+        give_back_actions(step, caster, name)
         return True
     if option.monster_action is not None:
         # The Apply asked already if it's spent (effect_lacks).
