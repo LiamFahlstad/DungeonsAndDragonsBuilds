@@ -64,8 +64,9 @@ from Combat.Fight.saves import (
     EffectOption,
     read_damage,
     read_hit_points,
+    roll_effect_save,
     roll_planned_attack,
-    roll_save,
+    roll_repeat_save,
 )
 from Combat.Fight.cascade import (
     add_condition,
@@ -721,15 +722,10 @@ class ConditionsMixin(CombatWindowState):
         point of origin (effect.cover_origin)."""
         assert effect.ability is not None  # the caller checks
         name = target["name"]
-        result = roll_save(
-            self._covered(
-                source, target, effect.cover_origin, _ignores_cover(effect.pick)
-            ),
-            effect.ability,
-            effect.dc,
-            effect.mode,
-            effect.typed_totals.get(id(target)),
+        covered = self._covered(
+            source, target, effect.cover_origin, _ignores_cover(effect.pick)
         )
+        result = roll_effect_save(covered, effect, effect.typed_totals.get(id(target)))
         ability = next(full for full, short in ABILITIES if short == effect.ability)
         against = f" against {effect.name}" if effect.name else ""
         rolled = "" if result.total is None else f", rolled {result.total}"
@@ -782,7 +778,7 @@ class ConditionsMixin(CombatWindowState):
                 # The new total as rolled at the table, the bonus in it.
                 total, how = at_table, f"{at_table}, rolled at the table"
             else:
-                again = roll_save(failed.char, failed.ability, failed.dc, effect.mode)
+                again = roll_effect_save(failed.char, effect)
                 if again.total is None:
                     continue
                 total = again.total + bonus
@@ -828,9 +824,7 @@ class ConditionsMixin(CombatWindowState):
         assert entry is not None  # the caller checks
         rolls = char.setdefault("_repeat_rolls", {})
         turn = (self.round_number, self.current_turn_idx, condition, entry["ability"])
-        result = roll_save(
-            char, entry["ability"], entry["dc"], entry["mode"], rolls.get(turn)
-        )
+        result = roll_repeat_save(char, effect, rolls.get(turn))
         rolls[turn] = result.total
         rolled = "" if result.total is None else f" (rolled {result.total})"
         note = f" ({result.note})" if result.note else ""

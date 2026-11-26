@@ -1,4 +1,5 @@
 from Core.Definitions import Ability, CreatureSize, Sense
+from Model.Content.CombatModifiers import D20Mode, D20Test, Modifier, RollMode
 from Model.Content.Feature import Feature, FeatureUses, RegainedOn, FeatureTarget
 from Model.Content.Improvements import SavingThrowAdvantage, GrantSense
 from Model.Ledger.LedgerWriter import LedgerWriter
@@ -39,6 +40,21 @@ class GnomishCunning(Feature):
 
     def apply(self, ledger_writer: LedgerWriter) -> None:
         self._advantage.apply(ledger_writer)
+
+    def combat_modifiers(self, character: CharacterView) -> tuple[Modifier, ...]:
+        # "Advantage on Intelligence, Wisdom, and Charisma saving throws." Its
+        # SavingThrowAdvantage is the sheet's, which the fight doesn't read.
+        return (
+            D20Mode(
+                (D20Test.SAVING_THROW,),
+                RollMode.ADVANTAGE,
+                (
+                    Ability.INTELLIGENCE,
+                    Ability.WISDOM,
+                    Ability.CHARISMA,
+                ),
+            ),
+        )
 
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         return [

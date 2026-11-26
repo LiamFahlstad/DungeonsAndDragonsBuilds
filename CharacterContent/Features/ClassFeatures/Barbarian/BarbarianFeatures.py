@@ -15,12 +15,13 @@ from Model.Content.Improvements import (
     SkillProficiencyChoice,
     SpeedBonus,
 )
-from Core.Definitions import Ability, DamageType, Skill
+from Core.Definitions import Ability, Condition, DamageType, Skill
 from Model.Content.CombatEffect import CombatCondition, CombatEffect, CombatRegain
 from Model.Content.CombatTriggers import CombatTrigger, TriggerEvent
 from Model.Content.CombatModifiers import (
     D20Mode,
     D20Test,
+    Modifier,
     Note,
     Resistance,
     RollMode,
@@ -272,6 +273,18 @@ class WeaponMastery(Feature):
 class DangerSenseText(Feature):
     def __init__(self):
         super().__init__(name="Danger Sense", origin="Barbarian Level 2")
+
+    def combat_modifiers(self, character: CharacterView) -> tuple[Modifier, ...]:
+        # "Advantage on Dexterity saving throws unless you have the Incapacitated
+        # condition." (DangerSense gives it on the sheet, which the fight doesn't read.)
+        return (
+            D20Mode(
+                (D20Test.SAVING_THROW,),
+                RollMode.ADVANTAGE,
+                (Ability.DEXTERITY,),
+                unless_conditions=(Condition.INCAPACITATED,),
+            ),
+        )
 
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         return [

@@ -6,7 +6,7 @@ from Core.Definitions import CharacterClass
 from Core.Rules import MAX_LEVEL, MIN_LEVEL, SECONDS_PER_ROUND
 from Model.Content.ActionType import ActionType
 from Model.Content.CombatEffect import CombatEffect
-from Model.Content.CombatModifiers import Movement
+from Model.Content.CombatModifiers import Modifier, Movement
 from Model.Content.Effect import Effect
 from Model.Content.FeatureText import Block
 from Model.Creatures.Combatants import ExtendedCombatantData
@@ -437,6 +437,21 @@ class Feature(Effect):
         badge in combat_effects() instead. Return None (default) for
         features that don't."""
         return None
+
+    def combat_modifiers(self, character: CharacterView) -> tuple[Modifier, ...]:
+        """Override when this feature, always on, changes a roll the combat
+        simulator makes for `character` (Model/Content/CombatModifiers.py),
+        as a badge's modifiers do while it's on: Brave's Advantage on saves
+        to avoid or end Frightened, War Caster's on Concentration saves
+        (Notes/combat-effects-plan.md, step 9.2). The fight reads them
+        beside the badges' (Combat/Effects/modifiers.py, modifiers_on). Only
+        what the fight doesn't already take from the sheet: not a save's
+        bonus, AC or a Resistance apply() gives, which the combatant already
+        has; a sheet's Advantage (SavingThrowAdvantage) isn't read there, so
+        it's said here too. A feature that does it only while it's used
+        gives the modifiers on its badge in combat_effects() instead.
+        Returns () (default) for features that change no roll."""
+        return ()
 
     def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         """Override to return when this feature's expended resource (uses, hit

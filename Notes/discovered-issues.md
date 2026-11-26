@@ -560,6 +560,16 @@ On a case-insensitive filesystem, --path Combat/Campaigns/X/Campaign.py resolves
 **History**
 - 2026-11-24 main session (claude-opus-5-5): found
 
+### DI-118 · Deflect Attacks tests patch turn_panel.roll_dice, but the roll moved to Combat/Fight/attacks.py, so they roll real dice and fail at random
+- **Status:** open
+- **Area:** combat-simulator
+- **Where:** `tests/test_hit_by_triggers.py:410`, `Combat/Fight/attacks.py:177`
+
+test_deflect_attacks_takes_its_roll_off_the_damage and test_deflect_attacks_can_take_it_all monkeypatch turn_panel_mixin.roll_dice. Since 22c5b7bd (step 5.4, answered hits into Combat/Fight) the reduction is rolled by settle_answered_hit in Combat/Fight/attacks.py with its own imported roll_dice, so the patch misses it: both fail on a clean HEAD (hp 26 != 27, 27 != 23) depending on the d10. Fix: monkeypatch Combat.Fight.attacks.roll_dice (or both) in those tests.
+
+**History**
+- 2026-11-25 main session (combat-effects plan 9.2): found
+
 ## Fixed
 
 ### DI-001 · Temporary Hit Points stack instead of keeping one amount

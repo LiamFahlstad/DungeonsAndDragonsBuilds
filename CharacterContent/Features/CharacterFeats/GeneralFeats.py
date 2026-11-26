@@ -101,7 +101,14 @@ from Model.Content.FeatureText import (
     dc_formula,
 )
 from Model.Content.CombatEffect import CombatCondition, CombatEffect, TurnEdge, TurnOf
-from Model.Content.CombatModifiers import Movement, Speed
+from Model.Content.CombatModifiers import (
+    D20Mode,
+    D20Test,
+    Modifier,
+    Movement,
+    RollMode,
+    Speed,
+)
 from Model.Content.CombatTriggers import CombatTrigger, TriggerEvent
 from Model.Content.StandardActions import DASH, DODGE, HIDE, take_actions
 
@@ -1793,6 +1800,17 @@ class Telepathic(_AbilityScoreFeat):
 class WarCaster(_AbilityScoreFeat):
     _NAME = "War Caster"
     _ABILITIES = (Ability.INTELLIGENCE, Ability.WISDOM, Ability.CHARISMA)
+
+    def combat_modifiers(self, character: CharacterView) -> tuple[Modifier, ...]:
+        # "Advantage on Constitution saving throws that you make to maintain Concentration."
+        return (
+            D20Mode(
+                (D20Test.SAVING_THROW,),
+                RollMode.ADVANTAGE,
+                (Ability.CONSTITUTION,),
+                concentration=True,
+            ),
+        )
 
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         return [

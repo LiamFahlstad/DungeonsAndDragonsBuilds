@@ -1,5 +1,5 @@
 """The modifiers on a combatant, and what they make of a roll against it or by
-it. A combatant is the combat UI's dict. Its modifiers come from three places:
+it. A combatant is the combat UI's dict. Its modifiers come from four places:
 
 - its "conditions", names, each a rules condition ("Restrained"), the same
   under a longer custom name ("Restrained by vines"), or a badge, which has no
@@ -7,7 +7,8 @@ it. A combatant is the combat UI's dict. Its modifiers come from three places:
   visibility state is the Invisible condition too (DI-068);
 - its cover (its "visibility_states"), the most protective one;
 - its lasting effects (active_effects.py): what a badge it has says it gives
-  (Bless's 1d4, Shield of Faith's +2 AC), while it has the badge.
+  (Bless's 1d4, Shield of Faith's +2 AC), while it has the badge;
+- what it has all the time, its features' and traits' (always_on.py).
 
 What a modifier says counts in a roll the simulator makes, a D20Bonus's dice
 rolled and added, and a hit's extra damage (hit_plan) rolled with its damage:
@@ -69,6 +70,7 @@ from Model.Content.StandardActions import DODGE
 from Model.Creatures.Combatants import Visibility
 
 from .active_effects import ActiveEffect, active_effects
+from .always_on import always_on_modifiers
 from .sight import NO_SIGHT, Seen, Sight
 
 NEUTRAL = "Neutral"
@@ -180,16 +182,18 @@ def effect_modifiers(char: dict) -> list[tuple[str, Modifier]]:
 
 def modifiers_on(char: dict) -> list[tuple[Source, Modifier]]:
     """Each modifier on char, with what it comes from: its rules conditions'
-    (the Condition), its cover's and its lasting effects' (their names)."""
+    (the Condition), its cover's, its lasting effects' and its always-on
+    features' and traits' (their names)."""
+    held = held_conditions(char)
     pairs: list[tuple[Source, Modifier]] = [
         (condition, modifier)
-        for condition in held_conditions(char)
+        for condition in held
         for modifier in CONDITION_RULES[condition]
     ]
     where = cover(char)
     if where is not None:
         pairs += [(where, modifier) for modifier in COVER_RULES[where]]
-    return pairs + effect_modifiers(char)
+    return pairs + effect_modifiers(char) + always_on_modifiers(char, held)
 
 
 def _label(source: Source) -> str:
@@ -387,14 +391,6 @@ def _plan(
         ]
         notes.append(f"{label} (not counted): {'; '.join(texts)}")
     return RollPlan(mode, "", tuple(notes), tuple(bonuses))
-
-
-def save_plan(char: dict, ability: str, mode: str, typed: bool = False) -> RollPlan:
-    """Char's saving throw of `ability` ("DEX"), asked for with `mode`.
-    `typed`: a total rolled at the table, which only an automatic failure
-    changes; its mode and bonuses are the GM's."""
-    sources = ((_label(c), m) for c, m in modifiers_on(char))
-    return _plan(mode, sources, D20Test.SAVING_THROW, ability, typed)
 
 
 def _whose(char: dict | None, source: Source) -> str:

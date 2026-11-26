@@ -1,4 +1,5 @@
-from Core.Definitions import CreatureSize, Skill, Sense
+from Core.Definitions import Condition, CreatureSize, Skill, Sense
+from Model.Content.CombatModifiers import D20Mode, D20Test, Modifier, RollMode
 from Model.Content.Feature import Feature
 from Model.Content.CombatEffect import CombatEffect
 from Model.Content.Improvements import SkillProficiencyChoice, GrantSense
@@ -33,6 +34,17 @@ class FeyAncestry(Feature):
             origin="Khoravar Trait",
             passive=True,
             usage_tags=["buff"],
+        )
+
+    def combat_modifiers(self, character: CharacterView) -> tuple[Modifier, ...]:
+        # "Advantage on saving throws you make to avoid or end the Charmed
+        # condition."
+        return (
+            D20Mode(
+                (D20Test.SAVING_THROW,),
+                RollMode.ADVANTAGE,
+                against_conditions=(Condition.CHARMED,),
+            ),
         )
 
     def get_improved_description(self, character: CharacterView) -> list[Block]:

@@ -43,7 +43,8 @@ from Combat.Fight.effect_options import (
     feature_options,
 )
 from Combat.Fight.saves import STANDARD_ACTION
-from Combat.Effects.modifiers import attack_plan, save_plan
+from Combat.Effects.modifiers import attack_plan
+from Combat.Effects.roll_plans import save_plan
 from Combat.PlayerCombatant import combatant_from_character
 from Combat.EncounterLogs import TURN_PREFIX
 from Combat.PlayerLog import is_round_key

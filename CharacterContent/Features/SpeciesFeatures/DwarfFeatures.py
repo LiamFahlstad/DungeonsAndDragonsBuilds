@@ -13,7 +13,8 @@ from Model.Content.Improvements import (
     GrantSense,
     HitPointsPerLevelBonus,
 )
-from Core.Definitions import CreatureSize, DamageType, Sense
+from Core.Definitions import Condition, CreatureSize, DamageType, Sense
+from Model.Content.CombatModifiers import D20Mode, D20Test, Modifier, RollMode
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Core.Rules import PROFICIENCY_BONUS_GAINED_AT, MAX_PROFICIENCY_BONUS
 from Model.View import CharacterView
@@ -48,6 +49,17 @@ class DwarvenResilience(Feature):
 
     def apply(self, ledger_writer: LedgerWriter):
         self._resistance.apply(ledger_writer)
+
+    def combat_modifiers(self, character: CharacterView) -> tuple[Modifier, ...]:
+        # "Advantage on saving throws you make to avoid or end the Poisoned
+        # condition." Its Resistance is on the sheet.
+        return (
+            D20Mode(
+                (D20Test.SAVING_THROW,),
+                RollMode.ADVANTAGE,
+                against_conditions=(Condition.POISONED,),
+            ),
+        )
 
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         return [

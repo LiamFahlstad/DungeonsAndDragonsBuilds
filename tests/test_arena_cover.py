@@ -37,7 +37,8 @@ from Combat.Arena.terrain import (
     Spot,
 )
 from Combat.Fight.effect_options import _spell_named, read_effect_text
-from Combat.Effects.modifiers import armor_class, save_plan
+from Combat.Effects.modifiers import armor_class
+from Combat.Effects.roll_plans import save_plan
 
 BARREL = Spot(thing=MapObject("Barrel", blocks=True, cover=HALF))
 PILLAR = Spot(thing=MapObject("Pillar", blocks=True, cover=THREE_QUARTERS))

@@ -93,6 +93,7 @@ from Combat.Fight.saves import (
     known_attack_bonus,
     known_save_dc,
     rolled_damage,
+    save_against,
     save_modifier,
     save_reminder,
 )
@@ -382,26 +383,22 @@ def _attack_tooltip(
     )
 
 
-def _save_text(target: dict, ability: str) -> str:
-    """A target's row for a saving throw: its bonus with what its modifiers
-    add, and what they do to the roll, to roll it that way at the table
-    ("DEX +3, Disadvantage", "DEX +5 (cover)", "WIS +1 +1d4", "DEX fails")."""
-    plan = save_reminder(target, ability)
+def _save_row(target: dict, ability: str, plan: RollPlan) -> tuple[str, str]:
+    """A target's row for a saving throw made as `plan` says, and its tooltip:
+    its bonus with what its modifiers add, and what they do to the roll, to
+    roll it that way at the table ("DEX +3, Disadvantage", "DEX +5 (cover)",
+    "WIS +1 +1d4", "DEX fails"), and why."""
+    why = [plan.auto_fail] if plan.auto_fail else [*plan.notes, *_bonus_notes(plan)]
+    tooltip = "\n".join([f"{target['name']}'s {ability} saving throw bonus", *why])
     if plan.auto_fail:
-        return f"{ability} fails"
+        return f"{ability} fails", tooltip
     flat, dice = bonus_reminder(plan)
     text = f"{ability} {save_modifier(target, ability) + flat:+d}"
     if dice:
         text = f"{text} {dice}"
     if any(label == cover(target) for label, _ in plan.bonuses):
         text = f"{text} (cover)"
-    return text if plan.mode == "Neutral" else f"{text}, {plan.mode}"
-
-
-def _save_tooltip(target: dict, ability: str) -> str:
-    plan = save_reminder(target, ability)
-    why = [plan.auto_fail] if plan.auto_fail else [*plan.notes, *_bonus_notes(plan)]
-    return "\n".join([f"{target['name']}'s {ability} saving throw bonus", *why])
+    return (text if plan.mode == "Neutral" else f"{text}, {plan.mode}"), tooltip
 
 
 def _damage_preview(text: str, chosen_type: str | None) -> str:
@@ -1028,6 +1025,7 @@ class UseCastDialog:
         self.amount_combo.currentIndexChanged.connect(self.show_amount_controls)
         self.amount_combo.currentIndexChanged.connect(self.show_roll_controls)
         self.damage_input.textChanged.connect(self.show_typed_type)
+        self.name_combo.currentTextChanged.connect(lambda _: self.show_save_bonuses())
         for signal in (
             self.amount_combo.currentIndexChanged,
             self.roll_combo.currentIndexChanged,
@@ -1386,6 +1384,7 @@ class UseCastDialog:
         ability = self.ability_combo.currentData()
         if ability is not None:
             self.last_ability["value"] = ability
+        against = save_against(self.picked["option"], self.name_combo.currentText())
         for target in self.targets:
             info = self.save_infos[id(target)]
             if ability is None:
@@ -1393,8 +1392,9 @@ class UseCastDialog:
                 continue
             seen = self.covered(target, self.cover_origin)
             far = self.spell_range_text(target)
-            info.setText(_save_text(seen, ability) + (f"; {far}" if far else ""))
-            info.setToolTip(_save_tooltip(seen, ability))
+            text, tip = _save_row(seen, ability, save_reminder(seen, ability, against))
+            info.setText(text + (f"; {far}" if far else ""))
+            info.setToolTip(tip)
 
     def show_roll_controls(self):
         kind = self.roll_kind()

@@ -22,6 +22,8 @@ ROLLERS = {
     "roll_bonuses",
     "_roll_d20",
     "roll_save",
+    "roll_effect_save",
+    "roll_repeat_save",
     "roll_planned_attack",
     "roll_extra_damage",
     "rolled_modifiers",
@@ -39,6 +41,8 @@ ROLL_SITES: dict[tuple[str, str, str], str] = {
     ("saves.py", "roll_save", "randint"): "helper: typed= is the table's",
     ("saves.py", "roll_save", "_roll_d20"): "helper: typed= is the table's",
     ("saves.py", "roll_save", "roll_bonuses"): "helper: typed= is the table's",
+    ("saves.py", "roll_effect_save", "roll_save"): "helper: typed= is the table's",
+    ("saves.py", "roll_repeat_save", "roll_save"): "helper: typed= is the table's",
     ("saves.py", "roll_planned_attack", "_roll_d20"): "helper",
     ("saves.py", "roll_planned_attack", "roll_bonuses"): "helper",
     ("saves.py", "roll_extra_damage", "roll_dice"): "helper: plan.at_table",
@@ -57,14 +61,14 @@ ROLL_SITES: dict[tuple[str, str, str], str] = {
     ("effects_given.py", "with_hit_extras", "roll_extra_damage"): (
         "a box under the target's row (typedExtra, 8.1)"
     ),
-    ("conditions_mixin.py", "_roll_effect_save", "roll_save"): (
+    ("conditions_mixin.py", "_roll_effect_save", "roll_effect_save"): (
         "a box per target (typedTotal)"
     ),
     ("effects_given.py", "give_badge_modifiers", "rolled_modifiers"): (
         "the dialog's Hit Point maximum box (8.6)"
     ),
     # Turns
-    ("conditions_mixin.py", "_roll_repeat_save", "roll_save"): (
+    ("conditions_mixin.py", "_roll_repeat_save", "roll_repeat_save"): (
         "a player's is a reminder; a monster's with monsters_roll_turn_dice off"
     ),
     ("turn_panel_mixin.py", "_start_monster_turn", "_recharge_roll"): (
@@ -93,7 +97,7 @@ ROLL_SITES: dict[tuple[str, str, str], str] = {
     ("attacks.py", "settle_answered_hit", "roll_dice"): (
         "the trigger pop-up's box (triggerRolled, 8.2)"
     ),
-    ("conditions_mixin.py", "_reroll_failed_save", "roll_save"): (
+    ("conditions_mixin.py", "_reroll_failed_save", "roll_effect_save"): (
         "the trigger pop-up's box (triggerRolled, 6.7): the new total"
     ),
     # Initiative

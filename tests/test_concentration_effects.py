@@ -24,7 +24,8 @@ from Combat.Effects.active_effects import (
     link_concentration,
     unlink_concentration,
 )
-from Combat.Effects.modifiers import modifiers_on, save_plan
+from Combat.Effects.modifiers import modifiers_on
+from Combat.Effects.roll_plans import save_plan
 from tests._combat_ui import make_ui
 
 NEUTRAL = "Neutral"

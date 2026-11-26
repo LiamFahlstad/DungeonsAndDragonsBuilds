@@ -11,7 +11,10 @@ change:
 - add new questions to **Open questions** (with a suggestion), and move them
   to **Decisions** once answered;
 - log bugs found along the way with the `discovered-issues` skill and list
-  their ids in **Discovered issues**.
+  their ids in **Discovered issues**;
+- when a step closes a gap in **Closing the gaps** (Phase 9), take it out of
+  that step's tables (or the Appendix's lists) and refresh the counts; a gap
+  found later goes in the table of the step that would close it.
 
 **Keep the overhead low (the user, 2026-11-10).** Only the user works in this
 codebase, so a step doesn't need the full multi-agent ceremony. Make the
@@ -49,11 +52,12 @@ change and move on; the full suite can run later.
 | 2 | Extensions list their own uses under their parent | **Done** (R10, new) |
 | S | **Spells as classes** (new direction, 2026-11-09; see its section) | S.1 base class, factory and converter **done**; S.2 the 57 spells with combat effects converted **done**; S.2c card lines as dataclasses **done** (R20); S.3 new effects go into classes **done** (R22); S.5 drift check **done** (R23); S.4 **done** (R26): all 594 spells are classes, the agents' tools switched over (R24), Q15 and DI-065 done (R25), every companion file deleted and nothing reads them |
 | 3 | Lasting effects (3.1-3.6) | 3.1 **done** (R28-R34): `char["active_effects"]`, one plain dict per badge, in the new Qt-free `Combat/Effects/active_effects.py`; the seven old keys are read only by its `upgrade_old_keys`, where a log is read; an old fight log replays the same (`tests/test_active_effects.py`). 3.2 **done** (R27), ahead of 3.1: the rules conditions are data, and saves, attack rolls (all three paths), AC, damage Resistance and condition immunity read them. 3.3 **done** (R35-R40): a badge's `CombatCondition` says its `modifiers`, the record keeps them as JSON, and `modifiers_on` reads them beside the conditions and cover; Bless's 1d4 is rolled into the saves (a monster's Concentration save too, R40) and attack rolls the simulator makes, Shield of Faith's +2 counts in AC, cover's +2/+5 in Dexterity saves (DI-066); a typed total stays as typed, with the bonus as a reminder in the dialog. 3.4 **done** (R41-R47): `ExtraDamageFrom` (on the target, from its effect's caster) and `ExtraDamageOnHit` (on the attacker); Hunter's Mark's 1d6 Force on its caster's hits and Divine Favor's 1d4 Radiant on its caster's weapon hits are rolled into the hits the dialog and a monster's action buttons deal, doubled on a Critical Hit, each type resisted on its own; a typed damage total stays as typed, with the extra as a reminder in the dialog. 3.5 **done** (R48-R53): `AtTurnStart` / `AtTurnEnd` are modifiers on a badge that name a row of their spell; Heroism's Temporary Hit Points are given as its target's turn starts, and Spirit Guardians asks, as each enemy of its caster ends its turn, with a button that opens the Custom Effect dialog with its damage row picked. 3.6 **done** (R54-R56): ending a concentration also ends every record linked to it (`held_by_concentration`), a creature leaving the fight ends its concentration first, and a badge another running effect still holds is relinked to that effect's caster. Added after (Decision 17, R125, 2026-11-11): a picked spell that gives a rules condition gives a badge of its own name beside it ("Charmed" and "Friends"), with its card, and taking either off takes the other off; a picked feature too (R126: "Turn Undead" beside Frightened and Incapacitated, "Hill's Tumble" beside Prone), not a weapon or a monster's action |
-| 4 | One `combat-effects` skill; feature agent; content rollout | 4.1 **done** (R57-R60): the `combat-effects` skill and `combat_effects.py` (renamed from spell-mechanics), with the principles, a Features section, `features`, `coverage` and `notes`, and features in `check`; `is_curated` is `is_described`. 4.2 **done**: the `feature-combat-effects` agent (opus); the spell agent is `spell-combat-effects`. 4.4 **done**: `coverage`. 4.3 (content): **Curse of the Lich done** (R61-R65, 2026-11-11): spells 44/44, features 23 described, 37 nothing to apply, none read from text; Time Loop PR was already done. Next: spells level by level and features class by class, which wait for the user's go (Decision 9) |
+| 4 | One `combat-effects` skill; feature agent; content rollout | 4.1 **done** (R57-R60): the `combat-effects` skill and `combat_effects.py` (renamed from spell-mechanics), with the principles, a Features section, `features`, `coverage` and `notes`, and features in `check`; `is_curated` is `is_described`. 4.2 **done**: the `feature-combat-effects` agent (opus); the spell agent is `spell-combat-effects`. 4.4 **done**: `coverage`. 4.3 (content): **Curse of the Lich done** (R61-R65, 2026-11-11): spells 44/44, features 23 described, 37 nothing to apply, none read from text; Time Loop PR was already done. Next: spells level by level and features class by class, which wait for the user's go (Decision 9); ranked in Phase 9 (9.16) |
 | 5 | Sheet chips, monster score | Not started |
 | 6 | **Triggers** (new concept, 2026-11-11; see its section): a row or badge says *when* it's used (a hit, damage taken, dropping to 0, ...), and the simulator applies it itself (AUTO) or asks with a pop-up as it happens (ASK) | 6.1-6.3 **done** (R66-R73, 2026-11-11): `CombatTrigger` on a row (`CombatEffect.trigger`, `Model/Content/CombatTriggers.py`), `outcome_firings` with its gates and modes, and the hit hooks in all three hit paths: when Kivi hits a Large or smaller creature and deals it damage, one pop-up per Apply asks about Hill's Tumble; Apply gives Prone, spends a Giant Ancestry use and logs it, inside the hit's undo step. Only `HIT` and `MISS` fire; the other events are data. 6.4 **done** (R74-R77, 2026-11-11): a monster's hit that gives a condition in a sentence of its own ("If the target is a Large or smaller creature, it has the Prone condition", "..., and the target has the Poisoned condition until the end of its next turn", "the Grappled condition (escape DC 13)") is read as a rider row of its own ("Tree Club: Prone") with an AUTO `after=` trigger: the Hill Giant's Tree Club knocks a Large target Prone from its button and Enter and from the dialog, asks when the size isn't known, and does nothing to a Huge target or on a miss. 101 riders in the catalog. 6.5 **done** (R108-R114, 2026-11-11): as an attack roll hits, the creature hit is asked about its `HIT_BY` rows before the damage (Shield's +5 turns Clover's 20 against AC 18 into a miss and spends her Reaction and a slot; Kivi's Deflect Attacks takes its 1d10 + 8 off, `CombatEffect.damage_reduction`), and damage from a creature asks the one damaged about its `TAKES_DAMAGE` rows (Hellish Rebuke, newly described; Storm's Thunder); a Reaction used this round or an Incapacitated owner asks no more. A badge's answer to a hit, built after (Q57, R161-R166): `WhenHit`. 6.6 **done** (R127-R131, 2026-11-12): as damage would drop a creature to 0 Hit Points, it's asked first about its `DROPS_TO_ZERO` rows (Ymira's Relentless Endurance: Apply leaves her at 1, not Unconscious, a use spent, in the hit's undo step; not when killed outright), `CombatEffect.drops_to`; a creature that reduces an enemy to 0 gets its `REDUCES_TO_ZERO` rows (Dark One's Blessing's 6 Temporary Hit Points, given at once; the trigger's new `enemy_only` gate); Relentless Rage described too; damage that leaves a creature Bloodied asks about its `BLOODIED` rows (Harvest Undead, R131). 6.7 **done** for the content the parties and examples have (R132-R139, 2026-11-12): as the fight starts, `ROLLS_INITIATIVE` rows are given or asked once (Kivi's Uncanny Metabolism gives back his Focus Points, `CombatEffect.regains`; Superior Inspiration, Perfect Focus, Evergreen Wild Shape, Ever-Ready Shot, Persistent Rage); a failed save the dialog rolls asks about `FAILS_SAVE` rows (Indomitable's reroll +Fighter level, `reroll_save`, with a box for the roll made at the table); `USES` and `CombatTrigger.aim` give spells their later steps (Ice Knife's explosion on its target and the creatures added; Green-Flame Blade's fire on the creature picked). Not built: Weapon Mastery (Q38, now its own step 6.9), `CASTS_SPELL` (no source in the parties), Diamond Soul (Q64). 6.8 **done** (R140-R142, 2026-11-12): the skill's Triggers section (event, mode, gates, `when`, and when to leave one untriggered), `combat_effects.py triggers` and the trigger counts in `coverage`, `Feature.untriggered`; both parties' features with a Trigger fact are triggered (Deflect Attacks, Uncanny Metabolism, Hill's Tumble) or say why not (8), and a test keeps it so. 6.9 **done** (R143-R148, 2026-11-12): each mastery property a wielder has is a row after its weapon's ("Longsword: Sap", `Model/Content/WeaponMasteryEffects.py`), fired only after the weapon picked in the dialog: Sap and Vex are AUTO badges that count for one attack roll (the new `once` and `by_caster` modifier fields; Guiding Bolt and Vicious Mockery written with them too), Slow a Speed -10 badge, Topple a DC 8 + modifier + PB Constitution save or Prone, Graze the modifier's damage on a miss, Push a reminder for a Large or smaller target, Cleave an attack roll on another creature once per turn; Nick a note on the weapon's row. 6.10 **done** (R149-R151, 2026-11-12, Q65): `TriggerEvent.ATTACKS`, asked of everyone else in the fight as the dialog or a monster's button is about to roll an attack (`attack_roll_firings`); Gabriel's Warding Flare gives the attacker a one-roll Disadvantage badge, which that roll counts and uses up. Added after (Decision 19, R156-R160, 2026-11-13): what a hit gives by itself is given as the hit lands, not as its Apply ends, so with Times 2 (Extra Attack) the second roll has the first hit's Vex (Q67); a use can spend several of its feature's uses, `CombatEffect.uses_spent` (Elemental Burst's 2 Focus Points, newly described; Q64). And (Decision 20, R161-R166, 2026-11-13) a badge answers a hit on its bearer: `WhenHit(effect, attacks, when)`, the bearer using a row of its spell on the attacker once the hit's damage is dealt, with the slot it was cast with kept on the badge; Armor of Agathys (5 Cold, 5 more per slot level, as the Ogre's Greatclub hits) and Fire Shield (2d8 Fire or Cold, asked: "within 5 feet") described, and a monster's button says whether its attack is melee or ranged (Q57). Phase 6 is done but for Q63, Q66 |
 | 7 | **Stat changes while an effect is on** (new, 2026-11-11; see its section): AC formulas and floors, Immunity and Vulnerability beside the built Resistance, Speed, size, Hit Point maximum, worked out from the stored stat plus the badges, and shown on the card with their sources | 7.1-7.2 **done** (R78-R83, 2026-11-11): `ArmorClassBase` (Mage Armor) and `ArmorClassMinimum` (Barkskin) beside `ArmorClass`, worked out by `armor_class(char, stored)`, which every attack path reads through `armor_bonus`; the same effect twice adds once; `DamageImmunity` and `Vulnerability` beside `Resistance` in `_damage_type_modifier`; Mage Armor, Barkskin, Stoneskin, Protection from Energy (a row per type) and Rage described (`tests/test_stat_changes.py`). 7.4 **done** (R84-R89, 2026-11-11): `HitPointMaximum(amount, upcast)`, rolled as the badge is given; `hit_point_maximum(char)` is the stored `max_hp` plus the badges, read by every cap, bar and Bloodied check; giving it raises current HP as Hit Points regained, ending it caps current HP (`Action.LOSE_HIT_POINTS`, replayed); Aid and Heroes' Feast described. 7.5 **done** (R90-R93, 2026-11-11): the card's and More Info's AC is the AC in use with what changes it ("AC: 17 (15; Shield of Faith +2)", cover too), a "Max HP 35 (30; Aid +5)" line, and the defenses the conditions and badges give with where from ("Resist: ...; Bludgeoning, Piercing, Slashing (Rage)", "Cond. Immune: Frightened (Heroism)"); the player view's full rows show the AC in use. 7.3 **done** (R94-R98, 2026-11-11): `Speed(bonus, multiplier, set_to)` and `Size(steps, becomes)`, worked out by `speed_in_use` and `size_in_use`; the trigger size gates read the size in use (an Enlarged Large Ogre is Huge to Hill's Tumble); the card shows "Speed: 80 ft. (40 ft.; Haste ×2)" and, when changed, "Size Huge (Large; Enlarge/Reduce +1)"; Haste (and its lethargy row), Longstrider, Enlarge/Reduce and Large Form described. 7.6 **done** (R106, R107, 2026-11-11): the rubric's Stat changes table, `combat_effects.py stats` (each note naming AC, a defense, Speed, the Hit Point maximum or size, marked counted or NOTE ONLY), and both parties' rows: Shield's `ArmorClass(5)`, Absorb Elements' `Resistance` (a row per type), Silence's Thunder `DamageImmunity`, Shield of Faith's restating note gone. **Phase 7 done** |
 | 8 | **Rolled at the table** (new, 2026-11-11, Decision 15; see its section): whatever the simulator rolls, the GM can give it a number rolled at the table instead | **Done** (R115-R124, 2026-11-11). 8.1-8.3: a hit's extra damage (Hunter's Mark, Divine Favor) has a box per target in the Custom Effect dialog, added as typed, even to a typed damage total, Critical Hit or not; Deflect Attacks' and Stone's Endurance's reduction has a box in the trigger pop-up; the setting "Roll monsters' recharges and repeat saves" (`monsters_roll_turn_dice`) off turns those into turn reminders. 8.4-8.7 (Decision 16): a card's Set initiative... (a summon's roll, or anyone's); a box takes one roll per Times copy ("nat 1, nat 20"); a Hit Point maximum box for a pick whose badge rolls one (Heroes' Feast), and a player's dice Hit Points at a turn's start left to a turn-column button; `tests/test_roll_sites.py` fails on a new place that rolls until it's listed with its way to the table (`tests/test_table_rolls.py`) |
+| 9 | **Closing the gaps** (audit 2026-11-24; see its section): every spell, feature, monster ability and item the combat effects don't cover yet, or cover only in part, ranked by how much it matters at the table and listed under the step that closes it | Audit **done** (2026-11-24). Most critical first (Decision 21): 9.2's saves **done** (R170, 2026-11-25): Magic Resistance (every monster with the trait, by name) has Advantage on a save against a spell; Brave, Fey Ancestry and Dwarven Resilience on saves to avoid or end their condition; War Caster on Concentration saves; Danger Sense, Gnomish Cunning and Dual Mind on their abilities' saves. Left of 9.2: Grappler's attack Advantage, Improved Critical, Sunlight Sensitivity, magic armor (with 9.8). Next: 9.3 (rank 9; Q69 first), then 9.1 |
 
 **Content described so far.** Spells: 57 (2024) + 1 (2014), all as classes
 (every spell is a class since S.4; 58 have combat effects);
@@ -665,6 +669,12 @@ suggested.
     one to build). *Built (R161-R166)*, as `WhenHit` rather than the
     suggested `OnTrigger(trigger, effect)` (R161). Q63 and Q66 stay open
     until they come up at the table.
+21. **Phase 9, most critical first; Q68 as suggested** (the user,
+    2026-11-25: "now start working on the plan most critical first"). The
+    rank-9 steps go before 9.1's cheap content: 9.2 (Magic Resistance,
+    silently wrong in most fights) first, then 9.3. Q68's always-on
+    `modifiers` hook, built as `Feature.combat_modifiers` and
+    `TRAIT_MODIFIERS` (R170).
 
 ## Goal
 
@@ -962,7 +972,8 @@ Mark, Heroism. The modifier types go in a sibling module,
    Obmar's, Edmund's Channel Divinity; their 2014-only spells), then Time Loop
    PR, then spells level by level and features class by class. The
    level-by-level spell pass waits for Decision 9: not before the engine
-   support is in place and the user says go.
+   support is in place and the user says go. The pass, ranked, is Phase 9's
+   step 9.16.
 4. **Done** (`combat_effects.py coverage`). A coverage line per campaign.
 
 ### Phase 5: beyond the dialog (optional)
@@ -1304,6 +1315,470 @@ roll, and stays as it is.
 | 8.5 | **Done** (R121). A roll per Times copy in each box (Q59). | Times 2 with "nat 1, nat 20" misses, then lands a Critical Hit with the extra typed for it (", 5"); "nat 1" alone rolls the second; "17, 9" with Times 1 is refused |
 | 8.6 | **Done** (R122, R123). A rolled Hit Point maximum box; a player's dice Hit Points at a turn's start as a button (Q60). | Heroes' Feast typed as 12 raises the maximum by 12 with nothing rolled; the box is hidden for a pick without one; Heroism with 1d4 on a player gives nothing by itself and leaves a turn-column button |
 | 8.7 | **Done** (R124). `tests/test_roll_sites.py` (Q61). | Every call of a rolling function is listed with its way to the table; a new one, or a listed one gone, fails |
+
+## Closing the gaps (Phase 9, audit 2026-11-24)
+
+**Why.** Phases 1-8 built the vocabulary and the engine, and both parties
+are described. What's left is what the combat effects don't cover yet:
+spells, features, monster abilities and items with no effects at all, and
+described rows whose rules the simulator only partly applies, the rest
+left to the GM in a note. An audit on 2026-11-24 listed every such gap and
+ranked it by how much it matters at the table. This phase turns that list
+into steps. Each gap is listed under the step that closes it; the long
+name lists are in the Appendix at the end of this plan.
+
+**How it was audited.** `.claude/skills/combat-effects/combat_effects.py`
+(`coverage`, `check`, `compare`, `notes`, `stats`, `triggers --all`), a
+dump of every described row's notes and badge modifiers, a walk of every
+`Builds/Examples` build's features, and counts over `Combat/Monsters` and
+`CharacterContent/Items`. `check` passes; nothing here is a rubric
+violation.
+
+**Keeping it current.** When a step lands, take the rows it closed out of
+its tables (or say what's left of them), refresh the counts in "Coverage"
+from `combat_effects.py coverage`, and tick the step in Status. A gap found
+later goes in the table of the step that would close it, ranked the same
+way.
+
+### Rank and kind
+
+**Rank (1-10): how much it matters at the table.**
+
+| Rank | Meaning |
+|---|---|
+| 9-10 | Comes up in most fights and the simulator's result is silently wrong |
+| 7-8 | Common (a staple spell, class feature or monster trait), and wrong or left to memory with a real swing |
+| 5-6 | Comes up regularly; a note reminds the GM, or the swing is moderate |
+| 3-4 | Occasional, or a small effect |
+| 1-2 | Rare, cosmetic, or not about combat |
+
+The gaps in the step tables are ranked by hand. The long lists in the
+Appendix (571 spells, 586 features, 102 monster abilities) are ranked by a
+heuristic: the item's `usage_tags` (damage/control > heal/buff/summon >
+utility), its level (cantrips and levels 1-3 are used most), and hand-set
+ranks for the staples. A spell with no effects still gets a row read from
+its text, so those lists stop at 8.
+
+**Kind: what fixing it takes.**
+
+- **Now**: the fields that exist already could express it; only the content
+  needs writing.
+- **Field**: needs a new field or modifier on the model.
+- **Engine**: needs the simulator (or battle map) to see something it
+  doesn't.
+- **Table**: decided at the table by design (principle 8); listed only so
+  it's known, in "Left to the table" at the end of this phase.
+
+A source marked **`[]`** in a table (e.g. "War Caster (Clover, `[]`)")
+returns nothing to apply, though part of its text does act in a fight.
+These are the nearest thing to bugs in the audit: the rubric keeps `[]` for
+features with nothing to put on a creature.
+
+### Coverage (2026-11-24)
+
+| What | Described | Nothing to apply (`[]`) | Not described | Notes |
+|---|---|---|---|---|
+| Spells (all 662 classes) | 75 | 16 | **571** | Only the two parties' spells are done (9.16, Appendix A.1) |
+| Curse of the Lich party | spells 44/44; features 26 | 34 | 0 | 50 passive (no row); 3 Trigger facts left to the GM. 4 of the `[]` ones do something in a fight (marked `[]` in the steps) |
+| Time Loop PR party | spells 33/33; features 7 | 19 | 0 | 41 passive; 4 Trigger facts left to the GM. Alert is `[]` (9.3) |
+| Grim's Castle party | none | none | none | No party members yet |
+| Features of all 115 example builds (714 classes, each once) | 41 | 28 | **424 read from text, 161 extensions with no row** | 60 passive; 181 Trigger facts with no trigger and no reason (9.16, Appendix A.3-A.5) |
+| Feature classes in `CharacterContent/Features` (about 1,171) | about 92 define `combat_effects` | | about 1,000 | Rough count: classes whose own body defines the method |
+| Monster abilities, official `monsters.py` (2,194) | 291 structured + 775 with effects | | 1,128 freeform | Read from text at runtime (9.13) |
+| Monster abilities, homebrew (204) | 65 structured + 37 with effects | | 102 freeform | 9.13, Appendix A.6 |
+| Items: potions, scrolls, poisons, wondrous items (39 classes) | 0 | | **all** | No item reaches the combat picker (9.8) |
+| Magic weapons and armor (38 classes) | fixed extra damage only | | 21 with text-only riders | 9.8, 9.2 |
+| Summon spells (`SPELL_SUMMONS`) | 0 | | **all** | The table is empty (9.9) |
+
+### The worst gaps (rank 7+)
+
+| Rank | Gap | Step | Kind |
+|---|---|---|---|
+| 9 | ~~Monsters' Magic Resistance (about 74 monsters) isn't counted in saves against spells~~ **counted** (R170) | 9.2 | Field |
+| 9 | Extra Attack (6 classes) has no row; the GM sets Times by hand | 9.3 | Engine (action economy) |
+| 8 | Pack Tactics (22 monsters): Advantage with an ally within 5 feet isn't counted, though the map knows | 9.4 | Field/Engine |
+| 8 | Aura of Protection: + Charisma modifier to allies' saves within 10 feet isn't counted | 9.4 | Field/Engine |
+| 8 | Sneak Attack has no hit trigger: picked by hand, crit doubling by hand | 9.1 | Now (+ a Finesse gate) |
+| 8 | Stunning Strike: read from text | 9.1 | Now |
+| 8 | Action Surge, Two Extra Attacks: read from text | 9.3 | Engine |
+| 8 | Staple damage cantrips and spells undescribed: Fire Bolt, Ray of Frost, Sorcerous Burst, Hex, Bane, Counterspell, the smites, Spirit Shroud, Hypnotic Pattern, ... (45 at 8) | 9.16 | Now |
+| 7 | ~~War Caster's Advantage on Concentration saves isn't counted, though the simulator rolls them (Clover)~~ **counted** (R170) | 9.2 | Field |
+| 7 | Regeneration (11 monsters) isn't applied at turn start | 9.5 | Field |
+| 7 | Evasion, Uncanny Dodge: not counted | 9.5 | Field |
+| 7 | Invisibility doesn't end when the bearer attacks or casts, so attackers keep the advantage | 9.6 | Field |
+| 7 | Divine Smite / Paladin's Smite have no hit trigger | 9.1 | Now |
+| 7 | Spiritual Weapon's repeat attack on later turns | 9.7 | Field |
+| 7 | Potions of Healing aren't in the picker | 9.8 | Field (rows for items) |
+| 7 | Breath Weapon, Reckless Attack, Great Weapon Master, Sharpshooter, Superiority Dice: read from text | 9.16 | Now / Field |
+
+### Steps
+
+The order (Decision 21: most critical first): the rank-9 gaps, which are
+silently wrong in most fights (9.2, 9.3), then what the model can already
+say (9.1: content only, cheap, no engine change), then by the highest rank
+each step closes. A step whose design isn't settled starts with its open
+question (Q69-Q71).
+Two steps lean on other plans: 9.9 on
+[summon-framework-plan.md](summon-framework-plan.md), and 9.14 on
+[combat-arena-plan.md](combat-arena-plan.md) and
+[combat-area-gaps-plan.md](combat-area-gaps-plan.md), so check their
+Status before starting either. The content sweep (9.16) waits for the
+user's go (Decision 9); 9.1's sources are ones a step or a party needs,
+which Decision 9 allows.
+
+| # | Step | Top rank | Kind | Done when |
+|---|---|---|---|---|
+| 9.1 | What the model can already say: the strike features' hit triggers, the party's `[]` features that need only rows, and the other **Now** rows | 8 | Now (+ a Finesse/Ranged gate) | Each source's rows do what its text says, with tests from the rules text; Sneak Attack is asked once per turn after a Finesse or Ranged hit, and its dice double on a Critical Hit by themselves; the picker goldens change only for these sources |
+| 9.2 | Always-on modifiers on features, monster traits and armor (Decision 21, R170) | 9 | Field | **Saves done** (R170): a monster with Magic Resistance has Advantage on a save the dialog rolls against a spell, and against a feature's effect it's a note; War Caster's Advantage is in a Concentration save; the save's log line, the dialog's save row and the card's Concentration check name what gives it; nothing the sheet already counts is counted twice. Left: the attack and Critical Hit rows of its table |
+| 9.3 | Actions and the turn order: Extra Attack, Action Surge, Haste's action, a lost turn, Initiative riders (Q69) | 9 | Engine | Per Q69's answer. As suggested: an Extra Attack owner's weapon row opens with Times 2 (3 with Two Extra Attacks); Action Surge gives back the Action; Command: Halt shows on the target's turn |
+| 9.4 | Auras and Pack Tactics, with distances from the battle map | 8 | Field/Engine | On the map, an ally within 10 feet of a Paladin with Aura of Protection adds the Paladin's Charisma modifier to a save the dialog rolls, and one 15 feet away doesn't; Pack Tactics gives Advantage with an ally within 5 feet of the target; off the map the GM is asked (principle 8). Needs 9.2 |
+| 9.5 | Damage outcomes: Evasion, Uncanny Dodge, Regeneration, damage rerolls | 7 | Field | Evasion turns a successful Dexterity save for half into no damage and a failure into half; Uncanny Dodge halves a hit's damage and spends the Reaction; Regeneration heals at its turn's start, not after the damage types that stop it |
+| 9.6 | "Ends early when ..." (`ends_on`, Q70) | 7 | Field | Invisibility ends as its bearer attacks, deals damage or casts; Sleep's target wakes when it takes damage; each in the same undo step as what ended it, and an old log replays the same |
+| 9.7 | Rows used again on later turns, and marks that move | 7 | Field | Spiritual Weapon's later attack is a row of the running spell, with no slot spent; Hunter's Mark moves to a new target when its target drops to 0 |
+| 9.8 | Items in the picker (Q71) | 7 | Field | A character with a Potion of Healing has a row that heals 2d4 + 2 and says it was drunk; a magic weapon's rider is a row after its weapon's, as Weapon Mastery's are |
+| 9.9 | Spell summons (`SPELL_SUMMONS`) | 6 | Field/content | Per the summon-framework plan's steps: Find Familiar, Summon Beast and Conjure Animals bring a combatant with its stat block |
+| 9.10 | Gates on saves and immunities, and saves at other times | 6 | Field | Hold Person does nothing to a non-Humanoid; Shatter's save has Disadvantage for a Construct; Grease's save is asked as a creature enters the area; Enlarge/Reduce asks an unwilling target for its save |
+| 9.11 | Hit and damage riders, and one casting with several targets | 6 | Field/Engine | Green-Flame Blade's and Booming Blade's attack takes the wielder's weapon row and its cantrip dice scale; Absorb Elements is asked before the damage it resists; Enlarge's +1d4 and Reduce's -1d4 count on weapon hits |
+| 9.12 | What the bearer adds or chooses later, badge endings and resources | 6 | Field | Bardic Inspiration is asked after its bearer fails a D20 Test the simulator rolls, then spent; Haste's lethargy is given as Haste ends; Spare the Dying makes its target Stable |
+| 9.13 | Monster abilities | 6 | Now (homebrew) / Engine (official) | The homebrew abilities in Appendix A.6 have effects or say why not (`monster-ability-converter`); DI-109, DI-110 fixed; the official ones are left to the runtime reading unless Q47 says otherwise |
+| 9.14 | Positions and the map: areas that change ground or light, moves a target is made to take, the conditions' movement limits | 5 | Engine | Each row in its table is counted from the map or reminded at the moment it applies; planned in the arena and area-gaps plans, not twice |
+| 9.15 | Tooling for the sweep | 5 | Tooling | `combat_effects.py features --examples` lists every example build's features with their state; `notes` finds the repeated rules worded differently; `stats` knows the Dash and Disengage badges |
+| 9.16 | The content sweep: the rest of the spells, features and homebrew abilities, by rank | 8 | Now | Waits for the user's go (Decision 9). Appendix A's rank 7-8 spells and rank 6+ features are described or say which step they wait for; `coverage` shows the new counts |
+
+#### 9.1 What the model can already say
+
+Content only: every row here can be written with fields that exist. Sneak
+Attack also needs a small **Field**: a Finesse or Ranged weapon gate on
+its trigger. Where a source's other gaps need a later step, the row says
+which.
+
+| Rank | Source | What to write |
+|---|---|---|
+| 8 | Sneak Attack (Rogue) | A `HIT` row, `once_per_turn`, its dice doubled on a Critical Hit by itself; "Advantage, or an ally within 5 feet" as a `when`. Needs the Finesse/Ranged weapon gate (**Field**). The plan's Trigger types table already lists it as `HIT`; it's still picked by hand |
+| 8 | Stunning Strike (Monk) | A `HIT` row once per turn after a Monk weapon or Unarmed Strike hit, 1 Focus Point: a Constitution save or Stunned until the start of your next turn; on a success, Speed halved and Advantage on the next attack roll against it (read from its text now) |
+| 7 | Divine Smite / Paladin's Smite | Cast after a hit: `HIT`, `attacks=MELEE`/`UNARMED`; dice doubled on a Critical Hit by itself |
+| 7 | Spiritual Weapon | Its attack on later turns as a second row with `spends_use=False`, until 9.7 makes it a proper later-turn row |
+| 6 | Tavern Brawler (Kivi, `[]`) | Push: once per turn, an Unarmed Strike hit in the Attack action also pushes 5 feet: a `HIT` row, `attacks=UNARMED`, `once_per_turn`, `CombatPush(5)` |
+| 6 | Grease, Moonbeam | The end-of-turn half of their area save: `AtTurnEnd` with a `when` (the save on entering the area: 9.10) |
+| 5 | Grappler (Kivi, `[]`) | Punch and Grab: once per turn, a hit also grapples: a `HIT` row after the Unarmed Strike, like the Grapple row in `Model/Content/UnarmedStrikeEffects.py` (its Advantage against the grappled creature: 9.2) |
+| 5 | Ensnaring Strike | Cast after a weapon hit (`HIT`, `attacks=WEAPON`), and its 1d6 Piercing (upcast 1d6) at the start of each of the Restrained target's turns: an `AtTurnStart` on an "Ensnaring Strike" badge beside Restrained (its size Advantage: 9.10; its escape check: 9.10) |
+| 5 | Exhaustion (rules condition) | Speed 5 feet lower per level (its D20 penalty is counted): a per-level `Speed` in `CONDITION_RULES`, or a `bonus` worked out from the level |
+| 4 | Pushes and pulls still in text | `CombatPush` rows (DI-095) |
+| 3 | Produce Flame | Casting (Bonus Action) and hurling (Magic action, later) as two rows, the hurl `spends_use=False` |
+| 3 | Elemental Strikes: move | Up to 10 feet toward or away on a failed save: two rows, `CombatPush(10, up_to=True)` and the same with `toward=True` |
+| 2 | Freedom of Movement | Swim Speed equal to Speed: `Movement(swims=True)` |
+| 1 | "Without a spell slot" notes (Mapping Magic, Paladin's Smite, Fiendish Legacy, Magic Initiate, Fey Touched ×2) | Drop the note, the only one `notes --min 3` flags: `uses_per_long_rest` already counts it. Check Mapping Magic's and Favored Enemy's rows for the field |
+
+#### 9.2 Always-on modifiers on features, monster traits and armor
+
+Save and attack rolls take their modifiers from rules conditions, cover
+and badges only (`modifiers_on`,
+[Combat/Effects/modifiers.py:181](../Combat/Effects/modifiers.py#L181)). A
+feature has no always-on equivalent of a badge's modifiers: `Feature` has
+`combat_effects`, `adjust_combat_effect` and `movement` only
+([Model/Content/Feature.py:399-430](../Model/Content/Feature.py#L399-L430)).
+Monster traits are the same: the structured `MagicResistance`,
+`PackTactics`, `Regeneration`, `SunlightSensitivity`, `Rampage`,
+`NimbleEscape`, `TinySwarm`, `SiegeMonster` and `Illumination` classes
+exist in `Model/Creatures/MonsterAbilities.py`, but no file in
+`Combat/Fight`, `Combat/Effects`, `Combat/CombatUIQt` or `Combat/Arena`
+reads them (Flyby and Pounce are read by name).
+
+**Built (R170, 2026-11-25), the saves:** `Feature.combat_modifiers` and
+`TRAIT_MODIFIERS` (`Combat/Effects/always_on.py`), read by `modifiers_on`;
+`D20Mode`'s save gates (`against_spells`, `against_conditions`,
+`concentration`, `unless_conditions`) settled by what the save is against
+(`SaveAgainst`). Counted now: Magic Resistance (13 structured + 61
+freeform monsters), War Caster, Brave, both Fey Ancestries, Dwarven
+Resilience, Danger Sense, Gnomish Cunning, Dual Mind. The same hook
+carries 9.4's auras and 9.5's Regeneration. Left:
+
+| Rank | Trait | What isn't counted | Where it appears |
+|---|---|---|---|
+| 6 | Grappler (Kivi, `[]`) | Advantage on attack rolls against a creature Grappled by you (the Grappled condition already names its grappler): an `AttacksAgainst`-like modifier, `by_caster` | Kivi |
+| 6 | Improved Critical | Critical Hit on 19-20 | Champion |
+| 4 | Magic armor (4): Dragonscale Plate's Resistance, Stalwart's Aegis's save Advantage, Shadowplate Mail, Veteran's Chain Shirt | Text only (AC from the sheet is counted) | Items |
+| 3 | Sunlight Sensitivity | Disadvantage in sunlight (a `when`, or the map's light: 9.14). Left out of R170 on purpose: as a `when` it adds a "not counted" note to every attack its monsters make; better once the map's light can settle it | 4 monsters |
+
+#### 9.3 Actions and the turn order
+
+What a creature gets to do on its turn, and when its turn comes, isn't
+modeled; the GM runs the turn (principle 8). Q69 asks how far to go.
+
+| Rank | Source | Left to the GM | Kind |
+|---|---|---|---|
+| 9 | Extra Attack (Barbarian, Fighter, Monk, Paladin, Ranger, Swords Bard) | No row; the GM sets Times by hand | **Engine** |
+| 8 | Two Extra Attacks (Fighter) | The same, with three attacks (an extension with no row) | **Engine** |
+| 8 | Action Surge (Fighter) | Read from its text: one more action this turn | **Engine** |
+| 5 | Haste | One extra limited action per turn | **Field** |
+| 5 | Command: Halt, Drop, Grovel | Takes no action, drops what it holds, ends its turn | **Field**: a "loses its turn / actions" modifier |
+| 3 | Adventurer's Atlas (Obmar, `[]`) | Each map holder adds 1d4 to Initiative | **Engine** |
+| 2 | Alert (Hanna, `[]`) | Initiative swap with an ally (the PB bonus is applied on the sheet) | **Engine** |
+
+#### 9.4 Auras and Pack Tactics, with distances from the battle map
+
+These are always-on (9.2) but depend on where creatures stand. The battle
+map already works out "within 5 feet" (combat-arena-plan step 16) and every
+distance between tokens; off the map, or with a token not on it, the
+simulator asks.
+
+| Rank | Source | What isn't counted | Where it appears |
+|---|---|---|---|
+| 8 | Pack Tactics | Advantage on attacks with an ally within 5 feet of the target | 14 structured + 8 freeform monsters |
+| 8 | Aura of Protection | + Charisma modifier to saves of allies within 10 feet | Paladin 6 |
+| 6 | Aura of Courage | Immunity to Frightened for allies in the aura (an extension with no row) | Paladin 10 |
+| 5 | Aura Expansion | The aura grows to 30 feet (an extension with no row) | Paladin 18 |
+
+#### 9.5 Damage outcomes
+
+| Rank | Source | What isn't counted | Kind |
+|---|---|---|---|
+| 7 | Evasion (Monk, Rogue) | No damage on a successful Dexterity save for half, half on a failure | **Field** |
+| 7 | Uncanny Dodge (Rogue) | Halve an attack's damage (Reaction): a `HIT_BY` row, but `damage_reduction` can't say "half" | **Field** |
+| 7 | Regeneration (1 structured + 10 freeform monsters) | Hit Points at the start of its turn, stopped by some damage types: an `AtTurnStart` on the trait (9.2's hook) | **Field** |
+| 3 | Savage Attacker, Great Weapon Fighting | Reroll damage dice | **Field** |
+
+#### 9.6 "Ends early when ..."
+
+The most common gap. The `notes` tool misses it because the wording
+differs every time (9.15). It's a missing field: something like
+`CombatCondition.ends_on`, with events the simulator already sees (takes
+damage, makes an attack roll, deals damage, casts a spell, is
+Incapacitated, Speed 0, no Temporary Hit Points left). R168's
+`loses_dodge` (Dodge's benefits stop while Incapacitated or at Speed 0) is
+the first such ending built; Q70 suggests widening it.
+
+| Rank | Source | Ends when | Kind |
+|---|---|---|---|
+| 7 | Invisibility | It attacks, deals damage or casts a spell | **Field** |
+| 6 | Sleep | The target wakes when it takes damage (or is shaken: **Table**); forgetting it leaves an Unconscious target taking auto-crits | **Field** |
+| 5 | Turn Undead | The creature takes any damage; you're Incapacitated or die | **Field** |
+| 5 | Cunning Action: Hide | It attacks or casts a Verbal spell (sound and being found: **Table**) | **Field** |
+| 4 | Armor of Agathys | No Temporary Hit Points left | **Field** |
+| 3 | Charm Person, Suggestion | You or your allies damage the target | **Field** (the "allies" part needs the side) |
+| 3 | Elemental Attunement, Patient Defense (Dodge) | Incapacitated; Speed 0 | **Field** (Dodge's half is `loses_dodge`) |
+| 3 | Unconscious (rules condition) | Drops what it holds; stays Prone when it ends | DI-067 |
+| 2 | Friends | The target takes damage, or you attack, deal damage or force a save | **Field** |
+
+#### 9.7 Rows used again on later turns, and marks that move
+
+| Rank | Source | Left to the GM | Kind |
+|---|---|---|---|
+| 7 | Spiritual Weapon | A Bonus Action each later turn moves it 20 feet and attacks again | **Field**: a "use again on a later turn" row (9.1 writes the attack as a second row meanwhile) |
+| 5 | Hunter's Mark | A Bonus Action moves the mark when the target drops to 0 | **Field**/**Engine**: `REDUCES_TO_ZERO` fires only for the creature that dealt the knockout, and nothing moves a badge to a new target |
+| 5 | Hex (undescribed, 9.16) | The same "move the mark" as Hunter's Mark | as Hunter's Mark |
+| 5 | Moonbeam | A Magic action moves the Cylinder 60 feet | `CombatArea.move_ft` exists; the saves as it moves onto a creature are **Engine** (9.14) |
+| 4 | Witch Bolt | A Bonus Action each later turn: 1d12 Lightning, no roll | as Spiritual Weapon; its end out of range or behind Total Cover is **Engine** (9.14) |
+| 4 | Spirit Guardians | Its turn-end damage row can't upcast without spending a slot ("type it in") | DI-078 |
+
+#### 9.8 Items in the picker
+
+No item class in `CharacterContent/Items` has `combat_effects`, and nothing
+in `Combat/Fight`, `Combat/CombatUIQt` or `Combat/PlayerCombatant.py`
+reads a character's items other than its weapons. Q71 has the suggested
+shape. Magic armor's always-on parts are 9.2's.
+
+| Rank | Items | What's missing | Kind |
+|---|---|---|---|
+| 7 | Potions of Healing (4 sizes) | No row: drinking one is healed by hand | **Field**: items need a `combat_effects()` and a picker section, as features have |
+| 5 | Other potions (13): Invisibility, Speed, Resistance, Enlarge, Guarding, Resolve, ... | No row | as above |
+| 5 | 17 magic weapons with riders only in their text: Vampiric Edge's healing, Sulvesburg's Folly's Prone save, Bloodlust Blade's Advantage, Rampaging Blade's and Moradin's Wrath's stacks, A Hushed Bell, Lightning, Thunder, The Storm, ... | The weapon row deals its fixed `extra_damage` (Flame Tongue's 2d6 Fire is counted); everything else is the tooltip | **Field**: a weapon's own rider rows, as Weapon Mastery has |
+| 4 | Wondrous items (19): Cloak of Protection, Bracers of Archery, Gauntlets of Strength, Button of Noble Sacrifice, ... | Sheet bonuses are counted; any activated effect is text | **Field** |
+| 3 | Scrolls (2), Poisons (1) | No row | **Field** |
+
+#### 9.9 Spell summons
+
+`SPELL_SUMMONS` in
+[CharacterContent/Summons/SpellSummons.py](../CharacterContent/Summons/SpellSummons.py)
+is empty ("Filled in by the plan's Phase 4 steps"), so no summon spell
+(Find Familiar, Summon Beast, Conjure Animals, Animate Dead, Spiritual
+Weapon's force, ...) brings a combatant with its stat block. Rank 6. The
+registry and its steps are
+[summon-framework-plan.md](summon-framework-plan.md)'s (S4.x); this step
+only tracks it. Class companions (Steel Defender, Drake Companion,
+Reanimated Companion) are built elsewhere (`Combat/Fight/summons.py`).
+DI-108 covers the catalog's 2024 summon stat blocks having no combat
+effects.
+
+#### 9.10 Gates on saves and immunities, and saves at other times
+
+**Who saves, and how.** There's no field for "this creature type only",
+"Advantage/Disadvantage on this save if ...", "succeeds automatically if
+..." or "only if unwilling". A **Field** each, e.g. `creature_types` on the
+effect and a `D20Mode` with a `when` on the save.
+
+| Rank | Source | Left to the GM |
+|---|---|---|
+| 5 | Hold Person, Charm Person | Humanoids only |
+| 5 | Turn Undead | Undead only |
+| 5 | Enlarge/Reduce | An unwilling target makes a Constitution save first (`compare` shows the text's CON save; the rows have no roll) |
+| 4 | Protection from Evil and Good | Its condition immunity and the save Advantage apply only against six creature types (`ConditionImmunity` has no gate) |
+| 3 | Charm Person | Advantage on the save if you or your allies are fighting it |
+| 3 | Shatter | A Construct has Disadvantage |
+| 3 | Ensnaring Strike | A Large or larger creature has Advantage (size is known: `largest_target` exists for triggers, not saves) |
+| 3 | Sleep | Creatures that don't sleep, or are immune to Exhaustion, succeed |
+| 3 | Freedom of Movement | Magic can't reduce its Speed or give it Paralyzed or Restrained: `ConditionImmunity` with a "from magic" gate |
+| 2 | Friends | Succeeds automatically if not a Humanoid, if you're fighting it, or if cast on it in the last 24 hours |
+
+**Saves at other times.** `repeat_save` covers only the repeat at the end
+of each turn. A **Field** for each pattern:
+
+| Rank | Source | Left to the GM |
+|---|---|---|
+| 6 | Grease, Moonbeam | The save again on entering the area (the end-of-turn half: 9.1) |
+| 5 | Sleep | A second save at the end of its next turn that turns Incapacitated into Unconscious (an escalation) |
+| 5 | Tasha's Hideous Laughter | Repeats the save, with Advantage, each time it takes damage; can't end Prone on itself |
+| 5 | Entangle, Ensnaring Strike | An action to make a Strength (Athletics) check against your DC to end it |
+
+#### 9.11 Hit and damage riders, and one casting with several targets
+
+| Rank | Source | Left to the GM | Kind |
+|---|---|---|---|
+| 6 | Green-Flame Blade, Booming Blade, True Strike | The weapon attack's own bonus and damage are typed in, and the extra cantrip damage (1d8/1d6 at level 5, 11, 17) is a note, not `cantrip` dice | **Field**: "an attack with the weapon used in the casting", taking the wielder's weapon row |
+| 5 | Absorb Elements | No trigger: it's a Reaction to taking Acid/Cold/Fire/Lightning/Thunder damage, and its Resistance should count against that damage (now "give back what it would have halved") | **Engine**: a before-damage `TAKES_DAMAGE` with a damage-type gate (`HIT_BY` only covers attack rolls) |
+| 4 | Eldritch Blast, Scorching Ray, Magic Missile | Splitting beams, rays or darts: lower Times and apply again | **Field**: per-instance targets |
+| 4 | Elemental Attunement | Unarmed Strikes get 10 feet more reach | **Field**: no reach modifier |
+| 4 | Enlarge/Reduce | +1d4 / -1d4 damage on weapon hits | **Field**: `ExtraDamageOnHit` needs a fixed type and can't subtract |
+| 4 | Chill Touch | Can't regain Hit Points until the end of your next turn (its badge has no modifier) | **Field**: a "no healing" modifier |
+| 3 | Absorb Elements | The first melee hit next turn deals 1d6 more (upcast) and ends it | **Field**: `ExtraDamageOnHit` has no `once` and takes only ANY/WEAPON |
+| 3 | Sacred Weapon, Elemental Attunement, True Strike | A hit can deal another damage type instead of its own (3 sources: principle 7's threshold) | **Field** |
+| 3 | Chromatic Orb | Leaps to another target when two d8s match, up to the slot level | **Engine**: the dice are rolled, the match isn't read |
+| 3 | Shield | No damage from Magic Missile | **Field** (immunity to a named spell) |
+| 2 | Resistance (cantrip) | Reduces damage of a chosen type by 1d4, once per turn | **Field**: `damage_reduction` exists only on a `HIT_BY` row, not a badge |
+
+#### 9.12 What the bearer adds or chooses later, badge endings and resources
+
+| Rank | Source | Left to the GM | Kind |
+|---|---|---|---|
+| 6 | Bardic Inspiration | Added after a failed D20 Test, then spent | **Field**: a trigger on the bearer's badge |
+| 5 | Haste: lethargy | Picked by hand as Haste ends | **Field**: an "as the badge ends" trigger (Fly's fall at the end is the same event) |
+| 5 | Spare the Dying | The target becomes Stable; the row applies nothing, though `Combat/Fight/health.py` tracks Stable | **Field**: a "stabilizes" outcome |
+| 5 | Lay on Hands | The Hit Point pool (typed each time; "20 after a Long Rest") | **Field**: a pool resource |
+| 4 | Combat Inspiration (Valor Bard) | The bearer spends the die as it hits or is hit | **Field**: the same badge trigger as Bardic Inspiration (its `untriggered` says so) |
+| 3 | Toll the Dead | Pick the d8 or d12 row by whether the target is missing HP | **Field**: a row gate on the target's HP, which the simulator knows |
+| 3 | Resourceful (Clover, `[]`) | Heroic Inspiration after a Long Rest; Heroic Inspiration isn't tracked at all | **Field** |
+| 3 | Jolt to Life | The revived creature's 3 Hit Points, healed by hand (one amount box per row) | **Field** |
+| 2 | Guidance | 1d4 on ability checks with one chosen skill | **Field**: `D20Bonus` filters by ability, not skill |
+| 2 | Martial Arts | Only unarmed or with Monk weapons, no armor or Shield | **Field**/sheet: an equipment gate |
+| 2 | Wild Companion | Spend a spell slot or a Wild Shape use by hand | **Field** |
+
+#### 9.13 Monster abilities
+
+Monster abilities use the same `CombatEffect` model. A plain
+`MonsterAbility(name, description)` with no `combat_effects` is read from
+its text at runtime: attacks, and riders in a sentence of their own (6.4).
+Some are traits with nothing to apply.
+
+| Rank | File | Abilities | Structured subclass | Plain, with effects | Freeform |
+|---|---|---|---|---|---|
+| 5 | `monsters.py` (generated, official) | 2,194 | 291 | 775 | 1,128 |
+| 6 | `monsters_homebrew.py` | 204 | 65 | 37 | 102 |
+
+Official monsters can't be hand-edited (`generate_monsters.py` overwrites
+them); their freeform abilities need the generator or the runtime reading
+(Q47). The homebrew ones are used in the campaigns and can be converted
+(the `monster-ability-converter` agent); they're listed in Appendix A.6.
+DI-109 and DI-110 cover the homebrew save prose and save-rolling traits;
+DI-061 is Mira's 6 abilities.
+
+Structured traits nothing reads yet, beside 9.2's and 9.5's (rank 3,
+1-4 monsters each): Nimble Escape (Bonus Action Disengage or Hide:
+R169's `take_actions` could say it **now**), Rampage (a move and bite
+after a kill), Tiny Swarm (swarm rules), Siege Monster (double damage to
+objects), Illumination (light: 9.14).
+
+#### 9.14 Positions and the map
+
+What needs the battle map to see a position, a move or the light. The map
+work belongs to [combat-arena-plan.md](combat-arena-plan.md); areas that
+change the ground are [combat-area-gaps-plan.md](combat-area-gaps-plan.md)'s
+step 2 (DI-105). This table keeps them in view from the effects' side.
+
+| Rank | Source | Left to the GM | Kind |
+|---|---|---|---|
+| 5 | Entangle, Grease, Spike Growth, Ice Storm | The area is Difficult Terrain (Ice Storm only to the end of your next turn) | **Field**: `CombatArea.difficult` exists for Walls only (area-gaps plan step 2) |
+| 5 | Spike Growth | 2d4 Piercing per 5 feet moved in the area | **Engine** (map movement) |
+| 5 | Moonbeam | The save as it moves onto a creature (its move: 9.7) | **Engine** |
+| 4 | Spirit Guardians | Other creatures' Speed is halved in the Emanation | **Engine** |
+| 4 | Booming Blade | Ends, dealing its Thunder, when the target willingly moves 5 feet | **Engine**: no "moves" event, though the battle map sees moves |
+| 4 | Sentinel: Halt | After you hit with an Opportunity Attack | **Engine**: no "was an Opportunity Attack" gate, though `Combat/Arena/arena.py` knows who can make one |
+| 4 | Dissonant Whispers | Uses its Reaction to move as far away as it can | **Engine** |
+| 4 | Command: Approach, Flee; Turn Undead | Moves toward / away on its next turn | **Engine** (or **Table**) |
+| 4 | Frightened (rules condition) | Can't willingly move closer to the source | **Engine** (the map could refuse the move) |
+| 4 | Charmed (rules condition) | Can't attack or target the charmer with harmful effects | **Engine** (the dialog could warn) |
+| 4 | Invisible (rules condition) | Concealed: unaffected by effects that need a seen target | DI-101 |
+| 4 | Witch Bolt | Ends out of range or behind Total Cover | **Engine** |
+| 3 | Silence | Take Deafened and the badge off as a creature leaves; no Verbal spells inside | **Engine** |
+| 3 | Faerie Fire, Starry Wisp, Fire Shield, Sacred Weapon | The target sheds Dim or Bright Light | **Field**/DI-099 |
+| 3 | Steady Aim | Only if you haven't moved this turn | **Engine**: the map tracks this turn's movement (`Combat/Arena/arena.py`) |
+| 3 | Stonecunning (Obmar, `[]`) | Bonus Action: Tremorsense 60 feet for 10 minutes, PB uses | **Field**: `Vision` has no tremorsense |
+| 3 | Grappled (rules condition) | The grappler drags it at extra cost | **Engine** |
+| 2 | Prone (rules condition) | Crawl only, or half its Speed to stand | Check the map (`Movement.stands_up_ft` exists) |
+| 2 | Freedom of Movement | 5 feet of movement to escape a grapple | **Field** |
+| 2 | Radiance of the Dawn | Dispels magical Darkness in the Emanation | DI-099 |
+| 2 | Fly and Swim Speeds from other sources than Fly | Text only, so the map can't move by them | DI-098 |
+
+#### 9.15 Tooling for the sweep
+
+- (rank 5) `features`, `triggers`, `coverage` and `notes` only look at
+  party members. Nothing lists the features no party has, so there is no
+  `todo` for features class by class (Phase 4.3). The audit walked every
+  `Builds/Examples` build through the same `walk_features` /
+  `feature_state` / `trigger_state` the tool uses. Suggestion: a
+  `features --examples` mode.
+- (rank 4) `notes` groups by the first words, so it misses repeated rules
+  worded differently: "ends early" (9.6, 12+ sources), "can deal X damage
+  instead" (9.11, 3), "sheds light" (9.14, 4), creature-type gates (9.10,
+  7).
+- (rank 3) `stats` marks Cunning Action's and Step of the Wind's Dash notes
+  **NOTE ONLY**, but the battle map already counts Dash and Disengage
+  (`Combat/Arena/arena.py`, `movement_ft` and the Disengage badge). The
+  tool doesn't know those badges by name, so these are false alarms.
+- `compare` (described spells against the text reading) shows only
+  differences made on purpose, except Enlarge/Reduce's missing save
+  (9.10).
+
+#### 9.16 The content sweep
+
+Phase 4.3's "spells level by level and features class by class", ranked.
+It waits for the user's go (Decision 9). Order:
+
+1. **Quick wins: about 70 of the 424 features read from text only need
+   `[]`** (or `passive=True`), rank 2. They grant spells, proficiencies,
+   languages or senses, and still get a row read from their text: every
+   "<Subclass> Spells" / "Domain Spells" / "Expanded Spell List" / "Circle
+   Spells", Bonus Proficiencies, Spellcasting (Sorcerer, Eldritch Knight,
+   Mystic Arts), the Barbarian's Weapon Mastery and Unarmored Defense, the
+   Orc's Darkvision, the Savants, Magical Secrets, Ritual Adept, Signature
+   Spells, Spell Mastery, Trance, Sentry's Rest, Tools of the Trade,
+   Universal and Telepathic Speech, Replacing Cantrips/Invocations, and the
+   like. Cheap, and each stops a guessed row.
+2. **The rank 7-8 spells (69, Appendix A.1) and rank 6+ features (30,
+   Appendix A.2).** Several wait for a step: the smites for 9.1's hit
+   trigger, Hex for 9.7's mark that moves, the summons (Conjure Animals,
+   Find Familiar) for 9.9. Many of the high features are other steps'
+   gaps: Extra Attack, Two Extra Attacks and Action Surge are 9.3; Uncanny
+   Dodge and Evasion 9.5; Danger Sense 9.2; Aura of Protection and Aura of
+   Courage 9.4. A source that needs a missing field goes in that step's
+   table instead of a note.
+3. **Then by rank**: the rest of Appendix A.1, A.3-A.5, and the homebrew
+   abilities in A.6 (9.13).
+
+#### Left to the table, by design (rank 1-2)
+
+Not simulated, on purpose (principle 8), so nothing to build: Feather Fall
+and Slow Fall (falling), Fly's fall as it ends, Divine Sense, Tinker's
+Magic, Portal Step's teleport, Misty Step's teleport (`[]`; the map could
+move the token later), Hunter's Mark's Perception Advantage, Lethargy
+Resilience's save at the table, Burning Hands' burning objects, Moonbeam's
+revert of a shape-shifter, Mage Armor ending as the target dons armor,
+Sacred Weapon ending as you stop carrying the weapon, Luck's (Halfling)
+reroll of a 1 (`untriggered`), Zone of Truth's Charisma save (`[]`; it
+only matters for lying), Tavern Brawler's reroll of 1s on Unarmed Strike
+damage, War Caster's spell instead of an Opportunity Attack, Powerful
+Build's Advantage on checks to end Grappled, Incapacitated's "can't
+speak", and Spider Climb's ceilings (`Movement(climbs=True)` covers it;
+the note is flavor).
 
 ## Revisions (better solutions found while building)
 
@@ -2885,6 +3360,45 @@ roll, and stays as it is.
   Eagle, Improved Mutable Form's Superior Stride, Wondrous Alteration's
   Aquatic Adaptation, Exceptional Training's beast commands.
 
+- **R170. Always-on modifiers, the saves** (2026-11-25, step 9.2,
+  Decision 21). Q68's hook, shaped like the always-on Movement already
+  is (`Feature.movement`, `TRAIT_MOVEMENT`): `Feature.combat_modifiers(
+  character)` beside `movement()`, and `TRAIT_MODIFIERS` for stat-block
+  traits by name, so the 61 generated Magic Resistances count as the 13
+  structured ones do (generated `monsters.py` can't carry a field). Both
+  in a new Qt-free `Combat/Effects/always_on.py`, which `modifiers_on`
+  reads beside the conditions, cover and badges. Instead of Q68's two
+  gates, `D20Mode` got four fields: `against_spells`, `against_conditions`,
+  `concentration` (saving throws only) and `unless_conditions` (Danger
+  Sense's "unless Incapacitated", checked against the held conditions, so
+  Stunned's Incapacitated counts). A save is told what it's against,
+  `SaveAgainst(spell, conditions, concentration)`, which settles them the
+  way a distance settles Prone's: it holds and counts, doesn't and is left
+  out, or can't be told and is a note (principle 8). What tells it: the
+  dialog's picker row (`spell_name` set: a spell, a monster's or a
+  feature's casting; another row: not a spell; none: unknown) and the
+  Condition box (`save_against`); a repeat save's badge source
+  (`is_spell_name`) and the conditions it ends; a Concentration save is
+  `KEEPS_CONCENTRATION`. Magic Resistance against a non-spell is a note
+  ("Advantage if the effect is magical"), because "other magical effects"
+  is the GM's call; that includes a Concentration save after a spell's
+  damage, left to the GM rather than ruled here. The sheet's
+  `SavingThrowAdvantage` (Danger Sense, Gnomish Cunning, Dual Mind) was
+  never read by the fight, so those features say it again in
+  `combat_modifiers`; nothing is counted twice. Shown: the save's log line
+  ("Magic Resistance: Advantage"), the dialog's per-target save row and
+  tooltip (now refreshed as the Condition box changes), and the card's
+  Concentration check ("DC 10 CON (+3, Advantage)"). The long-file
+  ratchet (`tests/test_combat_ui_structure.py`) shaped where the code
+  went: `save_plan` moved to a new `Combat/Effects/roll_plans.py` (the
+  refactor plan's 9a name for it; the attack plan is still in
+  `modifiers.py`), the dialog's two save-row helpers became one
+  `_save_row`, and the dialog's, repeat and reroll saves call
+  `roll_effect_save` / `roll_repeat_save` in `Combat/Fight/saves.py`;
+  every long file is at or under its cap. Not built: Grappler, Improved
+  Critical, Sunlight Sensitivity (its `when` would note every attack),
+  magic armor (9.8). Tests: `tests/test_always_on_modifiers.py`.
+
 ## Open questions (with suggestions)
 
 Q4-Q10, Q13, Q18, Q21-Q29, Q31-Q35, Q37, Q46, Q48-Q50, Q53 and Q55 are
@@ -2892,9 +3406,33 @@ Q4-Q10, Q13, Q18, Q21-Q29, Q31-Q35, Q37, Q46, Q48-Q50, Q53 and Q55 are
 Q36, Q38 and Q39 too (Decision 14), Q58-Q61 (Decision 16), Q62 (Decision 17),
 and Q56 and Q65 (Decision 18, built in R149-R155), Q64 and Q67
 (Decision 19, built in R156-R160), Q57 (Decision 20, built in
-R161-R166); all moved there. Q11 was done as suggested in S.4 (R24-R26): every spell is
+R161-R166), Q68 (Decision 21, built in R170); all moved there. Q11 was done as suggested in S.4 (R24-R26): every spell is
 a class.
 
+- **Q69. Extra Attack and the action economy** (9.3). The simulator
+  doesn't track how many attacks or actions a creature has this turn; the
+  GM sets Times by hand. *Suggestion:* no full action economy (principle
+  8: the GM runs the turn). A weapon row's Times opens at its owner's
+  attacks per Attack action (2 with Extra Attack, 3 with Two Extra
+  Attacks), and the GM can still change it; Action Surge is a row that
+  lets the turn's Action be used once more; Haste's extra action and
+  Command's lost turn are badges whose card and turn column say so.
+- **Q70. Which events end a badge early?** (9.6) *Suggestion:*
+  `CombatCondition.ends_on`, a tuple of events the simulator already sees:
+  takes damage, makes an attack roll, deals damage, casts a spell, forces a
+  save, is Incapacitated, has Speed 0, has no Temporary Hit Points left,
+  named like `TriggerEvent` where one exists. R168's `loses_dodge` becomes
+  one case of it. The badge ends as any badge ends (its concentration link
+  too, 3.6), inside the undo step of what ended it. "You or your allies"
+  (Charm Person) needs the side of whoever dealt the damage, which the
+  fight knows.
+- **Q71. Items in the picker** (9.8). *Suggestion:* `combat_effects()` on
+  item classes, the same `CombatEffect`, and an "Items" section in the
+  picker from the build's inventory, read the way weapons are today. A
+  consumable's row logs its use ("drinks a Potion of Healing"); its count
+  stays on the sheet for now, since the fight doesn't track inventory. A
+  magic weapon's riders are rows after its weapon's, as Weapon Mastery's
+  are (6.9).
 - **Q66. Two wielders' Vex on one creature** (R146). One badge per name
   keeps the last wielder's caster, so Edmund's Advantage goes when Thum
   vexes the same Ogre. *Suggestion:* leave it until it comes up at the
@@ -3055,6 +3593,27 @@ setting is one checkbox, off meaning turn-column buttons (R71, Q48). Q47 is
 - **DI-020** (open, hit again in 3.1): `tests/test_format_changed.py`'s three
   tests fail in a checkout with CRLF shell scripts (`core.autocrlf=true`);
   unrelated to the combat code.
+- **DI-095** (open, Phase 9 step 9.1): pushes and pulls still written only
+  in text, not as `CombatPush`.
+- **DI-098** (open, 9.14): Fly and Swim Speeds given by features and spells
+  other than Fly are text only, so the battle map can't move by them.
+- **DI-099** (open, 9.14): light that spells and carried sources give
+  (Light, Daylight, Flaming Sphere, Moonbeam, a torch) doesn't light
+  painted Darkness.
+- **DI-101** (open, 9.14): Invisible's Concealed (effects that need their
+  target seen) isn't warned about when a spell targets a creature the
+  caster can't see.
+- **DI-108** (open, 9.9): the catalog's 2024 spell-summon stat blocks
+  (Giant Insect, Aberrant Spirit, ...) have no combat effects, so their
+  attacks don't roll and their reach isn't known.
+- **DI-109** (open, 9.13): homebrew abilities in older save prose have no
+  save or damage effects, so their picker rows roll nothing.
+- **DI-118** (open, found in 9.2): the two Deflect Attacks tests in
+  `tests/test_hit_by_triggers.py` patch `turn_panel.roll_dice`, but since
+  the refactor's step 5.4 the roll is in `Combat/Fight/attacks.py`, so they
+  roll real dice and fail at random, on a clean HEAD too.
+- **DI-110** (open, 9.13): monster traits that roll a save (Death Burst,
+  ...) have no combat effects: no picker row, no save table.
 - Found and fixed: `test_an_entry_rides_only_on_its_own_sources_record` found
   no subject once every spell in both sources was a class; it hides the
   classes now (S.4). `tag_report.py` ignored class spells (R24); the text-reading tests dropped a spell's data by its old
@@ -3140,6 +3699,17 @@ top). The full suite runs later, when the user asks.
   in the same file (Set initiative and its undo, a roll per Times copy, a
   typed Hit Point maximum, dice Hit Points left to a button);
   `tests/test_roll_sites.py` keeps principle 13 for new code (8.7).
+- **Phase 9:** per step, the tests of the sources it changes, with
+  expected values from their rules text (not the code's output),
+  `combat_effects.py check`, and the picker goldens' diff read before
+  `UPDATE_SNAPSHOTS=1`. A step that adds a field follows the checklist
+  below. 9.2, 9.4 and 9.5 also run `test_effect_modifiers.py`, to show
+  the badges' modifiers didn't change. After a step,
+  `combat_effects.py coverage` gives the new counts for "Coverage".
+  9.2: `tests/test_always_on_modifiers.py` (the gates' JSON form and
+  refusals; each feature and Magic Resistance from its rules text; the
+  dialog's, a repeat and a Concentration save in the window), plus
+  `test_roll_sites.py` and `test_combat_ui_structure.py`.
 
 ## Checklist: adding a field to the model
 
@@ -3154,3 +3724,437 @@ top). The full suite runs later, when the user asks.
    rows diff read.
 7. If notes said this before: update those sources.
 8. Update this plan's Status and, if the design moved, Revisions.
+
+## Appendix: Phase 9's lists (audit 2026-11-24)
+
+The long lists behind Phase 9's steps, ranked as its "Rank and kind" says
+(by heuristic, with hand-set ranks for the staples). Take an entry out when
+it's described, marked `[]` or made passive.
+
+### A.1 Spells with no combat effects (571)
+
+The picker reads these from their rules text with regexes, so the GM has to
+check every row. `combat_effects.py todo --level N` lists them with where each
+one's effects go. Rank counts: 8: 45, 7: 24, 6: 131, 5: 172, 4: 96, 3: 27,
+2: 48, 1: 28.
+
+**Rank 7-8 (69), the ones to describe first:** Acid Splash (8), Fire Bolt (8), Frostbite (8), Mind Sliver (8), Poison Spray (8), Primal Savagery (8), Ray of Frost (8), Shocking Grasp (8), Sorcerous Burst (8), Thorn Whip (8), Word of Radiance (8), Bane (8), Cause Fear (8), Chaos Bolt (8), Color Spray (8), Hail of Thorns (8), Hex (8), Inflict Wounds (8), Sanctuary (8), Searing Smite (8), Silvery Barbs (8), Thunderous Smite (8), Wrathful Smite (8), Blindness/Deafness (8), Blur (8), Branding Smite (8), Cloud of Daggers (8), Darkness (8), Flaming Sphere (8), Mind Spike (8), Mirror Image (8), Shining Smite (8), Web (8), Bestow Curse (8), Blinding Smite (8), Call Lightning (8), Conjure Animals (8), Counterspell (8), Elemental Weapon (8), Fear (8), Hypnotic Pattern (8), Slow (8), Spirit Shroud (8), Thunder Step (8), Vampiric Touch (8), Shillelagh (7), Expeditious Retreat (7), Find Familiar (7), Goodberry (7), Magic Weapon (7), Prayer of Healing (7), Ray of Enfeeblement (7), Mass Healing Word (7), Revivify (7), Banishment (7), Evard's Black Tentacles (7), Wall of Fire (7), Cone of Cold (7), Flame Strike (7), Greater Restoration (7), Hold Monster (7), Steel Wind Strike (7), Synaptic Static (7), Wall of Force (7), Chain Lightning (7), Circle of Death (7), Disintegrate (7), Harm (7), Sunbeam (7).
+
+<details><summary>Every spell without effects, by level, highest rank first</summary>
+
+- **Cantrips (31):** Acid Splash (8), Fire Bolt (8), Frostbite (8), Mind Sliver (8), Poison Spray (8), Primal Savagery (8), Ray of Frost (8), Shocking Grasp (8), Sorcerous Burst (8), Thorn Whip (8), Word of Radiance (8), Shillelagh (7), Arcane Pulse (6), Blade Ward (6), Create Bonfire (6), Infestation (6), Lightning Lure (6), Magic Stone (6), Mold Earth (6), Sapping Sting (6), Sword Burst (6), Thunderclap (6), Wrath (6), Control Flames (2), Dancing Lights (2), Druidcraft (2), Encode Thoughts (2), Gust (2), Light (2), Mending (2), Shape Water (2)
+- **Level 1 (61):** Bane (8), Cause Fear (8), Chaos Bolt (8), Color Spray (8), Hail of Thorns (8), Hex (8), Inflict Wounds (8), Sanctuary (8), Searing Smite (8), Silvery Barbs (8), Thunderous Smite (8), Wrathful Smite (8), Expeditious Retreat (7), Find Familiar (7), Goodberry (7), Animal Friendship (6), Arms of Hadar (6), Azure Strike (6), Beast Bond (6), Catapult (6), Chains of Ice (6), Compelled Duel (6), Consume Soul (6), Death Grip (6), Earth Tremor (6), Ebon Might (6), Entropic Embrace (6), Fel Rush (6), Freezing Trap (6), Frost Fingers (6), Frost Nova (6), Infernal Strike (6), Insidious Rhythm (6), Jim's Magic Missile (6), Living Flame (6), Magnify Gravity (6), Moonfire (6), Rune Strike (6), Scourge Strike (6), Shadow Word: Pain (6), Snare (6), Spellfire Flare (6), Tasha's Caustic Brew (6), Throw Glaive (6), Wardaway (6), Zephyr Strike (6), Buzzing Bee (5), Gift of Alacrity (5), Illusory Script (5), Jump (5), Purify Food and Drink (5), Vampiric Blood (5), Create or Destroy Water (2), Detect Evil and Good (2), Detect Poison and Disease (2), Distort Value (2), Feign Interest (2), Identify (2), Quick Clothier (2), Tenser's Floating Disk (2), Unseen Servant (2)
+- **Level 2 (95):** Blindness/Deafness (8), Blur (8), Branding Smite (8), Cloud of Daggers (8), Darkness (8), Flaming Sphere (8), Mind Spike (8), Mirror Image (8), Shining Smite (8), Web (8), Magic Weapon (7), Prayer of Healing (7), Ray of Enfeeblement (7), Aganazzar's Scorcher (6), Alter Self (6), Consecration (6), Cordon of Arrows (6), Crown of Madness (6), Curse of Agony (6), Death Armor (6), Death and Decay (6), Disruptive Tune (6), Dragon's Breath (6), Dust Devil (6), Enthrall (6), Eruption (6), Eye Beam (6), Fiery Brand (6), Find Steed (6), Flame Blade (6), Frostscythe (6), Gust of Wind (6), Heat Metal (6), Kinetic Jaunt (6), Maximillian's Earthen Grasp (6), Melf's Acid Arrow (6), Phantasmal Force (6), Rime's Binding Ice (6), Roar of Ursoc (6), Searing Orb (6), Shadow Blade (6), Sigil of Flame (6), Snilloc's Snowball Swarm (6), Spray of Cards (6), Tasha's Mind Whip (6), Uncertain Footing (6), Warding Wind (6), Wither and Bloom (6), Arcane Vigor (5), Battle Familiar (5), Borrowed Knowledge (5), Calm Emotions (5), Detect Thoughts (5), Dream Breath (5), Dueling Ground (5), Elminster's Elusion (5), Enhance Ability (5), Feral Prowl (5), Find Traps (5), Flock of Familiars (5), Fortune's Favor (5), Healing Spirit (5), Homunculus Servant (5), Jim's Glowing Coin (5), Levitate (5), Nystul's Magic Aura (5), Pass without Trace (5), Protection from Poison (5), Summon Beast (5), Tortoise Shell (5), Warding Bond (5), Air Bubble (2), Animal Messenger (2), Arcane Lock (2), Augury (2), Beast Sense (2), Conjure Tools (2), Continual Flame (2), Deryan's Helpful Homunculi (2), Earthbind (2), Gentle Repose (2), Gift of Gab (2), Immovable Object (2), Knock (2), Locate Animals or Plants (2), Locate Object (2), Magic Mouth (2), Nathair's Mischief (2), Pinky Swear (2), Pyrotechnics (2), Rope Trick (2), Skywrite (2), Vortex Warp (2), Warp Sense (2), Wristpocket (2)
+- **Level 3 (88):** Bestow Curse (8), Blinding Smite (8), Call Lightning (8), Conjure Animals (8), Counterspell (8), Elemental Weapon (8), Fear (8), Hypnotic Pattern (8), Slow (8), Spirit Shroud (8), Thunder Step (8), Vampiric Touch (8), Mass Healing Word (7), Revivify (7), Antagonize (6), Ashardalon's Stride (6), Astral Flood (6), Blistering Scales (6), Cacophonic Shield (6), Conjure Barrage (6), Crusader's Mantle (6), Demon Spikes (6), Enemies Abound (6), Erupting Earth (6), Fast Friends (6), Flame Arrows (6), Flurry (6), Glyph of Warding (6), Hand of Gul'dan (6), Hunger of Hadar (6), Incite Greed (6), Inflict Doubt (6), Laeral's Silver Lance (6), Leeching Strike (6), Life Transference (6), Lightning Arrow (6), Magic Circle (6), Meld into Stone (6), Melf's Minute Meteors (6), Metamorphosis (6), Motivational Speech (6), Plant Growth (6), Pulse Wave (6), Rain of Fire (6), Remorseless Winter (6), Serpent Sting (6), Sleet Storm (6), Soul Reap (6), Speak with Plants (6), Stinking Cloud (6), Sylune's Viper (6), Tidal Wave (6), Wall of Sand (6), Wall of Water (6), Wind Wall (6), Animate Dead (5), Aura of Vitality (5), Beacon of Hope (5), Blink (5), Catnap (5), Clairvoyance (5), Conjure Constructs (5), Emerald Blossom (5), Feign Death (5), Galder's Tower (5), Gaseous Form (5), Guided Prayer (5), Intellect Fortress (5), Leomund's Tiny Hut (5), Phantom Steed (5), Prayer of Mending (5), Regrowth (5), Remove Curse (5), Summon Fey (5), Summon Lesser Demons (5), Summon Shadowspawn (5), Summon Undead (5), Tiny Servant (5), Water Breathing (5), Water Walk (5), Dispel Magic (4), Create Food and Water (2), Daylight (2), Major Image (2), Nondetection (2), Sending (2), Speak with Dead (2), Tongues (2)
+- **Level 4 (67):** Banishment (7), Evard's Black Tentacles (7), Wall of Fire (7), Death Ward (6), Dimension Door (6), Greater Invisibility (6), Polymorph (6), Backlash (5), Blight (5), Breath of Eons (5), Chaos Nova (5), Charm Monster (5), Collapsing Star (5), Compulsion (5), Confusion (5), Conjure Minor Elementals (5), Conjure Woodland Beings (5), Control Water (5), Distorted Distance (5), Dominate Beast (5), Doomtide (5), Elemental Bane (5), Emberstorm (5), Festering Blast (5), Find Greater Steed (5), Fount of Moonlight (5), Galder's Speedy Courier (5), Gate Seal (5), Grasping Vine (5), Gravity Sinkhole (5), Guardian of Faith (5), Guardian of Nature (5), Holy Nova (5), Mordenkainen's Faithful Hound (5), Mordenkainen's Private Sanctum (5), Otiluke's Resilient Sphere (5), Phantasmal Killer (5), Psychic Horror (5), Raulothim's Psychic Lance (5), Shadow of Moil (5), Sickening Radiance (5), Spellfire Storm (5), Staggering Smite (5), Starfall (5), Storm Sphere (5), Summon Greater Demon (5), Upheaval (5), Vitriolic Sphere (5), Watery Sphere (5), Arcane Eye (4), Aura of Life (4), Aura of Purity (4), Divine Shield (4), Giant Insect (4), Spirit of Death (4), Sticks to Snakes (4), Summon Aberration (4), Summon Construct (4), Summon Elemental (4), Time Dilation (4), Zone of Amicability (4), Divination (1), Fabricate (1), Hallucinatory Terrain (1), Leomund's Secret Chest (1), Locate Creature (1), Stone Shape (1)
+- **Level 5 (80):** Cone of Cold (7), Flame Strike (7), Greater Restoration (7), Hold Monster (7), Steel Wind Strike (7), Synaptic Static (7), Wall of Force (7), Animate Objects (6), Mass Cure Wounds (6), Awaken (5), Banishing Smite (5), Bigby's Hand (5), Bonestorm (5), Cloudkill (5), Conjure Elemental (5), Conjure Volley (5), Contact Other Plane (5), Contagion (5), Control Winds (5), Danse Macabre (5), Dawn (5), Destructive Wave (5), Dispel Evil and Good (5), Dominate Person (5), Dream (5), Enervation (5), Explosive Trap (5), Geas (5), Grave Ground (5), Hallow (5), Holy Weapon (5), Immolation (5), Infernal Calling (5), Insect Plague (5), Jallarzi's Storm of Radiance (5), Maelstrom (5), Modify Memory (5), Negative Energy Flood (5), Planar Binding (5), Shattering Star (5), Sigil of Chains (5), Songal's Elemental Suffusion (5), Spirit Lantern (5), Telekinesis (5), Temporal Shunt (5), Transmute Rock (5), Void Eruption (5), Wall of Light (5), Wall of Stone (5), Waves of Exhaustion (5), Wrath of Nature (5), Yolande's Regal Presence (5), Alustriel's Mooncloak (4), Antilife Shell (4), Circle of Power (4), Dream Flight (4), Innervate (4), Mislead (4), Raise Dead (4), Rary's Telepathic Bond (4), Reincarnate (4), Rescue (4), Summon Celestial (4), Summon Draconic Spirit (4), Summon Dragon (4), Summon Plant (4), Swift Quiver (4), Teleportation Circle (4), Commune (1), Commune with Nature (1), Create Spelljamming Helm (1), Creation (1), Far Step (1), Legend Lore (1), Mordenkainen's Lucubration (1), Passwall (1), Scrying (1), Seeming (1), Skill Empowerment (1), Tree Stride (1)
+- **Level 6 (55):** Chain Lightning (7), Circle of Death (7), Disintegrate (7), Harm (7), Sunbeam (7), Heal (6), Azure Sweep (5), Blade Barrier (5), Bones of the Earth (5), Combustion (5), Conjure Fey (5), Create Homunculus (5), Dirge (5), Druid Grove (5), Elminster's Effulgent Spheres (5), Eyebite (5), Fizban's Platinum Shield (5), Flesh to Stone (5), Forbiddance (5), Gravity Fissure (5), Guards and Wards (5), Investiture of Flame (5), Investiture of Ice (5), Investiture of Stone (5), Investiture of Wind (5), Leomund's Lamentable Belaborment (5), Mass Suggestion (5), Mental Prison (5), Move Earth (5), Otiluke's Freezing Sphere (5), Otto's Irresistible Dance (5), Programmed Illusion (5), Tasha's Otherworldly Guise (5), Tenser's Transformation (5), Wall of Ice (5), Wall of Thorns (5), Wind Walk (5), Arcane Gate (4), Contingency (4), Create Undead (4), Globe of Invulnerability (4), Magic Jar (4), Planar Ally (4), Primordial Ward (4), Soul Cage (4), Summon Dinosaur (4), Summon Fiend (4), Tranquility (4), True Seeing (4), Word of Recall (4), Drawmij's Instant Summons (1), Find the Path (1), Scatter (1), Tasha's Bubbling Cauldron (1), Transport via Plants (1)
+- **Level 7 (36):** Finger of Death (6), Forcecage (6), Crown of Stars (4), Delayed Blast Fireball (4), Divine Word (4), Draconic Transformation (4), Dream of the Blue Veil (4), Fire Storm (4), Fractured Awareness (4), Lay Waste (4), Mirage Arcane (4), Mordenkainen's Sword (4), Plane Shift (4), Power Word Pain (4), Prismatic Spray (4), Project Image (4), Reverse Gravity (4), Symbol (4), Teleport (4), Temple of the Gods (4), Tether Essence (4), Transfix (4), Void Star (4), Whirlwind (4), Aura of Evasion (3), Conjure Celestial (3), Create Magen (3), Power Word Fortify (3), Regenerate (3), Resurrection (3), Reweave Fate (3), Simbul's Synostodweomer (3), Simulacrum (3), Etherealness (1), Mordenkainen's Magnificent Mansion (1), Sequester (1)
+- **Level 8 (31):** Power Word Stun (6), Sunburst (6), Abi-Dalzim's Horrid Wilting (4), Antipathy/Sympathy (4), Befuddlement (4), Dark Star (4), Dominate Monster (4), Earthquake (4), Entrancing Mirrors (4), Feeblemind (4), Holy Aura (4), Holy Star of Mystra (4), Illusory Dragon (4), Incendiary Cloud (4), Lightning Ring (4), Maddening Darkness (4), Maze (4), Reality Break (4), Tsunami (4), Animal Shapes (3), Antimagic Field (3), Clone (3), Demiplane (3), Glibness (3), Iron Body (3), Mighty Fortress (3), Mind Blank (3), Moment of Prescience (3), Telepathy (3), Tree of Life (3), Control Weather (1)
+- **Level 9 (27):** Meteor Swarm (6), Power Word Kill (6), Time Stop (5), Wish (5), Blade of Disaster (4), Detonate (4), Foresight (4), Gate (4), Imprisonment (4), Mass Polymorph (4), Power Word Heal (4), Prismatic Wall (4), Psychic Scream (4), Ravenous Void (4), Storm of Vengeance (4), Time Ravage (4), Vision of Elapsing Eons (4), Wail of the Banshee (4), Weird (4), Apotheosis (3), Astral Projection (3), Invulnerability (3), Mass Heal (3), Shapechange (3), True Polymorph (3), True Resurrection (3), Hindsight (1)
+
+</details>
+
+### A.2 Features of the example builds, rank 6+ (30)
+
+Read from their text, extensions with no row, or both (A.3, A.4).
+
+| Rank | Feature | File(s) |
+|---|---|---|
+| 9 | Extra Attack | [ClassFeatures/Barbarian/BarbarianFeatures.py](../CharacterContent/Features/ClassFeatures/Barbarian/BarbarianFeatures.py), [ClassFeatures/Fighter/FighterFeatures.py](../CharacterContent/Features/ClassFeatures/Fighter/FighterFeatures.py), [ClassFeatures/Monk/MonkFeatures.py](../CharacterContent/Features/ClassFeatures/Monk/MonkFeatures.py), [ClassFeatures/Paladin/PaladinFeatures.py](../CharacterContent/Features/ClassFeatures/Paladin/PaladinFeatures.py), [ClassFeatures/Ranger/RangerFeatures.py](../CharacterContent/Features/ClassFeatures/Ranger/RangerFeatures.py), [SubClassFeatures2014/Bard/BardSwordsFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Bard/BardSwordsFeatures.py) |
+| 8 | Action Surge | [ClassFeatures/Fighter/FighterFeatures.py](../CharacterContent/Features/ClassFeatures/Fighter/FighterFeatures.py) |
+| 8 | Aura of Protection | [ClassFeatures/Paladin/PaladinFeatures.py](../CharacterContent/Features/ClassFeatures/Paladin/PaladinFeatures.py) |
+| 8 | Stunning Strike | [ClassFeatures/Monk/MonkFeatures.py](../CharacterContent/Features/ClassFeatures/Monk/MonkFeatures.py) |
+| 8 | Two Extra Attacks | [ClassFeatures/Fighter/FighterFeatures.py](../CharacterContent/Features/ClassFeatures/Fighter/FighterFeatures.py) |
+| 7 | Breath Weapon | [SpeciesFeatures/DragonbornFeatures.py](../CharacterContent/Features/SpeciesFeatures/DragonbornFeatures.py) |
+| 7 | Evasion | [ClassFeatures/Monk/MonkFeatures.py](../CharacterContent/Features/ClassFeatures/Monk/MonkFeatures.py), [ClassFeatures/Rogue/RogueFeatures.py](../CharacterContent/Features/ClassFeatures/Rogue/RogueFeatures.py) |
+| 7 | Great Weapon Master | [CharacterFeats/GeneralFeats.py](../CharacterContent/Features/CharacterFeats/GeneralFeats.py) |
+| 7 | Reckless Attack | [ClassFeatures/Barbarian/BarbarianFeatures.py](../CharacterContent/Features/ClassFeatures/Barbarian/BarbarianFeatures.py) |
+| 7 | Sharpshooter | [CharacterFeats/GeneralFeats.py](../CharacterContent/Features/CharacterFeats/GeneralFeats.py) |
+| 7 | Superiority Dice | [SubClassFeatures/Fighter/FighterBattleMasterFeatures.py](../CharacterContent/Features/SubClassFeatures/Fighter/FighterBattleMasterFeatures.py) |
+| 7 | Uncanny Dodge | [ClassFeatures/Rogue/RogueFeatures.py](../CharacterContent/Features/ClassFeatures/Rogue/RogueFeatures.py) |
+| 6 | Aura of Courage | [ClassFeatures/Paladin/PaladinFeatures.py](../CharacterContent/Features/ClassFeatures/Paladin/PaladinFeatures.py) |
+| 6 | Bladesong | [SubClassFeatures/Wizard/WizardBladesingerFeatures.py](../CharacterContent/Features/SubClassFeatures/Wizard/WizardBladesingerFeatures.py) |
+| 6 | Brutal Strike | [ClassFeatures/Barbarian/BarbarianFeatures.py](../CharacterContent/Features/ClassFeatures/Barbarian/BarbarianFeatures.py) |
+| 6 | Celestial Revelation | [SpeciesFeatures/AasimarFeatures.py](../CharacterContent/Features/SpeciesFeatures/AasimarFeatures.py) |
+| 6 | Colossus Slayer | [SubClassFeatures/Ranger/RangerHunterFeatures.py](../CharacterContent/Features/SubClassFeatures/Ranger/RangerHunterFeatures.py) |
+| 6 | Cunning Strike | [ClassFeatures/Rogue/RogueFeatures.py](../CharacterContent/Features/ClassFeatures/Rogue/RogueFeatures.py) |
+| 6 | Cutting Words | [SubClassFeatures/Bard/BardLoreFeatures.py](../CharacterContent/Features/SubClassFeatures/Bard/BardLoreFeatures.py) |
+| 6 | Divine Strike | [ClassFeatures/Cleric/ClericFeatures.py](../CharacterContent/Features/ClassFeatures/Cleric/ClericFeatures.py) |
+| 6 | Dreadful Strikes | [SubClassFeatures/Ranger/RangerFeyWandererFeatures.py](../CharacterContent/Features/SubClassFeatures/Ranger/RangerFeyWandererFeatures.py) |
+| 6 | Frenzy | [SubClassFeatures/Barbarian/BarbarianPathOfTheBerserkerFeatures.py](../CharacterContent/Features/SubClassFeatures/Barbarian/BarbarianPathOfTheBerserkerFeatures.py) |
+| 6 | Improved Critical | [SubClassFeatures/Fighter/FighterChampionFeatures.py](../CharacterContent/Features/SubClassFeatures/Fighter/FighterChampionFeatures.py) |
+| 6 | Open Hand Technique | [SubClassFeatures/Monk/MonkOpenHandFeatures.py](../CharacterContent/Features/SubClassFeatures/Monk/MonkOpenHandFeatures.py) |
+| 6 | Portent | [SubClassFeatures/Wizard/WizardDivinerFeatures.py](../CharacterContent/Features/SubClassFeatures/Wizard/WizardDivinerFeatures.py) |
+| 6 | Primal Strike | [ClassFeatures/Druid/DruidFeatures.py](../CharacterContent/Features/ClassFeatures/Druid/DruidFeatures.py) |
+| 6 | Radiant Strikes | [ClassFeatures/Paladin/PaladinFeatures.py](../CharacterContent/Features/ClassFeatures/Paladin/PaladinFeatures.py) |
+| 6 | Riposte | [CombatFeatures/Maneuvers.py](../CharacterContent/Features/CombatFeatures/Maneuvers.py) |
+| 6 | Starry Form | [SubClassFeatures/Druid/DruidStarsFeatures.py](../CharacterContent/Features/SubClassFeatures/Druid/DruidStarsFeatures.py) |
+| 6 | Vow of Enmity | [SubClassFeatures/Paladin/PaladinVengeanceFeatures.py](../CharacterContent/Features/SubClassFeatures/Paladin/PaladinVengeanceFeatures.py) |
+
+### A.3 Features read from their text (424)
+
+Not passive and no `combat_effects`: the picker guesses a row from the
+text. About 70 of them only need `[]` (9.16, item 1).
+
+<details><summary>Read from their text (424), each with its rank</summary>
+
+- [ClassFeatures/Barbarian/BarbarianFeatures.py](../CharacterContent/Features/ClassFeatures/Barbarian/BarbarianFeatures.py): Extra Attack (9), Reckless Attack (7), Danger Sense (5), Indomitable Might (3), Primal Knowledge (2), Unarmored Defense (2), Weapon Mastery (2)
+- [ClassFeatures/Fighter/FighterFeatures.py](../CharacterContent/Features/ClassFeatures/Fighter/FighterFeatures.py): Extra Attack (9), Action Surge (8), Studied Attacks (4)
+- [ClassFeatures/Monk/MonkFeatures.py](../CharacterContent/Features/ClassFeatures/Monk/MonkFeatures.py): Extra Attack (9), Evasion (7), Empowered Strikes (3), Self-Restoration (3), Acrobatic Movement (2)
+- [ClassFeatures/Paladin/PaladinFeatures.py](../CharacterContent/Features/ClassFeatures/Paladin/PaladinFeatures.py): Extra Attack (9), Aura of Protection (8), Radiant Strikes (6), Faithful Steed (3)
+- [ClassFeatures/Ranger/RangerFeatures.py](../CharacterContent/Features/ClassFeatures/Ranger/RangerFeatures.py): Extra Attack (9), Nature's Veil (4), Feral Senses (3), Roving (2), Tireless (1)
+- [SubClassFeatures2014/Bard/BardSwordsFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Bard/BardSwordsFeatures.py): Extra Attack (9), Blade Flourish (5), Bonus Proficiencies (2)
+- [CharacterFeats/GeneralFeats.py](../CharacterContent/Features/CharacterFeats/GeneralFeats.py): Great Weapon Master (7), Sharpshooter (7), Dual Wielder (4), Mage Slayer (4), Mounted Combatant (3), Durable (2), Observant (2)
+- [ClassFeatures/Rogue/RogueFeatures.py](../CharacterContent/Features/ClassFeatures/Rogue/RogueFeatures.py): Evasion (7), Uncanny Dodge (7), Reliable Talent (1)
+- [SpeciesFeatures/DragonbornFeatures.py](../CharacterContent/Features/SpeciesFeatures/DragonbornFeatures.py): Breath Weapon (7), Draconic Flight (4)
+- [SubClassFeatures/Fighter/FighterBattleMasterFeatures.py](../CharacterContent/Features/SubClassFeatures/Fighter/FighterBattleMasterFeatures.py): Superiority Dice (7), Student of War (3)
+- [ClassFeatures/Cleric/ClericFeatures.py](../CharacterContent/Features/ClassFeatures/Cleric/ClericFeatures.py): Divine Strike (6), Potent Spellcasting (5), Divine Order: Thaumaturge (4), Divine Intervention (2)
+- [ClassFeatures/Druid/DruidFeatures.py](../CharacterContent/Features/ClassFeatures/Druid/DruidFeatures.py): Primal Strike (6), Potent Spellcasting (5)
+- [SpeciesFeatures/AasimarFeatures.py](../CharacterContent/Features/SpeciesFeatures/AasimarFeatures.py): Celestial Revelation (6), Healing Hands (5), Light Bearer (3)
+- [SubClassFeatures/Druid/DruidStarsFeatures.py](../CharacterContent/Features/SubClassFeatures/Druid/DruidStarsFeatures.py): Starry Form (6), Star Map (3)
+- [SubClassFeatures/Fighter/FighterChampionFeatures.py](../CharacterContent/Features/SubClassFeatures/Fighter/FighterChampionFeatures.py): Improved Critical (6), Remarkable Athlete (4)
+- [SubClassFeatures/Monk/MonkOpenHandFeatures.py](../CharacterContent/Features/SubClassFeatures/Monk/MonkOpenHandFeatures.py): Open Hand Technique (6), Quivering Palm (5), Wholeness of Body (5), Fleet Step (3)
+- [SubClassFeatures/Paladin/PaladinVengeanceFeatures.py](../CharacterContent/Features/SubClassFeatures/Paladin/PaladinVengeanceFeatures.py): Vow of Enmity (6)
+- [SubClassFeatures/Ranger/RangerFeyWandererFeatures.py](../CharacterContent/Features/SubClassFeatures/Ranger/RangerFeyWandererFeatures.py): Dreadful Strikes (6), Otherworldly Glamour (3), Fey Wanderer Spells (2)
+- [SubClassFeatures/Ranger/RangerHunterFeatures.py](../CharacterContent/Features/SubClassFeatures/Ranger/RangerHunterFeatures.py): Colossus Slayer (6), Hunter's Lore (2)
+- [SubClassFeatures/Wizard/WizardBladesingerFeatures.py](../CharacterContent/Features/SubClassFeatures/Wizard/WizardBladesingerFeatures.py): Bladesong (6)
+- [SubClassFeatures/Wizard/WizardDivinerFeatures.py](../CharacterContent/Features/SubClassFeatures/Wizard/WizardDivinerFeatures.py): Portent (6), Divination Savant (2)
+- [CharacterFeats/OriginFeats.py](../CharacterContent/Features/CharacterFeats/OriginFeats.py): Lucky (5), Healer (4), Savage Attacker (4), Musician (2)
+- [ClassFeatures/Sorcerer/SorcererFeatures.py](../CharacterContent/Features/ClassFeatures/Sorcerer/SorcererFeatures.py): Font of Magic (5), Innate Sorcery (5), Metamagic (5), Spellcasting (2)
+- [SubClassFeatures/Barbarian/BarbarianPathOfTheElementsFeatures.py](../CharacterContent/Features/SubClassFeatures/Barbarian/BarbarianPathOfTheElementsFeatures.py): Raging Elements (5), Primordial Bond (4), Echo of the Elements (3)
+- [SubClassFeatures/Barbarian/BarbarianPathOfTheSpiritualGuardianFeatures.py](../CharacterContent/Features/SubClassFeatures/Barbarian/BarbarianPathOfTheSpiritualGuardianFeatures.py): Spirits' Fury (5), Consult the Spirits (2)
+- [SubClassFeatures/Bard/BardDanceFeatures.py](../CharacterContent/Features/SubClassFeatures/Bard/BardDanceFeatures.py): Dazzling Footwork (5)
+- [SubClassFeatures/Bard/BardGlamourFeatures.py](../CharacterContent/Features/SubClassFeatures/Bard/BardGlamourFeatures.py): Beguiling Magic (5), Mantle of Inspiration (4)
+- [SubClassFeatures/Bard/BardSpiritsFeatures.py](../CharacterContent/Features/SubClassFeatures/Bard/BardSpiritsFeatures.py): Spirits from Beyond (5), Channeler (3)
+- [SubClassFeatures/Cleric/ClericDisciplineFeatures.py](../CharacterContent/Features/SubClassFeatures/Cleric/ClericDisciplineFeatures.py): Ultimate Penitence (5), Atonement (4), Discipline Domain Spells (2)
+- [SubClassFeatures/Cleric/ClericGraveFeatures.py](../CharacterContent/Features/SubClassFeatures/Cleric/ClericGraveFeatures.py): Circle of Mortality (5)
+- [SubClassFeatures/Cleric/ClericShadowFeatures.py](../CharacterContent/Features/SubClassFeatures/Cleric/ClericShadowFeatures.py): Devouring Plague (5), Dispersion (4), Vampiric Embrace (4), Shadow Domain Spells (2)
+- [SubClassFeatures/Druid/DruidLandFeatures.py](../CharacterContent/Features/SubClassFeatures/Druid/DruidLandFeatures.py): Land's Aid (5), Nature's Sanctuary (4), Natural Recovery (3), Circle of the Land Spells (2)
+- [SubClassFeatures/Druid/DruidSeaFeatures.py](../CharacterContent/Features/SubClassFeatures/Druid/DruidSeaFeatures.py): Wrath of the Sea (5), Circle of the Sea Spells (2)
+- [SubClassFeatures/Fighter/FighterArcaneArcherFeatures.py](../CharacterContent/Features/SubClassFeatures/Fighter/FighterArcaneArcherFeatures.py): Arcane Shot (5), Curving Shot (5), Magical Ammunition (5), Masterful Shots (5)
+- [SubClassFeatures/Fighter/FighterEldritchKnightFeatures.py](../CharacterContent/Features/SubClassFeatures/Fighter/FighterEldritchKnightFeatures.py): Eldritch Strike (5), War Magic (3), Arcane Charge (2), Spellcasting (2), War Bond (2)
+- [SubClassFeatures/Fighter/FighterPsiWarriorFeatures.py](../CharacterContent/Features/SubClassFeatures/Fighter/FighterPsiWarriorFeatures.py): Psionic Power (5), Telekinetic Master (5), Bulwark of Force (4), Guarded Mind (4)
+- [SubClassFeatures/Fighter/FighterSorrowKnightFeatures.py](../CharacterContent/Features/SubClassFeatures/Fighter/FighterSorrowKnightFeatures.py): Despairing Strikes (5), Grim Constitution (4), Solemn Gaze (2)
+- [SubClassFeatures/Monk/MonkMercyFeatures.py](../CharacterContent/Features/SubClassFeatures/Monk/MonkMercyFeatures.py): Flurry of Healing and Harm (5), Hand of Harm (5), Hand of Healing (5), Hand of Ultimate Mercy (4), Implements of Mercy (3)
+- [SubClassFeatures/Monk/MonkMysticArtsFeatures.py](../CharacterContent/Features/SubClassFeatures/Monk/MonkMysticArtsFeatures.py): Focused Strike (5), Mystic Fighting Style (3), Spellcasting (2)
+- [SubClassFeatures/Monk/MonkMysticBrewsFeatures.py](../CharacterContent/Features/SubClassFeatures/Monk/MonkMysticBrewsFeatures.py): Tipsy Sway (5)
+- [SubClassFeatures/Paladin/PaladinEbonBladeFeatures.py](../CharacterContent/Features/SubClassFeatures/Paladin/PaladinEbonBladeFeatures.py): Death Coil (5), Runeforging (5), Runic Mastery (5), Runic Strikes (5), Aspect of the Horsemen (4), Runic Smite (3), Oath of the Ebon Blade Spells (2)
+- [SubClassFeatures/Paladin/PaladinGloryFeatures.py](../CharacterContent/Features/SubClassFeatures/Paladin/PaladinGloryFeatures.py): Glorious Defense (5), Living Legend (4)
+- [SubClassFeatures/Ranger/RangerDemonHunterFeatures.py](../CharacterContent/Features/SubClassFeatures/Ranger/RangerDemonHunterFeatures.py): Soul Fragments (5), Improved Spectral Sight (3), Spectral Sight (3), Void Warrior (3), Demon Hunter Spells (2)
+- [SubClassFeatures/Ranger/RangerGloomStalkerFeatures.py](../CharacterContent/Features/SubClassFeatures/Ranger/RangerGloomStalkerFeatures.py): Dread Ambusher (5), Umbral Sight (4), Gloom Stalker Spells (2)
+- [SubClassFeatures/Ranger/RangerHollowWardenFeatures.py](../CharacterContent/Features/SubClassFeatures/Ranger/RangerHollowWardenFeatures.py): Wrath of the Wild (5), Hollow Warden Spells (2)
+- [SubClassFeatures/Ranger/RangerWinterWalkerFeatures.py](../CharacterContent/Features/SubClassFeatures/Ranger/RangerWinterWalkerFeatures.py): Frigid Explorer (5), Hunter's Rime (5), Winter Walker Spells (2)
+- [SubClassFeatures/Rogue/RogueAssassinFeatures.py](../CharacterContent/Features/SubClassFeatures/Rogue/RogueAssassinFeatures.py): Assassinate (5), Assassin's Tools (2)
+- [SubClassFeatures/Rogue/RoguePhantomFeatures.py](../CharacterContent/Features/SubClassFeatures/Rogue/RoguePhantomFeatures.py): Death's Friend (5), Ghost Walk (4), Tokens of the Departed (4), Whispers of the Dead (3), Voice of Death (2)
+- [SubClassFeatures/Rogue/RogueSwashbucklerFeatures.py](../CharacterContent/Features/SubClassFeatures/Rogue/RogueSwashbucklerFeatures.py): Master Duelist (5), Fancy Footwork (4), Rakish Audacity (4)
+- [SubClassFeatures/Sorcerer/SorcererAberrantFeatures.py](../CharacterContent/Features/SubClassFeatures/Sorcerer/SorcererAberrantFeatures.py): Warping Implosion (5), Revelation in Flesh (4), Psionic Spells (2), Telepathic Speech (2)
+- [SubClassFeatures/Warlock/WarlockArchfeyFeatures.py](../CharacterContent/Features/SubClassFeatures/Warlock/WarlockArchfeyFeatures.py): Steps of the Fey (5), Archfey Spells (2)
+- [SubClassFeatures/Warlock/WarlockCelestialFeatures.py](../CharacterContent/Features/SubClassFeatures/Warlock/WarlockCelestialFeatures.py): Radiant Soul (5), Searing Vengeance (5), Healing Light (4), Celestial Spells (2)
+- [SubClassFeatures/Wizard/WizardEnchanterFeatures.py](../CharacterContent/Features/SubClassFeatures/Wizard/WizardEnchanterFeatures.py): Alter Memories (5), Hypnotic Presence (5), Instinctive Charm (5), Split Enchantment (5), Enchantment Savant (2)
+- [SubClassFeatures/Wizard/WizardNecromancerFeatures.py](../CharacterContent/Features/SubClassFeatures/Wizard/WizardNecromancerFeatures.py): Death's Master (5), Undead Thralls (5), Grave Power (3), Necromancy Savant (2), Necromancy Spellbook (2)
+- [SubClassFeatures/Wizard/WizardTransmuterFeatures.py](../CharacterContent/Features/SubClassFeatures/Wizard/WizardTransmuterFeatures.py): Wondrous Alteration (5), Transmuter's Stone (4), Empowered Transmutation (3), Shape-Shifter (3), Transmutation Savant (2)
+- [SubClassFeatures2014/Barbarian/BarbarianPathOfTheBattleragerFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Barbarian/BarbarianPathOfTheBattleragerFeatures.py): Battlerager Armor (5)
+- [SubClassFeatures2014/Barbarian/BarbarianPathOfTheStormHeraldFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Barbarian/BarbarianPathOfTheStormHeraldFeatures.py): Raging Storm (5), Shielding Storm (4), Storm Soul (4)
+- [SubClassFeatures2014/Bard/BardWhispersFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Bard/BardWhispersFeatures.py): Shadow Lore (5), Words of Terror (5), Mantle of Whispers (2)
+- [SubClassFeatures2014/Cleric/ClericDeathFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Cleric/ClericDeathFeatures.py): Channel Divinity: Touch of Death (5), Reaper (3), Bonus Proficiency (2), Death Domain Spells (2)
+- [SubClassFeatures2014/Cleric/ClericNatureFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Cleric/ClericNatureFeatures.py): Channel Divinity: Charm Animals and Plants (5), Dampen Elements (4), Acolyte of Nature (3), Bonus Proficiency (2), Nature Domain Spells (2)
+- [SubClassFeatures2014/Cleric/ClericOrderFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Cleric/ClericOrderFeatures.py): Channel Divinity: Order's Demand (5), Bonus Proficiencies (2), Embodiment of the Law (2), Order Domain Spells (2), Voice of Authority (2)
+- [SubClassFeatures2014/Cleric/ClericTempestFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Cleric/ClericTempestFeatures.py): Thunderous Strike (5), Wrath of the Storm (5), Channel Divinity: Destructive Wrath (3), Bonus Proficiencies (2), Stormborn (2), Tempest Domain Spells (2)
+- [SubClassFeatures2014/Druid/DruidSporesFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Druid/DruidSporesFeatures.py): Halo of Spores (5), Symbiotic Entity (4), Fungal Infestation (3), Circle of Spores Spells (2)
+- [SubClassFeatures2014/Druid/DruidWildfireFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Druid/DruidWildfireFeatures.py): Cauterizing Flames (5), Summon Wildfire Spirit (5), Circle Spells (2)
+- [SubClassFeatures2014/Fighter/FighterCavalierFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Fighter/FighterCavalierFeatures.py): Ferocious Charger (5), Hold the Line (5), Unwavering Mark (5), Vigilant Defender (5), Warding Maneuver (4), Bonus Proficiency (2), Born to the Saddle (2)
+- [SubClassFeatures2014/Fighter/FighterEchoKnightFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Fighter/FighterEchoKnightFeatures.py): Manifest Echo (5), Unleash Incarnation (5), Reclaim Potential (4), Shadow Martyr (4), Echo Avatar (2)
+- [SubClassFeatures2014/Fighter/FighterRuneKnightFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Fighter/FighterRuneKnightFeatures.py): Giant's Might (5), Rune Carver (5), Runic Shield (4)
+- [SubClassFeatures2014/Fighter/FighterSamuraiFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Fighter/FighterSamuraiFeatures.py): Rapid Strike (5), Fighting Spirit (4), Strength Before Death (3), Elegant Courtier (2)
+- [SubClassFeatures2014/Monk/MonkAstralSelfFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Monk/MonkAstralSelfFeatures.py): Arms of the Astral Self (5), Body of the Astral Self (5), Awakened Astral Self (4)
+- [SubClassFeatures2014/Monk/MonkDrunkenMasterFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Monk/MonkDrunkenMasterFeatures.py): Tipsy Sway (5), Drunkard's Luck (4), Intoxicated Frenzy (4), Bonus Proficiencies (2)
+- [SubClassFeatures2014/Monk/MonkKenseiFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Monk/MonkKenseiFeatures.py): Deft Strike (5), Kensei's Shot (5), Agile Parry (4), Sharpen the Blade (4), Unerring Accuracy (4), Kensei Weapons (2), Way of the Brush (2)
+- [SubClassFeatures2014/Monk/MonkLongDeathFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Monk/MonkLongDeathFeatures.py): Hour of Reaping (5), Touch of the Long Death (5), Mastery of Death (4), Touch of Death (4)
+- [SubClassFeatures2014/Monk/MonkSunSoulFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Monk/MonkSunSoulFeatures.py): Radiant Sun Bolt (5), Searing Arc Strike (5), Searing Sunburst (5), Sun Shield (5)
+- [SubClassFeatures2014/Paladin/PaladinConquestFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Paladin/PaladinConquestFeatures.py): Aura of Conquest (5), Channel Divinity: Conquering Presence (5), Scornful Rebuke (5), Channel Divinity: Guided Strike (4), Invincible Conqueror (4), Oath of Conquest Spells (2)
+- [SubClassFeatures2014/Paladin/PaladinCrownFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Paladin/PaladinCrownFeatures.py): Channel Divinity: Champion Challenge (5), Channel Divinity: Turn the Tide (4), Exalted Champion (4), Unyielding Saint (4), Divine Allegiance (3), Oath of the Crown Spells (2)
+- [SubClassFeatures2014/Paladin/PaladinOathbreakerFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Paladin/PaladinOathbreakerFeatures.py): Control Undead (5), Dread Lord (5), Dreadful Aspect (5), Aura of Hate (4), Supernatural Resistance (4), Oathbreaker Spells (2)
+- [SubClassFeatures2014/Paladin/PaladinRedemptionFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Paladin/PaladinRedemptionFeatures.py): Channel Divinity: Rebuke the Violent (5), Emissary of Redemption (5), Channel Divinity: Emissary of Peace (4), Protective Spirit (4), Aura of the Guardian (3), Oath of Redemption Spells (2)
+- [SubClassFeatures2014/Paladin/PaladinWatchersFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Paladin/PaladinWatchersFeatures.py): Mortal Bulwark (5), Vigilant Rebuke (5), Aura of the Sentinel (4), Oath of the Watchers Spells (2)
+- [SubClassFeatures2014/Ranger/RangerDrakewardenFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Ranger/RangerDrakewardenFeatures.py): Drake's Breath (5)
+- [SubClassFeatures2014/Ranger/RangerHorizonWalkerFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Ranger/RangerHorizonWalkerFeatures.py): Distant Strike (5), Planar Warrior (5), Spectral Defense (4), Detect Portal (2), Ethereal Step (2), Horizon Walker Spells (2)
+- [SubClassFeatures2014/Ranger/RangerMonsterSlayerFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Ranger/RangerMonsterSlayerFeatures.py): Magic-User's Nemesis (5), Slayer's Prey (5), Monster Slayer Magic (3), Hunter's Sense (2)
+- [SubClassFeatures2014/Ranger/RangerSwarmkeeperFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Ranger/RangerSwarmkeeperFeatures.py): Gathered Swarm (5), Swarming Dispersal (4), Swarmkeeper Magic (3), Writhing Tide (2)
+- [SubClassFeatures2014/Rogue/RogueMastermindFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Rogue/RogueMastermindFeatures.py): Misdirection (5), Master of Tactics (4), Insightful Manipulator (2), Master of Intrigue (2), Soul of Deceit (2)
+- [SubClassFeatures2014/Rogue/RogueScoutFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Rogue/RogueScoutFeatures.py): Sudden Strike (5), Ambush Master (4), Skirmisher (2), Superior Mobility (2)
+- [SubClassFeatures2014/Rogue/RogueSwashbucklerFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Rogue/RogueSwashbucklerFeatures.py): Panache (5), Elegant Maneuver (4), Fancy Footwork (4), Master Duelist (4)
+- [SubClassFeatures2014/Sorcerer/SorcererLunarSorceryFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Sorcerer/SorcererLunarSorceryFeatures.py): Moon Fire (5), Lunar Embodiment (3)
+- [SubClassFeatures2014/Sorcerer/SorcererStormSorceryFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Sorcerer/SorcererStormSorceryFeatures.py): Heart of the Storm (5), Storm's Fury (5), Wind Soul (4), Storm Guide (2), Tempestuous Magic (2)
+- [SubClassFeatures2014/Warlock/WarlockFathomlessFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Warlock/WarlockFathomlessFeatures.py): Tentacle of the Deep (5), Grasping Tentacles (4), Oceanic Soul (4), Expanded Spell List (2), Fathomless Plunge (2), Gift of the Sea (2)
+- [SubClassFeatures2014/Warlock/WarlockHexbladeFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Warlock/WarlockHexbladeFeatures.py): Accursed Specter (5), Hexblade's Curse (5), Hex Warrior (4), Expanded Spell List (2)
+- [SubClassFeatures2014/Warlock/WarlockTheGenieFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Warlock/WarlockTheGenieFeatures.py): Genie's Vessel (5), Elemental Gift (4), Expanded Spell List (2)
+- [SubClassFeatures2014/Wizard/WizardChronurgyFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Wizard/WizardChronurgyFeatures.py): Momentary Stasis (5), Arcane Abeyance (3), Chronal Shift (3), Convergent Future (3), Temporal Awareness (3)
+- [SubClassFeatures2014/Wizard/WizardGraviturgyFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Wizard/WizardGraviturgyFeatures.py): Adjust Density (5), Event Horizon (5), Gravity Well (5), Violent Attraction (5)
+- [ClassFeatures/Bard/BardFeatures.py](../CharacterContent/Features/ClassFeatures/Bard/BardFeatures.py): Countercharm (4), Magical Secrets (2), Words of Creation (2)
+- [SpeciesFeatures/ElfFeatures.py](../CharacterContent/Features/SpeciesFeatures/ElfFeatures.py): Fey Ancestry (4), Trance (2)
+- [SubClassFeatures/Fighter/FighterBanneretFeatures.py](../CharacterContent/Features/SubClassFeatures/Fighter/FighterBanneretFeatures.py): Group Recovery (4), Knightly Envoy (2)
+- [SubClassFeatures/Paladin/PaladinGeniesFeatures.py](../CharacterContent/Features/SubClassFeatures/Paladin/PaladinGeniesFeatures.py): Genie's Splendor (4)
+- [SubClassFeatures/Paladin/PaladinHolyFeatures.py](../CharacterContent/Features/SubClassFeatures/Paladin/PaladinHolyFeatures.py): Holy Deliverance (4)
+- [SubClassFeatures/Warlock/WarlockVestigeFeatures.py](../CharacterContent/Features/SubClassFeatures/Warlock/WarlockVestigeFeatures.py): Semblance of Life (4), Vestige Recovery (4), Vestige Companion (3), Vestige Spells (2)
+- [SubClassFeatures/Wizard/WizardConjurerFeatures.py](../CharacterContent/Features/SubClassFeatures/Wizard/WizardConjurerFeatures.py): Durable Summons (4), Focused Conjuration (3), Splintered Summons (3), Benign Transposition (2), Conjuration Savant (2)
+- [SubClassFeatures2014/Barbarian/BarbarianPathOfWildMagicFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Barbarian/BarbarianPathOfWildMagicFeatures.py): Bolstering Magic (4), Magic Awareness (2)
+- [SubClassFeatures2014/Bard/BardEloquenceFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Bard/BardEloquenceFeatures.py): Silver Tongue (4), Universal Speech (2)
+- [SubClassFeatures2014/Cleric/ClericForgeFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Cleric/ClericForgeFeatures.py): Blessing of the Forge (4), Bonus Proficiencies (2), Channel Divinity: Artisan's Blessing (2), Forge Domain Spells (2)
+- [SubClassFeatures2014/Cleric/ClericPeaceFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Cleric/ClericPeaceFeatures.py): Channel Divinity: Balm of Peace (4), Emboldening Bond (4), Implement of Peace (3), Peace Domain Spells (2)
+- [SubClassFeatures2014/Cleric/ClericTwilightFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Cleric/ClericTwilightFeatures.py): Channel Divinity: Twilight Sanctuary (4), Vigilant Blessing (4), Bonus Proficiencies (2), Eyes of Night (2), Steps of Night (2), Twilight Domain Spells (2)
+- [SubClassFeatures2014/Druid/DruidDreamsFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Druid/DruidDreamsFeatures.py): Balm of the Summer Court (4), Hearth of Moonlight and Shadow (4), Walker in Dreams (3), Hidden Paths (2)
+- [SubClassFeatures2014/Druid/DruidShepherdFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Druid/DruidShepherdFeatures.py): Faithful Summons (4), Mighty Summoner (4), Spirit Totem (4), Speech of the Woods (2)
+- [SubClassFeatures2014/Sorcerer/SorcererDivineSoulFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Sorcerer/SorcererDivineSoulFeatures.py): Empowered Healing (4), Favored by the Gods (4), Unearthly Recovery (4), Angelic Form (2)
+- [SubClassFeatures2014/Warlock/WarlockTheUndyingFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Warlock/WarlockTheUndyingFeatures.py): Among the Dead (4), Defy Death (4), Indestructible Life (4), Expanded Spell List (2), Undying Nature (2)
+- [CharacterFeats/EpicBoon.py](../CharacterContent/Features/CharacterFeats/EpicBoon.py): Epic Boon (3)
+- [SpeciesFeatures/GnomeFeatures.py](../CharacterContent/Features/SpeciesFeatures/GnomeFeatures.py): Forest Gnome Speak with Animals (3), Rock Gnome Prestidigitation (3)
+- [SubClassFeatures/Artificer/ArtificerBattleSmithFeatures.py](../CharacterContent/Features/SubClassFeatures/Artificer/ArtificerBattleSmithFeatures.py): Battle Ready (3), Battle Smith spells (3), Steel Defender (3), Tools of the Trade (2)
+- [SubClassFeatures/Ranger/RangerBeastMasterFeatures.py](../CharacterContent/Features/SubClassFeatures/Ranger/RangerBeastMasterFeatures.py): Primal Companion (3)
+- [SubClassFeatures2014/Bard/BardCreationFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Bard/BardCreationFeatures.py): Animating Performance (3), Performance of Creation (2)
+- [ClassFeatures/Warlock/WarlockFeatures.py](../CharacterContent/Features/ClassFeatures/Warlock/WarlockFeatures.py): Contact Patron (2), Mystic Arcanum (2), Replacing Cantrips and Spells (2), Replacing Eldritch Invocations (2), Magical Cunning (1), Regaining Spell Slots (1)
+- [ClassFeatures/Wizard/WizardFeatures.py](../CharacterContent/Features/ClassFeatures/Wizard/WizardFeatures.py): Memorize Spell (2), Ritual Adept (2), Signature Spells (2), Spell Mastery (2), Arcane Recovery (1)
+- [SpeciesFeatures/OrcFeatures.py](../CharacterContent/Features/SpeciesFeatures/OrcFeatures.py): Darkvision (2)
+- [SpeciesFeatures/WarForgedFeatures.py](../CharacterContent/Features/SpeciesFeatures/WarForgedFeatures.py): Sentry's Rest (2), Tireless (1)
+- [SubClassFeatures/Bard/BardLoreFeatures.py](../CharacterContent/Features/SubClassFeatures/Bard/BardLoreFeatures.py): Magical Discoveries (2)
+- [SubClassFeatures/Cleric/ClericArcanaFeatures.py](../CharacterContent/Features/SubClassFeatures/Cleric/ClericArcanaFeatures.py): Dispelling Recovery (2)
+- [SubClassFeatures/Sorcerer/SorcererDraconicFeatures.py](../CharacterContent/Features/SubClassFeatures/Sorcerer/SorcererDraconicFeatures.py): Draconic Spells (2)
+- [SubClassFeatures2014/Barbarian/BarbarianPathOfTheAncestralGuardianFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Barbarian/BarbarianPathOfTheAncestralGuardianFeatures.py): Consult the Spirits (2)
+- [SubClassFeatures2014/Wizard/WizardOrderOfScribesFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Wizard/WizardOrderOfScribesFeatures.py): Awakened Spellbook (2), Wizardly Quill (2)
+
+</details>
+
+### A.4 Extensions with no row (161)
+
+An extension with neither rows nor `adjust_combat_effect`.
+
+<details><summary>Extensions with no row (161), each with its rank</summary>
+
+- [ClassFeatures/Fighter/FighterFeatures.py](../CharacterContent/Features/ClassFeatures/Fighter/FighterFeatures.py): Two Extra Attacks (8), Tactical Master (4), Tactical Mind (3), Tactical Shift (3)
+- [ClassFeatures/Monk/MonkFeatures.py](../CharacterContent/Features/ClassFeatures/Monk/MonkFeatures.py): Stunning Strike (8), Deflect Energy (5), Disciplined Survivor (4), Heightened Focus (4)
+- [ClassFeatures/Barbarian/BarbarianFeatures.py](../CharacterContent/Features/ClassFeatures/Barbarian/BarbarianFeatures.py): Brutal Strike (6), Improved Brutal Strike 1 (5), Improved Brutal Strike 2 (5), Fast Movement (3), Instinctive Pounce (3)
+- [ClassFeatures/Paladin/PaladinFeatures.py](../CharacterContent/Features/ClassFeatures/Paladin/PaladinFeatures.py): Aura of Courage (6), Aura Expansion (5), Restoring Touch (4)
+- [ClassFeatures/Rogue/RogueFeatures.py](../CharacterContent/Features/ClassFeatures/Rogue/RogueFeatures.py): Cunning Strike (6), Devious Strikes (5), Improved Cunning Strike (5)
+- [CombatFeatures/Maneuvers.py](../CharacterContent/Features/CombatFeatures/Maneuvers.py): Riposte (6), Goading Attack (5), Pushing Attack (5)
+- [SubClassFeatures/Barbarian/BarbarianPathOfTheBerserkerFeatures.py](../CharacterContent/Features/SubClassFeatures/Barbarian/BarbarianPathOfTheBerserkerFeatures.py): Frenzy (6)
+- [SubClassFeatures/Bard/BardLoreFeatures.py](../CharacterContent/Features/SubClassFeatures/Bard/BardLoreFeatures.py): Cutting Words (6), Peerless Skill (4)
+- [ClassFeatures/Cleric/ClericFeatures.py](../CharacterContent/Features/ClassFeatures/Cleric/ClericFeatures.py): Improved Divine Strike (5), Improved Potent Spellcasting (4), Sear Undead (4), Greater Divine Intervention (2)
+- [ClassFeatures/Druid/DruidFeatures.py](../CharacterContent/Features/ClassFeatures/Druid/DruidFeatures.py): Improved Primal Strike (5), Wild Resurgence (3), Beast Spells (2)
+- [SubClassFeatures/Barbarian/BarbarianPathOfTheElementsFeatures.py](../CharacterContent/Features/SubClassFeatures/Barbarian/BarbarianPathOfTheElementsFeatures.py): Elemental Overload (5)
+- [SubClassFeatures/Barbarian/BarbarianPathOfTheSpiritualGuardianFeatures.py](../CharacterContent/Features/SubClassFeatures/Barbarian/BarbarianPathOfTheSpiritualGuardianFeatures.py): Spiritual Protectors (5), Spirit Shield (4)
+- [SubClassFeatures/Cleric/ClericArcanaFeatures.py](../CharacterContent/Features/SubClassFeatures/Cleric/ClericArcanaFeatures.py): Modify Magic (5)
+- [SubClassFeatures/Cleric/ClericGraveFeatures.py](../CharacterContent/Features/SubClassFeatures/Cleric/ClericGraveFeatures.py): Path to the Grave (5)
+- [SubClassFeatures/Cleric/ClericShadowFeatures.py](../CharacterContent/Features/SubClassFeatures/Cleric/ClericShadowFeatures.py): Shadowform (5)
+- [SubClassFeatures/Fighter/FighterArcaneArcherFeatures.py](../CharacterContent/Features/SubClassFeatures/Fighter/FighterArcaneArcherFeatures.py): Banishing Shot (5), Bursting Shot (5), Grasping Shot (5), Piercing Shot (5), Seeking Shot (5), Shadow Shot (5), Indomitable Teleport (2)
+- [SubClassFeatures/Fighter/FighterPsiWarriorFeatures.py](../CharacterContent/Features/SubClassFeatures/Fighter/FighterPsiWarriorFeatures.py): Telekinetic Adept (5)
+- [SubClassFeatures/Fighter/FighterSorrowKnightFeatures.py](../CharacterContent/Features/SubClassFeatures/Fighter/FighterSorrowKnightFeatures.py): Dreaded Appearance (5), Unsettled Strikes (5), Grieving Mantle (4)
+- [SubClassFeatures/Monk/MonkElementsFeatures.py](../CharacterContent/Features/SubClassFeatures/Monk/MonkElementsFeatures.py): Elemental Epitome (5), Stride of the Elements (4)
+- [SubClassFeatures/Monk/MonkMercyFeatures.py](../CharacterContent/Features/SubClassFeatures/Monk/MonkMercyFeatures.py): Physician's Touch (5)
+- [SubClassFeatures/Monk/MonkMysticBrewsFeatures.py](../CharacterContent/Features/SubClassFeatures/Monk/MonkMysticBrewsFeatures.py): Drunken Technique (5), Intoxicated Frenzy (5), Wizened Brewer (5), Master Brewer (4)
+- [SubClassFeatures/Paladin/PaladinAncientsFeatures.py](../CharacterContent/Features/SubClassFeatures/Paladin/PaladinAncientsFeatures.py): Nature's Wrath (5)
+- [SubClassFeatures/Paladin/PaladinEbonBladeFeatures.py](../CharacterContent/Features/SubClassFeatures/Paladin/PaladinEbonBladeFeatures.py): Improved Death Coil (5), Runic Power (5), Aura of Deathly Endurance (4), Undead Steed (2)
+- [SubClassFeatures/Paladin/PaladinGeniesFeatures.py](../CharacterContent/Features/SubClassFeatures/Paladin/PaladinGeniesFeatures.py): Elemental Smite (5)
+- [SubClassFeatures/Ranger/RangerBeastMasterFeatures.py](../CharacterContent/Features/SubClassFeatures/Ranger/RangerBeastMasterFeatures.py): Bestial Fury (5), Exceptional Training (5), Share Spells (2)
+- [SubClassFeatures/Ranger/RangerDemonHunterFeatures.py](../CharacterContent/Features/SubClassFeatures/Ranger/RangerDemonHunterFeatures.py): Illidari Knowledge (5), Soul Shatter (5), Torment (5), Demon Hunter Languages (2), Demon Hunter Spellcasting (2)
+- [SubClassFeatures/Rogue/RoguePhantomFeatures.py](../CharacterContent/Features/SubClassFeatures/Rogue/RoguePhantomFeatures.py): Wails from the Grave (5)
+- [SubClassFeatures/Rogue/RogueSwashbucklerFeatures.py](../CharacterContent/Features/SubClassFeatures/Rogue/RogueSwashbucklerFeatures.py): Panache (5), Dashing Strikes (4)
+- [SubClassFeatures2014/Barbarian/BarbarianPathOfTheAncestralGuardianFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Barbarian/BarbarianPathOfTheAncestralGuardianFeatures.py): Ancestral Protectors (5), Vengeful Ancestors (5), Spirit Shield (4)
+- [SubClassFeatures2014/Barbarian/BarbarianPathOfTheBattleragerFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Barbarian/BarbarianPathOfTheBattleragerFeatures.py): Spiked Retribution (5), Reckless Abandon (4)
+- [SubClassFeatures2014/Barbarian/BarbarianPathOfTheStormHeraldFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Barbarian/BarbarianPathOfTheStormHeraldFeatures.py): Storm Aura (5)
+- [SubClassFeatures2014/Barbarian/BarbarianPathOfWildMagicFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Barbarian/BarbarianPathOfWildMagicFeatures.py): Controlled Surge (5), Unstable Backlash (5), Wild Surge (5)
+- [SubClassFeatures2014/Bard/BardCreationFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Bard/BardCreationFeatures.py): Mote of Potential (5), Creative Crescendo (2)
+- [SubClassFeatures2014/Bard/BardEloquenceFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Bard/BardEloquenceFeatures.py): Unsettling Words (5), Infectious Inspiration (4), Unfailing Inspiration (4)
+- [SubClassFeatures2014/Bard/BardWhispersFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Bard/BardWhispersFeatures.py): Psychic Blades (5)
+- [SubClassFeatures2014/Cleric/ClericOrderFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Cleric/ClericOrderFeatures.py): Order's Wrath (5)
+- [SubClassFeatures2014/Cleric/ClericPeaceFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Cleric/ClericPeaceFeatures.py): Protective Bond (5), Expansive Bond (4)
+- [SubClassFeatures2014/Druid/DruidSporesFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Druid/DruidSporesFeatures.py): Spreading Spores (5)
+- [SubClassFeatures2014/Fighter/FighterEchoKnightFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Fighter/FighterEchoKnightFeatures.py): Legion of One (5)
+- [SubClassFeatures2014/Paladin/PaladinWatchersFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Paladin/PaladinWatchersFeatures.py): Channel Divinity: Abjure the Extraplanar (5), Channel Divinity: Watcher's Will (4), Aura of the Sentinel Expansion (3)
+- [SubClassFeatures2014/Ranger/RangerMonsterSlayerFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Ranger/RangerMonsterSlayerFeatures.py): Slayer's Counter (5), Supernatural Defense (4)
+- [SubClassFeatures2014/Ranger/RangerSwarmkeeperFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Ranger/RangerSwarmkeeperFeatures.py): Mighty Swarm (5)
+- [SubClassFeatures2014/Sorcerer/SorcererLunarSorceryFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Sorcerer/SorcererLunarSorceryFeatures.py): Lunar Phenomenon (5), Lunar Boons (4), Lunar Empowerment (4), Waxing and Waning (2)
+- [SubClassFeatures2014/Warlock/WarlockHexbladeFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Warlock/WarlockHexbladeFeatures.py): Master of Hexes (5), Armor of Hexes (4)
+- [ClassFeatures/Ranger/RangerFeatures.py](../CharacterContent/Features/ClassFeatures/Ranger/RangerFeatures.py): Foe Slayer (4), Precise Hunter (4), Relentless Hunter (3)
+- [ClassFeatures/Sorcerer/SorcererFeatures.py](../CharacterContent/Features/ClassFeatures/Sorcerer/SorcererFeatures.py): Sorcery Incarnate (4), Sorcerous Restoration (1)
+- [SubClassFeatures/Barbarian/BarbarianPathOfTheWorldTreeFeatures.py](../CharacterContent/Features/SubClassFeatures/Barbarian/BarbarianPathOfTheWorldTreeFeatures.py): Vitality of the Tree (4)
+- [SubClassFeatures/Cleric/ClericDisciplineFeatures.py](../CharacterContent/Features/SubClassFeatures/Cleric/ClericDisciplineFeatures.py): Luminous Barrier (4)
+- [SubClassFeatures/Fighter/FighterBanneretFeatures.py](../CharacterContent/Features/SubClassFeatures/Fighter/FighterBanneretFeatures.py): Shared Resilience (4), Team Tactics (4), Rallying Surge (3)
+- [SubClassFeatures/Paladin/PaladinGloryFeatures.py](../CharacterContent/Features/SubClassFeatures/Paladin/PaladinGloryFeatures.py): Aura of Alacrity (4), Inspiring Smite (4), Peerless Athlete (4)
+- [SubClassFeatures/Paladin/PaladinHolyFeatures.py](../CharacterContent/Features/SubClassFeatures/Paladin/PaladinHolyFeatures.py): Beacon of Light (4), Infusion of Light (4), Lightbringer's Aura (4)
+- [SubClassFeatures/Warlock/WarlockCelestialFeatures.py](../CharacterContent/Features/SubClassFeatures/Warlock/WarlockCelestialFeatures.py): Celestial Resilience (4)
+- [SubClassFeatures/Warlock/WarlockVestigeFeatures.py](../CharacterContent/Features/SubClassFeatures/Warlock/WarlockVestigeFeatures.py): Vestige Power (4)
+- [SubClassFeatures/Wizard/WizardTransmuterFeatures.py](../CharacterContent/Features/SubClassFeatures/Wizard/WizardTransmuterFeatures.py): Master Transmuter (4), Potent Stone (4)
+- [SubClassFeatures2014/Bard/BardSwordsFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Bard/BardSwordsFeatures.py): Master's Flourish (4)
+- [SubClassFeatures2014/Cleric/ClericForgeFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Cleric/ClericForgeFeatures.py): Saint of Forge and Fire (4)
+- [SubClassFeatures2014/Cleric/ClericTwilightFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Cleric/ClericTwilightFeatures.py): Twilight Shroud (4)
+- [SubClassFeatures2014/Druid/DruidShepherdFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Druid/DruidShepherdFeatures.py): Guardian Spirit (4)
+- [SubClassFeatures2014/Druid/DruidWildfireFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Druid/DruidWildfireFeatures.py): Blazing Revival (4), Enhanced Bond (4)
+- [SubClassFeatures2014/Monk/MonkAstralSelfFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Monk/MonkAstralSelfFeatures.py): Visage of the Astral Self (4)
+- [SubClassFeatures2014/Ranger/RangerDrakewardenFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Ranger/RangerDrakewardenFeatures.py): Bond of Fang and Scale (4), Perfected Bond (4)
+- [SubClassFeatures2014/Rogue/RogueSwashbucklerFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Rogue/RogueSwashbucklerFeatures.py): Rakish Audacity (4)
+- [SubClassFeatures2014/Warlock/WarlockFathomlessFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Warlock/WarlockFathomlessFeatures.py): Guardian Coil (4)
+- [SubClassFeatures2014/Wizard/WizardOrderOfScribesFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Wizard/WizardOrderOfScribesFeatures.py): One with the Word (4), Manifest Mind (2), Master Scriviner (2)
+- [SubClassFeatures/Cleric/ClericKnowledgeFeatures.py](../CharacterContent/Features/SubClassFeatures/Cleric/ClericKnowledgeFeatures.py): Mind Magic (3)
+- [SubClassFeatures/Fighter/FighterEldritchKnightFeatures.py](../CharacterContent/Features/SubClassFeatures/Fighter/FighterEldritchKnightFeatures.py): Improved War Magic (3)
+- [SubClassFeatures/Monk/MonkMysticArtsFeatures.py](../CharacterContent/Features/SubClassFeatures/Monk/MonkMysticArtsFeatures.py): Improved Mystic Fighting Style (3), Mystic Focus (3)
+- [SubClassFeatures/Monk/MonkShadowFeatures.py](../CharacterContent/Features/SubClassFeatures/Monk/MonkShadowFeatures.py): Shadow Arts (3)
+- [SubClassFeatures/Sorcerer/SorcererAberrantFeatures.py](../CharacterContent/Features/SubClassFeatures/Sorcerer/SorcererAberrantFeatures.py): Psionic Sorcery (3)
+- [SubClassFeatures/Wizard/WizardConjurerFeatures.py](../CharacterContent/Features/SubClassFeatures/Wizard/WizardConjurerFeatures.py): Distant Transposition (3)
+- [SubClassFeatures2014/Cleric/ClericDeathFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Cleric/ClericDeathFeatures.py): Improved Reaper (3), Inescapable Destruction (3)
+- [SubClassFeatures2014/Cleric/ClericNatureFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Cleric/ClericNatureFeatures.py): Master of Nature (3)
+- [SubClassFeatures2014/Fighter/FighterRuneKnightFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Fighter/FighterRuneKnightFeatures.py): Great Stature (3), Master of Runes (3), Runic Juggernaut (3)
+- [SubClassFeatures2014/Fighter/FighterSamuraiFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Fighter/FighterSamuraiFeatures.py): Tireless Spirit (3)
+- [SubClassFeatures2014/Paladin/PaladinConquestFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Paladin/PaladinConquestFeatures.py): Aura of Conquest Expansion (3)
+- [SubClassFeatures2014/Paladin/PaladinOathbreakerFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Paladin/PaladinOathbreakerFeatures.py): Aura of Hate Expansion (3)
+- [SubClassFeatures2014/Paladin/PaladinRedemptionFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Paladin/PaladinRedemptionFeatures.py): Aura of the Guardian Expansion (3)
+- [SubClassFeatures2014/Sorcerer/SorcererDivineSoulFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Sorcerer/SorcererDivineSoulFeatures.py): Divine Magic (3)
+- [ClassFeatures/Bard/BardFeatures.py](../CharacterContent/Features/ClassFeatures/Bard/BardFeatures.py): Font of Inspiration (2)
+- [SubClassFeatures2014/Monk/MonkKenseiFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Monk/MonkKenseiFeatures.py): Magic Kensei Weapons (2)
+- [SubClassFeatures2014/Warlock/WarlockTheGenieFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Warlock/WarlockTheGenieFeatures.py): Limited Wish (2), Sanctuary Vessel (2)
+
+</details>
+
+### A.5 Trigger fact with no trigger and no reason (181)
+
+The `triggers` check would fail for these if a party had them.
+
+<details><summary>Trigger fact with no trigger and no reason (181), each with its rank</summary>
+
+- [ClassFeatures/Monk/MonkFeatures.py](../CharacterContent/Features/ClassFeatures/Monk/MonkFeatures.py): Stunning Strike (8), Evasion (7), Disciplined Survivor (4)
+- [ClassFeatures/Barbarian/BarbarianFeatures.py](../CharacterContent/Features/ClassFeatures/Barbarian/BarbarianFeatures.py): Reckless Attack (7), Brutal Strike (6), Instinctive Pounce (3)
+- [ClassFeatures/Rogue/RogueFeatures.py](../CharacterContent/Features/ClassFeatures/Rogue/RogueFeatures.py): Evasion (7), Uncanny Dodge (7), Cunning Strike (6)
+- [ClassFeatures/Cleric/ClericFeatures.py](../CharacterContent/Features/ClassFeatures/Cleric/ClericFeatures.py): Divine Strike (6), Improved Potent Spellcasting (4), Sear Undead (4)
+- [ClassFeatures/Druid/DruidFeatures.py](../CharacterContent/Features/ClassFeatures/Druid/DruidFeatures.py): Primal Strike (6)
+- [ClassFeatures/Paladin/PaladinFeatures.py](../CharacterContent/Features/ClassFeatures/Paladin/PaladinFeatures.py): Radiant Strikes (6), Restoring Touch (4)
+- [CombatFeatures/Maneuvers.py](../CharacterContent/Features/CombatFeatures/Maneuvers.py): Riposte (6), Goading Attack (5), Pushing Attack (5)
+- [SubClassFeatures/Barbarian/BarbarianPathOfTheBerserkerFeatures.py](../CharacterContent/Features/SubClassFeatures/Barbarian/BarbarianPathOfTheBerserkerFeatures.py): Frenzy (6)
+- [SubClassFeatures/Bard/BardLoreFeatures.py](../CharacterContent/Features/SubClassFeatures/Bard/BardLoreFeatures.py): Cutting Words (6), Peerless Skill (4)
+- [SubClassFeatures/Druid/DruidStarsFeatures.py](../CharacterContent/Features/SubClassFeatures/Druid/DruidStarsFeatures.py): Starry Form (6)
+- [SubClassFeatures/Monk/MonkOpenHandFeatures.py](../CharacterContent/Features/SubClassFeatures/Monk/MonkOpenHandFeatures.py): Open Hand Technique (6), Quivering Palm (5), Fleet Step (3)
+- [SubClassFeatures/Paladin/PaladinVengeanceFeatures.py](../CharacterContent/Features/SubClassFeatures/Paladin/PaladinVengeanceFeatures.py): Vow of Enmity (6)
+- [SubClassFeatures/Ranger/RangerFeyWandererFeatures.py](../CharacterContent/Features/SubClassFeatures/Ranger/RangerFeyWandererFeatures.py): Dreadful Strikes (6)
+- [SubClassFeatures/Ranger/RangerHunterFeatures.py](../CharacterContent/Features/SubClassFeatures/Ranger/RangerHunterFeatures.py): Colossus Slayer (6)
+- [SubClassFeatures/Barbarian/BarbarianPathOfTheSpiritualGuardianFeatures.py](../CharacterContent/Features/SubClassFeatures/Barbarian/BarbarianPathOfTheSpiritualGuardianFeatures.py): Spirits' Fury (5), Spirit Shield (4)
+- [SubClassFeatures/Bard/BardGlamourFeatures.py](../CharacterContent/Features/SubClassFeatures/Bard/BardGlamourFeatures.py): Beguiling Magic (5)
+- [SubClassFeatures/Cleric/ClericArcanaFeatures.py](../CharacterContent/Features/SubClassFeatures/Cleric/ClericArcanaFeatures.py): Modify Magic (5), Dispelling Recovery (2)
+- [SubClassFeatures/Cleric/ClericShadowFeatures.py](../CharacterContent/Features/SubClassFeatures/Cleric/ClericShadowFeatures.py): Devouring Plague (5), Dispersion (4)
+- [SubClassFeatures/Fighter/FighterArcaneArcherFeatures.py](../CharacterContent/Features/SubClassFeatures/Fighter/FighterArcaneArcherFeatures.py): Bursting Shot (5), Curving Shot (5), Masterful Shots (5), Indomitable Teleport (2)
+- [SubClassFeatures/Fighter/FighterEldritchKnightFeatures.py](../CharacterContent/Features/SubClassFeatures/Fighter/FighterEldritchKnightFeatures.py): Eldritch Strike (5), Improved War Magic (3), War Magic (3), Arcane Charge (2)
+- [SubClassFeatures/Fighter/FighterPsiWarriorFeatures.py](../CharacterContent/Features/SubClassFeatures/Fighter/FighterPsiWarriorFeatures.py): Psionic Power (5), Telekinetic Adept (5)
+- [SubClassFeatures/Fighter/FighterSorrowKnightFeatures.py](../CharacterContent/Features/SubClassFeatures/Fighter/FighterSorrowKnightFeatures.py): Despairing Strikes (5), Dreaded Appearance (5), Grieving Mantle (4), Grim Constitution (4)
+- [SubClassFeatures/Monk/MonkMercyFeatures.py](../CharacterContent/Features/SubClassFeatures/Monk/MonkMercyFeatures.py): Hand of Harm (5)
+- [SubClassFeatures/Monk/MonkMysticArtsFeatures.py](../CharacterContent/Features/SubClassFeatures/Monk/MonkMysticArtsFeatures.py): Focused Strike (5), Improved Mystic Fighting Style (3), Mystic Fighting Style (3)
+- [SubClassFeatures/Monk/MonkMysticBrewsFeatures.py](../CharacterContent/Features/SubClassFeatures/Monk/MonkMysticBrewsFeatures.py): Drunken Technique (5), Intoxicated Frenzy (5), Tipsy Sway (5)
+- [SubClassFeatures/Paladin/PaladinEbonBladeFeatures.py](../CharacterContent/Features/SubClassFeatures/Paladin/PaladinEbonBladeFeatures.py): Runic Mastery (5), Runic Power (5), Runic Strikes (5)
+- [SubClassFeatures/Paladin/PaladinGeniesFeatures.py](../CharacterContent/Features/SubClassFeatures/Paladin/PaladinGeniesFeatures.py): Elemental Smite (5)
+- [SubClassFeatures/Paladin/PaladinGloryFeatures.py](../CharacterContent/Features/SubClassFeatures/Paladin/PaladinGloryFeatures.py): Glorious Defense (5), Inspiring Smite (4)
+- [SubClassFeatures/Ranger/RangerDemonHunterFeatures.py](../CharacterContent/Features/SubClassFeatures/Ranger/RangerDemonHunterFeatures.py): Soul Fragments (5), Torment (5)
+- [SubClassFeatures/Rogue/RoguePhantomFeatures.py](../CharacterContent/Features/SubClassFeatures/Rogue/RoguePhantomFeatures.py): Wails from the Grave (5)
+- [SubClassFeatures/Rogue/RogueSwashbucklerFeatures.py](../CharacterContent/Features/SubClassFeatures/Rogue/RogueSwashbucklerFeatures.py): Master Duelist (5), Fancy Footwork (4)
+- [SubClassFeatures/Warlock/WarlockCelestialFeatures.py](../CharacterContent/Features/SubClassFeatures/Warlock/WarlockCelestialFeatures.py): Searing Vengeance (5), Celestial Resilience (4)
+- [SubClassFeatures/Wizard/WizardEnchanterFeatures.py](../CharacterContent/Features/SubClassFeatures/Wizard/WizardEnchanterFeatures.py): Alter Memories (5), Instinctive Charm (5), Split Enchantment (5)
+- [SubClassFeatures/Wizard/WizardNecromancerFeatures.py](../CharacterContent/Features/SubClassFeatures/Wizard/WizardNecromancerFeatures.py): Death's Master (5), Necromancy Spellbook (2)
+- [SubClassFeatures2014/Barbarian/BarbarianPathOfTheAncestralGuardianFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Barbarian/BarbarianPathOfTheAncestralGuardianFeatures.py): Ancestral Protectors (5), Vengeful Ancestors (5), Spirit Shield (4)
+- [SubClassFeatures2014/Barbarian/BarbarianPathOfTheBattleragerFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Barbarian/BarbarianPathOfTheBattleragerFeatures.py): Spiked Retribution (5), Reckless Abandon (4)
+- [SubClassFeatures2014/Barbarian/BarbarianPathOfTheStormHeraldFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Barbarian/BarbarianPathOfTheStormHeraldFeatures.py): Raging Storm (5)
+- [SubClassFeatures2014/Barbarian/BarbarianPathOfWildMagicFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Barbarian/BarbarianPathOfWildMagicFeatures.py): Unstable Backlash (5), Wild Surge (5)
+- [SubClassFeatures2014/Bard/BardCreationFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Bard/BardCreationFeatures.py): Mote of Potential (5)
+- [SubClassFeatures2014/Bard/BardSwordsFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Bard/BardSwordsFeatures.py): Blade Flourish (5), Master's Flourish (4)
+- [SubClassFeatures2014/Bard/BardWhispersFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Bard/BardWhispersFeatures.py): Psychic Blades (5), Words of Terror (5), Mantle of Whispers (2)
+- [SubClassFeatures2014/Cleric/ClericDeathFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Cleric/ClericDeathFeatures.py): Channel Divinity: Touch of Death (5)
+- [SubClassFeatures2014/Cleric/ClericOrderFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Cleric/ClericOrderFeatures.py): Order's Wrath (5), Voice of Authority (2)
+- [SubClassFeatures2014/Cleric/ClericPeaceFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Cleric/ClericPeaceFeatures.py): Protective Bond (5)
+- [SubClassFeatures2014/Cleric/ClericTempestFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Cleric/ClericTempestFeatures.py): Thunderous Strike (5), Wrath of the Storm (5), Channel Divinity: Destructive Wrath (3)
+- [SubClassFeatures2014/Druid/DruidSporesFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Druid/DruidSporesFeatures.py): Halo of Spores (5), Spreading Spores (5), Fungal Infestation (3)
+- [SubClassFeatures2014/Druid/DruidWildfireFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Druid/DruidWildfireFeatures.py): Cauterizing Flames (5), Blazing Revival (4)
+- [SubClassFeatures2014/Fighter/FighterCavalierFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Fighter/FighterCavalierFeatures.py): Ferocious Charger (5), Unwavering Mark (5), Warding Maneuver (4)
+- [SubClassFeatures2014/Fighter/FighterEchoKnightFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Fighter/FighterEchoKnightFeatures.py): Unleash Incarnation (5), Reclaim Potential (4), Shadow Martyr (4)
+- [SubClassFeatures2014/Fighter/FighterSamuraiFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Fighter/FighterSamuraiFeatures.py): Rapid Strike (5), Strength Before Death (3), Tireless Spirit (3)
+- [SubClassFeatures2014/Monk/MonkDrunkenMasterFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Monk/MonkDrunkenMasterFeatures.py): Tipsy Sway (5), Drunkard's Luck (4), Drunken Technique (4), Intoxicated Frenzy (4)
+- [SubClassFeatures2014/Monk/MonkKenseiFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Monk/MonkKenseiFeatures.py): Deft Strike (5), Agile Parry (4), Unerring Accuracy (4)
+- [SubClassFeatures2014/Monk/MonkSunSoulFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Monk/MonkSunSoulFeatures.py): Searing Arc Strike (5), Sun Shield (5)
+- [SubClassFeatures2014/Paladin/PaladinConquestFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Paladin/PaladinConquestFeatures.py): Scornful Rebuke (5), Channel Divinity: Guided Strike (4)
+- [SubClassFeatures2014/Paladin/PaladinRedemptionFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Paladin/PaladinRedemptionFeatures.py): Channel Divinity: Rebuke the Violent (5), Protective Spirit (4), Aura of the Guardian (3)
+- [SubClassFeatures2014/Paladin/PaladinWatchersFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Paladin/PaladinWatchersFeatures.py): Vigilant Rebuke (5)
+- [SubClassFeatures2014/Ranger/RangerMonsterSlayerFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Ranger/RangerMonsterSlayerFeatures.py): Magic-User's Nemesis (5), Slayer's Counter (5), Supernatural Defense (4)
+- [SubClassFeatures2014/Ranger/RangerSwarmkeeperFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Ranger/RangerSwarmkeeperFeatures.py): Gathered Swarm (5), Swarming Dispersal (4)
+- [SubClassFeatures2014/Rogue/RogueMastermindFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Rogue/RogueMastermindFeatures.py): Misdirection (5), Insightful Manipulator (2)
+- [SubClassFeatures2014/Rogue/RogueScoutFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Rogue/RogueScoutFeatures.py): Sudden Strike (5), Skirmisher (2)
+- [SubClassFeatures2014/Sorcerer/SorcererStormSorceryFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Sorcerer/SorcererStormSorceryFeatures.py): Heart of the Storm (5), Storm's Fury (5)
+- [SubClassFeatures2014/Warlock/WarlockHexbladeFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Warlock/WarlockHexbladeFeatures.py): Accursed Specter (5), Master of Hexes (5), Armor of Hexes (4)
+- [SubClassFeatures2014/Warlock/WarlockTheGenieFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Warlock/WarlockTheGenieFeatures.py): Genie's Vessel (5)
+- [SubClassFeatures2014/Wizard/WizardGraviturgyFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Wizard/WizardGraviturgyFeatures.py): Event Horizon (5), Gravity Well (5), Violent Attraction (5)
+- [CharacterFeats/OriginFeats.py](../CharacterContent/Features/CharacterFeats/OriginFeats.py): Savage Attacker (4)
+- [ClassFeatures/Bard/BardFeatures.py](../CharacterContent/Features/ClassFeatures/Bard/BardFeatures.py): Countercharm (4)
+- [ClassFeatures/Fighter/FighterFeatures.py](../CharacterContent/Features/ClassFeatures/Fighter/FighterFeatures.py): Studied Attacks (4), Tactical Master (4), Tactical Mind (3), Tactical Shift (3)
+- [SubClassFeatures/Fighter/FighterBanneretFeatures.py](../CharacterContent/Features/SubClassFeatures/Fighter/FighterBanneretFeatures.py): Group Recovery (4), Shared Resilience (4), Team Tactics (4), Rallying Surge (3)
+- [SubClassFeatures/Paladin/PaladinHolyFeatures.py](../CharacterContent/Features/SubClassFeatures/Paladin/PaladinHolyFeatures.py): Infusion of Light (4), Lightbringer's Aura (4)
+- [SubClassFeatures/Warlock/WarlockVestigeFeatures.py](../CharacterContent/Features/SubClassFeatures/Warlock/WarlockVestigeFeatures.py): Vestige Recovery (4)
+- [SubClassFeatures/Wizard/WizardConjurerFeatures.py](../CharacterContent/Features/SubClassFeatures/Wizard/WizardConjurerFeatures.py): Durable Summons (4), Splintered Summons (3)
+- [SubClassFeatures2014/Bard/BardEloquenceFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Bard/BardEloquenceFeatures.py): Infectious Inspiration (4), Unfailing Inspiration (4)
+- [SubClassFeatures2014/Cleric/ClericNatureFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Cleric/ClericNatureFeatures.py): Dampen Elements (4)
+- [SubClassFeatures2014/Cleric/ClericTwilightFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Cleric/ClericTwilightFeatures.py): Channel Divinity: Twilight Sanctuary (4)
+- [SubClassFeatures2014/Druid/DruidShepherdFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Druid/DruidShepherdFeatures.py): Faithful Summons (4), Guardian Spirit (4)
+- [SubClassFeatures2014/Fighter/FighterRuneKnightFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Fighter/FighterRuneKnightFeatures.py): Runic Shield (4)
+- [SubClassFeatures2014/Monk/MonkLongDeathFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Monk/MonkLongDeathFeatures.py): Mastery of Death (4), Touch of Death (4)
+- [SubClassFeatures2014/Ranger/RangerHorizonWalkerFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Ranger/RangerHorizonWalkerFeatures.py): Spectral Defense (4)
+- [SubClassFeatures2014/Rogue/RogueSwashbucklerFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Rogue/RogueSwashbucklerFeatures.py): Fancy Footwork (4), Master Duelist (4)
+- [SubClassFeatures2014/Sorcerer/SorcererDivineSoulFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Sorcerer/SorcererDivineSoulFeatures.py): Empowered Healing (4), Favored by the Gods (4)
+- [SubClassFeatures2014/Warlock/WarlockFathomlessFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Warlock/WarlockFathomlessFeatures.py): Guardian Coil (4)
+- [SubClassFeatures2014/Warlock/WarlockTheUndyingFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Warlock/WarlockTheUndyingFeatures.py): Defy Death (4)
+- [SubClassFeatures2014/Wizard/WizardOrderOfScribesFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Wizard/WizardOrderOfScribesFeatures.py): One with the Word (4)
+- [SubClassFeatures/Wizard/WizardTransmuterFeatures.py](../CharacterContent/Features/SubClassFeatures/Wizard/WizardTransmuterFeatures.py): Empowered Transmutation (3)
+- [SubClassFeatures2014/Paladin/PaladinCrownFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Paladin/PaladinCrownFeatures.py): Divine Allegiance (3)
+- [SubClassFeatures2014/Wizard/WizardChronurgyFeatures.py](../CharacterContent/Features/SubClassFeatures2014/Wizard/WizardChronurgyFeatures.py): Arcane Abeyance (3), Chronal Shift (3), Convergent Future (3)
+- [SubClassFeatures/Ranger/RangerBeastMasterFeatures.py](../CharacterContent/Features/SubClassFeatures/Ranger/RangerBeastMasterFeatures.py): Share Spells (2)
+- [ClassFeatures/Sorcerer/SorcererFeatures.py](../CharacterContent/Features/ClassFeatures/Sorcerer/SorcererFeatures.py): Sorcerous Restoration (1)
+
+</details>
+
+### A.6 Homebrew monster abilities with no combat effects (102)
+
+Heuristic ranks: Multiattack, Legendary Resistance or a save 6, damage 5,
+a modifier 4, other traits 2, +1 for Recharge (9.13).
+
+<details><summary>Homebrew abilities with no combat effects (102), each with its rank</summary>
+
+- **CR 0 FreshAccursed**: 1 x Mumbling the Curse (6)
+- **CR 0 PhysicalAccursed**: Herd-Bound (6)
+- **CR 0 ArmoredAccursed**: Herd-Bound (6)
+- **CR 0 BrainBloatedAccursed**: Curse-Feeding Mind (6), Horde Retaliation (2)
+- **CR 0 CurseHighAccursed**: Curse-Drunk Euphoria (6)
+- **CR 0 HaratCR1_2**: Dwarven Resilience (6), Stubborn as Stone (6)
+- **CR 0 DwarfLifeCleric**: Dwarven Resilience (6)
+- **CR 0 ElfDruidOfTheLand**: Fey Ancestry (6)
+- **CR 0 Child**: Just a Child (2)
+- **CR 1 CommonCultist**: Fanatic's Surge (4), Marked for the Choir (4), Strength of the Faithful Mob (4), Zealous Communion (4)
+- **CR 1 AccursedGroupOf3**: Grab (6), Multiattack (6), Rush (2)
+- **CR 1 CurseCracked**: Unstable Vessel (5), Fractured Step (2)
+- **CR 1 CurseBodyBroken**: Scream of the Trapped (Recharge 5-6) (7), Still Me (6), Impossible Anatomy (5)
+- **CR 1 CurseMindBroken**: Memory Shatter (Recharge 5-6) (7), Broken Mind (6), Leaking Curse (5)
+- **CR 1 HaratCR1**: Dwarven Resilience (6), Stubborn as Stone (6), Shield of Stonehill (4)
+- **CR 1 GreypawCR1**: Keen Hearing and Smell (2), Relentless Tracker (2)
+- **CR 1 GoblinKingCR1**: Redirect Attack (2), Royal Command (2)
+- **CR 1 OrcAssassin**: Assassinate and Sneak Attack (5), Cunning Action (2), Relentless Endurance (1/Day) (2)
+- **CR 2 PriestOfTheBlackTongues**: Spellcasting (6), Curse-Marked (5), Black Tongue (4), Command the Accursed (2)
+- **CR 2 SisterLumenBellWardenOfStillChoirs**: Interrupting Chime (1/Day) (6), Attuned to the Choir (4), Sign of the Covered Mouth (2), Vow of the Cut Tongue (2)
+- **CR 2 AccursedGroupOf5**: Grab (6), Multiattack (6), Rush (2)
+- **CR 2 HaratCR2**: Dwarven Resilience (6), Stubborn as Stone (6), Shield of Stonehill (4), Too Stubborn to Fall (1/Day) (2)
+- **CR 2 GreypawCR2**: Keen Hearing and Smell (2), Relentless Tracker (2)
+- **CR 3 CantorOfTheBlackChoir**: Blackened Choir (5), Brink of the Accursed (5), Conduct the Choir (2)
+- **CR 3 GarronTheKindly**: Field Surgeon (4), The Reliquary of Voices (4), Unshaken Conviction (2)
+- **CR 3 SerCaldusTheVowOfSilence**: Rite of Silence (3/Day) (6), Silent Guard (6), Vow of Silence (6), Undying Vow (1/Day) (5), Names Unspoken (4)
+- **CR 3 GreypawCR3**: Bloodied Frenzy (2), Keen Hearing and Smell (2), Relentless Tracker (2)
+- **CR 3 MirelleTheGildedKnight**: Royal Resolve (1/Day) (6)
+- **CR 4 MarshalVirel**: Multiattack (6), Wordless Coordination (6), Kill the Scream (4), Parry (2), Signal to Strike (2)
+- **CR 4 GoblinKingCR4**: Royal Command (2)
+- **CR 5 TheChoirmasterOfHollowHymns**: Legendary Resistance (1/Day) (6), Throat-Strain (6), Curse-Marked (5), Hollow Hymn (4)
+- **CR 5 MiraPrincessOfTheLoop**: Fractured Timeline (6)
+- **CR 6 TheMouthThatWalks**: The Ceaseless Litany (5), Verge of Unmaking (5)
+- **CR 6 TheHunter**: Unnerving Calm (6), Cursebound (5), Curse Sense (4), Predator's Reflexes (2)
+- **CR 7 TheCrownWithoutAKing**: Coronation (Recharge 5-6) (7), Command the Accursed (2), Discorporate (2)
+- **CR 7 TheRoadChoir**: Directions to Salvation (Recharge 5-6) (7), A Hundred Anchors (6), The Long List (6), Endless Reknitting (5)
+- **CR 9 TheBellSaint**: Toll of Rising (Recharge 5-6) (7), Muffled Toll (Costs 2 Actions) (6), Undying Vigil (6), Drag (Costs 1 Action) (2)
+- **CR 15 TheHeadlessDragon**: Frightful Presence (6), Grasping Hands (6), Wing Buffet (Costs 2 Actions) (6), Cursed Regeneration (5), Detect (2), Sigil of Silence (2)
+
+</details>

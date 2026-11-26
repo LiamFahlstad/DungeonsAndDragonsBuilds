@@ -9,6 +9,7 @@ from Combat.Arena.ranges import (
     RangeCheck,
 )
 from Combat.Definitions import Action
+from Combat.Effects.always_on import KEEPS_CONCENTRATION
 from Combat.Effects.modifiers import (
     extra_text,
     hit_extras,
@@ -576,7 +577,14 @@ class DamageMixin(CombatWindowState):
         """A monster's Concentration save, a Constitution saving throw: its
         modifiers count as in any save rolled here (Bless's 1d4, a mode),
         and the log says how."""
-        result = roll_save(char, "CON", dc, "Neutral", one_die_if_straight=True)
+        result = roll_save(
+            char,
+            "CON",
+            dc,
+            "Neutral",
+            one_die_if_straight=True,
+            against=KEEPS_CONCENTRATION,
+        )
         self._settle_concentration(char, dc, result.success, result.total, result.note)
 
     @undoable

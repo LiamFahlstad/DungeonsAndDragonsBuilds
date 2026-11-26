@@ -32,8 +32,8 @@ from Combat.Effects.modifiers import (
     attack_plan,
     modifiers_on,
     resists,
-    save_plan,
 )
+from Combat.Effects.roll_plans import save_plan
 from Combat.Fight.saves import (
     ATTACK_ROLL,
     SPELL,

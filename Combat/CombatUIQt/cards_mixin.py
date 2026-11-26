@@ -18,6 +18,7 @@ from PyQt6.QtWidgets import (
 
 from Combat.Definitions import ConditionRule
 from Combat.Effects.active_effects import find_effect, timers
+from Combat.Effects.always_on import KEEPS_CONCENTRATION
 from Combat.Effects.modifiers import (
     defenses_from_modifiers,
     hit_point_maximum,
@@ -26,6 +27,7 @@ from Combat.Effects.modifiers import (
 )
 from Combat.Fight.attack_rolls import armor_text
 from Combat.Fight.health import death_state
+from Combat.Fight.saves import save_reminder
 from .dialogs_mixin import _damage_entry_text, _speed_text
 from Core.Rules import ability_modifier
 from Combat.Fight.monster_actions import (
@@ -342,7 +344,11 @@ class CardsMixin(CombatWindowState):
     def _add_concentration_checks(self, layout: QVBoxLayout, char: dict):
         """Each Concentration save char owes: roll it, or say how it went."""
         for dc in char.get("concentration_checks", []):
-            label = QLabel(f"DC {dc} CON ({self._con_save_mod(char):+d})")
+            # The mode its modifiers give, to roll it so at the table (War
+            # Caster's Advantage).
+            mode = save_reminder(char, "CON", KEEPS_CONCENTRATION).mode
+            how = "" if mode == "Neutral" else f", {mode}"
+            label = QLabel(f"DC {dc} CON ({self._con_save_mod(char):+d}{how})")
             label.setObjectName("statusLabel")
             layout.addWidget(label)
             row = QHBoxLayout()

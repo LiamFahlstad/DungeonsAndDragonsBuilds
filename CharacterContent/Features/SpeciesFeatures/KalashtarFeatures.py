@@ -1,4 +1,5 @@
 from Core.Definitions import Ability, DamageType
+from Model.Content.CombatModifiers import D20Mode, D20Test, Modifier, RollMode
 from Model.Content.Feature import (
     Feature,
     FeatureActivation,
@@ -27,6 +28,20 @@ class DualMind(Feature):
 
     def apply(self, ledger_writer: LedgerWriter):
         self._advantage.apply(ledger_writer)
+
+    def combat_modifiers(self, character: CharacterView) -> tuple[Modifier, ...]:
+        # "Advantage on Wisdom and Charisma saving throws." Its
+        # SavingThrowAdvantage is the sheet's, which the fight doesn't read.
+        return (
+            D20Mode(
+                (D20Test.SAVING_THROW,),
+                RollMode.ADVANTAGE,
+                (
+                    Ability.WISDOM,
+                    Ability.CHARISMA,
+                ),
+            ),
+        )
 
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         return [Facts((("Advantage", "On Wisdom and Charisma saving throws"),))]

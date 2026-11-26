@@ -6,13 +6,12 @@ import random
 import re
 from collections.abc import Iterable
 from dataclasses import dataclass, field
+from functools import lru_cache
 
-from Combat.Effects.modifiers import (
-    HitPlan,
-    RollPlan,
-    immune_to_condition,
-    save_plan,
-)
+from Combat.Effects.active_effects import ActiveEffect
+from Combat.Effects.always_on import SaveAgainst
+from Combat.Effects.modifiers import HitPlan, RollPlan, immune_to_condition
+from Combat.Effects.roll_plans import save_plan
 from Core.Rules import SPELL_SAVE_DC_BASE, ability_modifier
 from Model.Content.CombatArea import CombatArea
 from Model.Content.CombatEffect import CombatPush, CombatRegain
@@ -398,6 +397,7 @@ def roll_save(
     typed: int | None = None,
     *,
     one_die_if_straight: bool = False,
+    against: SaveAgainst | None = None,
 ) -> SaveResult:
     """Char's save against `dc`: `typed` is a total rolled at the table. A
     natural 1 or 20 is nothing special on a saving throw. Its modifiers
@@ -405,8 +405,10 @@ def roll_save(
     rolled one takes the mode they give and adds their bonuses (Bless's
     1d4, rolled after the d20; cover's +2 to a Dexterity save).
     `one_die_if_straight`: a straight roll throws one d20, not two, as a
-    monster's Concentration save always has, so its dice stay as they were."""
-    plan = save_plan(char, ability, mode, typed=typed is not None)
+    monster's Concentration save always has, so its dice stay as they were.
+    `against`: what the save is against (save_against), which settles
+    Magic Resistance's, Brave's and War Caster's Advantage."""
+    plan = save_plan(char, ability, mode, typed=typed is not None, against=against)
     if plan.auto_fail:
         return SaveResult(False, None, plan.auto_fail)
     if typed is not None:
@@ -421,10 +423,63 @@ def roll_save(
     return SaveResult(total >= dc, total, ", ".join((*plan.notes, *bonus_notes)))
 
 
-def save_reminder(char: dict, ability: str) -> RollPlan:
+def save_reminder(
+    char: dict, ability: str, against: SaveAgainst | None = None
+) -> RollPlan:
     """What char's modifiers do to its save of `ability`, for the GM to roll
-    it that way at the table."""
-    return save_plan(char, ability, "Neutral")
+    it that way at the table; `against` as roll_save's."""
+    return save_plan(char, ability, "Neutral", against=against)
+
+
+def save_against(pick: "EffectOption | None", condition_text: str) -> SaveAgainst:
+    """What a save against an effect is against: a spell, if its picker
+    row is one's or casts one (EffectOption.spell_name), not one if it's
+    another row, not known without a row (typed in, or a Times copy); and
+    the conditions `condition_text` names (CustomEffect.condition)."""
+    spell = None if pick is None else bool(pick.spell_name)
+    return SaveAgainst(spell, tuple(condition_names(condition_text)))
+
+
+def roll_effect_save(
+    char: dict, effect: "CustomEffect", typed: int | None = None
+) -> SaveResult:
+    """Char's save against the Custom dialog's `effect` (its ability, DC and
+    mode), against what its row is (save_against): roll_save's."""
+    assert effect.ability is not None  # the caller checks
+    against = save_against(effect.pick, effect.condition)
+    return roll_save(
+        char, effect.ability, effect.dc, effect.mode, typed, against=against
+    )
+
+
+@lru_cache(maxsize=1)
+def _spell_names() -> frozenset[str]:
+    from CharacterContent.Spells.SpellFactory import SpellFactory
+
+    return frozenset(spell.name.lower() for spell in SpellFactory.all_spells())
+
+
+def is_spell_name(name: str) -> bool:
+    """Whether `name` is a spell's (a badge's source: "Hold Person")."""
+    return name.lower() in _spell_names()
+
+
+def roll_repeat_save(
+    char: dict, effect: ActiveEffect, typed: int | None = None
+) -> SaveResult:
+    """Char's save to end the condition of `effect` (a lasting effect with a
+    repeat_save): against what gave it, a spell if its source is one's
+    name, and to end that condition and those it gave beside it."""
+    entry = effect["repeat_save"]
+    assert entry is not None  # the caller checks
+    source = effect.get("source")
+    against = SaveAgainst(
+        is_spell_name(source) if source else None,
+        (effect["name"], *entry.get("also", ())),
+    )
+    return roll_save(
+        char, entry["ability"], entry["dc"], entry["mode"], typed, against=against
+    )
 
 
 def roll_planned_attack(

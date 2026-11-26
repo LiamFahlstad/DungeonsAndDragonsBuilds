@@ -1,7 +1,13 @@
-from Core.Definitions import CreatureSize
+from Core.Definitions import Condition, CreatureSize
 from Model.Content.Feature import Feature
 from Model.View import CharacterView
-from Model.Content.CombatModifiers import Movement
+from Model.Content.CombatModifiers import (
+    D20Mode,
+    D20Test,
+    Modifier,
+    Movement,
+    RollMode,
+)
 from Model.Content.FeatureText import Block, Facts
 
 SPEED = 30  # Given by your species
@@ -12,6 +18,17 @@ class Brave(Feature):
     def __init__(self):
         super().__init__(
             name="Brave", origin="Halfling Trait", passive=True, usage_tags=["buff"]
+        )
+
+    def combat_modifiers(self, character: CharacterView) -> tuple[Modifier, ...]:
+        # "Advantage on saving throws you make to avoid or end the Frightened
+        # condition."
+        return (
+            D20Mode(
+                (D20Test.SAVING_THROW,),
+                RollMode.ADVANTAGE,
+                against_conditions=(Condition.FRIGHTENED,),
+            ),
         )
 
     def get_improved_description(self, character: CharacterView) -> list[Block]:

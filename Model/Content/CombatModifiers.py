@@ -113,19 +113,42 @@ class D20Mode:
     """Its own `tests` have Advantage or Disadvantage: of these `abilities`
     only, if any are given ("Disadvantage on Dexterity saving throws").
     `once`: only its next attack roll ("Disadvantage on the next attack roll
-    it makes": Sap, Vicious Mockery); the badge ends once that roll is made."""
+    it makes": Sap, Vicious Mockery); the badge ends once that roll is made.
+
+    What a saving throw is against, which the simulator knows where it rolls
+    one (Combat/Effects/modifiers.py, SaveAgainst), and which settles these
+    as a distance settles AttacksAgainst's: `against_spells` (Magic
+    Resistance: "saving throws against spells and other magical effects"),
+    `against_conditions` ("saving throws you make to avoid or end the
+    Frightened condition": Brave), `concentration` ("Constitution saving
+    throws that you make to maintain Concentration": War Caster). Where it
+    isn't known it's said to the GM, as a `when` is. `unless_conditions`:
+    not while its bearer has one of them (Danger Sense: "unless you have the
+    Incapacitated condition")."""
 
     tests: tuple[D20Test, ...]
     mode: RollMode
     abilities: tuple[Ability, ...] = ()
     when: str = ""
     once: bool = False
+    against_spells: bool = False
+    against_conditions: tuple[Condition, ...] = ()
+    concentration: bool = False
+    unless_conditions: tuple[Condition, ...] = ()
 
     def __post_init__(self):
         _check_tests(self.tests, self.abilities)
         _check_once(self)
         if self.once and self.tests != (D20Test.ATTACK_ROLL,):
             raise ValueError("once is for a D20Mode of attack rolls only")
+        gates = self.against_spells or self.against_conditions or self.concentration
+        if gates and self.tests != (D20Test.SAVING_THROW,):
+            raise ValueError(
+                "against_spells, against_conditions and concentration are for"
+                " a D20Mode of saving throws only"
+            )
+        if self.concentration and self.abilities not in ((), (Ability.CONSTITUTION,)):
+            raise ValueError("A Concentration save is a Constitution saving throw")
 
 
 @dataclass(frozen=True)
@@ -736,6 +759,8 @@ _ENUM_LISTS: dict[str, type[Enum]] = {
     "abilities": Ability,
     "damage_types": DamageType,
     "conditions": Condition,
+    "against_conditions": Condition,
+    "unless_conditions": Condition,
 }
 _ENUMS: dict[str, type[Enum]] = {
     "mode": RollMode,
@@ -754,6 +779,8 @@ _PLAIN: dict[str, type | tuple[type, ...]] = {
     "by_caster": bool,
     "seen_attacker": bool,
     "by_allies": bool,
+    "against_spells": bool,
+    "concentration": bool,
     "bonus": int,
     "base": int,
     "value": int,

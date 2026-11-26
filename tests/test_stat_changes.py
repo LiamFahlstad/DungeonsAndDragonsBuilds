@@ -37,13 +37,13 @@ from Combat.Effects.modifiers import (
     immune_to_damage,
     resists,
     rolled_modifiers,
-    save_plan,
     size_in_use,
     size_text,
     speed_changes,
     speed_in_use,
     vulnerable_to,
 )
+from Combat.Effects.roll_plans import save_plan
 from Combat.CombatUIQt.dialogs_mixin import _speed_text
 from Combat.CombatUIQt.player_view import _unit_details
 from Combat.Effects.triggers import AttackOutcome, TriggerRow, outcome_firings
