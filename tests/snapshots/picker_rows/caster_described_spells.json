@@ -1408,10 +1408,11 @@
     "Freedom of Movement": [
      {
       "ignores_difficult": true,
+      "swims": true,
       "type": "Movement"
      },
      {
-      "text": "Spells and other magical effects can't reduce its Speed or give it the Paralyzed or Restrained condition. It has a Swim Speed equal to its Speed, and can spend 5 feet of movement to escape nonmagical restraints or a grapple.",
+      "text": "Spells and other magical effects can't reduce its Speed or give it the Paralyzed or Restrained condition. It can spend 5 feet of movement to escape nonmagical restraints or a grapple.",
       "type": "Note"
      }
     ]
@@ -2382,10 +2383,45 @@
    "ability": null,
    "action_cost": "Bonus Action",
    "amount_kind": "Damage",
+   "badge_modifiers": {
+    "Produce Flame": [
+     {
+      "text": "Bright Light in a 20-foot radius and Dim Light 20 feet beyond; hurl it as a Magic action (Produce Flame: hurl)",
+      "type": "Note"
+     }
+    ]
+   },
+   "bonus": null,
+   "concentration": false,
+   "condition": "Produce Flame",
+   "counts_uses": true,
+   "damage": "",
+   "dc": null,
+   "duration_seconds": 600,
+   "feature_name": "",
+   "half_on_save": false,
+   "is_described": true,
+   "is_unavailable": false,
+   "note": "It goes on its user, whoever is targeted.",
+   "repeat_save": false,
+   "roll": "Saving throw",
+   "row_name": "",
+   "slot_level": "None",
+   "spell_level": 0,
+   "spell_name": "Produce Flame",
+   "summary": "",
+   "targets_self": true,
+   "until": null,
+   "upcast": []
+  },
+  "All spells | Produce Flame: hurl": {
+   "ability": null,
+   "action_cost": "Action",
+   "amount_kind": "Damage",
    "bonus": 7,
    "concentration": false,
    "condition": "",
-   "counts_uses": true,
+   "counts_uses": false,
    "damage": "1d8 Fire",
    "dc": null,
    "duration_seconds": 600,
@@ -2393,7 +2429,7 @@
    "half_on_save": false,
    "is_described": true,
    "is_unavailable": false,
-   "note": "Casting it (a Bonus Action) makes the flame; hurling it is a Magic action, on this turn or a later one.",
+   "note": "",
    "repeat_save": false,
    "roll": "Attack roll",
    "row_name": "",
@@ -3139,7 +3175,35 @@
    "half_on_save": false,
    "is_described": true,
    "is_unavailable": false,
-   "note": "On later turns, a Bonus Action moves the force up to 20 feet and repeats the attack. Add the spellcasting ability modifier to the damage.",
+   "note": "Add the spellcasting ability modifier to the damage.",
+   "repeat_save": false,
+   "roll": "Attack roll",
+   "row_name": "",
+   "slot_level": "None",
+   "spell_level": 2,
+   "spell_name": "Spiritual Weapon",
+   "summary": "+7  1d8 Force",
+   "until": null,
+   "upcast": [
+    "1d8"
+   ]
+  },
+  "All spells | Spiritual Weapon: attack again": {
+   "ability": null,
+   "action_cost": "Bonus Action",
+   "amount_kind": "Damage",
+   "bonus": 7,
+   "concentration": false,
+   "condition": "",
+   "counts_uses": false,
+   "damage": "1d8 Force",
+   "dc": null,
+   "duration_seconds": 60,
+   "feature_name": "",
+   "half_on_save": false,
+   "is_described": true,
+   "is_unavailable": false,
+   "note": "On a later turn: move the force up to 20 feet first. Cast with a higher slot, type the extra 1d8 per level above 2. Add the spellcasting ability modifier to the damage.",
    "repeat_save": false,
    "roll": "Attack roll",
    "row_name": "",

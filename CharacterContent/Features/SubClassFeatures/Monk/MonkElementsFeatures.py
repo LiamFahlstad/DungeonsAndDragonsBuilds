@@ -20,6 +20,7 @@ from Model.Content.CombatEffect import (
     CombatCondition,
     CombatDamage,
     CombatEffect,
+    CombatPush,
     EffectRoll,
 )
 from Model.Content.CombatArea import CombatArea, CombatAreaShape
@@ -140,16 +141,21 @@ class ElementalAttunement(Feature):
                     " of its type.",
                 ),
             ),
-            CombatEffect(
-                name="Elemental Strikes: move",
-                roll=EffectRoll.SAVE,
-                save_ability=Ability.STRENGTH,
-                spends_use=False,
-                notes=(
-                    "After an Unarmed Strike deals Acid, Cold, Fire, Lightning or"
-                    " Thunder damage while Elemental Attunement is on. On a failed"
-                    " save, move the target up to 10 feet toward or away from you.",
-                ),
+            # "On a failed save, you can move the target up to 10 feet
+            # toward or away from you": a row each way.
+            *(
+                CombatEffect(
+                    name=f"Elemental Strikes: move {way}",
+                    roll=EffectRoll.SAVE,
+                    save_ability=Ability.STRENGTH,
+                    spends_use=False,
+                    push=CombatPush(10, up_to=True, toward=toward),
+                    notes=(
+                        "After an Unarmed Strike deals Acid, Cold, Fire, Lightning"
+                        " or Thunder damage while Elemental Attunement is on.",
+                    ),
+                )
+                for way, toward in (("away", False), ("toward", True))
             ),
         ]
 

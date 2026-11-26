@@ -511,18 +511,24 @@ class SpiritualWeapon(ClassSpell):
     def combat_effects(
         self, character: CharacterView | None = None
     ) -> list[CombatEffect]:
+        damage = (
+            CombatDamage("1d8", DamageType.FORCE, upcast="1d8", add_modifier=True),
+        )
         return [
+            CombatEffect(roll=EffectRoll.ATTACK, damage=damage),
+            # "On each of your later turns, you can take a Bonus Action to
+            # move the force up to 20 feet and repeat the attack": a later
+            # step of the casting, costing the Bonus Action and no slot.
             CombatEffect(
+                name="Spiritual Weapon: attack again",
                 roll=EffectRoll.ATTACK,
-                damage=(
-                    CombatDamage(
-                        "1d8", DamageType.FORCE, upcast="1d8", add_modifier=True
-                    ),
-                ),
+                damage=damage,
+                action_type=ActionType.BONUS_ACTION,
+                spends_use=False,
                 notes=(
-                    "On later turns, a Bonus Action moves the force up to 20 feet and repeats the attack.",
+                    "On a later turn: move the force up to 20 feet first. Cast with a higher slot, type the extra 1d8 per level above 2.",
                 ),
-            )
+            ),
         ]
 
 

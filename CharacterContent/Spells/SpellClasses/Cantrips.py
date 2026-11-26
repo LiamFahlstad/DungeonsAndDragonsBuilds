@@ -33,7 +33,8 @@ from Model.Content.CombatEffect import (
     TurnEdge,
     TurnOf,
 )
-from Model.Content.CombatModifiers import D20Mode, D20Test, RollMode
+from Model.Content.ActionType import ActionType
+from Model.Content.CombatModifiers import D20Mode, D20Test, Note, RollMode
 from Model.Content.CombatTriggers import CombatTrigger, TriggerAim, TriggerEvent
 from Model.Content.Feature import FeatureTarget
 from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table
@@ -509,7 +510,27 @@ class ProduceFlame(ClassSpell):
         self, character: CharacterView | None = None
     ) -> list[CombatEffect]:
         return [
+            # Casting it, a Bonus Action: the flame in your hand.
             CombatEffect(
+                conditions=(
+                    CombatCondition(
+                        "Produce Flame",
+                        duration_seconds=10 * 60,
+                        modifiers=(
+                            Note(
+                                "Bright Light in a 20-foot radius and Dim Light"
+                                " 20 feet beyond; hurl it as a Magic action"
+                                " (Produce Flame: hurl)"
+                            ),
+                        ),
+                    ),
+                ),
+                targets_self=True,
+            ),
+            # "As a Magic action, you can hurl the flame" (on this turn or a
+            # later one), which ends the spell: a later step, no new casting.
+            CombatEffect(
+                name="Produce Flame: hurl",
                 roll=EffectRoll.ATTACK,
                 damage=(
                     CombatDamage(
@@ -518,10 +539,9 @@ class ProduceFlame(ClassSpell):
                         cantrip=((5, "2d8"), (11, "3d8"), (17, "4d8")),
                     ),
                 ),
-                notes=(
-                    "Casting it (a Bonus Action) makes the flame; hurling it is a Magic action, on this turn or a later one.",
-                ),
-            )
+                action_type=ActionType.ACTION,
+                spends_use=False,
+            ),
         ]
 
 

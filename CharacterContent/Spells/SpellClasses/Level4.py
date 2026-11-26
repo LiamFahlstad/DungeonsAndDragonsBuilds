@@ -1746,13 +1746,13 @@ class FreedomOfMovement(ClassSpell):
                     CombatCondition(
                         "Freedom of Movement",
                         modifiers=(
-                            Movement(ignores_difficult=True),
+                            # "a Swim Speed equal to its Speed"
+                            Movement(ignores_difficult=True, swims=True),
                             Note(
                                 "Spells and other magical effects can't reduce its"
                                 " Speed or give it the Paralyzed or Restrained"
-                                " condition. It has a Swim Speed equal to its"
-                                " Speed, and can spend 5 feet of movement to escape"
-                                " nonmagical restraints or a grapple."
+                                " condition. It can spend 5 feet of movement to"
+                                " escape nonmagical restraints or a grapple."
                             ),
                         ),
                     ),
