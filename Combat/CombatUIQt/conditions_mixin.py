@@ -51,19 +51,13 @@ from Combat.Fight.effects_given import (
     with_hit_extras,
 )
 from Combat.Fight.monster_actions import legendary_resistances_left
+from Combat.Fight.picked import option_duration, picked_effect
 from Combat.Fight.resources import effect_lacks, use_pick
 from Combat.Fight.saves import (
     ABILITIES,
-    ATTACK_ROLL,
-    DAMAGE_AMOUNT,
-    DEFAULT_SAVE_DC,
-    HEALING,
     SPELL,
-    TEMP_HP,
     CustomEffect,
     EffectOption,
-    read_damage,
-    read_hit_points,
     roll_effect_save,
     roll_planned_attack,
     roll_repeat_save,
@@ -94,15 +88,6 @@ _ATTACK_KINDS: dict[bool | None, AttackKind | None] = {
 }
 
 
-def _option_duration(option: EffectOption) -> dict | None:
-    """How long what a picked row gives lasts, as a CustomEffect says it."""
-    if option.until is not None:
-        return {"until": option.until[0], "of": option.until[1]}
-    if option.duration_seconds:
-        return {"seconds": option.duration_seconds}
-    return None
-
-
 def hit_rider(option: EffectOption) -> CustomEffect | None:
     """What a hit with `option` gives the target beside its damage (Molten
     Strike's Prone), as the Custom Effect dialog would, with no damage of its
@@ -113,52 +98,8 @@ def hit_rider(option: EffectOption) -> CustomEffect | None:
     return CustomEffect(
         name=option.name,
         condition=option.condition,
-        duration=_option_duration(option),
+        duration=option_duration(option),
         pick=option,
-    )
-
-
-def _picked_effect(option: EffectOption, last_save: dict) -> CustomEffect | None:
-    """What the Custom Effect dialog applies for `option` picked and nothing
-    edited: its roll, damage rolled now (twice over for a Critical Hit),
-    conditions, duration and costs. A DC or attack bonus it leaves unset is
-    the dialog's last (`last_save`, ConditionsMixin._custom_save). None when
-    its damage can't be applied as it is (a damage type to choose)."""
-    is_attack = option.roll == ATTACK_ROLL
-    text = option.damage_at(option.slot_level)
-    damage: list[tuple[int, str]] = []
-    critical: list[tuple[int, str]] = []
-    hit_points = 0
-    if option.amount_kind == DAMAGE_AMOUNT:
-        damage, problem = read_damage(text)
-        if is_attack and not problem:
-            critical, problem = read_damage(text, critical=True)
-    else:
-        hit_points, problem = read_hit_points(text, option.amount_kind)
-    if problem:
-        return None
-    duration = _option_duration(option)
-    dc = option.dc if option.dc is not None else last_save.get("dc")
-    bonus = option.bonus if option.bonus is not None else last_save.get("bonus")
-    return CustomEffect(
-        name=option.name,
-        condition=option.condition,
-        duration=duration,
-        damage=damage,
-        critical_damage=critical,
-        healing=hit_points if option.amount_kind == HEALING else 0,
-        temp_hp=hit_points if option.amount_kind == TEMP_HP else 0,
-        slot_level=option.slot_level,
-        action_cost=option.action_cost,
-        concentration=option.concentration,
-        attack_bonus=(bonus or 0) if is_attack else None,
-        ability=None if is_attack else option.ability,
-        dc=dc if dc is not None else DEFAULT_SAVE_DC,
-        half_on_save=option.half_on_save,
-        repeat_save=option.repeat_save,
-        pick=option,
-        weapon_attack=option.weapon_attack,
-        push=option.push,
     )
 
 
@@ -586,14 +527,17 @@ class ConditionsMixin(CombatWindowState):
             for effect in effects:
                 self._apply_custom_effect(effect)
 
-    def _apply_row(self, owner: dict, target: dict, option: EffectOption) -> bool:
+    def _apply_row(
+        self, owner: dict, target: dict, option: EffectOption, answers: object = None
+    ) -> bool:
         """Use one picker row of owner's on target, as picking it in the
         Custom Effect dialog and applying it as it's filled in would: what
         it costs (a use, logged), its roll, damage and conditions. What a
-        hit triggers comes this way (TurnPanelMixin._use_trigger). Returns
+        hit triggers comes this way (TurnPanelMixin._use_trigger), with the
+        hit it `answers` (picked.py: a Critical Hit's dice twice). Returns
         whether it was applied: not if owner is out of what it spends (no
         uses left, the action used), which the caller says."""
-        effect = _picked_effect(option, self._custom_save)
+        effect = picked_effect(option, self._custom_save, answers, owner)
         if effect is None or any(self._effect_lacks(owner, effect)):
             return False
         if option.note:

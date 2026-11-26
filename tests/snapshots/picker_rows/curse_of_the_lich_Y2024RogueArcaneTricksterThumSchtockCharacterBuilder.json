@@ -514,7 +514,7 @@
    "half_on_save": false,
    "is_described": true,
    "is_unavailable": false,
-   "note": "Once per turn, right after you hit a creature with an attack roll using a Finesse or a Ranged weapon: pick it. The damage is the weapon's type. You need Advantage on the roll, or an ally without the Incapacitated condition within 5 feet of the target and no Disadvantage. On a critical hit, roll the dice twice. Its damage is of a type to choose (Bludgeoning, Piercing, Slashing): give one.",
+   "note": "The damage is the weapon's type. Picked by hand after a Critical Hit, roll the dice twice. Its damage is of a type to choose (Bludgeoning, Piercing, Slashing): give one.",
    "repeat_save": false,
    "roll": "Saving throw",
    "row_name": "",
@@ -522,6 +522,12 @@
    "spell_level": 0,
    "spell_name": "",
    "summary": "2d6",
+   "trigger": {
+    "attacks": "weapon attack",
+    "event": "hit",
+    "once_per_turn": true,
+    "when": "the attack used a Finesse or a Ranged weapon, and you had Advantage on it, or an ally of yours without the Incapacitated condition was within 5 feet of the target and you didn't have Disadvantage"
+   },
    "until": null,
    "upcast": []
   },

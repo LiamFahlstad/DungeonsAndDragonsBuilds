@@ -268,8 +268,11 @@ def size_fits(size: str | None, largest: CreatureSize) -> bool | None:
 # A `when` that says what is a field (explicit-attributes plan 2.3): a
 # distance (`within_ft`) or the owner's sight of the other creature
 # (`sees`), which the battle map settles; a `when` is only what it can't.
+# A third creature's distance from the target ("an ally of yours within 5
+# feet of the target": Sneak Attack) is no field's, so it stays a `when`.
 _FIELD_IN_WHEN = re.compile(
-    r"\bwithin \d+ (?:feet|ft)\b|\byou can see (?:it|them|the attacker)\b"
+    r"\bwithin \d+ (?:feet|ft)\b(?! of the target)"
+    r"|\byou can see (?:it|them|the attacker)\b"
 )
 
 

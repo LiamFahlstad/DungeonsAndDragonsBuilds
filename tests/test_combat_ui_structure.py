@@ -133,7 +133,6 @@ LONG_FILES = {
         "9b moves its text helpers to use_cast/texts.py; UseCastDialog"
         " stays whole (R12)",
     ),
-    "Combat/CombatUIQt/conditions_mixin.py": (1035, "split in 9b, after step 7"),
     "Combat/CombatUIQt/dialogs_mixin.py": (
         1380,
         "9b moves the More Info panel to dialogs/more_info.py",

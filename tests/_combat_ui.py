@@ -29,6 +29,7 @@ import pytest  # noqa: E402
 
 from Combat.CombatUIQt import CombatAppQt  # noqa: E402
 from Combat.CombatUIQt.styles import QSS  # noqa: E402
+from Combat.Effects.triggers import TriggerChoice  # noqa: E402
 from tests._snapshot_helpers import UPDATE_SNAPSHOTS, load, save  # noqa: E402
 
 _app: QApplication | None = None
@@ -62,7 +63,11 @@ def described(ability: dict) -> dict:
 
 def make_ui(tmp_path, combatants=(), character_sheets=()) -> CombatAppQt:
     """A CombatAppQt fighting `combatants` (with `character_sheets` as the
-    party) and logging to tmp_path/logs/fight.json, with its window built."""
+    party) and logging to tmp_path/logs/fight.json, with its window built.
+    The trigger pop-up (TurnPanelMixin._ask_triggers) declines everything,
+    as Skip does, so a hit a strike could answer (Sneak Attack, Divine
+    Smite) never runs a modal event loop; a test that answers it sets its
+    own (monkeypatch.setattr(ui, "_ask_triggers", ...))."""
     qapp()
     ui = CombatAppQt(
         list(combatants),
@@ -71,6 +76,7 @@ def make_ui(tmp_path, combatants=(), character_sheets=()) -> CombatAppQt:
         log_path=tmp_path / "logs" / "fight.json",
     )
     ui._build_window()
+    ui._ask_triggers = lambda firings: TriggerChoice()
     return ui
 
 

@@ -896,9 +896,11 @@ class DivineSmite(ClassSpell):
                         when="the target is a Fiend or an Undead",
                     ),
                 ),
-                notes=(
-                    "Cast right after hitting a target with a Melee weapon or an Unarmed Strike: pick that target. On a critical hit, roll the dice twice.",
-                ),
+                # "a Bonus Action, which you take immediately after hitting a
+                # target with a Melee weapon or an Unarmed Strike" (both melee
+                # attacks): asked as it hits, its dice doubled by a Critical Hit.
+                trigger=CombatTrigger(TriggerEvent.HIT, attacks=AttackKind.MELEE),
+                notes=("Picked by hand after a Critical Hit, roll the dice twice.",),
             )
         ]
 
@@ -967,12 +969,31 @@ class EnsnaringStrike(ClassSpell):
             CombatEffect(
                 roll=EffectRoll.SAVE,
                 save_ability=Ability.STRENGTH,
-                conditions=(CombatCondition(Condition.RESTRAINED),),
-                notes=(
-                    "Cast right after hitting with a weapon. A Large or larger creature has Advantage on the save. On a success the spell ends.",
-                    "While Restrained, the target takes 1d6 Piercing damage (1d6 more per slot level above 1) at the start of each of its turns. It or a creature within reach can take an action to make a Strength (Athletics) check against your spell save DC to end the spell.",
+                # "a Bonus Action, which you take immediately after hitting a
+                # creature with a weapon": asked as a weapon hits.
+                trigger=CombatTrigger(TriggerEvent.HIT, attacks=AttackKind.WEAPON),
+                conditions=(
+                    CombatCondition(Condition.RESTRAINED),
+                    # "While Restrained, the target takes 1d6 Piercing damage
+                    # at the start of each of its turns."
+                    CombatCondition(
+                        "Ensnaring Strike",
+                        modifiers=(AtTurnStart("Ensnaring Strike: damage"),),
+                    ),
                 ),
-            )
+                notes=(
+                    "A Large or larger creature has Advantage on the save. On a success the spell ends.",
+                    "It or a creature within reach can take an action to make a Strength (Athletics) check against your spell save DC to end the spell.",
+                ),
+            ),
+            CombatEffect(
+                name="Ensnaring Strike: damage",
+                damage=(CombatDamage("1d6", DamageType.PIERCING, upcast="1d6"),),
+                spends_use=False,
+                notes=(
+                    "At the start of each of the Restrained target's turns, while it has Ensnaring Strike.",
+                ),
+            ),
         ]
 
 

@@ -1050,7 +1050,7 @@ class TurnPanelMixin(CombatWindowState):
             return False
         used = False
         for target in targets if targets is not None else [firing.target]:
-            if self._apply_row(firing.owner, target, option):
+            if self._apply_row(firing.owner, target, option, firing.outcome):
                 used = True
                 if _applies_nothing(option):
                     # What it does is done at the table (Push's 10 feet):

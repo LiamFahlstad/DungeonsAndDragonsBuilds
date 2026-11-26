@@ -612,7 +612,9 @@ def test_sneak_attack_is_its_dice_of_the_weapons_type():
     dice = (_level(Thum, CharacterClass.ROGUE) + 1) // 2
     assert row.damage == f"{dice}d6"
     assert row.action_cost is None and not row.counts_uses
-    assert "Finesse or a Ranged weapon" in row.note
+    # When: asked as a weapon hits, once per turn (plan step 9.1).
+    assert row.trigger is not None and row.trigger.once_per_turn
+    assert "Finesse or a Ranged weapon" in row.trigger.when
 
 
 # Free castings counted once per Long Rest each (Q56)

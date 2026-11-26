@@ -59,7 +59,7 @@ from CharacterContent.Items.Weapons.Magic import HalflingssTrick
 from CharacterContent.Spells.SpellClasses.Cantrips import ViciousMockery
 from CharacterContent.Spells.SpellClasses.Level1 import GuidingBolt
 from Combat.Fight.attack_rolls import parse_attack_roll
-from Combat.CombatUIQt.conditions_mixin import _picked_effect
+from Combat.Fight.picked import picked_effect as _picked_effect
 from Combat.Fight.monster_actions import parse_action
 from Combat.Fight.effect_options import (
     ATTACKS,
@@ -259,16 +259,26 @@ def no_modal_dialogs(monkeypatch):
     monkeypatch.setattr(QMessageBox, "question", refuse)
 
 
+def _is_mastery(name: str) -> bool:
+    """A mastery's row ("Longsword: Sap"), not a strike its hit is asked
+    about too (Sneak Attack, Divine Smite: tests/test_strike_triggers.py)."""
+    return ": " in name
+
+
 class Answers:
-    """Stands in for the pop-up: records each question and applies them all;
-    a row aimed at another creature goes on `aim` (a name's start), if it's
-    offered."""
+    """Stands in for the pop-up: records each question about a mastery row
+    and applies those; a row aimed at another creature goes on `aim` (a
+    name's start), if it's offered. The strikes a hit is also asked about
+    are skipped (plan step 9.1)."""
 
     def __init__(self):
         self.asked: list[list[str]] = []
         self.aim = ""
 
     def __call__(self, firings):
+        firings = [f for f in firings if _is_mastery(f.row.name)]
+        if not firings:
+            return TriggerChoice()
         self.asked.append([f.question for f in firings])
         aimed = tuple(
             (f, tuple(c for c in f.others if c["name"].startswith(self.aim))[:1])
@@ -313,7 +323,10 @@ def _row(char, name):
 
 def test_the_picker_lists_each_mastered_weapons_row(fight):
     _, party, _, _, _ = fight
-    names = {who: [r.name for r in triggered_rows(char)] for who, char in party.items()}
+    names = {
+        who: [r.name for r in triggered_rows(char) if _is_mastery(r.name)]
+        for who, char in party.items()
+    }
     assert names["Edmund"] == ["Longsword: Sap", "Handaxe: Vex"]
     # Halfling's Trick is a Shortsword: Thum's Shortsword mastery covers it.
     assert names["Thum"] == ["Shortsword: Vex", "Halfling's Trick: Vex"]
@@ -336,7 +349,7 @@ def test_a_mastery_follows_only_its_weapon_picked(fight):
         found, _ = outcome_firings(
             [AttackOutcome(edmund, ogre, **outcome)], triggered_rows
         )
-        return [(f.row.name, f.mode) for f in found]
+        return [(f.row.name, f.mode) for f in found if _is_mastery(f.row.name)]
 
     assert fired(hit=True, row="Longsword") == [("Longsword: Sap", TriggerMode.AUTO)]
     assert fired(hit=False, row="Longsword") == []

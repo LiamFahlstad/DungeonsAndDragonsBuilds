@@ -21,6 +21,8 @@ from Core.Definitions import (
     CharacterClass,
 )
 from Model.Content.CombatEffect import CombatDamage, CombatEffect
+from Model.Content.CombatModifiers import AttackKind
+from Model.Content.CombatTriggers import CombatTrigger, TriggerEvent
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.View import CharacterView
 from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table, dc_formula
@@ -127,13 +129,25 @@ class SneakAttack(Feature):
                 damage=(
                     CombatDamage(SNEAK_ATTACK_DICE.at(character), None, weapon_types),
                 ),
+                # "Once per turn, you can deal an extra 1d6 damage to one
+                # creature you hit with an attack roll if you have Advantage on
+                # the roll and the attack uses a Finesse or a Ranged weapon",
+                # or an ally of yours is within 5 feet of it: asked as a weapon
+                # hits, its dice doubled by a Critical Hit.
+                trigger=CombatTrigger(
+                    TriggerEvent.HIT,
+                    attacks=AttackKind.WEAPON,
+                    once_per_turn=True,
+                    when=(
+                        "the attack used a Finesse or a Ranged weapon, and you had"
+                        " Advantage on it, or an ally of yours without the"
+                        " Incapacitated condition was within 5 feet of the target"
+                        " and you didn't have Disadvantage"
+                    ),
+                ),
                 notes=(
-                    "Once per turn, right after you hit a creature with an attack"
-                    " roll using a Finesse or a Ranged weapon: pick it. The"
-                    " damage is the weapon's type.",
-                    "You need Advantage on the roll, or an ally without the"
-                    " Incapacitated condition within 5 feet of the target and no"
-                    " Disadvantage. On a critical hit, roll the dice twice.",
+                    "The damage is the weapon's type. Picked by hand after a"
+                    " Critical Hit, roll the dice twice.",
                 ),
             )
         ]

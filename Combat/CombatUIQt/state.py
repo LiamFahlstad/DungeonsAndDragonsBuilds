@@ -392,7 +392,9 @@ class CombatWindowState:
     def _resolve_attack_triggers(self, outcomes: list[Outcome]):
         raise NotImplementedError("TurnPanelMixin._resolve_attack_triggers")
 
-    def _apply_row(self, owner: dict, target: dict, option: EffectOption) -> bool:
+    def _apply_row(
+        self, owner: dict, target: dict, option: EffectOption, answers: object = None
+    ) -> bool:
         raise NotImplementedError("ConditionsMixin._apply_row")
 
     def _resolve_attack_roll(

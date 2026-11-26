@@ -664,7 +664,7 @@
    "half_on_save": false,
    "is_described": true,
    "is_unavailable": false,
-   "note": "Cast right after hitting a target with a Melee weapon or an Unarmed Strike: pick that target. On a critical hit, roll the dice twice. If the target is a Fiend or an Undead: 1d8 Radiant more. Add it for those targets.",
+   "note": "Picked by hand after a Critical Hit, roll the dice twice. If the target is a Fiend or an Undead: 1d8 Radiant more. Add it for those targets.",
    "repeat_save": false,
    "roll": "Saving throw",
    "row_name": "",
@@ -672,6 +672,10 @@
    "spell_level": 1,
    "spell_name": "Divine Smite",
    "summary": "2d8 Radiant",
+   "trigger": {
+    "attacks": "melee attack",
+    "event": "hit"
+   },
    "until": null,
    "upcast": [
     "1d8"
@@ -846,7 +850,7 @@
    "half_on_save": false,
    "is_described": true,
    "is_unavailable": false,
-   "note": "Without a spell slot, once per Long Rest. Cast right after hitting a target with a Melee weapon or an Unarmed Strike: pick that target. On a critical hit, roll the dice twice. If the target is a Fiend or an Undead: 1d8 Radiant more. Add it for those targets.",
+   "note": "Without a spell slot, once per Long Rest. Picked by hand after a Critical Hit, roll the dice twice. If the target is a Fiend or an Undead: 1d8 Radiant more. Add it for those targets.",
    "repeat_save": false,
    "roll": "Saving throw",
    "row_name": "",
@@ -854,6 +858,10 @@
    "spell_level": 0,
    "spell_name": "Divine Smite",
    "summary": "1/1  2d8 Radiant",
+   "trigger": {
+    "attacks": "melee attack",
+    "event": "hit"
+   },
    "until": null,
    "upcast": []
   },

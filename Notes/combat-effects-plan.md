@@ -57,7 +57,7 @@ change and move on; the full suite can run later.
 | 6 | **Triggers** (new concept, 2026-11-11; see its section): a row or badge says *when* it's used (a hit, damage taken, dropping to 0, ...), and the simulator applies it itself (AUTO) or asks with a pop-up as it happens (ASK) | 6.1-6.3 **done** (R66-R73, 2026-11-11): `CombatTrigger` on a row (`CombatEffect.trigger`, `Model/Content/CombatTriggers.py`), `outcome_firings` with its gates and modes, and the hit hooks in all three hit paths: when Kivi hits a Large or smaller creature and deals it damage, one pop-up per Apply asks about Hill's Tumble; Apply gives Prone, spends a Giant Ancestry use and logs it, inside the hit's undo step. Only `HIT` and `MISS` fire; the other events are data. 6.4 **done** (R74-R77, 2026-11-11): a monster's hit that gives a condition in a sentence of its own ("If the target is a Large or smaller creature, it has the Prone condition", "..., and the target has the Poisoned condition until the end of its next turn", "the Grappled condition (escape DC 13)") is read as a rider row of its own ("Tree Club: Prone") with an AUTO `after=` trigger: the Hill Giant's Tree Club knocks a Large target Prone from its button and Enter and from the dialog, asks when the size isn't known, and does nothing to a Huge target or on a miss. 101 riders in the catalog. 6.5 **done** (R108-R114, 2026-11-11): as an attack roll hits, the creature hit is asked about its `HIT_BY` rows before the damage (Shield's +5 turns Clover's 20 against AC 18 into a miss and spends her Reaction and a slot; Kivi's Deflect Attacks takes its 1d10 + 8 off, `CombatEffect.damage_reduction`), and damage from a creature asks the one damaged about its `TAKES_DAMAGE` rows (Hellish Rebuke, newly described; Storm's Thunder); a Reaction used this round or an Incapacitated owner asks no more. A badge's answer to a hit, built after (Q57, R161-R166): `WhenHit`. 6.6 **done** (R127-R131, 2026-11-12): as damage would drop a creature to 0 Hit Points, it's asked first about its `DROPS_TO_ZERO` rows (Ymira's Relentless Endurance: Apply leaves her at 1, not Unconscious, a use spent, in the hit's undo step; not when killed outright), `CombatEffect.drops_to`; a creature that reduces an enemy to 0 gets its `REDUCES_TO_ZERO` rows (Dark One's Blessing's 6 Temporary Hit Points, given at once; the trigger's new `enemy_only` gate); Relentless Rage described too; damage that leaves a creature Bloodied asks about its `BLOODIED` rows (Harvest Undead, R131). 6.7 **done** for the content the parties and examples have (R132-R139, 2026-11-12): as the fight starts, `ROLLS_INITIATIVE` rows are given or asked once (Kivi's Uncanny Metabolism gives back his Focus Points, `CombatEffect.regains`; Superior Inspiration, Perfect Focus, Evergreen Wild Shape, Ever-Ready Shot, Persistent Rage); a failed save the dialog rolls asks about `FAILS_SAVE` rows (Indomitable's reroll +Fighter level, `reroll_save`, with a box for the roll made at the table); `USES` and `CombatTrigger.aim` give spells their later steps (Ice Knife's explosion on its target and the creatures added; Green-Flame Blade's fire on the creature picked). Not built: Weapon Mastery (Q38, now its own step 6.9), `CASTS_SPELL` (no source in the parties), Diamond Soul (Q64). 6.8 **done** (R140-R142, 2026-11-12): the skill's Triggers section (event, mode, gates, `when`, and when to leave one untriggered), `combat_effects.py triggers` and the trigger counts in `coverage`, `Feature.untriggered`; both parties' features with a Trigger fact are triggered (Deflect Attacks, Uncanny Metabolism, Hill's Tumble) or say why not (8), and a test keeps it so. 6.9 **done** (R143-R148, 2026-11-12): each mastery property a wielder has is a row after its weapon's ("Longsword: Sap", `Model/Content/WeaponMasteryEffects.py`), fired only after the weapon picked in the dialog: Sap and Vex are AUTO badges that count for one attack roll (the new `once` and `by_caster` modifier fields; Guiding Bolt and Vicious Mockery written with them too), Slow a Speed -10 badge, Topple a DC 8 + modifier + PB Constitution save or Prone, Graze the modifier's damage on a miss, Push a reminder for a Large or smaller target, Cleave an attack roll on another creature once per turn; Nick a note on the weapon's row. 6.10 **done** (R149-R151, 2026-11-12, Q65): `TriggerEvent.ATTACKS`, asked of everyone else in the fight as the dialog or a monster's button is about to roll an attack (`attack_roll_firings`); Gabriel's Warding Flare gives the attacker a one-roll Disadvantage badge, which that roll counts and uses up. Added after (Decision 19, R156-R160, 2026-11-13): what a hit gives by itself is given as the hit lands, not as its Apply ends, so with Times 2 (Extra Attack) the second roll has the first hit's Vex (Q67); a use can spend several of its feature's uses, `CombatEffect.uses_spent` (Elemental Burst's 2 Focus Points, newly described; Q64). And (Decision 20, R161-R166, 2026-11-13) a badge answers a hit on its bearer: `WhenHit(effect, attacks, when)`, the bearer using a row of its spell on the attacker once the hit's damage is dealt, with the slot it was cast with kept on the badge; Armor of Agathys (5 Cold, 5 more per slot level, as the Ogre's Greatclub hits) and Fire Shield (2d8 Fire or Cold, asked: "within 5 feet") described, and a monster's button says whether its attack is melee or ranged (Q57). Phase 6 is done but for Q63, Q66 |
 | 7 | **Stat changes while an effect is on** (new, 2026-11-11; see its section): AC formulas and floors, Immunity and Vulnerability beside the built Resistance, Speed, size, Hit Point maximum, worked out from the stored stat plus the badges, and shown on the card with their sources | 7.1-7.2 **done** (R78-R83, 2026-11-11): `ArmorClassBase` (Mage Armor) and `ArmorClassMinimum` (Barkskin) beside `ArmorClass`, worked out by `armor_class(char, stored)`, which every attack path reads through `armor_bonus`; the same effect twice adds once; `DamageImmunity` and `Vulnerability` beside `Resistance` in `_damage_type_modifier`; Mage Armor, Barkskin, Stoneskin, Protection from Energy (a row per type) and Rage described (`tests/test_stat_changes.py`). 7.4 **done** (R84-R89, 2026-11-11): `HitPointMaximum(amount, upcast)`, rolled as the badge is given; `hit_point_maximum(char)` is the stored `max_hp` plus the badges, read by every cap, bar and Bloodied check; giving it raises current HP as Hit Points regained, ending it caps current HP (`Action.LOSE_HIT_POINTS`, replayed); Aid and Heroes' Feast described. 7.5 **done** (R90-R93, 2026-11-11): the card's and More Info's AC is the AC in use with what changes it ("AC: 17 (15; Shield of Faith +2)", cover too), a "Max HP 35 (30; Aid +5)" line, and the defenses the conditions and badges give with where from ("Resist: ...; Bludgeoning, Piercing, Slashing (Rage)", "Cond. Immune: Frightened (Heroism)"); the player view's full rows show the AC in use. 7.3 **done** (R94-R98, 2026-11-11): `Speed(bonus, multiplier, set_to)` and `Size(steps, becomes)`, worked out by `speed_in_use` and `size_in_use`; the trigger size gates read the size in use (an Enlarged Large Ogre is Huge to Hill's Tumble); the card shows "Speed: 80 ft. (40 ft.; Haste ×2)" and, when changed, "Size Huge (Large; Enlarge/Reduce +1)"; Haste (and its lethargy row), Longstrider, Enlarge/Reduce and Large Form described. 7.6 **done** (R106, R107, 2026-11-11): the rubric's Stat changes table, `combat_effects.py stats` (each note naming AC, a defense, Speed, the Hit Point maximum or size, marked counted or NOTE ONLY), and both parties' rows: Shield's `ArmorClass(5)`, Absorb Elements' `Resistance` (a row per type), Silence's Thunder `DamageImmunity`, Shield of Faith's restating note gone. **Phase 7 done** |
 | 8 | **Rolled at the table** (new, 2026-11-11, Decision 15; see its section): whatever the simulator rolls, the GM can give it a number rolled at the table instead | **Done** (R115-R124, 2026-11-11). 8.1-8.3: a hit's extra damage (Hunter's Mark, Divine Favor) has a box per target in the Custom Effect dialog, added as typed, even to a typed damage total, Critical Hit or not; Deflect Attacks' and Stone's Endurance's reduction has a box in the trigger pop-up; the setting "Roll monsters' recharges and repeat saves" (`monsters_roll_turn_dice`) off turns those into turn reminders. 8.4-8.7 (Decision 16): a card's Set initiative... (a summon's roll, or anyone's); a box takes one roll per Times copy ("nat 1, nat 20"); a Hit Point maximum box for a pick whose badge rolls one (Heroes' Feast), and a player's dice Hit Points at a turn's start left to a turn-column button; `tests/test_roll_sites.py` fails on a new place that rolls until it's listed with its way to the table (`tests/test_table_rolls.py`) |
-| 9 | **Closing the gaps** (audit 2026-11-24; see its section): every spell, feature, monster ability and item the combat effects don't cover yet, or cover only in part, ranked by how much it matters at the table and listed under the step that closes it | Audit **done** (2026-11-24). Most critical first (Decision 21): 9.2's saves **done** (R170, 2026-11-25): Magic Resistance (every monster with the trait, by name) has Advantage on a save against a spell; Brave, Fey Ancestry and Dwarven Resilience on saves to avoid or end their condition; War Caster on Concentration saves; Danger Sense, Gnomish Cunning and Dual Mind on their abilities' saves. Left of 9.2: Grappler's attack Advantage, Improved Critical, Sunlight Sensitivity, magic armor (with 9.8). 9.3's Attack action **done** (R171, 2026-11-26, Decision 22): a weapon row opens with Times at its owner's attacks per Attack action (Extra Attack 2, Two Extra Attacks 3, Three 4) while its Action is unspent, 1 after; Action Surge gives back the Action. Left of 9.3: Haste's action, Command's lost turn, the Initiative riders. Next: 9.1 (rank 8, content only), then 9.4 |
+| 9 | **Closing the gaps** (audit 2026-11-24; see its section): every spell, feature, monster ability and item the combat effects don't cover yet, or cover only in part, ranked by how much it matters at the table and listed under the step that closes it | Audit **done** (2026-11-24). Most critical first (Decision 21): 9.2's saves **done** (R170, 2026-11-25): Magic Resistance (every monster with the trait, by name) has Advantage on a save against a spell; Brave, Fey Ancestry and Dwarven Resilience on saves to avoid or end their condition; War Caster on Concentration saves; Danger Sense, Gnomish Cunning and Dual Mind on their abilities' saves. Left of 9.2: Grappler's attack Advantage, Improved Critical, Sunlight Sensitivity, magic armor (with 9.8). 9.3's Attack action **done** (R171, 2026-11-26, Decision 22): a weapon row opens with Times at its owner's attacks per Attack action (Extra Attack 2, Two Extra Attacks 3, Three 4) while its Action is unspent, 1 after; Action Surge gives back the Action. Left of 9.3: Haste's action, Command's lost turn, the Initiative riders. 9.1's strikes **done** (R172, 2026-11-26): Sneak Attack, Divine Smite (and Paladin's Smite's free casting), Ensnaring Strike and Stunning Strike are asked as a hit lands, and a fired row's dice double on a Critical Hit. Left of 9.1: the other **Now** rows. Next: the rest of 9.1, then 9.4 |
 
 **Content described so far.** Spells: 57 (2024) + 1 (2014), all as classes
 (every spell is a class since S.4; 58 have combat effects);
@@ -1402,15 +1402,15 @@ features with nothing to put on a creature.
 | 9 | ~~Extra Attack (6 classes) has no row; the GM sets Times by hand~~ **Times opens at the attack count** (R171) | 9.3 | Engine (action economy) |
 | 8 | Pack Tactics (22 monsters): Advantage with an ally within 5 feet isn't counted, though the map knows | 9.4 | Field/Engine |
 | 8 | Aura of Protection: + Charisma modifier to allies' saves within 10 feet isn't counted | 9.4 | Field/Engine |
-| 8 | Sneak Attack has no hit trigger: picked by hand, crit doubling by hand | 9.1 | Now (+ a Finesse gate) |
-| 8 | Stunning Strike: read from text | 9.1 | Now |
+| 8 | ~~Sneak Attack has no hit trigger: picked by hand, crit doubling by hand~~ **asked as a weapon hits, crit doubled** (R172) | 9.1 | Now (+ a Finesse gate) |
+| 8 | ~~Stunning Strike: read from text~~ **described, asked as a melee hit lands** (R172) | 9.1 | Now |
 | 8 | ~~Action Surge, Two Extra Attacks: read from text~~ **described** (R171) | 9.3 | Engine |
 | 8 | Staple damage cantrips and spells undescribed: Fire Bolt, Ray of Frost, Sorcerous Burst, Hex, Bane, Counterspell, the smites, Spirit Shroud, Hypnotic Pattern, ... (45 at 8) | 9.16 | Now |
 | 7 | ~~War Caster's Advantage on Concentration saves isn't counted, though the simulator rolls them (Clover)~~ **counted** (R170) | 9.2 | Field |
 | 7 | Regeneration (11 monsters) isn't applied at turn start | 9.5 | Field |
 | 7 | Evasion, Uncanny Dodge: not counted | 9.5 | Field |
 | 7 | Invisibility doesn't end when the bearer attacks or casts, so attackers keep the advantage | 9.6 | Field |
-| 7 | Divine Smite / Paladin's Smite have no hit trigger | 9.1 | Now |
+| 7 | ~~Divine Smite / Paladin's Smite have no hit trigger~~ **asked as a melee hit lands** (R172) | 9.1 | Now |
 | 7 | Spiritual Weapon's repeat attack on later turns | 9.7 | Field |
 | 7 | Potions of Healing aren't in the picker | 9.8 | Field (rows for items) |
 | 7 | Breath Weapon, Reckless Attack, Great Weapon Master, Sharpshooter, Superiority Dice: read from text | 9.16 | Now / Field |
@@ -1432,7 +1432,7 @@ which Decision 9 allows.
 
 | # | Step | Top rank | Kind | Done when |
 |---|---|---|---|---|
-| 9.1 | What the model can already say: the strike features' hit triggers, the party's `[]` features that need only rows, and the other **Now** rows | 8 | Now (+ a Finesse/Ranged gate) | Each source's rows do what its text says, with tests from the rules text; Sneak Attack is asked once per turn after a Finesse or Ranged hit, and its dice double on a Critical Hit by themselves; the picker goldens change only for these sources |
+| 9.1 | What the model can already say: the strike features' hit triggers (**done**, R172), the party's `[]` features that need only rows, and the other **Now** rows | 8 | Now (+ a Finesse/Ranged gate) | Each source's rows do what its text says, with tests from the rules text; Sneak Attack is asked once per turn after a Finesse or Ranged hit, and its dice double on a Critical Hit by themselves; the picker goldens change only for these sources |
 | 9.2 | Always-on modifiers on features, monster traits and armor (Decision 21, R170) | 9 | Field | **Saves done** (R170): a monster with Magic Resistance has Advantage on a save the dialog rolls against a spell, and against a feature's effect it's a note; War Caster's Advantage is in a Concentration save; the save's log line, the dialog's save row and the card's Concentration check name what gives it; nothing the sheet already counts is counted twice. Left: the attack and Critical Hit rows of its table |
 | 9.3 | Actions and the turn order: Extra Attack, Action Surge, Haste's action, a lost turn, Initiative riders (Decision 22, R171) | 9 | Engine | **Attack action done** (R171): an Extra Attack owner's weapon row opens with Times 2 (3 with Two Extra Attacks, an extension) while the Action is unspent; Action Surge gives back the Action. Left: Command: Halt shows on the target's turn; Haste's extra action; the Initiative riders |
 | 9.4 | Auras and Pack Tactics, with distances from the battle map | 8 | Field/Engine | On the map, an ally within 10 feet of a Paladin with Aura of Protection adds the Paladin's Charisma modifier to a save the dialog rolls, and one 15 feet away doesn't; Pack Tactics gives Advantage with an ally within 5 feet of the target; off the map the GM is asked (principle 8). Needs 9.2 |
@@ -1451,21 +1451,23 @@ which Decision 9 allows.
 
 #### 9.1 What the model can already say
 
-Content only: every row here can be written with fields that exist. Sneak
-Attack also needs a small **Field**: a Finesse or Ranged weapon gate on
-its trigger. Where a source's other gaps need a later step, the row says
-which.
+Content only: every row here can be written with fields that exist.
+Where a source's other gaps need a later step, the row says which.
+
+**Built (R172, 2026-11-26), the strikes:** Sneak Attack, Divine Smite and
+Paladin's Smite, Ensnaring Strike (with its turn-start damage) and Stunning
+Strike are asked as a hit lands; a fired row rolls its dice twice on a
+Critical Hit and takes its hit's weapon's damage type when its own is left
+to choose. Sneak Attack's Finesse/Ranged gate is a `when` (the question
+says it), not a field: the gates are in `Combat/Effects/triggers.py`, a
+long file at its cap. Left:
 
 | Rank | Source | What to write |
 |---|---|---|
-| 8 | Sneak Attack (Rogue) | A `HIT` row, `once_per_turn`, its dice doubled on a Critical Hit by itself; "Advantage, or an ally within 5 feet" as a `when`. Needs the Finesse/Ranged weapon gate (**Field**). The plan's Trigger types table already lists it as `HIT`; it's still picked by hand |
-| 8 | Stunning Strike (Monk) | A `HIT` row once per turn after a Monk weapon or Unarmed Strike hit, 1 Focus Point: a Constitution save or Stunned until the start of your next turn; on a success, Speed halved and Advantage on the next attack roll against it (read from its text now) |
-| 7 | Divine Smite / Paladin's Smite | Cast after a hit: `HIT`, `attacks=MELEE`/`UNARMED`; dice doubled on a Critical Hit by itself |
 | 7 | Spiritual Weapon | Its attack on later turns as a second row with `spends_use=False`, until 9.7 makes it a proper later-turn row |
 | 6 | Tavern Brawler (Kivi, `[]`) | Push: once per turn, an Unarmed Strike hit in the Attack action also pushes 5 feet: a `HIT` row, `attacks=UNARMED`, `once_per_turn`, `CombatPush(5)` |
 | 6 | Grease, Moonbeam | The end-of-turn half of their area save: `AtTurnEnd` with a `when` (the save on entering the area: 9.10) |
 | 5 | Grappler (Kivi, `[]`) | Punch and Grab: once per turn, a hit also grapples: a `HIT` row after the Unarmed Strike, like the Grapple row in `Model/Content/UnarmedStrikeEffects.py` (its Advantage against the grappled creature: 9.2) |
-| 5 | Ensnaring Strike | Cast after a weapon hit (`HIT`, `attacks=WEAPON`), and its 1d6 Piercing (upcast 1d6) at the start of each of the Restrained target's turns: an `AtTurnStart` on an "Ensnaring Strike" badge beside Restrained (its size Advantage: 9.10; its escape check: 9.10) |
 | 5 | Exhaustion (rules condition) | Speed 5 feet lower per level (its D20 penalty is counted): a per-level `Speed` in `CONDITION_RULES`, or a `bonus` worked out from the level |
 | 4 | Pushes and pulls still in text | `CombatPush` rows (DI-095) |
 | 3 | Produce Flame | Casting (Bonus Action) and hurling (Magic action, later) as two rows, the hurl `spends_use=False` |
@@ -3437,6 +3439,43 @@ the note is flavor).
   Haste's extra action, Command's lost turn, the Initiative riders
   (Adventurer's Atlas, Alert). Tests: `tests/test_attack_action.py`.
 
+- **R172. The strikes asked as a hit lands** (2026-11-26, step 9.1,
+  Decision 21's order). `HIT` triggers, all ASK: Sneak Attack
+  (`attacks=WEAPON`, `once_per_turn`, its Finesse-or-Ranged and
+  Advantage-or-ally conditions as a `when`), Divine Smite (`attacks=MELEE`,
+  which takes in the Unarmed Strike; Paladin's Smite's free casting takes
+  the spell's trigger and is asked first while its use lasts, then the
+  spell's own, `_free_castings_first`), Ensnaring Strike (`attacks=WEAPON`,
+  and an "Ensnaring Strike" badge beside Restrained whose `AtTurnStart`
+  names a new "Ensnaring Strike: damage" row, 1d6 Piercing), Stunning
+  Strike (`attacks=MELEE`, `once_per_turn`, "a Monk weapon or an Unarmed
+  Strike" as a `when`; a Constitution save or Stunned until the start of
+  your next turn, the extension spending Monk's Focus; a "Stunning Strike:
+  saved" row for a success: `Speed(multiplier=0.5)` and a `once`
+  `AttacksAgainst` Advantage). Two bugs found applying them from the
+  pop-up: a fired row's Critical Hit dice were read only for attack rows,
+  so a rider's weren't doubled; and a damage type left to choose made the
+  row unappliable (Sneak Attack was never dealt, so its once a turn wasn't
+  counted either). `_use_trigger` now passes the firing's outcome to
+  `_apply_row`, and `picked_effect` uses it: a Critical Hit's dice, and the
+  hit's weapon's damage type for one left to choose ("the damage is the
+  weapon's type"). `_picked_effect` and `_option_duration` moved, Qt-free,
+  to `Combat/Fight/picked.py` (the refactor plan's step 5.4 direction),
+  which took `conditions_mixin.py` under 1,000 lines and off
+  `LONG_FILES`. The notes those triggers replace are gone; each keeps
+  "picked by hand after a Critical Hit, roll the dice twice". The weapon
+  mastery tests now look at mastery rows only. Found verifying: (1) a hit
+  counts only for its own attacker's rows: Fire Shield's flames, answering
+  an Ogre's Critical Hit on Edmund, were doubled too, so `picked_effect`
+  takes the row's owner and ignores a hit someone else made; (2) the
+  `combat_effects.py check` rule against a distance in a `when`
+  (`_FIELD_IN_WHEN`) now lets "within 5 feet of the target" through, a
+  third creature's distance no field says (Sneak Attack's ally); (3) a
+  test whose party member now has a strike to ask about opened the real
+  pop-up and hung the run (`test_active_effects.py`), so the harness's
+  `make_ui` declines every pop-up by default, as Skip does, and a test
+  that answers sets its own. Tests: `tests/test_strike_triggers.py`.
+
 ## Open questions (with suggestions)
 
 Q4-Q10, Q13, Q18, Q21-Q29, Q31-Q35, Q37, Q46, Q48-Q50, Q53 and Q55 are
@@ -3743,7 +3782,10 @@ top). The full suite runs later, when the user asks.
   `test_roll_sites.py` and `test_combat_ui_structure.py`. 9.3:
   `tests/test_attack_action.py` (each Extra Attack's count, an extension's
   through a built Fighter 18, the weapon rows before and after the Action,
-  Action Surge before and after acting and through the dialog).
+  Action Surge before and after acting and through the dialog). 9.1:
+  `tests/test_strike_triggers.py` (each strike's trigger and rows; Thum's
+  Sneak Attack in the window: its dice, twice on a Critical Hit, once a
+  turn), plus `test_weapon_mastery.py` and the picker goldens.
 
 ## Checklist: adding a field to the model
 

@@ -20,6 +20,7 @@ from CharacterContent.Items.Weapons import WeaponDamageRolls
 from Core.Definitions import (
     Ability,
     CharacterClass,
+    Condition,
 )
 from Core.Rules import levels_gained
 from Model.View import CharacterView
@@ -27,14 +28,18 @@ from Model.Ledger.LedgerWriter import LedgerWriter
 from Core.Rules import MAX_LEVEL
 from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table, dc_formula
 from Model.Content.CombatEffect import (
+    CombatCondition,
     CombatDamage,
     CombatEffect,
     CombatHitPoints,
     CombatInstances,
     CombatRegain,
     EffectRoll,
+    TurnEdge,
+    TurnOf,
     with_bonus,
 )
+from Model.Content.CombatModifiers import AttackKind, AttacksAgainst, RollMode, Speed
 from Model.Content.CombatTriggers import CombatTrigger, TriggerEvent
 from Model.Content.StandardActions import (
     dash_condition,
@@ -750,6 +755,40 @@ class StunningStrike(Feature):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # An extension of Monk's Focus: its save DC and its Focus Points.
+        until_your_next_turn = (TurnEdge.START, TurnOf.SOURCE)
+        return [
+            CombatEffect(
+                roll=EffectRoll.SAVE,
+                save_ability=Ability.CONSTITUTION,
+                conditions=(
+                    CombatCondition(Condition.STUNNED, until=until_your_next_turn),
+                ),
+                trigger=CombatTrigger(
+                    TriggerEvent.HIT,
+                    attacks=AttackKind.MELEE,
+                    once_per_turn=True,
+                    when="it was a Monk weapon or an Unarmed Strike",
+                ),
+                notes=("On a successful save, pick Stunning Strike: saved instead.",),
+            ),
+            CombatEffect(
+                name="Stunning Strike: saved",
+                conditions=(
+                    CombatCondition(
+                        "Stunning Strike",
+                        until=until_your_next_turn,
+                        modifiers=(
+                            Speed(multiplier=0.5),
+                            AttacksAgainst(RollMode.ADVANTAGE, once=True),
+                        ),
+                    ),
+                ),
+                spends_use=False,
+            ),
+        ]
 
 
 class EmpoweredStrikes(Feature):
