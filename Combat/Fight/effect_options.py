@@ -1701,7 +1701,7 @@ def effect_options(
         for title, actions in sections
     ]
     weapons = who.get("_weapons_objects") or []
-    features = who.get("_feature_objects") or []
+    features = [*(who.get("_feature_objects") or ()), *(who.get("_item_objects") or ())]
     categories += [
         (
             ATTACKS,

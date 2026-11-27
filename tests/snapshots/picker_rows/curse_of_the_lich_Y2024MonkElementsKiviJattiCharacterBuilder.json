@@ -456,6 +456,445 @@
    ],
    "upcast": []
   },
+  "Features | Potion of Healing": {
+   "ability": null,
+   "action_cost": "Bonus Action",
+   "amount_kind": "Healing",
+   "bonus": null,
+   "concentration": false,
+   "condition": "",
+   "counts_uses": false,
+   "damage": "2d4 + 2",
+   "dc": null,
+   "duration_seconds": null,
+   "feature_name": "Potion of Healing",
+   "half_on_save": false,
+   "is_described": true,
+   "is_unavailable": false,
+   "note": "Drinking it uses one up: take it off the sheet's inventory.",
+   "repeat_save": false,
+   "roll": "Saving throw",
+   "row_name": "",
+   "slot_level": "None",
+   "spell_level": 0,
+   "spell_name": "",
+   "summary": "heals 2d4 + 2",
+   "until": null,
+   "upcast": []
+  },
+  "Features | Potion of Invisibility": {
+   "ability": null,
+   "action_cost": "Bonus Action",
+   "amount_kind": "Damage",
+   "badge_modifiers": {
+    "Potion of Invisibility": [
+     {
+      "events": [
+       "makes an attack roll",
+       "casts a spell",
+       "has the Incapacitated condition"
+      ],
+      "type": "EndsWhen"
+     }
+    ]
+   },
+   "bonus": null,
+   "concentration": false,
+   "condition": "Invisible + Potion of Invisibility",
+   "counts_uses": false,
+   "damage": "",
+   "dc": null,
+   "duration_seconds": 3600,
+   "feature_name": "Potion of Invisibility",
+   "half_on_save": false,
+   "is_described": true,
+   "is_unavailable": false,
+   "note": "It goes on its user, whoever is targeted. Drinking it uses one up: take it off the sheet's inventory.",
+   "repeat_save": false,
+   "roll": "Saving throw",
+   "row_name": "",
+   "slot_level": "None",
+   "spell_level": 0,
+   "spell_name": "",
+   "summary": "Invisible",
+   "targets_self": true,
+   "until": null,
+   "upcast": []
+  },
+  "Features | Potion of Resistance: Acid": {
+   "ability": null,
+   "action_cost": "Bonus Action",
+   "amount_kind": "Damage",
+   "badge_modifiers": {
+    "Potion of Resistance: Acid": [
+     {
+      "damage_types": [
+       "Acid"
+      ],
+      "type": "Resistance"
+     }
+    ]
+   },
+   "bonus": null,
+   "concentration": false,
+   "condition": "Potion of Resistance: Acid",
+   "counts_uses": false,
+   "damage": "",
+   "dc": null,
+   "duration_seconds": 3600,
+   "feature_name": "Potion of Resistance",
+   "half_on_save": false,
+   "is_described": true,
+   "is_unavailable": false,
+   "note": "It goes on its user, whoever is targeted. Drinking it uses one up: take it off the sheet's inventory.",
+   "repeat_save": false,
+   "roll": "Saving throw",
+   "row_name": "",
+   "slot_level": "None",
+   "spell_level": 0,
+   "spell_name": "",
+   "summary": "",
+   "targets_self": true,
+   "until": null,
+   "upcast": []
+  },
+  "Features | Potion of Resistance: Cold": {
+   "ability": null,
+   "action_cost": "Bonus Action",
+   "amount_kind": "Damage",
+   "badge_modifiers": {
+    "Potion of Resistance: Cold": [
+     {
+      "damage_types": [
+       "Cold"
+      ],
+      "type": "Resistance"
+     }
+    ]
+   },
+   "bonus": null,
+   "concentration": false,
+   "condition": "Potion of Resistance: Cold",
+   "counts_uses": false,
+   "damage": "",
+   "dc": null,
+   "duration_seconds": 3600,
+   "feature_name": "Potion of Resistance",
+   "half_on_save": false,
+   "is_described": true,
+   "is_unavailable": false,
+   "note": "It goes on its user, whoever is targeted. Drinking it uses one up: take it off the sheet's inventory.",
+   "repeat_save": false,
+   "roll": "Saving throw",
+   "row_name": "",
+   "slot_level": "None",
+   "spell_level": 0,
+   "spell_name": "",
+   "summary": "",
+   "targets_self": true,
+   "until": null,
+   "upcast": []
+  },
+  "Features | Potion of Resistance: Fire": {
+   "ability": null,
+   "action_cost": "Bonus Action",
+   "amount_kind": "Damage",
+   "badge_modifiers": {
+    "Potion of Resistance: Fire": [
+     {
+      "damage_types": [
+       "Fire"
+      ],
+      "type": "Resistance"
+     }
+    ]
+   },
+   "bonus": null,
+   "concentration": false,
+   "condition": "Potion of Resistance: Fire",
+   "counts_uses": false,
+   "damage": "",
+   "dc": null,
+   "duration_seconds": 3600,
+   "feature_name": "Potion of Resistance",
+   "half_on_save": false,
+   "is_described": true,
+   "is_unavailable": false,
+   "note": "It goes on its user, whoever is targeted. Drinking it uses one up: take it off the sheet's inventory.",
+   "repeat_save": false,
+   "roll": "Saving throw",
+   "row_name": "",
+   "slot_level": "None",
+   "spell_level": 0,
+   "spell_name": "",
+   "summary": "",
+   "targets_self": true,
+   "until": null,
+   "upcast": []
+  },
+  "Features | Potion of Resistance: Force": {
+   "ability": null,
+   "action_cost": "Bonus Action",
+   "amount_kind": "Damage",
+   "badge_modifiers": {
+    "Potion of Resistance: Force": [
+     {
+      "damage_types": [
+       "Force"
+      ],
+      "type": "Resistance"
+     }
+    ]
+   },
+   "bonus": null,
+   "concentration": false,
+   "condition": "Potion of Resistance: Force",
+   "counts_uses": false,
+   "damage": "",
+   "dc": null,
+   "duration_seconds": 3600,
+   "feature_name": "Potion of Resistance",
+   "half_on_save": false,
+   "is_described": true,
+   "is_unavailable": false,
+   "note": "It goes on its user, whoever is targeted. Drinking it uses one up: take it off the sheet's inventory.",
+   "repeat_save": false,
+   "roll": "Saving throw",
+   "row_name": "",
+   "slot_level": "None",
+   "spell_level": 0,
+   "spell_name": "",
+   "summary": "",
+   "targets_self": true,
+   "until": null,
+   "upcast": []
+  },
+  "Features | Potion of Resistance: Lightning": {
+   "ability": null,
+   "action_cost": "Bonus Action",
+   "amount_kind": "Damage",
+   "badge_modifiers": {
+    "Potion of Resistance: Lightning": [
+     {
+      "damage_types": [
+       "Lightning"
+      ],
+      "type": "Resistance"
+     }
+    ]
+   },
+   "bonus": null,
+   "concentration": false,
+   "condition": "Potion of Resistance: Lightning",
+   "counts_uses": false,
+   "damage": "",
+   "dc": null,
+   "duration_seconds": 3600,
+   "feature_name": "Potion of Resistance",
+   "half_on_save": false,
+   "is_described": true,
+   "is_unavailable": false,
+   "note": "It goes on its user, whoever is targeted. Drinking it uses one up: take it off the sheet's inventory.",
+   "repeat_save": false,
+   "roll": "Saving throw",
+   "row_name": "",
+   "slot_level": "None",
+   "spell_level": 0,
+   "spell_name": "",
+   "summary": "",
+   "targets_self": true,
+   "until": null,
+   "upcast": []
+  },
+  "Features | Potion of Resistance: Necrotic": {
+   "ability": null,
+   "action_cost": "Bonus Action",
+   "amount_kind": "Damage",
+   "badge_modifiers": {
+    "Potion of Resistance: Necrotic": [
+     {
+      "damage_types": [
+       "Necrotic"
+      ],
+      "type": "Resistance"
+     }
+    ]
+   },
+   "bonus": null,
+   "concentration": false,
+   "condition": "Potion of Resistance: Necrotic",
+   "counts_uses": false,
+   "damage": "",
+   "dc": null,
+   "duration_seconds": 3600,
+   "feature_name": "Potion of Resistance",
+   "half_on_save": false,
+   "is_described": true,
+   "is_unavailable": false,
+   "note": "It goes on its user, whoever is targeted. Drinking it uses one up: take it off the sheet's inventory.",
+   "repeat_save": false,
+   "roll": "Saving throw",
+   "row_name": "",
+   "slot_level": "None",
+   "spell_level": 0,
+   "spell_name": "",
+   "summary": "",
+   "targets_self": true,
+   "until": null,
+   "upcast": []
+  },
+  "Features | Potion of Resistance: Psychic": {
+   "ability": null,
+   "action_cost": "Bonus Action",
+   "amount_kind": "Damage",
+   "badge_modifiers": {
+    "Potion of Resistance: Psychic": [
+     {
+      "damage_types": [
+       "Psychic"
+      ],
+      "type": "Resistance"
+     }
+    ]
+   },
+   "bonus": null,
+   "concentration": false,
+   "condition": "Potion of Resistance: Psychic",
+   "counts_uses": false,
+   "damage": "",
+   "dc": null,
+   "duration_seconds": 3600,
+   "feature_name": "Potion of Resistance",
+   "half_on_save": false,
+   "is_described": true,
+   "is_unavailable": false,
+   "note": "It goes on its user, whoever is targeted. Drinking it uses one up: take it off the sheet's inventory.",
+   "repeat_save": false,
+   "roll": "Saving throw",
+   "row_name": "",
+   "slot_level": "None",
+   "spell_level": 0,
+   "spell_name": "",
+   "summary": "",
+   "targets_self": true,
+   "until": null,
+   "upcast": []
+  },
+  "Features | Potion of Resistance: Radiant": {
+   "ability": null,
+   "action_cost": "Bonus Action",
+   "amount_kind": "Damage",
+   "badge_modifiers": {
+    "Potion of Resistance: Radiant": [
+     {
+      "damage_types": [
+       "Radiant"
+      ],
+      "type": "Resistance"
+     }
+    ]
+   },
+   "bonus": null,
+   "concentration": false,
+   "condition": "Potion of Resistance: Radiant",
+   "counts_uses": false,
+   "damage": "",
+   "dc": null,
+   "duration_seconds": 3600,
+   "feature_name": "Potion of Resistance",
+   "half_on_save": false,
+   "is_described": true,
+   "is_unavailable": false,
+   "note": "It goes on its user, whoever is targeted. Drinking it uses one up: take it off the sheet's inventory.",
+   "repeat_save": false,
+   "roll": "Saving throw",
+   "row_name": "",
+   "slot_level": "None",
+   "spell_level": 0,
+   "spell_name": "",
+   "summary": "",
+   "targets_self": true,
+   "until": null,
+   "upcast": []
+  },
+  "Features | Potion of Resistance: Thunder": {
+   "ability": null,
+   "action_cost": "Bonus Action",
+   "amount_kind": "Damage",
+   "badge_modifiers": {
+    "Potion of Resistance: Thunder": [
+     {
+      "damage_types": [
+       "Thunder"
+      ],
+      "type": "Resistance"
+     }
+    ]
+   },
+   "bonus": null,
+   "concentration": false,
+   "condition": "Potion of Resistance: Thunder",
+   "counts_uses": false,
+   "damage": "",
+   "dc": null,
+   "duration_seconds": 3600,
+   "feature_name": "Potion of Resistance",
+   "half_on_save": false,
+   "is_described": true,
+   "is_unavailable": false,
+   "note": "It goes on its user, whoever is targeted. Drinking it uses one up: take it off the sheet's inventory.",
+   "repeat_save": false,
+   "roll": "Saving throw",
+   "row_name": "",
+   "slot_level": "None",
+   "spell_level": 0,
+   "spell_name": "",
+   "summary": "",
+   "targets_self": true,
+   "until": null,
+   "upcast": []
+  },
+  "Features | Potion of Speed": {
+   "ability": null,
+   "action_cost": "Bonus Action",
+   "amount_kind": "Damage",
+   "badge_modifiers": {
+    "Potion of Speed": [
+     {
+      "bonus": 5,
+      "type": "Speed"
+     },
+     {
+      "events": [
+       "has the Incapacitated condition"
+      ],
+      "type": "EndsWhen"
+     }
+    ]
+   },
+   "bonus": null,
+   "concentration": false,
+   "condition": "Potion of Speed",
+   "counts_uses": false,
+   "damage": "",
+   "dc": null,
+   "duration_seconds": 3600,
+   "feature_name": "Potion of Speed",
+   "half_on_save": false,
+   "is_described": true,
+   "is_unavailable": false,
+   "note": "It goes on its user, whoever is targeted. Drinking it uses one up: take it off the sheet's inventory.",
+   "repeat_save": false,
+   "roll": "Saving throw",
+   "row_name": "",
+   "slot_level": "None",
+   "spell_level": 0,
+   "spell_name": "",
+   "summary": "",
+   "targets_self": true,
+   "until": null,
+   "upcast": []
+  },
   "Features | Punch and Grab": {
    "ability": "STR",
    "action_cost": null,

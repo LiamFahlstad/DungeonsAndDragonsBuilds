@@ -116,6 +116,7 @@ Combatant = TypedDict(
         "_weapon_masteries": list,
         "_spell_objects": dict,
         "_feature_objects": list,
+        "_item_objects": list,
         # ---- What the fight adds ----
         # Battle statistics (Combat/Fight/stats.py).
         "stats": dict,

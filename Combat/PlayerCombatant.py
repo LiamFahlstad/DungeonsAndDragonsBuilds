@@ -174,6 +174,13 @@ def combatant_from_character(character: Character) -> dict:
         "_spell_objects": spell_objects,
         "features": [feature.name for feature in character.features],
         "_feature_objects": list(character.features),
+        # The items it carries that say what using them does in a fight
+        # (a Potion of Healing), each a picker row (plan step 9.8).
+        "_item_objects": [
+            item
+            for item, _ in character.items
+            if item.combat_effects(character) is not None
+        ],
         "invocations": list(character.invocations),
     }
 
