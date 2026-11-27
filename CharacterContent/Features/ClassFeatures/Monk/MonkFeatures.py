@@ -39,7 +39,14 @@ from Model.Content.CombatEffect import (
     TurnOf,
     with_bonus,
 )
-from Model.Content.CombatModifiers import AttackKind, AttacksAgainst, RollMode, Speed
+from Model.Content.CombatModifiers import (
+    AttackKind,
+    AttacksAgainst,
+    Modifier,
+    RollMode,
+    Speed,
+)
+from Model.Content.CombatModifiers import Evasion as EvasionModifier
 from Model.Content.CombatTriggers import CombatTrigger, TriggerEvent
 from Model.Content.StandardActions import (
     dash_condition,
@@ -843,6 +850,14 @@ class Evasion(Feature):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
+
+    def combat_modifiers(self, character: CharacterView) -> tuple[Modifier, ...]:
+        # Always on: counted in the saves the simulator rolls (plan step 9.5).
+        return (EvasionModifier(),)
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # Nothing to pick: it changes its owner's saves (combat_modifiers).
+        return []
 
 
 class AcrobaticMovement(Feature):

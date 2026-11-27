@@ -389,6 +389,10 @@ class Regeneration(MonsterAbility):
             f"The {self.creature_name} regains {self.hp} Hit Points at the "
             f"start of each of its turns if it has at least 1 Hit Point.{exception}"
         )
+        # The turn column's reminder as its turn starts, as a generated stat
+        # block's Regeneration has (plan step 9.5).
+        if not self.at_turn_start:
+            self.at_turn_start = self.description
 
 
 @dataclass_decorator

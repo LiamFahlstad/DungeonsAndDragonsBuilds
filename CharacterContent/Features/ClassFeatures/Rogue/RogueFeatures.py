@@ -20,8 +20,9 @@ from Core.Definitions import (
     Skill,
     CharacterClass,
 )
-from Model.Content.CombatEffect import CombatDamage, CombatEffect
-from Model.Content.CombatModifiers import AttackKind
+from Model.Content.CombatEffect import HALF_DAMAGE, CombatDamage, CombatEffect
+from Model.Content.CombatModifiers import AttackKind, Modifier
+from Model.Content.CombatModifiers import Evasion as EvasionModifier
 from Model.Content.CombatTriggers import CombatTrigger, TriggerEvent
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Model.View import CharacterView
@@ -402,6 +403,19 @@ class UncannyDodge(Feature):
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # Asked as an attack roll by an attacker it can see hits its owner,
+        # before the damage, which it halves (rounded down, before
+        # Resistance); its Reaction (its activation) is spent.
+        return [
+            CombatEffect(
+                name="Uncanny Dodge",
+                spends_use=False,
+                trigger=CombatTrigger(TriggerEvent.HIT_BY, sees=True),
+                damage_reduction=HALF_DAMAGE,
+            )
+        ]
+
 
 class Evasion(Feature):
     def __init__(self):
@@ -431,6 +445,14 @@ class Evasion(Feature):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
+
+    def combat_modifiers(self, character: CharacterView) -> tuple[Modifier, ...]:
+        # Always on: counted in the saves the simulator rolls (plan step 9.5).
+        return (EvasionModifier(),)
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # Nothing to pick: it changes its owner's saves (combat_modifiers).
+        return []
 
 
 class ReliableTalent(Feature):

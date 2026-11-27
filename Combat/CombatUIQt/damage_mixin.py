@@ -19,12 +19,15 @@ from Combat.Effects.triggers import (
     DropOutcome,
     PendingAttack,
     TriggerMode,
-    reduced_damage,
 )
 from Combat.Effects.sight import Seen
 from Core.Definitions import Condition
 from Combat.Fight.amounts import AmountError, parse_amount, parse_damage
-from Combat.Fight.attacks import resolve_attack_roll, use_up_badges
+from Combat.Fight.attacks import (
+    apply_reduction,
+    resolve_attack_roll,
+    use_up_badges,
+)
 from Combat.Fight.health import (
     DEAD,
     DYING,
@@ -365,7 +368,7 @@ class DamageMixin(CombatWindowState):
                         if part
                     )
                     continue
-                these = reduced_damage(parts, reduction)
+                these = apply_reduction(parts, reduction)
             dealt = (
                 self._deal_damage(
                     target,

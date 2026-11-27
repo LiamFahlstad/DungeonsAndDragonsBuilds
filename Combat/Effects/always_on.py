@@ -22,7 +22,13 @@ from collections.abc import Iterable
 from dataclasses import dataclass, replace
 
 from Core.Definitions import Condition
-from Model.Content.CombatModifiers import D20Mode, D20Test, Modifier, RollMode
+from Model.Content.CombatModifiers import (
+    D20Mode,
+    D20Test,
+    Evasion,
+    Modifier,
+    RollMode,
+)
 from Model.Content.RulesConditions import rules_condition
 
 # Stat-block traits that are always-on rules for rolls, by name: every Magic
@@ -32,6 +38,8 @@ TRAIT_MODIFIERS: dict[str, tuple[Modifier, ...]] = {
     "Magic Resistance": (
         D20Mode((D20Test.SAVING_THROW,), RollMode.ADVANTAGE, against_spells=True),
     ),
+    # A monster's Evasion reads as the Rogue's (plan step 9.5).
+    "Evasion": (Evasion(),),
 }
 
 

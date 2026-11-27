@@ -25,6 +25,7 @@ from PyQt6.QtWidgets import (
 )
 
 from Combat.Effects.triggers import HitFiring, TriggerChoice
+from Model.Content.CombatEffect import HALF_DAMAGE
 from Model.Content.CombatTriggers import TriggerAim, TriggerEvent
 
 _WIDTH = 520
@@ -163,6 +164,8 @@ class TriggerPrompt(QDialog):
 def _own_roll(firing: HitFiring) -> tuple[str, str]:
     """What a firing rolls itself, and what its box's total is: Deflect
     Attacks' reduction, Indomitable's new save. ("", "") for none."""
+    if firing.row.damage_reduction == HALF_DAMAGE:
+        return "", ""  # Uncanny Dodge halves it: nothing rolled
     if firing.row.damage_reduction:
         return firing.row.damage_reduction, "the total taken off the damage"
     bonus = firing.row.reroll_save

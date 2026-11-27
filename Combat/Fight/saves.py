@@ -10,12 +10,17 @@ from functools import lru_cache
 
 from Combat.Effects.active_effects import ActiveEffect
 from Combat.Effects.always_on import SaveAgainst
-from Combat.Effects.modifiers import HitPlan, RollPlan, immune_to_condition
+from Combat.Effects.modifiers import (
+    HitPlan,
+    RollPlan,
+    immune_to_condition,
+    modifiers_on,
+)
 from Combat.Effects.roll_plans import save_plan
 from Core.Rules import SPELL_SAVE_DC_BASE, ability_modifier
 from Model.Content.CombatArea import CombatArea
 from Model.Content.CombatEffect import CombatPush, CombatRegain
-from Model.Content.CombatModifiers import Modifier
+from Model.Content.CombatModifiers import Evasion, Modifier
 from Model.Content.CombatTriggers import CombatTrigger
 
 from .amounts import AmountError, parse_damage
@@ -438,6 +443,19 @@ def save_against(pick: "EffectOption | None", condition_text: str) -> SaveAgains
     the conditions `condition_text` names (CustomEffect.condition)."""
     spell = None if pick is None else bool(pick.spell_name)
     return SaveAgainst(spell, tuple(condition_names(condition_text)))
+
+
+def evades(char: dict, effect: "CustomEffect") -> bool:
+    """Whether char's Evasion changes what `effect`'s save does to it: a save
+    of Evasion's ability (Dexterity) against an effect that deals half
+    damage on a success, while char can use it (not Incapacitated). Then a
+    success takes none, and a failure half (plan step 9.5)."""
+    if effect.ability is None or not effect.half_on_save:
+        return False
+    return any(
+        isinstance(m, Evasion) and m.ability.short_name == effect.ability
+        for _, m in modifiers_on(char)
+    )
 
 
 def roll_effect_save(

@@ -12,7 +12,13 @@ from collections.abc import Callable
 from dataclasses import dataclass
 
 from Combat.Effects.modifiers import hit_notes, makes_critical_hit, used_up_by_attack
-from Combat.Effects.triggers import AttackOutcome, HitFiring, still_hits
+from Combat.Effects.triggers import (
+    AttackOutcome,
+    HitFiring,
+    reduced_damage,
+    still_hits,
+)
+from Model.Content.CombatEffect import HALF_DAMAGE
 
 from .attack_rolls import (
     AttackRoll,
@@ -157,6 +163,34 @@ def use_up_badges(
 # ---- What the one hit answered it with ----
 
 
+class Reduction(int):
+    """What a hit's answers take off its damage: the amount (an int, as
+    before), and whether one halves it first (`halves`: Uncanny Dodge). True
+    when it does either."""
+
+    halves: bool = False
+
+    def __new__(cls, amount: int = 0, halves: bool = False):
+        made = super().__new__(cls, amount)
+        made.halves = halves
+        return made
+
+    def __bool__(self) -> bool:
+        return self.halves or int(self) != 0
+
+
+def apply_reduction(
+    parts: list[tuple[int, str]], reduction: int
+) -> list[tuple[int, str]]:
+    """A hit's damage with `reduction` taken off it, before Resistance: each
+    type halved first, rounded down, if it `halves` (Uncanny Dodge: "halve
+    the attack's damage against you (round down)"), then the amount off
+    (reduced_damage: Deflect Attacks)."""
+    if getattr(reduction, "halves", False):
+        parts = [(amount // 2, kind) for amount, kind in parts if amount // 2 > 0]
+    return reduced_damage(parts, int(reduction))
+
+
 def settle_answered_hit(
     step: Step,
     outcome: AttackOutcome,
@@ -168,12 +202,20 @@ def settle_answered_hit(
     takes off (Deflect Attacks' roll, or what was rolled at the table for
     it), logged, and whether the attack still hits, checked against the AC
     the answers left (Shield's +5). Adds a line to `notes` when it's a miss
-    now. Returns (still hits, the damage to take off)."""
+    now. Returns (still hits, the damage to take off: a Reduction, which
+    may halve it too)."""
     reduction = 0
+    halves = False
     target = outcome.target
     for firing, at_table in answered:
         dice = firing.row.damage_reduction
-        if dice:
+        if dice == HALF_DAMAGE:
+            halves = True
+            step.log(
+                f"{target['name']}'s {firing.row.name} halves the damage",
+                character=target["name"],
+            )
+        elif dice:
             amount = roll_dice(dice) if at_table is None else at_table
             how = dice if at_table is None else f"{dice}, rolled at the table"
             reduction += amount
@@ -191,4 +233,4 @@ def settle_answered_hit(
             character=target["name"],
         )
         notes.append(f"{target['name']}: now a miss")
-    return hits, reduction
+    return hits, Reduction(reduction, halves)

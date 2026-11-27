@@ -125,6 +125,11 @@ def with_bonus(dice: str, bonus: int) -> str:
     return f"{dice} {'+' if bonus > 0 else '-'} {abs(bonus)}"
 
 
+# A damage_reduction that halves the hit's damage, rounded down, before
+# Resistance (Uncanny Dodge).
+HALF_DAMAGE = "half"
+
+
 @dataclass(frozen=True)
 class CombatDamage:
     """Damage one use deals: dice and a type, or None with the types the user
@@ -479,12 +484,15 @@ class CombatEffect:
                 f" not {self.trigger!r}"
             )
         if self.damage_reduction:
-            if not isinstance(self.damage_reduction, str) or not DICE.fullmatch(
-                self.damage_reduction
+            # Dice taken off, or "half" (Uncanny Dodge: "halve the attack's
+            # damage against you").
+            if not isinstance(self.damage_reduction, str) or not (
+                self.damage_reduction == HALF_DAMAGE
+                or DICE.fullmatch(self.damage_reduction)
             ):
                 raise ValueError(
                     f"damage_reduction {self.damage_reduction!r} is not dice like"
-                    " '1d10 + 8'"
+                    f" '1d10 + 8', or {HALF_DAMAGE!r}"
                 )
             if self.trigger is None or self.trigger.event is not TriggerEvent.HIT_BY:
                 raise ValueError(

@@ -29,10 +29,10 @@ from Combat.Effects.triggers import (
     FailedSaveOutcome,
     UsesOutcome,
     outcome_firings,
-    reduced_damage,
 )
 from Model.Content.CombatModifiers import AttackKind
 from Combat.Fight.attack_rolls import armor_in_use
+from Combat.Fight.attacks import apply_reduction
 from Combat.Fight.effect_options import (
     COLLAPSED_CATEGORIES,
     effect_options,
@@ -58,6 +58,7 @@ from Combat.Fight.saves import (
     SPELL,
     CustomEffect,
     EffectOption,
+    evades,
     roll_effect_save,
     roll_planned_attack,
     roll_repeat_save,
@@ -429,11 +430,11 @@ class ConditionsMixin(CombatWindowState):
                         source, target, damage, effect, critical
                     )
                 if reduction:
-                    damage = reduced_damage(damage, reduction)
+                    damage = apply_reduction(damage, reduction)
             if effect.ability is not None:
                 saved = self._roll_effect_save(target, effect, source)
                 results.append(saved)
-            avoided = effect.ability is not None and saved and not effect.half_on_save
+            avoided, halved = self._save_damage(target, effect, saved, bool(damage))
             dealt = 0
             if damage and not avoided:
                 dealt = self._deal_damage(
@@ -441,7 +442,7 @@ class ConditionsMixin(CombatWindowState):
                     damage,
                     source,
                     effect.count_resistances,
-                    saved,
+                    halved,
                     critical=critical,
                 )
                 if not any(c is target for c in self.characters):
@@ -656,6 +657,22 @@ class ConditionsMixin(CombatWindowState):
         give_effect_condition."""
         source = self.selected_character or self._current_turn_character()
         return run_step(self, give_effect_condition, target, effect, condition, source)
+
+    def _save_damage(
+        self, target: dict, effect: CustomEffect, saved: bool, has_damage: bool
+    ) -> tuple[bool, bool]:
+        """Whether effect's damage misses target after its save (`saved`),
+        and whether it's halved: none on a success with half_on_save off;
+        with Evasion (saves.evades), none on a success and half on a
+        failure, which the log says."""
+        avoided = effect.ability is not None and saved and not effect.half_on_save
+        if not (has_damage and evades(target, effect)):
+            return avoided, saved
+        said = "no" if saved else "half"
+        self._log_event(
+            f"{target['name']}'s Evasion: {said} damage", character=target["name"]
+        )
+        return saved, True
 
     def _roll_effect_save(
         self, target: dict, effect: CustomEffect, source: dict | None = None

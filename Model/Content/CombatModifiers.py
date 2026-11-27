@@ -695,6 +695,20 @@ class WhenHit:
 Trigger = AtTurnStart | AtTurnEnd
 TRIGGER_CLASSES = (AtTurnStart, AtTurnEnd)
 
+
+@dataclass(frozen=True)
+class Evasion:
+    """On a saving throw of `ability` against an effect that deals only half
+    damage on a success: no damage on a success, half on a failure (the
+    Rogue's and Monk's Evasion: "you instead take no damage if you succeed
+    on the saving throw and only half damage if you fail"). Not while its
+    bearer has one of `unless_conditions` ("You can't use this feature if
+    you have the Incapacitated condition")."""
+
+    ability: Ability = Ability.DEXTERITY
+    unless_conditions: tuple[Condition, ...] = (Condition.INCAPACITATED,)
+
+
 Modifier = (
     D20Mode
     | AttacksAgainst
@@ -720,6 +734,7 @@ Modifier = (
     | AtTurnStart
     | AtTurnEnd
     | WhenHit
+    | Evasion
 )
 
 
@@ -770,6 +785,7 @@ MODIFIER_TYPES: dict[str, type] = {
         AtTurnStart,
         AtTurnEnd,
         WhenHit,
+        Evasion,
     )
 }
 MODIFIER_CLASSES = tuple(MODIFIER_TYPES.values())
@@ -790,6 +806,7 @@ _ENUMS: dict[str, type[Enum]] = {
     "attacks": AttackKind,
     "whose": WhoseTurn,
     "becomes": CreatureSize,
+    "ability": Ability,
 }
 _PLAIN: dict[str, type | tuple[type, ...]] = {
     "when": str,
