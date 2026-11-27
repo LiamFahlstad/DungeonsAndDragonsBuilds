@@ -515,6 +515,50 @@ def hold_with_area(step: Step, key: str, applied: list[dict]):
     link_concentration_on(step, caster, new)
 
 
+def is_later_step(effect: CustomEffect) -> bool:
+    """Whether effect is a later step of a spell's casting (a row that
+    spends no use: Hunter's Mark's move), whose badges its caster's
+    concentration on the spell holds."""
+    pick = effect.pick
+    return pick is not None and pick.kind == SPELL and not pick.counts_uses
+
+
+def hold_given(
+    step: Step, effect: CustomEffect, applied: list[dict], caster: dict | None
+):
+    """What effect gave, held by the concentration it belongs to: a kept
+    area's as it acted again (hold_with_area), or its caster's on the spell
+    a later step of it is part of (hold_with_spell)."""
+    if effect.from_area:
+        hold_with_area(step, effect.from_area, applied)
+    elif caster is not None and effect.pick is not None and is_later_step(effect):
+        spell = effect.pick.spell_name or effect.pick.name
+        hold_with_spell(step, caster, spell, applied)
+
+
+def hold_with_spell(step: Step, caster: dict, spell: str, applied: list[dict]):
+    """What a later step of a casting gave (Hunter's Mark moved to a new
+    creature: a row with spends_use=False), held by caster's concentration
+    on that spell while it lasts, so it comes off as the concentration
+    ends, as what the cast gave does (plan step 9.7). Nothing to hold to
+    when caster isn't concentrating on it."""
+    entry = next(
+        (
+            e
+            for e in caster.get("active_spells") or []
+            if e.get("name") == spell and e.get("concentration")
+        ),
+        None,
+    )
+    if entry is None or not applied:
+        return
+    held = entry.setdefault("applied", [])
+    new = [row for row in applied if row not in held]
+    held.extend(new)
+    link_concentration_on(step, caster, new)
+    step.result.change(caster)
+
+
 def link_concentration_on(step: Step, caster: dict, applied: list[dict]):
     """Record on each effect in `applied` ({"target", "condition"} rows,
     as an active spell holds them) that caster concentrates on it."""

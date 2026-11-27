@@ -1905,6 +1905,84 @@
    "until": null,
    "upcast": []
   },
+  "All spells | Hex": {
+   "ability": null,
+   "action_cost": "Bonus Action",
+   "amount_kind": "Damage",
+   "badge_modifiers": {
+    "Hex": [
+     {
+      "amount": "1d6",
+      "damage_type": "Necrotic",
+      "type": "ExtraDamageFrom"
+     },
+     {
+      "text": "Disadvantage on ability checks of the ability chosen when it was cast",
+      "type": "Note"
+     }
+    ]
+   },
+   "bonus": null,
+   "concentration": true,
+   "condition": "Hex",
+   "counts_uses": true,
+   "damage": "",
+   "dc": null,
+   "duration_seconds": 3600,
+   "feature_name": "",
+   "half_on_save": false,
+   "is_described": true,
+   "is_unavailable": false,
+   "note": "",
+   "repeat_save": false,
+   "roll": "Saving throw",
+   "row_name": "",
+   "slot_level": "None",
+   "spell_level": 1,
+   "spell_name": "Hex",
+   "summary": "",
+   "until": null,
+   "upcast": []
+  },
+  "All spells | Hex: move the curse": {
+   "ability": null,
+   "action_cost": "Bonus Action",
+   "amount_kind": "Damage",
+   "badge_modifiers": {
+    "Hex": [
+     {
+      "amount": "1d6",
+      "damage_type": "Necrotic",
+      "type": "ExtraDamageFrom"
+     },
+     {
+      "text": "Disadvantage on ability checks of the ability chosen when it was cast",
+      "type": "Note"
+     }
+    ]
+   },
+   "bonus": null,
+   "concentration": false,
+   "condition": "Hex",
+   "counts_uses": false,
+   "damage": "",
+   "dc": null,
+   "duration_seconds": 3600,
+   "feature_name": "",
+   "half_on_save": false,
+   "is_described": true,
+   "is_unavailable": false,
+   "note": "Once the cursed creature has dropped to 0 Hit Points.",
+   "repeat_save": false,
+   "roll": "Saving throw",
+   "row_name": "",
+   "slot_level": "None",
+   "spell_level": 1,
+   "spell_name": "Hex",
+   "summary": "",
+   "until": null,
+   "upcast": []
+  },
   "All spells | Hold Person": {
    "ability": "WIS",
    "action_cost": "Action",
@@ -1959,7 +2037,42 @@
    "half_on_save": false,
    "is_described": true,
    "is_unavailable": false,
-   "note": "You deal an extra 1d6 Force damage to the target whenever you hit it with an attack roll, and have Advantage on Wisdom (Perception or Survival) checks to find it. If it drops to 0 Hit Points, a Bonus Action moves the mark to a new creature.",
+   "note": "You deal an extra 1d6 Force damage to the target whenever you hit it with an attack roll, and have Advantage on Wisdom (Perception or Survival) checks to find it.",
+   "repeat_save": false,
+   "roll": "Saving throw",
+   "row_name": "",
+   "slot_level": "None",
+   "spell_level": 1,
+   "spell_name": "Hunter's Mark",
+   "summary": "",
+   "until": null,
+   "upcast": []
+  },
+  "All spells | Hunter's Mark: move the mark": {
+   "ability": null,
+   "action_cost": "Bonus Action",
+   "amount_kind": "Damage",
+   "badge_modifiers": {
+    "Hunter's Mark": [
+     {
+      "amount": "1d6",
+      "damage_type": "Force",
+      "type": "ExtraDamageFrom"
+     }
+    ]
+   },
+   "bonus": null,
+   "concentration": false,
+   "condition": "Hunter's Mark",
+   "counts_uses": false,
+   "damage": "",
+   "dc": null,
+   "duration_seconds": 3600,
+   "feature_name": "",
+   "half_on_save": false,
+   "is_described": true,
+   "is_unavailable": false,
+   "note": "Once the marked creature has dropped to 0 Hit Points.",
    "repeat_save": false,
    "roll": "Saving throw",
    "row_name": "",
@@ -3531,7 +3644,7 @@
    "half_on_save": false,
    "is_described": true,
    "is_unavailable": false,
-   "note": "On each of your later turns, a Bonus Action deals 1d12 Lightning damage to the target automatically, even if the first attack missed. It ends if the target is out of range or has Total Cover from you.",
+   "note": "It ends if the target is out of range or has Total Cover from you.",
    "repeat_save": false,
    "roll": "Attack roll",
    "row_name": "",
@@ -3543,6 +3656,32 @@
    "upcast": [
     "1d12"
    ]
+  },
+  "All spells | Witch Bolt: later turn": {
+   "ability": null,
+   "action_cost": "Bonus Action",
+   "amount_kind": "Damage",
+   "bonus": null,
+   "concentration": false,
+   "condition": "",
+   "counts_uses": false,
+   "damage": "1d12 Lightning",
+   "dc": null,
+   "duration_seconds": 60,
+   "feature_name": "",
+   "half_on_save": false,
+   "is_described": true,
+   "is_unavailable": false,
+   "note": "",
+   "repeat_save": false,
+   "roll": "Saving throw",
+   "row_name": "",
+   "slot_level": "None",
+   "spell_level": 1,
+   "spell_name": "Witch Bolt",
+   "summary": "1d12 Lightning",
+   "until": null,
+   "upcast": []
   }
  }
 }

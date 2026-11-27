@@ -3,6 +3,8 @@ which SpellFactory uses instead of their JSON records. Written by
 CharacterContent/Spells/SpellClassConverter.py; edit them by hand from
 then on: each class is its spell's one source."""
 
+from dataclasses import replace
+
 from CharacterContent.Spells.SpellFactory.ClassSpell import (
     ClassSpell,
     RecordStamp,
@@ -46,6 +48,7 @@ from Model.Content.CombatModifiers import (
     D20Bonus,
     D20Test,
     ExtraDamageFrom,
+    Note,
     ExtraDamageOnHit,
     Resistance,
     RollMode,
@@ -54,6 +57,7 @@ from Model.Content.CombatModifiers import (
     WhenHit,
 )
 from Model.Content.CombatModifiers import EndEvent, EndsWhen
+from Model.Content.ActionType import ActionType
 from Model.Content.CombatTriggers import CombatTrigger, TriggerAim, TriggerEvent
 from Model.Content.Feature import FeatureTarget
 from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table
@@ -1544,9 +1548,24 @@ class HuntersMark(ClassSpell):
                 ),
                 notes=(
                     "You deal an extra 1d6 Force damage to the target whenever you hit it with an attack roll, and have Advantage on Wisdom (Perception or Survival) checks to find it.",
-                    "If it drops to 0 Hit Points, a Bonus Action moves the mark to a new creature.",
                 ),
-            )
+            ),
+            # "If the target drops to 0 Hit Points before the spell ends,
+            # you can take a Bonus Action on a later turn to move the mark
+            # to a new creature you can see within range": no slot, and
+            # held by the same concentration.
+            CombatEffect(
+                name="Hunter's Mark: move the mark",
+                conditions=(
+                    CombatCondition(
+                        "Hunter's Mark",
+                        modifiers=(ExtraDamageFrom("1d6", DamageType.FORCE),),
+                    ),
+                ),
+                action_type=ActionType.BONUS_ACTION,
+                spends_use=False,
+                notes=("Once the marked creature has dropped to 0 Hit Points.",),
+            ),
         ]
 
 
@@ -2273,9 +2292,18 @@ class WitchBolt(ClassSpell):
                 roll=EffectRoll.ATTACK,
                 damage=(CombatDamage("2d12", DamageType.LIGHTNING, upcast="1d12"),),
                 notes=(
-                    "On each of your later turns, a Bonus Action deals 1d12 Lightning damage to the target automatically, even if the first attack missed. It ends if the target is out of range or has Total Cover from you.",
+                    "It ends if the target is out of range or has Total Cover from you.",
                 ),
-            )
+            ),
+            # "On each of your later turns, you can take a Bonus Action to
+            # deal 1d12 Lightning damage to the target automatically, even
+            # if the first attack missed."
+            CombatEffect(
+                name="Witch Bolt: later turn",
+                damage=(CombatDamage("1d12", DamageType.LIGHTNING),),
+                action_type=ActionType.BONUS_ACTION,
+                spends_use=False,
+            ),
         ]
 
 
@@ -3957,6 +3985,44 @@ class Hex(ClassSpell):
                         ),
                     ),
                 ),
+            ),
+        ]
+
+    def combat_effects(
+        self, character: CharacterView | None = None
+    ) -> list[CombatEffect]:
+        # "you deal an extra 1d6 Necrotic damage to the target whenever you
+        # hit it with an attack roll. Also, choose one ability when you
+        # cast the spell. The target has Disadvantage on ability checks made
+        # with the chosen ability."
+        def hexed(name: str = "") -> CombatEffect:
+            return CombatEffect(
+                name=name,
+                conditions=(
+                    CombatCondition(
+                        "Hex",
+                        modifiers=(
+                            ExtraDamageFrom("1d6", DamageType.NECROTIC),
+                            Note(
+                                "Disadvantage on ability checks of the ability"
+                                " chosen when it was cast"
+                            ),
+                        ),
+                    ),
+                ),
+            )
+
+        # "If the target drops to 0 Hit Points before this spell ends, you
+        # can take a Bonus Action on a later turn to curse a new creature":
+        # no slot, held by the same concentration.
+        move = hexed("Hex: move the curse")
+        return [
+            hexed(),
+            replace(
+                move,
+                action_type=ActionType.BONUS_ACTION,
+                spends_use=False,
+                notes=("Once the cursed creature has dropped to 0 Hit Points.",),
             ),
         ]
 

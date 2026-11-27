@@ -505,7 +505,7 @@
    "half_on_save": false,
    "is_described": true,
    "is_unavailable": false,
-   "note": "On each of your later turns, a Bonus Action deals 1d12 Lightning damage to the target automatically, even if the first attack missed. It ends if the target is out of range or has Total Cover from you.",
+   "note": "It ends if the target is out of range or has Total Cover from you.",
    "repeat_save": false,
    "roll": "Attack roll",
    "row_name": "",
@@ -517,6 +517,32 @@
    "upcast": [
     "1d12"
    ]
+  },
+  "Dessie's Spells | Witch Bolt: later turn": {
+   "ability": null,
+   "action_cost": "Bonus Action",
+   "amount_kind": "Damage",
+   "bonus": null,
+   "concentration": false,
+   "condition": "",
+   "counts_uses": false,
+   "damage": "1d12 Lightning",
+   "dc": null,
+   "duration_seconds": 60,
+   "feature_name": "",
+   "half_on_save": false,
+   "is_described": true,
+   "is_unavailable": false,
+   "note": "",
+   "repeat_save": false,
+   "roll": "Saving throw",
+   "row_name": "",
+   "slot_level": "None",
+   "spell_level": 1,
+   "spell_name": "Witch Bolt",
+   "summary": "1d12 Lightning",
+   "until": null,
+   "upcast": []
   },
   "Features | Jolt to Life": {
    "ability": "DEX",

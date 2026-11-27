@@ -45,7 +45,8 @@ from Combat.Fight.effects_given import (
     give_effect_condition,
     give_effect_conditions,
     hold_concentration,
-    hold_with_area,
+    hold_given,
+    is_later_step,
     regain_feature_uses,
     set_shield,
     with_hit_extras,
@@ -482,8 +483,8 @@ class ConditionsMixin(CombatWindowState):
             self._hold_concentration(caster, label, effect, applied)
         elif effect.area is not None and source is not None:
             self._hold_area(source, label, effect)
-        elif effect.from_area:
-            self._hold_with_area(effect.from_area, applied)
+        elif effect.from_area or is_later_step(effect):
+            self._hold_with_area(effect, applied, caster)
         if effect.damage and source is not None:
             source["_last_damage_type"] = effect.damage[0][1]  # not an extra's
         pushed = []
@@ -639,10 +640,12 @@ class ConditionsMixin(CombatWindowState):
         hold_concentration."""
         run_step(self, hold_concentration, caster, label, effect, applied)
 
-    def _hold_with_area(self, key: str, applied: list[dict]):
-        """What a kept area gave as it acted again, held by its spell:
-        effects_given.py's hold_with_area."""
-        run_step(self, hold_with_area, key, applied)
+    def _hold_with_area(
+        self, effect: CustomEffect, applied: list[dict], caster: dict | None
+    ):
+        """What a kept area or a later step of a casting gave, held by its
+        spell's concentration: effects_given.py's hold_given."""
+        run_step(self, hold_given, effect, applied, caster)
 
     def _give_effect_conditions(self, target: dict, effect: CustomEffect) -> list[dict]:
         """Give target what of effect lands: effects_given.py's

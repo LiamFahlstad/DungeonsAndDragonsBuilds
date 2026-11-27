@@ -145,8 +145,8 @@ def test_extra_damage_that_cant_be_is_refused_in_python(make):
 def _badge(spell: str):
     effects = SpellFactory.create(spell).combat_effects()
     assert effects is not None
-    (effect,) = effects
-    (condition,) = effect.conditions
+    # The casting's (the first: Hunter's Mark's move comes after, 9.7).
+    (condition,) = effects[0].conditions
     return condition
 
 
