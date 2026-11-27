@@ -53,6 +53,7 @@ from Model.Content.CombatModifiers import (
     Vision,
     WhenHit,
 )
+from Model.Content.CombatModifiers import EndEvent, EndsWhen
 from Model.Content.CombatTriggers import CombatTrigger, TriggerAim, TriggerEvent
 from Model.Content.Feature import FeatureTarget
 from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table
@@ -1987,9 +1988,15 @@ class Sleep(ClassSpell):
                     CombatCondition(
                         Condition.INCAPACITATED, until=(TurnEdge.END, TurnOf.TARGET)
                     ),
+                    # "The spell ends on a target if it takes damage".
+                    CombatCondition(
+                        "Sleep",
+                        until=(TurnEdge.END, TurnOf.TARGET),
+                        modifiers=(EndsWhen((EndEvent.TAKES_DAMAGE,)),),
+                    ),
                 ),
                 notes=(
-                    "At the end of its next turn the target repeats the save: on a failure it has the Unconscious condition for the duration. It wakes if it takes damage or someone within 5 feet takes an action to shake it. Creatures that don't sleep, or are immune to Exhaustion, succeed automatically.",
+                    "At the end of its next turn the target repeats the save: on a failure it has the Unconscious condition for the duration. Someone within 5 feet can also take an action to shake it awake. Creatures that don't sleep, or are immune to Exhaustion, succeed automatically.",
                 ),
             )
         ]
@@ -2372,15 +2379,17 @@ class ArmorOfAgathys(ClassSpell):
             CombatEffect(
                 temp_hp=CombatHitPoints(dice="5", upcast="5"),
                 conditions=(
+                    # "The spell ends early if you have no Temporary Hit
+                    # Points."
                     CombatCondition(
                         "Armor of Agathys",
-                        modifiers=(WhenHit("Armor of Agathys: Cold damage"),),
+                        modifiers=(
+                            WhenHit("Armor of Agathys: Cold damage"),
+                            EndsWhen((EndEvent.NO_TEMP_HP,)),
+                        ),
                     ),
                 ),
                 targets_self=True,
-                notes=(
-                    "It ends early once you have no Temporary Hit Points: take its badge off then.",
-                ),
             ),
             CombatEffect(
                 name="Armor of Agathys: Cold damage",

@@ -25,10 +25,12 @@ from Combat.Fight.cascade import (
     clear_concentration_if_unused,
     end_concentration_spells,
     end_linked_effects,
+    end_when,
     end_spell_effects,
     holder_of,
     start_concentration,
 )
+from Model.Content.CombatModifiers import EndEvent
 from .state import CombatWindowState
 from .steps import run_step
 from .undo import undoable
@@ -199,8 +201,10 @@ class SpellsMixin(CombatWindowState):
     def _count_spell_cast(
         self, caster: dict, name: str, level: int, slot_level: int | None
     ):
-        """Count and log a cast: Combat/Fight/spells.py's log_spell_cast."""
+        """Count and log a cast: Combat/Fight/spells.py's log_spell_cast;
+        and end what ends as caster casts a spell (Invisibility)."""
         log_spell_cast(self.logger, caster, name, level, slot_level)
+        run_step(self, end_when, caster, EndEvent.CASTS_SPELL)
 
     @undoable
     def _apply_cast_spell(self, spell, slot_level: int | None = None):

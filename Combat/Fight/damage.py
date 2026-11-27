@@ -20,8 +20,15 @@ from Combat.Effects.triggers import (
 )
 from Combat.Summons import vanishes_at_zero_hp
 from Core.Definitions import Condition
+from Model.Content.CombatModifiers import EndEvent
 
-from .cascade import add_condition, apply_bloodied, note_health_change, remove_condition
+from .cascade import (
+    add_condition,
+    apply_bloodied,
+    end_when,
+    note_health_change,
+    remove_condition,
+)
 from .health import damage_at_zero_hp, death_state
 from .player_knowledge import note_damage_defense
 from .stats import _default_stats, damage_dealt_key, damage_taken_key
@@ -210,6 +217,15 @@ def deal_damage(
     if taken > 0 and state_before in ("dying", "stabilized"):
         take_damage_at_zero_hp(step, target, taken, critical)
     note_health_change(step, target)
+    if taken > 0:
+        # Badges that end as their bearer takes damage (Sleep), is left
+        # without Temporary Hit Points (Armor of Agathys) or deals damage
+        # (Invisibility): plan step 9.6.
+        end_when(step, target, EndEvent.TAKES_DAMAGE)
+        if not target.get("temp_hp"):
+            end_when(step, target, EndEvent.NO_TEMP_HP)
+        if source is not None and source is not target:
+            end_when(step, source, EndEvent.DEALS_DAMAGE)
     # A summon whose spec says so vanishes at 0 HP (a drake), once
     # what it was concentrating on has ended.
     vanishes = knockout and vanishes_at_zero_hp(target)

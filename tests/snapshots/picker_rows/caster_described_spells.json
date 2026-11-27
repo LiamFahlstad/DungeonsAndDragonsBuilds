@@ -248,6 +248,12 @@
      {
       "effect": "Armor of Agathys: Cold damage",
       "type": "WhenHit"
+     },
+     {
+      "events": [
+       "has no Temporary Hit Points left"
+      ],
+      "type": "EndsWhen"
      }
     ]
    },
@@ -262,7 +268,7 @@
    "half_on_save": false,
    "is_described": true,
    "is_unavailable": false,
-   "note": "It goes on its user, whoever is targeted. It ends early once you have no Temporary Hit Points: take its badge off then.",
+   "note": "It goes on its user, whoever is targeted.",
    "repeat_save": false,
    "roll": "Saving throw",
    "row_name": "",
@@ -2065,9 +2071,21 @@
    "ability": null,
    "action_cost": "Action",
    "amount_kind": "Damage",
+   "badge_modifiers": {
+    "Invisibility": [
+     {
+      "events": [
+       "makes an attack roll",
+       "deals damage",
+       "casts a spell"
+      ],
+      "type": "EndsWhen"
+     }
+    ]
+   },
    "bonus": null,
    "concentration": true,
-   "condition": "Invisible",
+   "condition": "Invisible + Invisibility",
    "counts_uses": true,
    "damage": "",
    "dc": null,
@@ -2076,7 +2094,7 @@
    "half_on_save": false,
    "is_described": true,
    "is_unavailable": false,
-   "note": "It ends right after the target makes an attack roll, deals damage or casts a spell.",
+   "note": "",
    "repeat_save": false,
    "roll": "Saving throw",
    "row_name": "",
@@ -2955,9 +2973,19 @@
     "shape": "Sphere",
     "size_ft": 5
    },
+   "badge_modifiers": {
+    "Sleep": [
+     {
+      "events": [
+       "takes damage"
+      ],
+      "type": "EndsWhen"
+     }
+    ]
+   },
    "bonus": null,
    "concentration": true,
-   "condition": "Incapacitated",
+   "condition": "Incapacitated + Sleep",
    "counts_uses": true,
    "damage": "",
    "dc": 15,
@@ -2966,7 +2994,7 @@
    "half_on_save": false,
    "is_described": true,
    "is_unavailable": false,
-   "note": "At the end of its next turn the target repeats the save: on a failure it has the Unconscious condition for the duration. It wakes if it takes damage or someone within 5 feet takes an action to shake it. Creatures that don't sleep, or are immune to Exhaustion, succeed automatically.",
+   "note": "At the end of its next turn the target repeats the save: on a failure it has the Unconscious condition for the duration. Someone within 5 feet can also take an action to shake it awake. Creatures that don't sleep, or are immune to Exhaustion, succeed automatically.",
    "repeat_save": false,
    "roll": "Saving throw",
    "row_name": "",

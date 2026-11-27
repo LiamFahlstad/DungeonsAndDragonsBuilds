@@ -739,9 +739,21 @@
    "ability": null,
    "action_cost": "Action",
    "amount_kind": "Damage",
+   "badge_modifiers": {
+    "Invisibility": [
+     {
+      "events": [
+       "makes an attack roll",
+       "deals damage",
+       "casts a spell"
+      ],
+      "type": "EndsWhen"
+     }
+    ]
+   },
    "bonus": null,
    "concentration": true,
-   "condition": "Invisible",
+   "condition": "Invisible + Invisibility",
    "counts_uses": true,
    "damage": "",
    "dc": null,
@@ -750,7 +762,7 @@
    "half_on_save": false,
    "is_described": true,
    "is_unavailable": false,
-   "note": "It ends right after the target makes an attack roll, deals damage or casts a spell.",
+   "note": "",
    "repeat_save": false,
    "roll": "Saving throw",
    "row_name": "",

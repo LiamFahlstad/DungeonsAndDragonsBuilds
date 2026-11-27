@@ -696,6 +696,32 @@ Trigger = AtTurnStart | AtTurnEnd
 TRIGGER_CLASSES = (AtTurnStart, AtTurnEnd)
 
 
+class EndEvent(StrEnum):
+    """What happens to a badge's bearer that ends the badge early, each as
+    the fight sees it (Combat/Fight/cascade.py, end_when; plan step 9.6)."""
+
+    TAKES_DAMAGE = "takes damage"
+    DEALS_DAMAGE = "deals damage"
+    ATTACKS = "makes an attack roll"
+    CASTS_SPELL = "casts a spell"
+    INCAPACITATED = "has the Incapacitated condition"
+    NO_TEMP_HP = "has no Temporary Hit Points left"
+
+
+@dataclass(frozen=True)
+class EndsWhen:
+    """The badge ends early as its bearer does one of `events`
+    (Invisibility: "The spell ends early immediately after the target makes
+    an attack roll, deals damage, or casts a spell"; Sleep: it wakes as it
+    takes damage), in the same undo step as what ended it."""
+
+    events: tuple[EndEvent, ...]
+
+    def __post_init__(self):
+        if not self.events or not all(isinstance(e, EndEvent) for e in self.events):
+            raise ValueError(f"EndsWhen needs EndEvents, got {self.events!r}")
+
+
 @dataclass(frozen=True)
 class Evasion:
     """On a saving throw of `ability` against an effect that deals only half
@@ -735,6 +761,7 @@ Modifier = (
     | AtTurnEnd
     | WhenHit
     | Evasion
+    | EndsWhen
 )
 
 
@@ -786,6 +813,7 @@ MODIFIER_TYPES: dict[str, type] = {
         AtTurnEnd,
         WhenHit,
         Evasion,
+        EndsWhen,
     )
 }
 MODIFIER_CLASSES = tuple(MODIFIER_TYPES.values())
@@ -799,6 +827,7 @@ _ENUM_LISTS: dict[str, type[Enum]] = {
     "conditions": Condition,
     "against_conditions": Condition,
     "unless_conditions": Condition,
+    "events": EndEvent,
 }
 _ENUMS: dict[str, type[Enum]] = {
     "mode": RollMode,

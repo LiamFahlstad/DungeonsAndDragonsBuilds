@@ -57,7 +57,7 @@ change and move on; the full suite can run later.
 | 6 | **Triggers** (new concept, 2026-11-11; see its section): a row or badge says *when* it's used (a hit, damage taken, dropping to 0, ...), and the simulator applies it itself (AUTO) or asks with a pop-up as it happens (ASK) | 6.1-6.3 **done** (R66-R73, 2026-11-11): `CombatTrigger` on a row (`CombatEffect.trigger`, `Model/Content/CombatTriggers.py`), `outcome_firings` with its gates and modes, and the hit hooks in all three hit paths: when Kivi hits a Large or smaller creature and deals it damage, one pop-up per Apply asks about Hill's Tumble; Apply gives Prone, spends a Giant Ancestry use and logs it, inside the hit's undo step. Only `HIT` and `MISS` fire; the other events are data. 6.4 **done** (R74-R77, 2026-11-11): a monster's hit that gives a condition in a sentence of its own ("If the target is a Large or smaller creature, it has the Prone condition", "..., and the target has the Poisoned condition until the end of its next turn", "the Grappled condition (escape DC 13)") is read as a rider row of its own ("Tree Club: Prone") with an AUTO `after=` trigger: the Hill Giant's Tree Club knocks a Large target Prone from its button and Enter and from the dialog, asks when the size isn't known, and does nothing to a Huge target or on a miss. 101 riders in the catalog. 6.5 **done** (R108-R114, 2026-11-11): as an attack roll hits, the creature hit is asked about its `HIT_BY` rows before the damage (Shield's +5 turns Clover's 20 against AC 18 into a miss and spends her Reaction and a slot; Kivi's Deflect Attacks takes its 1d10 + 8 off, `CombatEffect.damage_reduction`), and damage from a creature asks the one damaged about its `TAKES_DAMAGE` rows (Hellish Rebuke, newly described; Storm's Thunder); a Reaction used this round or an Incapacitated owner asks no more. A badge's answer to a hit, built after (Q57, R161-R166): `WhenHit`. 6.6 **done** (R127-R131, 2026-11-12): as damage would drop a creature to 0 Hit Points, it's asked first about its `DROPS_TO_ZERO` rows (Ymira's Relentless Endurance: Apply leaves her at 1, not Unconscious, a use spent, in the hit's undo step; not when killed outright), `CombatEffect.drops_to`; a creature that reduces an enemy to 0 gets its `REDUCES_TO_ZERO` rows (Dark One's Blessing's 6 Temporary Hit Points, given at once; the trigger's new `enemy_only` gate); Relentless Rage described too; damage that leaves a creature Bloodied asks about its `BLOODIED` rows (Harvest Undead, R131). 6.7 **done** for the content the parties and examples have (R132-R139, 2026-11-12): as the fight starts, `ROLLS_INITIATIVE` rows are given or asked once (Kivi's Uncanny Metabolism gives back his Focus Points, `CombatEffect.regains`; Superior Inspiration, Perfect Focus, Evergreen Wild Shape, Ever-Ready Shot, Persistent Rage); a failed save the dialog rolls asks about `FAILS_SAVE` rows (Indomitable's reroll +Fighter level, `reroll_save`, with a box for the roll made at the table); `USES` and `CombatTrigger.aim` give spells their later steps (Ice Knife's explosion on its target and the creatures added; Green-Flame Blade's fire on the creature picked). Not built: Weapon Mastery (Q38, now its own step 6.9), `CASTS_SPELL` (no source in the parties), Diamond Soul (Q64). 6.8 **done** (R140-R142, 2026-11-12): the skill's Triggers section (event, mode, gates, `when`, and when to leave one untriggered), `combat_effects.py triggers` and the trigger counts in `coverage`, `Feature.untriggered`; both parties' features with a Trigger fact are triggered (Deflect Attacks, Uncanny Metabolism, Hill's Tumble) or say why not (8), and a test keeps it so. 6.9 **done** (R143-R148, 2026-11-12): each mastery property a wielder has is a row after its weapon's ("Longsword: Sap", `Model/Content/WeaponMasteryEffects.py`), fired only after the weapon picked in the dialog: Sap and Vex are AUTO badges that count for one attack roll (the new `once` and `by_caster` modifier fields; Guiding Bolt and Vicious Mockery written with them too), Slow a Speed -10 badge, Topple a DC 8 + modifier + PB Constitution save or Prone, Graze the modifier's damage on a miss, Push a reminder for a Large or smaller target, Cleave an attack roll on another creature once per turn; Nick a note on the weapon's row. 6.10 **done** (R149-R151, 2026-11-12, Q65): `TriggerEvent.ATTACKS`, asked of everyone else in the fight as the dialog or a monster's button is about to roll an attack (`attack_roll_firings`); Gabriel's Warding Flare gives the attacker a one-roll Disadvantage badge, which that roll counts and uses up. Added after (Decision 19, R156-R160, 2026-11-13): what a hit gives by itself is given as the hit lands, not as its Apply ends, so with Times 2 (Extra Attack) the second roll has the first hit's Vex (Q67); a use can spend several of its feature's uses, `CombatEffect.uses_spent` (Elemental Burst's 2 Focus Points, newly described; Q64). And (Decision 20, R161-R166, 2026-11-13) a badge answers a hit on its bearer: `WhenHit(effect, attacks, when)`, the bearer using a row of its spell on the attacker once the hit's damage is dealt, with the slot it was cast with kept on the badge; Armor of Agathys (5 Cold, 5 more per slot level, as the Ogre's Greatclub hits) and Fire Shield (2d8 Fire or Cold, asked: "within 5 feet") described, and a monster's button says whether its attack is melee or ranged (Q57). Phase 6 is done but for Q63, Q66 |
 | 7 | **Stat changes while an effect is on** (new, 2026-11-11; see its section): AC formulas and floors, Immunity and Vulnerability beside the built Resistance, Speed, size, Hit Point maximum, worked out from the stored stat plus the badges, and shown on the card with their sources | 7.1-7.2 **done** (R78-R83, 2026-11-11): `ArmorClassBase` (Mage Armor) and `ArmorClassMinimum` (Barkskin) beside `ArmorClass`, worked out by `armor_class(char, stored)`, which every attack path reads through `armor_bonus`; the same effect twice adds once; `DamageImmunity` and `Vulnerability` beside `Resistance` in `_damage_type_modifier`; Mage Armor, Barkskin, Stoneskin, Protection from Energy (a row per type) and Rage described (`tests/test_stat_changes.py`). 7.4 **done** (R84-R89, 2026-11-11): `HitPointMaximum(amount, upcast)`, rolled as the badge is given; `hit_point_maximum(char)` is the stored `max_hp` plus the badges, read by every cap, bar and Bloodied check; giving it raises current HP as Hit Points regained, ending it caps current HP (`Action.LOSE_HIT_POINTS`, replayed); Aid and Heroes' Feast described. 7.5 **done** (R90-R93, 2026-11-11): the card's and More Info's AC is the AC in use with what changes it ("AC: 17 (15; Shield of Faith +2)", cover too), a "Max HP 35 (30; Aid +5)" line, and the defenses the conditions and badges give with where from ("Resist: ...; Bludgeoning, Piercing, Slashing (Rage)", "Cond. Immune: Frightened (Heroism)"); the player view's full rows show the AC in use. 7.3 **done** (R94-R98, 2026-11-11): `Speed(bonus, multiplier, set_to)` and `Size(steps, becomes)`, worked out by `speed_in_use` and `size_in_use`; the trigger size gates read the size in use (an Enlarged Large Ogre is Huge to Hill's Tumble); the card shows "Speed: 80 ft. (40 ft.; Haste ×2)" and, when changed, "Size Huge (Large; Enlarge/Reduce +1)"; Haste (and its lethargy row), Longstrider, Enlarge/Reduce and Large Form described. 7.6 **done** (R106, R107, 2026-11-11): the rubric's Stat changes table, `combat_effects.py stats` (each note naming AC, a defense, Speed, the Hit Point maximum or size, marked counted or NOTE ONLY), and both parties' rows: Shield's `ArmorClass(5)`, Absorb Elements' `Resistance` (a row per type), Silence's Thunder `DamageImmunity`, Shield of Faith's restating note gone. **Phase 7 done** |
 | 8 | **Rolled at the table** (new, 2026-11-11, Decision 15; see its section): whatever the simulator rolls, the GM can give it a number rolled at the table instead | **Done** (R115-R124, 2026-11-11). 8.1-8.3: a hit's extra damage (Hunter's Mark, Divine Favor) has a box per target in the Custom Effect dialog, added as typed, even to a typed damage total, Critical Hit or not; Deflect Attacks' and Stone's Endurance's reduction has a box in the trigger pop-up; the setting "Roll monsters' recharges and repeat saves" (`monsters_roll_turn_dice`) off turns those into turn reminders. 8.4-8.7 (Decision 16): a card's Set initiative... (a summon's roll, or anyone's); a box takes one roll per Times copy ("nat 1, nat 20"); a Hit Point maximum box for a pick whose badge rolls one (Heroes' Feast), and a player's dice Hit Points at a turn's start left to a turn-column button; `tests/test_roll_sites.py` fails on a new place that rolls until it's listed with its way to the table (`tests/test_table_rolls.py`) |
-| 9 | **Closing the gaps** (audit 2026-11-24; see its section): every spell, feature, monster ability and item the combat effects don't cover yet, or cover only in part, ranked by how much it matters at the table and listed under the step that closes it | Audit **done** (2026-11-24). Most critical first (Decision 21): 9.2's saves **done** (R170, 2026-11-25): Magic Resistance (every monster with the trait, by name) has Advantage on a save against a spell; Brave, Fey Ancestry and Dwarven Resilience on saves to avoid or end their condition; War Caster on Concentration saves; Danger Sense, Gnomish Cunning and Dual Mind on their abilities' saves. Left of 9.2: Grappler's attack Advantage, Improved Critical, Sunlight Sensitivity, magic armor (with 9.8). 9.3's Attack action **done** (R171, 2026-11-26, Decision 22): a weapon row opens with Times at its owner's attacks per Attack action (Extra Attack 2, Two Extra Attacks 3, Three 4) while its Action is unspent, 1 after; Action Surge gives back the Action. Left of 9.3: Haste's action, Command's lost turn, the Initiative riders. 9.1's strikes **done** (R172, 2026-11-26): Sneak Attack, Divine Smite (and Paladin's Smite's free casting), Ensnaring Strike and Stunning Strike are asked as a hit lands, and a fired row's dice double on a Critical Hit; Kivi's Tavern Brawler Push and Grappler Punch and Grab are asked as an Unarmed Strike hits (R173); Spiritual Weapon's later attack, Produce Flame's hurl, Freedom of Movement's Swim Speed and Elemental Strikes' move are rows (R174). Left of 9.1: DI-095's pushes and the "without a spell slot" notes. 9.4 **done** but for Aura of Courage (R175, 2026-11-26): Aura of Protection's bonus on allies' saves and Pack Tactics' Advantage are counted from the battle map, and noted off it. 9.5 **done** but for Regeneration's healing and damage rerolls (R176, 2026-11-27): Evasion (the Rogue's, the Monk's, a monster's) on Dexterity saves for half, Uncanny Dodge halving a hit, and a structured Regeneration reminded of as its turn starts. Next: 9.6 ("ends early", Q70; rank 7) |
+| 9 | **Closing the gaps** (audit 2026-11-24; see its section): every spell, feature, monster ability and item the combat effects don't cover yet, or cover only in part, ranked by how much it matters at the table and listed under the step that closes it | Audit **done** (2026-11-24). Most critical first (Decision 21): 9.2's saves **done** (R170, 2026-11-25): Magic Resistance (every monster with the trait, by name) has Advantage on a save against a spell; Brave, Fey Ancestry and Dwarven Resilience on saves to avoid or end their condition; War Caster on Concentration saves; Danger Sense, Gnomish Cunning and Dual Mind on their abilities' saves. Left of 9.2: Grappler's attack Advantage, Improved Critical, Sunlight Sensitivity, magic armor (with 9.8). 9.3's Attack action **done** (R171, 2026-11-26, Decision 22): a weapon row opens with Times at its owner's attacks per Attack action (Extra Attack 2, Two Extra Attacks 3, Three 4) while its Action is unspent, 1 after; Action Surge gives back the Action. Left of 9.3: Haste's action, Command's lost turn, the Initiative riders. 9.1's strikes **done** (R172, 2026-11-26): Sneak Attack, Divine Smite (and Paladin's Smite's free casting), Ensnaring Strike and Stunning Strike are asked as a hit lands, and a fired row's dice double on a Critical Hit; Kivi's Tavern Brawler Push and Grappler Punch and Grab are asked as an Unarmed Strike hits (R173); Spiritual Weapon's later attack, Produce Flame's hurl, Freedom of Movement's Swim Speed and Elemental Strikes' move are rows (R174). Left of 9.1: DI-095's pushes and the "without a spell slot" notes. 9.4 **done** but for Aura of Courage (R175, 2026-11-26): Aura of Protection's bonus on allies' saves and Pack Tactics' Advantage are counted from the battle map, and noted off it. 9.5 **done** but for Regeneration's healing and damage rerolls (R176, 2026-11-27): Evasion (the Rogue's, the Monk's, a monster's) on Dexterity saves for half, Uncanny Dodge halving a hit, and a structured Regeneration reminded of as its turn starts. 9.6 **done** for the sources the fight can see end (R177, 2026-11-27): Invisibility ends after its bearer attacks, deals damage or casts, Sleep and Turn Undead as their target takes damage, Armor of Agathys with its last Temporary Hit Point, Elemental Attunement as its bearer is Incapacitated. Next: 9.7 (later turns, marks that move; rank 7) |
 
 **Content described so far.** Spells: 57 (2024) + 1 (2014), all as classes
 (every spell is a class since S.4; 58 have combat effects);
@@ -679,6 +679,12 @@ suggested.
     continue", with 9.3 named next and Q69 first): no action economy of
     its own; a weapon row opens at its owner's attacks per Attack action,
     and Action Surge gives back the turn's Action. *Built (R171).*
+23. **Q70 as suggested, as a modifier** (the user, 2026-11-27: "yes", to
+    building 9.6 on Q70's suggestion): the events that end a badge early,
+    ended in the same undo step as what ended it. *Built (R177)* as an
+    `EndsWhen(events)` modifier on the badge rather than a new
+    `CombatCondition.ends_on` field: a badge's modifiers are already its
+    record's, kept in the fight's log, so no log format changed.
 
 ## Goal
 
@@ -1409,7 +1415,7 @@ features with nothing to put on a creature.
 | 7 | ~~War Caster's Advantage on Concentration saves isn't counted, though the simulator rolls them (Clover)~~ **counted** (R170) | 9.2 | Field |
 | 7 | Regeneration (11 monsters) isn't applied at turn start (reminded of; R176) | 9.5 | Field |
 | 7 | ~~Evasion, Uncanny Dodge: not counted~~ **counted** (R176) | 9.5 | Field |
-| 7 | Invisibility doesn't end when the bearer attacks or casts, so attackers keep the advantage | 9.6 | Field |
+| 7 | ~~Invisibility doesn't end when the bearer attacks or casts~~ **ends then** (R177) | 9.6 | Field |
 | 7 | ~~Divine Smite / Paladin's Smite have no hit trigger~~ **asked as a melee hit lands** (R172) | 9.1 | Now |
 | 7 | Spiritual Weapon's repeat attack on later turns | 9.7 | Field |
 | 7 | Potions of Healing aren't in the picker | 9.8 | Field (rows for items) |
@@ -1437,7 +1443,7 @@ which Decision 9 allows.
 | 9.3 | Actions and the turn order: Extra Attack, Action Surge, Haste's action, a lost turn, Initiative riders (Decision 22, R171) | 9 | Engine | **Attack action done** (R171): an Extra Attack owner's weapon row opens with Times 2 (3 with Two Extra Attacks, an extension) while the Action is unspent; Action Surge gives back the Action. Left: Command: Halt shows on the target's turn; Haste's extra action; the Initiative riders |
 | 9.4 | Auras and Pack Tactics, with distances from the battle map (**done** but for Aura of Courage, R175) | 8 | Field/Engine | On the map, an ally within 10 feet of a Paladin with Aura of Protection adds the Paladin's Charisma modifier to a save the dialog rolls, and one 15 feet away doesn't; Pack Tactics gives Advantage with an ally within 5 feet of the target; off the map the GM is asked (principle 8). Needs 9.2 |
 | 9.5 | Damage outcomes: Evasion, Uncanny Dodge, Regeneration, damage rerolls (**done** but for Regeneration's healing and the rerolls, R176) | 7 | Field | Evasion turns a successful Dexterity save for half into no damage and a failure into half; Uncanny Dodge halves a hit's damage and spends the Reaction; Regeneration heals at its turn's start, not after the damage types that stop it |
-| 9.6 | "Ends early when ..." (`ends_on`, Q70) | 7 | Field | Invisibility ends as its bearer attacks, deals damage or casts; Sleep's target wakes when it takes damage; each in the same undo step as what ended it, and an old log replays the same |
+| 9.6 | "Ends early when ..." (`EndsWhen`, Decision 23; **done** but for the side-gated ones, R177) | 7 | Field | Invisibility ends as its bearer attacks, deals damage or casts; Sleep's target wakes when it takes damage; each in the same undo step as what ended it, and an old log replays the same |
 | 9.7 | Rows used again on later turns, and marks that move | 7 | Field | Spiritual Weapon's later attack is a row of the running spell, with no slot spent; Hunter's Mark moves to a new target when its target drops to 0 |
 | 9.8 | Items in the picker (Q71) | 7 | Field | A character with a Potion of Healing has a row that heals 2d4 + 2 and says it was drunk; a magic weapon's rider is a row after its weapon's, as Weapon Mastery's are |
 | 9.9 | Spell summons (`SPELL_SUMMONS`) | 6 | Field/content | Per the summon-framework plan's steps: Find Familiar, Summon Beast and Conjure Animals bring a combatant with its stat block |
@@ -1549,6 +1555,8 @@ Tactics are done. Left:
 
 #### 9.6 "Ends early when ..."
 
+**Built (R177, 2026-11-27):** the `EndsWhen(events)` modifier on a badge, ended by `cascade.end_when` where the fight sees each `EndEvent`: Invisibility, Sleep, Turn Undead, Armor of Agathys and Elemental Attunement. Left:
+
 The most common gap. The `notes` tool misses it because the wording
 differs every time (9.15). It's a missing field: something like
 `CombatCondition.ends_on`, with events the simulator already sees (takes
@@ -1559,13 +1567,9 @@ the first such ending built; Q70 suggests widening it.
 
 | Rank | Source | Ends when | Kind |
 |---|---|---|---|
-| 7 | Invisibility | It attacks, deals damage or casts a spell | **Field** |
-| 6 | Sleep | The target wakes when it takes damage (or is shaken: **Table**); forgetting it leaves an Unconscious target taking auto-crits | **Field** |
-| 5 | Turn Undead | The creature takes any damage; you're Incapacitated or die | **Field** |
 | 5 | Cunning Action: Hide | It attacks or casts a Verbal spell (sound and being found: **Table**) | **Field** |
-| 4 | Armor of Agathys | No Temporary Hit Points left | **Field** |
 | 3 | Charm Person, Suggestion | You or your allies damage the target | **Field** (the "allies" part needs the side) |
-| 3 | Elemental Attunement, Patient Defense (Dodge) | Incapacitated; Speed 0 | **Field** (Dodge's half is `loses_dodge`) |
+| 3 | Patient Defense (Dodge) | Incapacitated; Speed 0 | Its own `loses_dodge` already (R168); Elemental Attunement's Incapacitated is R177's |
 | 3 | Unconscious (rules condition) | Drops what it holds; stays Prone when it ends | DI-067 |
 | 2 | Friends | The target takes damage, or you attack, deal damage or force a save | **Field** |
 
@@ -3553,6 +3557,29 @@ the note is flavor).
   `tests/test_damage_outcomes.py` (Uncanny Dodge on the Rogue 17 example
   build, Wraith Grimscar, as no party member has it yet).
 
+- **R177. Badges that end early** (2026-11-27, step 9.6, Decision 23).
+  `EndsWhen(events)`, a modifier in the badge's record, names the
+  `EndEvent`s that end it: TAKES_DAMAGE, DEALS_DAMAGE, ATTACKS (an attack
+  roll), CASTS_SPELL, INCAPACITATED, NO_TEMP_HP. `cascade.end_when(step,
+  char, event)` takes off each such badge of char's, logged ("Tiger's
+  Invisibility ends: it makes an attack roll"), with what it stands for,
+  and it's called where the fight sees each: `deal_damage` (damage taken
+  by the target, left without Temporary Hit Points, dealt by the source),
+  `resolve_attack_roll` (every attack roll, after it), `use_pick` and Cast
+  Spell's `_count_spell_cast` (a cast), `add_condition` (Incapacitated). A
+  Speed of 0 event was left out: nothing needs it yet (Dodge has its own
+  `loses_dodge`). Sources: Invisibility (attacks, deals damage, casts),
+  Sleep (takes damage, its badge beside Incapacitated), Turn Undead (takes
+  damage), Armor of Agathys (no Temporary Hit Points), Elemental
+  Attunement (Incapacitated); each note that said it is gone. Found: a
+  pick that names its own badge beside rules conditions (Invisibility,
+  Silence, Ensnaring Strike) never linked the badge to them, so taking
+  the badge off left Invisible behind; `give_pick_badge` now links it, as
+  Decision 17 meant. Not built: Charm Person's and Suggestion's "you or
+  your allies damage it" and Friends' (they need the damage source's
+  side), Cunning Action: Hide's Verbal spell, Booming Blade's move (9.14).
+  Tests: `tests/test_ends_early.py`.
+
 ## Open questions (with suggestions)
 
 Q4-Q10, Q13, Q18, Q21-Q29, Q31-Q35, Q37, Q46, Q48-Q50, Q53 and Q55 are
@@ -3561,18 +3588,9 @@ Q36, Q38 and Q39 too (Decision 14), Q58-Q61 (Decision 16), Q62 (Decision 17),
 and Q56 and Q65 (Decision 18, built in R149-R155), Q64 and Q67
 (Decision 19, built in R156-R160), Q57 (Decision 20, built in
 R161-R166), Q68 (Decision 21, built in R170), Q69 (Decision 22, built in
-R171); all moved there. Q11 was done as suggested in S.4 (R24-R26): every spell is
+R171), Q70 (Decision 23, built in R177); all moved there. Q11 was done as suggested in S.4 (R24-R26): every spell is
 a class.
 
-- **Q70. Which events end a badge early?** (9.6) *Suggestion:*
-  `CombatCondition.ends_on`, a tuple of events the simulator already sees:
-  takes damage, makes an attack roll, deals damage, casts a spell, forces a
-  save, is Incapacitated, has Speed 0, has no Temporary Hit Points left,
-  named like `TriggerEvent` where one exists. R168's `loses_dodge` becomes
-  one case of it. The badge ends as any badge ends (its concentration link
-  too, 3.6), inside the undo step of what ended it. "You or your allies"
-  (Charm Person) needs the side of whoever dealt the damage, which the
-  fight knows.
 - **Q71. Items in the picker** (9.8). *Suggestion:* `combat_effects()` on
   item classes, the same `CombatEffect`, and an "Items" section in the
   picker from the build's inventory, read the way weapons are today. A
@@ -3869,7 +3887,9 @@ top). The full suite runs later, when the user asks.
   Incapacitated, two Paladins, Aura Expansion; Pack Tactics' allies; both
   through Fight on the map). 9.5: `tests/test_damage_outcomes.py`
   (Evasion's save outcomes and exception, Uncanny Dodge's halving, a
-  structured Regeneration's reminder).
+  structured Regeneration's reminder). 9.6: `tests/test_ends_early.py`
+  (each source's ending in the window, casting Invisibility on oneself
+  keeping it, a badge without EndsWhen staying).
 
 ## Checklist: adding a field to the model
 

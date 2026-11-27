@@ -15,6 +15,7 @@ when there's enough of it.
 """
 
 from Combat.Definitions import Action, ActionCost, Phase
+from Model.Content.CombatModifiers import EndEvent
 from Core.Rules import ACTIONS_PER_TURN
 
 from .asker import Asker
@@ -227,6 +228,11 @@ def use_pick(step: Step, caster: dict, effect: CustomEffect) -> bool | None:
         if not can_cast_or_say(step, caster, spell):
             return None
         log_spell_cast(step, caster, spell, option.spell_level, effect.slot_level)
+        # A badge that ends as its bearer casts a spell (Invisibility); cascade
+        # imports this module, so it's imported here.
+        from .cascade import end_when
+
+        end_when(step, caster, EndEvent.CASTS_SPELL)
         return True
     if option.kind == FEATURE:
         name = option.feature_name or option.name

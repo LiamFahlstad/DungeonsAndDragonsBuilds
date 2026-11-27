@@ -19,6 +19,7 @@ from Combat.Effects.triggers import (
     still_hits,
 )
 from Model.Content.CombatEffect import HALF_DAMAGE
+from Model.Content.CombatModifiers import EndEvent
 
 from .attack_rolls import (
     AttackRoll,
@@ -28,7 +29,7 @@ from .attack_rolls import (
     note_attack_roll,
     stored_armor,
 )
-from .cascade import remove_condition
+from .cascade import end_when, remove_condition
 from .fight import Fight
 from .monster_actions import first_number, roll_dice
 from .player_knowledge import _player_names, _seen
@@ -124,6 +125,9 @@ def resolve_attack_roll(
         character=name,
     )
     use_up_badges(step, source, target)
+    if source is not None:
+        # A badge that ends as its bearer makes an attack roll (Invisibility).
+        end_when(step, source, EndEvent.ATTACKS)
     warning = step.fight.cover_warning(source, target)
     if warning:
         notes = (*notes, warning)

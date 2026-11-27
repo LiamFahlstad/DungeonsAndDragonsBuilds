@@ -45,6 +45,7 @@ from Model.Content.CombatModifiers import (
     Size,
     Vision,
 )
+from Model.Content.CombatModifiers import EndEvent, EndsWhen
 from Model.Content.Feature import FeatureTarget
 from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table
 from Model.View import CharacterView
@@ -179,11 +180,24 @@ class Invisibility(ClassSpell):
     ) -> list[CombatEffect]:
         return [
             CombatEffect(
-                conditions=(CombatCondition(Condition.INVISIBLE),),
-                targets=CombatTargets(1, upcast=1),
-                notes=(
-                    "It ends right after the target makes an attack roll, deals damage or casts a spell.",
+                conditions=(
+                    CombatCondition(Condition.INVISIBLE),
+                    # "The spell ends early immediately after the target
+                    # makes an attack roll, deals damage, or casts a spell."
+                    CombatCondition(
+                        "Invisibility",
+                        modifiers=(
+                            EndsWhen(
+                                (
+                                    EndEvent.ATTACKS,
+                                    EndEvent.DEALS_DAMAGE,
+                                    EndEvent.CASTS_SPELL,
+                                )
+                            ),
+                        ),
+                    ),
                 ),
+                targets=CombatTargets(1, upcast=1),
             )
         ]
 

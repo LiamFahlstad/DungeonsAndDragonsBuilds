@@ -298,9 +298,19 @@
     "shape": "Emanation",
     "size_ft": 30
    },
+   "badge_modifiers": {
+    "Turn Undead": [
+     {
+      "events": [
+       "takes damage"
+      ],
+      "type": "EndsWhen"
+     }
+    ]
+   },
    "bonus": null,
    "concentration": false,
-   "condition": "Frightened + Incapacitated",
+   "condition": "Frightened + Incapacitated + Turn Undead",
    "counts_uses": true,
    "damage": "",
    "dc": 14,
@@ -309,7 +319,7 @@
    "half_on_save": false,
    "is_described": true,
    "is_unavailable": false,
-   "note": "Each Undead of your choice in it. On its turns it moves as far from you as it can. It ends early on a creature that takes any damage, or if you have the Incapacitated condition or die.",
+   "note": "Each Undead of your choice in it. On its turns it moves as far from you as it can. It also ends if you have the Incapacitated condition or die.",
    "repeat_save": false,
    "roll": "Saving throw",
    "row_name": "",

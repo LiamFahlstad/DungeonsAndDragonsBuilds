@@ -537,7 +537,8 @@ def test_turn_undead_frightens_and_incapacitates_for_a_minute():
         "WIS",
         _sheet(Gabriel).calculate_difficulty_class_for_ability(Ability.WISDOM),
     )
-    assert row.condition == "Frightened + Incapacitated"
+    # Its own badge comes too: it ends both as the creature takes damage (9.6).
+    assert row.condition == "Frightened + Incapacitated + Turn Undead"
     assert row.duration_seconds == 60
     assert "Undead" in row.note
 

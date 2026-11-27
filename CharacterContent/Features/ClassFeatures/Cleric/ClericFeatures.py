@@ -15,6 +15,7 @@ from Model.Content.Improvements import (
     GrantWeaponProficiency,
 )
 from Core.Definitions import Ability, CharacterClass, DamageType, Skill, ArmorType
+from Model.Content.CombatModifiers import EndEvent, EndsWhen
 from Model.Content.CombatEffect import (
     CombatCondition,
     CombatDamage,
@@ -325,13 +326,18 @@ class ChannelDivinity(Feature):
                 conditions=(
                     CombatCondition("Frightened"),
                     CombatCondition("Incapacitated"),
+                    # "These effects end early on the creature if it takes
+                    # any damage."
+                    CombatCondition(
+                        "Turn Undead",
+                        modifiers=(EndsWhen((EndEvent.TAKES_DAMAGE,)),),
+                    ),
                 ),
                 area=CombatArea(CombatAreaShape.EMANATION, 30),
                 notes=(
                     "Each Undead of your choice in it.",
-                    "On its turns it moves as far from you as it can. It ends"
-                    " early on a creature that takes any damage, or if you have"
-                    " the Incapacitated condition or die.",
+                    "On its turns it moves as far from you as it can. It also"
+                    " ends if you have the Incapacitated condition or die.",
                 ),
             ),
         ]

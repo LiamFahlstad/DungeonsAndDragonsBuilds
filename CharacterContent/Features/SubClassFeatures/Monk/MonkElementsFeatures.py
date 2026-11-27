@@ -16,6 +16,7 @@ from CharacterContent.Spells.SpellLists import DruidLevel0Spells
 from Model.Spells import FeatureSpell
 from Model.View import CharacterView
 from Model.Content.FeatureText import Block, Facts, Option, Paragraph, dc_formula
+from Model.Content.CombatModifiers import EndEvent, EndsWhen
 from Model.Content.CombatEffect import (
     CombatCondition,
     CombatDamage,
@@ -129,13 +130,15 @@ class ElementalAttunement(Feature):
                 conditions=(
                     CombatCondition(
                         "Elemental Attunement",
-                        duration_seconds=10 * 60,  # or until Incapacitated
+                        duration_seconds=10 * 60,
+                        # "It ends early if you have the Incapacitated
+                        # condition."
+                        modifiers=(EndsWhen((EndEvent.INCAPACITATED,)),),
                     ),
                 ),
                 targets_self=True,
                 notes=(
-                    "Used at the start of your turn. It ends early if you have"
-                    " the Incapacitated condition.",
+                    "Used at the start of your turn.",
                     "Your Unarmed Strikes have 10 feet more reach, and a hit can"
                     " deal Acid, Cold, Fire, Lightning or Thunder damage instead"
                     " of its type.",

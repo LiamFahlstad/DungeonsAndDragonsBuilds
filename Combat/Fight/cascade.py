@@ -28,6 +28,7 @@ from Combat.Arena.arena import (
 )
 from Combat.Definitions import Action, CombatStatus, Phase
 from Combat.Effects.active_effects import (
+    active_effects,
     held_by_concentration,
     is_linked,
     link_concentration,
@@ -36,6 +37,7 @@ from Combat.Effects.active_effects import (
 from Combat.Effects.modifiers import has_condition, hit_point_maximum, loses_dodge
 from Combat.WildShape import current_form, form_badge, leave_form, wild_shape_feature
 from Core.Definitions import Condition
+from Model.Content.CombatModifiers import EndEvent, EndsWhen, modifier_from_dict
 from Model.Content.StandardActions import DASH, DODGE
 
 from .conditions import gain_condition, incapacitates, lose_condition
@@ -109,6 +111,38 @@ def add_condition(
         # Speed of 0 (Grappled); they don't count from then on anyway.
         if cond != DODGE and DODGE in char["conditions"] and loses_dodge(char):
             remove_condition(step, char, DODGE)
+        # A badge that ends as its bearer is Incapacitated (Elemental
+        # Attunement).
+        if incapacitates(cond):
+            end_when(step, char, EndEvent.INCAPACITATED)
+
+
+def end_when(step: Step, char: dict, event: EndEvent):
+    """End each badge on char that ends early as it does `event` (its
+    EndsWhen: Invisibility as it makes an attack roll, Sleep as it takes
+    damage), logged, with the conditions it gave going with it. Plan step
+    9.6; called where the fight sees each event: deal_damage,
+    resolve_attack_roll, a spell's cast, add_condition."""
+    held = char.get("conditions") or []
+    ending = [
+        effect["name"]
+        for effect in active_effects(char)
+        if effect["name"] in held
+        and any(
+            isinstance(modifier, EndsWhen) and event in modifier.events
+            for modifier in (
+                modifier_from_dict(data, f"{effect['name']} on {char['name']}")
+                for data in effect.get("modifiers") or ()
+            )
+        )
+    ]
+    for name in ending:
+        if name not in char.get("conditions", []):
+            continue  # gone with another that ended
+        step.log(
+            f"{char['name']}'s {name} ends: it {event.value}", character=char["name"]
+        )
+        remove_condition(step, char, name, source=char)
 
 
 def take_dash(step: Step, char: dict):

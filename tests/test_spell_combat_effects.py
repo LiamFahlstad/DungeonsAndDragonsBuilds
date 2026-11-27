@@ -315,7 +315,8 @@ def test_ray_of_sickness_poisons_until_the_end_of_the_casters_next_turn():
 
 def test_sleep_incapacitates_until_the_end_of_the_targets_next_turn():
     sleep = _option("Sleep")
-    assert sleep.condition == "Incapacitated"
+    # Its own badge comes too: it wakes the target as it takes damage (9.6).
+    assert sleep.condition == "Incapacitated + Sleep"
     assert sleep.until == ("end", "target")
     assert not sleep.repeat_save  # its second save is a different one
     assert "Unconscious" in sleep.note

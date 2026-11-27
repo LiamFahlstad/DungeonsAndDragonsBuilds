@@ -252,7 +252,14 @@ def give_pick_badge(
                 FEATURE_BADGE_COLOR,
                 FEATURE,
             )
-    if not badge or badge in effect.conditions:
+    if not badge:
+        return
+    if badge in effect.conditions:
+        # Its badge given by name beside them (Invisibility beside
+        # Invisible, Silence beside Deafened): it stands for them all the
+        # same, so they end together (plan step 9.6).
+        if badge in target["conditions"]:
+            link_badge(target, badge, rules)
         return
     add_condition(step, target, badge, source, counted=False)
     link_badge(target, badge, conditions)

@@ -96,7 +96,8 @@ def test_turn_undead_gives_both_conditions_and_spends_channel_divinity(
     dlg = open_dialog(monkeypatch, ui._show_custom_condition_dialog)
     _pick(dlg, "Turn Undead")
     name_box = dlg.findChild(QComboBox, "conditionName")
-    assert name_box.currentText() == "Frightened + Incapacitated"
+    # Its own badge comes too: it ends both as the creature takes damage (9.6).
+    assert name_box.currentText() == "Frightened + Incapacitated + Turn Undead"
     _rolls(monkeypatch, 1)  # the Tiger fails its Wisdom save
     _apply(dlg)
     assert {"Frightened", "Incapacitated"} <= set(tiger["conditions"])

@@ -1241,9 +1241,19 @@
     "shape": "Sphere",
     "size_ft": 5
    },
+   "badge_modifiers": {
+    "Sleep": [
+     {
+      "events": [
+       "takes damage"
+      ],
+      "type": "EndsWhen"
+     }
+    ]
+   },
    "bonus": null,
    "concentration": true,
-   "condition": "Incapacitated",
+   "condition": "Incapacitated + Sleep",
    "counts_uses": true,
    "damage": "",
    "dc": 14,
@@ -1252,7 +1262,7 @@
    "half_on_save": false,
    "is_described": true,
    "is_unavailable": false,
-   "note": "At the end of its next turn the target repeats the save: on a failure it has the Unconscious condition for the duration. It wakes if it takes damage or someone within 5 feet takes an action to shake it. Creatures that don't sleep, or are immune to Exhaustion, succeed automatically.",
+   "note": "At the end of its next turn the target repeats the save: on a failure it has the Unconscious condition for the duration. Someone within 5 feet can also take an action to shake it awake. Creatures that don't sleep, or are immune to Exhaustion, succeed automatically.",
    "repeat_save": false,
    "roll": "Saving throw",
    "row_name": "",
