@@ -570,6 +570,16 @@ test_deflect_attacks_takes_its_roll_off_the_damage and test_deflect_attacks_can_
 **History**
 - 2026-11-25 main session (combat-effects plan 9.2): found
 
+### DI-119 · Starry Form's text-read picker row gives its druid Incapacitated
+- **Status:** open
+- **Area:** combat-simulator
+- **Where:** `CharacterContent/Features/SubClassFeatures/Druid/DruidStarsFeatures.py (StarryForm)`
+
+Starry Form has no combat_effects yet (needs a Wild Shape extension link, CASTS_SPELL for Chalice, a d20 floor for Dragon; plan 9.12/9.14). Its row read from the text comes out as '+5 1d8 Radiant, Incapacitated' because the text says the form ends when you're Incapacitated; a GM picking it would make the druid Incapacitated. Fix: describe it once those exist, or give it [] with a reason meanwhile.
+
+**History**
+- 2026-11-28 main-session: found
+
 ## Fixed
 
 ### DI-001 · Temporary Hit Points stack instead of keeping one amount

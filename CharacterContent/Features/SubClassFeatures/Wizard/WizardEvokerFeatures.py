@@ -1,3 +1,8 @@
+from dataclasses import replace
+
+from Core.Definitions import CharacterClass
+from CharacterContent.Spells.SpellFactory.Enums import School
+from Model.Content.CombatEffect import CombatEffect
 from Model.Content.Feature import Feature, FeatureTarget
 from Model.View import CharacterView
 from Model.Content.FeatureText import Block, Facts, Paragraph
@@ -30,6 +35,10 @@ class EvocationSavant(Feature):
             "In addition, whenever you gain access to a new level of spell slots in this class, you can add one Wizard spell from the Evocation school to your spellbook for free. The chosen spell must be of a level for which you have spell slots."
         )
         return description
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # Spells for the spellbook, in the picker as spells.
+        return []
 
 
 class PotentCantrip(Feature):
@@ -118,6 +127,42 @@ class EmpoweredEvocation(Feature):
     def get_description(self, character: CharacterView) -> str:
         description = "Whenever you cast a Wizard spell from the Evocation school, you can add your Intelligence modifier to one damage roll of that spell."
         return description
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # It changes the damage of the Evocation spells it applies to.
+        return []
+
+    def adjust_combat_effect(
+        self, character: CharacterView, source: str, effect: CombatEffect
+    ) -> CombatEffect:
+        # The casting itself (not a later turn's row of the spell), and one
+        # roll: with several instances (Magic Missile's darts, Scorching
+        # Ray's rays) the modifier would be added to each, so those are
+        # left as they are. A Wizard casts a Wizard spell with Intelligence,
+        # so the caster's spellcasting modifier is the Intelligence one.
+        if not effect.spends_use or effect.instances is not None:
+            return effect
+        if not _is_wizard_evocation_spell(source):
+            return effect
+        for index, part in enumerate(effect.damage):
+            if not part.add_modifier and not part.when:
+                damage = list(effect.damage)
+                damage[index] = replace(part, add_modifier=True)
+                return replace(effect, damage=tuple(damage))
+        return effect
+
+
+def _is_wizard_evocation_spell(name: str) -> bool:
+    # Imported when first asked for, as SpellFactory does.
+    from CharacterContent.Spells.SpellClasses import SPELL_CLASSES
+
+    spell = SPELL_CLASSES.get(name)
+    if spell is None:
+        return False
+    return (
+        spell.rules.school is School.EVOCATION
+        and CharacterClass.WIZARD in spell.rules.classes
+    )
 
 
 class Overchannel(Feature):

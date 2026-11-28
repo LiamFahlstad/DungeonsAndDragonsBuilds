@@ -14,6 +14,7 @@ from Model.Content.Feature import (
     TimeUnit,
 )
 from Core.Rules import MAX_ABILITY_MODIFIER
+from Model.Content.CombatEffect import CombatEffect
 from Model.View import CharacterView
 from Model.Content.FeatureText import Block, Facts, Option, Paragraph
 
@@ -67,6 +68,17 @@ class StarMap(Feature):
 
     def number_of_uses(self, character: CharacterView) -> int:
         return max(1, character.get_wisdom_modifier())
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # Its free castings of Guiding Bolt spend this feature's own uses;
+        # Guidance is a cantrip, in the picker as a spell.
+        return [
+            CombatEffect(
+                name="Guiding Bolt (Star Map)",
+                spell="Guiding Bolt",
+                notes=("While holding the Star Map.",),
+            )
+        ]
 
 
 STARRY_FORM_DICE = FeatureDice(

@@ -1,3 +1,7 @@
+from Core.Definitions import DamageType
+from Model.Content.CombatEffect import CombatDamage, CombatEffect
+from Model.Content.CombatModifiers import AttackKind
+from Model.Content.CombatTriggers import CombatTrigger, TriggerEvent
 from Model.Content.Feature import Feature, FeatureActivation, ActionType, FeatureTarget
 from Model.View import CharacterView
 from Model.Content.FeatureText import Block, Facts, Paragraph
@@ -32,6 +36,10 @@ class HuntersLore(Feature):
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
 
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # What its owner knows about a marked creature: nothing to put on it.
+        return []
+
 
 class ColossusSlayer(Feature):
     def __init__(self):
@@ -61,6 +69,35 @@ class ColossusSlayer(Feature):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ENEMY
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        weapon_types = (
+            DamageType.BLUDGEONING,
+            DamageType.PIERCING,
+            DamageType.SLASHING,
+        )
+        return [
+            CombatEffect(
+                damage=(CombatDamage("1d8", None, weapon_types),),
+                # "When you hit a creature with a weapon, the weapon deals an
+                # extra 1d8 damage to the target if it's missing any of its
+                # Hit Points ... only once per turn": it happens, but the
+                # simulator has no gate on the target's Hit Points (plan step
+                # 9.12, Toll the Dead's), so the GM is asked. The hit's own
+                # damage is dealt by then, hence "before this hit".
+                trigger=CombatTrigger(
+                    TriggerEvent.HIT,
+                    optional=False,
+                    attacks=AttackKind.WEAPON,
+                    once_per_turn=True,
+                    when="it was missing any of its Hit Points before this hit",
+                ),
+                notes=(
+                    "The damage is the weapon's type. Picked by hand after a"
+                    " Critical Hit, roll the dice twice.",
+                ),
+            )
+        ]
 
 
 class HordeBreaker(Feature):

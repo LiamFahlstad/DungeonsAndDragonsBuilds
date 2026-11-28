@@ -1,3 +1,4 @@
+from Model.Content.CombatEffect import CombatEffect
 from Model.Content.Feature import Feature, FeatureActivation, ActionType, FeatureTarget
 from Model.View import CharacterView
 from Model.Content.FeatureText import Block, Facts, Paragraph, Table
@@ -58,6 +59,10 @@ class LifeDomainSpells(Feature):
     def get_description(self, character: CharacterView) -> str:
         description = "Your connection to this divine domain ensures you always have certain spells ready. When you reach a Cleric level specified in the Life Domain Spells table, you thereafter always have the listed spells prepared."
         return description
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # Its spells are in the picker as spells.
+        return []
 
 
 class PreserveLife(Feature):

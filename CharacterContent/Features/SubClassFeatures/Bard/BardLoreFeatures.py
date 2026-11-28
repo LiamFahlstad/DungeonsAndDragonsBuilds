@@ -1,4 +1,5 @@
 from Core.Definitions import Skill
+from Model.Content.CombatEffect import CombatEffect
 from Model.Content.Feature import Feature, FeatureActivation, ActionType, FeatureTarget
 from Model.Content.Improvements import SkillProficiencyChoice
 from Model.Ledger.LedgerWriter import LedgerWriter
@@ -97,6 +98,10 @@ class MagicalDiscoveries(Feature):
             "You always have the chosen spells prepared, and whenever you gain a Bard level, you can replace one of the spells with another spell that meets these requirements."
         )
         return description
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # Only grants spells, which are in the picker as spells.
+        return []
 
 
 class PeerlessSkill(Feature):

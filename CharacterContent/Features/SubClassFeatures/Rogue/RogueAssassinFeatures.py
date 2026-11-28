@@ -1,4 +1,5 @@
 import Core.Definitions as Definitions
+from Model.Content.CombatEffect import CombatEffect
 from Model.Content.Feature import Feature, FeatureTarget
 from Model.Content.Improvements import InitiativeRollCondition
 from Model.Ledger.LedgerWriter import LedgerWriter
@@ -70,6 +71,10 @@ class AssassinsTools(Feature):
     def get_description(self, character: CharacterView) -> str:
         description = "You gain a Disguise Kit and a Poisoner's Kit, and you have proficiency with them."
         return description
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # Tools and their proficiency: nothing to put on a creature in a fight.
+        return []
 
 
 class InfiltrationExpertise(Feature):
