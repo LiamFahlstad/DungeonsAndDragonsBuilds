@@ -5,6 +5,7 @@ from Core.Definitions import (
     Condition,
     DamageType,
 )
+from Model.Content.CombatEffect import CombatEffect
 from Model.Content.Feature import (
     ActionType,
     Feature,
@@ -81,6 +82,10 @@ class CircleOfTheLandSpells(Feature):
             f"You have chosen the {self.land_type.value} land."
         )
         return description
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # Its spells are in the picker as spells.
+        return []
 
 
 LANDS_AID_DICE = FeatureDice(

@@ -1,5 +1,13 @@
+from Model.Content.CombatAdjustments import (
+    Adjustment,
+    AddToOneDamageRoll,
+    Applies,
+    Spells,
+)
 import Core.Definitions as Definitions
 from Core.Definitions import Ability, DamageType
+from Model.Content.CombatEffect import CombatCondition, CombatDamage, CombatEffect
+from Model.Content.CombatModifiers import Movement
 from Model.Content.Feature import (
     ActionType,
     Feature,
@@ -51,6 +59,10 @@ class DraconicSpells(Feature):
             "9	Legend Lore, Summon Dragon"
         )
         return description
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # Its spells are in the picker as spells.
+        return []
 
 
 class DraconicResilience(Feature):
@@ -147,6 +159,18 @@ class ElementalAffinity(Feature):
         )
         return description
 
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # Its Resistance is on the sheet; it only changes spells' damage.
+        return []
+
+    def combat_adjustments(self, character: CharacterView) -> tuple[Adjustment, ...]:
+        # Any spell that deals its type (or lets it be chosen), whatever class
+        # casts it or a feature's free casting: the Charisma modifier, not the
+        # spellcasting one. The casting itself, and one damage roll.
+        types = (self.damage_type,)
+        bonus = AddToOneDamageRoll(character.get_charisma_modifier(), types)
+        return (Adjustment(Applies(spells=Spells(), deals=types), (bonus,)),)
+
 
 class DragonWings(Feature):
     def __init__(self):
@@ -189,6 +213,22 @@ class DragonWings(Feature):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # Its own use, Bonus Action and hour; dismissed by taking the badge
+        # off.
+        return [
+            CombatEffect(
+                targets_self=True,
+                conditions=(
+                    CombatCondition("Dragon Wings", modifiers=(Movement(fly_ft=60),)),
+                ),
+                notes=(
+                    "With no use left, you can spend 3 Sorcery Points (no"
+                    " action required) to restore it.",
+                ),
+            )
+        ]
 
 
 class DragonCompanion(Feature):

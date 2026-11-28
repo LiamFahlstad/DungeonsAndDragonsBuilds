@@ -1,5 +1,6 @@
 from Model.Content.Feature import Feature, FeatureActivation, ActionType, FeatureTarget
 from Model.View import CharacterView
+from Model.Content.CombatEffect import CombatEffect
 from Model.Content.CombatModifiers import Movement
 from Model.Content.FeatureText import Block, Facts, Option, Paragraph
 
@@ -41,6 +42,12 @@ class FastHands(Feature):
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.OBJECT
 
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # A Sleight of Hand check, the Utilize action or a magic item's Magic
+        # action as a Bonus Action: nothing to put on a creature (an item's
+        # own row is the item's).
+        return []
+
 
 class SecondStoryWork(Feature):
     def __init__(self):
@@ -76,6 +83,11 @@ class SecondStoryWork(Feature):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # The Climb Speed is movement() (the battle map counts it); jumping
+        # with Dexterity is the table's.
+        return []
 
 
 class SupremeSneak(Feature):
@@ -152,6 +164,10 @@ class UseMagicDevice(Feature):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.OBJECT
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # Attunement, charges and Spell Scrolls: the items', not a row.
+        return []
 
 
 class ThiefsReflexes(Feature):

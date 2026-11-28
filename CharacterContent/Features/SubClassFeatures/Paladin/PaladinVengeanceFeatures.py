@@ -9,6 +9,7 @@ from Model.Content.Feature import (
 )
 from Model.View import CharacterView
 from Model.Content.FeatureText import Block, Facts, Paragraph, Table
+from Model.Content.CombatEffect import CombatEffect
 
 
 class OathOfVengeanceSpells(Feature):
@@ -46,6 +47,10 @@ class OathOfVengeanceSpells(Feature):
             "17	Hold Monster, Scrying"
         )
         return description
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # It only grants spells, which are in the picker as spells.
+        return []
 
 
 class VowOfEnmity(Feature):

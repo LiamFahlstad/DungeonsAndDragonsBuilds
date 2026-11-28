@@ -9,6 +9,7 @@ from Model.Content.Feature import (
     FeatureDuration,
     TimeUnit,
 )
+from Model.Content.CombatEffect import CombatEffect
 from Model.Content.Improvements import DamageResistance
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Core.Rules import MAX_ABILITY_MODIFIER
@@ -79,6 +80,10 @@ class WarDomainSpells(Feature):
     def get_description(self, character: CharacterView) -> str:
         description = "Your connection to this divine domain ensures you always have certain spells ready. When you reach a Cleric level specified in the War Domain Spells table, you thereafter always have the listed spells prepared."
         return description
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # Its spells are in the picker as spells.
+        return []
 
 
 class WarPriest(Feature):

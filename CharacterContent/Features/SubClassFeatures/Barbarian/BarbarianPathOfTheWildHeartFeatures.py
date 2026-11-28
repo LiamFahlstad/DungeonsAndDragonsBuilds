@@ -1,3 +1,4 @@
+from Model.Content.CombatEffect import CombatEffect
 from Model.Content.Feature import Feature, FeatureActivation, FeatureTarget
 from Core.Definitions import Ability
 from CharacterContent.Spells.SpellLists import (
@@ -43,6 +44,10 @@ class AnimalSpeaker(Feature):
     def get_description(self, character: CharacterView) -> str:
         description = "You can cast the Beast Sense and Speak with Animals spells but only as Rituals. Wisdom is your spellcasting ability for them."
         return description
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # It only grants spells (as Rituals), which are in the picker as spells.
+        return []
 
 
 class RageOfTheWilds(Feature):
@@ -175,6 +180,10 @@ class NatureSpeaker(Feature):
     def get_description(self, character: CharacterView) -> str:
         description = "You can cast the Commune with Nature spell but only as a Ritual. Wisdom is your spellcasting ability for it."
         return description
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # It only grants a spell (as a Ritual), which is in the picker as a spell.
+        return []
 
 
 class PowerOfTheWilds(Feature):

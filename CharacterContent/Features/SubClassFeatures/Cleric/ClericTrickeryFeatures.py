@@ -6,6 +6,7 @@ from Model.Content.Feature import (
     FeatureDuration,
     TimeUnit,
 )
+from Model.Content.CombatEffect import CombatEffect
 from Model.View import CharacterView
 from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table
 
@@ -74,6 +75,10 @@ class TrickeryDomainSpells(Feature):
     def get_description(self, character: CharacterView) -> str:
         description = "Your connection to this divine domain ensures you always have certain spells ready. When you reach a Cleric level specified in the Trickery Domain Spells table, you thereafter always have the listed spells prepared."
         return description
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # It only grants spells, which are in the picker as spells.
+        return []
 
 
 class InvokeDuplicity(Feature):

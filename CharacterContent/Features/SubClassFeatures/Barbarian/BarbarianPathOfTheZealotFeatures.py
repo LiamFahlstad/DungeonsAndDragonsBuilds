@@ -11,6 +11,15 @@ from Model.Content.Feature import (
 )
 from Model.View import CharacterView
 from Model.Content.FeatureText import Block, Facts, Paragraph
+from Model.Content.CombatEffect import (
+    CombatCondition,
+    CombatEffect,
+    CombatHitPoints,
+    CombatTargets,
+    TurnEdge,
+    TurnOf,
+)
+from Model.Content.CombatModifiers import D20Mode, D20Test, RollMode
 
 
 class DivineFury(Feature):
@@ -94,6 +103,20 @@ class WarriorOfTheGods(Feature):
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
 
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # "Expend dice from the pool, roll them, and regain a number of Hit
+        # Points equal to the roll's total": a row per number of dice, each
+        # spending that many of the pool's d12s (its uses).
+        return [
+            CombatEffect(
+                name=f"Warrior of the Gods: {count}d12",
+                healing=CombatHitPoints(f"{count}d12"),
+                targets_self=True,
+                uses_spent=count,
+            )
+            for count in range(1, self.number_of_uses(character) + 1)
+        ]
+
 
 class FanaticalFocus(Feature):
     def __init__(self):
@@ -171,6 +194,31 @@ class ZealousPresence(Feature):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # Its own use and Bonus Action, on up to ten others within 60 feet.
+        return [
+            CombatEffect(
+                conditions=(
+                    CombatCondition(
+                        "Zealous Presence",
+                        until=(TurnEdge.START, TurnOf.SOURCE),
+                        modifiers=(
+                            D20Mode(
+                                (D20Test.ATTACK_ROLL, D20Test.SAVING_THROW),
+                                RollMode.ADVANTAGE,
+                            ),
+                        ),
+                    ),
+                ),
+                targets=CombatTargets(10),
+                notes=(
+                    "Other creatures of your choice within 60 feet: not you.",
+                    "With no use left, you can expend a use of Rage (no"
+                    " action required) to restore it.",
+                ),
+            )
+        ]
 
 
 class RageOfTheGods(Feature):

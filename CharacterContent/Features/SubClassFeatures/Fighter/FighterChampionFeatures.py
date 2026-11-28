@@ -1,4 +1,5 @@
 from Core.Definitions import DiceRollCondition, Skill
+from Model.Content.CombatEffect import CombatEffect
 from Model.Content.Feature import Feature, FeatureTarget
 from Model.Content.Improvements import InitiativeRollCondition, SkillRollCondition
 from Model.Ledger.LedgerWriter import LedgerWriter
@@ -86,6 +87,10 @@ class AdditionalFightingStyle(Feature):
     def get_description(self, character: CharacterView) -> str:
         description = "You gain another Fighting Style feat of your choice."
         return description
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # It grants a Fighting Style feat, which is a feature of its own.
+        return []
 
 
 class HeroicWarrior(Feature):

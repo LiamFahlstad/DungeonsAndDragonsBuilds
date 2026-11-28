@@ -1,6 +1,23 @@
+from CharacterContent.Features.ClassFeatures.Monk.MonkFeatures import (
+    MARTIAL_ARTS_DIE,
+    MonksFocus,
+)
 from Core.Definitions import (
     Ability,
+    Condition,
 )
+from Model.Content.CombatEffect import (
+    CombatCondition,
+    CombatEffect,
+    CombatHitPoints,
+    CombatPush,
+    EffectRoll,
+    TurnEdge,
+    TurnOf,
+    with_bonus,
+)
+from Model.Content.CombatModifiers import AttackKind, Note
+from Model.Content.CombatTriggers import CombatTrigger, TriggerEvent
 from Model.Content.Feature import (
     Feature,
     FeatureUses,
@@ -106,6 +123,51 @@ class OpenHandTechnique(Feature):
         )
         return description
 
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # "Whenever you hit a creature with an attack granted by your Flurry
+        # of Blows, you can impose one of the following effects": a row per
+        # effect, asked as an Unarmed Strike hits. Which feature granted the
+        # attack isn't a gate, so it's the question. Its saves use the Focus
+        # save DC (8 + Wisdom modifier + Proficiency Bonus).
+        dc = MonksFocus().calculate_dc(character)
+
+        def on_flurry_hit() -> CombatTrigger:
+            return CombatTrigger(
+                TriggerEvent.HIT,
+                attacks=AttackKind.UNARMED,
+                when="it was an attack granted by your Flurry of Blows",
+            )
+
+        return [
+            CombatEffect(
+                name="Open Hand Technique: Addle",
+                conditions=(
+                    CombatCondition(
+                        "Open Hand Technique",
+                        until=(TurnEdge.START, TurnOf.TARGET),
+                        modifiers=(Note("Can't make Opportunity Attacks"),),
+                    ),
+                ),
+                trigger=on_flurry_hit(),
+            ),
+            CombatEffect(
+                name="Open Hand Technique: Push",
+                roll=EffectRoll.SAVE,
+                save_ability=Ability.STRENGTH,
+                dc=dc,
+                push=CombatPush(15, up_to=True),
+                trigger=on_flurry_hit(),
+            ),
+            CombatEffect(
+                name="Open Hand Technique: Topple",
+                roll=EffectRoll.SAVE,
+                save_ability=Ability.DEXTERITY,
+                dc=dc,
+                conditions=(CombatCondition(Condition.PRONE),),
+                trigger=on_flurry_hit(),
+            ),
+        ]
+
 
 class WholenessOfBody(Feature):
     def __init__(self):
@@ -150,6 +212,21 @@ class WholenessOfBody(Feature):
 
     def number_of_uses(self, character: CharacterView) -> int:
         return max(1, character.get_wisdom_modifier())
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        wisdom = character.get_wisdom_modifier()
+        notes = ()
+        if wisdom < 0:
+            notes = ("You regain at least 1 Hit Point.",)
+        return [
+            CombatEffect(
+                healing=CombatHitPoints(
+                    with_bonus(MARTIAL_ARTS_DIE.at(character), wisdom)
+                ),
+                targets_self=True,
+                notes=notes,
+            )
+        ]
 
 
 class FleetStep(Feature):

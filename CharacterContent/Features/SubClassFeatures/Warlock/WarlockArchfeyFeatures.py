@@ -10,6 +10,7 @@ from Model.Content.Feature import (
 from Model.Content.Improvements import ConditionImmunity
 from Model.Ledger.LedgerWriter import LedgerWriter
 from Core.Rules import MAX_ABILITY_MODIFIER
+from Model.Content.CombatEffect import CombatEffect
 from Model.View import CharacterView
 from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table, dc_formula
 
@@ -40,6 +41,10 @@ class ArchfeySpells(Feature):
     def get_description(self, character: CharacterView) -> str:
         description = "The magic of your patron ensures you always have certain spells ready; when you reach a Warlock level specified in the Archfey Spells table, you thereafter always have the listed spells prepared."
         return description
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # Its spells are in the picker as spells.
+        return []
 
 
 class StepsOfTheFey(Feature):

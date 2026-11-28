@@ -1,4 +1,5 @@
 from Core.Definitions import Skill
+from Model.Content.CombatEffect import CombatEffect
 from Model.Content.Feature import (
     Feature,
     FeatureUses,
@@ -161,6 +162,10 @@ class ImplementsOfMercy(Feature):
     def get_description(self, character: CharacterView) -> str:
         description = "You gain proficiency in the Insight and Medicine skills and proficiency with the Herbalism Kit."
         return description
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # Proficiencies only.
+        return []
 
 
 class PhysiciansTouch(Feature):

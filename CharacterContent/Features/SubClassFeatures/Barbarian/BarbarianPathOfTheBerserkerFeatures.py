@@ -1,6 +1,16 @@
+from Model.Content.CombatAdjustments import (
+    PARENT,
+    AddBadgeModifiers,
+    Adjustment,
+    AlsoEnds,
+)
 from Core.Definitions import (
     Ability,
+    Condition,
 )
+from Model.Content.CombatArea import CombatArea, CombatAreaShape
+from Model.Content.CombatEffect import CombatCondition, CombatEffect, EffectRoll
+from Model.Content.CombatModifiers import ConditionImmunity
 from Model.Content.Feature import (
     ActionType,
     Feature,
@@ -74,6 +84,21 @@ class MindlessRage(Feature):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.SELF
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # It only changes Rage's effect.
+        return []
+
+    def combat_adjustments(self, character: CharacterView) -> tuple[Adjustment, ...]:
+        # Rage (its parent) gives Immunity to Charmed and Frightened, and
+        # ends them as it starts.
+        immune = (Condition.CHARMED, Condition.FRIGHTENED)
+        return (
+            Adjustment(
+                PARENT,
+                (AddBadgeModifiers((ConditionImmunity(immune),)), AlsoEnds(immune)),
+            ),
+        )
 
 
 class Retaliation(Feature):
@@ -160,3 +185,20 @@ class IntimidatingPresence(Feature):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.AREA
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # Its own use and Bonus Action; its DC is calculate_dc's.
+        return [
+            CombatEffect(
+                roll=EffectRoll.SAVE,
+                save_ability=Ability.WISDOM,
+                conditions=(CombatCondition(Condition.FRIGHTENED),),
+                repeat_save=True,
+                area=CombatArea(CombatAreaShape.EMANATION, 30),
+                notes=(
+                    "Each creature of your choice in it.",
+                    "With no use left, you can expend a use of Rage (no"
+                    " action required) to restore it.",
+                ),
+            )
+        ]

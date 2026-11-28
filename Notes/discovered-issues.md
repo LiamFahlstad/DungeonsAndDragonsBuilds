@@ -169,6 +169,8 @@ Uses are counted per feature name in char['feature_uses_used'], so Starry Form, 
 
 **History**
 - 2026-11-04 main session (Claude Opus 5.5): found
+- 2026-11-28 feature-combat-effects: Land's Aid now has rows (thorns, healing) that would spend Wild Shape's use once CharacterContent/Classes/SubClasses2024/DruidLand.py adds it with extends=DruidFeatures.WildShape (as Archdruid is); until then the picker counts no use. Nature's Sanctuary the same when described.
+- 2026-11-28 feature-combat-effects: Correction to the note above: Land's Aid was left undescribed after all (its healing step is a spends_use=False row, which DI-121 makes cost a second Magic action). It still needs extends=DruidFeatures.WildShape in DruidLand.py when described.
 
 ### DI-038 · Combat UI: a Wild Shape form's duration (hours = half Druid level) isn't tracked
 - **Status:** open
@@ -576,6 +578,88 @@ test_deflect_attacks_takes_its_roll_off_the_damage and test_deflect_attacks_can_
 - **Where:** `CharacterContent/Features/SubClassFeatures/Druid/DruidStarsFeatures.py (StarryForm)`
 
 Starry Form has no combat_effects yet (needs a Wild Shape extension link, CASTS_SPELL for Chalice, a d20 floor for Dragon; plan 9.12/9.14). Its row read from the text comes out as '+5 1d8 Radiant, Incapacitated' because the text says the form ends when you're Incapacitated; a GM picking it would make the druid Incapacitated. Fix: describe it once those exist, or give it [] with a reason meanwhile.
+
+**History**
+- 2026-11-28 main-session: found
+
+### DI-120 · Quivering Palm and Vow of Enmity aren't granted as extensions of the pool they spend
+- **Status:** open
+- **Area:** character-engine
+- **Where:** `CharacterContent/Classes/SubClasses2024/MonkOpenHand.py:50, CharacterContent/Classes/SubClasses2024/PaladinVengeance.py:30`
+
+Quivering Palm costs 4 Focus Points and Vow of Enmity a use of Channel Divinity, but both are added with data.add_feature(...) and no extends=, unlike Stunning Strike (extends=MonksFocus) and Sacred Weapon (extends=ChannelDivinity; ChannelDivinity.combat_effects' comment even names Vow of Enmity as an extension). Their combat rows (uses_spent=4; a Channel Divinity use) would spend nothing, so both were left without combat_effects. Fix: extends=MonkFeatures.MonksFocus / extends=PaladinFeatures.ChannelDivinity, then describe them.
+
+**History**
+- 2026-11-28 feature-combat-effects: found
+
+### DI-121 · A feature row with spends_use=False still costs its feature's (or parent's) action
+- **Status:** open
+- **Area:** combat-simulator
+- **Where:** `Combat/Fight/effect_options.py:1304-1308 (_described_feature_option)`
+
+Spell rows with spends_use=False get action_cost None (_described_spell_option), but a feature's row takes feature_action_cost(feature), or its parent's for an extension, whatever spends_use says, and triggered_rows / _apply_row spend it (effect_lacks refuses when it's used). Seen: Frenzy, an extension of Rage, showed action_cost Bonus Action. Same for Rage's extensions Relentless Rage (DROPS_TO_ZERO) and Persistent Rage (ROLLS_INITIATIVE, spends_use=False): firing them would spend or need a Bonus Action. The skill says spends_use=False spends no action. Blocks Frenzy and Avenging Angel's Frightful Aura (an AtTurnStart row on enemies' turns), left undescribed.
+
+**History**
+- 2026-11-28 feature-combat-effects: found
+- 2026-11-28 feature-combat-effects: Also blocks Land's Aid (Circle of the Land): its one-creature healing is a spends_use=False second step after the thorns' save, and the picker gives it Land's Aid's Magic action again. Left undescribed.
+- 2026-11-28 feature-combat-effects: Also blocks Zealot's Fanatical Focus (FAILS_SAVE reroll) and Divine Fury (HIT damage), both extensions of Rage: their free rows would cost Rage's Bonus Action. Left undescribed (subclass sweep).
+
+### DI-122 · A triggered row's damage type to choose takes the hit weapon's type even when it isn't one of its choices
+- **Status:** open
+- **Area:** combat-simulator
+- **Where:** `Combat/Fight/picked.py:55`
+
+_typed_like_the_hit fills every roll whose damage_type is None with the hit's weapon's type (R172: right for Sneak Attack and Colossus Slayer, whose choices are Bludgeoning/Piercing/Slashing). It doesn't look at the CombatDamage's choices, so a HIT row like Zealot's Divine Fury (1d6 + half Barbarian level, Necrotic or Radiant, chosen each time) would deal Slashing on a longsword hit. Writing one row per type instead doesn't help: the trigger pop-up (Combat/CombatUIQt/trigger_prompt.py) checks every firing to start with, so Apply would deal both. Fix: fill the weapon's type only when it's among the roll's choices (or when it has none), else leave the type for the GM to give. Divine Fury is left None until then (subclass sweep).
+
+**History**
+- 2026-11-28 feature-combat-effects: found
+
+### DI-123 · Mantle of Inspiration isn't granted as an extension of Bardic Inspiration
+- **Status:** open
+- **Area:** character-engine
+- **Where:** `CharacterContent/Classes/SubClasses2024/BardGlamour.py:26`
+
+Mantle of Inspiration expends a use of Bardic Inspiration, but BardGlamourLevel3 adds it with data.add_feature(BardGlamourFeatures.MantleOfInspiration()) and no extends=, so a combat row for it would spend nothing (DI-120's family). Mantle of Majesty, which has uses of its own and is restored by a level 3+ slot, is the one added with extends=BardFeatures.BardicInspiration. Fix: extends=BardFeatures.BardicInspiration on Mantle of Inspiration (check whether Mantle of Majesty's extends= is intended). Mantle of Inspiration was left without combat_effects.
+
+**History**
+- 2026-11-28 feature-combat-effects: found
+
+### DI-124 · Mercy Monk's Hand of Harm, Hand of Healing and Hand of Ultimate Mercy aren't granted as extensions of Monk's Focus
+- **Status:** open
+- **Area:** character-engine
+- **Where:** `CharacterContent/Classes/SubClasses2024/MonkMercy.py:21`, `CharacterContent/Classes/SubClasses2024/MonkMercy.py:54`
+
+Hand of Harm and Hand of Healing expend 1 Focus Point and Hand of Ultimate Mercy 5, but MonkMercyLevel3 and MonkMercyLevel17 add them with data.add_feature(...) and no extends=, so a combat row for them would spend no Focus Point (DI-123's family; Shadow Arts is added with extends=MonkFeatures.MonksFocus). Physician's Touch is added with extends=HandOfHarm, though it changes Hand of Healing too. Fix: extends=MonkFeatures.MonksFocus on Hand of Harm and Hand of Healing (Hand of Ultimate Mercy has its own once-per-Long-Rest use as well as the 5 Focus Points, so it needs both). All of Mercy's Hand features were left without combat_effects (plan 9.17, subclass sweep).
+
+**History**
+- 2026-11-28 feature-combat-effects: found
+
+### DI-125 · College of Dance's Bardic Damage isn't on the sheet's Unarmed Strike (no Dexterity, no Bardic Inspiration die)
+- **Status:** open
+- **Area:** character-engine-dev
+- **Where:** `CharacterContent/Features/SubClassFeatures/Bard/BardDanceFeatures.py:9`, `CharacterContent/Items/Weapons/Unarmed.py:10`
+
+Dazzling Footwork says an Unarmed Strike can use Dexterity for its attack rolls and deal Bludgeoning equal to the Bardic Inspiration die + Dexterity modifier (while unarmored and without a Shield). The sheet's Unarmed Strike (Builds/StartingEquipment.py) stays Strength and 1 + Str, so the sheet and the combat picker's weapon row are wrong for a Dance Bard. Monks get theirs from MonkBase. A feature's adjust_combat_effect doesn't reach weapon rows, so combat effects can't fix it; Dazzling Footwork's combat_effects is left None (plan 9.11).
+
+**History**
+- 2026-11-28 feature-combat-effects: found
+
+### DI-126 · Dance's Inspiring Movement and Tandem Footwork spend Bardic Inspiration but aren't wired as its extensions
+- **Status:** open
+- **Area:** subclass-implementer
+- **Where:** `CharacterContent/Classes/SubClasses2024/BardDance.py:30`
+
+Both texts say 'expend one use of your Bardic Inspiration', but BardDance.py adds them with data.add_feature(X()) rather than extends=BardFeatures.BardicInspiration (as Lore's Cutting Words and Valor's Combat Inspiration are). A combat row of theirs can't spend Bardic Inspiration's uses until they're extensions. Both are left None in the subclass sweep (plan 9.3, 9.14).
+
+**History**
+- 2026-11-28 feature-combat-effects: found
+
+### DI-127 · Tests left stale by R177's EndsWhen: Armor of Agathys and Turn Undead
+- **Status:** open
+- **Area:** combat-simulator
+- **Where:** `tests/test_badge_hit_triggers.py (test_the_two_spells_are_described, test_the_ogre_takes_5_cold_damage_as_its_greatclub_hits); tests/test_linked_badges.py::test_turn_undead_gives_its_badge_with_the_features_card`
+
+Fail on a clean HEAD (8e730238 and after): Armor of Agathys' badge modifiers now also hold EndsWhen(NO_TEMP_HP), which the test's expected tuple lacks; the ogre test's HP counts and the Turn Undead badge test also disagree (68 vs 63, 3 vs 2). Look at whether the tests or the EndsWhen change are right, then fix the one that's wrong.
 
 **History**
 - 2026-11-28 main-session: found

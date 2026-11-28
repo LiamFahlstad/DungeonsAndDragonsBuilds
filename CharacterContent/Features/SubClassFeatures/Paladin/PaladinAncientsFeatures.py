@@ -10,7 +10,10 @@ from Model.Content.Feature import (
 )
 from Model.View import CharacterView
 from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table, dc_formula
-from Core.Definitions import Ability
+from Core.Definitions import Ability, CharacterClass, Condition
+from Model.Content.CombatArea import CombatArea, CombatAreaShape
+from Model.Content.CombatEffect import CombatCondition, CombatEffect, EffectRoll
+from Model.Content.CombatTriggers import CombatTrigger, TriggerEvent
 
 
 class NaturesWrath(Feature):
@@ -57,6 +60,22 @@ class NaturesWrath(Feature):
         description = "As a Magic action, you can expend one use of your Channel Divinity to conjure spectral vines around nearby creatures. Each creature of your choice that you can see within 15 feet of yourself must succeed on a Strength saving throw or have the Restrained condition for 1 minute. A Restrained creature repeats the save at the end of each of its turns, ending the effect on a success."
         return description
 
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # An extension of Channel Divinity: it spends one of its uses. The
+        # DC is the picker's, the Paladin spell save DC.
+        return [
+            CombatEffect(
+                roll=EffectRoll.SAVE,
+                save_ability=Ability.STRENGTH,
+                conditions=(
+                    CombatCondition(Condition.RESTRAINED, duration_seconds=60),
+                ),
+                repeat_save=True,
+                area=CombatArea(CombatAreaShape.EMANATION, 15),
+                notes=("Each creature of your choice you can see in it.",),
+            )
+        ]
+
 
 class OathOfTheAncientsSpells(Feature):
     def __init__(self):
@@ -94,6 +113,10 @@ class OathOfTheAncientsSpells(Feature):
             "17	Commune with Nature, Tree Stride"
         )
         return description
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # It only prepares spells, which are in the picker as spells.
+        return []
 
 
 class AuraOfWarding(Feature):
@@ -182,6 +205,21 @@ class UndyingSentinel(Feature):
 
     def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        level = character.get_class_level(CharacterClass.PALADIN)
+        # "You can drop to 1 Hit Point instead, and you regain a number of
+        # Hit Points equal to three times your Paladin level": it leaves you
+        # at 1 + 3 x level. Asked as damage would drop you to 0, not when
+        # it kills you outright; it spends its once-per-Long-Rest use.
+        # Ageless has nothing to do in a fight.
+        return [
+            CombatEffect(
+                targets_self=True,
+                trigger=CombatTrigger(TriggerEvent.DROPS_TO_ZERO),
+                drops_to=1 + 3 * level,
+            )
+        ]
 
 
 class ElderChampion(Feature):

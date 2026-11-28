@@ -1,3 +1,4 @@
+from Model.Content.CombatEffect import CombatEffect
 from Model.Content.Feature import (
     Feature,
     FeatureUses,
@@ -85,6 +86,10 @@ class GlorySpells(Feature):
             "17	Legend Lore, Yolande's Regal Presence"
         )
         return description
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # It only grants spells, which are in the picker as spells.
+        return []
 
 
 class PeerlessAthlete(Feature):

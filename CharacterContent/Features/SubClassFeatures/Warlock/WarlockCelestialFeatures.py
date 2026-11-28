@@ -1,5 +1,18 @@
+from Model.Content.CombatAdjustments import (
+    Adjustment,
+    AddToOneDamageRoll,
+    Applies,
+    Rows,
+    Spells,
+)
 from Core.Definitions import DamageType
 import Core.Definitions as Definitions
+from Model.Content.CombatEffect import (
+    CombatDamage,
+    CombatEffect,
+    CombatHitPoints,
+    CombatTargets,
+)
 from Model.Content.Feature import (
     Feature,
     FeatureUses,
@@ -43,6 +56,10 @@ class CelestialSpells(Feature):
     def get_description(self, character: CharacterView) -> str:
         description = "The magic of your patron ensures you always have certain spells ready; when you reach a Warlock level specified in the Celestial Spells table, you thereafter always have the listed spells prepared."
         return description
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # Its spells are in the picker as spells.
+        return []
 
 
 class HealingLight(Feature):
@@ -99,6 +116,22 @@ class HealingLight(Feature):
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
 
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # How many dice to spend is the player's choice: a row per count, up
+        # to the Charisma modifier (minimum one), each spending that many
+        # dice from the pool.
+        most = max(1, character.get_charisma_modifier())
+        return [
+            CombatEffect(
+                name=f"Healing Light: {count}d6",
+                healing=CombatHitPoints(f"{count}d6"),
+                targets=CombatTargets(1),
+                uses_spent=count,
+                notes=("The target can be you, or a creature you can see.",),
+            )
+            for count in range(1, most + 1)
+        ]
+
 
 class RadiantSoul(Feature):
     def __init__(self):
@@ -129,8 +162,28 @@ class RadiantSoul(Feature):
         description = "Your link to your patron allows you to serve as a conduit for radiant energy. You have Resistance to Radiant damage. Once per turn, when a spell you cast deals Radiant or Fire damage, you can add your Charisma modifier to that spell's damage against one of the spell's targets."
         return description
 
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # The Resistance is on the sheet; the damage is added to the spells'
+        # rows (combat_adjustments).
+        return []
+
+    def combat_adjustments(self, character: CharacterView) -> tuple[Adjustment, ...]:
+        # A spell (or a feature's casting of one) that deals Radiant or Fire
+        # damage, on any turn: once per turn and against one of its targets,
+        # which the GM picks, of the type the spell deals.
+        types = (DamageType.RADIANT, DamageType.FIRE)
+        bonus = AddToOneDamageRoll(
+            character.get_charisma_modifier(),
+            types,
+            when="you add Radiant Soul to this target (once per turn, one target)",
+        )
+        applies = Applies(spells=Spells(), deals=types, rows=Rows.ALL)
+        return (Adjustment(applies, (bonus,)),)
+
 
 class CelestialResilience(Feature):
+    untriggered = "Magical Cunning's 1-minute rite and the rests happen outside the fight: pick it as the fight starts."
+
     def __init__(self):
         super().__init__(
             name="Celestial Resilience",
@@ -161,6 +214,35 @@ class CelestialResilience(Feature):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # An extension of Magical Cunning: gaining the points spends none of
+        # its uses (the rite or the rest does).
+        level = character.get_class_level(Definitions.CharacterClass.WARLOCK)
+        charisma = character.get_charisma_modifier()
+        when = (
+            "When you use Magical Cunning or finish a Short or Long Rest: pick"
+            " it as the fight starts if one came just before."
+        )
+        return [
+            CombatEffect(
+                name="Celestial Resilience: you",
+                temp_hp=CombatHitPoints(str(max(0, level + charisma))),
+                targets_self=True,
+                spends_use=False,
+                notes=(when,),
+            ),
+            CombatEffect(
+                name="Celestial Resilience: others",
+                temp_hp=CombatHitPoints(str(max(0, level // 2 + charisma))),
+                targets=CombatTargets(5),
+                spends_use=False,
+                notes=(
+                    "Up to five creatures you can see as you gain your own"
+                    " points (Celestial Resilience: you).",
+                ),
+            ),
+        ]
 
 
 class SearingVengeance(Feature):

@@ -1,6 +1,9 @@
+from Model.Content.CombatAdjustments import AddNote, Adjustment, Applies
+from CharacterContent.Features.ClassFeatures.Fighter.FighterFeatures import ActionSurge
 from Core.Definitions import (
     Ability,
 )
+from Model.Content.CombatEffect import CombatEffect
 from Model.Content.Feature import (
     Feature,
     FeatureActivation,
@@ -63,6 +66,10 @@ class EldritchKnightSpellcasting(Feature):
     def regained_on(self, character: CharacterView) -> "RegainedOn | None":
         return RegainedOn.LONG_REST
 
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # Spellcasting itself: its spells are in the picker as spells.
+        return []
+
 
 class WarBond(Feature):
     def __init__(self):
@@ -108,6 +115,11 @@ class WarBond(Feature):
             "You can have up to two bonded weapons, but you can summon only one at a time with a Bonus Action. If you attempt to bond with a third weapon, you must break the bond with one of the other two."
         )
         return description
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # Summoning a bonded weapon to hand and not being disarmed of it put
+        # nothing on a creature.
+        return []
 
 
 class WarMagic(Feature):
@@ -166,6 +178,8 @@ class EldritchStrike(Feature):
 
 
 class ArcaneCharge(Feature):
+    untriggered = "Teleporting isn't simulated: it's a note on Action Surge's row."
+
     def __init__(self):
         super().__init__(
             name="Arcane Charge",
@@ -194,6 +208,17 @@ class ArcaneCharge(Feature):
     def get_description(self, character: CharacterView) -> str:
         description = "When you use your Action Surge, you can teleport up to 30 feet to an unoccupied space you can see. You can teleport before or after the additional action."
         return description
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # It only changes Action Surge's row (the teleport is a note there).
+        return []
+
+    def combat_adjustments(self, character: CharacterView) -> tuple[Adjustment, ...]:
+        note = (
+            "Arcane Charge: you can teleport up to 30 feet to an unoccupied"
+            " space you can see, before or after the additional action."
+        )
+        return (Adjustment(Applies(features=(ActionSurge,)), (AddNote(note),)),)
 
 
 class ImprovedWarMagic(Feature):

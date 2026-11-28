@@ -9,6 +9,7 @@ from Model.Content.Feature import (
     FeatureDuration,
     TimeUnit,
 )
+from Model.Content.CombatEffect import CombatEffect
 from Model.View import CharacterView
 from Model.Content.FeatureText import Block, Facts, Option, Paragraph, Table, dc_formula
 
@@ -41,6 +42,10 @@ class CircleOfTheSeaSpells(Feature):
     def get_description(self, character: CharacterView) -> str:
         description = "When you reach a Druid level specified in the Circle of the Sea Spells table, you thereafter always have the listed spells prepared."
         return description
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # It only grants spells, which are in the picker as spells.
+        return []
 
 
 class WrathOfTheSea(Feature):

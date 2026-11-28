@@ -1,4 +1,5 @@
 from Model.Content.Feature import Feature, FeatureActivation, ActionType, FeatureTarget
+from Model.Content.CombatEffect import CombatEffect
 from Model.View import CharacterView
 from Model.Content.FeatureText import Block, Facts, Paragraph
 
@@ -30,6 +31,11 @@ class AbjurationSavant(Feature):
             "In addition, whenever you gain access to a new level of spell slots in this class, you can add one Wizard spell from the Abjuration school to your spell book for free. The chosen spell must be of a level for which you have spell slots."
         )
         return description
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # It only adds spells to the spellbook, which are in the picker as
+        # spells.
+        return []
 
 
 class ArcaneWard(Feature):
