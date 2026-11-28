@@ -46,7 +46,7 @@ stays in the picker for use by hand.
 """
 
 import re
-from dataclasses import dataclass, fields
+from dataclasses import dataclass, fields, replace
 from enum import StrEnum
 from typing import Any
 
@@ -403,10 +403,13 @@ class CombatEffect:
     instances: CombatInstances | None = None
     # None: the source's action (a feature's FeatureActivation, a spell's
     # casting time). Set it when using it takes an action the source doesn't
-    # say, like the casting of the spell a feature's use rides on.
+    # say, like the casting of the spell a feature's use rides on;
+    # ActionType.NO_ACTION when it takes none (part of another action).
     action_type: ActionType | None = None
-    # True also holds Concentration; a spell's own Concentration counts anyway.
-    concentration: bool = False
+    # None: the source's (its spell's own Concentration). True holds
+    # Concentration; False doesn't, even for a Concentration spell (a feature
+    # that casts one without it).
+    concentration: bool | None = None
     # Whether it spends one of the feature's FeatureUses (if it has any).
     spends_use: bool = True
     # How many of those uses one use spends: Elemental Burst's 2 Focus
@@ -642,6 +645,23 @@ class CombatEffect:
                 )
             if self.targets_self:
                 raise ValueError("A use that goes on its user has no targets to count")
+
+    def holds_concentration(self, source: bool) -> bool:
+        """Whether using it holds Concentration, `source` being whether its
+        source's does (its spell's own)."""
+        return source if self.concentration is None else self.concentration
+
+    def over(self, base: "CombatEffect") -> "CombatEffect":
+        """`base` with whatever this effect sets instead (each field not at
+        its default), and both their notes, this one's first: a feature's
+        use that casts a spell, over the spell's own effect."""
+        changes = {
+            field.name: getattr(self, field.name)
+            for field in fields(self)
+            if getattr(self, field.name) != field.default
+        }
+        changes["notes"] = self.notes + base.notes
+        return replace(base, **changes)
 
     def to_dict(self) -> dict:
         """The effect as plain data, leaving out what's at its default: what
@@ -1009,7 +1029,7 @@ class _Reader:
             instances=self.instances(data.get("instances")),
             action_type=self.enum(data.get("action_type"), "action_type", ActionType),
             concentration=self.kind(
-                data.get("concentration"), "concentration", (bool,), False
+                data.get("concentration"), "concentration", (bool,)
             ),
             spends_use=self.kind(data.get("spends_use"), "spends_use", (bool,), True),
             uses_spent=self.kind(data.get("uses_spent"), "uses_spent", (int,), 1),

@@ -11,7 +11,7 @@ don't notice, so what's unclear is left out and said in the option's note."""
 
 import re
 from collections.abc import Iterable
-from dataclasses import dataclass, fields, replace
+from dataclasses import dataclass, replace
 from functools import lru_cache
 
 from CharacterContent.Spells.SpellFactory import SpellFactory
@@ -707,8 +707,9 @@ def spell_options(spell, char: dict | None) -> list[EffectOption]:
     # Nothing to apply (Alarm): casting it still spends the slot and the
     # action, and holds Concentration.
     return [
-        _described_spell_option(spell, who, effect)
+        option
         for effect in effects or [CombatEffect()]
+        for option in _described_spell_options(spell, who, effect)
     ]
 
 
@@ -717,41 +718,45 @@ def spell_option(spell, char: dict | None) -> EffectOption:
     return spell_options(spell, char)[0]
 
 
-def _described_spell_option(spell, who: dict, effect: CombatEffect) -> EffectOption:
-    """What one way to cast a spell its combat effects describe fills in: the
-    effect itself, with the caster's DC, attack bonus and modifier, the
-    spell's casting time, duration and Concentration, and the cheapest slot
-    left. A way that's part of a cast already counted (spends_use=False:
-    Ice Knife's explosion) spends nothing."""
+def _described_spell_options(
+    spell, who: dict, effect: CombatEffect
+) -> list[EffectOption]:
+    """What one way to cast a spell its combat effects describe fills in (and
+    the ways the caster's features add: variants), with the caster's DC,
+    attack bonus and modifier, the spell's casting time, duration and
+    Concentration, and the cheapest slot left. A way that's part of a cast
+    already counted (spends_use=False: Ice Knife's explosion) spends nothing."""
     casts = effect.spends_use
     source = EffectSource(spell.name, spell=spell, with_slot=casts and spell.level > 0)
-    effect, changed_by = _adjusted(who, source, effect)
+    dc = _spell_save_dc(spell, who) if effect.roll == "save" else None
+    bonus = _spell_attack_bonus(spell, who) if effect.roll == "attack" else None
     slot = spell_slot_choices(who, spell.level)[0][1] if casts else None
     no_slot = []
     if casts and spell.level and has_slots(who) and slot is None:
         no_slot.append(f"No slot of level {spell.level} or higher left.")
-    return _described_option(
-        who,
-        effect,
-        name=spell.name,
-        kind=SPELL,
-        tooltip=spell.description + changed_by,
-        default_dc=_spell_save_dc(spell, who) if effect.roll == "save" else None,
-        default_bonus=(
-            _spell_attack_bonus(spell, who) if effect.roll == "attack" else None
-        ),
-        modifier=_spell_modifier(spell, who),
-        level=spell.level,
-        duration_seconds=spell.duration_seconds,
-        action_cost=casting_time_cost(spell) if casts else None,
-        concentration=spell.is_concentration and casts,
-        spell_name=spell.name,
-        lead_notes=no_slot,
-        slot_level=slot,
-        spell_level=spell.level,
-        counts_uses=casts,
-        default_area=spell.combat_area,
-    )
+    return [
+        _described_option(
+            who,
+            row.effect,
+            name=spell.name,
+            kind=SPELL,
+            tooltip=spell.description + row.changed_by,
+            default_dc=dc,
+            default_bonus=bonus,
+            modifier=_spell_modifier(spell, who),
+            level=spell.level,
+            duration_seconds=spell.duration_seconds,
+            action_cost=casting_time_cost(spell) if casts else None,
+            concentration=spell.is_concentration and casts,
+            spell_name=spell.name,
+            lead_notes=no_slot,
+            slot_level=slot,
+            spell_level=spell.level,
+            counts_uses=casts,
+            default_area=spell.combat_area,
+        )
+        for row in adjusted(who.get("_stat_block"), source, effect).rows
+    ]
 
 
 def _text_spell_option(spell, who: dict) -> EffectOption:
@@ -1268,7 +1273,9 @@ def feature_options(char: dict, feature) -> list[EffectOption]:
     if effects is None:
         rows = [] if feature.passive else [_feature_option(char, feature)]
     else:
-        rows = [_described_feature_option(char, feature, e) for e in effects]
+        rows = [
+            r for e in effects for r in _described_feature_options(char, feature, e)
+        ]
     return rows + _extension_options(char, feature)
 
 
@@ -1284,15 +1291,16 @@ def _extension_options(char: dict, parent) -> list[EffectOption]:
     rows = []
     for extension in sheet.extensions_of(parent):
         for effect in extension.combat_effects(sheet) or []:
-            rows.append(_described_feature_option(char, extension, effect, parent))
+            rows += _described_feature_options(char, extension, effect, parent)
         rows += _extension_options(char, extension)
     return rows
 
 
-def _described_feature_option(
+def _described_feature_options(
     char: dict, feature, effect: CombatEffect, parent=None
-) -> EffectOption:
-    """What one use a feature describes fills in. What it leaves unset is the
+) -> list[EffectOption]:
+    """What one use a feature describes fills in (and the ways the character's
+    features add: variants, Model/Content/CombatAdjustments.py). What it leaves unset is the
     feature's own: its DC, action, duration and uses, or for an extension
     without them, its parent's (Radiance of the Dawn spends a use of Channel
     Divinity). A use that casts a spell takes that spell's effect under its
@@ -1313,14 +1321,13 @@ def _described_feature_option(
     concentration = False
     spell = _spell_named(effect.spell) if effect.spell else None
     if spell is not None:
-        effect = _casting(spell, effect)
+        described = spell.combat_effects()  # its own first one, under this
+        effect = effect.over(described[0]) if described else effect
         if duration is None:
             duration = spell.duration_seconds
         if action_cost is None:
             action_cost = casting_time_cost(spell)
         concentration = spell.is_concentration
-    source = EffectSource(feature.name, feature=feature, spell=spell)
-    effect, changed_by = _adjusted(char, source, effect)
     counted_as = owner.name
     if effect.uses_per_long_rest:
         # Its own count, not the feature's (Fey Touched's free castings).
@@ -1339,52 +1346,28 @@ def _described_feature_option(
             lead_notes.append(
                 "No uses left." if uses[0] == 0 else f"{spent} needed, {uses[0]} left."
             )
-    return _described_option(
-        char,
-        effect,
-        name=feature.name,
-        kind=FEATURE,
-        tooltip=description + changed_by,
-        default_dc=dc,
-        modifier=_casting_modifier(char),
-        duration_seconds=duration,
-        action_cost=action_cost,
-        concentration=concentration,
-        lead=lead,
-        lead_notes=lead_notes,
-        counts_uses=counts_uses,
-        uses_spent=spent,
-        feature_name=counted_as,
-        default_area=spell.combat_area if spell is not None else None,
-    )
-
-
-def _casting(spell, effect: CombatEffect) -> CombatEffect:
-    """A use that casts `spell`: the spell's own (first) combat effect, with
-    whatever `effect` sets instead, and both their notes, its own first.
-    Without the spell described, just `effect`."""
-    described = spell.combat_effects()
-    if not described:
-        return effect
-    base = described[0]
-    changes = {
-        field.name: getattr(effect, field.name)
-        for field in fields(CombatEffect)
-        if getattr(effect, field.name) != field.default
-    }
-    changes["notes"] = effect.notes + base.notes
-    return replace(base, **changes)
-
-
-def _adjusted(
-    char: dict, source: EffectSource, effect: CombatEffect
-) -> tuple[CombatEffect, str]:
-    """`effect`, a row of `source`, as char's features change it
-    (Feature.combat_adjustments, Model/Content/CombatAdjustments.py), and
-    a line for the row's tooltip naming them ("" when none do)."""
-    changed = adjusted(char.get("_stat_block"), source, effect)
-    line = f"\n\nChanged by {', '.join(changed.by)}." if changed.by else ""
-    return changed.effect, line
+    source = EffectSource(feature.name, feature=feature, spell=spell)
+    return [
+        _described_option(
+            char,
+            row.effect,
+            name=feature.name,
+            kind=FEATURE,
+            tooltip=description + row.changed_by,
+            default_dc=dc,
+            modifier=_casting_modifier(char),
+            duration_seconds=duration,
+            action_cost=action_cost,
+            concentration=concentration,
+            lead=lead,
+            lead_notes=lead_notes,
+            counts_uses=counts_uses,
+            uses_spent=spent,
+            feature_name=counted_as,
+            default_area=spell.combat_area if spell is not None else None,
+        )
+        for row in adjusted(sheet, source, effect).rows
+    ]
 
 
 def _described_option(
@@ -1489,8 +1472,8 @@ def _described_option(
         parts.insert(len(list(lead)), f"{count} {noun}s" if noun else f"{count}×")
     if first is not None and first.duration_seconds is not None:
         duration_seconds = first.duration_seconds
-    if effect.action_type is not None:
-        action_cost = FEATURE_ACTION_COSTS[effect.action_type.value]
+    if effect.action_type is not None:  # NO_ACTION: none
+        action_cost = FEATURE_ACTION_COSTS.get(effect.action_type.value)
     return EffectOption(
         name=shown_name,
         kind=kind,
@@ -1508,7 +1491,7 @@ def _described_option(
         duration_seconds=duration_seconds,
         until=first.until if first is not None else None,
         action_cost=action_cost,
-        concentration=effect.concentration or concentration,
+        concentration=effect.holds_concentration(concentration),
         spell_name=spell_name or effect.spell or "",
         upcast=upcast,
         amount_kind=amount_kind,

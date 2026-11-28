@@ -16,14 +16,29 @@ the order the features were granted in (as apply() doesn't):
    Aim: Steady Aim no longer sets Speed to 0). Only from the source's own
    effect, so it never takes away what another adjustment adds.
 2. SET: what an adjustment sets (Supreme Healing's highest numbers, an
-   action changed). Each says how two of its kind combine (the same twice
-   is once); two that can't combine are refused.
+   action changed). The same change twice is made once; two that can't
+   both be made (`Change.conflicts`: two different actions) keep the first
+   by its feature's name, and the row says which one wasn't made.
 3. ADD: notes, damage, healing, a badge's modifiers, the conditions it
    ends, by the adjusting feature's name.
 
+A change decides from the row as its phase found it (`AdjustContext.before`)
+and writes onto the row as it goes, so within a phase no change sees what
+another made: Elemental Affinity's "one damage roll" is one of the spell's
+own, never a part another feature added in the same phase. That, and not
+the sort by name, is what makes the result independent of the order.
+
+An adjustment changes the row itself, or, with `variant=`, adds a row of
+its own next to it, which stays as it was: another way to use the source
+(Fleet Step: Step of the Wind right after another Bonus Action, with no
+action of its own). A variant row is the row with every in-place change
+and the variant's own, made together in the one order above; variants
+don't combine with each other.
+
 Every reader of a character's effects goes through `adjusted`: the picker's
-rows (spells, features, extensions, triggered rows) and the badges given
-straight from a card's Use or Cast button.
+rows (spells, features, extensions, triggered rows; `Adjusted.rows` gives
+the variants too) and the badges given straight from a card's Use or Cast
+button (`adjusted_effects`: the row itself, never a variant).
 """
 
 from __future__ import annotations
@@ -146,22 +161,36 @@ class Phase(IntEnum):
 
 @dataclass(frozen=True)
 class AdjustContext:
-    """What a change is made for: the character, the source of the row, and
-    the adjusting feature's name (for notes)."""
+    """What a change is made for: the character, the source of the row, the
+    adjusting feature's name (for notes), and the row as the change's phase
+    found it, which is what a change decides from (the module docstring)."""
 
     character: object
     source: "EffectSource"
     by: str
+    before: CombatEffect
 
 
 class Change:
-    """One change to an effect. `phase` says when it's made; a SET change
-    also says how two of its kind combine (`merge`)."""
+    """One change to an effect. `phase` says when it's made. A SET change
+    that can't be made together with another says so (`conflicts`) and
+    what it would make the row (`describe`), for the note on the row."""
 
     phase: ClassVar[Phase]
 
     def make(self, effect: CombatEffect, context: AdjustContext) -> CombatEffect:
         raise NotImplementedError
+
+    def conflicts(self, other: "Change") -> bool:
+        """Whether this SET change and `other` can't both be made: each would
+        set the same thing to something else (two different actions).
+        Changes that commute (MaximizeDice's healing and its damage) don't."""
+        return False
+
+    def describe(self) -> str:
+        """What this change makes the row, for the note when it conflicts
+        ("a Bonus Action")."""
+        return type(self).__name__
 
 
 # DROP ---------------------------------------------------------------------
@@ -282,15 +311,23 @@ class MaximizeDice(Change):
 
 @dataclass(frozen=True)
 class CostsAction(Change):
-    """Using it takes `action` instead (a casting as a Bonus Action). When
-    two features set different actions on one row, the first by name
-    counts and the row says so (`_settle_sets`)."""
+    """Using it takes `action` instead (a casting as a Bonus Action), or
+    none (ActionType.NO_ACTION: Fleet Step's Step of the Wind, as part of
+    another Bonus Action). Two different actions on one row conflict."""
 
     action: ActionType
     phase: ClassVar[Phase] = Phase.SET
 
     def make(self, effect, context):
         return replace(effect, action_type=self.action)
+
+    def conflicts(self, other):
+        return isinstance(other, CostsAction) and other.action != self.action
+
+    def describe(self):
+        if self.action is ActionType.NO_ACTION:
+            return "take no action"
+        return f"a {self.action.value.replace('_', ' ').title()}"
 
 
 # ADD ----------------------------------------------------------------------
@@ -339,7 +376,8 @@ class AddToOneDamageRoll(Change):
     def make(self, effect, context):
         if self.amount <= 0:
             return effect
-        parts = [part for part in effect.damage if not part.when]
+        # The row's own damage rolls, not a part another ADD change made.
+        parts = [part for part in context.before.damage if not part.when]
         wanted = set(self.damage_types)
         dealt = _unique(
             part.damage_type
@@ -446,10 +484,14 @@ class AlsoEnds(Change):
 @dataclass(frozen=True)
 class Adjustment:
     """What a feature changes, and where: `changes` on every row `applies`
-    matches."""
+    matches. With `variant`, the changes make a row of their own instead,
+    named "<row> (<variant>)", next to the row, which stays as it was:
+    another way to use it (Fleet Step's Step of the Wind with no action).
+    The variant row spends what its row spends."""
 
     applies: Applies
     changes: tuple[Change, ...]
+    variant: str = ""
 
     def __post_init__(self):
         if not self.changes:
@@ -489,10 +531,22 @@ class SpellLike(Protocol):
 
 @dataclass(frozen=True)
 class Adjusted:
-    """An effect as the character's features change it, and which did."""
+    """An effect as the character's features change it, which features did,
+    and the rows their variants add (each an Adjusted of its own)."""
 
     effect: CombatEffect
     by: tuple[str, ...] = ()
+    variants: tuple["Adjusted", ...] = ()
+
+    @property
+    def rows(self) -> tuple["Adjusted", ...]:
+        """The row, then its variants' rows: what the picker lists."""
+        return (self, *self.variants)
+
+    @property
+    def changed_by(self) -> str:
+        """The line a row's tooltip ends with ("" when nothing changed it)."""
+        return f"\n\nChanged by {', '.join(self.by)}." if self.by else ""
 
 
 class _Sheet(Protocol):
@@ -501,51 +555,79 @@ class _Sheet(Protocol):
     def extensions_of(self, feature) -> list: ...
 
 
+_Found = list[tuple[str, Change]]  # (the adjusting feature's name, a change)
+
+
 def adjusted(
     sheet: _Sheet | None, source: EffectSource, effect: CombatEffect
 ) -> Adjusted:
     """`effect`, a row of `source`, with every change the features of
     `sheet` (a character's stat block) make to it, in the order the module
-    docstring gives."""
+    docstring gives, and a row for each variant that applies to it."""
     if sheet is None:
         return Adjusted(effect)
-    found: list[tuple[str, Change]] = []
+    found: _Found = []
+    variants: list[tuple[str, _Found]] = []
     for feature in sheet.iter_features_with_extensions():
         for adjustment in feature.combat_adjustments(sheet):
-            if adjustment.applies.match(source, feature, sheet, effect):
-                found.extend((feature.name, c) for c in adjustment.changes)
+            if not adjustment.applies.match(source, feature, sheet, effect):
+                continue
+            pairs = [(feature.name, c) for c in adjustment.changes]
+            if adjustment.variant:
+                variants.append((adjustment.variant, pairs))
+            else:
+                found.extend(pairs)
+    row = _changed(sheet, source, effect, found)
+    rows = []
+    for variant, pairs in sorted(variants, key=lambda v: (v[0], v[1][0][0])):
+        own = _changed(sheet, source, effect, found + pairs)
+        name = f"{effect.name or source.name} ({variant})"
+        rows.append(replace(own, effect=replace(own.effect, name=name)))
+    return replace(row, variants=tuple(rows))
+
+
+def _changed(
+    sheet: _Sheet, source: EffectSource, effect: CombatEffect, found: _Found
+) -> Adjusted:
+    """`effect` with the changes `found` makes, phase by phase."""
     if not found:
         return Adjusted(effect)
-    found.sort(key=lambda pair: (pair[1].phase, pair[0]))
+    found = sorted(found, key=lambda pair: (pair[1].phase, pair[0]))
     found, notes = _settle_sets(found)
     done: set[Change] = set()
+    phase, before = None, effect
     for by, change in found:
+        if change.phase is not phase:
+            phase, before = change.phase, effect
         if change.phase is Phase.SET:
             if change in done:
                 continue  # the same twice is once
             done.add(change)
-        effect = change.make(effect, AdjustContext(sheet, source, by))
+        effect = change.make(effect, AdjustContext(sheet, source, by, before))
     if notes:
         effect = replace(effect, notes=effect.notes + notes)
     return Adjusted(effect, tuple(dict.fromkeys(by for by, _ in found)))
 
 
-def _settle_sets(
-    found: list[tuple[str, Change]],
-) -> tuple[list[tuple[str, Change]], tuple[str, ...]]:
-    """The SET changes that can't both be made: of two different actions,
-    the first by its feature's name counts, and a note says which didn't."""
-    actions = [(by, c) for by, c in found if isinstance(c, CostsAction)]
-    if len({c.action for _, c in actions}) < 2:
-        return found, ()
-    first = actions[0][1]
-    dropped = [(by, c) for by, c in actions if c.action != first.action]
-    note = (
-        f"{actions[0][0]} makes it a {first.action.value};"
-        + "".join(f" {by} would make it a {c.action.value}" for by, c in dropped)
-        + ". Check which applies."
-    )
-    return [pair for pair in found if pair not in dropped], (note,)
+def _settle_sets(found: _Found) -> tuple[_Found, tuple[str, ...]]:
+    """`found` (sorted) without the SET changes that conflict with one before
+    them (`Change.conflicts`), and a note on each that wasn't made."""
+    kept: _Found = []
+    notes = []
+    for by, change in found:
+        if change.phase is Phase.SET:
+            clash = next(
+                (pair for pair in kept if change.conflicts(pair[1])),
+                None,
+            )
+            if clash is not None:
+                notes.append(
+                    f"{clash[0]} makes it {clash[1].describe()}; {by} would make"
+                    f" it {change.describe()}. Check which applies."
+                )
+                continue
+        kept.append((by, change))
+    return kept, tuple(notes)
 
 
 def adjusted_effects(

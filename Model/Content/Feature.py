@@ -430,9 +430,13 @@ class Feature(Effect):
         Adjustment(Applies(spells=Spells(school=EVOCATION, on_list=WIZARD)),
         (AddToOneDamageRoll(intelligence),)). The fight makes the changes
         in a fixed order, whatever order the features were granted in, so
-        an adjustment never reads or undoes another's. A rider with no row
-        of its own returns [] from combat_effects() too. Returns ()
-        (default) for features that change no other effect."""
+        an adjustment never reads or undoes another's. One that offers
+        another way to use the row, rather than always changing it, is a
+        variant: Fleet Step's Adjustment(Applies(features=(StepOfTheWind,),
+        rows=Rows.ALL), (CostsAction(ActionType.NO_ACTION), ...),
+        variant="Fleet Step") adds "Step of the Wind: Dash (Fleet Step)".
+        A rider with no row of its own returns [] from combat_effects() too.
+        Returns () (default) for features that change no other effect."""
         return ()
 
     def movement(self, character: CharacterView) -> Movement | None:

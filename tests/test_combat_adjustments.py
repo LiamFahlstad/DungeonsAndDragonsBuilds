@@ -31,14 +31,18 @@ from Combat.Fight.monster_actions import DamageRoll
 from Combat.Fight.saves import with_dice
 from Core.Definitions import Condition, DamageType
 from Model.Content.ActionType import ActionType
+from Combat.Fight.effect_options import feature_options
 from Model.Content.CombatAdjustments import (
     PARENT,
+    AddDamage,
     AddNote,
     Adjustment,
     Applies,
     CostsAction,
     EffectSource,
+    Spells,
     adjusted,
+    adjusted_effects,
 )
 from Model.Content.CombatEffect import (
     CombatCondition,
@@ -271,3 +275,154 @@ def test_an_upcast_can_be_dice_and_a_number():
     assert CombatHitPoints("2d8", "2d8 + 1").upcast == "2d8 + 1"
     with pytest.raises(ValueError):
         CombatHitPoints("2d8", "2d8 + ")
+
+
+# ---------------------------------------------------------------------------
+# A change decides from the row as its phase found it
+
+
+class _AddsFire(Feature):
+    """Adds a Fire part to every spell it's cast with: a stand-in for any
+    feature whose ADD change another ADD change could otherwise read."""
+
+    def combat_adjustments(self, character):
+        part = AddDamage(CombatDamage("1d6", DamageType.FIRE))
+        return (Adjustment(Applies(spells=Spells()), (part,)),)
+
+
+@pytest.mark.parametrize("name", ["A Adds Fire", "Z Adds Fire"])
+def test_one_damage_roll_is_one_of_the_spells_own_whatever_the_names(name):
+    """Elemental Affinity (Fire) is for "a spell that deals damage of that
+    type": Lightning Bolt deals Lightning, so a Fire part another feature adds
+    doesn't make it count, whichever feature's name sorts first."""
+    sheet = _Sheet(_AddsFire(name=name), ElementalAffinity(DamageType.FIRE), charisma=3)
+    bolt = _cast(sheet, "Lightning Bolt")
+    assert [part.dice for part in bolt.damage][1:] == ["1d6"]
+
+
+class _Costs(Feature):
+    def __init__(self, name, change):
+        super().__init__(name=name)
+        self.change = change
+
+    def combat_adjustments(self, character):
+        return (Adjustment(Applies(features=(SteadyAim,)), (self.change,)),)
+
+
+def test_a_conflict_note_names_both_features_and_what_each_would_make_it():
+    steady = SteadyAim()
+    sheet = _Sheet(
+        steady,
+        _Costs("B Feature", CostsAction(ActionType.NO_ACTION)),
+        _Costs("A Feature", CostsAction(ActionType.BONUS_ACTION)),
+        _Costs("C Feature", CostsAction(ActionType.BONUS_ACTION)),  # same: no clash
+    )
+    (effect,) = steady.combat_effects(sheet)
+    effect = adjusted(sheet, EffectSource("Steady Aim", feature=steady), effect).effect
+    assert effect.action_type is ActionType.BONUS_ACTION
+    assert effect.notes[-1] == (
+        "A Feature makes it a Bonus Action; B Feature would make it take no"
+        " action. Check which applies."
+    )
+
+
+# ---------------------------------------------------------------------------
+# Variants: another way to use a row
+
+
+def _wei():
+    from Builds.Examples.Y2024_Monk_OpenHand_WeiStonefist import (
+        Y2024MonkOpenHandWeiStonefistCharacterBuilder,
+    )
+    from Combat.PlayerCombatant import combatant_from_character
+
+    return combatant_from_character(
+        Y2024MonkOpenHandWeiStonefistCharacterBuilder().build()
+    )
+
+
+def test_fleet_step_adds_a_step_of_the_wind_row_that_takes_no_action():
+    """Fleet Step: "When you take a Bonus Action other than Step of the
+    Wind, you can also use Step of the Wind immediately after that Bonus
+    Action." Each of Step of the Wind's rows stays as it was, and gets a
+    row of its own after it: no action, the same Focus Point."""
+    char = _wei()
+    sheet = char["_stat_block"]
+    focus = next(f for f in sheet.features if f.name == "Monk's Focus")
+    rows = {
+        row.name: row
+        for row in feature_options(char, focus)
+        if row.name.startswith("Step of the Wind")
+    }
+    assert list(rows) == [
+        "Step of the Wind: Dash",
+        "Step of the Wind: Dash (Fleet Step)",
+        "Step of the Wind: Disengage and Dash",
+        "Step of the Wind: Disengage and Dash (Fleet Step)",
+    ]
+    own, fleet = (
+        rows["Step of the Wind: Disengage and Dash"],
+        rows["Step of the Wind: Disengage and Dash (Fleet Step)"],
+    )
+    assert own.action_cost is not None and fleet.action_cost is None
+    assert "Fleet Step" not in own.note and "Fleet Step:" in fleet.note
+    assert fleet.counts_uses and fleet.summary == own.summary  # the same use
+    assert fleet.tooltip.endswith("Changed by Fleet Step.")
+
+
+class _Variant(Feature):
+    def combat_adjustments(self, character):
+        return (
+            Adjustment(
+                Applies(features=(SteadyAim,)),
+                (CostsAction(ActionType.NO_ACTION),),
+                variant=self.name,
+            ),
+        )
+
+
+def test_a_variant_row_has_the_rows_own_changes_too():
+    """Roving Aim changes Steady Aim itself, so a variant of Steady Aim keeps
+    Speed too; the row itself takes no variant's change."""
+    steady = SteadyAim()
+    sheet = _Sheet(steady, InfiltrationExpertise(), _Variant(name="Quick"))
+    (effect,) = steady.combat_effects(sheet)
+    row = adjusted(sheet, EffectSource("Steady Aim", feature=steady), effect)
+    (quick,) = row.variants
+    assert quick.effect.name == "Steady Aim (Quick)"
+    assert quick.effect.action_type is ActionType.NO_ACTION
+    assert row.effect.action_type is effect.action_type
+    for each in row.rows:
+        (badge,) = each.effect.conditions
+        assert not any(isinstance(m, Speed) for m in badge.modifiers)
+    assert quick.by == ("Infiltration Expertise", "Quick")
+
+
+def test_a_cards_use_button_gets_the_row_never_a_variant():
+    steady = SteadyAim()
+    sheet = _Sheet(steady, _Variant(name="Quick"))
+    effects = adjusted_effects(
+        sheet, EffectSource("Steady Aim", feature=steady), steady.combat_effects(sheet)
+    )
+    assert [e.name for e in effects] == [""]
+
+
+# ---------------------------------------------------------------------------
+# Concentration and no action are values of their own
+
+
+def test_concentration_is_the_sources_unless_the_row_says():
+    assert CombatEffect().holds_concentration(True)
+    assert not CombatEffect().holds_concentration(False)
+    assert not CombatEffect(concentration=False).holds_concentration(True)
+    assert CombatEffect(concentration=True).holds_concentration(False)
+
+
+def test_a_feature_row_over_its_spell_keeps_what_it_sets():
+    """A feature that casts a spell without Concentration says False, and
+    that wins over the spell's own effect (over), as its notes go first."""
+    spell = CombatEffect(damage=(CombatDamage("1d8", DamageType.FORCE),), notes=("S",))
+    row = CombatEffect(spell="X", concentration=False, notes=("F",)).over(spell)
+    assert row.concentration is False and row.damage == spell.damage
+    assert row.notes == ("F", "S")
+    assert CombatEffect(spell="X").over(spell).concentration is None

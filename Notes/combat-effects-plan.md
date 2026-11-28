@@ -58,7 +58,7 @@ change and move on; the full suite can run later.
 | 7 | **Stat changes while an effect is on** (new, 2026-11-11; see its section): AC formulas and floors, Immunity and Vulnerability beside the built Resistance, Speed, size, Hit Point maximum, worked out from the stored stat plus the badges, and shown on the card with their sources | 7.1-7.2 **done** (R78-R83, 2026-11-11): `ArmorClassBase` (Mage Armor) and `ArmorClassMinimum` (Barkskin) beside `ArmorClass`, worked out by `armor_class(char, stored)`, which every attack path reads through `armor_bonus`; the same effect twice adds once; `DamageImmunity` and `Vulnerability` beside `Resistance` in `_damage_type_modifier`; Mage Armor, Barkskin, Stoneskin, Protection from Energy (a row per type) and Rage described (`tests/test_stat_changes.py`). 7.4 **done** (R84-R89, 2026-11-11): `HitPointMaximum(amount, upcast)`, rolled as the badge is given; `hit_point_maximum(char)` is the stored `max_hp` plus the badges, read by every cap, bar and Bloodied check; giving it raises current HP as Hit Points regained, ending it caps current HP (`Action.LOSE_HIT_POINTS`, replayed); Aid and Heroes' Feast described. 7.5 **done** (R90-R93, 2026-11-11): the card's and More Info's AC is the AC in use with what changes it ("AC: 17 (15; Shield of Faith +2)", cover too), a "Max HP 35 (30; Aid +5)" line, and the defenses the conditions and badges give with where from ("Resist: ...; Bludgeoning, Piercing, Slashing (Rage)", "Cond. Immune: Frightened (Heroism)"); the player view's full rows show the AC in use. 7.3 **done** (R94-R98, 2026-11-11): `Speed(bonus, multiplier, set_to)` and `Size(steps, becomes)`, worked out by `speed_in_use` and `size_in_use`; the trigger size gates read the size in use (an Enlarged Large Ogre is Huge to Hill's Tumble); the card shows "Speed: 80 ft. (40 ft.; Haste ×2)" and, when changed, "Size Huge (Large; Enlarge/Reduce +1)"; Haste (and its lethargy row), Longstrider, Enlarge/Reduce and Large Form described. 7.6 **done** (R106, R107, 2026-11-11): the rubric's Stat changes table, `combat_effects.py stats` (each note naming AC, a defense, Speed, the Hit Point maximum or size, marked counted or NOTE ONLY), and both parties' rows: Shield's `ArmorClass(5)`, Absorb Elements' `Resistance` (a row per type), Silence's Thunder `DamageImmunity`, Shield of Faith's restating note gone. **Phase 7 done** |
 | 8 | **Rolled at the table** (new, 2026-11-11, Decision 15; see its section): whatever the simulator rolls, the GM can give it a number rolled at the table instead | **Done** (R115-R124, 2026-11-11). 8.1-8.3: a hit's extra damage (Hunter's Mark, Divine Favor) has a box per target in the Custom Effect dialog, added as typed, even to a typed damage total, Critical Hit or not; Deflect Attacks' and Stone's Endurance's reduction has a box in the trigger pop-up; the setting "Roll monsters' recharges and repeat saves" (`monsters_roll_turn_dice`) off turns those into turn reminders. 8.4-8.7 (Decision 16): a card's Set initiative... (a summon's roll, or anyone's); a box takes one roll per Times copy ("nat 1, nat 20"); a Hit Point maximum box for a pick whose badge rolls one (Heroes' Feast), and a player's dice Hit Points at a turn's start left to a turn-column button; `tests/test_roll_sites.py` fails on a new place that rolls until it's listed with its way to the table (`tests/test_table_rolls.py`) |
 | 9 | **Closing the gaps** (audit 2026-11-24; see its section): every spell, feature, monster ability and item the combat effects don't cover yet, or cover only in part, ranked by how much it matters at the table and listed under the step that closes it | Audit **done** (2026-11-24). Most critical first (Decision 21): 9.2's saves **done** (R170, 2026-11-25): Magic Resistance (every monster with the trait, by name) has Advantage on a save against a spell; Brave, Fey Ancestry and Dwarven Resilience on saves to avoid or end their condition; War Caster on Concentration saves; Danger Sense, Gnomish Cunning and Dual Mind on their abilities' saves. Left of 9.2: Grappler's attack Advantage, Improved Critical, Sunlight Sensitivity, magic armor (with 9.8). 9.3's Attack action **done** (R171, 2026-11-26, Decision 22): a weapon row opens with Times at its owner's attacks per Attack action (Extra Attack 2, Two Extra Attacks 3, Three 4) while its Action is unspent, 1 after; Action Surge gives back the Action. Left of 9.3: Haste's action, Command's lost turn, the Initiative riders. 9.1's strikes **done** (R172, 2026-11-26): Sneak Attack, Divine Smite (and Paladin's Smite's free casting), Ensnaring Strike and Stunning Strike are asked as a hit lands, and a fired row's dice double on a Critical Hit; Kivi's Tavern Brawler Push and Grappler Punch and Grab are asked as an Unarmed Strike hits (R173); Spiritual Weapon's later attack, Produce Flame's hurl, Freedom of Movement's Swim Speed and Elemental Strikes' move are rows (R174). Left of 9.1: DI-095's pushes and the "without a spell slot" notes. 9.4 **done** but for Aura of Courage (R175, 2026-11-26): Aura of Protection's bonus on allies' saves and Pack Tactics' Advantage are counted from the battle map, and noted off it. 9.5 **done** but for Regeneration's healing and damage rerolls (R176, 2026-11-27): Evasion (the Rogue's, the Monk's, a monster's) on Dexterity saves for half, Uncanny Dodge halving a hit, and a structured Regeneration reminded of as its turn starts. 9.6 **done** for the sources the fight can see end (R177, 2026-11-27): Invisibility ends after its bearer attacks, deals damage or casts, Sleep and Turn Undead as their target takes damage, Armor of Agathys with its last Temporary Hit Point, Elemental Attunement as its bearer is Incapacitated. 9.7 **done** but for what moves on the map (R178, 2026-11-27): Hunter's Mark's and Hex's (newly described) moves and Witch Bolt's later damage are rows of a Bonus Action and no slot, held by the casting's concentration. 9.8's potions **done** (R179, 2026-11-27): a character's items that say what using them does are picker rows (12 of the 17 potions: Healing, Invisibility, Speed, Swiftness, Enlarge, Resistance, Guarding, Resolve), a Bonus Action each. Left of 9.8: magic weapons' riders, wondrous items, scrolls, poisons. 9.16's **subclass sweep started** (the user's go, 2026-11-27): every feature of a swept 2024 subclass is described or left `None` with a "(left `None`, subclass sweep)" row in the step that would close it (new 9.17 for gaps no step covers); Berserker, Champion, Open Hand, Vengeance, Hunter, Assassin, Lore, Life, Stars, Evoker, Zealot, Psi Warrior, Shadow, Ancients, Gloom Stalker, Glamour, Archfey, War, Land, Draconic, Wild Heart, Eldritch Knight, Mercy, Glory, Trickery, Sea, Abjurer, Dance, Thief and Celestial swept (tracker in 9.16); DI-120, DI-121, DI-122-DI-126 found. Next: 9.9 (spell summons, with the summon-framework plan) or 9.10 (save gates; rank 6) |
-| 10 | **Adjustments** (new, 2026-11-28, Decision 26; see its section): one feature changing another's effect, as data | **Built** (R180, 2026-11-28): `Feature.combat_adjustments` and `Model/Content/CombatAdjustments.py` replace `adjust_combat_effect`; `Applies` (parent, features by class, spells by school/list/level/slot; deals, heals, rows) and DROP/SET/ADD `Change`s made in a fixed order; the picker's rows and the Use/Cast buttons' badges go through `adjusted`; the six hooks moved; Disciple of Life, Supreme Healing and Roving Aim described. Next: the changes in its "Not built yet" table (`Variant`, no Concentration, `AreaAtLeast`) |
+| 10 | **Adjustments** (new, 2026-11-28, Decision 26; see its section): one feature changing another's effect, as data | **Built** (R180, 2026-11-28): `Feature.combat_adjustments` and `Model/Content/CombatAdjustments.py` replace `adjust_combat_effect`; `Applies` (parent, features by class, spells by school/list/level/slot; deals, heals, rows) and DROP/SET/ADD `Change`s made in a fixed order; the picker's rows and the Use/Cast buttons' badges go through `adjusted`; the six hooks moved; Disciple of Life, Supreme Healing and Roving Aim described. **Second pass** (R181, 2026-11-28, Decision 27): a SET change says itself when it conflicts (`Change.conflicts`), a change decides from the row as its phase found it (`AdjustContext.before`), so the order never matters; `Adjustment(variant=)` adds another way to use a row (Fleet Step described); `ActionType.NO_ACTION`; `CombatEffect.concentration` is None (the spell's) / True / False; a which-mechanism table. Next: the changes in its "Not built yet" table (`AreaAtLeast`, weapon rows, a variant spending its adjuster's own resource) |
 
 **Content described so far.** Spells: 57 (2024) + 1 (2014), all as classes
 (every spell is a class since S.4; 58 have combat effects);
@@ -704,6 +704,17 @@ suggested.
     previous feature's combat effects. Spend some effort in designing the
     combat effect modification / adjustment to the engine in a clean well
     designed way without hacky solutions"). *Built (R180)*: Phase 10.
+27. **Adjustments, second pass: the model keeps the rules, not the code**
+    (the user, 2026-11-28, the same request again: "Spend some effort in
+    designing the combat effect modification / adjustment to the engine in
+    a clean well designed way without hacky solutions"). That the order
+    features come in doesn't matter is a property of the changes (each
+    decides from the row as its phase found it), not of sorting by name;
+    how two SET changes clash is each change's own (`conflicts`,
+    `describe`), not a special case in `adjusted`; "another way to use
+    it" is a variant row next to the source's, never a change made in
+    place; "no action" and "no Concentration" are values of their own, not
+    the absence of one. *Built (R181)*: Phase 10's "Second pass".
 
 ## Goal
 
@@ -738,7 +749,9 @@ should be filled in **by one model, through one code path**, so that:
 7. **Notes are the escape hatch, and a repeated note is a missing field.**
 8. **The simulator never guesses positions or table decisions:** it prompts
    with a pre-filled form.
-9. **Order doesn't matter** for `adjust_combat_effect` hooks: they only add.
+9. **Order doesn't matter** for adjustments (Phase 10): DROP, SET, ADD in a
+   fixed order, each change deciding from the row as its phase found it.
+   (Before R180, `adjust_combat_effect` hooks kept it by only adding.)
 10. **Nothing lands on a target unless the effect says so.** No implicit
     badges.
 11. **An extension's uses are its parent's** (R10): an extension that describes
@@ -1589,7 +1602,7 @@ Tactics are done. Left:
 |---|---|---|---|
 | 7 | Regeneration (1 structured + 10 freeform monsters) | Healing itself at the start of its turn. Every one is reminded of as its turn starts (the generated ones' `at_turn_start`, the structured one's since R176); doing it needs the damage types it took since its last turn tracked, since the trait famously stops for Acid or Fire | **Field** |
 | 3 | Savage Attacker, Great Weapon Fighting | Reroll damage dice | **Field** |
-| 5 | Evoker: Overchannel (left `None`, subclass sweep) | A level 1-5 Wizard spell's damage dice at their maximum, and its caster takes Necrotic damage that grows with each use since a Long Rest (a resource, 9.12). Supreme Healing, in this row before, is **described** (R180: `MaximizeDice(healing=True)`) | **Field**: `MaximizeDice(damage=True)` exists (Phase 10); Overchannel needs it as a variant row (Phase 10's `Variant`) and the self-damage resource |
+| 5 | Evoker: Overchannel (left `None`, subclass sweep) | A level 1-5 Wizard spell's damage dice at their maximum, and its caster takes Necrotic damage that grows with each use since a Long Rest (a resource, 9.12). Supreme Healing, in this row before, is **described** (R180: `MaximizeDice(healing=True)`) | **Field**: `MaximizeDice(damage=True)` exists (Phase 10); variants are built (R181); Overchannel needs a variant that spends its own growing self-damage resource (9.12, Phase 10's table) |
 | 5 | Champion: Survivor (left `None`, subclass sweep) | Heroic Rally: at the start of each of its turns while Bloodied (and not at 0), it regains 5 + Constitution modifier Hit Points, Regeneration's always-on healing; Defy Death's Advantage on Death Saving Throws (no D20 Test for a death save) | **Field**: as Regeneration above, from a feature (`combat_modifiers`) |
 | 5 | Evoker: Potent Cantrip (left `None`, subclass sweep) | Half damage on a missed cantrip attack roll (half on a successful save is `half_on_success`, but writing only that half was left out on purpose) | **Field**: half damage on a miss |
 | 6 | Abjurer: Arcane Ward (left `None`, subclass sweep) | A ward of 2 x Wizard level + Intelligence modifier Hit Points on its owner that takes damage first (after Resistances and Vulnerabilities), stays at 0 without absorbing, regains 2 x the slot's level whenever its owner casts an Abjuration spell with a slot, or as a Bonus Action spending a slot; created once per Long Rest as an Abjuration spell is cast with a slot | **Field**: a damage-absorbing pool on a badge, apart from Temporary Hit Points (they stack, and the ward recharges); and `CASTS_SPELL` (6.7's leftover, 9.17) with a school gate for creating and recharging it |
@@ -1717,7 +1730,7 @@ of each turn. A **Field** for each pattern:
 | 5 | Berserker: Retaliation; Vengeance: Soul of Vengeance (left `None`, subclass sweep) | A Reaction melee attack with a weapon or Unarmed Strike: Retaliation as a creature within 5 feet damages its owner; Soul of Vengeance as the Vow of Enmity's target hits or misses (no event for "a creature under your badge attacks") | **Field**: a Reaction row that is an attack with the wielder's weapon row (Green-Flame Blade's family) |
 | 4 | Hunter: Superior Hunter's Defense (left `None`, subclass sweep) | Reaction to taking damage: Resistance to that damage and its type until the end of the turn | **Engine**: the before-damage `TAKES_DAMAGE` with a damage-type gate Absorb Elements needs |
 | 3 | Assassin: Envenom Weapons (left `None`, subclass sweep) | +2d6 Poison on a failed save against Cunning Strike's Poison option, ignoring Resistance to Poison | **Field**: "ignores Resistance" damage; needs Cunning Strike described first, and its 2d6 also lands on the repeat saves (9.10) |
-| 5 | Dance: Dazzling Footwork (left `None`, subclass sweep) | Bardic Damage: an Unarmed Strike with Dexterity, dealing the Bardic Inspiration die + Dexterity Bludgeoning; Agile Strikes: one Unarmed Strike as part of the action, Bonus Action or Reaction that expends a Bardic Inspiration use; only while unarmored and without a Shield (Unarmored Defense is on the sheet) | **Field**: a feature that changes its owner's weapon row (`adjust_combat_effect` doesn't reach weapon rows; the sheet's Unarmed Strike doesn't say it either, DI-125), and a `USES` trigger after another source's row (Bardic Inspiration's; `after=` names only the same source's) |
+| 5 | Dance: Dazzling Footwork (left `None`, subclass sweep) | Bardic Damage: an Unarmed Strike with Dexterity, dealing the Bardic Inspiration die + Dexterity Bludgeoning; Agile Strikes: one Unarmed Strike as part of the action, Bonus Action or Reaction that expends a Bardic Inspiration use; only while unarmored and without a Shield (Unarmored Defense is on the sheet) | **Field**: a feature that changes its owner's weapon row (adjustments don't reach weapon rows, Phase 10; the sheet's Unarmed Strike doesn't say it either, DI-125), and a `USES` trigger after another source's row (Bardic Inspiration's; `after=` names only the same source's) |
 | 5 | Psi Warrior: Telekinetic Adept, Telekinetic Thrust (left `None`, subclass sweep; an extension of Psionic Power) | After Psionic Strike deals damage: a Strength save (DC 8 + Intelligence + PB) or Prone, or moved up to 10 feet | **Field**: an extension's row `after=` a row of its parent (`after` names rows of the same source only; 9.17), and Psionic Power described first. Psi-Powered Leap is 9.12's and 9.14's. Psionic Strike is writable now (HIT, `attacks=WEAPON`, `once_per_turn`, `needs_damage`, `within_ft=30`, `with_bonus(die, INT)` Force, `when` "it's your turn") but waits with its feature |
 | 4 | Gloom Stalker: Stalker's Flurry (left `None`, subclass sweep) | With Dreadful Strike, one of: Sudden Strike (another attack with the same weapon against a different creature within 5 feet of the original target) or Mass Fear (the target and each creature within 10 feet of it: Wisdom save or Frightened until the start of your next turn). Its 2d8 belongs in Dread Ambusher's own row (9.3) | **Field**: Sudden Strike is Horde Breaker's "attack with the weapon just used"; Mass Fear needs an extension's row to come `after` its parent's row (`trigger_problems` refuses an `after` naming a row of another feature; 9.17) |
 | 4 | Glamour: Unbreakable Majesty (left `None`, subclass sweep) | For 1 minute (ends if Incapacitated: `EndsWhen` exists), the first attack roll that hits you each turn: the attacker makes a Charisma save or the attack misses instead | **Engine**: a badge's answer before the hit's damage (`WhenHit` fires after it), with a save whose failure turns the hit into a miss; "the first time on a turn" per attacker-turn |
@@ -1826,7 +1839,7 @@ step 2 (DI-105). This table keeps them in view from the effects' side.
 | 4 | Trickery: Improved Duplicity, Shared Distraction (left `None`, subclass sweep) | Its owner and its allies have Advantage on attack rolls against a creature within 5 feet of the illusion | **Engine**: as Invoke Duplicity above, an aura from the illusion's point (9.4's `Aura` measures from a creature) |
 | 3 | Dance: Inspiring Movement (left `None`, subclass sweep) | Reaction as an enemy it can see ends its turn within 5 feet: a Bardic Inspiration use spent to move up to half its Speed, then one ally within 30 feet may use its Reaction to move up to half its Speed, none of it provoking Opportunity Attacks | **Engine**: an "an enemy ends its turn" event, the moves on the map, and the feature wired as an extension of Bardic Inspiration so it spends that use (DI-126, 9.17's wiring row) |
 | 3 | Psi Warrior: Telekinetic Adept, Psi-Powered Leap (left `None`, subclass sweep) | A Fly Speed of twice its Speed until the end of the turn | **Field**: `Movement`'s Fly Speed is a number of feet or equal to its Speed, not a multiple of it |
-| 3 | Sea: Aquatic Affinity (left `None`, subclass sweep) | A Swim Speed equal to its Speed (DI-098, above); its 10-foot Emanation is Wrath of the Sea's, read from the Druid level once that's described (Phase 10's `AreaAtLeast`, not built) | **Now**: `movement()` returning `Movement(swims=True)`, outside the sweep's methods (`combat_effects` / `adjust_combat_effect`) |
+| 3 | Sea: Aquatic Affinity (left `None`, subclass sweep) | A Swim Speed equal to its Speed (DI-098, above); its 10-foot Emanation is Wrath of the Sea's, read from the Druid level once that's described (Phase 10's `AreaAtLeast`, not built) | **Now**: `movement()` returning `Movement(swims=True)`, outside the sweep's methods (`combat_effects` / `combat_adjustments`) |
 
 #### 9.15 Tooling for the sweep
 
@@ -1889,7 +1902,7 @@ read directly.
 |---|---|---|---|
 | Barbarian: Berserker | Intimidating Presence (Wisdom save or Frightened, repeat save, 30-foot Emanation); Mindless Rage `[]` + a hook adding Charmed/Frightened immunity to Rage's badge and ending them | | Frenzy (9.17, DI-121), Retaliation (9.11) |
 | Fighter: Champion | Additional Fighting Style `[]` | | Improved Critical (9.2), Remarkable Athlete (9.14), Heroic Warrior (9.12), Superior Critical (9.2), Survivor (9.5) |
-| Monk: Open Hand | Open Hand Technique: Addle, Push, Topple (asked as an Unarmed Strike hits, `when` it was Flurry of Blows'; Focus save DC); Wholeness of Body (Martial Arts die + Wisdom, self) | | Fleet Step (9.17), Quivering Palm (9.17, DI-120) |
+| Monk: Open Hand | Open Hand Technique: Addle, Push, Topple (asked as an Unarmed Strike hits, `when` it was Flurry of Blows'; Focus save DC); Wholeness of Body (Martial Arts die + Wisdom, self); Fleet Step `[]` + a variant of each Step of the Wind row with no action (R181) | | Quivering Palm (9.17, DI-120) |
 | Paladin: Vengeance | Oath of Vengeance Spells `[]` | | Vow of Enmity (9.17, DI-120), Relentless Avenger (9.14), Soul of Vengeance (9.11), Avenging Angel (9.17, DI-121) |
 | Ranger: Hunter | Colossus Slayer (asked: HIT, weapon, once per turn, `when` missing HP; 9.12 would make it automatic); Hunter's Lore `[]` | | Horde Breaker (9.11), Escape the Horde (9.2), Multiattack Defense (9.2), Superior Hunter's Prey (9.14), Superior Hunter's Defense (9.11) |
 | Rogue: Assassin | Assassin's Tools `[]`; Infiltration Expertise `[]` + Roving Aim's `DropModifier(Speed)` on Steady Aim (R180) | | Assassinate (9.3), Death Strike (9.3), Envenom Weapons (9.11) |
@@ -1933,15 +1946,14 @@ designed: do them first.
 | 5 | Vengeance: Vow of Enmity; Open Hand: Quivering Palm (left `None`) | Vow of Enmity: a badge with `AttacksAgainst(ADVANTAGE, by_caster=True)` for 1 minute, spending a Channel Divinity use (`untriggered` like Sacred Weapon). Quivering Palm: on an Unarmed Strike hit, 4 Focus Points; later a Constitution save for 10d12 Force, half on a success | **Wiring, DI-120**: neither is granted with `extends=` (`CharacterContent/Classes/SubClasses2024/PaladinVengeance.py`, `MonkOpenHand.py`), so a row can't spend its parent's uses. Both can be written once that's fixed |
 | 5 | Zealot: Rage of the Gods, Revivification (left `None`, subclass sweep) | Reaction as a creature within 30 feet would drop to 0 Hit Points: it drops to the Barbarian level's Hit Points instead | **Engine**: `DROPS_TO_ZERO` asked of others within N feet (it's asked of the owner only), with `drops_to` on that creature |
 | 5 | `CASTS_SPELL` (6.7's leftover): Life: Blessed Healer; Stars: Starry Form's Chalice; Glamour: Beguiling Magic; Archfey: Steps of the Fey, Misty Escape, Bewitching Magic; Glory: Inspiring Smite; Abjurer: Arcane Ward (left `None`, subclass sweep) | Beguiling Magic: right after you cast an Enchantment or Illusion spell with a slot, a creature you can see within 60 feet makes a Wisdom save or is Charmed or Frightened (a row each) for 1 minute, repeating the save at the end of each of its turns; once per Long Rest, or a Bardic Inspiration use restores it. Steps of the Fey: its free Misty Steps (Charisma modifier per Long Rest: writable now, as Star Map's), and with every casting of Misty Step, slot or not, Refreshing Step (you or one creature within 10 feet: 1d10 Temporary Hit Points) or Taunting Step (creatures within 5 feet of the space you left: Wisdom save or Disadvantage on attack rolls against creatures other than you until the start of your next turn). Misty Escape: Misty Step as a Reaction to taking damage (with a slot or a Steps of the Fey use), and Disappearing Step (Invisible until the start of your next turn or right after you attack, deal damage or cast: `EndsWhen` exists) and Dreadful Step (creatures within 5 feet of the space left or arrived in: Wisdom save or 2d10 Psychic). Bewitching Magic: right after you cast an Enchantment or Illusion spell with an action and a slot, Misty Step as part of the same action, without a slot. The others' own text is in their rows (9.12, 9.5) | **Engine**: `CASTS_SPELL` is data only (CombatTriggers.py), with spell-name, school, slot and action gates; a `USES` `after=` the free Misty Steps row misses slot castings, and its `aim` can't pick "others, not the caster" for a self-targeted spell. **Field**: Taunting Step's "against creatures other than the giver" (a `D20Mode` gate, the inverse of `AttacksAgainst.by_caster`; as Power of the Wilds' Lion needs), a Reaction casting of a spell with a slot (a feature's `spell=` row is a free casting; the spell's own row keeps its Bonus Action), and a free casting that costs no action (DI-121's family). The rows themselves are writable now |
-| 5 | Dance: Dazzling Footwork (left `None`, subclass sweep) | Its Unarmed Strike isn't Dexterity-based or the Bardic Inspiration die's on the sheet's weapon row, so the combat picker's row is wrong for a Dance Bard | **Bug, DI-125**: `Unarmed.py` and the sheet's Unarmed Strike (`Builds/StartingEquipment.py`) don't say it; a feature's `adjust_combat_effect` doesn't reach weapon rows. The feature's own rows are 9.11's |
-| 5 | War: War God's Blessing; Draconic: Dragon Companion (left `None`, subclass sweep) | War God's Blessing: Shield of Faith or Spiritual Weapon cast with a Channel Divinity use instead of a slot, as a Bonus Action, without Concentration for 1 minute; ends early if cast again, on Incapacitated or death. Dragon Companion: its free casting of Summon Dragon (once per Long Rest, `uses_per_long_rest=1`) without Concentration for 1 minute. A row with `spell=` would hold the caster's Concentration (Concentration saves, ending another Concentration spell): silently wrong | **Field**: a feature row that drops its spell's Concentration (`_described_feature_option` takes `spell.is_concentration`, and a row's `concentration` can only add it), as a choice at casting for Dragon Companion (a second row); the early end on Incapacitated is 9.6's `EndsWhen`. Summon Dragon has no combat effects and brings no stat block (the summon registry is 9.9's) |
+| 5 | Dance: Dazzling Footwork (left `None`, subclass sweep) | Its Unarmed Strike isn't Dexterity-based or the Bardic Inspiration die's on the sheet's weapon row, so the combat picker's row is wrong for a Dance Bard | **Bug, DI-125**: `Unarmed.py` and the sheet's Unarmed Strike (`Builds/StartingEquipment.py`) don't say it; a feature's adjustments don't reach weapon rows (Phase 10). The feature's own rows are 9.11's |
+| 5 | War: War God's Blessing; Draconic: Dragon Companion (left `None`, subclass sweep) | War God's Blessing: Shield of Faith or Spiritual Weapon cast with a Channel Divinity use instead of a slot, as a Bonus Action, without Concentration for 1 minute; ends early if cast again, on Incapacitated or death. Dragon Companion: its free casting of Summon Dragon (once per Long Rest, `uses_per_long_rest=1`) without Concentration for 1 minute. A row with `spell=` would hold the caster's Concentration (Concentration saves, ending another Concentration spell): silently wrong | **Field**: a feature row that drops its spell's Concentration is **built** (R181: `concentration=False`; Dragon Companion's choice at casting is a variant, Phase 10). Still waiting: Spiritual Weapon's later attacks are held by the casting's Concentration (R178), so War God's Blessing's casting would leave them nothing to hold them: they need holding by its 1-minute badge; the early end on Incapacitated is 9.6's `EndsWhen`. Summon Dragon has no combat effects and brings no stat block (the summon registry is 9.9's) |
 | 5 | Glory: Glorious Defense (left `None`, subclass sweep) | Reaction (Charisma modifier uses): as its owner or a creature it can see within 10 feet is hit by an attack roll, + Charisma modifier (minimum 1) to the target's AC against that attack; if it then misses, one weapon attack against the attacker | **Engine**: `HIT_BY` is asked of the creature hit only, so another creature's hit needs an event asked of those near it (`within_ft=10`, `sees=True`); the counterattack is 9.11's attack with a weapon, after the hit turned into a miss |
-| 3 | Open Hand: Fleet Step (left `None`) | Step of the Wind right after another Bonus Action, as part of it. (Roving Aim, in this row before, is **described**: R180's `DropModifier`) | **Field**: Phase 10's `Variant` (a second row of Step of the Wind with no action), and DI-121 |
 | 4 | Zealot: Rage of the Gods; Psi Warrior: Telekinetic Thrust; Gloom Stalker: Stalker's Flurry (Mass Fear) (left `None`, subclass sweep) | Rage of the Gods comes "when you activate your Rage"; Telekinetic Thrust after Psionic Strike; Mass Fear after Dreadful Strike | **Field**: an extension's `USES` / `HIT` row `after=` its parent's row |
 | 4 | Wild Heart: Aspect of the Wilds (left `None`, subclass sweep) | Owl: Darkvision 60 feet, or 60 feet more; Panther: a Climb Speed equal to its Speed; Salmon: a Swim Speed equal to its Speed. Chosen at a Long Rest, always on | **Field**: the Long Rest choice isn't recorded on the sheet, so `movement()` can't return Panther's `Movement(climbs=True)` or Salmon's `Movement(swims=True)`, and Owl's Darkvision is a sense of the sheet's (GrantSense), not a `Vision` |
 | 4 | Psi Warrior: Bulwark of Force (left `None`, subclass sweep) | Half Cover for up to Intelligence modifier (minimum 1) creatures, its owner included, for 1 minute | **Field**: a "has Half Cover" badge modifier counted as the dialog's cover is (+2 AC and Dexterity saves, not with other cover, not against `ignores_cover`); `ArmorClass(2)` would stack with the dialog's cover. Its ending is 9.6's |
 | 4 | Gloom Stalker: Shadowy Dodge (left `None`, subclass sweep) | Reaction as a creature makes an attack roll against you: Disadvantage on it (Warding Flare's one-roll badge), then teleport up to 30 feet (table) | **Field**: an `ATTACKS` gate for a roll against the owner (`AttackRollOutcome.target` is known); a `when` would ask on every enemy attack roll in the fight |
-| 4 | Abjurer: Spell Breaker (left `None`, subclass sweep) | Counterspell and Dispel Magic always prepared (in the picker as spells); Dispel Magic as a Bonus Action with the Proficiency Bonus added to its ability check; a slot used for either isn't expended if it fails to stop a spell | **Field**: a hook that changes a spell's casting time (`adjust_combat_effect` may only add; a feature row with `spell=` spends no slot, so a Bonus Action row of its own can't be written), and a slot given back when the spell fails; Counterspell and Dispel Magic aren't described yet, and hooks don't reach text-read spell rows |
+| 4 | Abjurer: Spell Breaker (left `None`, subclass sweep) | Counterspell and Dispel Magic always prepared (in the picker as spells); Dispel Magic as a Bonus Action with the Proficiency Bonus added to its ability check; a slot used for either isn't expended if it fails to stop a spell | **Field**: the Bonus Action is ready (a `CostsAction(BONUS_ACTION)` variant of Dispel Magic, R181); left: the Proficiency Bonus on its ability check, and a slot given back when the spell fails; Counterspell and Dispel Magic aren't described yet, and hooks don't reach text-read spell rows |
 | 3 | Shadow: Improved Shadow Step (left `None`, subclass sweep; an extension of Shadow Step) | 1 Focus Point drops Shadow Step's Dim Light requirement and adds an Unarmed Strike after the teleport | **Field**/wiring: an extension of Shadow Step whose row spends Monk's Focus' points (two parents); Shadow Step itself waits (9.14) |
 | 3 | Glory: Living Legend (left `None`, subclass sweep) | Bonus Action, 10 minutes, once per Long Rest or a level 5 slot: Advantage on Charisma checks; a Reaction to reroll a failed save (`FAILS_SAVE`, `reroll_save=0`, could be written); once on each of its turns, a missed weapon attack roll hits instead | **Field**: a "the miss hits instead" outcome on a `MISS` row (Unerring Strike), and restoring the use with a spell slot (Wild Companion's, 9.12) |
 
@@ -2029,15 +2041,97 @@ Arcane Charge, Radiant Soul) and `adjust_combat_effect` is gone. Newly
 described with it: Disciple of Life, Supreme Healing, and Infiltration
 Expertise's Roving Aim. Tests: `tests/test_combat_adjustments.py`.
 
+**Second pass (R181, 2026-11-28, Decision 27).** A review of R180 against
+"no hacky solutions" found four places where the code, not the model,
+kept a rule, or where the model couldn't say what the waiting features
+need:
+
+- **SET conflicts were a special case.** `_settle_sets` knew `CostsAction`
+  by name, though the docstring promised each change says how two of its
+  kind combine. Now `Change.conflicts(other)` (default: never) and
+  `Change.describe()` ("a Bonus Action", "take no action") are each
+  change's own, and `_settle_sets` keeps the first by feature name of any
+  that conflict and notes the rest without knowing a change class. A new
+  SET change (`AreaAtLeast`) needs nothing in `adjusted`.
+- **Order-independence leaned on the sort.** Within ADD,
+  `AddToOneDamageRoll` read the running row, so a part another feature's
+  `AddDamage` made could take Elemental Affinity's bonus, or not,
+  depending on which feature's name sorts first (a Fire part added to
+  Lightning Bolt). Now every change gets `AdjustContext.before`, the row
+  as its phase found it, and decides from that: "one damage roll" is one
+  of the row's own. Changes that only append commute anyway; the sort by
+  name is left only to make notes come out in the same order.
+- **Changes could only edit the row in place.** Fleet Step, Overchannel,
+  Spell Breaker and Dragon Companion each give a *choice* of another way
+  to use the source. Now `Adjustment(applies, changes, variant="Fleet
+  Step")` keeps the row and adds "<row> (Fleet Step)" after it:
+  - built from the source's row with every in-place change and the
+    variant's own, made together in the one DROP/SET/ADD order (so
+    Overchannel's maximized dice would come after Empowered Evocation's
+    Intelligence, as with any SET before ADD);
+  - it spends what its row spends (uses are worked out before adjusting;
+    no change touches them), and is counted under the row's own name;
+  - variants don't combine with each other (no Fleet Step + another
+    variant row);
+  - a card's Use or Cast button gives the row itself, never a variant
+    (`adjusted_effects`); the picker lists `Adjusted.rows`;
+  - when to use one: the text offers a choice at use time ("you can
+    also ...", "you can modify it so ..."); a change in place is for
+    what always applies ("whenever you cast ...").
+  A separate `Variant` class was rejected: it would have the same
+  `applies`, `changes` and checks, and every feature would return two
+  kinds.
+- **"No action" and "no Concentration" couldn't be said.** A row's
+  `action_type=None` already means "the source's", and `concentration`
+  could only add (`effect.concentration or spell's`). Now
+  `ActionType.NO_ACTION` is an action of its own (none at all: part of
+  another), and `CombatEffect.concentration` is `None` (the source's: the
+  spell's own), `True` or `False` (a feature that casts the spell without
+  it), read through `CombatEffect.holds_concentration(source)`. Old fight
+  logs wrote `"concentration": false` on every effect (asdict); only
+  monster rows are read back from them, and a monster row's source
+  Concentration is False too, so they read the same.
+- The picker's `_casting` (a feature row over the spell it casts, its set
+  fields winning) is model logic, so it's `CombatEffect.over(base)` now;
+  that, and the tooltip line moving to `Adjusted.changed_by`, brings
+  `effect_options.py` back under its line cap (2060 of 2072; R180 left it
+  at 2075).
+
+Not done, on purpose: a `Concentration(holds, duration)` change. No
+feature can be fully described with it yet (Decision 25): Dragon
+Companion's variant waits for Summon Dragon (9.9), and War God's
+Blessing, which only needs its own rows' `concentration=False`, waits
+for Spiritual Weapon's later attacks to be held by its 1-minute badge
+instead of by Concentration (R178 holds them by Concentration). A known
+wrinkle: `Rows.CASTING` reads `spends_use`, which also marks a free use
+of the source itself (Step of the Wind's Dash without a Focus Point), so
+Fleet Step applies to `Rows.ALL`. Split "is the use itself" from "spends
+a use" if a third feature trips on it.
+
+**Which mechanism**, for a feature that builds on another (the
+`combat-effects` skill has the same table):
+
+| The feature's text | Written as |
+|---|---|
+| A use of its own | its `combat_effects()` rows |
+| Another way to spend its parent's uses (Radiance of the Dawn) | its rows, granted with `extends=` |
+| Always changes how its parent works (Mindless Rage) | `Adjustment(PARENT, ...)`, `[]` rows |
+| Always changes other features' or spells' rows (Empowered Evocation) | `Adjustment(Applies(features=/spells=), ...)` |
+| Offers another way to use them (Fleet Step, Overchannel) | an `Adjustment` with `variant=` |
+| Changes stats while a badge is on | the badge's `modifiers`; on another source's badge, `AddBadgeModifiers` |
+| Always-on stats or movement | `movement()`, always-on modifiers (9.2) |
+| Happens as something else happens (a hit, a failed save) | a row with a `trigger` (Phase 6) |
+
 **Not built yet: the changes the sweep needs next**, each a small `Change`
 once a feature needs it:
 
 | Rank | Change | Features waiting | Why it isn't an existing change |
 |---|---|---|---|
-| 5 | A variant row: the source's row again, under another name, with changes (`Variant`) | Fleet Step (Step of the Wind after another Bonus Action, no action; also DI-121), Spell Breaker (Dispel Magic as a Bonus Action), Overchannel (maximized damage, with its self-damage resource, 9.12) | Every change today edits the row in place; these add a second way to use it |
-| 5 | A casting without Concentration | War God's Blessing, Dragon Companion | Concentration comes from the spell in `_described_feature_option`, not from the effect, so neither a row nor a change can turn it off; needs the option builder to read it from the effect |
+| 5 | A variant that spends its adjusting feature's own resource | Overchannel (`MaximizeDice(damage=True)` as a variant of a level 1-5 Wizard spell; its growing Necrotic self-damage, 9.12) | A variant spends what its row spends (R181); Overchannel's cost is its own and grows |
+| 5 | A casting without Concentration, as a change (`Concentration(holds, duration_seconds)`) | Dragon Companion (a variant of Summon Dragon lasting 1 minute; waits for 9.9) | The field is built (R181: `concentration=False`); the change waits for a feature it would fully describe. War God's Blessing needs only the field, and waits for Spiritual Weapon's later attacks to be held by its badge (9.17) |
 | 4 | An area made larger (`AreaAtLeast(feet)`, combining by the larger) | Aquatic Affinity on Wrath of the Sea (5 to 10 feet) | Waits for Wrath of the Sea's rows (DI-037) |
 | 4 | Badge modifiers on a parent with no rows yet | Stormborn, Full of Stars, Twinkling Constellations | `AddBadgeModifiers` is ready; their parents (Wrath of the Sea, Starry Form) wait for DI-037 and 9.12 |
+| 4 | Nothing new: a `CostsAction(BONUS_ACTION)` variant of Dispel Magic | Spell Breaker | Waits for Dispel Magic to be described (adjustments don't reach text-read spell rows) and for its Proficiency Bonus on the ability check |
 | 3 | Reaching weapon rows | Dazzling Footwork's Bardic Damage (DI-125), magic weapons' riders (9.8) | Adjustments reach spell and feature rows only; a weapon row has no `EffectSource` yet |
 
 ## Revisions (better solutions found while building)
@@ -3882,6 +3976,20 @@ once a feature needs it:
   (`add_modifier`), as its text says; Magic Missile's darts get a note,
   not a silent skip. Tests: `tests/test_combat_adjustments.py`; the old
   hook test in `tests/test_feature_combat_effects.py` is rewritten on it.
+- **R181. Adjustments, second pass** (2026-11-28, Phase 10, Decision 27).
+  Conflicts between SET changes are each change's own
+  (`Change.conflicts`, `describe`) instead of `_settle_sets` knowing
+  `CostsAction`; every change gets `AdjustContext.before` and decides
+  from it, so Elemental Affinity no longer takes a Fire part another
+  feature added to Lightning Bolt when that feature's name sorts first;
+  `Adjustment(variant=)` and `Adjusted.rows`/`variants`, the picker's
+  `_described_spell_options`/`_described_feature_options` returning the
+  row and its variants; `ActionType.NO_ACTION`;
+  `CombatEffect.concentration: bool | None` with `holds_concentration`;
+  the picker's `_casting` is `CombatEffect.over`. Fleet Step described (a
+  variant of each Step of the Wind row, no action). Tests:
+  `tests/test_combat_adjustments.py` (variants on Wei Stonefist's picker
+  rows, conflicts, the order, Concentration).
 
 ## Open questions (with suggestions)
 

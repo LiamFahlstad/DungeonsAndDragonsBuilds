@@ -207,7 +207,7 @@ Phase 10). A feature returns `(Adjustment(applies, changes), ...)`:
 |---|---|---|
 | `DropModifier(Speed)` | drop | Roving Aim: Steady Aim's badge loses `Speed(set_to=0)`; only from the source's own effect |
 | `MaximizeDice(healing=True)` / `(damage=True)` | set | Supreme Healing; Overchannel. The same twice is once |
-| `CostsAction(ActionType.BONUS_ACTION)` | set | another action; two different ones: the first by name counts, with a note |
+| `CostsAction(ActionType.BONUS_ACTION)` | set | another action, or `ActionType.NO_ACTION` (part of another action: Fleet Step). Two different ones conflict (`Change.conflicts`): the first by name counts, and the row says which wasn't made |
 | `AddNote(text)` | add | Combat Inspiration's two more ways to spend the die |
 | `AddDamage(CombatDamage(...))` | add | a damage part more |
 | `AddToOneDamageRoll(amount, types, when=)` | add | "add X to one damage roll": Empowered Evocation, Elemental Affinity, Radiant Soul. It finds the part (a chosen type gets a `when`), and on a row of instances it's a note. Nothing for 0 or less |
@@ -215,11 +215,45 @@ Phase 10). A feature returns `(Adjustment(applies, changes), ...)`:
 | `AddBadgeModifiers(modifiers, badge=)` | add | Mindless Rage's `ConditionImmunity` on the Rage badge (the source's own name unless `badge`) |
 | `AlsoEnds(conditions)` | add | Mindless Rage ends Charmed and Frightened |
 
+A change decides from the row as its phase found it, never from what
+another change in the same phase made (`AdjustContext.before`): one
+damage roll is one of the row's own. A new SET change that can't be made
+with another overrides `conflicts` and `describe`; nothing else in
+`adjusted` knows change classes.
+
+**A variant: another way to use the row**, not a change to it:
+`Adjustment(applies, changes, variant="Fleet Step")` keeps the row as it
+was and adds "<row> (Fleet Step)" after it, with every in-place change and
+its own. It spends what its row spends. Use it when the text gives a
+choice at use time ("you can also ...", "when you cast it, you can modify
+it so ..."); change the row in place when the text always applies
+("whenever you cast ..."). Fleet Step:
+`Adjustment(Applies(features=(StepOfTheWind,), rows=Rows.ALL),
+(CostsAction(ActionType.NO_ACTION), AddNote("Fleet Step: ...")),
+variant="Fleet Step")`. A card's Use or Cast button gives the row itself,
+never a variant.
+
+**Which mechanism**:
+
+| The feature's text | Write |
+|---|---|
+| A use of its own | its `combat_effects()` rows |
+| Another way to spend its parent's uses (Radiance of the Dawn) | its rows, granted with `extends=` |
+| Always changes how its parent works (Mindless Rage) | `Adjustment(PARENT, ...)`, `[]` rows |
+| Always changes other features' or spells' rows (Empowered Evocation) | `Adjustment(Applies(features=/spells=), ...)` |
+| Adds a choice of another way to use them (Fleet Step, Overchannel) | an Adjustment with `variant=` |
+| Changes stats while its badge or another's is on | the badge's `modifiers`; on another's badge: `AddBadgeModifiers` |
+| Always-on stats, movement | `movement()`, always-on modifiers (plan 9.2) |
+| Happens as something else happens (a hit, a failed save) | a row with a `trigger` |
+
+A feature row that casts a spell without its Concentration says
+`concentration=False` (None, the default, is the spell's own). The
+row's own fields win over the spell's (`CombatEffect.over`).
+
 The row's tooltip ends "Changed by <feature>." A change the vocabulary
-can't say yet (a variant row of its own: Fleet Step, Spell Breaker; an
-area made larger: Aquatic Affinity; a casting without Concentration) is a
-missing change: leave the feature `None` and add it to the plan's Phase 10
-list, never a note standing in for it.
+can't say yet (an area made larger: Aquatic Affinity; a weapon's row:
+Dazzling Footwork) is a missing change: leave the feature `None` and add
+it to the plan's Phase 10 list, never a note standing in for it.
 
 ## Triggers
 

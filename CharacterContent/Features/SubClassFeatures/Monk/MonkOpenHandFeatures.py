@@ -1,6 +1,14 @@
 from CharacterContent.Features.ClassFeatures.Monk.MonkFeatures import (
     MARTIAL_ARTS_DIE,
     MonksFocus,
+    StepOfTheWind,
+)
+from Model.Content.CombatAdjustments import (
+    AddNote,
+    Adjustment,
+    Applies,
+    CostsAction,
+    Rows,
 )
 from Core.Definitions import (
     Ability,
@@ -248,6 +256,26 @@ class FleetStep(Feature):
     def get_description(self, character: CharacterView) -> str:
         description = "When you take a Bonus Action other than Step of the Wind, you can also use Step of the Wind immediately after that Bonus Action."
         return description
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # It only adds a way to use Step of the Wind.
+        return []
+
+    def combat_adjustments(self, character: CharacterView) -> tuple[Adjustment, ...]:
+        # Another way to use each of Step of the Wind's rows (its Dash too,
+        # which spends no Focus Point): right after another Bonus Action, as
+        # part of it, so it takes no action of its own. It spends what the
+        # row spends.
+        note = AddNote(
+            "Fleet Step: right after a Bonus Action other than Step of the Wind."
+        )
+        return (
+            Adjustment(
+                Applies(features=(StepOfTheWind,), rows=Rows.ALL),
+                (CostsAction(ActionType.NO_ACTION), note),
+                variant="Fleet Step",
+            ),
+        )
 
 
 class QuiveringPalm(Feature):
