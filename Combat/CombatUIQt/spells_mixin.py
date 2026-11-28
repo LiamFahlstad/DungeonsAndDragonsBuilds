@@ -20,6 +20,7 @@ from Combat.Effects.active_effects import (
 )
 from Combat.PlayerCombatant import max_pact_slots
 from Combat.Fight.effect_options import PactSlot, casting_time_cost
+from Model.Content.CombatAdjustments import EffectSource, adjusted_effects
 from Combat.Fight.resources import spell_slot_lack
 from Combat.Fight.cascade import (
     clear_concentration_if_unused,
@@ -280,7 +281,13 @@ class SpellsMixin(CombatWindowState):
                 if spell.name not in char["conditions"] or self._held_by_effect(row):
                     applied.append(row)
         # What the badge does while it's on (Bless's 1d4), as the spell says.
-        modifiers = badge_modifiers(spell.combat_effects(), spell.name)
+        # And what the caster's features change about it.
+        effects = adjusted_effects(
+            source.get("_stat_block"),
+            EffectSource(spell.name, spell=spell, with_slot=slot_level is not None),
+            spell.combat_effects(),
+        )
+        modifiers = badge_modifiers(effects, spell.name)
         for char in list(recipients):
             describe(char, spell.name, tooltip_html, badge_color, SPELL)
             self._add_condition_to(char, spell.name, source=source)

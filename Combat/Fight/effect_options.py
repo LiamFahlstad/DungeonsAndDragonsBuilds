@@ -26,6 +26,7 @@ from Combat.Arena.ranges import (
 from Combat.Definitions import ActionCost
 from Combat.Effects.triggers import TriggerRow
 from Core.Definitions import Condition
+from Model.Content.CombatAdjustments import EffectSource, adjusted
 from Model.Content.CombatArea import CombatArea
 from Model.Content.CombatEffect import (
     CombatCondition,
@@ -722,8 +723,9 @@ def _described_spell_option(spell, who: dict, effect: CombatEffect) -> EffectOpt
     spell's casting time, duration and Concentration, and the cheapest slot
     left. A way that's part of a cast already counted (spends_use=False:
     Ice Knife's explosion) spends nothing."""
-    effect = _adjusted(who, spell.name, effect)
     casts = effect.spends_use
+    source = EffectSource(spell.name, spell=spell, with_slot=casts and spell.level > 0)
+    effect, changed_by = _adjusted(who, source, effect)
     slot = spell_slot_choices(who, spell.level)[0][1] if casts else None
     no_slot = []
     if casts and spell.level and has_slots(who) and slot is None:
@@ -733,7 +735,7 @@ def _described_spell_option(spell, who: dict, effect: CombatEffect) -> EffectOpt
         effect,
         name=spell.name,
         kind=SPELL,
-        tooltip=spell.description,
+        tooltip=spell.description + changed_by,
         default_dc=_spell_save_dc(spell, who) if effect.roll == "save" else None,
         default_bonus=(
             _spell_attack_bonus(spell, who) if effect.roll == "attack" else None
@@ -1274,7 +1276,7 @@ def _extension_options(char: dict, parent) -> list[EffectOption]:
     """The rows of the features granted as extensions of `parent`: more ways
     to use it (Radiance of the Dawn, a use of Channel Divinity). One that
     only changes the parent's own effect (Combat Inspiration) says so with
-    adjust_combat_effect and has none. An extension not described has none
+    combat_adjustments and has none. An extension not described has none
     either: they never had rows of their own."""
     sheet = char.get("_stat_block")
     if sheet is None:
@@ -1317,7 +1319,8 @@ def _described_feature_option(
         if action_cost is None:
             action_cost = casting_time_cost(spell)
         concentration = spell.is_concentration
-    effect = _adjusted(char, feature.name, effect)
+    source = EffectSource(feature.name, feature=feature, spell=spell)
+    effect, changed_by = _adjusted(char, source, effect)
     counted_as = owner.name
     if effect.uses_per_long_rest:
         # Its own count, not the feature's (Fey Touched's free castings).
@@ -1341,7 +1344,7 @@ def _described_feature_option(
         effect,
         name=feature.name,
         kind=FEATURE,
-        tooltip=description,
+        tooltip=description + changed_by,
         default_dc=dc,
         modifier=_casting_modifier(char),
         duration_seconds=duration,
@@ -1373,15 +1376,15 @@ def _casting(spell, effect: CombatEffect) -> CombatEffect:
     return replace(base, **changes)
 
 
-def _adjusted(char: dict, source: str, effect: CombatEffect) -> CombatEffect:
-    """`effect` of char's feature or spell named `source`, as char's
-    features change it (Feature.adjust_combat_effect)."""
-    sheet = char.get("_stat_block")
-    if sheet is None:
-        return effect
-    for feature in sheet.iter_features_with_extensions():
-        effect = feature.adjust_combat_effect(sheet, source, effect)
-    return effect
+def _adjusted(
+    char: dict, source: EffectSource, effect: CombatEffect
+) -> tuple[CombatEffect, str]:
+    """`effect`, a row of `source`, as char's features change it
+    (Feature.combat_adjustments, Model/Content/CombatAdjustments.py), and
+    a line for the row's tooltip naming them ("" when none do)."""
+    changed = adjusted(char.get("_stat_block"), source, effect)
+    line = f"\n\nChanged by {', '.join(changed.by)}." if changed.by else ""
+    return changed.effect, line
 
 
 def _described_option(

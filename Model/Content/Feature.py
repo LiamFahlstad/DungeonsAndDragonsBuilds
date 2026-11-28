@@ -5,6 +5,7 @@ from typing import Callable, Literal, Sequence
 from Core.Definitions import CharacterClass
 from Core.Rules import MAX_LEVEL, MIN_LEVEL, SECONDS_PER_ROUND
 from Model.Content.ActionType import ActionType
+from Model.Content.CombatAdjustments import Adjustment
 from Model.Content.CombatEffect import CombatEffect
 from Model.Content.CombatModifiers import Aura, Modifier, Movement
 from Model.Content.Effect import Effect
@@ -419,19 +420,20 @@ class Feature(Effect):
         """
         return None
 
-    def adjust_combat_effect(
-        self, character: CharacterView, source: str, effect: CombatEffect
-    ) -> CombatEffect:
+    def combat_adjustments(self, character: CharacterView) -> tuple[Adjustment, ...]:
         """Override when this feature changes what using another of the
-        character's features or spells does in a fight (Combat Inspiration:
-        two more ways to spend a Bardic Inspiration die). It sees every
-        effect of the character's features and spells, so check `source` (the
-        feature's or spell's name) first, and return
-        dataclasses.replace(effect, ...). Applied in no particular order, like
-        apply(): only add (a note, a damage part, add_modifier), never undo or
-        read what another feature added. Returns `effect` unchanged (default)
-        for features that change no other effect."""
-        return effect
+        character's features, or casting a spell, does in a fight: what it
+        applies to and the changes it makes, as data
+        (Model/Content/CombatAdjustments.py). Mindless Rage, granted as an
+        extension of Rage: Adjustment(PARENT, (AddBadgeModifiers(
+        (ConditionImmunity(...),)), AlsoEnds(...))); Empowered Evocation:
+        Adjustment(Applies(spells=Spells(school=EVOCATION, on_list=WIZARD)),
+        (AddToOneDamageRoll(intelligence),)). The fight makes the changes
+        in a fixed order, whatever order the features were granted in, so
+        an adjustment never reads or undoes another's. A rider with no row
+        of its own returns [] from combat_effects() too. Returns ()
+        (default) for features that change no other effect."""
+        return ()
 
     def movement(self, character: CharacterView) -> Movement | None:
         """Override when this feature, always on, changes how `character`

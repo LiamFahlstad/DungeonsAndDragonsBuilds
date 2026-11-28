@@ -50,6 +50,7 @@ from CharacterContent.Spells import SpellClassConverter as converter  # noqa: E4
 from CharacterContent.Spells.SpellFactory import DataSpell, SpellFactory  # noqa: E402
 from Combat.Fight import effect_options as eo  # noqa: E402
 from Core.Definitions import Ability, Condition  # noqa: E402
+from Model.Content.CombatAdjustments import Adjustment  # noqa: E402
 from Model.Content.CombatEffect import CombatEffect  # noqa: E402
 from Model.Content.CombatTriggers import trigger_problems  # noqa: E402
 from Model.Content.FeatureText import Facts, Option  # noqa: E402
@@ -550,7 +551,7 @@ def feature_state(feature, parent, effects) -> str:
     its described rows, none, or a row read from its text. An undescribed
     passive feature or extension has no row at all; an extension that is a
     way to use its parent (Radiance of the Dawn) wants combat effects, one
-    that only changes it (a rider) wants adjust_combat_effect or nothing."""
+    that only changes it (a rider) wants combat_adjustments or nothing."""
     if effects is None:
         if parent is not None:
             return EXTENSION
@@ -588,7 +589,7 @@ def feature_problems() -> list[str]:
             except Exception as error:  # a feature whose effects don't build
                 problems.append(f"{combatant['name']}'s features: {error!r}")
                 continue
-            for feature, _, effects in rows:
+            for feature, parent, effects in rows:
                 if type(feature) in seen:
                     continue
                 seen.add(type(feature))
@@ -602,14 +603,34 @@ def feature_problems() -> list[str]:
                             f"{where_defined(feature)}: {feature.name!r}[{index}]:"
                             f" casts {effect.spell!r}, which isn't a spell"
                         )
-                try:
-                    feature.adjust_combat_effect(sheet, "", CombatEffect())
-                except Exception as error:
-                    problems.append(
-                        f"{where_defined(feature)}: {feature.name!r}:"
-                        f" adjust_combat_effect fails: {error!r}"
-                    )
+                problems += [
+                    f"{where_defined(feature)}: {feature.name!r}: {problem}"
+                    for problem in adjustment_problems(feature, parent, sheet)
+                ]
     return problems
+
+
+def adjustment_problems(feature, parent, sheet) -> list[str]:
+    """What's wrong with a feature's combat_adjustments: it fails, returns
+    something else than Adjustments, or applies to its parent only while it
+    isn't granted as an extension (so it changes nothing)."""
+    try:
+        adjustments = feature.combat_adjustments(sheet)
+    except Exception as error:
+        return [f"combat_adjustments fails: {error!r}"]
+    if not isinstance(adjustments, tuple) or not all(
+        isinstance(a, Adjustment) for a in adjustments
+    ):
+        return [f"combat_adjustments returns {adjustments!r}, not Adjustments"]
+    return [
+        "an adjustment applies to its parent, but it isn't granted as an"
+        " extension (extends=): it changes nothing"
+        for a in adjustments
+        if a.applies.parent
+        and parent is None
+        and not a.applies.features
+        and a.applies.spells is None
+    ]
 
 
 def cmd_features(args) -> int:
@@ -637,7 +658,7 @@ def cmd_features(args) -> int:
     print(
         f"{left} feature(s) read from their text, or extensions without combat"
         " effects. An extension that only changes its parent (a rider) needs"
-        " none: give it adjust_combat_effect, or leave it."
+        " none: give it combat_adjustments, or leave it."
     )
     return 0
 

@@ -1,5 +1,4 @@
-from dataclasses import replace
-
+from Model.Content.CombatAdjustments import PARENT, AddNote, Adjustment
 from CharacterContent.Features.ClassFeatures.Bard.BardFeatures import (
     BARDIC_INSPIRATION_DIE,
 )
@@ -27,18 +26,15 @@ class CombatInspiration(Feature):
         # It changes how Bardic Inspiration's die can be spent.
         return []
 
-    def adjust_combat_effect(
-        self, character: CharacterView, source: str, effect: CombatEffect
-    ) -> CombatEffect:
-        if source != "Bardic Inspiration":
-            return effect
+    def combat_adjustments(self, character: CharacterView) -> tuple[Adjustment, ...]:
+        # Two more ways to spend its parent's (Bardic Inspiration's) die.
         die = BARDIC_INSPIRATION_DIE.at(character)
         note = (
             f"Combat Inspiration: it can instead add the {die} to its AC against"
             " an attack roll that hits it (a Reaction), or to the damage of an"
             " attack roll it hits with."
         )
-        return replace(effect, notes=effect.notes + (note,))
+        return (Adjustment(PARENT, (AddNote(note),)),)
 
     def get_improved_description(self, character: CharacterView) -> list[Block]:
         return [

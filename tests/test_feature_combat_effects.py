@@ -50,6 +50,7 @@ from Model.Content.CombatEffect import (
     TurnEdge,
     TurnOf,
 )
+from Model.Content.CombatAdjustments import AddNote, Adjustment, Applies
 from Model.Content.Feature import ActionType, Feature, FeatureActivation
 
 HOUR = 60 * 60
@@ -305,7 +306,7 @@ def test_bardic_inspiration_is_a_badge_for_an_hour():
 
 def test_combat_inspiration_is_in_a_valor_bards_note():
     """Combat Inspiration adds to Bardic Inspiration's effect
-    (Feature.adjust_combat_effect): two more ways to spend the die."""
+    (Feature.combat_adjustments): two more ways to spend the die."""
     (effect,) = _effects(Thomas, "Bardic Inspiration")
     assert not any("Combat Inspiration" in n for n in effect.notes)
     note = _rows(Thomas)["Bardic Inspiration"].note
@@ -453,29 +454,34 @@ def test_a_features_own_action_wins_over_the_spells_casting_time():
     assert row.action_cost == "Action"
 
 
+class _Other(Feature):
+    def __init__(self):
+        super().__init__(name="Other")
+
+
 class _Adds(Feature):
-    """Adds a note to the effects of the feature or spell named `source`."""
+    """Adds a note to the rows of features of the class `applies_to`."""
 
-    def __init__(self, source: str, note: str):
-        super().__init__(name=f"Adds to {source}")
-        self.source, self.note = source, note
+    def __init__(self, applies_to: type, note: str):
+        super().__init__(name=f"Adds to {applies_to.__name__}")
+        self.applies_to, self.note = applies_to, note
 
-    def adjust_combat_effect(self, character, source, effect):
-        if source != self.source:
-            return effect
-        return replace(effect, notes=effect.notes + (self.note,))
+    def combat_adjustments(self, character):
+        applies = Applies(features=(self.applies_to,))
+        return (Adjustment(applies, (AddNote(self.note),)),)
 
 
-def test_a_feature_adjusts_only_the_source_it_names(monkeypatch):
+def test_a_feature_adjusts_only_the_sources_it_applies_to(monkeypatch):
     char = combatant_from_character(_sheet(Thomas))
     sheet = char["_stat_block"]
     real = sheet.iter_features_with_extensions
-    adders = [_Adds("Test Feature", "From the hook."), _Adds("Other", "Never.")]
+    adders = [_Adds(_Described, "From the hook."), _Adds(_Other, "Never.")]
     monkeypatch.setattr(
         sheet, "iter_features_with_extensions", lambda: [*real(), *adders]
     )
     (row,) = feature_options(char, _Described([CombatEffect(notes=("Own.",))]))
     assert row.note == "Own. From the hook."
+    assert row.tooltip.endswith("Changed by Adds to _Described.")
     fireball = dict(effect_options(char, all_spells=[]))
     assert all("Never." not in o.note for rows in fireball.values() for o in rows)
 

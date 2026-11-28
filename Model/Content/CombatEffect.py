@@ -72,9 +72,10 @@ from Model.Content.RulesConditions import rules_condition
 # "2d4", "1d8 + 3", or a flat "5".
 DICE = re.compile(r"\d+d\d+(?: [+-] \d+)?|\d+")
 # What a slot level above the spell's adds: dice ("1d6"), or for Hit Points
-# also a number ("5": False Life).
+# also a number ("5": False Life), or both ("2d8 + 1": Cure Wounds with
+# Disciple of Life's 1 more per slot level, Model/Content/CombatAdjustments.py).
 _UPCAST_DICE = re.compile(r"\d+d\d+")
-_UPCAST_DICE_OR_NUMBER = re.compile(r"\d+d\d+|\d+")
+_UPCAST_DICE_OR_NUMBER = re.compile(r"\d+d\d+(?: \+ \d+)?|\d+")
 # The character levels a cantrip's dice grow at.
 CANTRIP_LEVELS = (5, 11, 17)
 

@@ -1,3 +1,14 @@
+from CharacterContent.Features.ClassFeatures.Cleric.ClericFeatures import (
+    ChannelDivinity,
+)
+from Model.Content.CombatAdjustments import (
+    AddHealing,
+    Adjustment,
+    Applies,
+    MaximizeDice,
+    Rows,
+    Spells,
+)
 from Model.Content.CombatEffect import CombatEffect
 from Model.Content.Feature import Feature, FeatureActivation, ActionType, FeatureTarget
 from Model.View import CharacterView
@@ -34,6 +45,17 @@ class DiscipleOfLife(Feature):
 
     def target(self, character: CharacterView) -> "FeatureTarget | None":
         return FeatureTarget.ALLY
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # It changes the healing spells it applies to.
+        return []
+
+    def combat_adjustments(self, character: CharacterView) -> tuple[Adjustment, ...]:
+        # A healing spell cast with a slot, as it's cast (not a later turn's
+        # row): 2 + the slot's level more.
+        with_slot = Spells(min_level=1, with_slot=True)
+        more = AddHealing(2, per_slot_level=1)
+        return (Adjustment(Applies(spells=with_slot, heals=True), (more,)),)
 
 
 class LifeDomainSpells(Feature):
@@ -160,3 +182,14 @@ class SupremeHealing(Feature):
     def get_description(self, character: CharacterView) -> str:
         description = "When you would normally roll one or more dice to restore Hit Points to a creature with a spell or Channel Divinity, don't roll those dice for the healing; instead use the highest number possible for each die. For example, instead of restoring 2d6 Hit Points to a creature with a spell, you restore 12."
         return description
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # It changes the healing of spells and Channel Divinity.
+        return []
+
+    def combat_adjustments(self, character: CharacterView) -> tuple[Adjustment, ...]:
+        # Every row that heals, later turns' too: its dice at their highest.
+        applies = Applies(
+            features=(ChannelDivinity,), spells=Spells(), heals=True, rows=Rows.ALL
+        )
+        return (Adjustment(applies, (MaximizeDice(healing=True),)),)

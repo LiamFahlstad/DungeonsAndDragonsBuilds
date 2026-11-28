@@ -169,7 +169,7 @@ class BardicInspiration(Feature):
 
     def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
         # Other features add ways to spend the die (Combat Inspiration's
-        # adjust_combat_effect).
+        # combat_adjustments).
         die = BARDIC_INSPIRATION_DIE.at(character)
         return [
             CombatEffect(

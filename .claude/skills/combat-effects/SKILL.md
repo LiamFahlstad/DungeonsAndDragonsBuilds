@@ -39,7 +39,8 @@ draft gets sent back:
 8. **An extension's uses are its parent's.** An extension that is another
    way to use its parent describes its own rows (they spend the parent's
    uses unless it has its own); one that only changes the parent's effect
-   uses `adjust_combat_effect` and returns `[]`.
+   says so in `combat_adjustments` (`Adjustment(PARENT, ...)`) and returns
+   `[]`.
 
 ## Where they live
 
@@ -142,7 +143,7 @@ The rubric above applies; on top of it:
   spells (its spells are in the picker as spells: Cartographer Spells),
   one used from its own control (Wild Shape, a summon), Spellcasting
   itself, or a rider that only changes another feature (then also
-  `adjust_combat_effect`). A passive feature that only changes the stat
+  `combat_adjustments`). A passive feature that only changes the stat
   block can stay `None` (no row either way); give it `[]` only when it has
   `passive=False`.
 - **Work numbers out from `character`**: the level's dice
@@ -169,10 +170,9 @@ The rubric above applies; on top of it:
   `CombatDamage(dice, None, choices)` or one effect per option, never a
   guess.
 - **A feature that changes another's effect** (Combat Inspiration on
-  Bardic Inspiration, Agonizing Blast on Eldritch Blast) overrides
-  `adjust_combat_effect(character, source, effect)`: check `source` first,
-  only add (a note, a damage part, `add_modifier`), and return
-  `dataclasses.replace(effect, ...)`.
+  Bardic Inspiration, Empowered Evocation on Evocation spells) returns it
+  as data from `combat_adjustments(character)`: see "Adjustments" below.
+  Never check names or walk another feature's effect by hand.
 - **Badges and their modifiers** work as for spells: a feature that lasts
   and marks its targets (Sacred Weapon, Rage) gives a `CombatCondition`
   named after the feature, with its `modifiers` when the model has them.
@@ -180,8 +180,46 @@ The rubric above applies; on top of it:
   written once, in `Model/Content/WeaponMasteryEffects.py`, and the picker
   adds its row ("Longsword: Sap", `after=` the weapon) under each weapon
   its wielder has the mastery of. A feature that grants masteries (Weapon
-  Mastery) gives `[]`. Nothing yet changes a mastery's row (a feature's
-  `adjust_combat_effect` doesn't reach it): say so in the feature's notes.
+  Mastery) gives `[]`. Nothing yet changes a mastery's row or a weapon's
+  (adjustments reach spell and feature rows only): say so in the feature's
+  notes.
+- **Subclasses with no party member** aren't listed by `features
+  --campaign`: read the feature file's classes directly, and run each
+  `combat_effects()` on a bare `Character` at levels 3, 11 and 20.
+
+### Adjustments (one feature changing another's effect)
+
+`Model/Content/CombatAdjustments.py` (its docstring has the design; plan
+Phase 10). A feature returns `(Adjustment(applies, changes), ...)`:
+
+- **`applies`**: `PARENT` (the feature it's granted onto with `extends=`:
+  Mindless Rage on Rage), `Applies(features=(ActionSurge,))` (by class:
+  Arcane Charge), `Applies(spells=Spells(school=School.EVOCATION,
+  on_list=CharacterClass.WIZARD))`, or several of these at once (Supreme
+  Healing: `features=(ChannelDivinity,), spells=Spells()`). Then only rows
+  that deal one of `deals`, or heal (`heals=True`). `rows=Rows.CASTING`
+  (default: the use or casting itself, `spends_use`) or `Rows.ALL` (later
+  turns' rows too). `Spells(with_slot=True)` leaves out a feature's free
+  casting; `min_level`/`max_level` bound the spell's level.
+- **`changes`**, made in a fixed order whatever order features come in:
+
+| Change | Phase | For |
+|---|---|---|
+| `DropModifier(Speed)` | drop | Roving Aim: Steady Aim's badge loses `Speed(set_to=0)`; only from the source's own effect |
+| `MaximizeDice(healing=True)` / `(damage=True)` | set | Supreme Healing; Overchannel. The same twice is once |
+| `CostsAction(ActionType.BONUS_ACTION)` | set | another action; two different ones: the first by name counts, with a note |
+| `AddNote(text)` | add | Combat Inspiration's two more ways to spend the die |
+| `AddDamage(CombatDamage(...))` | add | a damage part more |
+| `AddToOneDamageRoll(amount, types, when=)` | add | "add X to one damage roll": Empowered Evocation, Elemental Affinity, Radiant Soul. It finds the part (a chosen type gets a `when`), and on a row of instances it's a note. Nothing for 0 or less |
+| `AddHealing(amount, per_slot_level=)` | add | Disciple of Life's 2 + slot level (`upcast` becomes "2d8 + 1") |
+| `AddBadgeModifiers(modifiers, badge=)` | add | Mindless Rage's `ConditionImmunity` on the Rage badge (the source's own name unless `badge`) |
+| `AlsoEnds(conditions)` | add | Mindless Rage ends Charmed and Frightened |
+
+The row's tooltip ends "Changed by <feature>." A change the vocabulary
+can't say yet (a variant row of its own: Fleet Step, Spell Breaker; an
+area made larger: Aquatic Affinity; a casting without Concentration) is a
+missing change: leave the feature `None` and add it to the plan's Phase 10
+list, never a note standing in for it.
 
 ## Triggers
 

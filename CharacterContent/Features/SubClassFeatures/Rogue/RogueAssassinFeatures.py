@@ -1,5 +1,8 @@
 import Core.Definitions as Definitions
+from CharacterContent.Features.ClassFeatures.Rogue.RogueFeatures import SteadyAim
+from Model.Content.CombatAdjustments import Adjustment, Applies, DropModifier
 from Model.Content.CombatEffect import CombatEffect
+from Model.Content.CombatModifiers import Speed
 from Model.Content.Feature import Feature, FeatureTarget
 from Model.Content.Improvements import InitiativeRollCondition
 from Model.Ledger.LedgerWriter import LedgerWriter
@@ -105,6 +108,15 @@ class InfiltrationExpertise(Feature):
             "Roving Aim. Your speed isn't reduced to 0 by using Steady Aim."
         )
         return description
+
+    def combat_effects(self, character: CharacterView) -> list[CombatEffect]:
+        # Masterful Mimicry isn't for a fight; Roving Aim changes Steady Aim.
+        return []
+
+    def combat_adjustments(self, character: CharacterView) -> tuple[Adjustment, ...]:
+        # Roving Aim: Steady Aim's badge no longer sets its Speed to 0.
+        roving_aim = DropModifier(Speed)
+        return (Adjustment(Applies(features=(SteadyAim,)), (roving_aim,)),)
 
 
 class EnvenomWeapons(Feature):

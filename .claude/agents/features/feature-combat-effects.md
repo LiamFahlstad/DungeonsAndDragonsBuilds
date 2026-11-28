@@ -1,6 +1,6 @@
 ---
 name: feature-combat-effects
-description: Use to add, review or fix features' combat effects - what using a class, subclass, species or feat feature does in a fight (save or attack, ability, damage dice and types, healing, temporary hit points, a condition or badge and what it does while it's on, a use that casts a spell, or nothing to apply) - as CombatEffect objects in the feature's combat_effects() method (and adjust_combat_effect for a feature that changes another's effect), which the combat UI's Custom Effect picker fills its form from instead of reading the feature's text. Give it a campaign's party or one member ("the Curse of the Lich party", "Kivi's Monk features"), a class or subclass, or named features. Not for spells (spell-combat-effects), a feature's sheet text, apply() or uses (character-engine-dev), action/usage tags (feature-card-tagger), extension wiring (feature-extension-auditor), or the picker's code (combat-simulator).
+description: Use to add, review or fix features' combat effects - what using a class, subclass, species or feat feature does in a fight (save or attack, ability, damage dice and types, healing, temporary hit points, a condition or badge and what it does while it's on, a use that casts a spell, or nothing to apply) - as CombatEffect objects in the feature's combat_effects() method (and combat_adjustments for a feature that changes another's effect), which the combat UI's Custom Effect picker fills its form from instead of reading the feature's text. Give it a campaign's party or one member ("the Curse of the Lich party", "Kivi's Monk features"), a class or subclass, or named features. Not for spells (spell-combat-effects), a feature's sheet text, apply() or uses (character-engine-dev), action/usage tags (feature-card-tagger), extension wiring (feature-extension-auditor), or the picker's code (combat-simulator).
 tools: Read, Grep, Glob, Edit, Write, Bash
 model: opus
 memory: project
@@ -19,16 +19,23 @@ rubric for every field and its Features section.
 
 ## Procedure
 
+0. Read `.claude/agent-memory/feature-combat-effects/MEMORY.md` from disk:
+   the copy in your prompt can be hours stale when other runs add lessons.
 1. `python .claude/skills/combat-effects/combat_effects.py features --campaign <name> [--member <name>]`
    lists what your task covers: each feature still read from its text, and
    each extension without effects, with the file and line of its class.
 2. For **every** feature, read its full `get_description()` (and
    `get_improved_description()`, if any) and decide: rows (one
    `CombatEffect` per way to use it), `[]` (nothing to put on a creature in
-   a fight), or `adjust_combat_effect` (it only changes another feature's
-   or spell's effect). An extension that only changes its parent is a
-   rider: `adjust_combat_effect` and `[]`, or leave it `None` when it changes
-   nothing the picker shows.
+   a fight), or `combat_adjustments` (it only changes another feature's
+   or spell's effect: the skill's "Adjustments"). An extension that only
+   changes its parent is a rider: `Adjustment(PARENT, ...)` and `[]`, or
+   leave it `None` when it changes nothing the picker shows. When the model
+   or the simulator can't yet say all of a feature (a missing field,
+   trigger event, change or engine support; the plan's Phase 9 and 10 list
+   what isn't built), leave it `None` and report what's missing and the
+   plan step that would close it: never a partial row with a note standing
+   in for the missing part.
 3. Write `combat_effects(self, character)` in the feature's class, working
    numbers out from `character` (level dice, pools, DCs through
    `calculate_dc`). Import what you use from `Model.Content.CombatEffect`,
@@ -41,15 +48,15 @@ rubric for every field and its Features section.
 
 ## Scope
 
-- Yours: the `combat_effects()` and `adjust_combat_effect()` methods of the
-  feature classes your task names, and the imports they need.
+- Yours: the `combat_effects()` and `combat_adjustments()` methods of the
+  feature classes your task names, their `untriggered` class attribute
+  (the skill's Triggers section), and the imports they need.
 - **Never edit** anything else in a feature class (its text, `apply()`,
   uses, tags, `origin`), `Model/Content/CombatEffect.py`,
   `Model/Content/CombatModifiers.py`, `Model/Content/Feature.py`,
-  `effect_options.py`, the combat UI, spell classes or any test. If the
-  model can't say something a feature needs, put it in `notes` and report
-  it under Concerns; a note you write for a third feature or spell is a
-  missing field (`combat_effects.py notes`).
+  `Model/Content/CombatAdjustments.py`, `effect_options.py`, the combat
+  UI, spell classes or any test. A note you write for a third feature or
+  spell is a missing field (`combat_effects.py notes`): report it.
 - Don't replace effects a feature already has unless your task says to fix
   it.
 - A feature class is shared by every character that has it: check the

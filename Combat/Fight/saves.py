@@ -349,7 +349,11 @@ def damage_text(rolls: Iterable[DamageRoll]) -> str:
 
 def with_dice(roll: DamageRoll, dice: str, times: int) -> DamageRoll:
     """Roll with `times` more of dice: more of the same die, or added on. A
-    flat number is added on ("2d4 + 4" with 5 twice is "2d4 + 4 + 10")."""
+    flat number is added on ("2d4 + 4" with 5 twice is "2d4 + 4 + 10"), and
+    dice with a number both are ("2d8 + 1": Disciple of Life's Cure Wounds)."""
+    if " + " in dice:
+        more, flat = dice.split(" + ")
+        return with_dice(with_dice(roll, more, times), flat, times)
     if "d" not in dice:
         return DamageRoll(f"{roll.dice} + {int(dice) * times}", roll.damage_type)
     count, sides = map(int, dice.split("d"))

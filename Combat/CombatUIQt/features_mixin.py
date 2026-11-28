@@ -10,6 +10,7 @@ from Combat.Effects.active_effects import (
 )
 from Combat.Fight.badge_text import FEATURE_BADGE_COLOR, feature_condition_tooltip
 from Combat.Fight.effect_options import feature_action_cost
+from Model.Content.CombatAdjustments import EffectSource, adjusted_effects
 from Combat.Fight.resources import count_feature_use, feature_lack
 from .state import CombatWindowState
 from .undo import undoable
@@ -91,7 +92,10 @@ class FeaturesMixin(CombatWindowState):
         has_duration = isinstance(duration_value, int) and duration_value > 0
 
         # What the badge does while it's on, as the feature's effects say.
+        # And what the character's other features change about it (Mindless
+        # Rage's immunities on Rage).
         effects = feature.combat_effects(sb) if sb is not None else None
+        effects = adjusted_effects(sb, EffectSource(feature.name, feature), effects)
         modifiers = badge_modifiers(effects, feature.name)
         for char in list(recipients):
             describe(char, feature.name, tooltip_html, badge_color, FEATURE)
